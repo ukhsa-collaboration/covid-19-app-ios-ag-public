@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:README.md">
+   </FileRef>
+   <FileRef
+      location = "group:NHS-COVID-19/NHS-COVID-19.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Docs">
+   </FileRef>
+   <FileRef
+      location = "group:Protobuf">
+   </FileRef>
+   <FileRef
+      location = "group:Scripts">
+   </FileRef>
+</Workspace>

@@ -1,0 +1,15 @@
+# Format options
+
+--trimwhitespace nonblank-lines
+--importgrouping testable-bottom
+--wraparguments before-first
+--header "\nCopyright © 2020 NHSX. All rights reserved.\n"
+--ifdef no-indent
+
+# Rules
+
+--disable blankLinesAtStartOfScope
+--disable blankLinesAtEndOfScope
+--disable hoistPatternLet
+--disable unusedArguments
+--disable numberFormatting

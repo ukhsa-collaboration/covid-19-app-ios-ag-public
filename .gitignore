@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+
+# Xcode
+xcuserdata
+*.xcuserstate
+*.xcscmblueprint
+
+# Swift PM
+.build
+.swiftpm
+
+# Reports
+build
+/TestReport
+/AppReport
+/TestResults.xcresult
+
+# Build Artefacts
+/Scenarios
+/Production
+
+# AppCode
+.idea

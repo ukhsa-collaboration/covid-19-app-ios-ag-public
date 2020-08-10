@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# ignore option doesn't work if put in a config file.
+# exclude option doesn't work either but it's a bug in current version.
+
+function ignoreHeader {
+	output=$($PWD/git-format-staged --formatter "$PWD/swiftformat --config .swiftformat --header ignore --stdinpath {}" "**/Package.swift" 2>&1)
+
+	if [ $? -eq 1 ]
+	then
+	   echo $output
+	fi	
+}
+
+function excludeFile {
+	output=$($PWD/git-format-staged --formatter "$PWD/swiftformat --config .swiftformat --stdinpath {}" "*.swift" "!**/Package.swift" 2>&1)
+
+	if [ $? -eq 1 ]
+	then
+	   echo $output
+	fi	
+}
+
+ignoreHeader
+excludeFile

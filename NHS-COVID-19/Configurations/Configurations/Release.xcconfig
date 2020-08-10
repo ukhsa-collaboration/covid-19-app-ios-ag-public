@@ -1,0 +1,12 @@
+
+IS_DEBUG = NO
+IS_RELEASE = YES
+CHANNEL = Distribution
+
+#include "../Project.xcconfig"
+
+SWIFT_OPTIMIZATION_LEVEL = -O
+SWIFT_COMPILATION_MODE = wholemodule
+GCC_OPTIMIZATION_LEVEL = s
+
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym

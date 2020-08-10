@@ -1,0 +1,335 @@
+"onboarding_strapline_title" = "COVID-19";
+"onboarding_strapline_accessiblity_label" = "NHS Covid 19";
+
+"home_strapline_title" = "Test and Trace";
+"home_strapline_accessiblity_label" = "NHS Test and Trace";
+
+"unrecoverable_error_page_title" = "Unfortunately, you can’t run this app";
+"unrecoverable_error_title" = "This could be due to:";
+"unrecoverable_error_description" = "Restricted settings (for example, if this is a company phone).\n
+Another app on your phone is using the same technology and stopping this app from working.";
+
+"bluetooth_disabled_title" = "Bluetooth always needs to be kept on";
+"bluetooth_disabled_description_1" = "If you have Bluetooth turned off, this app will not work. ";
+"bluetooth_disabled_description_2" = "This app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed.";
+"bluetooth_disabled_description_3" = "This app cannot track your location and your privacy remains protected.";
+"bluetooth_disabled_description_4" = "Please go to Settings and turn on Bluetooth.";
+
+"exposure_notification_disabled_title" = "In order for this app to work you need to turn your exposure notifications on in settings.";
+"exposure_notification_disabled_description_1" = "To identify whether you are at risk of infection, you must activate the exposure notification feature.";
+"exposure_notification_disabled_description_2" = "Exposure logging works by your device receiving, via Bluetooth, encrypted random IDs of other users and passing your own random ID to their devices. This feature can be deactivated at any time.";
+"exposure_notification_disabled_action" = "Go to settings";
+
+"authorization_denied_title" = "For this app to work, you must allow permissions on your device";
+"authorization_denied_description_1" = "Your phone’s technology is needed for this app to function (such as Bluetooth Low Energy for contact tracing and the camera for venue check-in). For the app to work, you need to accept permissions when prompted.";
+"authorization_denied_description_2" = "Your phone might refer to these as ‘Exposure Notifications’ or ‘Exposure Logging’.";
+"authorization_denied_description_3" = "Exposure Logging works by your device receiving, via Bluetooth, encrypted random IDs of other users and passing your random ID to their devices. This feature can be deactivated at any time, but the app will not then work.";
+"authorization_denied_action" = "Go to settings";
+
+"authentication_code_title" = "Thank you for helping us improve the NHS COVID-19 app";
+"authentication_code_description_1" = "The app plays a critical part in the NHS Test & Trace service. The more people that use it, the more we can improve it.";
+"authentication_code_description_2" = "While we wait for a vaccine to be found, NHS Test & Trace and the app are the best way for us to get back to the things we love.";
+"authentication_code_textfield_heading" = "Enter your unique code";
+"authentication_code_textfield_example" = "Example: 5apv-enka";
+"authentication_code_textfield_label" = "Unique code";
+"authentication_code_info_heading" = "Where can I find this code?";
+"authentication_code_info_description_1" = "Please enter one code above. You will have received this code by letter or by email, and it will look like this:";
+"authentication_code_info_example" = "5apv-enka";
+"authentication_code_info_description_2" = "Please note, this app is for use by people aged 18 years and over only.";
+"authentication_code_button_title" = "Continue";
+"authentication_code_error_description" = "Code not recognised. Please make sure you are using a valid code.";
+
+"start_onboarding_step_title" = "This app helps us keep each other safe";
+"start_onboarding_step_subtitle" = "It’s like having Test and Trace in your pocket.
+Here are some of the useful things you can do with the app:";
+"start_onboarding_step_1_header" = "Get notified";
+"start_onboarding_step_2_header" = "Check into venues";
+"start_onboarding_step_3_header" = "Check your symptoms";
+"start_onboarding_step_4_header" = "Isolation countdown";
+"start_onboarding_step_1_description" = "Find out when you’ve been near other app users who have reported a positive test for coronavirus.";
+"start_onboarding_step_2_description" = "Check into places like bars and restaurants with the app’s QR code scanner, without having to fill out any forms. If coronavirus is found at the venue, the app will let you know.";
+"start_onboarding_step_3_description" = "Feeling unwell? Check if your symptoms could be coronavirus and order a free test if you need one.";
+"start_onboarding_step_4_description" = "If you are isolating, the app will count down the days and give you the right information.";
+"start_onboarding_step_detail" = "Please note that this is a test version of the app for clinical investigation and improvement and is not the final version.";
+"start_onboarding_button_title" = "Continue";
+"start_onboarding_step_warning" = "Please note, this app is for use by people aged 18 years and over only.";
+
+"postcode_entry_step_title" = "Enter the first part of your postcode (postcode district)";
+"postcode_entry_example_label" = "Example: CE1B";
+"postcode_entry_textfield_label" = "Postcode";
+"postcode_entry_information_title" = "Why do we need the postcode district?";
+"postcode_entry_information_description_1" = "The postcode district helps with learning about the spread of coronavirus in different areas. This makes sure we can give the best possible public health advice for your area.";
+"postcode_entry_information_description_2" = "Don’t worry. Your postcode district won’t be used to track your location.";
+"postcode_entry_continue_button_title" = "Continue";
+"postcode_entry_error_description" = "Please enter your postcode district code.
+This is the first part of a postcode. For example: E2, L36, PO30";
+
+"permissions_onboarding_step_title" = "Set up app permissions";
+"exposure_notification_permissions_onboarding_step_heading" = "‘Exposure Notifications’";
+"notification_permissions_onboarding_step_heading" = "Notifications";
+"exposure_notification_permissions_onboarding_step_body" = "The app needs ‘Bluetooth Low Energy’ to work properly. On your phone it might be called something different, like ‘Exposure Notifications’ or ‘Exposure Logging’.";
+"notification_permissions_onboarding_step_body" = "The app uses notifications. For example - to tell you if you’ve spent time near someone who has tested positive for coronavirus.";
+"permissions_onboarding_step_detail" = "For the app to work properly, you need to allow ‘Exposure Notifications’.";
+"permissions_continue_button_title" = "Continue";
+
+"privacy_title" = "Protecting your privacy";
+"privacy_description_paragraph1" = "The NHS values your privacy. The app tracks the virus, it doesn’t track you and cannot see who you are, where you are or who is with you. Any information is stored on your phone, not in a central database. That means that if you test positive for coronavirus, you can choose to share your data with the NHS so we can alert other app users. You can be sure that personal data never leaves your phone and you remain anonymous at all times.";
+"privacy_description_paragraph2" = "You also control your data. The app stores your data for 14 days after it’s been recorded (and for 21 days for the venues you check into with QR code). You can delete your data at any time by choosing ‘delete all my data’ or by uninstalling the app. Your phone may still keep some very basic data generated by the app - this is controlled by your phone’s operating system, not by the NHS.";
+"privacy_description_paragraph4" = "This app uses automated decision-making. This means that people do not make decisions. Therefore no one sees your data.";
+"privacy_notice_label" = "Privacy notice";
+"terms_of_use_label" = "Terms of use";
+"link_accessibility_hint" = "Opens in your browser";
+"privacy_links_label" = "Before you activate this app, please read the Privacy Notice and agree to the Terms of Use.";
+"privacy_links_accessibility_label" = "Important: Before you activate this app, please read the Privacy Notice and agree to the Terms of Use.";
+"privacy_yes_button" = "I agree";
+"privacy_no_button" = "No, thanks";
+"privacy_no_button_accessibility_label" = "No thanks, I do not agree";
+"privacy_header" = "You’re in control";
+"data_header" = "Your data";
+
+"home_diagnosis_button_title" = "Report symptoms";
+"home_default_advice_button_title" = "Read latest advice";
+"home_isolation_advice_button_title" = "Read self-isolation advice";
+"home_testing_information_button_title" = "Book a free test";
+"home_about_the_app_button_title" = "How the app works";
+"home_toggle_exposure_notification_title" = "Contact tracing";
+"home_toggle_exposure_notification_on" = "Active";
+"home_toggle_exposure_notification_off" = "Inactive";
+"home_checkin_button_title" = "Venue check-in";
+"home_about_button_title" = "About";
+"home_about_button_title_accessibility_label" = "About the NHS Test and Trace app";
+"home_early_access_label" = "This is an early access release of the NHS COVID-19 app exclusively for clinical investigations";
+"numbered_list_item %ld %@" = "%ld, %@";
+
+"risk_level_indicator_contact_tracing_active" = "Contact tracing active";
+"risk_level_indicator_contact_tracing_not_active" = "Contact tracing not active";
+"risk_level_low" = "LOW";
+"risk_level_medium" = "MEDIUM";
+"risk_level_high" = "HIGH";
+"risk_level_banner_text %@ %@" = "%@ area risk level is %@";
+"risk_level_more_info" = "More info";
+"risk_level_more_info_accessibility_label" = "More information about postcode district risk alerts";
+
+"user_notification_explanation" = "Verifying exposure info";
+
+"checkin_open_settings_button_title" = "Allow camera permissions";
+"checkin_camera_permission_denial_title" = "Check in to a venue by scanning an official NHS QR code";
+"checkin_camera_permission_denial_explanation" = "This app uses your camera to check in to venues. Please allow camera permissions to scan the official NHS QR code.";
+"checkin_camera_permission_close_button_title" = "Close";
+"checkin_camera_failure_title" = "Sorry, your phone doesn’t support venue check in";
+"checkin_camera_failure_description" = "Please check in to the venue manually. Speak to a member of staff at the venue for more information.";
+"checkin_camera_failure_button_title" = "Back to home";
+"checkin_camera_qrcode_scanner_title" = "Check in to a venue by scanning an official NHS QR code";
+"checkin_camera_qrcode_scanner_status_label" = "Point to a QRCode";
+"checkin_camera_qrcode_scanner_description_label" = "Hold your phone so that the official NHS QR code appears in the viewfinder above. When your phone recognises the QR code, it will show that you have successfully checked in.";
+"checkin_camera_qrcode_scanner_help_button_title %@" = "%@ More info about venue check-in";
+"checkin_camera_qrcode_scanner_help_button_accessibility_label" = "More info about venue check-in";
+"checkin_scanning_failure_title" = "Something went wrong";
+"checkin_scanning_failure_description" = "It could be that you are trying to scan an invalid official NHS QR code or that this venue isn’t recognised.\n
+Please check in to the venue manually. Speak to a member of staff at the venue for more information.";
+"checkin_scanning_failure_button_title" = "Back to home";
+"checkin_confirmation_explanation" = "Thank you for scanning, you have now checked in.
+You will be automatically checked out at midnight or when you scan another official NHS QR code.";
+"checkin_confirmation_button_title" = "Back to home";
+"checkin_wrong_button_title" = "Cancel this check-in";
+"checkin_confirmation_title %@ %@" = "Checked in at “%@” at %@";
+"checkin_information_title" = "Venue check in";
+"checkin_information_how_it_works_section_title" = "How it works";
+"checkin_information_how_it_works_section_description" = "This app uses official NHS QR codes to help you quickly and easily check into places you visit.\n
+By using this app, we can alert you if you may have come into contact with the virus at a venue you visited recently.";
+"checkin_information_how_it_helps_section_title" = "How it helps";
+"checkin_information_how_it_helps_section_description" = "This app feature makes it easy for businesses to support contact tracing.\n
+It helps you and others (as well as the venue) stay safe while keeping your privacy protected.";
+"checkin_information_button_title" = "Return to check in";
+"checkin_qrcode_scanner_close_button_title" = "Close";
+"checkin_risky_venue_information_title %@ %@" = "You recently visited a venue where you may have come into contact with coronavirus";
+"checkin_risky_venue_information_description" = "We want to let you know that you may have come into contact with coronavirus while at a venue you have visited.\n
+Although there is only a small risk that you have been infected during your visit, please continue to follow the latest advice on social distancing.\n
+If you have symptoms of coronavirus you need to self-isolate immediately. Please use the symptom checker on the App and book a free test.";
+"checkin_risky_venue_information_button_title" = "Back to home";
+
+"qrcoder_scanner_status_starting" = "How to scan an official NHS QR code";
+"qrcoder_scanner_status_requesting_permission" = "How to scan an official NHS QR code";
+"qrcoder_scanner_status_scanning" = "Scanning for an official NHS QR code";
+"qrcoder_scanner_status_processing" = "Scanning for an official NHS QR code";
+"qrcoder_scanner_status_running" = "How to scan an official NHS QR code";
+"qrcoder_scanner_status_stopped" = "How to scan an official NHS QR code";
+
+"alert_postcode_risk_change_title" = "Your area risk level has changed.";
+"alert_postcode_risk_change_body" = "Open the app for more details.";
+"alert_venue_risk_change_title" = "You may have come into contact with coronavirus at a venue you recently visited.";
+"alert_venue_risk_change_body" = "Tap to see the details.";
+"alert_isolation_state_change_title" = "Your isolation advice has changed";
+"alert_isolation_state_change_body" = "Open the app for more details.";
+"alert_exposure_detection_title" = "You may have been near an app user who has coronavirus. Please stay at home.";
+"alert_exposure_detection_body" = "Tap here for more details.";
+"alert_test_result_received_title" = "Your test results are here.";
+"alert_test_result_received_body" = "Tap to see the details.";
+"alert_app_availability_changed_title" = "The app availability has changed";
+"alert_app_availability_changed_body" = "Tap to see the details.";
+
+"diagnosis_questionnaire_title" = "Select symptoms";
+"loading" = "Loading…";
+"loading_failed_action" = "Try again";
+"loading_failed_heading" = "Something went wrong";
+"loading_failed_body" = "Before trying again, please check that your phone’s mobile data settings are on, check your Wi-Fi connection (if using one) and make sure that Airplane Mode is off.";
+
+"symptom_card_accessibility_label %@ %@" = "%@. %@";
+"symptom_card_checked" = "checked";
+"symptom_card_unchecked" = "unchecked";
+"symptom_onset_select_day %@" = "%@";
+
+"step_accessibility_label %ld %ld" = "Step %ld out of %ld";
+"step_label %ld %ld" = "%ld / %ld";
+
+"symptom_list_heading" = "Select as many of the symptoms as apply to you";
+"symptom_list_description" = "If you do not have any of these symptoms, there is no need to do anything right now. If you develop any of these symptoms, report them on this app and book a free test.";
+"symptom_list_primary_action" = "Continue";
+"symptom_list_secondary_action" = "I don’t have any of these symptoms";
+"symptom_list_error_heading" = "There is a problem";
+"symptom_list_error_description" = "You need to either select symptoms or select “I don’t have any of these symptoms”";
+"symptom_list_discard_alert_title" = "Remove the selected symptoms";
+"symptom_list_discard_alert_body" = "Any selected symptoms will be removed.";
+"symptom_list_discard_alert_cancel" = "Cancel";
+"symptom_list_discard_alert_discard" = "Remove";
+
+"no_symptoms_heading" = "You are unlikely to have coronavirus";
+"no_symptoms_body_1" = "If you develop any of these symptoms, report them on this app and book a free test.";
+"no_symptoms_body_2" = "For further advice, please visit:";
+"no_symptoms_link" = "NHS 111 online";
+"no_symptoms_return_home_button" = "Back to home";
+
+"no_symptoms_isolating_info_isolate_for" = "Self-isolate for";
+"no_symptoms_isolating_info" = "You do not appear to have coronavirus symptoms";
+"no_symptoms_isolating_body" = "You do not appear to have coronavirus symptoms yet. It can take up to 14 days for symptoms to develop. Please stay at home to keep yourself and others safe";
+"no_symptoms_isolating_advice" = "For further advice, please visit:";
+"no_symptoms_isolating_services_link" = "NHS 111 online";
+"no_symptoms_isolating_return_home_button" = "Back to home";
+
+"positive_symptoms_please_isolate_for" = "Please isolate for";
+"positive_symptoms_and_book_a_test" = "and book a test";
+"positive_symptoms_you_might_have_corona" = "You might have coronavirus";
+"positive_symptoms_explanation" = "Your symptoms suggest you might have coronavirus. Please isolate yourself and your household and book a free test.";
+"positive_symptoms_link_label" = "For further advice, please visit the link below";
+"positive_symptoms_corona_test_button" = "Book a free test";
+
+"exposure_acknowledgement_self_isolate_for" = "Self-isolate for";
+"exposure_acknowledgement_warning" = "You have been in contact with someone who has coronavirus. Please stay at home to keep yourself and others safe.";
+"exposure_acknowledgement_explaination_1" = "You are at high risk of having and spreading the virus if you don’t feel unwell.";
+"exposure_acknowledgement_explaination_2" = "Your isolation countdown has started and you should self-isolate for the full period identified.";
+"exposure_acknowledgement_link_label" = "For further advice, please visit:";
+"exposure_acknowledgement_link" = "NHS 111 online";
+"exposure_acknowledgement_button" = "I understand";
+
+"isolation_until_date %@ %@" = "Until %@ at %@";
+"isolation_until_date_title" = "You need to self-isolate";
+
+"end_of_isolation_isolate_title" = "Good news!";
+"end_of_isolation_has_passed_description date: %@ time: %@" = "You were released from isolation on %@ at %@";
+"end_of_isolation_is_near_description date: %@ time: %@" = "Your self-isolation will finish on %@ at %@";
+"end_of_isolation_finished_description" = "Your self-isolation has now finished";
+"end_of_isolation_positive_text_no_isolation_title" = "Although you tested positive, your period for self-isolation is over";
+"end_of_isolation_isolate_if_have_symptom_warning" = "However, if you have a high temperature, continue to self-isolate until it returns to normal";
+"end_of_isolation_negative_test_result" = "Your coronavirus test result is negative";
+"end_of_isolation_explanation_1" = "If you have started to show any symptoms since your self-isolation began, or otherwise believe that you have coronavirus, please remain isolated.";
+"end_of_isolation_explanation_negative_test_result" = "Your test result shows that you did not have the virus at the time of testing. If you develop symptoms report them on this app.";
+"end_of_isolation_link_label" = "For further advice, please visit:";
+"end_of_isolation_online_services_link" = "NHS 111 online";
+"end_of_isolation_corona_back_to_home_button" = "Back to home";
+"end_of_isolation_further_advice_link" = "For further advice call 111";
+"end_of_isolation_further_advice_visit" = "For further advice, please visit:";
+
+"positive_test_result_title" = "Continue to self-isolate for";
+"positive_test_result_info" = "Your coronavirus test result is positive";
+"positive_test_result_explanation" = "Your test result shows that you have coronavirus. You have been sent an email or text with more information.";
+"positive_test_results_continue" = "Continue";
+
+"negative_test_result_with_isolation_title" = "Continue to self-isolate for";
+"negative_test_result_with_isolation_info" = "Your coronavirus test result is negative. As you may still develop symptoms, please remain in isolation";
+"negative_test_result_with_isolation_explanation" = "Your test result shows that you didn’t have the virus when the test was done. You have been sent an email or text with more information.";
+"negative_test_result_with_isolation_advice" = "For further advice, please visit:";
+"negative_test_result_with_isolation_service_link" = "NHS 111 online";
+"negative_test_result_with_isolation_back_to_home" = "Back to home";
+
+"symptom_review_title" = "Review symptoms";
+"symptom_review_heading" = "Review your answers";
+"symptom_review_confirm_heading" = "You said ‘yes’ to these symptoms:";
+"symptom_review_deny_heading" = "You said ‘no’ to these symptoms:";
+"symptom_review_date_heading" = "Do you remember the earliest date that you began to experience any of these symptoms?";
+"symptom_review_date_placeholder" = "Select a date";
+"symptom_review_date_hint" = "Double tap to open date picker";
+"symptom_review_no_date" = "I don’t remember the date";
+"symptom_review_no_date_accessability_label_checked" = "I don’t remember the date. Checked";
+"symptom_review_no_date_accessability_label_not_checked" = "I don’t remember the date. Not checked";
+"symptom_review_error_description" = "You need to either input a date or select “I don’t remember the date”";
+"symptom_review_button_submit" = "Submit";
+"symptom_review_button" = "Change";
+"symptom_review_button_accessibility_label %@" = "Change your answer for %@";
+
+"virology_testing_information_title" = "Information about testing";
+
+"virology_book_a_test_title" = "Book a free test";
+"virology_book_a_test_heading" = "Getting tested";
+"virology_book_a_test_paragraph1" = "Selecting ‘Book a free test now’ will redirect you from this app to the government’s coronavirus testing website.";
+"virology_book_a_test_paragraph2" = "Once there, you’ll be asked to enter some personal details (like your address) in order to get a test, but nothing you enter there will be shared with this app, and nothing you’ve entered here will be shared there.";
+"virology_book_a_test_paragraph3" = "The only information shared between app and website is a digital ‘token’ which will help us get your test results back to the app.";
+"virology_book_a_test_paragraph4" = "Any data used in the testing process is described in the Privacy Notice:";
+"virology_book_a_test_testing_privacy_notice" = "Testing privacy notice";
+"virology_book_a_test_paragraph5" = "You can also find out how this app uses the data you’ve given us:";
+"virology_book_a_test_app_privacy_notice" = "App privacy notice";
+"virology_book_a_test_paragraph6" = "You can only use this app to get a test for yourself. To get a test for someone else, use the government’s coronavirus testing website:";
+"virology_book_a_test_book_a_test_for_someone_else" = "Book a test for someone else";
+"virology_book_a_test_button" = "Book a free test now";
+
+"about_this_app_title" = "About this app";
+"about_this_app_how_this_app_works_heading" = "How this apps works";
+"about_this_app_how_this_app_works_paragraph1" = "This app uses contact tracing technology to help protect yourself and others.";
+"about_this_app_how_this_app_works_paragraph2" = "The app detects and logs other nearby app users. If any of those users later test positive for coronavirus, you will receive an alert with advice.";
+"about_this_app_how_this_app_works_paragraph3" = "The app also lets you report your symptoms and find out if you need a test.";
+"about_this_app_how_this_app_works_paragraph4" = "You can also use this app to scan official NHS QR codes to check in to places you visit.";
+"about_this_app_common_questions_heading" = "Common questions";
+"about_this_app_common_questions_description" = "Visit our common questions page to learn more about the NHS COVID-19 app and the wider Test & Trace programme.";
+"about_this_app_common_questions_button" = "Common questions";
+"about_this_app_our_policies_heading" = "Our policies";
+"about_this_app_our_policies_description" = "Our policy documentation tells you important information about using the app, how we use your data, and how the app supports user access.";
+"about_this_app_our_policies_terms_of_use_button" = "Terms of use";
+"about_this_app_our_policies_privacy_notice_button" = "Privacy Notice";
+"about_this_app_our_policies_accessibility_statement_button" = "Accessibility Statement";
+
+"about_this_app_my_data_heading" = "About your data";
+"about_this_app_my_data_description" = "The app has access to the postcode district you added in the registration, a history of venues you have checked into in the last 21 days, your last test result and the start date of your symptoms. You can delete the stored data.";
+"about_this_app_my_data_button" = "Manage my data";
+
+"about_this_app_software_information_heading" = "Software information";
+"about_this_app_software_information_app_name %@" = "App name: %@";
+"about_this_app_software_information_version %@" = "Version: %@";
+"about_this_app_software_information_date_of_release" = "Date of release: 08/2020";
+"about_this_app_software_information_entity_name_and_address" = "
+Entity name and address:
+NHS Test & Trace
+Department of Health and Social Care
+39 Victoria Street
+Westminster
+London
+SW1H 0EU
+UK";
+
+"mydata_title" = "My Data";
+"mydata_section_postcode_description" = "POSTCODE DISTRICT";
+"mydata_section_test_result_description" = "LAST TEST RESULT TAKEN";
+"mydata_section_venue_history_description" = "VENUE HISTORY";
+"mydata_section_symptoms_description" = "SYMPTOMS ONSET DATE";
+"mydata_section_encounter_description" = "ENCOUNTER DATE";
+"mydata_section_date_description" = "Date";
+"mydata_date_description %@" = "%@";
+"mydata_date_interval_description %@ %@" = "%@";
+"mydata_test_result_positive" = "Positive";
+"mydata_test_result_negative" = "Negative";
+"mydata_data_deletion_button_title" = "Delete all my data";
+"mydata_delete_data_alert_title" = "Deleting your app data?";
+"mydata_delete_data_alert_description" = "Any information you share through this app will only be used for public health purposes. Data held will be removed once you confirm. Please note that your phone will retain some information, such as the data your phone collects to log other user app users. This data is not controlled by the app but by your phone’s operating system. If you want to continue using this app later, you will have to set it up again.";
+"mydata_delete_data_alert_button_title" = "Delete data";
+
+"accessability_error_os_out_of_date" = "OS out of date";
+"accessability_error_update_the_app" = "Update your software";
+"accessability_error_cannot_run_app" = "Unfortunately, you can’t run this app";

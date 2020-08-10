@@ -1,0 +1,8 @@
+
+PRODUCT_BUNDLE_IDENTIFIER = com.zuhlke.nhs.covid19.UITests
+INFOPLIST_FILE = UITests/Configurations/Info.plist
+
+TEST_TARGET_NAME = NHS-COVID-19-Internal
+
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
+PRODUCT_NAME = $(TARGET_NAME)

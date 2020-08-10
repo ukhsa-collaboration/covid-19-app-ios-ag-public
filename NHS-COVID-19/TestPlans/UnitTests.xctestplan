@@ -1,0 +1,66 @@
+{
+  "configurations" : [
+    {
+      "id" : "BA71C7B7-37C4-4E92-AE44-A11998FD074F",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:NHS-COVID-19\/NHS-COVID-19.xcodeproj",
+        "identifier" : "89AD486A2461A1C00013EC66",
+        "name" : "AppTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:NHS-COVID-19\/Core",
+        "identifier" : "DomainTests",
+        "name" : "DomainTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:NHS-COVID-19\/Core",
+        "identifier" : "IntegrationTests",
+        "name" : "IntegrationTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:NHS-COVID-19\/Core",
+        "identifier" : "InterfaceTests",
+        "name" : "InterfaceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:NHS-COVID-19\/Core",
+        "identifier" : "CommonTests",
+        "name" : "CommonTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:NHS-COVID-19\/Core",
+        "identifier" : "ScenariosTests",
+        "name" : "ScenariosTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:NHS-COVID-19\/Core",
+        "identifier" : "TestSupportTests",
+        "name" : "TestSupportTests"
+      }
+    }
+  ],
+  "version" : 1
+}

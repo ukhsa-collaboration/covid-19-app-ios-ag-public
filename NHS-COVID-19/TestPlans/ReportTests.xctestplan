@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "BA71C7B7-37C4-4E92-AE44-A11998FD074F",
+      "name" : "Configuration 1",
+      "options" : {
+        "commandLineArgumentEntries" : [
+
+        ],
+        "environmentVariableEntries" : [
+          {
+            "key" : "test_mode",
+            "value" : "report"
+          }
+        ]
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:NHS-COVID-19\/NHS-COVID-19.xcodeproj",
+        "identifier" : "89AD485A2461A0B50013EC66",
+        "name" : "UITests"
+      }
+    }
+  ],
+  "version" : 1
+}

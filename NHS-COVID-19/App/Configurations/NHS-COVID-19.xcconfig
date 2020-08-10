@@ -1,0 +1,15 @@
+
+#include "../../Configurations/Targets/App.xcconfig"
+
+PRODUCT_BUNDLE_IDENTIFIER = uk.nhs.covid19.production
+BUNDLE_DISPLAY_NAME = NHS COVID-19
+
+DEVELOPMENT_TEAM = 877YMUFLMF
+CODE_SIGN_STYLE = Manual
+CODE_SIGN_IDENTITY = Apple $(CHANNEL)
+PROVISIONING_PROFILE_SPECIFIER = Exposure Notification - $(CHANNEL)
+
+INFOPLIST_FILE = App/Configurations/Info.plist
+CODE_SIGN_ENTITLEMENTS = App/Configurations/$(CHANNEL).entitlements
+
+ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon

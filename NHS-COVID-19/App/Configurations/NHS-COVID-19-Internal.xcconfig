@@ -1,0 +1,5 @@
+
+#include "NHS-COVID-19.xcconfig"
+
+PRODUCT_BUNDLE_IDENTIFIER = uk.nhs.covid19.internal
+BUNDLE_DISPLAY_NAME = Scenarios

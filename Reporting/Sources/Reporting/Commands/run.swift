@@ -1,0 +1,31 @@
+//
+// Copyright © 2020 NHSX. All rights reserved.
+//
+
+import ArgumentParser
+
+public func run() -> Never {
+    ReportCommand.main()
+}
+
+struct ReportCommand: ParsableCommand {
+    static var configuration = CommandConfiguration(
+        commandName: "report",
+        abstract: "A tool for producing reports from iOS app bundles.",
+        subcommands: [
+            ArchiveReportCommand.self,
+            IPAReportCommand.self,
+            WorkspaceReportCommand.self,
+            ConfigureCommand.self,
+            ExportCommand.self,
+            ValidateCommand.self,
+            UploadCommand.self,
+            VersioningCommand.self,
+            DeployLatestCommand.self,
+        ]
+    )
+    
+    func run() throws {
+        print("running")
+    }
+}

@@ -1,0 +1,77 @@
+//
+// Copyright © 2020 NHSX. All rights reserved.
+//
+
+import Common
+import Foundation
+import SwiftUI
+
+struct ConfigureMocksView: View {
+    
+    @ObservedObject
+    var dataProvider: MockDataProvider
+    
+    var body: some View {
+        NavigationView {
+            List {
+                Section(header: Text(verbatim: "Postcode Risk")) {
+                    TextFieldRow(label: "High Risk", text: $dataProvider.highRiskPostcodes)
+                    TextFieldRow(label: "Medium Risk", text: $dataProvider.mediumRiskPostcodes)
+                    TextFieldRow(label: "Low Risk", text: $dataProvider.lowRiskPostcodes)
+                }
+                Section(header: Text(verbatim: "Check In")) {
+                    TextFieldRow(label: "High Risk Venue IDs", text: $dataProvider.riskyVenueIDs)
+                }
+                Section(header: Text(verbatim: "Test Order Website")) {
+                    TextFieldRow(label: "Website", text: $dataProvider.orderTestWebsite)
+                    TextFieldRow(label: "Reference Code", text: $dataProvider.testReferenceCode)
+                    Picker(selection: $dataProvider.receivedTestResult, label: Text("Result")) {
+                        ForEach(0 ..< MockDataProvider.testResults.count) {
+                            Text(verbatim: MockDataProvider.testResults[$0])
+                        }
+                    }
+                }
+                Section(header: Text(verbatim: "App Availability")) {
+                    TextFieldRow(label: "Minimum OS version", text: $dataProvider.minimumOSVersion)
+                    TextFieldRow(label: "Minimum app version", text: $dataProvider.minimumAppVersion)
+                    TextFieldRow(label: "Latest app version", text: $dataProvider.latestAppVersion)
+                }
+                Section(header: Text(verbatim: "Exposure Notification")) {
+                    VStack(alignment: .leading) {
+                        Toggle("Use fake EN contacts", isOn: $dataProvider.useFakeENContacts)
+                        Text(verbatim: "Only takes effect after restarting the scenario")
+                            .font(.caption)
+                    }
+                    TextFieldRow(label: "Count of EN contacts", text: $dataProvider.numberOfContactsString)
+                    TextFieldRow(label: "Days since EN contacts", text: $dataProvider.contactDaysAgoString)
+                }
+                Section(header: Text(verbatim: "Hello tester! 👋🏼"), footer: Text(verbatim: "Happy testing 🙌🏼")) {
+                    Text(verbatim: """
+                    Your friend, the developer here. Hope you’re having a good day.
+                    
+                    Let us know if you need any more help with testing and we’ll do our best to support you.
+                    """)
+                }
+            }
+            .listStyle(GroupedListStyle())
+            .navigationBarTitle("Mocks")
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+    }
+    
+}
+
+private struct TextFieldRow: View {
+    
+    var label: String
+    var text: Binding<String>
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(verbatim: label)
+                .font(.caption)
+            TextField("", text: text)
+        }
+    }
+    
+}
