@@ -12,6 +12,7 @@ public struct Isolation: Equatable {
         case bothCases
     }
     
+    public var fromDay: LocalDay
     public var untilStartOfDay: LocalDay
     public var reason: Reason
 }

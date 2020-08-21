@@ -15,6 +15,10 @@ extension XCUIElementQuery {
         elementWithText(localize(key))
     }
     
+    subscript(verbatim string: String) -> XCUIElement {
+        elementWithText(string)
+    }
+    
     subscript<T: RawRepresentable>(key key: T) -> XCUIElement where T.RawValue == String {
         elementWithText(key.rawValue)
     }

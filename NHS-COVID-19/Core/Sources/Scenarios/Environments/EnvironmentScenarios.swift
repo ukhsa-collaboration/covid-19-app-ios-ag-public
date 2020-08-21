@@ -36,8 +36,14 @@ class DemoEnvironmentScenario: EnvironmentScenario {
     static var nameForSorting: String { "5" }
 }
 
+class StagingEnvironmentScenario: EnvironmentScenario {
+    static let name = "Staging"
+    static let configuration = EnvironmentConfiguration.staging
+    static var nameForSorting: String { "6" }
+}
+
 class ProductionEnvironmentScenario: EnvironmentScenario {
     static let name = "Production"
     static let configuration = EnvironmentConfiguration.production
-    static var nameForSorting: String { "6" }
+    static var nameForSorting: String { "7" }
 }

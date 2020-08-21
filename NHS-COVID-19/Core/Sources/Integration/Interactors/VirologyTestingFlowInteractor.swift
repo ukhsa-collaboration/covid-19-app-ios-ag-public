@@ -10,17 +10,17 @@ import Interface
 
 class VirologyTestingFlowInteractor: VirologyTestingFlowViewController.Interacting {
     private let virologyTestOrderInfoProvider: VirologyTestingTestOrderInfoProviding
-    private let externalLinkOpener: ExternalLinkOpening
+    private let openURL: (URL) -> Void
     private let pasteboardCopier: PasteboardCopying
     
     private var referenceCode: ReferenceCode?
     private var orderWebsiteURL: URL?
     
     init(virologyTestOrderInfoProvider: VirologyTestingTestOrderInfoProviding,
-         externalLinkOpener: ExternalLinkOpening,
+         openURL: @escaping (URL) -> Void,
          pasteboardCopier: PasteboardCopying) {
         self.virologyTestOrderInfoProvider = virologyTestOrderInfoProvider
-        self.externalLinkOpener = externalLinkOpener
+        self.openURL = openURL
         self.pasteboardCopier = pasteboardCopier
     }
     
@@ -41,7 +41,7 @@ class VirologyTestingFlowInteractor: VirologyTestingFlowViewController.Interacti
     
     func didTapOrderTestLink() {
         if let orderWebsiteURL = orderWebsiteURL {
-            externalLinkOpener.openExternalLink(url: orderWebsiteURL)
+            openURL(orderWebsiteURL)
         }
     }
 }

@@ -65,11 +65,7 @@ public class PositiveTestResultViewController: UIViewController {
         pleaseIsolateStack.accessibilityTraits = [.staticText]
         pleaseIsolateStack.accessibilityLabel = localize(.positive_test_please_isolate_accessibility_label(days: daysToIsolate))
         
-        let indicationLabel = UILabel()
-        indicationLabel.text = localize(.positive_test_result_info)
-        indicationLabel.styleAsSecondaryTitle()
-        
-        let infobox = InformationBox(views: [indicationLabel], style: .badNews)
+        let infobox = InformationBox.indication.badNews(localize(.positive_test_result_info))
         
         let explanationLabel = UILabel()
         explanationLabel.text = localize(.positive_test_result_explanation)

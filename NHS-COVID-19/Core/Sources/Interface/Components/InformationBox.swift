@@ -9,7 +9,7 @@ public class InformationBox: UIView {
     /// Defines the color of the bar at the side of InformationBox
     public enum Style {
         /// Has a blue bar at the side
-        case information
+        case information(InformationColor)
         /// Has a green bar at the side
         case goodNews
         /// Has a yellow bar at the side
@@ -18,9 +18,17 @@ public class InformationBox: UIView {
         case badNews
         // Has a clear bar at the side
         case noNews
+        
+        public enum InformationColor {
+            case purple
+            case orange
+            case lightBlue
+            case turquoise
+            case darkBlue
+        }
     }
     
-    var style: Style = .information {
+    var style: Style = .information(.darkBlue) {
         didSet {
             setupColor(for: style)
         }
@@ -74,7 +82,15 @@ public class InformationBox: UIView {
     
     func setupColor(for style: Style) {
         switch style {
-        case .information:
+        case .information(.purple):
+            stripe.backgroundColor = UIColor(.stylePurple)
+        case .information(.orange):
+            stripe.backgroundColor = UIColor(.styleOrange)
+        case .information(.turquoise):
+            stripe.backgroundColor = UIColor(.styleTurquoise)
+        case .information(.lightBlue):
+            stripe.backgroundColor = UIColor(.styleBlue)
+        case .information(.darkBlue):
             stripe.backgroundColor = UIColor(.nhsBlue)
         case .goodNews:
             stripe.backgroundColor = UIColor(.nhsButtonGreen)

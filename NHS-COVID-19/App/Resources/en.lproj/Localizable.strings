@@ -26,9 +26,10 @@ Another app on your phone is using the same technology and stopping this app fro
 "authorization_denied_description_3" = "Exposure Logging works by your device receiving, via Bluetooth, encrypted random IDs of other users and passing your random ID to their devices. This feature can be deactivated at any time, but the app will not then work.";
 "authorization_denied_action" = "Go to settings";
 
-"authentication_code_title" = "Thank you for helping us improve the NHS COVID-19 app";
-"authentication_code_description_1" = "The app plays a critical part in the NHS Test & Trace service. The more people that use it, the more we can improve it.";
-"authentication_code_description_2" = "While we wait for a vaccine to be found, NHS Test & Trace and the app are the best way for us to get back to the things we love.";
+"authentication_code_title" = "Currently only for NHS Volunteer Responders, Isle of Wight and Newham residents";
+"authentication_code_description" = "Thank you for helping us improve the NHS COVID-19 app. During this test phase, you will need a unique code to use this app.
+We all want to get back to the things we love. And we can all do our bit to help. This app is an important part of the NHS Test and Trace service. The more of us that use it, the more we can improve it.
+Until a vaccine or treatment for coronavirus is found, NHS Test and Trace and this app remain a vital way to help stop the spread of coronavirus.";
 "authentication_code_textfield_heading" = "Enter your unique code";
 "authentication_code_textfield_example" = "Example: 5apv-enka";
 "authentication_code_textfield_label" = "Unique code";
@@ -61,6 +62,7 @@ Here are some of the useful things you can do with the app:";
 "postcode_entry_information_description_1" = "The postcode district helps with learning about the spread of coronavirus in different areas. This makes sure we can give the best possible public health advice for your area.";
 "postcode_entry_information_description_2" = "Don’t worry. Your postcode district won’t be used to track your location.";
 "postcode_entry_continue_button_title" = "Continue";
+"postcode_entry_error_title" = "Invalid postcode district code";
 "postcode_entry_error_description" = "Please enter your postcode district code.
 This is the first part of a postcode. For example: E2, L36, PO30";
 
@@ -91,7 +93,7 @@ This is the first part of a postcode. For example: E2, L36, PO30";
 "home_default_advice_button_title" = "Read latest advice";
 "home_isolation_advice_button_title" = "Read self-isolation advice";
 "home_testing_information_button_title" = "Book a free test";
-"home_about_the_app_button_title" = "How the app works";
+"home_about_the_app_button_title" = "About this app";
 "home_toggle_exposure_notification_title" = "Contact tracing";
 "home_toggle_exposure_notification_on" = "Active";
 "home_toggle_exposure_notification_off" = "Inactive";
@@ -101,7 +103,7 @@ This is the first part of a postcode. For example: E2, L36, PO30";
 "home_early_access_label" = "This is an early access release of the NHS COVID-19 app exclusively for clinical investigations";
 "numbered_list_item %ld %@" = "%ld, %@";
 
-"risk_level_indicator_contact_tracing_active" = "Contact tracing active";
+"risk_level_indicator_contact_tracing_active" = "Your app is active and scanning";
 "risk_level_indicator_contact_tracing_not_active" = "Contact tracing not active";
 "risk_level_low" = "LOW";
 "risk_level_medium" = "MEDIUM";
@@ -109,6 +111,13 @@ This is the first part of a postcode. For example: E2, L36, PO30";
 "risk_level_banner_text %@ %@" = "%@ area risk level is %@";
 "risk_level_more_info" = "More info";
 "risk_level_more_info_accessibility_label" = "More information about postcode district risk alerts";
+
+"risk_level_screen_low_body" = "Low - your local authority is currently assessed as ‘low risk’, with levels of infection similar to most other parts of the country";
+"risk_level_screen_medium_body" = "Medium - your local authority, or a neighbouring local authority, has higher levels of infection than other parts of the country. The local area plan has been implemented and targeted actions are in place to reduce transmission of infection (e.g. additional testing in care homes and increased community engagement with high risk groups). Some areas may be receiving additional national support (e.g. mobile testing capacity)";
+"risk_level_screen_high_body" = "High - Your local authority, or a neighbouring local authority, is using additional measures to those in place in the rest of England (e.g. lockdown) to reduce transmission of infection because of high levels of infection in the local area. A detailed action plan is in place and local resources are being augmented with national support.";
+"risk_level_screen_button" = "Definitions of area risk levels";
+"risk_level_screen_title" = "Risk level";
+"risk_level_screen_close_button" = "Close";
 
 "user_notification_explanation" = "Verifying exposure info";
 
@@ -156,7 +165,7 @@ If you have symptoms of coronavirus you need to self-isolate immediately. Please
 "qrcoder_scanner_status_stopped" = "How to scan an official NHS QR code";
 
 "alert_postcode_risk_change_title" = "Your area risk level has changed.";
-"alert_postcode_risk_change_body" = "Open the app for more details.";
+"alert_postcode_risk_change_body" = "Tap to see the details.";
 "alert_venue_risk_change_title" = "You may have come into contact with coronavirus at a venue you recently visited.";
 "alert_venue_risk_change_body" = "Tap to see the details.";
 "alert_isolation_state_change_title" = "Your isolation advice has changed";
@@ -236,7 +245,6 @@ If you have symptoms of coronavirus you need to self-isolate immediately. Please
 "end_of_isolation_link_label" = "For further advice, please visit:";
 "end_of_isolation_online_services_link" = "NHS 111 online";
 "end_of_isolation_corona_back_to_home_button" = "Back to home";
-"end_of_isolation_further_advice_link" = "For further advice call 111";
 "end_of_isolation_further_advice_visit" = "For further advice, please visit:";
 
 "positive_test_result_title" = "Continue to self-isolate for";
@@ -283,21 +291,22 @@ If you have symptoms of coronavirus you need to self-isolate immediately. Please
 
 "about_this_app_title" = "About this app";
 "about_this_app_how_this_app_works_heading" = "How this apps works";
-"about_this_app_how_this_app_works_paragraph1" = "This app uses contact tracing technology to help protect yourself and others.";
-"about_this_app_how_this_app_works_paragraph2" = "The app detects and logs other nearby app users. If any of those users later test positive for coronavirus, you will receive an alert with advice.";
-"about_this_app_how_this_app_works_paragraph3" = "The app also lets you report your symptoms and find out if you need a test.";
-"about_this_app_how_this_app_works_paragraph4" = "You can also use this app to scan official NHS QR codes to check in to places you visit.";
+"about_this_app_how_this_app_works_paragraph1" = "This app uses contact tracing technology to help protect yourself and others so we can all get back to the things we love.";
+"about_this_app_how_this_app_works_paragraph2" = "The app notices and logs other nearby app users. If any of those users later test positive for coronavirus, you’ll receive an alert with advice.";
+"about_this_app_how_this_app_works_paragraph3" = "The app also lets you report your symptoms and find out if you need a test. You can also use it to scan official NHS QR codes to quickly and easily check in to places you visit.";
+"about_this_app_how_this_app_works_button" = "How the app works";
 "about_this_app_common_questions_heading" = "Common questions";
 "about_this_app_common_questions_description" = "Visit our common questions page to learn more about the NHS COVID-19 app and the wider Test & Trace programme.";
 "about_this_app_common_questions_button" = "Common questions";
 "about_this_app_our_policies_heading" = "Our policies";
-"about_this_app_our_policies_description" = "Our policy documentation tells you important information about using the app, how we use your data, and how the app supports user access.";
+"about_this_app_our_policies_description" = "Our policies tells you important information about using the app, how we use your data, and how the app supports user access.";
 "about_this_app_our_policies_terms_of_use_button" = "Terms of use";
 "about_this_app_our_policies_privacy_notice_button" = "Privacy Notice";
 "about_this_app_our_policies_accessibility_statement_button" = "Accessibility Statement";
+"about_this_app_footer_text" = "Thank you for protecting yourself and others by using the app";
 
 "about_this_app_my_data_heading" = "About your data";
-"about_this_app_my_data_description" = "The app has access to the postcode district you added in the registration, a history of venues you have checked into in the last 21 days, your last test result and the start date of your symptoms. You can delete the stored data.";
+"about_this_app_my_data_description" = "The app has access to the postcode district you added in the registration, a history of the places you’ve checked into in the last 14 days, your last test result and the start date of your symptoms. You can delete the stored data whenever you want.";
 "about_this_app_my_data_button" = "Manage my data";
 
 "about_this_app_software_information_heading" = "Software information";
@@ -333,3 +342,19 @@ UK";
 "accessability_error_os_out_of_date" = "OS out of date";
 "accessability_error_update_the_app" = "Update your software";
 "accessability_error_cannot_run_app" = "Unfortunately, you can’t run this app";
+
+"link_privacy" = "https://www.gov.uk/government/publications/nhs-test-and-trace-app-privacy-information";
+"link_our_policies" = "https://covid19.nhs.uk/our-policies.html";
+"link_faq" = "https://faq.covid19.nhs.uk/";
+"link_about_the_app" = "https://covid19.nhs.uk";
+"link_accessibility_statement" = "https://covid19.nhs.uk/accessibility.html";
+"link_isolation_advice" = "https://faq.covid19.nhs.uk/article/KA-01099/en-us";
+"link_general_advice" = "https://www.gov.uk/coronavirus";
+"link_more_info_on_postcode_risk" = "https://faq.covid19.nhs.uk/article/KA-01101/en-us";
+"link_book_a_test_for_someone_else" = "https://www.nhs.uk/conditions/coronavirus-covid-19/testing-and-tracing/get-a-test-to-check-if-you-have-coronavirus/";
+"link_testing_privacy_notice" = "https://www.gov.uk/government/publications/coronavirus-covid-19-testing-privacy-information/testing-for-coronavirus-privacy-information";
+"link_nhs111_online" = "https://111.nhs.uk/";
+"link_how_this_app_works" = "https://covid19.nhs.uk/about-the-app.html";
+
+"cancel" = "Cancel";
+"back" = "Back";

@@ -10,11 +10,10 @@ import Interface
 struct SendKeysLoadingFlowViewControllerInteractor: SendKeysLoadingFlowViewController.Interacting {
     var acknowledgement: TestResultAcknowledgementState.PositiveResultAcknowledgement
     
-    let externalLinkOpener: ExternalLinkOpening
+    let openURL: (URL) -> Void
     
     func didTapOnlineServicesLink() {
-        guard let link = URL(string: ExternalLink.nhs111Online.rawValue) else { return }
-        externalLinkOpener.openExternalLink(url: link)
+        openURL(ExternalLink.nhs111Online.url)
     }
     
     func shareKeys() -> AnyPublisher<Void, Error> {

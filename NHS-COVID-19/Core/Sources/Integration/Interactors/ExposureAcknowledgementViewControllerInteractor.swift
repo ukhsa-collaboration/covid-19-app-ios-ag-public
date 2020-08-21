@@ -7,11 +7,11 @@ import Foundation
 import Interface
 
 struct ExposureAcknowledgementViewControllerInteractor: ExposureAcknowledgementViewController.Interacting {
-    private var externalLinkOpener: ExternalLinkOpening
+    private let openURL: (URL) -> Void
     private var _acknowledge: () -> Void
     
-    init(externalLinkOpener: ExternalLinkOpening, acknowledge: @escaping () -> Void) {
-        self.externalLinkOpener = externalLinkOpener
+    init(openURL: @escaping (URL) -> Void, acknowledge: @escaping () -> Void) {
+        self.openURL = openURL
         _acknowledge = acknowledge
     }
     
@@ -20,7 +20,6 @@ struct ExposureAcknowledgementViewControllerInteractor: ExposureAcknowledgementV
     }
     
     func didTapOnlineLink() {
-        guard let url = URL(string: ExternalLink.nhs111Online.rawValue) else { return }
-        externalLinkOpener.openExternalLink(url: url)
+        openURL(ExternalLink.nhs111Online.url)
     }
 }

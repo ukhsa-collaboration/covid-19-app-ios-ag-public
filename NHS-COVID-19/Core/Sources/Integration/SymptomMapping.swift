@@ -11,8 +11,9 @@ public class SymptomMapping {
     private var domainSymptoms = [SymptomInfo.ID: Symptom]()
     
     func interfaceSymptomFrom(domainSymptom: Symptom) -> SymptomInfo {
-        let heading = domainSymptom.title["en-GB"]!
-        let content = domainSymptom.description["en-GB"]!
+        let language = Bundle.preferredLocalizations(from: Array(domainSymptom.title.keys)).first ?? "en-GB"
+        let heading = domainSymptom.title[language]!
+        let content = domainSymptom.description[language]!
         
         let viewModel = SymptomInfo(isConfirmed: false, heading: heading, content: content)
         domainSymptoms[viewModel.id] = domainSymptom

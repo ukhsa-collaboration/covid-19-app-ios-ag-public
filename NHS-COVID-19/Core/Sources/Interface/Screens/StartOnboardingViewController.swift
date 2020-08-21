@@ -47,11 +47,11 @@ private class StartOnboardingStep: OnboardingStep {
     }()
     
     private lazy var stepDescription2: UIView = {
-        WelcomePoint(image: .welcomeQRCode, header: localize(.start_onboarding_step_2_header), body: localize(.start_onboarding_step_2_description))
+        WelcomePoint(image: .qrCode, header: localize(.start_onboarding_step_2_header), body: localize(.start_onboarding_step_2_description))
     }()
     
     private lazy var stepDescription3: UIView = {
-        WelcomePoint(image: .welcomeSymptoms, header: localize(.start_onboarding_step_3_header), body: localize(.start_onboarding_step_3_description))
+        WelcomePoint(image: .thermometer, header: localize(.start_onboarding_step_3_header), body: localize(.start_onboarding_step_3_description))
     }()
     
     private lazy var stepDescription4: UIView = {
@@ -88,7 +88,7 @@ private class StartOnboardingStep: OnboardingStep {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
-        stackView.spacing = .doubleSpacing
+        stackView.spacing = .standardSpacing
         stackView.layoutMargins = .inner
         stackView.isLayoutMarginsRelativeArrangement = true
         return [stackView]

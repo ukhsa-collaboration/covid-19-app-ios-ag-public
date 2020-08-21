@@ -57,11 +57,7 @@ public class NegativeTestResultViewController: UIViewController {
         let pleaseIsolateStack = UIStackView(arrangedSubviews: [titleLabel, endOfIsolationLabel])
         pleaseIsolateStack.axis = .vertical
         
-        let indicationLabel = UILabel()
-        indicationLabel.text = localize(.end_of_isolation_negative_test_result)
-        indicationLabel.styleAsSecondaryTitle()
-        
-        let infobox = InformationBox(views: [indicationLabel], style: .goodNews)
+        let infobox = InformationBox.indication.goodNews(localize(.end_of_isolation_negative_test_result))
         
         let explanationLabel = UILabel()
         explanationLabel.text = localize(.end_of_isolation_explanation_negative_test_result)

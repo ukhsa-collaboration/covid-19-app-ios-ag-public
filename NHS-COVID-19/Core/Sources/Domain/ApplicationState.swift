@@ -27,6 +27,7 @@ public struct RunningAppContext {
     public var checkInContext: CheckInContext?
     public var postcodeStore: PostcodeStore?
     public var openSettings: () -> Void
+    public var openURL: (URL) -> Void
     public var selfDiagnosisManager: SelfDiagnosisManager?
     public var isolationState: DomainProperty<IsolationState>
     public var testInfo: DomainProperty<IndexCaseInfo.TestInfo?>
@@ -37,6 +38,7 @@ public struct RunningAppContext {
     public var symptomsDateAndEncounterDateProvider: SymptomsOnsetDateAndEncounterDateProviding
     public var deleteAllData: () -> Void
     public var riskyCheckInsAcknowledgementState: AnyPublisher<RiskyCheckInsAcknowledgementState, Never>
+    public var qrCodeScanner: QRCodeScanning
 }
 
 public enum ApplicationState {
@@ -72,7 +74,7 @@ public enum ApplicationState {
     case failedToStart
     
     /// Application requires onboarding.
-    case authorizationOnboarding(requestPermissions: () -> Void)
+    case authorizationOnboarding(requestPermissions: () -> Void, openURL: (URL) -> Void)
     
     /// Application is set up, but can not run exposure detection. See `reason`.
     ///

@@ -46,14 +46,16 @@ private extension ApplicationServices {
             processingTaskRequestManager: MockProcessingTaskRequestManager(),
             metricManager: MockMetricManager(),
             notificationCenter: NotificationCenter(),
-            distributeClient: MockHTTPClient(),
+            distributeClient: SandboxDistributeClient(),
             apiClient: SandboxSubmissionClient(),
             iTunesClient: MockHTTPClient(),
             cameraManager: MockCameraManager(),
             encryptedStore: SandboxEncryptedStore(host: host),
             cacheStorage: FileStorage(forCachesOf: UUID().uuidString),
             venueDecoder: QRCode.fake,
-            appInfo: AppInfo(bundleId: UUID().uuidString, version: "1")
+            appInfo: AppInfo(bundleId: UUID().uuidString, version: "1"),
+            pasteboardCopier: MockPasteboardCopier(),
+            postcodeValidator: SandboxPostcodeValidator()
         )
     }
     

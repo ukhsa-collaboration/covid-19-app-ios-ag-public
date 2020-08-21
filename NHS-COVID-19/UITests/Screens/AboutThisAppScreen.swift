@@ -24,8 +24,8 @@ struct AboutThisAppScreen {
         app.staticTexts[localized: .about_this_app_how_this_app_works_paragraph3]
     }
     
-    var aboutThisAppParagraphFour: XCUIElement {
-        app.staticTexts[localized: .about_this_app_how_this_app_works_paragraph3]
+    var aboutThisAppButton: XCUIElement {
+        app.links[localized: .about_this_app_how_this_app_works_button]
     }
     
     var commonQuestionsHeading: XCUIElement {
@@ -74,6 +74,10 @@ struct AboutThisAppScreen {
     
     var softwareInformationHeading: XCUIElement {
         app.staticTexts[localized: .about_this_app_software_information_heading]
+    }
+    
+    var aboutThisAppFooterText: XCUIElement {
+        app.staticTexts[localized: .about_this_app_footer_text]
     }
     
     var appName: XCUIElement {

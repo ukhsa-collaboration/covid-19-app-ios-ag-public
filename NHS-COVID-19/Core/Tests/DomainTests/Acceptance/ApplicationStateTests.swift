@@ -4,10 +4,10 @@
 
 import Combine
 import Common
-import Integration
 import TestSupport
 import XCTest
 @testable import Domain
+@testable import Integration
 @testable import Scenarios
 
 class ApplicationStateTests: XCTestCase {
@@ -48,7 +48,9 @@ class ApplicationStateTests: XCTestCase {
                 encryptedStore: configuration.encryptedStore,
                 cacheStorage: configuration.cacheStorage,
                 venueDecoder: QRCode.forTests,
-                appInfo: AppInfo(bundleId: .random(), version: "1")
+                appInfo: AppInfo(bundleId: .random(), version: "1"),
+                pasteboardCopier: MockPasteboardCopier(),
+                postcodeValidator: PostcodeValidator(validPostcodes: ["B44"])
             )
             
             coordinator = ApplicationCoordinator(services: services, enabledFeatures: configuration.enabledFeatures)
@@ -122,13 +124,14 @@ class ApplicationStateTests: XCTestCase {
         try completeExposureNotificationActivation(authorizationStatus: .unknown)
         try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
         
-        guard case .authorizationOnboarding(let requestPermissions) = coordinator.state else {
+        guard case .authorizationOnboarding(let requestPermissions, let openUrl) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
-        let externalLink = ExternalLink.privacy
-        coordinator.openInBrowser(externalLink)
-        XCTAssertEqual(application.openedURL?.absoluteString, externalLink.rawValue)
+        let url = ExternalLink.privacy.url
+        openUrl(url)
+        
+        XCTAssertEqual(application.openedURL, url)
         
         requestPermissions()
         exposureNotificationManager.instanceAuthorizationStatus = .authorized
@@ -153,7 +156,7 @@ class ApplicationStateTests: XCTestCase {
         try completeExposureNotificationActivation(authorizationStatus: .authorized, status: .disabled)
         try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
         
-        guard case .authorizationOnboarding(let requestPermissions) = coordinator.state else {
+        guard case .authorizationOnboarding(let requestPermissions, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
@@ -201,7 +204,7 @@ class ApplicationStateTests: XCTestCase {
         try completeExposureNotificationActivation(authorizationStatus: .unknown)
         try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
         
-        guard case .authorizationOnboarding(let requestPermissions) = coordinator.state else {
+        guard case .authorizationOnboarding(let requestPermissions, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         

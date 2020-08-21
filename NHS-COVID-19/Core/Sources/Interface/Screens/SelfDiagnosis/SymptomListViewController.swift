@@ -60,10 +60,20 @@ public class SymptomListViewController: UIViewController {
         }
     }
     
+    private var symptomCardHeightConstraints = [(UIView, NSLayoutConstraint)]()
+    
+    override public func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        symptomCardHeightConstraints.forEach { view, constraint in
+            view.sizeToFit()
+            constraint.constant = view.bounds.height
+        }
+    }
+    
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(didTapCancel))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: localize(.cancel), style: .done, target: self, action: #selector(didTapCancel))
         
         let view = self.view!
         view.styleAsScreenBackground(with: traitCollection)
@@ -98,10 +108,11 @@ public class SymptomListViewController: UIViewController {
             let symptomCard = SymptomCard(viewModel: symptom)
             let symptomCardVC = UIHostingController(rootView: symptomCard)
             symptomCardVC.view.backgroundColor = UIColor.clear
-            let container = UIView()
-            container.addFillingSubview(symptomCardVC.view)
-            container.setContentHuggingPriority(.defaultLow, for: .horizontal)
-            symptomStack.addArrangedSubview(container)
+            symptomStack.addArrangedSubview(symptomCardVC.view)
+            
+            let heightConstraint = symptomCardVC.view.heightAnchor.constraint(equalToConstant: 0)
+            heightConstraint.isActive = true
+            symptomCardHeightConstraints.append((symptomCardVC.view, heightConstraint))
         }
         
         let reportButton = UIButton()

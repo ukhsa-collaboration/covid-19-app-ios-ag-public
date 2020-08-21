@@ -18,9 +18,7 @@ extension HomeScreenScenario {
     
     static func postcodeViewModel(parent: UIViewController) -> RiskLevelBanner.ViewModel? {
         if Self.riskyPostcodeEnabled {
-            return RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .constant(.low)) {
-                parent.showAlert(title: HomeScreenAlerts.moreInfoAlertTitle)
-            }
+            return RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .constant(.low))
         } else {
             return nil
         }
@@ -41,7 +39,7 @@ extension HomeScreenScenario {
                 ),
                 postcodeRiskViewModel: postcodeViewModel(parent: parent),
                 isolationViewModel: RiskLevelIndicator.ViewModel(isolationState: .constant(.notIsolating), paused: .constant(false)),
-                exposureNotificationsEnabled: exposureNotificationsEnabled.eraseToAnyPublisher(),
+                exposureNotificationsEnabled: exposureNotificationsEnabled.removeDuplicates().eraseToAnyPublisher(),
                 showOrderTestButton: .constant(showOrderTestButton),
                 shouldShowSelfDiagnosis: .constant(shouldShowSelfDiagnosis)
             )
@@ -81,8 +79,7 @@ public class HomeScreenAlerts {
     public static let testingInformationAlertTitle = "Testing information button tapped"
     public static let exposureNotificationAlertTitle = "Exposure notificiatons toggled"
     public static let aboutAlertTitle = "About tapped"
-    public static let moreInfoAlertTitle = "More info tapped"
-    public static let contactTracingAlertTitle = "Contact tracing tapped"
+    public static let postcodeBannerAlertTitle = "Postcode banner tapped"
 }
 
 private class Interactor: HomeViewController.Interacting {
@@ -100,6 +97,10 @@ private class Interactor: HomeViewController.Interacting {
         self.viewController = viewController
         self.checkInEnabled = checkInEnabled
         _setExposureNotifcationEnabled = setExposureNotifcationEnabled
+    }
+    
+    func didTapMoreInfo() {
+        viewController?.showAlert(title: HomeScreenAlerts.postcodeBannerAlertTitle)
     }
     
     func didTapDiagnosisButton() {
@@ -124,10 +125,6 @@ private class Interactor: HomeViewController.Interacting {
     
     func didTapAboutButton() {
         viewController?.showAlert(title: HomeScreenAlerts.aboutAlertTitle)
-    }
-    
-    func didtapContactTracingButton() {
-        viewController?.showAlert(title: HomeScreenAlerts.contactTracingAlertTitle)
     }
     
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never> {

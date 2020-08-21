@@ -45,6 +45,14 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
         return label
     }()
     
+    private lazy var errorTitle: UILabel = {
+        let label = UILabel()
+        label.text = localize(.postcode_entry_error_title)
+        label.styleAsErrorHeading()
+        label.isHidden = true
+        return label
+    }()
+    
     private lazy var errorDescription: UILabel = {
         let label = UILabel()
         label.text = localize(.postcode_entry_error_description)
@@ -90,15 +98,23 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
     private let description1 = UILabel().styleAsBody().set(text: localize(.postcode_entry_information_description_1))
     private let description2 = UILabel().styleAsBody().set(text: localize(.postcode_entry_information_description_2))
     
+    func stack(for labels: [UILabel]) -> UIStackView {
+        let stackView = UIStackView(arrangedSubviews: labels)
+        stackView.axis = .vertical
+        stackView.spacing = .standardSpacing
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = .inner
+        return stackView
+    }
+    
+    private lazy var informationBox: InformationBox = InformationBox.error(
+        title, exampleLabel, errorTitle, errorDescription, postcodeTextField
+    )
+    
     var content: [UIView] {
         [
-            title,
-            exampleLabel,
-            errorDescription,
-            postcodeTextField,
-            descriptionTitle,
-            description1,
-            description2,
+            informationBox,
+            stack(for: [descriptionTitle, description1, description2]),
         ]
     }
     
@@ -109,9 +125,11 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
             case .success:
                 break
             case .failure:
+                errorTitle.isHidden = false
                 errorDescription.isHidden = false
+                informationBox.error()
                 postcodeTextField.layer.borderColor = UIColor(.errorRed).cgColor
-                UIAccessibility.post(notification: .layoutChanged, argument: errorDescription)
+                UIAccessibility.post(notification: .layoutChanged, argument: errorTitle)
             }
         }
     }

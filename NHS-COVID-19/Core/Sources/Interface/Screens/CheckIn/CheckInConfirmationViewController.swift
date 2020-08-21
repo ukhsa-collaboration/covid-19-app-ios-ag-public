@@ -30,6 +30,11 @@ public class CheckInConfirmationViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override public func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
     override public func viewDidLoad() {
         super.viewDidLoad()
         
@@ -119,7 +124,7 @@ public class CheckInConfirmationViewController: UIViewController {
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: goHomeButton.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: goHomeButton.topAnchor, constant: -.standardSpacing),
         ])
         
         NSLayoutConstraint.activate([

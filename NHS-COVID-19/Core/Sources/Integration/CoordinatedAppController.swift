@@ -10,9 +10,9 @@ import UIKit
 
 public class CoordinatedAppController: AppController {
     
-    #warning("Make private when possible")
-    // After all of the extension in `Integration` is dissolved, we can make this property private.
-    let coordinator: ApplicationCoordinator
+    private let coordinator: ApplicationCoordinator
+    let pasteboardCopier: PasteboardCopying
+    
     private var cancellable: AnyCancellable?
     
     public var rootViewController = UIViewController()
@@ -29,7 +29,7 @@ public class CoordinatedAppController: AppController {
     
     fileprivate init(coordinator: ApplicationCoordinator) {
         self.coordinator = coordinator
-        
+        pasteboardCopier = coordinator.pasteboardCopier
         cancellable = coordinator.$state
             .regulate(as: .modelChange)
             .sink { [weak self] state in

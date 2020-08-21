@@ -19,23 +19,23 @@ public struct ToggleButton: View {
     }
     
     public var body: some View {
-        ZStack {
-            Color(.surface)
-                .clipShape(RoundedRectangle(cornerRadius: .menuButtonCornerRadius))
-                .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.04), radius: .stripeWidth, x: 0, y: 0)
-            HStack(spacing: .standardSpacing) {
+        HStack(spacing: .zero) {
+            ZStack {
                 Image(imageName)
                     .resizable()
                     .scaledToFit()
-                    .foregroundColor(Color(.nhsBlue))
-                    .frame(width: 30)
-                    .accessibility(hidden: true)
-                Toggle(text, isOn: $isToggledOn)
-                    .font(.body)
                     .foregroundColor(Color(.primaryText))
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .padding(.standardSpacing)
+                    .frame(width: 30, height: 30)
+                    .accessibility(hidden: true)
+            }.frame(width: 60)
+            Toggle(text, isOn: $isToggledOn)
+                .font(.body)
+                .foregroundColor(Color(.primaryText))
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.standardSpacing)
         }
+        .background(Color(.surface))
+        .clipShape(RoundedRectangle(cornerRadius: .menuButtonCornerRadius))
+        .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.04), radius: .stripeWidth, x: 0, y: 0)
     }
 }

@@ -124,7 +124,7 @@ public class SymptomsReviewViewController: UIViewController {
     
     private lazy var dateLabel = dynamicLabel(font: .title3, color: UIColor(.primaryText), text: localize(.symptom_review_date_heading))
     
-    private lazy var dateInfoBox = InformationBox(views: [dateLabel, dateContainer, noDateContainer], style: .noNews)
+    private lazy var dateInfoBox = InformationBox.error(dateLabel, dateContainer, noDateContainer)
     
     private lazy var textField: UITextField = {
         let textField = UITextField()
@@ -299,7 +299,7 @@ public class SymptomsReviewViewController: UIViewController {
         case .failure:
             errorBoxVC.view.isHidden = false
             scrollView.setContentOffset(.zero, animated: true)
-            dateInfoBox.style = .badNews
+            dateInfoBox.error()
         }
     }
     

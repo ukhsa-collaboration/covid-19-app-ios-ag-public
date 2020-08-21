@@ -143,7 +143,7 @@ class OnboardingFlowTests: XCTestCase {
             }
             
             let homeScreen = HomeScreen(app: app)
-            XCTAssert(homeScreen.aboutButton.exists)
+            XCTAssert(homeScreen.notIsolatingIndicator.exists)
         }
     }
     

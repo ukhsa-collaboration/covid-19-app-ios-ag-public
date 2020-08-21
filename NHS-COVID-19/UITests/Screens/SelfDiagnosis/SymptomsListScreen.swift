@@ -24,12 +24,8 @@ struct SymptomsListScreen {
         app.staticTexts[localized: .symptom_list_description]
     }
     
-    var symptom1Card: XCUIElement {
-        app.buttons[localized: .symptom_card_accessibility_label(heading: SymptomsListViewControllerScenario.symptom1Heading, content: SymptomsListViewControllerScenario.symptom1Content)]
-    }
-    
-    var symptom2Card: XCUIElement {
-        app.buttons[localized: .symptom_card_accessibility_label(heading: SymptomsListViewControllerScenario.symptom2Heading, content: SymptomsListViewControllerScenario.symptom2Content)]
+    func symptomCard(heading: String, content: String) -> XCUIElement {
+        app.buttons[localized: .symptom_card_accessibility_label(heading: heading, content: content)]
     }
     
     var reportButton: XCUIElement {

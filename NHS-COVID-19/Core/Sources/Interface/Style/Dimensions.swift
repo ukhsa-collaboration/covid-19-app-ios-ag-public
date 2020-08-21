@@ -14,7 +14,7 @@ extension CGFloat {
     public static let hairSpacing: CGFloat = 4
     
     public static let buttonCornerRadius: CGFloat = 8
-    public static let menuButtonCornerRadius: CGFloat = 10
+    public static let menuButtonCornerRadius: CGFloat = 15
     public static let buttonMinimumHeight: CGFloat = 54
     public static let stripeWidth: CGFloat = 4
     public static let stripeSpacing: CGFloat = 12

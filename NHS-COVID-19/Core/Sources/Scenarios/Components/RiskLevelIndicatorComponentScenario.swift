@@ -22,9 +22,9 @@ public class RiskLevelIndicatorComponentScenario: Scenario {
         func content() -> RiskLevelIndicator.ViewModel {
             switch self {
             case .isolatingThreeDays:
-                return RiskLevelIndicator.ViewModel(isolationState: .constant(.isolating(days: 3, endDate: Date())), paused: .constant(false))
+                return RiskLevelIndicator.ViewModel(isolationState: .constant(.isolating(days: 3, percentRemaining: 0.2, endDate: Date())), paused: .constant(false))
             case .isolatingFourteenDays:
-                return RiskLevelIndicator.ViewModel(isolationState: .constant(.isolating(days: 14, endDate: Date())), paused: .constant(false))
+                return RiskLevelIndicator.ViewModel(isolationState: .constant(.isolating(days: 14, percentRemaining: 0.2, endDate: Date())), paused: .constant(false))
             case .notIsolating:
                 return RiskLevelIndicator.ViewModel(isolationState: .constant(.notIsolating), paused: .constant(false))
             case .paused:

@@ -9,11 +9,10 @@ import Interface
 struct EndOfIsolationViewControllerInteractor: EndOfIsolationViewController.Interacting {
     
     var acknowledge: () -> Void
-    let externalLinkOpener: ExternalLinkOpening
+    let openURL: (URL) -> Void
     
     func didTapOnlineServicesLink() {
-        guard let link = URL(string: ExternalLink.nhs111Online.rawValue) else { return }
-        externalLinkOpener.openExternalLink(url: link)
+        openURL(ExternalLink.nhs111Online.url)
     }
     
     func didTapReturnHome() {

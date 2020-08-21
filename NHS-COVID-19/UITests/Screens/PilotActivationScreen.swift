@@ -12,12 +12,10 @@ struct PilotActivationScreen {
         app.staticTexts[localized: .authentication_code_title]
     }
     
-    var description1: XCUIElement {
-        app.staticTexts[localized: .authentication_code_description_1]
-    }
-    
-    var description2: XCUIElement {
-        app.staticTexts[localized: .authentication_code_description_2]
+    var descriptions: [XCUIElement] {
+        localize(.authentication_code_description).components(separatedBy: "\n").map {
+            app.staticTexts[verbatim: $0]
+        }
     }
     
     var textfieldHeading: XCUIElement {

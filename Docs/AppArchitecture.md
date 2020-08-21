@@ -117,7 +117,7 @@ This package contains the “glue” that connects the app’s UI to its core lo
 #### Testing Strategy
 
 * Where possible, the code is unit tested (`IntegrationTests`).
-* Where testing an individual unit is is not possible, the subsystem will be tested with integration tests internal to the module (`IntegrationTests`).
+* Where testing an individual unit is not possible, the subsystem will be tested with integration tests internal to the module (`IntegrationTests`).
 * Where integration affects UI, this is tested via “Journey” tests (`UITests`).
 
 ### Scenarios

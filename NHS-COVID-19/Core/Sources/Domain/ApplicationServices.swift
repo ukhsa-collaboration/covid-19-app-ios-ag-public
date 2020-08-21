@@ -21,6 +21,8 @@ public class ApplicationServices {
     let cacheStorage: FileStorage
     let venueDecoder: QRCode
     let appInfo: AppInfo
+    let pasteboardCopier: PasteboardCopying
+    let postcodeValidator: PostcodeValidating
     
     public init(
         application: Application,
@@ -36,7 +38,9 @@ public class ApplicationServices {
         encryptedStore: EncryptedStoring,
         cacheStorage: FileStorage,
         venueDecoder: QRCode,
-        appInfo: AppInfo
+        appInfo: AppInfo,
+        pasteboardCopier: PasteboardCopying,
+        postcodeValidator: PostcodeValidating
     ) {
         self.application = application
         self.exposureNotificationManager = exposureNotificationManager
@@ -52,6 +56,8 @@ public class ApplicationServices {
         self.cacheStorage = cacheStorage
         self.venueDecoder = venueDecoder
         self.appInfo = appInfo
+        self.pasteboardCopier = pasteboardCopier
+        self.postcodeValidator = postcodeValidator
     }
     
 }

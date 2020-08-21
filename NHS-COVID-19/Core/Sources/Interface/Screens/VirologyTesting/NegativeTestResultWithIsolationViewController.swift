@@ -63,11 +63,7 @@ public class NegativeTestResultWithIsolationViewController: UIViewController {
         pleaseIsolateStack.accessibilityTraits = [.staticText]
         pleaseIsolateStack.accessibilityLabel = localize(.positive_test_please_isolate_accessibility_label(days: daysToIsolate))
         
-        let indicationLabel = UILabel()
-        indicationLabel.text = localize(.negative_test_result_with_isolation_info)
-        indicationLabel.styleAsSecondaryTitle()
-        
-        let infobox = InformationBox(views: [indicationLabel], style: .warning, backgroundColor: UIColor(.surface))
+        let infobox = InformationBox.indication.warning(localize(.negative_test_result_with_isolation_info))
         
         let explanationLabel = UILabel()
         explanationLabel.text = localize(.negative_test_result_with_isolation_explanation)

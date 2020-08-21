@@ -30,29 +30,15 @@ public class VenueCheckInInformationViewController: UIViewController {
         return label
     }
     
-    private var howItWorksSection: UIView {
-        let titleLabel = UILabel()
-        titleLabel.styleAsHeading()
-        titleLabel.text = localize(.checkin_information_how_it_works_section_title)
-        
-        let descriptionLabel = UILabel()
-        descriptionLabel.styleAsBody()
-        descriptionLabel.text = localize(.checkin_information_how_it_works_section_description)
-        
-        return InformationBox(views: [titleLabel, descriptionLabel], style: .information)
-    }
+    private let howItWorksSection = InformationBox.information(
+        title: localize(.checkin_information_how_it_works_section_title),
+        body: [localize(.checkin_information_how_it_works_section_description)]
+    )
     
-    private var howItHelpsSection: UIView {
-        let titleLabel = UILabel()
-        titleLabel.styleAsHeading()
-        titleLabel.text = localize(.checkin_information_how_it_helps_section_title)
-        
-        let descriptionLabel = UILabel()
-        descriptionLabel.styleAsBody()
-        descriptionLabel.text = localize(.checkin_information_how_it_helps_section_description)
-        
-        return InformationBox(views: [titleLabel, descriptionLabel], style: .information)
-    }
+    private let howItHelpsSection = InformationBox.information(
+        title: localize(.checkin_information_how_it_helps_section_title),
+        body: [localize(.checkin_information_how_it_helps_section_description)]
+    )
     
     public init(interactor: Interacting) {
         self.interactor = interactor

@@ -47,7 +47,7 @@ class HousekeeperTests: XCTestCase {
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
             isolationLogicalState: IsolationLogicalState.isolating(
-                Isolation(untilStartOfDay: LocalDay(year: 2020, month: 7, day: 26, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false)), endAcknowledged: false, startAcknowledged: false
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 26, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false)), endAcknowledged: false, startAcknowledged: false
             ),
             hasPendingTestTokens: true
         )
@@ -61,7 +61,7 @@ class HousekeeperTests: XCTestCase {
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
             isolationLogicalState: IsolationLogicalState.isolationFinishedButNotAcknowledged(
-                Isolation(untilStartOfDay: LocalDay(year: 2020, month: 7, day: 23, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false))
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 23, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false))
             ),
             hasPendingTestTokens: false
         )
@@ -75,7 +75,7 @@ class HousekeeperTests: XCTestCase {
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet:
-                Isolation(untilStartOfDay: LocalDay(year: 2020, month: 7, day: 14, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false))
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 14, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false))
             ),
             hasPendingTestTokens: true
         )
@@ -89,7 +89,7 @@ class HousekeeperTests: XCTestCase {
             deletionPeriod: 4,
             today: GregorianDay(year: 2020, month: 7, day: 24),
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet:
-                Isolation(untilStartOfDay: LocalDay(year: 2020, month: 7, day: 21, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false))
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 21, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false))
             ),
             hasPendingTestTokens: true
         )
@@ -105,7 +105,7 @@ class HousekeeperTests: XCTestCase {
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet:
-                Isolation(untilStartOfDay: LocalDay(year: 2020, month: 7, day: 14, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false))
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 14, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false))
             ),
             hasPendingTestTokens: false
         )
@@ -119,7 +119,7 @@ class HousekeeperTests: XCTestCase {
             deletionPeriod: 4,
             today: GregorianDay(year: 2020, month: 7, day: 24),
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet:
-                Isolation(untilStartOfDay: LocalDay(year: 2020, month: 7, day: 20, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false))
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 20, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false))
             ),
             hasPendingTestTokens: true
         )
@@ -133,7 +133,7 @@ class HousekeeperTests: XCTestCase {
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet:
-                Isolation(untilStartOfDay: LocalDay(year: 2020, month: 7, day: 8, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false))
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 8, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false))
             ),
             hasPendingTestTokens: true
         )

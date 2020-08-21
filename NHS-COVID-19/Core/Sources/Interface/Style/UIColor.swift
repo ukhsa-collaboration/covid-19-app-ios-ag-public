@@ -22,6 +22,14 @@ public enum ColorName: String, CaseIterable, Identifiable {
     case warningIcon = "Warning Icon"
     case navigationBar = "Navigation Bar"
     
+    case styleTurquoise = "Style/Turquoise"
+    case styleGreen = "Style/Green"
+    case styleOrange = "Style/Orange"
+    case stylePink = "Style/Pink"
+    case stylePurple = "Style/Purple"
+    case styleRed = "Style/Red"
+    case styleBlue = "Style/Blue"
+    
     public var id: ColorName {
         self
     }

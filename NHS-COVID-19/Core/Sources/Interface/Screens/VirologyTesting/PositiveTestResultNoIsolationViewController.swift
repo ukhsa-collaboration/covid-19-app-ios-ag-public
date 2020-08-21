@@ -41,11 +41,7 @@ public class PositiveTestResultNoIsolationViewController: UIViewController {
         titleLabel.styleAsPageHeader()
         titleLabel.textAlignment = .center
         
-        let indicationLabel = UILabel()
-        indicationLabel.text = localize(.end_of_isolation_isolate_if_have_symptom_warning)
-        indicationLabel.styleAsSecondaryTitle()
-        
-        let infobox = InformationBox(views: [indicationLabel], style: .warning, backgroundColor: UIColor(.surface))
+        let infobox = InformationBox.indication.warning(localize(.end_of_isolation_isolate_if_have_symptom_warning))
         
         let explanationLabel = UILabel()
         explanationLabel.text = localize(.end_of_isolation_further_advice_visit)

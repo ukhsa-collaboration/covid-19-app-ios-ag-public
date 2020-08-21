@@ -1,0 +1,359 @@
+"onboarding_strapline_title" = "COVID-19";
+"onboarding_strapline_accessiblity_label" = "NHS Covid 19";
+
+"home_strapline_title" = "ٹیسٹ اینڈ ٹریس";
+"home_strapline_accessiblity_label" = "NHS ٹیسٹ اینڈ ٹریس";
+
+"unrecoverable_error_page_title" = "بدقسمتی سے آپ یہ ایپ نہیں چلا سکتے";
+"unrecoverable_error_title" = "اس کی وجہ ہو سکتی ہے:";
+"unrecoverable_error_description" = "محدود کردہ سیٹنگز (مثال کے طور پر اگر یہ کمپنی فون ہو)۔\n
+آپ کے فون میں موجود ایک اور ایپ یہی ٹیکنالوجی استعمال کر رہی ہے اور ایپ کو کام کرنے سے روک رہی ہے۔";
+
+"bluetooth_disabled_title" = "بلیو ٹوتھ ہمیشہ آن رکھا جانا چاہیے";
+"bluetooth_disabled_description_1" = "اگر آپ کا بلیو ٹوتھ بند ہوا تو یہ ایپ کام نہیں کرے گی۔ ";
+"bluetooth_disabled_description_2" = "یہ ایپ بیٹری بچانے والی بلیو ٹوتھ لو انرجی استعمال کرتے ہوئے اپنے نزدیک ایسے فون کی موجودگی کا تعین کرتی ہے جس میں یہ ایپ موجود ہو۔";
+"bluetooth_disabled_description_3" = "یہ ایپ آپ کا مقام معلوم نہیں کر سکتی اور آپ کی پرائیویسی محفوظ رہتی ہے۔";
+"bluetooth_disabled_description_4" = "براہ کرم سیٹنگز میں جا کر بلیو ٹوتھ آن کریں۔";
+
+"exposure_notification_disabled_title" = "اس ایپ کے کام کرنے کے لئے ضروری ہے کہ آپ سیٹنگز میں اپنے سامنا ہونے کے نوٹیفیکیشنز آن کریں۔";
+"exposure_notification_disabled_description_1" = "آپ کو انفیکشن کا خطرہ لاحق ہونے کی نشاندہی کرنے کے لئے لازمی ہے کہ آپ سامنا ہونے کے نوٹیفیکیشنز کا فیچر فعال کریں۔";
+"exposure_notification_disabled_description_2" = "سامنا ہونے کے اندراج کا طریقہ یہ ہے کہ آپ کی ڈیوائس کو بلیو ٹوتھ کے ذریعے دیگر صارفین سے بے ربط انکرپٹڈ آئی ڈیز موصول ہوتی ہیں اور آپ کی اپنی بے ربط آئی ڈی ان کی ڈیوائسز کو بھیجی جاتی ہے۔ یہ فیچر کسی بھی وقت غیر فعال کیا جا سکتا ہے۔";
+"exposure_notification_disabled_action" = "سیٹنگز میں جائیں";
+
+"authorization_denied_title" = "اس ایپ کے کام کرنے کے لئے ضروری ہے کہ آپ اپنی ڈیوائس میں اجازتیں دیں";
+"authorization_denied_description_1" = "اس ایپ کے چلنے کے لئے آپ کے فون کی ٹینالوجی درکار ہے (جیسے رابطے کے سراغ کے لئے بلیو ٹوتھ لو انرجی اور مقام پر چیک ان کے لئے کیمرا)۔ ایپ کے کام کرنے کے لئے ضروری ہے کہ آپ اشارہ دیے جانے پر اجازتیں قبول کریں۔";
+"authorization_denied_description_2" = "ممکن ہے کہ آپ کا فون انہیں 'سامنا ہونے کے نوٹیفیکیشنز' یا 'سامنا ہونے کا اندراج' کہے۔";
+"authorization_denied_description_3" = "سامنا ہونے کے اندراج کا طریقہ یہ ہے کہ آپ کی ڈیوائس کو بلیو ٹوتھ کے ذریعے دیگر صارفین سے بے ربط انکرپٹڈ آئی ڈیز موصول ہوتی ہیں اور آپ کی بے ربط آئی ڈی ان کی ڈیوائسز کو بھیجی جاتی ہے۔ یہ فیچر کسی بھی وقت غیر فعال کیا جا سکتا ہے مگر پھر ایپ کام نہیں کرے گی۔";
+"authorization_denied_action" = "سیٹنگز میں جائیں";
+
+"authentication_code_title" = "NHS کی COVID-19 ایپ میں بہتری لانے میں ہماری مدد کے لئے آپ کا شکریہ";
+"authentication_code_description" = "یہ ایپ NHS ٹیسٹ اینڈ ٹریس سروس میں کلیدی کردار ادا کرتی ہے جتنے زیادہ لوگ اسے استعمال کریں گے، ہم اسے اتنا ہی بہتر بنا سکیں گے۔
+ویکسین کی تیاری کے انتظار کے دوران NHS ٹیسٹ اینڈ ٹریس اور ایپ اپنی پسندیدہ اشیاء کی جانب لوٹنے کا بہترین راستہ ہے۔";
+"authentication_code_textfield_heading" = "اپنا منفرد کوڈ درج کریں";
+"authentication_code_textfield_example" = "مثال: 5apv-enka";
+"authentication_code_textfield_label" = "منفرد کوڈ";
+"authentication_code_info_heading" = "مجھے یہ کوڈ کہاں ملے گا؟";
+"authentication_code_info_description_1" = "براہ کرم اوپر ایک کوڈ درج کریں۔ آپ کو خط یا ای میل کے ذریعے یہ کوڈ ملا ہو گا، اور یہ ایسا نظر آئے گا:";
+"authentication_code_info_example" = "5apv-enka";
+"authentication_code_info_description_2" = "براہ کرم نوٹ کریں، یہ ایپ صرف 18 سال اور زائد عمر کے افراد کے استعمال کے لئے ہے۔";
+"authentication_code_button_title" = "جاری رکھیں";
+"authentication_code_error_description" = "کوڈ نہیں پہچانا گیا۔ براہ کرم یقینی بنائیں کہ آپ درست کوڈ استعمال کر رہے ہوں۔";
+
+"start_onboarding_step_title" = "یہ ایپ ایک دوسرے کو محفوظ رکھنے میں مدد دیتی ہے";
+"start_onboarding_step_subtitle" = "یہ ٹیسٹ اینڈ ٹریس کو اپنی جیب میں رکھنے کی مانند ہے۔
+یہ چند کارآمد کام ہیں جو آپ اس ایپ سے کر سکتے ہیں:";
+"start_onboarding_step_1_header" = "اطلاع وصول کریں";
+"start_onboarding_step_2_header" = "مقامات میں چیک ان کریں";
+"start_onboarding_step_3_header" = "اپنی علامات چیک کریں";
+"start_onboarding_step_4_header" = "علیحدگی کی الٹی گنتی";
+"start_onboarding_step_1_description" = "معلوم کریں کہ کب آپ ایپ کے دیگر ایسے صارفین کے نزدیک موجود تھے جنہوں نے کوروناوائرس کے مثبت ٹیسٹ کی اطلاع دی تھی۔";
+"start_onboarding_step_2_description" = "ایپ کے کیو آر کوڈ اسکینر سے بارز اور ریستورانوں جیسے مقامات پر بغیر کوئی فارم پر کیے چیک ان کریں۔ اگر مقام میں کورونا وائرس پایا گیا تو ایپ آپ کو آگاہ کرے گی۔";
+"start_onboarding_step_3_description" = "طبیعت ٹھیک نہیں؟ دیکھیں کہ آپ کی علامات کوروناوائرس تو نہیں اور ضرورت ہونے پر مفت ٹیسٹ آرڈر کریں۔";
+"start_onboarding_step_4_description" = "اگر آپ علیحدگی میں ہیں تو ایپ الٹے دن گنے گی اور آپ کو درست معلومات دے گی۔";
+"start_onboarding_step_detail" = "براہ کرم نوٹ کریں کہ یہ ایپ کا ٹیسٹ ورژن ہے جسے طبی تفتیش اور بہتری کے لئے بنایا گیا ہے اور یہ حتمی ورژن نہیں ہے۔";
+"start_onboarding_button_title" = "جاری رکھیں";
+"start_onboarding_step_warning" = "براہ کرم نوٹ کریں، یہ ایپ صرف 18 سال اور زائد عمر کے افراد کے استعمال کے لئے ہے۔";
+
+"postcode_entry_step_title" = "اپنے پوسٹ کوڈ کا پہلا حصہ درج کریں (پوسٹ کوڈ کا ضلع)";
+"postcode_entry_example_label" = "مثال: CE1B";
+"postcode_entry_textfield_label" = "پوسٹ کوڈ";
+"postcode_entry_information_title" = "ہمیں پوسٹ کوڈ کا ضلع کیوں درکار ہے؟";
+"postcode_entry_information_description_1" = "پوسٹ کوڈ کا ضلع مختلف علاقوں میں کورونا وائرس کے پھیلاؤ کے متعلق جاننے میں مدد دیتا ہے۔ اس سے یقینی بنایا جاتا ہے کہ ہم آپ کے علاقے میں عوامی صحت کا بہترین مشورہ دے سکیں۔";
+"postcode_entry_information_description_2" = "فکر مند نہ ہوں۔ آپ کے پوسٹ کوڈ کا ضلع آپ کے مقام کا پتہ لگانے کے لئے استعمال نہیں کیا جائے گا۔";
+"postcode_entry_continue_button_title" = "جاری رکھیں";
+"postcode_entry_error_title" = "غلط پوسٹ کوڈ ضلعی کوڈ";
+"postcode_entry_error_description" = "براہ کرم اپنے پوسٹ کوڈ کا ضلعی کوڈ درج کریں۔
+یہ پوسٹ کوڈ کا پہلا حصہ ہوتا ہے۔ مثال کے طور پر: E2, L36, PO30";
+
+"permissions_onboarding_step_title" = "ایپ کی اجازتیں طے کریں";
+"exposure_notification_permissions_onboarding_step_heading" = "'سامنا ہونے کے نوٹیفیکیشنز'";
+"notification_permissions_onboarding_step_heading" = "نوٹیفیکیشنز";
+"exposure_notification_permissions_onboarding_step_body" = "اس ایپ کو مناسب طریقے سے کام کرنے کے لئے 'بلیو ٹوتھ لو انرجی' درکار ہے۔ ممکن ہے کہ آپ کے فون پر اسے کچھ اور کہا جاتا ہو، جیسے 'سامنا ہونے کے نوٹیفیکیشنز' یا 'سامنا ہونے کا اندراج'۔";
+"notification_permissions_onboarding_step_body" = "یہ ایپ نوٹیفیکیشنز استعمال کرتی ہے۔ مثال کے طور پر - آپ کو بتانے کے لئے کہ آیا آپ نے کسی ایسے فرد کے نزدیک وقت گزارا ہے جس کا کوروناوائرس کا ٹیسٹ مثبت آیا ہو۔";
+"permissions_onboarding_step_detail" = "ایپ کے مناسب طور سے کام کرنے کے لئے ضروری ہے کہ آپ 'سامنا ہونے کے نوٹیفیکیشنز' کی اجازت دیں۔";
+"permissions_continue_button_title" = "جاری رکھیں";
+
+"privacy_title" = "اپنی رازداری کا تحفظ کریں";
+"privacy_description_paragraph1" = "NHS آپ کی رازداری کی قدر کرتا ہے۔ ایپ وائرس کا تعاقب کرتی ہے، یہ آپ کا تعاقب نہیں کرتی اور جان نہیں سکتی کہ آپ کون ہیں، کہاں ہیں یا کس کے ساتھ ہیں۔ تمام معلومات آپ کے فون میں محفوظ کی جاتی ہیں، نہ کہ مرکزی ڈیٹابیس میں۔ اس کا مطلب یہ ہے کہ اگر آپ کا کوروناوائرس کا ٹیسٹ مثبت آیا تو آپ NHS سے اپنے ڈیٹا کے اشتراک کا انتخاب کرتے ہیں تا کہ ہم ایپ کے دیگر صارفین کو مطلع کر سکیں۔ آپ یقین رکھ سکتے ہیں کہ ذاتی ڈیٹا کبھی آپ کے فون سے باہر نہیں جاتا اور آپ ہمہ وقت گمنام رہتے ہیں۔";
+"privacy_description_paragraph2" = "آپ اپنے ڈیٹا پر بھی اختیار رکھتے ہیں۔ یہ ایپ آپ کا ڈیٹا ریکارڈ کیے جانے کے بعد 14 دن تک (اور کیو آر کوڈ سے چیک ان کیے گئے مقامات کے لئے 21 دن تک) آپ کا ڈیٹا محفوظ رکھتی ہے۔ آپ جب چاہیں 'میرا تمام ڈیٹا مٹا دیں' منتخب کر کے یا ایپ کو ان انسٹال کر کے اپنا ڈیٹا مٹا سکتے ہیں۔ ممکن ہے کہ آپ کا فون ایپ سے تیار کردہ انتہائی بنیادی ڈیٹا محفوظ رکھے - یہ آپ کے فون کے آپریٹنگ سسٹم کے اختیار میں ہے، NHS کے اختیار میں نہیں۔";
+"privacy_description_paragraph4" = "یہ ایپ خود کار فیصلہ سازی استعمال کرتی ہے۔ اس کا مطلب ہے کہ افراد فیصلے نہیں لیتے۔ اس لئے کوئی آپ کا ڈیٹا نہیں دیکھتا۔";
+"privacy_notice_label" = "رازداری کا نوٹس";
+"terms_of_use_label" = "استعمال کی شرائط";
+"link_accessibility_hint" = "اپنے براؤزر میں کھولیں";
+"privacy_links_label" = "یہ ایپ فعال کرنے سے قبل براہ کرم رازداری کا نوٹس پڑھیں اور استعمال کی شرائط پر رضامندی ظاہر کریں۔";
+"privacy_links_accessibility_label" = "اہم: یہ ایپ فعال کرنے سے قبل براہ کرم رازداری کا نوٹس پڑھیں اور استعمال کی شرائط پر رضامندی ظاہر کریں۔";
+"privacy_yes_button" = "میں متفق ہوں";
+"privacy_no_button" = "نہیں، شکریہ";
+"privacy_no_button_accessibility_label" = "نہیں شکریہ، میں متفق نہیں";
+"privacy_header" = "آپ بااختیار ہیں";
+"data_header" = "آپ کا ڈیٹا";
+
+"home_diagnosis_button_title" = "علامات کی اطلاع دیں";
+"home_default_advice_button_title" = "تازہ ترین مشورہ پڑھیں";
+"home_isolation_advice_button_title" = "ذاتی علیحدگی کا مشورہ پڑھیں";
+"home_testing_information_button_title" = "مفت ٹیسٹ بک کروائیں";
+"home_about_the_app_button_title" = "اس ایپ کے بارے میں";
+"home_toggle_exposure_notification_title" = "رابطے کا سراغ";
+"home_toggle_exposure_notification_on" = "فعال";
+"home_toggle_exposure_notification_off" = "غیر فعال";
+"home_checkin_button_title" = "مقام پر چیک ان";
+"home_about_button_title" = "بارے میں";
+"home_about_button_title_accessibility_label" = "NHS ٹیسٹ اینڈ ٹریس ایپ کے بارے میں";
+"home_early_access_label" = "NHS کی COVID-19 ایپ کا ابتدائی رسائی کا اجراء ہے جسے مخصوص طور پر طبی تفتیشات کے لئے بنایا گیا ہے۔";
+"numbered_list_item %ld %@" = "%ld، %@";
+
+"risk_level_indicator_contact_tracing_active" = "آپ کی ایپ فعال ہے اور اسکین کر رہی ہے";
+"risk_level_indicator_contact_tracing_not_active" = "رابطے کا سراغ فعال نہیں";
+"risk_level_low" = "کم";
+"risk_level_medium" = "معتدل";
+"risk_level_high" = "شدید";
+"risk_level_banner_text %@ %@" = "%@ علاقے کے خطرے کی سطح ہے %@";
+"risk_level_more_info" = "مزید معلومات";
+"risk_level_more_info_accessibility_label" = "پوسٹ کوڈ کے ضلع میں خطرے کی اطلاعات کے متعلق مزید معلومات";
+
+"risk_level_screen_low_body" = "کم - آپ کی مقامی اتھارٹی کا حالیہ تجزیہ 'کم خطرے' کا ہے، جو ملک کے زیادہ تر دیگر حصوں میں انفیکشن کی سطح کے مماثل ہے";
+"risk_level_screen_medium_body" = "معتدل - آپ کی مقامی اتھارٹی یا کسی ہمسایہ اتھارٹی میں ملک کے دیگر حصوں کی نسبت انفیکشن کی سطح زیادہ ہے۔ مقامی علاقے کا پلان نافذ کر دیا گیا ہے اور ہدف کردہ کاروائیاں کی جا رہی ہیں تا کہ انفیکشن کی منتقلی کی رفتار گھٹائی جا سکے (مثلاً کیئر ہومز میں اضافی ٹیسٹس اور زیادہ خطرے والے گروہوں میں اضافی کمیونٹی ذمہ داری)۔ ممکن ہے کہ چند علاقوں کو اضافی قومی سپورٹ حاصل ہو (مثلاً حرکی ٹیسٹوں کی گنجائش)";
+"risk_level_screen_high_body" = "شدید- مقامی علاقے میں انفیکشن کی شدید سطح کے باعث آپ کی مقامی اتھارٹی یا ہمسایہ مقامی اتھارٹی باقی انگلینڈ میں موجود اقدامات کے علاوہ اضافی اقدامات کر رہی ہے تا کہ انفیکشن کی منتقلی کی رفتار گھٹائی جا سکے۔ کاروائی کا تفصیلی پلان نافذ کر دیا گیا ہے اور قومی مدد سے مقامی وسائل میں اضافہ کیا جا رہا ہے۔";
+"risk_level_screen_button" = "علاقے کے خطرے کےدرجات کی تصریحات";
+"risk_level_screen_title" = "خطرے کی سطح";
+"risk_level_screen_close_button" = "بند کریں";
+
+"user_notification_explanation" = "سامنے کی معلومات کی تصدیق کی جا رہی ہے";
+
+"checkin_open_settings_button_title" = "کیمرا کی اجازتیں دیں";
+"checkin_camera_permission_denial_title" = "آفیشل NHS کیو آر کوڈ اسکین کر کے کسی مقام پر چیک ان کریں۔";
+"checkin_camera_permission_denial_explanation" = "یہ ایپ مقامات پر چیک ان کرنے کے لئے آپ کا کیمرا استعمال کرتی ہے۔ براہ کرم آفیشل NHS کیو آر کوڈ اسکین کرنے کے لئے کیمرا کی اجازتیں دیں۔";
+"checkin_camera_permission_close_button_title" = "بند کریں";
+"checkin_camera_failure_title" = "معاف کیجیے گا، آپ کا فون مقام پر چیک ان کو سپورٹ نہیں کرتا";
+"checkin_camera_failure_description" = "براہ کرم دستی طور پر مقام میں چیک ان کریں۔ مزید معلومات کے لئے مقام کے عملے کے کسی رکن سے بات کریں۔";
+"checkin_camera_failure_button_title" = "صفحۂ اول پر واپس جائیں";
+"checkin_camera_qrcode_scanner_title" = "آفیشل NHS کیو آر کوڈ اسکین کر کے کسی مقام پر چیک ان کریں۔";
+"checkin_camera_qrcode_scanner_status_label" = "کیو آر کوڈ کی طرف رخ کریں";
+"checkin_camera_qrcode_scanner_description_label" = "اپنا فون ایسے رکھیں کہ آفیشل NHS کیو آر کوڈ درج بالا مقام تلاش کرنے کے فیچر میں ظاہر ہو۔ جب آپ کا فون کیو آر کوڈ کو پہچان لے گا تو ظاہر کرنے گا کہ آپ نے کامیابی سے چیک ان کر لیا ہے۔";
+"checkin_camera_qrcode_scanner_help_button_title %@" = "%@ مقام پر چیک ان کے متعلق مزید معلومات";
+"checkin_camera_qrcode_scanner_help_button_accessibility_label" = "مقام پر چیک ان کے متعلق مزید معلومات";
+"checkin_scanning_failure_title" = "کچھ گڑبڑ ہے";
+"checkin_scanning_failure_description" = "ممکن ہے کہ آپ کوئی ناقابل قبول آفیشل NHS کیو آر کوڈ اسکین کرنے کی کوشش کر رہے ہوں یا یہ مقام تسلیم شدہ نہ ہو۔\n
+براہ کرم دستی طور پر مقام میں چیک ان کریں۔ مزید معلومات کے لئے مقام کے عملے کے کسی رکن سے بات کریں۔";
+"checkin_scanning_failure_button_title" = "صفحۂ اول پر واپس جائیں";
+"checkin_confirmation_explanation" = "اسکین کرنے کا شکریہ، اب آپ چیک ان کر چکے ہیں۔
+رات بارہ بجے آپ خود کار طور پر چیک آؤٹ ہو جائیں گے یا کسی اور آفیشل NHS کیو آر کوڈ کو اسکین کرنے سے چیک آؤٹ ہو جائیں گے۔";
+"checkin_confirmation_button_title" = "صفحۂ اول پر واپس جائیں";
+"checkin_wrong_button_title" = "اس چیک ان کو منسوخ کریں";
+"checkin_confirmation_title %@ %@" = "\"%@\" میں اس وقت چیک ان کیا %@";
+"checkin_information_title" = "مقام پر چیک ان";
+"checkin_information_how_it_works_section_title" = "یہ کیسے کام کرتا ہے";
+"checkin_information_how_it_works_section_description" = "یہ ایپ آفیشل NHS کیو آر کوڈز استعمال کرتے ہوئے آپ کو آپ کی دورہ کی گئی جگہوں میں تیزی اور آسانی سے چیک ان کرنے میں مدد کرتی ہے۔\n
+اس ایپ کے استعمال سے اگر آپ کے حال میں دورہ کیے گئے کسی مقام پر وائرس سے رابطے میں آنے کا امکان ہو تو ہم آپ کو مطلع کر سکتے ہیں۔";
+"checkin_information_how_it_helps_section_title" = "یہ کیسے مدد کرتی ہے";
+"checkin_information_how_it_helps_section_description" = "ایپ کا یہ فیچر کاروباروں کے لئے رابطے کے سراغ کی سپورٹ آسان بناتا ہے۔\n
+یہ آپ اور دیگر افراد (اور مقام) کو بھی محفوظ رکھنے میں مدد دیتا ہے جبکہ آپ کی رازداری کا تحفظ برقرار رکھتا ہے۔";
+"checkin_information_button_title" = "چیک ان پر واپس جائيں";
+"checkin_qrcode_scanner_close_button_title" = "بند کریں";
+"checkin_risky_venue_information_title %@ %@" = "آپ حال ہی میں ایک مقام سے ہو کر آئے ہیں اور ممکن ہے کہ وہاں آپ کا کوروناوائرس سے رابطہ ہو گیا ہو۔";
+"checkin_risky_venue_information_description" = "ہم آپ کو بتانا چاہتے ہیں کہ ممکن ہے کہ جس مقام سے آپ ہو کر آئے ہیں، وہاں آپ کا کوروناوائرس سے رابطہ ہو گیا ہو۔\n
+اگرچہ وہاں موجودگی کے دوران آپ کے متاثر ہونے کا خدشہ کم ہے، مگر براہ کرم سماجی فاصلے کے تازہ ترین مشورے پر عمل کریں۔\n
+اگر آپ میں کوروناوائرس کی علامات ہیں تو ضروری ہے کہ آپ فوراً خود کو علیحدہ کر لیں۔ براہ کرم ایپ پر علامات چیک کرنے کا فیچر استعمال کریں اور مفت ٹیسٹ بک کروائیں۔";
+"checkin_risky_venue_information_button_title" = "صفحۂ اول پر واپس جائیں";
+
+"qrcoder_scanner_status_starting" = "NHS کا آفیشل کیو آر کوڈ کیسے اسکین کیا جائے";
+"qrcoder_scanner_status_requesting_permission" = "NHS کا آفیشل کیو آر کوڈ کیسے اسکین کیا جائے";
+"qrcoder_scanner_status_scanning" = "NHS کا آفیشل کیو آر کوڈ کیسے اسکین کیا جا رہا ہے";
+"qrcoder_scanner_status_processing" = "NHS کا آفیشل کیو آر کوڈ کیسے اسکین کیا جا رہا ہے";
+"qrcoder_scanner_status_running" = "NHS کا آفیشل کیو آر کوڈ کیسے اسکین کیا جائے";
+"qrcoder_scanner_status_stopped" = "NHS کا آفیشل کیو آر کوڈ کیسے اسکین کیا جائے";
+
+"alert_postcode_risk_change_title" = "آپ کے علاقے میں خطرے کی سطح بدل گئی ہے۔";
+"alert_postcode_risk_change_body" = "تفصیلات دیکھنے کے لئے ٹیپ کریں۔";
+"alert_venue_risk_change_title" = "ممکن ہے کہ جس مقام سے آپ حال ہی میں ہو کر آئے ہیں، وہاں آپ کا کورونا وائرس سے رابطہ ہو گیا ہو۔";
+"alert_venue_risk_change_body" = "تفصیلات دیکھنے کے لئے ٹیپ کریں۔";
+"alert_isolation_state_change_title" = "آپ کی علیحدگی کا مشورہ بدل گیا ہے۔";
+"alert_isolation_state_change_body" = "مزید تفصیلات کے لئے ایپ کھولیں۔";
+"alert_exposure_detection_title" = "ممکن ہے کہ آپ ایپ کے کسی ایسے صارف کے نزدیک رہے ہوں جسے کوروناوائرس ہے۔ براہ کرم گھر پر رہیں۔";
+"alert_exposure_detection_body" = "مزید تفصیلات کے لئے یہاں ٹیپ کریں۔";
+"alert_test_result_received_title" = "آپ کے ٹیسٹ کے نتائج آ گئے ہیں۔";
+"alert_test_result_received_body" = "تفصیلات دیکھنے کے لئے ٹیپ کریں۔";
+"alert_app_availability_changed_title" = "ایپ کی دستیابی بدل گئی ہے۔";
+"alert_app_availability_changed_body" = "تفصیلات دیکھنے کے لئے ٹیپ کریں۔";
+
+"diagnosis_questionnaire_title" = "علامات منتخب کریں";
+"loading" = "لوڈ ہو رہا ہے...";
+"loading_failed_action" = "دوبارہ کوشش کریں";
+"loading_failed_heading" = "کچھ گڑبڑ ہے";
+"loading_failed_body" = "دوبارہ کوشش کرنے سے پہلے براہ کرم چیک کریں کہ آپ کے فون کی موبائل ڈیٹا سیٹنگز آن ہوں، اپنا وائی فائی کنکشن چیک کریں (اگر استعمال میں ہو) اور یقینی بنائیں کہ ایئر پلین موڈ آف ہو۔";
+
+"symptom_card_accessibility_label %@ %@" = "%@۔ %@";
+"symptom_card_checked" = "نشانزد";
+"symptom_card_unchecked" = "غیر نشانزد";
+"symptom_onset_select_day %@" = "%@";
+
+"step_accessibility_label %ld %ld" = "قدم %ld از %ld";
+"step_label %ld %ld" = "%ld / %ld";
+
+"symptom_list_heading" = "وہ تمام علامات منتخب کریں جن کا آپ پر اطلاق ہوتا ہے";
+"symptom_list_description" = "اگر آپ میں ان میں سے کوئی علامات نہیں تو ابھی کچھ کرنے کی ضرورت نہیں ہے۔ اگر آپ میں ان میں سے کوئی علامات پیدا ہو جائیں تو ایپ پر ان کی اطلاع دیں اور مفت ٹیسٹ بک کروائیں۔";
+"symptom_list_primary_action" = "جاری رکھیں";
+"symptom_list_secondary_action" = "مجھ میں ان میں سے کوئی علامات نہیں";
+"symptom_list_error_heading" = "ایک مسئلہ ہے";
+"symptom_list_error_description" = "درکار ہے کہ آپ علامات منتخب کریں یا \"مجھ میں ان میں سے کوئی علامات نہیں\" منتخب کریں";
+"symptom_list_discard_alert_title" = "منتخب کردہ علامات مٹائیں";
+"symptom_list_discard_alert_body" = "منتخب کردہ تمام علامات کو مٹا دیا جائے گا۔";
+"symptom_list_discard_alert_cancel" = "منسوخ کریں";
+"symptom_list_discard_alert_discard" = "مٹائیں";
+
+"no_symptoms_heading" = "آپ کو کوروناوائرس ہونے کا امکان نہیں";
+"no_symptoms_body_1" = "اگر آپ میں ان میں سے کوئی علامات پیدا ہو جائیں تو ایپ پر ان کی اطلاع دیں اور مفت ٹیسٹ بک کروائیں۔";
+"no_symptoms_body_2" = "مزید مشورے کے لئے براہ کرم دیکھیے:";
+"no_symptoms_link" = "NHS 111 آن لائن";
+"no_symptoms_return_home_button" = "صفحۂ اول پر واپس جائیں";
+
+"no_symptoms_isolating_info_isolate_for" = "ذیل کے لئے خود کو علیحدہ کریں";
+"no_symptoms_isolating_info" = "بظاہر آپ میں کوروناوائرس کی علامات موجود نہیں۔";
+"no_symptoms_isolating_body" = "ابھی تک بظاہر آپ میں کوروناوائرس کی علامات موجود نہیں۔ علامات ظاہر ہونے میں 14 دن تک کا وقت لگ سکتا ہے۔ براہ کرم خود کو اور دیگر افراد کو محفوظ کرنے کے لئے گھر پر رہیں";
+"no_symptoms_isolating_advice" = "مزید مشورے کے لئے براہ کرم دیکھیے:";
+"no_symptoms_isolating_services_link" = "NHS 111 آن لائن";
+"no_symptoms_isolating_return_home_button" = "صفحۂ اول پر واپس جائیں";
+
+"positive_symptoms_please_isolate_for" = "براہ کرم  ذیل کے لئے علیحدگی اختیار کریں";
+"positive_symptoms_and_book_a_test" = "اور ٹیسٹ بک کروائیں";
+"positive_symptoms_you_might_have_corona" = "ممکن ہے کہ آپ کو کوروناوائرس ہو";
+"positive_symptoms_explanation" = "آپ کی علامات سے ظاہر ہوتا ہے کہ آپ کو کوروناوائرس ہونے کا امکان ہے۔ براہ کرم خود کو اور اپنے گھرانے کو علیحدہ کر لیں اور مفت ٹیسٹ بک کروائیں۔";
+"positive_symptoms_link_label" = "مزید مشورے کے لئے براہ کرم درج ذیل لنک پر جائیں:";
+"positive_symptoms_corona_test_button" = "مفت ٹیسٹ بک کروائیں";
+
+"exposure_acknowledgement_self_isolate_for" = "ذیل کے لئے خود کو علیحدہ کریں";
+"exposure_acknowledgement_warning" = "آپ کسی ایسے فرد سے رابطے میں آئے ہیں جسے کوروناوائرس ہے۔ براہ کرم خود کو اور دیگر افراد کو محفوظ کرنے کے لئے گھر پر رہیں۔";
+"exposure_acknowledgement_explaination_1" = "اگر آپ کی طبعیت ٹھیک نہیں تو آپ کو وائرس ہونے اور پھیلانے کا شدید خطرہ لاحق ہے۔";
+"exposure_acknowledgement_explaination_2" = "آپ کی علیحدگی کی الٹی گنتی کا آغاز ہو گیا ہے اور آپ کو بیان کردہ مکمل مدت کے لئے خود کو علیحدہ کر لینا چاہیے۔";
+"exposure_acknowledgement_link_label" = "مزید مشورے کے لئے براہ کرم دیکھیے:";
+"exposure_acknowledgement_link" = "NHS 111 آن لائن";
+"exposure_acknowledgement_button" = "میں سمجھ رہا/رہی ہوں";
+
+"isolation_until_date %@ %@" = "%@ کو ذیل تک %@";
+"isolation_until_date_title" = "آپ کو خود کو علیحدہ کرنے کی ضرورت ہے";
+
+"end_of_isolation_isolate_title" = "اچھی خبر ہے!";
+"end_of_isolation_has_passed_description date: %@ time: %@" = "%@ کو اس وقت آپ کی علیحدگی ختم کر دی گئی %@";
+"end_of_isolation_is_near_description date: %@ time: %@" = "آپ کی ذاتی علیحدگی %@ کو اس وقت ختم ہو جائے گی %@";
+"end_of_isolation_finished_description" = "آپ کی ذاتی علیحدگی اب مکمل ہو چکی ہے";
+"end_of_isolation_positive_text_no_isolation_title" = "اگرچہ آپ کا ٹیسٹ مثبت آیا تھا، آپ کی ذاتی علیحدگی کی مدت پوری ہو چکی ہے";
+"end_of_isolation_isolate_if_have_symptom_warning" = "لیکن اگر آپ کا درجۂ حرارت زیادہ ہے تو اس کے معتدل ہونے تک ذاتی علیحدگی جاری رکھیں";
+"end_of_isolation_negative_test_result" = "آپ کے کوروناوائرس کے ٹیسٹ کا نتیجہ منفی ہے";
+"end_of_isolation_explanation_1" = "اگر ڈاتی علیحدگی کے آغاز کے بعد سے آپ میں کوئی علامات ظاہر ہوئی ہیں، یا اس کے علاوہ آپ کے خیال میں آپ کو کوروناوائرس ہے تو براہ کرم علیحدہ رہیں۔";
+"end_of_isolation_explanation_negative_test_result" = "آپ کے ٹیسٹ کے نتیجے سے ظاہر ہوتا ہے کہ ٹیسٹ ہونے کے وقت آپ میں وائرس موجود نہیں تھا۔ اگر آپ میں علامات ظاہر ہو جائیں تو اس ایپ پر ان کی اطلاع دیں۔";
+"end_of_isolation_link_label" = "مزید مشورے کے لئے براہ کرم دیکھیے:";
+"end_of_isolation_online_services_link" = "NHS 111 آن لائن";
+"end_of_isolation_corona_back_to_home_button" = "صفحۂ اول پر واپس جائیں";
+"end_of_isolation_further_advice_visit" = "مزید مشورے کے لئے براہ کرم دیکھیے:";
+
+"positive_test_result_title" = "ذیل کے لئے ذاتی علیحدگی جاری رکھیں";
+"positive_test_result_info" = "آپ کے کوروناوائرس کے ٹیسٹ کا نتیجہ مثبت ہے۔";
+"positive_test_result_explanation" = "آپ کے ٹیسٹ کے نتیجے سے ظاہر ہوتا ہے کہ آپ کو کوروناوائرس ہے۔ آپ کو ای میل یا ٹیکسٹ میں مزید معلومات ارسال کی گئی ہیں۔";
+"positive_test_results_continue" = "جاری رکھیں";
+
+"negative_test_result_with_isolation_title" = "ذیل کے لئے ذاتی علیحدگی جاری رکھیں";
+"negative_test_result_with_isolation_info" = "آپ کے کوروناوائرس کے ٹیسٹ کا نتیجہ منفی ہے۔ ممکن ہے کہ آپ میں اب بھی علامات موجود ہوں، اس لئے براہ کرم علیحدگی میں رہیں۔";
+"negative_test_result_with_isolation_explanation" = "آپ کے ٹیسٹ کے نتائج سے ظاہر ہوتا ہے کہ ٹیسٹ ہونے کے وقت آپ میں وائرس نہیں تھا۔ آپ کو ای میل یا ٹیکسٹ میں مزید معلومات ارسال کی گئی ہیں۔";
+"negative_test_result_with_isolation_advice" = "مزید مشورے کے لئے براہ کرم دیکھیے:";
+"negative_test_result_with_isolation_service_link" = "NHS 111 آن لائن";
+"negative_test_result_with_isolation_back_to_home" = "صفحۂ اول پر واپس جائیں";
+
+"symptom_review_title" = "علامات پر نظر ثانی کریں";
+"symptom_review_heading" = "اپنے جوابات پر نظر ثانی کریں";
+"symptom_review_confirm_heading" = "آپ نے ان علامات پر 'ہاں' کہا:";
+"symptom_review_deny_heading" = "آپ نے ان علامات پر 'نہیں' کہا:";
+"symptom_review_date_heading" = "کیا آپ کو وہ تاریخ یاد ہے جب آپ نے پہلی مرتبہ ان میں سے کوئی علامات محسوس کیں؟";
+"symptom_review_date_placeholder" = "تاریخ منتخب کریں";
+"symptom_review_date_hint" = "تاریخ منتخب کرنے کا فیچر کھولنے کے لئے دو مرتبہ ٹیپ کریں";
+"symptom_review_no_date" = "مجھے تاریخ یاد نہیں";
+"symptom_review_no_date_accessability_label_checked" = "مجھے تاریخ یاد نہیں۔ نشانزد";
+"symptom_review_no_date_accessability_label_not_checked" = "مجھے تاریخ یاد نہیں۔ غیر نشانزد";
+"symptom_review_error_description" = "درکار ہے کہ آپ تاریخ درج کریں یا \"مجھے تاریخ یاد نہیں\" منتخب کریں";
+"symptom_review_button_submit" = "جمع کروائیں";
+"symptom_review_button" = "تبدیل کریں";
+"symptom_review_button_accessibility_label %@" = "ذیل کے لئے اپنا جواب تبدیل کریں %@";
+
+"virology_testing_information_title" = "ٹیسٹ کروانے کے متعلق معلومات";
+
+"virology_book_a_test_title" = "مفت ٹیسٹ بک کروائیں";
+"virology_book_a_test_heading" = "ٹیسٹ کروانا";
+"virology_book_a_test_paragraph1" = "'ابھی مفت ٹیسٹ بک کروائیں' منتخب کرنے سے آپ کو اس ایپ سے کوروناوائرس کے ٹیسٹ کی سرکاری ویب سائٹ پر بھیج دیا جائے گا۔";
+"virology_book_a_test_paragraph2" = "وہاں پہنچنے کے بعد آپ سے چند ذاتی تفصیلات (جیسے آپ کا پتہ) درج کرنے کی درخواست کی جائے گی تا کہ ٹیسٹ لیا جا سکے، مگر آپ کی درج کردہ کوئی بھی معلومات اس ایپ کو نہیں دی جائیں گی اور یہاں درج کردہ کوئی بھی معلومات وہاں نہیں دی جائیں گی۔";
+"virology_book_a_test_paragraph3" = "ایپ اور ویب سائٹ کے درمیان مشترک معلومات محض ایک ڈیجیٹل 'ٹوکن' ہو گا جس سے ہمیں آپ کے ٹیسٹ کے نتائج واپس ایپ میں لانے میں مدد ملے گی۔";
+"virology_book_a_test_paragraph4" = "ٹیسٹنگ کے عمل میں استعمال کیا جانے والا تمام ڈیٹا رازداری کے نوٹس میں تفصیل سے بیان کیا گيا ہے:";
+"virology_book_a_test_testing_privacy_notice" = "ٹیسٹنگ کی رازداری کا نوٹس";
+"virology_book_a_test_paragraph5" = "آپ یہ بھی معلوم کر سکتے ہیں کہ یہ ایپ آپ کا ہمیں دیا گيا ڈیٹا کیسے استعمال کرتی ہے:";
+"virology_book_a_test_app_privacy_notice" = "ایپ کی رازداری کا نوٹس";
+"virology_book_a_test_paragraph6" = "آپ صرف اپنا ٹیسٹ کروانے کے لئے یہ ایپ استعمال کر سکتے ہیں۔ کسی اور کا ٹیسٹ کروانے کے لئے کوروناوائرس کے ٹیسٹ کی سرکاری ویب سائٹ استعمال کریں۔";
+"virology_book_a_test_book_a_test_for_someone_else" = "کسی اور کے لئے ٹیسٹ بک کروائیں";
+"virology_book_a_test_button" = "ابھی مفت ٹیسٹ بک کروائیں";
+
+"about_this_app_title" = "اس ایپ کے بارے میں";
+"about_this_app_how_this_app_works_heading" = "یہ ایپ کیسے کام کرتی ہے";
+"about_this_app_how_this_app_works_paragraph1" = "یہ ایپ آپ کو اور دوسروں کو محفوظ رکھنے کے لئے رابطے کے سراغ کی ٹیکنالوجی استعمال کرتی ہے تا کہ ہم سب اپنی پسندیدہ اشیاء کی طرف لوٹ سکیں۔";
+"about_this_app_how_this_app_works_paragraph2" = "یہ ایپ نزدیک موجود دیگر ایپ صارفین کو نوٹ کرتی ہے اور ان کا اندراج کرتی ہے۔ اگر بعد میں ان میں سے کسی صارف کا کوروناوائرس کا ٹیسٹ مثبت آ گیا تو آپ کو مشورے کے ساتھ اطلاع دی جائے گی۔";
+"about_this_app_how_this_app_works_paragraph3" = "یہ ایپ آپ کو اپنی علامات رپورٹ کرنے اور ٹیسٹ کی ضرورت معلوم کرنے کے بھی قابل بناتی ہے۔ اسے استعمال کرتے ہوئے آپ اپنے دورہ کیے جانے والے مقامات پر تیزی اور آسانی سے چیک ان کرنے کے لئے آفیشل NHS کیو آر کوڈز اسکین کر سکتے ہیں۔";
+"about_this_app_how_this_app_works_button" = "یہ ایپ کیسے کام کرتی ہے";
+"about_this_app_common_questions_heading" = "عام سوالات";
+"about_this_app_common_questions_description" = "NHS کی COVID-19 ایپ اور وسعیع تر ٹیسٹ اینڈ ٹریس پروگرام کے متعلق مزید جاننے کے لئے ہمارے عام سوالات کے صفحے پر جائیں۔";
+"about_this_app_common_questions_button" = "عام سوالات";
+"about_this_app_our_policies_heading" = "ہماری پالیسیاں";
+"about_this_app_our_policies_description" = "ہماری پالیسیوں میں آپ کو ایپ کے استعمال، ہمارے آپ کے ڈیٹا کے استعمال کے طریقے، اور ایپ کے صارف کی رسائی کو سپورٹ کرنے کے طریقے کے متعلق بتایا جاتا ہے۔";
+"about_this_app_our_policies_terms_of_use_button" = "استعمال کی شرائط";
+"about_this_app_our_policies_privacy_notice_button" = "رازداری کا نوٹس";
+"about_this_app_our_policies_accessibility_statement_button" = "رسائی کا بیان";
+"about_this_app_footer_text" = "ایپ کے استعمال سے خود کو اور دیگر افراد کو محفوظ رکھنے کے لئے شکریہ!";
+
+"about_this_app_my_data_heading" = "آپ کے ڈیٹا کے متعلق";
+"about_this_app_my_data_description" = "اس ایپ کو آپ کے رجسٹریشن میں شامل کردہ پوسٹ کوڈ ضلع، گزشتہ 14 دن میں آپ کے چیک ان کی گئی جگہوں، آپ کے آخری ٹیسٹ کا نتیجہ اور آپ کی علامات کی ابتدائی تاریخ تک رسائی حاصل ہے۔ آپ جب چاہیں محفوظ کردہ ڈیٹا مٹا سکتے ہیں۔";
+"about_this_app_my_data_button" = "میرے ڈیٹا کا انتظام";
+
+"about_this_app_software_information_heading" = "سافٹ ویئر کی معلومات";
+"about_this_app_software_information_app_name %@" = "ایپ کا نام: %@";
+"about_this_app_software_information_version %@" = "ورژن: %@";
+"about_this_app_software_information_date_of_release" = "اجراء کی تاریخ: 08/2020";
+"about_this_app_software_information_entity_name_and_address" = "
+ادارے کا نام اور پتہ:
+NHS ٹیسٹ اینڈ ٹریس
+شعبۂ صحت و سماجی بہبود
+39 وکٹوریا اسٹریٹ
+ویسٹ منسٹر
+لندن
+SW1H 0EU
+UK";
+
+"mydata_title" = "میرا ڈیٹا";
+"mydata_section_postcode_description" = "پوسٹ کوڈ ڈسٹرکٹ";
+"mydata_section_test_result_description" = "آخری مرتبہ لیے گئے ٹیسٹ کا نتیجہ";
+"mydata_section_venue_history_description" = "مقام کی تاریخ";
+"mydata_section_symptoms_description" = "علامات ظاہر ہونے کی تاریخ";
+"mydata_section_encounter_description" = "سامنا ہونے کی تاریخ";
+"mydata_section_date_description" = "تاریخ";
+"mydata_date_description %@" = "%@";
+"mydata_date_interval_description %@ %@" = "%@";
+"mydata_test_result_positive" = "مثبت";
+"mydata_test_result_negative" = "منفی";
+"mydata_data_deletion_button_title" = "میرا تمام ڈیٹا مٹا دیں";
+"mydata_delete_data_alert_title" = "آپ کا ایپ ڈیٹا مٹائیں؟";
+"mydata_delete_data_alert_description" = "اس ایپ کے ذریعے آپ کی دی گئی تمام معلومات کو صرف عوامی صحت کے مقاصد سے استعمال کیا جائے گا۔ آپ کی تصدیق کے بعد رکھا گیا ڈیٹا مٹا دیا جائے گا۔ براہ کرم نوٹ کریں کہ آپ کا فون کچھ ڈیٹا برقرار رکھے گا، جیسا کہ وہ ڈیٹا جو آپ کا فون دیگر یوزر ایپس کے صارفین کے ریکارڈ کے لئے محفوظ رکھتا ہے۔ یہ ڈیٹا ایپ کے زیر اختیار نہیں بلکہ آپ کے فون کے آپریٹنگ سسٹم کے زیر اختیار ہے۔ اگر آپ بعد میں اس ایپ کا استعمال جاری رکھنا چاہتے ہیں تو آپ کو اسے دوبارہ سیٹ کرنا ہو گا۔";
+"mydata_delete_data_alert_button_title" = "ڈیٹا مٹائیں";
+
+"accessability_error_os_out_of_date" = "آپریٹنگ سسٹم متروک ہے";
+"accessability_error_update_the_app" = "اپنا سافٹ ویئر اپ ڈیٹ کریں";
+"accessability_error_cannot_run_app" = "بدقسمتی سے آپ یہ ایپ نہیں چلا سکتے";
+
+"link_privacy" = "https://www.gov.uk/government/publications/nhs-test-and-trace-app-privacy-information";
+"link_our_policies" = "https://covid19.nhs.uk/our-policies.html>";
+"link_faq" = "https://faq.covid19.nhs.uk/";
+"link_about_the_app" = "https://covid19.nhs.uk";
+"link_accessibility_statement" = "https://covid19.nhs.uk/accessibility.html";
+"link_isolation_advice" = "https://faq.covid19.nhs.uk/article/KA-01099/en-us";
+"link_general_advice" = "https://www.gov.uk/coronavirus";
+"link_more_info_on_postcode_risk" = "https://faq.covid19.nhs.uk/article/KA-01101/en-us";
+"link_book_a_test_for_someone_else" = "https://www.nhs.uk/conditions/coronavirus-covid-19/testing-and-tracing/get-a-test-to-check-if-you-have-coronavirus/";
+"link_testing_privacy_notice" = "https://www.gov.uk/government/publications/coronavirus-covid-19-testing-privacy-information/testing-for-coronavirus-privacy-information";
+"link_nhs111_online" = "https://111.nhs.uk/";
+"link_how_this_app_works" = "https://covid19.nhs.uk/about-the-app.html";
+
+"cancel" = "منسوخ کریں";
+"back" = "واپس جائیں";

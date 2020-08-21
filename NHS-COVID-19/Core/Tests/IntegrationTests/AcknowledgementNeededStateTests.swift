@@ -17,7 +17,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
             testResultAckState: .notNeeded,
             riskyCheckInsAckState: .notNeeded
         )
-        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context, externalLinkOpener: MockExternalLinkOpener()).await().get()
+        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         if case .notNeeded = state {
             XCTAssert(true)
         }
@@ -31,7 +31,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
             riskyCheckInsAckState: .notNeeded
         )
         
-        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context, externalLinkOpener: MockExternalLinkOpener()).await().get()
+        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         if case .positiveTestResultAckNeeded(_, let isolationEndDate) = state {
             XCTAssert(true)
             XCTAssertEqual(date, isolationEndDate)
@@ -45,7 +45,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
             riskyCheckInsAckState: .notNeeded
         )
         
-        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context, externalLinkOpener: MockExternalLinkOpener()).await().get()
+        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         if case .negativeTestResultAckNeeded = state {
             XCTAssert(true)
         }
@@ -59,7 +59,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
             riskyCheckInsAckState: .notNeeded
         )
         
-        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context, externalLinkOpener: MockExternalLinkOpener()).await().get()
+        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         if case .negativeTestResultAckNeeded(_, let isolationEndDate) = state {
             XCTAssert(true)
             XCTAssertEqual(date, isolationEndDate)
@@ -68,7 +68,8 @@ class AcknowledgementNeededStateTests: XCTestCase {
     
     func testIsolationEndAckNeeded() throws {
         let isolation = Isolation(
-            untilStartOfDay: LocalDay.today,
+            fromDay: .today,
+            untilStartOfDay: .today,
             reason: .indexCase(hasPositiveTestResult: false)
         )
         let context = makeRunningAppContext(
@@ -77,7 +78,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
             riskyCheckInsAckState: .notNeeded
         )
         
-        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context, externalLinkOpener: MockExternalLinkOpener()).await().get()
+        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         if case .isolationEndAckNeeded(_, let isolationEndDate, let showAdvisory) = state {
             XCTAssert(true)
             XCTAssertEqual(isolationEndDate, isolation.endDate)
@@ -87,7 +88,8 @@ class AcknowledgementNeededStateTests: XCTestCase {
     
     func testPositiveTestResultOverIsolationEndAckNeeded() throws {
         let isolation = Isolation(
-            untilStartOfDay: LocalDay.today,
+            fromDay: .today,
+            untilStartOfDay: .today,
             reason: .indexCase(hasPositiveTestResult: false)
         )
         
@@ -97,7 +99,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
             riskyCheckInsAckState: .needed(acknowledge: {}, venueName: "Venue", checkInDate: Date())
         )
         
-        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context, externalLinkOpener: MockExternalLinkOpener()).await().get()
+        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         
         if case .positiveTestResultAckNeeded = state {
             XCTAssert(true)
@@ -106,7 +108,8 @@ class AcknowledgementNeededStateTests: XCTestCase {
     
     func testNegativeTestResultOverIsolationEndAckNeeded() throws {
         let isolation = Isolation(
-            untilStartOfDay: LocalDay.today,
+            fromDay: .today,
+            untilStartOfDay: .today,
             reason: .indexCase(hasPositiveTestResult: false)
         )
         
@@ -116,7 +119,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
             riskyCheckInsAckState: .needed(acknowledge: {}, venueName: "Venue", checkInDate: Date())
         )
         
-        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context, externalLinkOpener: MockExternalLinkOpener()).await().get()
+        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         
         if case .negativeTestResultAckNeeded = state {
             XCTAssert(true)
@@ -132,7 +135,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
             riskyCheckInsAckState: .needed(acknowledge: {}, venueName: expectedVenueName, checkInDate: expectedCheckInDate)
         )
         
-        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context, externalLinkOpener: MockExternalLinkOpener()).await().get()
+        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         
         if case let .riskyVenueNeeded(_, venueName, checkInDate) = state,
             venueName == expectedVenueName,
@@ -150,6 +153,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
             checkInContext: nil,
             postcodeStore: nil,
             openSettings: {},
+            openURL: { _ in },
             selfDiagnosisManager: nil,
             isolationState: Just(.noNeedToIsolate).domainProperty(), testInfo: Just(nil).domainProperty(),
             isolationAcknowledgementState: Result.success(isolationAckState).publisher.eraseToAnyPublisher(),
@@ -160,7 +164,8 @@ class AcknowledgementNeededStateTests: XCTestCase {
             testResultAcknowledgementState: Result.success(testResultAckState).publisher.eraseToAnyPublisher(),
             symptomsDateAndEncounterDateProvider: MockSymptomsOnsetDateAndEncounterDateProvider(),
             deleteAllData: {},
-            riskyCheckInsAcknowledgementState: Result.success(riskyCheckInsAckState).publisher.eraseToAnyPublisher()
+            riskyCheckInsAcknowledgementState: Result.success(riskyCheckInsAckState).publisher.eraseToAnyPublisher(),
+            qrCodeScanner: MockQRCodeScanner()
         )
     }
     
@@ -183,8 +188,4 @@ class AcknowledgementNeededStateTests: XCTestCase {
             nil
         }
     }
-}
-
-private struct MockExternalLinkOpener: ExternalLinkOpening {
-    func openExternalLink(url: URL) {}
 }

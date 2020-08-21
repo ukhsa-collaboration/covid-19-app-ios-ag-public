@@ -45,7 +45,7 @@ public class LogoStrapline: UIView {
         let image = UIImage(.logoAlt)
         let logoView = UIImageView(image: image)
         logoView.contentMode = .scaleAspectFit
-        logoView.tintColor = UIColor(colorName)
+        logoView.tintColor = UIColor(.nhsBlue)
         
         let titleLabel = UILabel()
         titleLabel.adjustsFontForContentSizeCategory = false

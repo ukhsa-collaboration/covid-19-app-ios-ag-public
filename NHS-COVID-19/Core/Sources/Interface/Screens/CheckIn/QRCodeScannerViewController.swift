@@ -32,9 +32,9 @@ public class QRCodeScannerViewController: UIViewController {
         didSet {
             switch state {
             case .running:
-                captureSession.startRunning()
+                captureSession?.startRunning()
             case .processing, .stopped:
-                captureSession.stopRunning()
+                captureSession?.stopRunning()
             case .failed:
                 interactor.didFailedToInitializeCamera()
             default:
@@ -43,12 +43,13 @@ public class QRCodeScannerViewController: UIViewController {
         }
     }
     
-    private var captureSession = AVCaptureSession()
+    private var captureSession: AVCaptureSession?
     private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     private var scanView: ScanView!
     
     private var cameraPermissionState: AnyPublisher<CameraPermissionState, Never>
     private var requestCameraAccess: () -> Void
+    private var createCaptureSession: (@escaping ([AVMetadataMachineReadableCodeObject]) -> Void) -> AVCaptureSession?
     private var cancellable: AnyCancellable?
     
     private var isCameraSetup: Bool = false
@@ -61,12 +62,14 @@ public class QRCodeScannerViewController: UIViewController {
         interactor: Interacting,
         cameraPermissionState: AnyPublisher<CameraPermissionState, Never>,
         requestCameraAccess: @escaping () -> Void,
+        createCaptureSession: @escaping (@escaping ([AVMetadataMachineReadableCodeObject]) -> Void) -> AVCaptureSession?,
         completion: @escaping (String) -> Void
     ) {
         self.interactor = interactor
         self.cameraPermissionState = cameraPermissionState
         self.requestCameraAccess = requestCameraAccess
         self.completion = completion
+        self.createCaptureSession = createCaptureSession
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -82,6 +85,11 @@ public class QRCodeScannerViewController: UIViewController {
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+    
+    override public func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     override public func viewDidAppear(_ animated: Bool) {
@@ -163,32 +171,13 @@ public class QRCodeScannerViewController: UIViewController {
     private func setupCamera() {
         guard !isCameraSetup else { return }
         
-        guard let captureDevice = AVCaptureDevice.default(for: .video) else {
+        guard let session = createCaptureSession(scan) else {
             state = .failed
             return
         }
+        captureSession = session
         
-        do {
-            let input = try AVCaptureDeviceInput(device: captureDevice)
-            
-            captureSession.addInput(input)
-            
-            let captureMetadataOutput = AVCaptureMetadataOutput()
-            captureSession.addOutput(captureMetadataOutput)
-            
-            guard captureMetadataOutput.availableMetadataObjectTypes.contains(.qr) else {
-                state = .failed
-                return
-            }
-            
-            captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
-            captureMetadataOutput.metadataObjectTypes = [.qr]
-        } catch {
-            state = .failed
-            return
-        }
-        
-        videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        videoPreviewLayer = AVCaptureVideoPreviewLayer(session: session)
         videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
         videoPreviewLayer?.frame = view.layer.bounds
         videoPreviewLayer.map { view.layer.insertSublayer($0, at: 0) }
@@ -196,6 +185,25 @@ public class QRCodeScannerViewController: UIViewController {
         isCameraSetup = true
         
         state = .running
+    }
+    
+    private func scan(qrCodes: [AVMetadataMachineReadableCodeObject]) {
+        qrCodes.first.map { qrCode in
+            guard let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: qrCode) else {
+                return
+            }
+            
+            guard self.scanView.scanWindowBound.contains(barCodeObject.bounds) else {
+                return
+            }
+            
+            if let payload = qrCode.stringValue {
+                self.state = .scanning
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.process(payload)
+                }
+            }
+        }
     }
     
     private func process(_ payload: String) {
@@ -219,35 +227,5 @@ public class QRCodeScannerViewController: UIViewController {
     
     @objc func closeButtonTapped() {
         dismiss(animated: true, completion: nil)
-    }
-}
-
-extension QRCodeScannerViewController: AVCaptureMetadataOutputObjectsDelegate {
-    
-    public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        let qrCodes = metadataObjects.compactMap { object -> AVMetadataMachineReadableCodeObject? in
-            guard let code = object as? AVMetadataMachineReadableCodeObject, code.type == .qr else {
-                return nil
-            }
-            
-            return code
-        }
-        
-        qrCodes.first.map { qrCode in
-            guard let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: qrCode) else {
-                return
-            }
-            
-            guard self.scanView.scanWindowBound.contains(barCodeObject.bounds) else {
-                return
-            }
-            
-            if let payload = qrCode.stringValue {
-                self.state = .scanning
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.process(payload)
-                }
-            }
-        }
     }
 }

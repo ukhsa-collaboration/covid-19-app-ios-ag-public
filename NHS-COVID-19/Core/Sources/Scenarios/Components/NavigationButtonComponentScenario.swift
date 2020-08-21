@@ -23,13 +23,13 @@ public class NavigationButtonComponentScenario: Scenario {
         func content() -> NavigationButton {
             switch self {
             case .checkIn:
-                return NavigationButton(imageName: .homeCheckin, text: localize(.home_checkin_button_title)) {}
+                return NavigationButton(imageName: .qrCode, foregroundColor: Color(.background), backgroundColor: Color(.stylePurple), text: localize(.home_checkin_button_title)) {}
             case .advice:
-                return NavigationButton(imageName: .homeAdvice, text: localize(.home_default_advice_button_title)) {}
+                return NavigationButton(imageName: .read, foregroundColor: Color(.background), backgroundColor: Color(.stylePink), text: localize(.home_default_advice_button_title)) {}
             case .isolationAdvice:
-                return NavigationButton(imageName: .homeAdvice, text: localize(.home_isolation_advice_button_title)) {}
+                return NavigationButton(imageName: .read, foregroundColor: Color(.background), backgroundColor: Color(.stylePink), text: localize(.home_isolation_advice_button_title)) {}
             case .symptoms:
-                return NavigationButton(imageName: .homeSymptoms, text: localize(.home_diagnosis_button_title)) {}
+                return NavigationButton(imageName: .thermometer, foregroundColor: Color(.background), backgroundColor: Color(.styleOrange), text: localize(.home_diagnosis_button_title)) {}
             }
         }
     }

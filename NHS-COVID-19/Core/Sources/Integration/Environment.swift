@@ -52,7 +52,7 @@ private extension HTTPRemote {
 
 private extension QRCode {
     
-    init(for signatureKey: SignatureKey) {
+    init(for signatureKey: SigningKeyInfo) {
         self.init(
             keyId: signatureKey.id,
             key: try! P256.Signing.PublicKey(pemRepresentationCompatibility: signatureKey.pemRepresentation)

@@ -59,11 +59,8 @@ public class EndOfIsolationViewController: UIViewController {
         endOfIsolationLabel.textAlignment = .center
         endOfIsolationLabel.isAccessibilityElement = false
         
-        let indicationLabel = UILabel()
-        indicationLabel.text = localize(.end_of_isolation_isolate_if_have_symptom_warning)
-        indicationLabel.styleAsSecondaryTitle()
+        let infobox = InformationBox.indication.warning(localize(.end_of_isolation_isolate_if_have_symptom_warning))
         
-        let infobox = InformationBox(views: [indicationLabel], style: .warning, backgroundColor: UIColor(.surface))
         infobox.isHidden = !showAdvisory
         
         let explanation1Label = UILabel()

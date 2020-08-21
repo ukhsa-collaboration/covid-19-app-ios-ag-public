@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDECodeSnippetCompletionPrefix</key>
+	<string></string>
+	<key>IDECodeSnippetCompletionScopes</key>
+	<array>
+		<string>All</string>
+	</array>
+	<key>IDECodeSnippetContents</key>
+	<string>class &lt;#ScreenTests#&gt;: XCTestCase {
+    
+    @Propped
+    private var runner: ApplicationRunner&lt;&lt;#ScreenScenario#&gt;&gt;
+    
+    func testBasics() throws {
+        try runner.run { app in
+            let screen = &lt;#Screen#&gt;(app: app)                        
+        }
+    }
+}</string>
+	<key>IDECodeSnippetIdentifier</key>
+	<string>07B91C66-8228-41BB-BEBB-3FB4B63DD387</string>
+	<key>IDECodeSnippetLanguage</key>
+	<string>Xcode.SourceCodeLanguage.Swift</string>
+	<key>IDECodeSnippetSummary</key>
+	<string></string>
+	<key>IDECodeSnippetTitle</key>
+	<string>Screen Tests</string>
+	<key>IDECodeSnippetUserSnippet</key>
+	<true/>
+	<key>IDECodeSnippetVersion</key>
+	<integer>0</integer>
+</dict>
+</plist>

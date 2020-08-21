@@ -43,7 +43,7 @@ public class PrivacyViewController: UIViewController {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fill
-        stackView.spacing = .doubleSpacing
+        stackView.spacing = .standardSpacing
         stackView.layoutMargins = .standard
         stackView.isLayoutMarginsRelativeArrangement = true
         
@@ -88,7 +88,7 @@ public class PrivacyViewController: UIViewController {
         
         let stackView = UIStackView(arrangedSubviews: [logoStrapline, imageView, privacyTitle])
         stackView.axis = .vertical
-        stackView.spacing = .tripleSpacing
+        stackView.spacing = .standardSpacing
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.layoutMargins = .inner
         return stackView
@@ -100,6 +100,10 @@ public class PrivacyViewController: UIViewController {
         linksHeader.setDynamicTextStyle(.headline)
         linksHeader.text = localize(.privacy_links_label)
         linksHeader.accessibilityLabel = localize(.privacy_links_accessibility_label)
+        
+        let dataDescription3 = UILabel()
+        dataDescription3.styleAsBody()
+        dataDescription3.text = localize(.privacy_description_paragraph4)
         
         let privacyNotice = LinkButton(
             title: localize(.privacy_notice_label)
@@ -122,7 +126,7 @@ public class PrivacyViewController: UIViewController {
         noThanksButton.addTarget(self, action: #selector(didTapNoThanks), for: .touchUpInside)
         noThanksButton.accessibilityLabel = localize(.privacy_no_button_accessibility_label)
         
-        let stackView = UIStackView(arrangedSubviews: [linksHeader, privacyNotice, termsOfUse, agreeButton, noThanksButton])
+        let stackView = UIStackView(arrangedSubviews: [dataDescription3, linksHeader, privacyNotice, termsOfUse, agreeButton, noThanksButton])
         stackView.axis = .vertical
         stackView.spacing = .standardSpacing
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -140,7 +144,12 @@ public class PrivacyViewController: UIViewController {
         privacyDescription.styleAsBody()
         privacyDescription.text = localize(.privacy_description_paragraph1)
         
-        return InformationBox(views: [privacyHeader, privacyDescription], style: .noNews)
+        let stackView = UIStackView(arrangedSubviews: [privacyHeader, privacyDescription])
+        stackView.axis = .vertical
+        stackView.spacing = .halfSpacing
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = .inner
+        return stackView
     }
     
     private func getDataInformationView() -> UIView {
@@ -152,11 +161,12 @@ public class PrivacyViewController: UIViewController {
         dataDescription1.styleAsBody()
         dataDescription1.text = localize(.privacy_description_paragraph2)
         
-        let dataDescription3 = UILabel()
-        dataDescription3.styleAsBody()
-        dataDescription3.text = localize(.privacy_description_paragraph4)
-        
-        return InformationBox(views: [dataHeader, dataDescription1, dataDescription3], style: .noNews)
+        let stackView = UIStackView(arrangedSubviews: [dataHeader, dataDescription1])
+        stackView.axis = .vertical
+        stackView.spacing = .halfSpacing
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = .inner
+        return stackView
     }
     
     @objc func didTapPrivacyNotice() {

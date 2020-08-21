@@ -48,7 +48,7 @@ private class InformationBoxViewController: UIViewController {
         label.styleAsBody()
         label.text = Scenario.shortLabel
         
-        return InformationBox(views: [label], style: .information)
+        return InformationBox(views: [label], style: .information(.darkBlue))
     }()
     
     private lazy var singleLabelLongInformationBox: UIView = {
@@ -57,7 +57,7 @@ private class InformationBoxViewController: UIViewController {
         label.text = Scenario.longLabel
         label.numberOfLines = 0
         
-        return InformationBox(views: [label], style: .information)
+        return InformationBox(views: [label], style: .information(.darkBlue))
     }()
     
     private lazy var stackViewInformationBox: UIView = {
@@ -74,14 +74,14 @@ private class InformationBoxViewController: UIViewController {
         stackLabel2.text = Scenario.longStackLabel
         stackLabel2.numberOfLines = 0
         
-        return InformationBox(views: [title, stackLabel1, stackLabel2], style: .information)
+        return InformationBox(views: [title, stackLabel1, stackLabel2], style: .information(.darkBlue))
     }()
     
     private lazy var clickableComponentInformationBox: UIView = {
         let link = LinkButton(title: Scenario.link)
         link.addTarget(self, action: #selector(didTapLink), for: .touchUpInside)
         
-        return InformationBox(views: [link], style: .information)
+        return InformationBox(views: [link], style: .information(.darkBlue))
     }()
     
     private lazy var warningInformationBox: UIView = {
@@ -124,6 +124,7 @@ private class InformationBoxViewController: UIViewController {
     }()
     
     private lazy var informationStack: UIView = {
+        
         let stack = UIStackView(arrangedSubviews: [
             UILabel().styleAsSecondaryTitle().set(text: Scenario.informationLabel),
             InformationBox.information(Scenario.informationNoTitleLabel),
@@ -135,6 +136,23 @@ private class InformationBoxViewController: UIViewController {
                 title: Scenario.informationTitleLabel,
                 body: Scenario.informationBodyMultipleLabel
             ),
+        ])
+        
+        stack.axis = .vertical
+        stack.alignment = .fill
+        stack.distribution = .equalSpacing
+        stack.spacing = .bigSpacing
+        return stack
+    }()
+    
+    private lazy var coloredInformationStack: UIView = {
+        
+        let stack = UIStackView(arrangedSubviews: [
+            InformationBox.information.purple([.heading("Purple info box title"), .body("Purple info box body")]),
+            InformationBox.information.orange([.heading("Orange info box title"), .body("Orange info box body")]),
+            InformationBox.information.lightBlue([.heading("Light blue info box title"), .body("Light blue info box body")]),
+            InformationBox.information.turquoise([.heading("Turquoise info box title"), .body("Turquoise info box body")]),
+            InformationBox.information.darkBlue([.heading("Dark blue info box title"), .body("Dark blue info box body")]),
         ])
         
         stack.axis = .vertical
@@ -158,6 +176,7 @@ private class InformationBoxViewController: UIViewController {
             badNewsInformationBox,
             indicationStack,
             informationStack,
+            coloredInformationStack,
         ])
         
         contentStackView.axis = .vertical

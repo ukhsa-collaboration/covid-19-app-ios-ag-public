@@ -14,7 +14,7 @@ class SelfDiagnosisManagerTests: XCTestCase {
     private var isolationState: IsolationState!
     private let timeZone = Calendar.utc.timeZone
     
-    private let symptoms = [
+    fileprivate let symptoms = [
         (Symptom(title: ["": ""], description: ["": ""], riskWeight: 1), false),
         (Symptom(title: ["": ""], description: ["": ""], riskWeight: 1), true),
         (Symptom(title: ["": ""], description: ["": ""], riskWeight: 1), true),
@@ -34,12 +34,12 @@ class SelfDiagnosisManagerTests: XCTestCase {
     }
     
     func testIsolateIfExactlyReachedThreshold() {
-        isolationState = .isolate(Isolation(untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false)))
+        isolationState = .isolate(Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false)))
         XCTAssertEqual(selfDiagnosisManager.evaluateSymptoms(symptoms: symptoms, onsetDay: nil, threshold: 2), isolationState)
     }
     
     func testIsolateIfExactlyAboveThreshold() {
-        isolationState = .isolate(Isolation(untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false)))
+        isolationState = .isolate(Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false)))
         XCTAssertEqual(selfDiagnosisManager.evaluateSymptoms(symptoms: symptoms, onsetDay: nil, threshold: 1), isolationState)
     }
     

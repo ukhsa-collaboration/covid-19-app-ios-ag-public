@@ -12,10 +12,13 @@ class SandboxUserNotificationsManager: UserNotificationManaging {
     typealias AlertText = Sandbox.Text.UserNotification
     
     private let host: SandboxHost
-    var authorizationStatus: AuthorizationStatus = .notDetermined
+    var authorizationStatus: AuthorizationStatus
     
     init(host: SandboxHost) {
         self.host = host
+        
+        let allowed = host.initialState.userNotificationsAuthorized
+        authorizationStatus = allowed ? .authorized : .notDetermined
     }
     
     func requestAuthorization(options: AuthorizationOptions, completionHandler: @escaping (Bool, Error?) -> Void) {

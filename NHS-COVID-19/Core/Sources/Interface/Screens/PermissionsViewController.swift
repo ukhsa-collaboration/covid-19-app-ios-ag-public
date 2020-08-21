@@ -42,6 +42,15 @@ private class PermissionsStep: NSObject, OnboardingStep {
         return label
     }
     
+    func stack(for labels: [UILabel]) -> UIStackView {
+        let stackView = UIStackView(arrangedSubviews: labels)
+        stackView.axis = .vertical
+        stackView.spacing = .halfSpacing
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = .inner
+        return stackView
+    }
+    
     private var exposureNotificationHeading: UILabel { label(for: .exposure_notification_permissions_onboarding_step_heading).styleAsTertiaryTitle() }
     private var exposureNotificationBody: UILabel { label(for: .exposure_notification_permissions_onboarding_step_body).styleAsBody() }
     private var notificationsHeading: UILabel { label(for: .notification_permissions_onboarding_step_heading).styleAsTertiaryTitle() }
@@ -50,12 +59,10 @@ private class PermissionsStep: NSObject, OnboardingStep {
     
     var content: [UIView] {
         [
-            title,
-            exposureNotificationHeading,
-            exposureNotificationBody,
-            notificationsHeading,
-            notificationsBody,
-            detail,
+            stack(for: [title]),
+            stack(for: [exposureNotificationHeading, exposureNotificationBody]),
+            stack(for: [notificationsHeading, notificationsBody]),
+            stack(for: [detail]),
         ]
     }
     

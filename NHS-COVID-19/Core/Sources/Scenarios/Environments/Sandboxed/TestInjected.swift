@@ -12,6 +12,11 @@ public struct TestInjected<Value> {
         userDefault = UserDefault(key, defaultValue: defaultValue)
     }
     
+    init<T>(_ key: String) where Value == T? {
+        self.key = key
+        userDefault = UserDefault(key)
+    }
+    
     public var wrappedValue: Value {
         get {
             userDefault.wrappedValue
@@ -51,7 +56,10 @@ extension TestInjected {
         case let value as Double:
             return "<real>\(value)</real>"
         default:
-            fatalError()
+            preconditionFailure("""
+                Attempting to pass an invalid type through launch arguments.
+                If the property being set is optional, it cannot be set to nil
+            """)
         }
     }
     

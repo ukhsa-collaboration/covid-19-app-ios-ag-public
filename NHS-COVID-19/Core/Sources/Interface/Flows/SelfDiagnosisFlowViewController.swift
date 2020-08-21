@@ -26,9 +26,9 @@ public class SelfDiagnosisFlowViewController: UINavigationController {
     
     public typealias Interacting = SelfDiagnosisFlowViewControllerInteracting
     
-    private let interactor: Interacting
+    fileprivate let interactor: Interacting
     
-    private enum State: Equatable {
+    fileprivate enum State: Equatable {
         case start
         case loaded(Int?)
         case failedToLoad
@@ -39,11 +39,11 @@ public class SelfDiagnosisFlowViewController: UINavigationController {
     }
     
     @Published
-    private var state: State = .start
+    fileprivate var state: State = .start
     
-    private var symptoms = [SymptomInfo]()
+    fileprivate var symptoms = [SymptomInfo]()
     private var dateSelectionWindow = 0
-    private var initialIsolationState: IsolationState
+    fileprivate var initialIsolationState: IsolationState
     
     private var cancellables = [AnyCancellable]()
     
@@ -72,26 +72,33 @@ public class SelfDiagnosisFlowViewController: UINavigationController {
     }
     
     private func update(for state: State) {
+        viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
         pushViewController(rootViewController(for: state), animated: state != .start)
     }
     
     private func rootViewController(for state: State) -> UIViewController {
         switch state {
         case .start:
-            return LoadingViewController(interactor: self, title: localize(.diagnosis_questionnaire_title))
+            let interactor = LoadingViewControllerInteractor(navigationController: self)
+            return LoadingViewController(interactor: interactor, title: localize(.diagnosis_questionnaire_title))
         case .loaded(let symptomIndex):
-            return SymptomListViewController(symptoms, symptomIndex: symptomIndex, interactor: self)
+            let interactor = SymptomListViewControllerInteractor(controller: self)
+            return SymptomListViewController(symptoms, symptomIndex: symptomIndex, interactor: interactor)
         case .failedToLoad:
-            return LoadingErrorViewController(interacting: self, title: localize(.diagnosis_questionnaire_title))
+            let interactor = LoadingErrorControllerInteractor(controller: self)
+            return LoadingErrorViewController(interacting: interactor, title: localize(.diagnosis_questionnaire_title))
         case .reviewing:
-            return SymptomsReviewViewController(symptoms, dateSelectionWindow: dateSelectionWindow, interactor: self)
+            let interactor = SymptomsReviewViewControllerInteractor(controller: self)
+            return SymptomsReviewViewController(symptoms, dateSelectionWindow: dateSelectionWindow, interactor: interactor)
         case .noSymptoms(.notIsolating):
-            return NoSymptomsViewController(interactor: self)
-        case .noSymptoms(.isolating(_, let endDate)):
+            let interactor = NoSymptomsViewControllerInteractor(controller: self)
+            return NoSymptomsViewController(interactor: interactor)
+        case .noSymptoms(.isolating(_, _, let endDate)):
             let interactor = NoSymptomsIsolatingViewControllerInteractor(navigationController: self, didTapOnlineServicesLink: self.interactor.nhs111LinkTapped)
             return NoSymptomsIsolatingViewController(interactor: interactor, isolationEndDate: endDate)
         case .hasSymptoms(let isolationEndDate):
-            return PositiveSymptomsViewController(interactor: self, isolationEndDate: isolationEndDate)
+            let interactor = PositiveSymptomsViewControllerInteractor(controller: self)
+            return PositiveSymptomsViewController(interactor: interactor, isolationEndDate: isolationEndDate)
         case .bookATest:
             return BookATestInfoViewController(interactor: interactor, shouldHaveCancelButton: false)
         }
@@ -143,68 +150,126 @@ private struct NoSymptomsIsolatingViewControllerInteractor: NoSymptomsIsolatingV
     
 }
 
-extension SelfDiagnosisFlowViewController: LoadingViewController.Interacting {
-    public func didTapCancel() {
-        dismiss(animated: true, completion: nil)
+private class LoadingViewControllerInteractor: LoadingViewController.Interacting {
+    private weak var navigationController: UINavigationController?
+    
+    init(navigationController: UINavigationController?) {
+        self.navigationController = navigationController
+    }
+    
+    func didTapCancel() {
+        navigationController?.dismiss(animated: true, completion: nil)
     }
 }
 
-extension SelfDiagnosisFlowViewController: LoadingErrorViewController.Interacting {
+private struct LoadingErrorControllerInteractor: LoadingErrorViewController.Interacting {
+    private weak var controller: SelfDiagnosisFlowViewController?
+    
+    init(controller: SelfDiagnosisFlowViewController?) {
+        self.controller = controller
+    }
+    
+    func didTapCancel() {
+        controller?.dismiss(animated: true, completion: nil)
+    }
+    
     public func didTapRetry() {
-        executeFetchQuestionnaire()
+        controller?.executeFetchQuestionnaire()
     }
 }
 
-extension SelfDiagnosisFlowViewController: SymptomListViewController.Interacting {
+private struct SymptomListViewControllerInteractor: SymptomListViewController.Interacting {
+    
+    private weak var controller: SelfDiagnosisFlowViewController?
+    
+    init(controller: SelfDiagnosisFlowViewController?) {
+        self.controller = controller
+    }
+    
+    public func didTapCancel() {
+        controller?.dismiss(animated: true, completion: nil)
+    }
+    
     public func didTapReportButton() -> Result<Void, UIValidationError> {
-        guard symptoms.contains(where: { $0.isConfirmed }) else {
+        guard let controller = controller else {
+            return .success(())
+        }
+        
+        guard controller.symptoms.contains(where: { $0.isConfirmed }) else {
             return .failure(.noSymptomSelected)
         }
         
-        state = .reviewing
+        controller.state = .reviewing
         return .success(())
     }
     
     public func didTapNoSymptomsButton() {
-        state = .noSymptoms(currentIsolationState: initialIsolationState)
+        guard let controller = controller else { return }
+        controller.state = .noSymptoms(currentIsolationState: controller.initialIsolationState)
     }
 }
 
-extension SelfDiagnosisFlowViewController: NoSymptomsViewController.Interacting {
+private struct NoSymptomsViewControllerInteractor: NoSymptomsViewController.Interacting {
+    
+    private weak var controller: SelfDiagnosisFlowViewController?
+    
+    init(controller: SelfDiagnosisFlowViewController?) {
+        self.controller = controller
+    }
+    
     public func didTapNHS111Link() {
-        #warning("Do this properly")
-        let url = URL(string: "https://111.nhs.uk/")!
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        controller?.interactor.nhs111LinkTapped()
     }
     
     public func didTapReturnHome() {
-        dismiss(animated: true, completion: nil)
+        controller?.dismiss(animated: true, completion: nil)
     }
 }
 
-extension SelfDiagnosisFlowViewController: PositiveSymptomsViewController.Interacting {
+private struct PositiveSymptomsViewControllerInteractor: PositiveSymptomsViewController.Interacting {
+    
+    private weak var controller: SelfDiagnosisFlowViewController?
+    
+    init(controller: SelfDiagnosisFlowViewController?) {
+        self.controller = controller
+    }
+    
+    public func didTapCancel() {
+        controller?.dismiss(animated: true, completion: nil)
+    }
+    
     public func furtherAdviceLinkTapped() {
-        interactor.furtherAdviceLinkTapped()
+        controller?.interactor.furtherAdviceLinkTapped()
     }
     
     public func didTapBookTest() {
-        state = .bookATest
+        controller?.state = .bookATest
     }
 }
 
-extension SelfDiagnosisFlowViewController: SymptomsReviewViewController.Interacting {
+private struct SymptomsReviewViewControllerInteractor: SymptomsReviewViewController.Interacting {
+    
+    private weak var controller: SelfDiagnosisFlowViewController?
+    
+    init(controller: SelfDiagnosisFlowViewController?) {
+        self.controller = controller
+    }
+    
     public func changeSymptomAnswer(index: Int) {
-        state = .loaded(index)
+        controller?.state = .loaded(index)
     }
     
     public func confirmSymptoms(selectedDay: GregorianDay?, hasCheckedNoDate: Bool) -> Result<Void, UIValidationError> {
+        guard let controller = controller else {
+            return .success(())
+        }
         if selectedDay == nil, !hasCheckedNoDate {
             return .failure(.neitherDateNorNoDateCheckSet)
         } else {
-            if let isolationEndDate = interactor.evaluateSymptoms(symptoms: symptoms, onsetDay: selectedDay) {
-                state = .hasSymptoms(isolationEndDate: isolationEndDate)
+            if let isolationEndDate = controller.interactor.evaluateSymptoms(symptoms: controller.symptoms, onsetDay: selectedDay) {
+                controller.state = .hasSymptoms(isolationEndDate: isolationEndDate)
             } else {
-                state = .noSymptoms(currentIsolationState: initialIsolationState)
+                controller.state = .noSymptoms(currentIsolationState: controller.initialIsolationState)
             }
             return .success(())
         }

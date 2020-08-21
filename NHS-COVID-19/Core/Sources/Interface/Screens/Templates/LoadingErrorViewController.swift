@@ -62,7 +62,7 @@ public class LoadingErrorViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(didTapCancel))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: localize(.cancel), style: .done, target: self, action: #selector(didTapCancel))
         
         let view = self.view!
         view.styleAsScreenBackground(with: traitCollection)

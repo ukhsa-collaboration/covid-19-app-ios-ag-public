@@ -2,12 +2,20 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Common
 import Scenarios
 import XCTest
 
-class NewSelfDiagnosisFlowTest: XCTestCase {
+class SelfDiagnosisFlowTest: XCTestCase {
     @Propped
     private var runner: ApplicationRunner<SandboxedScenario>
+    
+    override func setUp() {
+        $runner.initialState.isPilotActivated = true
+        $runner.initialState.exposureNotificationsAuthorized = true
+        $runner.initialState.userNotificationsAuthorized = true
+        $runner.initialState.postcode = "CE1B"
+    }
     
     func testPositiveSymptomsPath() throws {
         
@@ -17,29 +25,17 @@ class NewSelfDiagnosisFlowTest: XCTestCase {
             """
         }
         
-        $runner.initialState.isPilotActivated = true
-        
         try runner.run { app in
-            let startOnboardingScreen = StartOnboardingScreen(app: app)
+            let homeScreen = HomeScreen(app: app)
+            XCTAssert(homeScreen.notIsolatingIndicator.exists)
             
-            XCTAssert(startOnboardingScreen.stepTitle.exists)
-        }
-    }
-}
-
-class SelfDiagnosisFlowTest: XCTestCase {
-    @Propped
-    private var runner: ApplicationRunner<SelfDiagnosisFlowScenario>
-    
-    func testPositiveSymptomsPath() throws {
-        $runner.report("Positive symptoms path") {
-            """
-            User selects symptoms and is notified of corona symptoms
-            """
-        }
-        try runner.run { app in
-            let symptomListScreen = SymptomsListScreen(app: app)
-            XCTAssert(symptomListScreen.heading.exists)
+            runner.step("Home Screen") {
+                """
+                When the user is on the Home screen they can tap 'Report symptoms'
+                """
+            }
+            
+            homeScreen.diagnoisButton.tap()
             
             runner.step("Symptom List") {
                 """
@@ -47,7 +43,12 @@ class SelfDiagnosisFlowTest: XCTestCase {
                 """
             }
             
-            app.buttons[localized: .symptom_card_accessibility_label(heading: SelfDiagnosisFlowScenario.symptomCardHeading, content: SelfDiagnosisFlowScenario.symptomCardContent)].tap()
+            let symptomsListScreen = SymptomsListScreen(app: app)
+            
+            symptomsListScreen.symptomCard(
+                heading: Sandbox.Text.SymptomsList.cardHeading.rawValue,
+                content: Sandbox.Text.SymptomsList.cardContent.rawValue
+            ).tap()
             
             runner.step("Symptom selected") {
                 """
@@ -55,7 +56,7 @@ class SelfDiagnosisFlowTest: XCTestCase {
                 """
             }
             
-            symptomListScreen.reportButton.tap()
+            symptomsListScreen.reportButton.tap()
             
             let reviewSymptomsScreen = SymptomsReviewScreen(app: app)
             XCTAssert(reviewSymptomsScreen.heading.exists)
@@ -67,6 +68,13 @@ class SelfDiagnosisFlowTest: XCTestCase {
             }
             
             reviewSymptomsScreen.noDate.tap()
+            
+            runner.step("No Date") {
+                """
+                The can specify an onset date or tick that they don't remember the onset date, before confirming
+                """
+            }
+            
             reviewSymptomsScreen.confirmButton.tap()
             
             let positiveSymptomsScreen = PositiveSymptomsScreen(app: app)
@@ -74,84 +82,31 @@ class SelfDiagnosisFlowTest: XCTestCase {
             
             runner.step("Positive Symptoms screen") {
                 """
-                The user is asked to isolate
+                The user is asked to isolate, and given the option to book a test
                 """
             }
+            positiveSymptomsScreen.bookTestButton.firstMatch.tap()
+            
+            let bookATestScreen = BookATestScreen(app: app)
+            XCTAssert(bookATestScreen.title.exists)
+            
+            runner.step("Positive Symptoms screen") {
+                """
+                The user is presented with information about booking a test
+                """
+            }
+            
+            bookATestScreen.button.tap()
+            
+            runner.step("Positive Symptoms screen") {
+                """
+                The user is returned to the homescreen, which presents their isolation countdown and different menu options.
+                """
+            }
+            
+            let date = GregorianDay.today.advanced(by: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset).startDate(in: .current)
+            
+            XCTAssert(homeScreen.isolatingIndicator(date: date, days: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset).exists)
         }
     }
-    
-    func testSymptomListInputValidation() throws {
-        $runner.report("Symptom list input validation") {
-            """
-            User does not select a symptom before confirming the symptom list screen
-            """
-        }
-        try runner.run { app in
-            let symptomListScreen = SymptomsListScreen(app: app)
-            XCTAssert(symptomListScreen.heading.exists)
-            
-            runner.step("Symptom List") {
-                """
-                The user is presented a list of symptoms
-                """
-            }
-            
-            symptomListScreen.reportButton.tap()
-            
-            XCTAssert(symptomListScreen.errorBox.exists)
-            
-            runner.step("Symptom List Error") {
-                """
-                The user has selected no symptom
-                """
-            }
-        }
-    }
-    
-    func testReviewSymptomsInputValidation() throws {
-        $runner.report("Review Symptoms Input Validation") {
-            """
-            User selects symptoms, but does not provide a start date or check the "I don't remember" control
-            """
-        }
-        try runner.run { app in
-            let symptomListScreen = SymptomsListScreen(app: app)
-            XCTAssert(symptomListScreen.heading.exists)
-            
-            runner.step("Symptom List") {
-                """
-                The user is presented a list of symptoms
-                """
-            }
-            
-            app.buttons[localized: .symptom_card_accessibility_label(heading: SelfDiagnosisFlowScenario.symptomCardHeading, content: SelfDiagnosisFlowScenario.symptomCardContent)].tap()
-            
-            runner.step("Symptom selected") {
-                """
-                The user selects a symptom and confirms the screen
-                """
-            }
-            
-            symptomListScreen.reportButton.tap()
-            
-            let reviewSymptomsScreen = SymptomsReviewScreen(app: app)
-            XCTAssert(reviewSymptomsScreen.heading.exists)
-            
-            runner.step("Review Symptoms") {
-                """
-                The user is presented a list of the selected symptoms for review
-                """
-            }
-            
-            reviewSymptomsScreen.confirmButton.tap()
-            
-            XCTAssert(reviewSymptomsScreen.errorBox.exists)
-            runner.step("Review Symptoms Input Validation Error") {
-                """
-                The user is presented an error informing about the invalid input
-                """
-            }
-        }
-    }
-    
 }

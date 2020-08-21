@@ -146,6 +146,13 @@ class ExposureNotificationStateControllerTests: XCTestCase {
         XCTAssertEqual(manager.setExposureNotificationEnabledValue, true)
         cancellable.cancel()
     }
+    
+    func testEnablingTwiceDoesNotSendItThroughToTheManager() {
+        controller.activate()
+        manager.exposureNotificationEnabled = true
+        controller.setEnabled(true).sink {}.cancel()
+        XCTAssertNil(manager.setExposureNotificationEnabledValue)
+    }
 }
 
 private let authorizationStatusPairs: [(ExposureNotificationStateController.AuthorizationState, ExposureNotificationManaging.AuthorizationStatus)] = [

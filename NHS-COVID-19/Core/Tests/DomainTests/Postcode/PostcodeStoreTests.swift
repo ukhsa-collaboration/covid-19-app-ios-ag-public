@@ -16,7 +16,7 @@ class PostcodeStoreTests: XCTestCase {
         super.setUp()
         
         encryptedStore = MockEncryptedStore()
-        postcodeStore = PostcodeStore(store: encryptedStore)
+        postcodeStore = PostcodeStore(store: encryptedStore) { _ in true }
     }
     
     func testLoadingPostcodeDataWithLowRisk() {
@@ -27,7 +27,7 @@ class PostcodeStoreTests: XCTestCase {
         }
         """# .data(using: .utf8)!
         
-        postcodeStore = PostcodeStore(store: encryptedStore)
+        postcodeStore = PostcodeStore(store: encryptedStore) { _ in true }
         
         XCTAssertTrue(postcodeStore.hasPostcode)
         XCTAssertEqual("P1", postcodeStore.load())
@@ -42,7 +42,7 @@ class PostcodeStoreTests: XCTestCase {
         }
         """# .data(using: .utf8)!
         
-        postcodeStore = PostcodeStore(store: encryptedStore)
+        postcodeStore = PostcodeStore(store: encryptedStore) { _ in true }
         
         XCTAssertTrue(postcodeStore.hasPostcode)
         XCTAssertEqual("P1", postcodeStore.load())
@@ -57,7 +57,7 @@ class PostcodeStoreTests: XCTestCase {
         }
         """# .data(using: .utf8)!
         
-        postcodeStore = PostcodeStore(store: encryptedStore)
+        postcodeStore = PostcodeStore(store: encryptedStore) { _ in true }
         
         XCTAssertTrue(postcodeStore.hasPostcode)
         XCTAssertEqual("P1", postcodeStore.load())
@@ -69,10 +69,6 @@ class PostcodeStoreTests: XCTestCase {
         XCTAssertEqual(postcodeStore.load(), "B44")
     }
     
-    func testSavePostcodeFailure() throws {
-        XCTAssertThrowsError(try postcodeStore.save(postcode: "1111"))
-    }
-    
     func testDeletePostcode() throws {
         
         try postcodeStore.save(postcode: "B44")
@@ -82,41 +78,5 @@ class PostcodeStoreTests: XCTestCase {
     
     func testNoRiskProvidedByDefault() {
         XCTAssertNil(postcodeStore.riskLevel)
-    }
-    
-    func testValidPartialPostcode() {
-        let postcode = "B44"
-        
-        XCTAssertTrue(postcodeStore.isValid(postcode))
-    }
-    
-    func testValidLowerCasePostcode() {
-        let postcode = "po30"
-        
-        XCTAssertTrue(postcodeStore.isValid(postcode))
-    }
-    
-    func testInvalidPostcode() {
-        let postcode = "1111"
-        
-        XCTAssertFalse(postcodeStore.isValid(postcode))
-    }
-    
-    func testTooLongPostcode() {
-        let postcode = "po301"
-        
-        XCTAssertFalse(postcodeStore.isValid(postcode))
-    }
-    
-    func testTooShortPostcode() {
-        let postcode = "A"
-        
-        XCTAssertFalse(postcodeStore.isValid(postcode))
-    }
-    
-    func testEmptyPostcode() {
-        let postcode = ""
-        
-        XCTAssertFalse(postcodeStore.isValid(postcode))
     }
 }

@@ -20,8 +20,8 @@ extension UIApplication: Application {
 
 extension Application {
     
-    func open(_ url: URL, options: [OpenExternalURLOptionsKey: Any] = [:], completionHandler completion: ((Bool) -> Void)? = nil) {
-        open(url, options: options, completionHandler: completion)
+    func open(_ url: URL) {
+        open(url, options: [:], completionHandler: nil)
     }
     
     func openSettings() {

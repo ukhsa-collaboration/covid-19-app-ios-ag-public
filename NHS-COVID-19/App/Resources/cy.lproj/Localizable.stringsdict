@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>positive_symptoms_please_isolate_accessibility_label %ld</key>
+    <dict>
+        <key>NSStringLocalizedFormatKey</key>
+        <string>%#@days@</string>
+        <key>days</key>
+        <dict>
+            <key>NSStringFormatSpecTypeKey</key>
+            <string>NSStringPluralRuleType</string>
+            <key>NSStringFormatValueTypeKey</key>
+            <string>d</string>
+            <key>other</key>
+            <string>Hunanynyswch am %ld diwrnod ac archebwch brawf</string>
+            <key>one</key>
+            <string>Hunanynyswch am %ld diwrnod ac archebwch brawf</string>
+        </dict>
+    </dict>
+    <key>positive_test_please_isolate_accessibility_label %ld</key>
+    <dict>
+        <key>NSStringLocalizedFormatKey</key>
+        <string>%#@days@</string>
+        <key>days</key>
+        <dict>
+            <key>NSStringFormatSpecTypeKey</key>
+            <string>NSStringPluralRuleType</string>
+            <key>NSStringFormatValueTypeKey</key>
+            <string>d</string>
+            <key>other</key>
+            <string>Parhewch i hunanynysu am %ld diwrnod</string>
+            <key>one</key>
+            <string>Parhewch i hunanynysu am %ld diwrnod</string>
+        </dict>
+    </dict>
+    <key>isolation_days_accessibility_label %ld</key>
+    <dict>
+        <key>NSStringLocalizedFormatKey</key>
+        <string>%#@days@</string>
+        <key>days</key>
+        <dict>
+            <key>NSStringFormatSpecTypeKey</key>
+            <string>NSStringPluralRuleType</string>
+            <key>NSStringFormatValueTypeKey</key>
+            <string>d</string>
+            <key>one</key>
+            <string>%ld diwrnod i fynd</string>
+            <key>other</key>
+            <string>%ld diwrnod i fynd</string>
+        </dict>
+    </dict>
+    <key>positive_symptoms_days %ld</key>
+    <dict>
+        <key>NSStringLocalizedFormatKey</key>
+        <string>%#@days@</string>
+        <key>days</key>
+        <dict>
+            <key>NSStringFormatSpecTypeKey</key>
+            <string>NSStringPluralRuleType</string>
+            <key>NSStringFormatValueTypeKey</key>
+            <string>d</string>
+            <key>one</key>
+            <string>%ld diwrnod</string>
+            <key>other</key>
+            <string>%ld diwrnod</string>
+        </dict>
+    </dict>
+    <key>isolation_days_subtitle %ld</key>
+    <dict>
+        <key>NSStringLocalizedFormatKey</key>
+        <string>%#@days@</string>
+        <key>days</key>
+        <dict>
+            <key>NSStringFormatSpecTypeKey</key>
+            <string>NSStringPluralRuleType</string>
+            <key>NSStringFormatValueTypeKey</key>
+            <string>d</string>
+            <key>one</key>
+            <string>Diwrnodau i fynd</string>
+            <key>other</key>
+            <string>Diwrnodau i fynd</string>
+        </dict>
+    </dict>
+    <key>exposure_acknowledgement_days %ld</key>
+    <dict>
+        <key>NSStringLocalizedFormatKey</key>
+        <string>%#@days@</string>
+        <key>days</key>
+        <dict>
+            <key>NSStringFormatSpecTypeKey</key>
+            <string>NSStringPluralRuleType</string>
+            <key>NSStringFormatValueTypeKey</key>
+            <string>d</string>
+            <key>one</key>
+            <string>%ld diwrnod</string>
+            <key>other</key>
+            <string>%ld diwrnod</string>
+        </dict>
+    </dict>
+    <key>exposure_acknowledgement_please_isolate_accessibility_label %ld</key>
+    <dict>
+        <key>NSStringLocalizedFormatKey</key>
+        <string>%#@days@</string>
+        <key>days</key>
+        <dict>
+            <key>NSStringFormatSpecTypeKey</key>
+            <string>NSStringPluralRuleType</string>
+            <key>NSStringFormatValueTypeKey</key>
+            <string>d</string>
+            <key>other</key>
+            <string>Hunanynyswch am %ld diwrnod</string>
+            <key>one</key>
+            <string>Hunanynyswch am %ld diwrnod</string>
+        </dict>
+    </dict>
+    <key>isolation_indicator_accessiblity_label days: %ld date: %@ time: %@</key>
+    <dict>
+        <key>NSStringLocalizedFormatKey</key>
+        <string>%#@days@</string>
+        <key>days</key>
+        <dict>
+            <key>NSStringFormatSpecTypeKey</key>
+            <string>NSStringPluralRuleType</string>
+            <key>NSStringFormatValueTypeKey</key>
+            <string>d</string>
+            <key>other</key>
+            <string>Mae angen ichi hunanynysu tan %2$@ am %3$@. %1$ld diwrnod i fynd.</string>
+            <key>one</key>
+            <string>Mae angen ichi hunanynysu tan %2$@ am %3$@. %1$ld diwrnod i fynd.</string>
+        </dict>
+    </dict>
+</dict>
+</plist>

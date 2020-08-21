@@ -143,6 +143,7 @@ public struct DetectionExposureManager: ExposureManaging {
                 
                 return risks
                     .replaceError(with: nil)
+                    .prepend(nil) // TODO: Why is this necessary? `last()` won’t complete if we complete with an empty upstream.
                     .scan(nil) { lhs, rhs -> RiskInfo? in
                         switch (lhs, rhs) {
                         case (.some(let lhs), .some(let rhs)):

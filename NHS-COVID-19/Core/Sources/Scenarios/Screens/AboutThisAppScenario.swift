@@ -15,6 +15,7 @@ public class AboutThisAppScreenScenario: Scenario {
     public static let privacyNoticeTapped = "Privacy notice tapped"
     public static let accessibilityStatementTapped = "Accessibility statement tapped"
     public static let seeDataTapped = "See data tapped"
+    public static let howThisAppWorksTaped = "How this app works taped"
     
     public static let appName = "NHS-COVID-19"
     public static let version = "1.0"
@@ -53,5 +54,9 @@ private class Interactor: AboutThisAppViewController.Interacting {
     
     func didTapSeeData() {
         viewController?.showAlert(title: AboutThisAppScreenScenario.seeDataTapped)
+    }
+    
+    func didTapHowThisAppWorks() {
+        viewController?.showAlert(title: AboutThisAppScreenScenario.howThisAppWorksTaped)
     }
 }

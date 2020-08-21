@@ -24,6 +24,7 @@ public class QRCodeScannerScreenScenario: Scenario {
             requestCameraAccess: {
                 parent.showAlert(title: "Should request for camera permisson.")
             },
+            createCaptureSession: { _ in nil },
             completion: { _ in }
         )
         parent.pushViewController(viewController, animated: false)

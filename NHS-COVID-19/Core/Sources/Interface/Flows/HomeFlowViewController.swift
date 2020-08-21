@@ -4,23 +4,26 @@
 
 import Combine
 import Common
+import Localization
 import SwiftUI
 import UIKit
 
 public protocol HomeFlowViewControllerInteracting: MyDataViewControllerInteracting {
+    var riskLevelInfoViewModel: RiskLevelInfoViewModel? { get }
     func makeDiagnosisViewController() -> UIViewController?
     func openAdvice()
     func openIsolationAdvice()
     func makeCheckInViewController() -> UIViewController?
     func makeTestingInformationViewController() -> UIViewController?
     func getAppData() -> AppData
-    func openAboutContactTracingLink()
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never>
     var shouldShowCheckIn: Bool { get }
     func openTearmsOfUseLink()
     func openPrivacyLink()
     func openFAQ()
     func openAccessibilityStatementLink()
+    func openHowThisAppWorksLink()
+    func openWebsiteLinkfromRisklevelInfoScreen()
 }
 
 public class HomeFlowViewController: UINavigationController {
@@ -59,8 +62,13 @@ public class HomeFlowViewController: UINavigationController {
 
 extension HomeFlowViewController: HomeViewController.Interacting {
     
-    public func didtapContactTracingButton() {
-        interactor.openAboutContactTracingLink()
+    public func didTapMoreInfo() {
+        guard let vm = interactor.riskLevelInfoViewModel else { return }
+        let viewController = RiskLevelInfoViewController(viewModel: vm, interactor: self)
+        let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.modalPresentationStyle = .overFullScreen
+        
+        present(navigationController, animated: true)
     }
     
     public func didTapAdviceButton() {
@@ -102,6 +110,7 @@ extension HomeFlowViewController: HomeViewController.Interacting {
         let version = "\(appVersion) (\(buildNumber))"
         
         let viewController = AboutThisAppViewController(interactor: self, appName: appName, version: version)
+        viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
         pushViewController(viewController, animated: true)
     }
     
@@ -115,6 +124,10 @@ extension HomeFlowViewController: HomeViewController.Interacting {
 }
 
 extension HomeFlowViewController: AboutThisAppViewController.Interacting {
+    public func didTapHowThisAppWorks() {
+        interactor.openHowThisAppWorksLink()
+    }
+    
     public func didTapCommonQuestions() {
         interactor.openFAQ()
     }
@@ -134,7 +147,15 @@ extension HomeFlowViewController: AboutThisAppViewController.Interacting {
     public func didTapSeeData() {
         let data = interactor.getAppData()
         let viewController = UIHostingController(rootView: MyDataView(interactor: interactor, data: data))
+        viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
         pushViewController(viewController, animated: true)
     }
     
+}
+
+extension HomeFlowViewController: RiskLevelInfoViewController.Interacting {
+    
+    public func didTapWebsiteLink() {
+        interactor.openWebsiteLinkfromRisklevelInfoScreen()
+    }
 }

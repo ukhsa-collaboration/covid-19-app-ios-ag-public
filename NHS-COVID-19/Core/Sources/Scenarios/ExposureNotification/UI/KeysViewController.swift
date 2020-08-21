@@ -3,6 +3,7 @@
 //
 
 import ExposureNotification
+import Localization
 import UIKit
 
 class KeysViewController: ListViewController {
@@ -21,7 +22,8 @@ class KeysViewController: ListViewController {
         let keysSection = ListSection(title: "keys (Select to copy)", rows: rows)
         super.init(title: "Keys", sections: [keysSection])
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .cancel,
+            title: localize(.cancel),
+            style: .done,
             target: self,
             action: #selector(cancel)
         )

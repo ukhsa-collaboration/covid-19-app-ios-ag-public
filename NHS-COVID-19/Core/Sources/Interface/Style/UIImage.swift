@@ -34,8 +34,17 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case calendar = "Calendar"
     case welcomeNotification = "Onboarding/Welcome/WelcomeNotification"
     case welcomeCountdown = "Onboarding/Welcome/WelcomeCountdown"
-    case welcomeSymptoms = "Onboarding/Welcome/WelcomeSymptoms"
-    case welcomeQRCode = "Onboarding/Welcome/WelcomeQRCode"
+    case thermometer = "Thermometer"
+    case qrCode = "QRCode"
+    case bluetooth = "Bluetooth"
+    case info = "Info"
+    case read = "Read"
+    case swab = "Swab"
+    case pin = "Pin"
+    
+    case riskLevelLow = "RiskLevel/Low"
+    case riskLevelMedium = "RiskLevel/Medium"
+    case riskLevelHigh = "RiskLevel/High"
     
     public var id: ImageName {
         self

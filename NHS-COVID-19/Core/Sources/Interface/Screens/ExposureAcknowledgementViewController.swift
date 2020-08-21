@@ -53,14 +53,6 @@ public class ExposureAcknowledgementViewController: UIViewController {
         return label
     }()
     
-    private let warningInformationBox: InformationBox = {
-        let label = UILabel()
-        label.text = localize(.exposure_acknowledgement_warning)
-        label.styleAsSecondaryTitle()
-        
-        return InformationBox(views: [label], style: .warning)
-    }()
-    
     private let explainationLabel1: UILabel = {
         let label = UILabel()
         label.styleAsBody()
@@ -118,7 +110,7 @@ public class ExposureAcknowledgementViewController: UIViewController {
         let stack = UIStackView(arrangedSubviews: [
             padlockImageView,
             pleaseIsolateStack,
-            warningInformationBox,
+            InformationBox.indication.warning(localize(.exposure_acknowledgement_warning)),
             explainationLabel1,
             explainationLabel2,
             exposureAcknowledgementLinkLabel,

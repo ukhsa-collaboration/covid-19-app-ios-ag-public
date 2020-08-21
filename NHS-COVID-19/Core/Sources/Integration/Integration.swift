@@ -34,10 +34,10 @@ extension CoordinatedAppController {
         case .failedToStart:
             let vc = UnrecoverableErrorViewController()
             return UINavigationController(rootViewController: vc)
-        case .authorizationOnboarding(requestPermissions: let requestPermissions):
+        case .authorizationOnboarding(requestPermissions: let requestPermissions, openURL: let openURL):
             let interactor = OnboardingInteractor(
                 _requestPermissions: requestPermissions,
-                _openExternalLink: coordinator.openInBrowser
+                _openURL: openURL
             )
             return OnboardingFlowViewController(interactor: interactor)
             
@@ -62,7 +62,7 @@ extension CoordinatedAppController {
     
     private func viewControllerForRunningApp(with context: RunningAppContext) -> UIViewController {
         WrappingViewController {
-            AcknowledgementNeededState.makeAcknowledgementState(context: context, externalLinkOpener: coordinator)
+            AcknowledgementNeededState.makeAcknowledgementState(context: context)
                 .regulate(as: .modelChange)
                 .map { [weak self] state in
                     switch state {
@@ -100,7 +100,7 @@ extension CoordinatedAppController {
     }
     
     private func viewControllerForRunningAppIgnoringAcknowledgement(with context: RunningAppContext) -> UIViewController {
-        let interactor = HomeFlowViewControllerInteractor(context: context, coordinator: coordinator)
+        let interactor = HomeFlowViewControllerInteractor(context: context, pasteboardCopier: pasteboardCopier)
         
         let postcodeViewModel: RiskLevelBanner.ViewModel?
         
@@ -114,10 +114,7 @@ extension CoordinatedAppController {
                     case .medium: return .medium
                     case .high: return .high
                     }
-                }.property(initialValue: nil),
-                moreInfo: { [weak coordinator] in
-                    coordinator?.openInBrowser(.moreInfoOnPostcodeRisk)
-                }
+                }.property(initialValue: nil)
             )
         } else {
             postcodeViewModel = nil
@@ -163,18 +160,18 @@ extension CoordinatedAppController {
 private struct OnboardingInteractor: OnboardingFlowViewController.Interacting {
     
     var _requestPermissions: () -> Void
-    var _openExternalLink: (ExternalLink) -> Void
+    let _openURL: (URL) -> Void
     
     func requestPermissions() {
         _requestPermissions()
     }
     
     func didTapPrivacyNotice() {
-        _openExternalLink(ExternalLink.privacy)
+        _openURL(ExternalLink.privacy.url)
     }
     
     func didTapTermsOfUse() {
-        _openExternalLink(ExternalLink.ourPolicies)
+        _openURL(ExternalLink.ourPolicies.url)
     }
 }
 

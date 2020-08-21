@@ -35,6 +35,14 @@ extension UILabel {
     }
     
     @discardableResult
+    public func styleAsErrorHeading() -> Self {
+        textColor = UIColor(.errorRed)
+        setDynamicTextStyle(.headline)
+        accessibilityTraits = .header
+        return self
+    }
+    
+    @discardableResult
     public func styleAsHeading() -> Self {
         textColor = UIColor(.primaryText)
         setDynamicTextStyle(.headline)

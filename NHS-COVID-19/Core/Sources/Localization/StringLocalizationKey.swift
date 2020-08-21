@@ -33,8 +33,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case authorization_denied_action
     
     case authentication_code_title
-    case authentication_code_description_1
-    case authentication_code_description_2
+    case authentication_code_description
     case authentication_code_textfield_heading
     case authentication_code_textfield_example
     case authentication_code_info_heading
@@ -66,6 +65,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case postcode_entry_information_description_1
     case postcode_entry_information_description_2
     case postcode_entry_step_title
+    case postcode_entry_error_title
     case postcode_entry_error_description
     
     case permissions_onboarding_step_title
@@ -110,6 +110,13 @@ public enum StringLocalizationKey: String, CaseIterable {
     case risk_level_low
     case risk_level_more_info
     case risk_level_more_info_accessibility_label
+    
+    case risk_level_screen_low_body
+    case risk_level_screen_medium_body
+    case risk_level_screen_high_body
+    case risk_level_screen_button
+    case risk_level_screen_title
+    case risk_level_screen_close_button
     
     case link_accessibility_hint
     
@@ -206,7 +213,6 @@ public enum StringLocalizationKey: String, CaseIterable {
     case end_of_isolation_explanation_negative_test_result
     case end_of_isolation_online_services_link
     case end_of_isolation_corona_back_to_home_button
-    case end_of_isolation_further_advice_link
     case end_of_isolation_further_advice_visit
     case end_of_isolation_link_label
     
@@ -271,7 +277,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case about_this_app_how_this_app_works_paragraph1
     case about_this_app_how_this_app_works_paragraph2
     case about_this_app_how_this_app_works_paragraph3
-    case about_this_app_how_this_app_works_paragraph4
+    case about_this_app_how_this_app_works_button
     case about_this_app_common_questions_heading
     case about_this_app_common_questions_description
     case about_this_app_our_policies_heading
@@ -286,6 +292,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case about_this_app_software_information_heading
     case about_this_app_software_information_entity_name_and_address
     case about_this_app_software_information_date_of_release
+    case about_this_app_footer_text
     
     case mydata_title
     case mydata_section_postcode_description
@@ -304,6 +311,23 @@ public enum StringLocalizationKey: String, CaseIterable {
     case accessability_error_os_out_of_date
     case accessability_error_update_the_app
     case accessability_error_cannot_run_app
+    
+    case link_privacy
+    case link_our_policies
+    case link_faq
+    case link_about_the_app
+    case link_accessibility_statement
+    case link_isolation_advice
+    case link_general_advice
+    case link_more_info_on_postcode_risk
+    case link_book_a_test_for_someone_else
+    case link_testing_privacy_notice
+    case link_nhs111_online
+    case link_how_this_app_works
+    
+    case cancel
+    case back
+    
 }
 
 public enum ParameterisedStringLocalizable {

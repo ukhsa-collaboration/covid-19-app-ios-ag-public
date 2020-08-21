@@ -8,13 +8,13 @@ import Localization
 import SwiftUI
 
 public protocol HomeViewControllerInteracting {
+    func didTapMoreInfo()
     func didTapDiagnosisButton()
     func didTapAdviceButton()
     func didTapIsolationAdviceButton()
     func didTapCheckInButton()
     func didTapTestingInformationButton()
     func didTapAboutButton()
-    func didtapContactTracingButton()
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never>
     var shouldShowCheckIn: Bool { get }
 }
@@ -66,12 +66,6 @@ public class HomeViewController: UIViewController {
         super.viewDidLoad()
         view.styleAsScreenBackground(with: traitCollection)
         
-        let logoStrapline = LogoStrapline(.lightSurface, style: .home)
-        navigationItem.titleView = logoStrapline
-        let aboutButton = UIBarButtonItem(title: localize(.home_about_button_title), style: .plain, target: self, action: #selector(aboutTapped))
-        aboutButton.accessibilityLabel = localize(.home_about_button_title_accessibility_label)
-        navigationItem.rightBarButtonItem = aboutButton
-        
         let homeView = HomeView(
             interactor: interactor,
             riskViewModel: postcodeRiskViewModel,
@@ -96,6 +90,11 @@ public class HomeViewController: UIViewController {
             controller.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
         ])
         
+    }
+    
+    override public func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     @objc private func aboutTapped() {

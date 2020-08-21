@@ -8,7 +8,7 @@ import SwiftUI
 
 public enum IsolationState: Equatable {
     case notIsolating
-    case isolating(days: Int, endDate: Date)
+    case isolating(days: Int, percentRemaining: Double, endDate: Date)
 }
 
 public struct RiskLevelIndicator: View {
@@ -42,8 +42,8 @@ public struct RiskLevelIndicator: View {
     
     private func containedView() -> AnyView {
         switch (viewModel.isolationState, viewModel.paused) {
-        case (let .isolating(days, endDate), _):
-            return Self.makeIsolatingIndicator(days: days, date: endDate, isDetectionPaused: viewModel.paused)
+        case (let .isolating(days, percentRemaining, endDate), _):
+            return Self.makeIsolatingIndicator(days: days, percentRemaining: percentRemaining, date: endDate, isDetectionPaused: viewModel.paused)
         case (.notIsolating, false):
             return Self.makeNotIsolatingIndicator()
         case (.notIsolating, true):

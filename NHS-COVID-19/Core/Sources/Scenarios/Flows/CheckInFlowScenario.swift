@@ -2,6 +2,7 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import AVFoundation
 import Combine
 import Common
 import Domain
@@ -53,6 +54,7 @@ public class CheckInFlowScenario: Scenario {
     }
     
     private class Interactor: CheckInFlowViewController.Interacting {
+        
         private weak var viewController: UIViewController?
         private let manager: CameraManager
         private let controller: CameraStateController
@@ -89,6 +91,10 @@ public class CheckInFlowScenario: Scenario {
             viewController?.present(alert, animated: false, completion: nil)
         }
         
+        func createCaptureSession(resultHandler: ([AVMetadataMachineReadableCodeObject]) -> Void) -> AVCaptureSession? {
+            return nil
+        }
+        
         func process(_ payload: String) -> CheckInDetail {
             CheckInDetail(venueName: "Some Venue", removeCurrentCheckIn: {})
         }
@@ -113,6 +119,11 @@ public class CheckInFlowScenario: Scenario {
         func requestAccess(completionHandler handler: @escaping (AuthorizationStatus) -> Void) {
             self.handler = handler
         }
+        
+        func createCaptureSession(handler: CaptureSessionOutputHandler) -> AVCaptureSession? {
+            return nil
+        }
+        
     }
     
 }

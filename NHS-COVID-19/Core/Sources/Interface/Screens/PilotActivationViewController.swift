@@ -31,33 +31,13 @@ private class PilotActivationStep: NSObject, OnboardingStep {
         self.submit = submit
     }
     
-    private lazy var title: UILabel = {
-        let label = UILabel()
-        label.text = localize(.authentication_code_title)
-        label.styleAsPageHeader()
-        return label
-    }()
-    
-    private lazy var description1: UILabel = {
-        let label = UILabel()
-        label.text = localize(.authentication_code_description_1)
-        label.styleAsBody()
-        return label
-    }()
-    
-    private lazy var description2: UILabel = {
-        let label = UILabel()
-        label.text = localize(.authentication_code_description_2)
-        label.styleAsBody()
-        return label
-    }()
+    private let title = UILabel().styleAsPageHeader().set(text: localize(.authentication_code_title))
     
     private lazy var headerContent: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [
-            title,
-            description1,
-            description2,
-        ])
+        let stackView = UIStackView(arrangedSubviews: [title])
+        localize(.authentication_code_description).components(separatedBy: "\n").forEach {
+            stackView.addArrangedSubview(UILabel().styleAsBody().set(text: $0))
+        }
         stackView.axis = .vertical
         stackView.spacing = .standardSpacing
         stackView.layoutMargins = .inner
@@ -68,7 +48,7 @@ private class PilotActivationStep: NSObject, OnboardingStep {
     private lazy var textfieldHeading: UILabel = {
         let label = UILabel()
         label.text = localize(.authentication_code_textfield_heading)
-        label.styleAsHeading()
+        label.styleAsTertiaryTitle()
         return label
     }()
     
@@ -120,34 +100,19 @@ private class PilotActivationStep: NSObject, OnboardingStep {
         }
     }
     
-    private lazy var informationBox: InformationBox = {
-        let title = UILabel()
-        title.styleAsHeading()
-        title.text = localize(.authentication_code_info_heading)
-        
-        let description1 = UILabel()
-        description1.styleAsBody()
-        description1.text = localize(.authentication_code_info_description_1)
-        
-        let example = UILabel()
-        example.styleAsHeading()
-        example.text = localize(.authentication_code_info_example)
-        
-        let description2 = UILabel()
-        description2.styleAsBody()
-        description2.text = localize(.authentication_code_info_description_2)
-        
-        return InformationBox(views: [title, description1, example, description2], style: .information, backgroundColor: .clear)
-    }()
+    private let informationBox = InformationBox.information(
+        .title(localize(.authentication_code_info_heading)),
+        .body(localize(.authentication_code_info_description_1)),
+        .heading(localize(.authentication_code_info_example)),
+        .body(localize(.authentication_code_info_description_2))
+    )
     
-    private lazy var textfieldInformationBox: InformationBox = {
-        InformationBox(views: [
-            textfieldHeading,
-            textfieldExampleLabel,
-            errorDescription,
-            authenticationCodeTextField,
-        ], style: .noNews, backgroundColor: .clear)
-    }()
+    private lazy var textfieldInformationBox = InformationBox.error(
+        textfieldHeading,
+        textfieldExampleLabel,
+        errorDescription,
+        authenticationCodeTextField
+    )
     
     private lazy var spinner: UIView = {
         let container = UIView()
@@ -190,7 +155,8 @@ private class PilotActivationStep: NSObject, OnboardingStep {
     func showError() {
         errorDescription.isHidden = false
         authenticationCodeTextField.layer.borderColor = UIColor(.errorRed).cgColor
-        textfieldInformationBox.style = .badNews
+        textfieldInformationBox.error()
+        UIAccessibility.post(notification: .layoutChanged, argument: errorDescription)
         
         CATransaction.disableActions {
             authenticationCodeTextField.rightViewMode = .never

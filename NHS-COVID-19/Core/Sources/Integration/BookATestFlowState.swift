@@ -14,7 +14,7 @@ enum BookATestFlowState {
     
     static func makeState(
         context: RunningAppContext,
-        coordinator: ApplicationCoordinator
+        pasteboardCopier: PasteboardCopying
     ) -> AnyPublisher<BookATestFlowState, Never> {
         let testOrdering = CurrentValueSubject<Bool, Never>(false)
         return testOrdering
@@ -22,15 +22,15 @@ enum BookATestFlowState {
                 if value {
                     return .testOrdering(VirologyTestingFlowInteractor(
                         virologyTestOrderInfoProvider: context.virologyTestOrderInfoProvider,
-                        externalLinkOpener: coordinator,
-                        pasteboardCopier: coordinator
+                        openURL: context.openURL,
+                        pasteboardCopier: pasteboardCopier
                     ))
                 } else {
                     return .bookATest(BookATestInfoViewControllerInteractor(
                         didTapBookATest: {
                             testOrdering.send(true)
                         },
-                        openExternalLink: coordinator.openInBrowser
+                        openURL: context.openURL
                     ))
                 }
             }.eraseToAnyPublisher()

@@ -2,7 +2,13 @@
   "images" : [
     {
       "filename" : "icon-chevron-right.pdf",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "language-direction" : "left-to-right"
+    },
+    {
+      "filename" : "icon-chevron-left.pdf",
+      "idiom" : "universal",
+      "language-direction" : "right-to-left"
     }
   ],
   "info" : {

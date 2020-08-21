@@ -10,10 +10,9 @@ import Interface
 
 struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting {
     let selfDiagnosisManager: SelfDiagnosisManager
-    let coordinator: ApplicationCoordinator
     let orderTest: () -> Void
     let symptomMapper = SymptomMapping()
-    let externalLinkOpener: ExternalLinkOpening
+    let openURL: (URL) -> Void
     
     func fetchQuestionnaire() -> AnyPublisher<InterfaceSymptomsQuestionnaire, Error> {
         selfDiagnosisManager.fetchQuestionnaire()
@@ -57,15 +56,11 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
     }
     
     func furtherAdviceLinkTapped() {
-        if let furtherAdviceLink = URL(string: ExternalLink.isolationAdvice.rawValue) {
-            externalLinkOpener.openExternalLink(url: furtherAdviceLink)
-        }
+        openURL(ExternalLink.isolationAdvice.url)
     }
     
     func nhs111LinkTapped() {
-        if let nhs111Link = URL(string: ExternalLink.nhs111Online.rawValue) {
-            externalLinkOpener.openExternalLink(url: nhs111Link)
-        }
+        openURL(ExternalLink.nhs111Online.url)
     }
 }
 
@@ -76,20 +71,14 @@ extension SelfDiagnosisFlowInteractor: BookATestInfoViewControllerInteracting {
     }
     
     public func didTapTestingPrivacyNotice() {
-        guard let testingPrivacyNoticeLink = URL(string: ExternalLink.testingPrivacyNotice.rawValue) else { return }
-        
-        externalLinkOpener.openExternalLink(url: testingPrivacyNoticeLink)
+        openURL(ExternalLink.testingPrivacyNotice.url)
     }
     
     public func didTapAppPrivacyNotice() {
-        guard let appPrivacyNoticeLink = URL(string: ExternalLink.privacy.rawValue) else { return }
-        
-        externalLinkOpener.openExternalLink(url: appPrivacyNoticeLink)
+        openURL(ExternalLink.privacy.url)
     }
     
     public func didTapBookATestForSomeoneElse() {
-        guard let bookATestForSomeoneElseLink = URL(string: ExternalLink.bookATestForSomeoneElse.rawValue) else { return }
-        
-        externalLinkOpener.openExternalLink(url: bookATestForSomeoneElseLink)
+        openURL(ExternalLink.bookATestForSomeoneElse.url)
     }
 }

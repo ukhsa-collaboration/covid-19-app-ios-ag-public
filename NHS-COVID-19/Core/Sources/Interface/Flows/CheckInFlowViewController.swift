@@ -2,8 +2,10 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import AVFoundation
 import Combine
 import Common
+import Localization
 import UIKit
 
 public struct CheckInDetail {
@@ -18,6 +20,7 @@ public struct CheckInDetail {
 
 public protocol CheckInFlowViewControllerInteracting: CameraAccessDeniedViewControllerInteracting {
     func requestCameraAccess()
+    func createCaptureSession(resultHandler: @escaping ([AVMetadataMachineReadableCodeObject]) -> Void) -> AVCaptureSession?
     func process(_ payload: String) throws -> CheckInDetail
 }
 
@@ -86,6 +89,7 @@ public class CheckInFlowViewController: UINavigationController {
                 rootViewController(for: state),
             ]
         } else {
+            viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
             pushViewController(rootViewController(for: state), animated: true)
         }
     }
@@ -97,6 +101,7 @@ public class CheckInFlowViewController: UINavigationController {
                 interactor: self,
                 cameraPermissionState: cameraPermissionState,
                 requestCameraAccess: interactor.requestCameraAccess,
+                createCaptureSession: interactor.createCaptureSession,
                 completion: { [weak self] payload in
                     guard let self = self else { return }
                     do {

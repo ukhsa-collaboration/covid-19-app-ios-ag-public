@@ -25,8 +25,16 @@ extension Interface.IsolationState {
         case .noNeedToIsolate:
             self = .notIsolating
         case .isolate(let isolation):
-            self = .isolating(days: today.daysRemaining(until: isolation.endDate), endDate: isolation.endDate)
+            let duration = isolation.fromDay.gregorianDay.distance(to: isolation.untilStartOfDay.gregorianDay)
+            let daysRemaining = today.daysRemaining(until: isolation.endDate)
+            let percentRemaining = Self.percentRemaining(duration: duration, daysRemaining: daysRemaining)
+            self = .isolating(days: daysRemaining, percentRemaining: percentRemaining, endDate: isolation.endDate)
         }
     }
     
+    private static func percentRemaining(duration: Int, daysRemaining: Int) -> Double {
+        if duration <= 0 { return 0 }
+        let percentRemaining = Double(daysRemaining) / Double(duration)
+        return max(0, min(percentRemaining, 1))
+    }
 }

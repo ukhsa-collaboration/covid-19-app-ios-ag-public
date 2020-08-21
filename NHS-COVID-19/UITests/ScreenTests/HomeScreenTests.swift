@@ -13,8 +13,8 @@ class SuccessHomeScreenTests: XCTestCase {
     func testBasics() throws {
         try runner.run { app in
             let screen = HomeScreen(app: app)
-            XCTAssert(screen.aboutButton.exists)
             XCTAssert(screen.riskLevelBanner.exists)
+            XCTAssert(screen.notIsolatingIndicator.exists)
         }
     }
     
@@ -22,22 +22,11 @@ class SuccessHomeScreenTests: XCTestCase {
         try runner.run { app in
             let screen = HomeScreen(app: app)
             
-            let moreInfoButtonAction = app.staticTexts[HomeScreenAlerts.moreInfoAlertTitle]
+            let moreInfoButtonAction = app.staticTexts[HomeScreenAlerts.postcodeBannerAlertTitle]
             
-            app.scrollTo(element: screen.moreInfoButton)
-            screen.moreInfoButton.tap()
+            app.scrollTo(element: screen.riskLevelBanner)
+            screen.riskLevelBanner.tap()
             XCTAssert(moreInfoButtonAction.displayed)
-        }
-    }
-    
-    func testAboutContactTracing() throws {
-        try runner.run { app in
-            let screen = HomeScreen(app: app)
-            
-            let aboutContactTracingAction = app.staticTexts[HomeScreenAlerts.contactTracingAlertTitle]
-            app.scrollTo(element: screen.aboutTracingButton)
-            screen.aboutTracingButton.tap()
-            XCTAssert(aboutContactTracingAction.displayed)
         }
     }
     

@@ -3,16 +3,17 @@
 //
 
 import Domain
+import Foundation
 import Interface
 
 public struct BookATestInfoViewControllerInteractor: BookATestInfoViewControllerInteracting {
     
-    private let _openExternalLink: (ExternalLink) -> Void
+    private let _openURL: (URL) -> Void
     private let _didTapBookATest: () -> Void
     
-    public init(didTapBookATest: @escaping () -> Void, openExternalLink: @escaping (ExternalLink) -> Void) {
+    public init(didTapBookATest: @escaping () -> Void, openURL: @escaping (URL) -> Void) {
         _didTapBookATest = didTapBookATest
-        _openExternalLink = openExternalLink
+        _openURL = openURL
     }
     
     public func didTapBookATest() {
@@ -20,14 +21,14 @@ public struct BookATestInfoViewControllerInteractor: BookATestInfoViewController
     }
     
     public func didTapTestingPrivacyNotice() {
-        _openExternalLink(ExternalLink.testingPrivacyNotice)
+        _openURL(ExternalLink.testingPrivacyNotice.url)
     }
     
     public func didTapAppPrivacyNotice() {
-        _openExternalLink(ExternalLink.privacy)
+        _openURL(ExternalLink.privacy.url)
     }
     
     public func didTapBookATestForSomeoneElse() {
-        _openExternalLink(ExternalLink.bookATestForSomeoneElse)
+        _openURL(ExternalLink.bookATestForSomeoneElse.url)
     }
 }

@@ -59,6 +59,7 @@ open class CheckInStatusViewController: UIViewController {
         actionButton.styleAsPrimary()
         actionButton.setTitle(status.actionButtonTitle, for: .normal)
         actionButton.addTarget(self, action: #selector(didTapActionButton), for: .touchUpInside)
+        actionButton.translatesAutoresizingMaskIntoConstraints = false
         return actionButton
     }()
     
@@ -75,70 +76,68 @@ open class CheckInStatusViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [imageView, titleLabel])
+        if let explainationLabel = explanationLabel {
+            stackView.addArrangedSubview(explainationLabel)
+        }
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.distribution = .fill
+        stackView.spacing = .standardSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private let contentView: UIView = {
+        let contentView = UIView()
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        return contentView
+    }()
+    
+    private let scrollView: UIView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        let view = self.view!
         view.styleAsScreenBackground(with: traitCollection)
         
         status.closeButtonTitle.map { _ in
             self.setupCloseButton()
         }
         
-        var content: [UIView] = [imageView, titleLabel]
-        if let explanationLabel = explanationLabel {
-            content.append(explanationLabel)
-        }
-        
-        let scrollView = UIScrollView()
-        scrollView.showsVerticalScrollIndicator = false
-        
-        let stackViewContainerView = UIView()
-        
         view.addSubview(scrollView)
-        scrollView.addFillingSubview(stackViewContainerView)
+        view.addSubview(actionButton)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(stackView)
         
-        view.addAutolayoutSubview(scrollView)
-        
-        let stackView = UIStackView(arrangedSubviews: content)
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.distribution = .fill
-        stackView.layoutMargins = .standard
-        stackView.spacing = .standardSpacing
-        
-        let stackViewContainerViewHeightConstraint = stackViewContainerView.heightAnchor.constraint(equalTo: scrollView.heightAnchor, constant: 0.0)
-        stackViewContainerViewHeightConstraint.priority = .defaultLow
-        
-        stackViewContainerView.addAutolayoutSubview(stackView)
-        stackView.isLayoutMarginsRelativeArrangement = true
-        
-        view.addAutolayoutSubview(stackView)
         NSLayoutConstraint.activate([
-            stackViewContainerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: 0.0),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: .standardSpacing),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            actionButton.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: .standardSpacing),
+            actionButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: .standardSpacing),
+            actionButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -.standardSpacing),
+            actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -.standardSpacing),
             
-            stackView.centerYAnchor.constraint(equalTo: stackViewContainerView.centerYAnchor, constant: 0.0),
-            stackView.topAnchor.constraint(greaterThanOrEqualTo: stackViewContainerView.topAnchor),
-            stackView.bottomAnchor.constraint(lessThanOrEqualTo: stackViewContainerView.bottomAnchor),
-            stackView.leadingAnchor.constraint(equalTo: stackViewContainerView.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: stackViewContainerView.trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            stackViewContainerViewHeightConstraint,
-        ])
-        
-        view.addAutolayoutSubview(actionButton)
-        NSLayoutConstraint.activate([
-            actionButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .standardSpacing),
-            actionButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.standardSpacing),
-            actionButton.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -.standardSpacing),
-        ])
-        
-        NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: actionButton.topAnchor),
+            stackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor),
+            stackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: .standardSpacing),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -.standardSpacing),
+            
+            stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor).withPriority(.defaultLow),
+            
         ])
     }
     

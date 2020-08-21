@@ -99,6 +99,10 @@ class ExposureNotificationStateController: ObservableObject {
     }
     
     func setEnabled(_ enabled: Bool, completion: @escaping () -> Void) {
+        guard enabled != isEnabled else {
+            completion()
+            return
+        }
         manager.setExposureNotificationEnabled(enabled) { _ in
             self.authorizationState = AuthorizationState(self.manager.instanceAuthorizationStatus)
             completion()

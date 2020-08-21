@@ -35,11 +35,14 @@ public class PostcodeStore {
     @Published
     private(set) var hasPostcode: Bool
     
-    init(store: EncryptedStoring) {
+    private let isValid: (_ postcode: String) -> Bool
+    
+    init(store: EncryptedStoring, isValid: @escaping (_ postcode: String) -> Bool) {
         _postcodeInfo = store.encrypted("postcode")
         let info = _postcodeInfo.wrappedValue
         hasPostcode = info != nil
         riskLevel = info?.riskLevel
+        self.isValid = isValid
     }
     
     func save(postcode: String) throws {
@@ -58,9 +61,5 @@ public class PostcodeStore {
     func delete() {
         riskLevel = nil
         postcodeInfo = nil
-    }
-    
-    func isValid(_ postcode: String) -> Bool {
-        postcode.uppercased().range(of: "^[A-Z]{1,2}[0-9R][0-9A-Z]?$", options: .regularExpression) != nil
     }
 }

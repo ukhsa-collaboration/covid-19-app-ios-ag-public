@@ -25,19 +25,18 @@ public struct RiskLevelBanner: View {
         
         var postcode: String
         
-        var moreInfo: () -> Void
-        
-        public init(postcode: String, riskLevel: InterfaceProperty<RiskLevel?>, moreInfo: @escaping () -> Void) {
+        public init(postcode: String, riskLevel: InterfaceProperty<RiskLevel?>) {
             self.postcode = postcode
             _riskLevel = riskLevel
-            self.moreInfo = moreInfo
         }
     }
     
     @ObservedObject private var viewModel: ViewModel
+    private let moreInfo: () -> Void
     
-    public init(viewModel: ViewModel) {
+    public init(viewModel: ViewModel, moreInfo: @escaping () -> Void) {
         self.viewModel = viewModel
+        self.moreInfo = moreInfo
     }
     
     public var body: some View {
@@ -48,44 +47,13 @@ public struct RiskLevelBanner: View {
     }
     
     private func realBody(riskLevel: ViewModel.RiskLevel) -> some View {
-        ZStack {
-            Color(.surface)
-                .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.1), radius: .stripeWidth, y: .stripeWidth)
-            HStack(spacing: 0) {
-                Color(riskLevel.stripeColor)
-                    .frame(width: .bannerStripeWidth)
-                HStack {
-                    HStack {
-                        Image(.locationIcon)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(maxWidth: .locationIconPreferredLength)
-                            .accessibility(hidden: true)
-                        Text(.risk_level_banner_text(postcode: viewModel.postcode, risk: riskLevel.label))
-                            .font(.body)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .foregroundColor(Color(.primaryText))
-                    }
-                    Spacer()
-                    Button(action: viewModel.moreInfo) {
-                        HStack(spacing: .hairSpacing) {
-                            Text(.risk_level_more_info)
-                                .font(.headline)
-                                .foregroundColor(Color(.nhsBlue))
-                                .underline()
-                            Image(.externalLink)
-                                .resizable()
-                                .frame(width: .linkButtonPreferredLength, height: .linkButtonPreferredLength)
-                                .foregroundColor(Color(.nhsBlue))
-                        }
-                        .padding([.top, .bottom], .halfSpacing)
-                    }
-                    .linkify(.risk_level_more_info)
-                    .accessibility(label: Text(.risk_level_more_info_accessibility_label))
-                }
-                .padding([.leading, .trailing], .halfSpacing)
-            }
-        }
+        NavigationButton(
+            imageName: .pin,
+            foregroundColor: riskLevel.color,
+            backgroundColor: .clear,
+            text: localize(.risk_level_banner_text(postcode: viewModel.postcode, risk: riskLevel.label)),
+            action: moreInfo
+        )
     }
     
 }
@@ -115,4 +83,14 @@ private extension RiskLevelBanner.ViewModel.RiskLevel {
         }
     }
     
+    var color: Color {
+        switch self {
+        case .low:
+            return Color(.styleGreen)
+        case .medium:
+            return Color(.styleOrange)
+        case .high:
+            return Color(.styleRed)
+        }
+    }
 }

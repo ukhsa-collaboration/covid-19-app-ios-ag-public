@@ -25,6 +25,8 @@ public class HomeFlowScenario: Scenario {
     public static var showTermsOfUseAlertTitle = "Show Terms of Use"
     public static var showAccessibilityStatementTitle = "Show Accessibility Statement"
     public static var showAboutContactTracing = "Show About contact tracing"
+    public static let howThisAppWorksTaped = "How this app works taped"
+    public static let showMoreInfoAlertTitle = "Show more info"
     
     static var appController: AppController {
         Controller()
@@ -36,7 +38,7 @@ public class HomeFlowScenario: Scenario {
         
         init() {
             let interactor = HomeFlowInteractor(viewController: rootViewController)
-            let postcodeViewModel = RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .constant(.low), moreInfo: {})
+            let postcodeViewModel = RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .constant(.low))
             let riskLevelIndicatorViewModel = RiskLevelIndicator.ViewModel(isolationState: .constant(.notIsolating), paused: .constant(false))
             let flow = HomeFlowViewController(
                 interactor: interactor,
@@ -52,6 +54,11 @@ public class HomeFlowScenario: Scenario {
 }
 
 private struct HomeFlowInteractor: HomeFlowViewController.Interacting {
+    var riskLevelInfoViewModel: RiskLevelInfoViewModel?
+    
+    func openWebsiteLinkfromRisklevelInfoScreen() {
+        viewController?.showAlert(title: HomeFlowScenario.showMoreInfoAlertTitle)
+    }
     
     private weak var viewController: UIViewController?
     
@@ -97,10 +104,6 @@ private struct HomeFlowInteractor: HomeFlowViewController.Interacting {
         viewController?.showAlert(title: HomeFlowScenario.showIsolationAdviceAlertTitle)
     }
     
-    func openAboutContactTracingLink() {
-        viewController?.showAlert(title: HomeFlowScenario.showAboutContactTracing)
-    }
-    
     func deleteAppData() {
         viewController?.showAlert(title: HomeFlowScenario.showDeleteDataAlertTitle)
     }
@@ -123,6 +126,10 @@ private struct HomeFlowInteractor: HomeFlowViewController.Interacting {
     
     func openAccessibilityStatementLink() {
         viewController?.showAlert(title: HomeFlowScenario.showAccessibilityStatementTitle)
+    }
+    
+    func openHowThisAppWorksLink() {
+        viewController?.showAlert(title: HomeFlowScenario.howThisAppWorksTaped)
     }
     
 }

@@ -18,7 +18,7 @@ class AboutThisAppScreenTests: XCTestCase {
             XCTAssert(screen.aboutThisAppParagraphOne.exists)
             XCTAssert(screen.aboutThisAppParagraphTwo.exists)
             XCTAssert(screen.aboutThisAppParagraphThree.exists)
-            XCTAssert(screen.aboutThisAppParagraphFour.exists)
+            XCTAssert(screen.aboutThisAppButton.exists)
             
             XCTAssert(screen.commonQuestionsHeading.exists)
             XCTAssert(screen.commonQuestionsDescription.exists)

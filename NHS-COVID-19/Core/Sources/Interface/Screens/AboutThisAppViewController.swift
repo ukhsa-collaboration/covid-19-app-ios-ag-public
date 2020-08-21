@@ -2,6 +2,7 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Common
 import Localization
 import UIKit
 
@@ -12,6 +13,7 @@ public protocol AboutThisAppViewControllerInteracting {
     func didTapPrivacyNotice()
     func didTapAccessibilityStatement()
     func didTapSeeData()
+    func didTapHowThisAppWorks()
 }
 
 public class AboutThisAppViewController: UIViewController {
@@ -35,115 +37,67 @@ public class AboutThisAppViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var aboutThisAppSection: UIView = {
-        let headingLabel = UILabel()
-        headingLabel.styleAsHeading()
-        headingLabel.text = localize(.about_this_app_how_this_app_works_heading)
-        
-        let paragraph1 = UILabel()
-        paragraph1.styleAsBody()
-        paragraph1.text = localize(.about_this_app_how_this_app_works_paragraph1)
-        
-        let paragraph2 = UILabel()
-        paragraph2.styleAsBody()
-        paragraph2.text = localize(.about_this_app_how_this_app_works_paragraph2)
-        
-        let paragraph3 = UILabel()
-        paragraph3.styleAsBody()
-        paragraph3.text = localize(.about_this_app_how_this_app_works_paragraph3)
-        
-        let paragraph4 = UILabel()
-        paragraph4.styleAsBody()
-        paragraph4.text = localize(.about_this_app_how_this_app_works_paragraph4)
-        
-        return InformationBox(views: [headingLabel, paragraph1, paragraph2, paragraph3, paragraph4], style: .information)
+    private let aboutThisAppSection = InformationBox.information.purple([
+        .heading(localize(.about_this_app_how_this_app_works_heading)),
+        .body(localize(.about_this_app_how_this_app_works_paragraph1)),
+        .body(localize(.about_this_app_how_this_app_works_paragraph2)),
+        .body(localize(.about_this_app_how_this_app_works_paragraph3)),
+        .view(mutating(LinkButton(title: localize(.about_this_app_how_this_app_works_button))) {
+            $0.addTarget(self, action: #selector(didTapHowThisAppWorks))
+        }),
+    ])
+    
+    private lazy var commonQuestionsSection = InformationBox.information.orange([
+        .heading(localize(.about_this_app_common_questions_heading)),
+        .body(localize(.about_this_app_common_questions_description)),
+        .view(mutating(LinkButton(title: localize(.about_this_app_common_questions_button))) {
+            $0.addTarget(self, action: #selector(didTapCommonQuestions))
+        }),
+    ])
+    
+    private lazy var ourPoliciesSection: UIView = InformationBox.information.lightBlue([
+        .heading(localize(.about_this_app_our_policies_heading)),
+        .body(localize(.about_this_app_our_policies_description)),
+        .view(mutating(LinkButton(title: localize(.about_this_app_our_policies_terms_of_use_button))) {
+            $0.addTarget(self, action: #selector(didTapTermsOfUse))
+        }),
+        .view(mutating(LinkButton(title: localize(.about_this_app_our_policies_privacy_notice_button))) {
+            $0.addTarget(self, action: #selector(didTapPrivacyNotice))
+        }),
+        .view(mutating(LinkButton(title: localize(.about_this_app_our_policies_accessibility_statement_button))) {
+            $0.addTarget(self, action: #selector(didTapAccessibilityStatement))
+        }),
+    ])
+    
+    private lazy var showMyDataSection: UIView = InformationBox.information.turquoise([
+        .heading(localize(.about_this_app_my_data_heading)),
+        .body(localize(.about_this_app_my_data_description)),
+        .view(mutating(LinkButton(title: localize(.about_this_app_my_data_button))) {
+            $0.addTarget(self, action: #selector(didTapSeeData))
+        }),
+    ])
+    
+    private lazy var softwareInformationSection = InformationBox.information.darkBlue([
+        .heading(localize(.about_this_app_software_information_heading)),
+        .body(localize(.about_this_app_software_information_app_name(name: appName ?? ""))),
+        .body(localize(.about_this_app_software_information_version(version: version ?? ""))),
+        .body(localize(.about_this_app_software_information_date_of_release)),
+        .body(localize(.about_this_app_software_information_entity_name_and_address)),
+    ])
+    
+    private lazy var footerLabel: UILabel = {
+        let label = UILabel()
+        label.styleAsHeading()
+        label.text = localize(.about_this_app_footer_text)
+        label.textAlignment = .center
+        return label
     }()
     
-    private lazy var commonQuestionsSection: UIView = {
-        let headingLabel = UILabel()
-        headingLabel.styleAsHeading()
-        headingLabel.text = localize(.about_this_app_common_questions_heading)
-        
-        let descriptionLabel = UILabel()
-        descriptionLabel.styleAsBody()
-        descriptionLabel.text = localize(.about_this_app_common_questions_description)
-        
-        let commonQuestionsButton = LinkButton(
-            title: localize(.about_this_app_common_questions_button)
-        )
-        commonQuestionsButton.addTarget(self, action: #selector(didTapCommonQuestions), for: .touchUpInside)
-        
-        return InformationBox(views: [headingLabel, descriptionLabel, commonQuestionsButton], style: .information)
-    }()
-    
-    private lazy var ourPoliciesSection: UIView = {
-        let headingLabel = UILabel()
-        headingLabel.styleAsHeading()
-        headingLabel.text = localize(.about_this_app_our_policies_heading)
-        
-        let descriptionLabel = UILabel()
-        descriptionLabel.styleAsBody()
-        descriptionLabel.text = localize(.about_this_app_our_policies_description)
-        
-        let termsOfUseButton = LinkButton(
-            title: localize(.about_this_app_our_policies_terms_of_use_button)
-        )
-        termsOfUseButton.addTarget(self, action: #selector(didTapTermsOfUse), for: .touchUpInside)
-        
-        let privacyNoticeButton = LinkButton(
-            title: localize(.about_this_app_our_policies_privacy_notice_button)
-        )
-        privacyNoticeButton.addTarget(self, action: #selector(didTapPrivacyNotice), for: .touchUpInside)
-        
-        let accessibilityStatementButton = LinkButton(
-            title: localize(.about_this_app_our_policies_accessibility_statement_button)
-        )
-        accessibilityStatementButton.addTarget(self, action: #selector(didTapAccessibilityStatement), for: .touchUpInside)
-        
-        return InformationBox(views: [headingLabel, descriptionLabel, termsOfUseButton, privacyNoticeButton, accessibilityStatementButton], style: .information)
-    }()
-    
-    private lazy var showMyDataSection: UIView = {
-        let headingLabel = UILabel()
-        headingLabel.styleAsHeading()
-        headingLabel.text = localize(.about_this_app_my_data_heading)
-        
-        let descriptionLabel = UILabel()
-        descriptionLabel.styleAsBody()
-        descriptionLabel.text = localize(.about_this_app_my_data_description)
-        
-        let showMyDataButton = LinkButton(
-            title: localize(.about_this_app_my_data_button),
-            accessoryImage: nil
-        )
-        showMyDataButton.addTarget(self, action: #selector(didTapSeeData), for: .touchUpInside)
-        
-        return InformationBox(views: [headingLabel, descriptionLabel, showMyDataButton], style: .information)
-    }()
-    
-    private lazy var softwareInformationSection: UIView = {
-        let headingLabel = UILabel()
-        headingLabel.styleAsHeading()
-        headingLabel.text = localize(.about_this_app_software_information_heading)
-        
-        let appNameLabel = UILabel()
-        appNameLabel.styleAsBody()
-        
-        appNameLabel.text = localize(.about_this_app_software_information_app_name(name: appName ?? ""))
-        
-        let versionLabel = UILabel()
-        versionLabel.styleAsBody()
-        versionLabel.text = localize(.about_this_app_software_information_version(version: version ?? ""))
-        
-        let dateOfReleaseLabel = UILabel()
-        dateOfReleaseLabel.styleAsBody()
-        dateOfReleaseLabel.text = localize(.about_this_app_software_information_date_of_release)
-        
-        let nameAndAddressLabel = UILabel()
-        nameAndAddressLabel.styleAsBody()
-        nameAndAddressLabel.text = localize(.about_this_app_software_information_entity_name_and_address)
-        
-        return InformationBox(views: [headingLabel, appNameLabel, versionLabel, dateOfReleaseLabel, nameAndAddressLabel], style: .information)
+    private lazy var footerImage: UIImageView = {
+        let image = UIImage(named: "Onboarding/Protect")
+        let imageView = UIImageView(image: image)
+        imageView.styleAsDecoration()
+        return imageView
     }()
     
     override public func viewDidLoad() {
@@ -158,6 +112,8 @@ public class AboutThisAppViewController: UIViewController {
             ourPoliciesSection,
             commonQuestionsSection,
             softwareInformationSection,
+            footerLabel,
+            footerImage,
         ]
         
         let stackView = UIStackView(arrangedSubviews: sections)
@@ -206,5 +162,8 @@ public class AboutThisAppViewController: UIViewController {
     @objc func didTapAccessibilityStatement() {
         interacting.didTapAccessibilityStatement()
     }
+    
+    @objc func didTapHowThisAppWorks() {
+        interacting.didTapHowThisAppWorks()
+    }
 }
- 

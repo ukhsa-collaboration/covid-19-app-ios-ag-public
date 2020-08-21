@@ -31,6 +31,10 @@ struct EnterPostcodeScreen {
         app.textFields[localized: .postcode_entry_textfield_label]
     }
     
+    var errorTitle: XCUIElement {
+        app.staticTexts[localized: .postcode_entry_error_title]
+    }
+    
     var errorDescription: XCUIElement {
         app.staticTexts[localized: .postcode_entry_error_description]
     }

@@ -14,7 +14,7 @@ enum SelfDiagnosisOrderFlowState {
     
     static func makeState(
         context: RunningAppContext,
-        coordinator: ApplicationCoordinator
+        pasteboardCopier: PasteboardCopying
     ) -> AnyPublisher<SelfDiagnosisOrderFlowState, Never> {
         let testOrdering = CurrentValueSubject<Bool, Never>(false)
         return testOrdering
@@ -22,17 +22,16 @@ enum SelfDiagnosisOrderFlowState {
                 if value {
                     return .testOrdering(VirologyTestingFlowInteractor(
                         virologyTestOrderInfoProvider: context.virologyTestOrderInfoProvider,
-                        externalLinkOpener: coordinator,
-                        pasteboardCopier: coordinator
+                        openURL: context.openURL,
+                        pasteboardCopier: pasteboardCopier
                     ))
                 } else {
                     return .selfDiagnosis(SelfDiagnosisFlowInteractor(
                         selfDiagnosisManager: context.selfDiagnosisManager!,
-                        coordinator: coordinator,
                         orderTest: {
                             testOrdering.send(true)
                         },
-                        externalLinkOpener: coordinator
+                        openURL: context.openURL
                     ), isolationState: Interface.IsolationState(domainState: context.isolationState.currentValue, today: LocalDay.today))
                 }
             }.eraseToAnyPublisher()

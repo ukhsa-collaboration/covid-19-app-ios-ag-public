@@ -114,7 +114,7 @@ public struct MyDataView: View {
                             primaryButton: .default(Text(localize(.mydata_delete_data_alert_button_title))) {
                                 self.interactor.deleteAppData()
                             },
-                            secondaryButton: .cancel()
+                            secondaryButton: .cancel(Text(.cancel))
                         )
                     }
                     .frame(minWidth: 0, maxWidth: .infinity)

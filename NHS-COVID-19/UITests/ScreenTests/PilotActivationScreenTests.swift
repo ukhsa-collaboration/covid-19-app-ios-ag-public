@@ -14,8 +14,9 @@ class PilotActivationScreenTests: XCTestCase {
         try runner.run { app in
             let screen = PilotActivationScreen(app: app)
             XCTAssert(screen.title.exists)
-            XCTAssert(screen.description1.exists)
-            XCTAssert(screen.description2.exists)
+            screen.descriptions.forEach {
+                XCTAssert($0.exists)
+            }
             XCTAssert(screen.textfieldHeading.exists)
             XCTAssert(screen.textfieldExample.exists)
             XCTAssert(screen.infoHeading.exists)

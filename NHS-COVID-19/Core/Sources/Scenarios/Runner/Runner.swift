@@ -14,7 +14,6 @@ public class Runner {
     public static let interfaceStyleDefaultKey = "interfaceStyle"
     public static let disableAnimations = "disable_animations"
     public static let disableHardwareKeyboard = "disable_hardware_keyboard"
-    public static let isPilotActivated = "sandbox.isPilotActivated"
     
     private let loggingManager: LoggingManager
     private let appController = WrappingAppController()

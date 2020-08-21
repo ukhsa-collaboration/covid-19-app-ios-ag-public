@@ -17,7 +17,7 @@ class IsolationStateTests: XCTestCase {
     }
     
     func testInitializingNotIsolatingWhenNotAcknowledged() {
-        let state = IsolationState(logicalState: .isolationFinishedButNotAcknowledged(Isolation(untilStartOfDay: .today, reason: .contactCase)))
+        let state = IsolationState(logicalState: .isolationFinishedButNotAcknowledged(Isolation(fromDay: .today, untilStartOfDay: .today, reason: .contactCase)))
         
         TS.assert(state, equals: .noNeedToIsolate)
     }
@@ -25,7 +25,7 @@ class IsolationStateTests: XCTestCase {
     func testInitializingIsolating() {
         let timeZone = TimeZone(secondsFromGMT: .random(in: 100 ... 1000))!
         let day = LocalDay(year: 2020, month: 3, day: 17, timeZone: timeZone)
-        let isolation = Isolation(untilStartOfDay: day, reason: .indexCase(hasPositiveTestResult: false))
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: .indexCase(hasPositiveTestResult: false))
         let state = IsolationState(logicalState: .isolating(isolation, endAcknowledged: false, startAcknowledged: true))
         
         TS.assert(state, equals: .isolate(isolation))

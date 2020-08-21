@@ -30,7 +30,7 @@ public class NoSymptomsIsolatingViewController: UIViewController {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(didTapCancel))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: localize(.cancel), style: .done, target: self, action: #selector(didTapCancel))
         
         let view = self.view!
         view.styleAsScreenBackground(with: traitCollection)
@@ -62,11 +62,7 @@ public class NoSymptomsIsolatingViewController: UIViewController {
         pleaseIsolateStack.accessibilityTraits = [.staticText]
         pleaseIsolateStack.accessibilityLabel = localize(.positive_test_please_isolate_accessibility_label(days: daysToIsolate))
         
-        let indicationLabel = UILabel()
-        indicationLabel.text = localize(.no_symptoms_isolating_info)
-        indicationLabel.styleAsSecondaryTitle()
-        
-        let infobox = InformationBox(views: [indicationLabel], style: .goodNews, backgroundColor: UIColor(.surface))
+        let infobox = InformationBox.indication.goodNews(localize(.no_symptoms_isolating_info))
         
         let explanationLabel = UILabel()
         explanationLabel.text = localize(.no_symptoms_isolating_body)

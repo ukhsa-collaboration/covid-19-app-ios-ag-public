@@ -33,7 +33,8 @@ public class AppAvailabilityErrorViewController: RecoverableErrorViewController 
     }
     
     public init(viewModel: ViewModel) {
-        let description = viewModel.descriptions[Locale(identifier: "en-GB")]
+        let language = Bundle.preferredLocalizations(from: viewModel.descriptions.keys.map { $0.identifier }).first ?? "en-GB"
+        let description = viewModel.descriptions[Locale(identifier: language)]
         super.init(error: AppAvailabilityError(title: viewModel.title, description: description))
     }
     

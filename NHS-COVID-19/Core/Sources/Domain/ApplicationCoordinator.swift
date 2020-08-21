@@ -9,15 +9,7 @@ import Foundation
 import Logging
 import UIKit
 
-public protocol PasteboardCopying {
-    func copyToPasteboard(value: String)
-}
-
-public protocol ExternalLinkOpening {
-    func openExternalLink(url: URL)
-}
-
-public class ApplicationCoordinator: PasteboardCopying, ExternalLinkOpening {
+public class ApplicationCoordinator {
     
     private static let appAvailabilityCheckTaskFrequency = 6.0 * 60 * 60 // 6h
     private static let exposureDetectionBackgroundTaskFrequency = 2.0 * 60 * 60 // 2h
@@ -56,6 +48,9 @@ public class ApplicationCoordinator: PasteboardCopying, ExternalLinkOpening {
     private let riskScoreNegotiator: RiskScoreNegotiator
     private let circuitBreaker: CircuitBreaker
     private let housekeeper: Housekeeper
+    private let qrCodeScanner: QRCodeScanning
+    
+    public let pasteboardCopier: PasteboardCopying
     
     @Published
     public var state = ApplicationState.starting
@@ -66,6 +61,7 @@ public class ApplicationCoordinator: PasteboardCopying, ExternalLinkOpening {
         processingTaskRequestManager = services.processingTaskRequestManager
         exposureNotificationManager = services.exposureNotificationManager
         distributeClient = services.distributeClient
+        pasteboardCopier = services.pasteboardCopier
         
         Self.logger.debug("Initialising")
         
@@ -79,7 +75,7 @@ public class ApplicationCoordinator: PasteboardCopying, ExternalLinkOpening {
         appActivationManager = AppActivationManager(store: services.encryptedStore, httpClient: services.apiClient)
         
         if enabledFeatures.contains(.riskyPostcode) {
-            postcodeStore = PostcodeStore(store: services.encryptedStore)
+            postcodeStore = PostcodeStore(store: services.encryptedStore, isValid: services.postcodeValidator.isValid(_:))
             postcodeManager = PostcodeManager(postcodeStore: postcodeStore!, httpClient: distributeClient)
         } else {
             postcodeManager = nil
@@ -175,26 +171,13 @@ public class ApplicationCoordinator: PasteboardCopying, ExternalLinkOpening {
             }
         )
         
-        let circuitBreaker = self.circuitBreaker
-        exposureDetectionStore.$exposureInfo
-            .filter { $0 != nil && $0!.approvalToken == nil }
-            .receive(on: RunLoop.main) // Hack: `$exposureInfo` fires _before_ the value is set, not after
-            .flatMap { _ in
-                circuitBreaker.processPendingApprovals()
-            }
-            .sink(receiveValue: {})
-            .store(in: &cancellabes)
-        
-        checkInContext?.checkInsStore.detectedNewRiskyCheckIns
-            .flatMap(circuitBreaker.processPendingApprovals)
-            .sink(receiveValue: {})
-            .store(in: &cancellabes)
-        
         housekeeper = Housekeeper(
             isolationStateStore: isolationStateStore,
             isolationStateManager: isolationStateManager,
             virologyTestingStateStore: virologyTestingStateStore
         )
+        
+        qrCodeScanner = QRCodeScanner(cameraManager: services.cameraManager)
         
         monitorRawState()
         
@@ -234,7 +217,7 @@ public class ApplicationCoordinator: PasteboardCopying, ExternalLinkOpening {
         case .failedToStart:
             return .failedToStart
         case .authorizationOnboarding:
-            return .authorizationOnboarding(requestPermissions: requestPermissions)
+            return .authorizationOnboarding(requestPermissions: requestPermissions, openURL: application.open)
         case .canNotRunExposureNotification(let reason):
             return .canNotRunExposureNotification(reason: disabledReason(from: reason))
         case .postcodeOnboarding:
@@ -246,6 +229,7 @@ public class ApplicationCoordinator: PasteboardCopying, ExternalLinkOpening {
                     checkInContext: checkInContext,
                     postcodeStore: postcodeStore,
                     openSettings: application.openSettings,
+                    openURL: application.open,
                     selfDiagnosisManager: selfDiagnosisManager,
                     isolationState: isolationStateManager.$state
                         .map(IsolationState.init)
@@ -276,7 +260,8 @@ public class ApplicationCoordinator: PasteboardCopying, ExternalLinkOpening {
                     deleteAllData: { [weak self] in
                         self?.deleteAllData()
                     },
-                    riskyCheckInsAcknowledgementState: makeRiskyCheckInsAcknowledgementState()
+                    riskyCheckInsAcknowledgementState: makeRiskyCheckInsAcknowledgementState(),
+                    qrCodeScanner: qrCodeScanner
                 )
             )
         }
@@ -449,12 +434,7 @@ public class ApplicationCoordinator: PasteboardCopying, ExternalLinkOpening {
     private func makeBackgroundJobsForRunningState() -> [BackgroundTaskAggregator.Job] {
         var enabledJobs = [BackgroundTaskAggregator.Job]()
         
-        let processPendingCircuitBreakerApprovals = BackgroundTaskAggregator.Job(
-            preferredFrequency: Self.exposureDetectionBackgroundTaskFrequency,
-            work: circuitBreaker.processPendingApprovals
-        )
-        enabledJobs.append(processPendingCircuitBreakerApprovals)
-        
+        let circuitBreaker = self.circuitBreaker
         let detectionExposureManager = self.detectionExposureManager
         let riskScoreNegotiator = self.riskScoreNegotiator
         let expsoureNotificationJob = BackgroundTaskAggregator.Job(
@@ -465,15 +445,19 @@ public class ApplicationCoordinator: PasteboardCopying, ExternalLinkOpening {
                 .map { riskInfo in
                     riskScoreNegotiator.receive(riskInfo: riskInfo)
                 }
+                .append(Deferred(createPublisher: circuitBreaker.processExposureNotificationApproval))
                 .eraseToAnyPublisher()
         }
         enabledJobs.append(expsoureNotificationJob)
         
         if let postcodeManager = self.postcodeManager {
             let postcodeJob = BackgroundTaskAggregator.Job(
-                preferredFrequency: Self.matchingRiskyPostcodeDeletionBackgroundTaskFrequency,
-                work: postcodeManager.evaluatePostcodeRisk
-            )
+                preferredFrequency: Self.exposureDetectionBackgroundTaskFrequency
+            ) {
+                postcodeManager.evaluatePostcodeRisk()
+                    .append(Deferred(createPublisher: circuitBreaker.processRiskyVenueApproval))
+                    .eraseToAnyPublisher()
+            }
             enabledJobs.append(postcodeJob)
         }
         
@@ -558,10 +542,6 @@ public class ApplicationCoordinator: PasteboardCopying, ExternalLinkOpening {
             .store(in: &cancellabes)
     }
     
-    public func openInBrowser(_ externalLink: ExternalLink) {
-        application.open(externalLink.url)
-    }
-    
     private func requestPermissions() {
         exposureNotificationStateController.enable {
             self.userNotificationsStateController.authorize()
@@ -588,14 +568,6 @@ public class ApplicationCoordinator: PasteboardCopying, ExternalLinkOpening {
         }
     }
     
-    public func copyToPasteboard(value: String) {
-        UIPasteboard.general.string = value
-    }
-    
-    public func openExternalLink(url: URL) {
-        application.open(url)
-    }
-    
     private func deleteAllData() {
         // start with postcode. This resets the UI immediately; making sure there’s no jitter as we delete everything
         postcodeStore?.delete()
@@ -604,22 +576,6 @@ public class ApplicationCoordinator: PasteboardCopying, ExternalLinkOpening {
         exposureDetectionStore.delete()
         virologyTestingStateStore.delete()
     }
-}
-
-public enum ExternalLink: String {
-    case privacy = "https://covid19.nhs.uk/privacy-and-data.html"
-    case ourPolicies = "https://covid19.nhs.uk/our-policies.html"
-    case faq = "https://faq.covid19.nhs.uk/"
-    case aboutTheApp = "https://covid19.nhs.uk"
-    case accessibilityStatement = "https://covid19.nhs.uk/accessibility.html"
-    case isolationAdvice = "https://faq.covid19.nhs.uk/article/KA-01099/en-us"
-    case generalAdvice = "https://www.gov.uk/coronavirus"
-    case moreInfoOnPostcodeRisk = "https://faq.covid19.nhs.uk/article/KA-01101/en-us"
-    case bookATestForSomeoneElse = "https://www.nhs.uk/conditions/coronavirus-covid-19/testing-and-tracing/get-a-test-to-check-if-you-have-coronavirus/"
-    case testingPrivacyNotice = "https://www.gov.uk/government/publications/coronavirus-covid-19-testing-privacy-information/testing-for-coronavirus-privacy-information"
-    case nhs111Online = "https://111.nhs.uk/"
-    
-    var url: URL { URL(string: rawValue)! }
 }
 
 private extension NotificationCenter {

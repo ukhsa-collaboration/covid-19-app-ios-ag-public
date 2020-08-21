@@ -51,8 +51,10 @@ public struct NotIsolatingIndicator: View {
             .frame(width: 75, height: 75, alignment: .center)
             
             Text(.risk_level_indicator_contact_tracing_active)
-                .font(.body)
+                .bold()
+                .scaledFont(textStyle: .title3, size: 18)
                 .foregroundColor(Color(.primaryText))
+                .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .frame(height: .appActivityIndicatorMinHeight)

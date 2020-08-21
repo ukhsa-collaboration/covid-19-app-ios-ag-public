@@ -63,13 +63,6 @@ public class PositiveSymptomsViewController: UIViewController {
         return label
     }()
     
-    private let warningInformationBox: InformationBox = {
-        let label = UILabel()
-        label.text = localize(.positive_symptoms_you_might_have_corona)
-        label.styleAsSecondaryTitle()
-        return InformationBox(views: [label], style: .warning, backgroundColor: UIColor(.surface))
-    }()
-    
     private let explainationLabel: UILabel = {
         let label = UILabel()
         label.styleAsBody()
@@ -121,7 +114,7 @@ public class PositiveSymptomsViewController: UIViewController {
         let stack = UIStackView(arrangedSubviews: [
             padlockImageView,
             pleaseIsolateStack,
-            warningInformationBox,
+            InformationBox.indication.warning(localize(.positive_symptoms_you_might_have_corona)),
             explainationLabel,
             linkLabel,
             furtherAdviceLink,
@@ -142,7 +135,7 @@ public class PositiveSymptomsViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(didTapCancel))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: localize(.cancel), style: .done, target: self, action: #selector(didTapCancel))
         view.styleAsScreenBackground(with: traitCollection)
         
         view.addAutolayoutSubview(scrollView)

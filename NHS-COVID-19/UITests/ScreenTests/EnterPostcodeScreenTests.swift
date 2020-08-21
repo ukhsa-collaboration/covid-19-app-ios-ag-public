@@ -110,6 +110,7 @@ class EnterPostcodeScreenTests: XCTestCase {
             screen.postcodeTextField.tap()
             screen.postcodeTextField.typeText("\(postcode)\n")
             
+            XCTAssert(screen.errorTitle.exists)
             XCTAssert(screen.errorDescription.exists)
         }
     }

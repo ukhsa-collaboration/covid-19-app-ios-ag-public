@@ -12,16 +12,26 @@ import UIKit
 struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     
     var context: RunningAppContext
-    var coordinator: ApplicationCoordinator
+    var pasteboardCopier: PasteboardCopying
     
-    func openAboutContactTracingLink() {
-        // TODO: interactor method name is out of date. Fix it.
-        coordinator.openInBrowser(.aboutTheApp)
+    var riskLevelInfoViewModel: RiskLevelInfoViewModel? {
+        if let riskLevel = context.postcodeStore?.riskLevel, let postcode = context.postcodeStore?.load() {
+            let riskLevelInfo: RiskLevelInfoViewModel.RiskLevel
+            
+            switch riskLevel {
+            case .low: riskLevelInfo = .low
+            case .medium: riskLevelInfo = .medium
+            case .high: riskLevelInfo = .high
+            }
+            
+            return RiskLevelInfoViewModel(postcode: postcode, riskLevel: riskLevelInfo)
+        }
+        return nil
     }
     
     func makeDiagnosisViewController() -> UIViewController? {
         WrappingViewController {
-            SelfDiagnosisOrderFlowState.makeState(context: context, coordinator: self.coordinator)
+            SelfDiagnosisOrderFlowState.makeState(context: context, pasteboardCopier: pasteboardCopier)
                 .map { state in
                     switch state {
                     case .selfDiagnosis(let interactor, let isolationState):
@@ -39,6 +49,9 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             _openSettings: context.openSettings,
             _requestCameraAccess: {
                 checkInContext.cameraStateController.requestAccess()
+            },
+            _createCaptureSession: { resultHandler in
+                self.context.qrCodeScanner.createCaptureSession(resultHandler: resultHandler)
             },
             _process: {
                 let (venueName, removeCurrentCheckIn) = try checkInContext.checkInsStore.checkIn(with: $0)
@@ -65,7 +78,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     
     func makeTestingInformationViewController() -> UIViewController? {
         WrappingViewController {
-            BookATestFlowState.makeState(context: context, coordinator: self.coordinator)
+            BookATestFlowState.makeState(context: context, pasteboardCopier: pasteboardCopier)
                 .map { state in
                     switch state {
                     case .bookATest(let interactor):
@@ -112,11 +125,11 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     }
     
     func openIsolationAdvice() {
-        coordinator.openInBrowser(.isolationAdvice)
+        context.openURL(ExternalLink.isolationAdvice.url)
     }
     
     func openAdvice() {
-        coordinator.openInBrowser(.generalAdvice)
+        context.openURL(ExternalLink.generalAdvice.url)
     }
     
     func deleteAppData() {
@@ -124,19 +137,27 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     }
     
     func openTearmsOfUseLink() {
-        coordinator.openInBrowser(.ourPolicies)
+        context.openURL(ExternalLink.ourPolicies.url)
     }
     
     func openPrivacyLink() {
-        coordinator.openInBrowser(.privacy)
+        context.openURL(ExternalLink.privacy.url)
     }
     
     func openFAQ() {
-        coordinator.openInBrowser(.faq)
+        context.openURL(ExternalLink.faq.url)
     }
     
     func openAccessibilityStatementLink() {
-        coordinator.openInBrowser(.accessibilityStatement)
+        context.openURL(ExternalLink.accessibilityStatement.url)
+    }
+    
+    func openHowThisAppWorksLink() {
+        context.openURL(ExternalLink.howThisAppWorks.url)
+    }
+    
+    func openWebsiteLinkfromRisklevelInfoScreen() {
+        context.openURL(ExternalLink.moreInfoOnPostcodeRisk.url)
     }
     
 }

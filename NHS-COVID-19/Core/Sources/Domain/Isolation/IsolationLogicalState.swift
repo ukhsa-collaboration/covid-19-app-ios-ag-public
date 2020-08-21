@@ -93,7 +93,11 @@ enum IsolationLogicalState: Equatable {
         // reduce how long we can isolate
         _isolation.untilStartOfDay = min(_isolation.untilStartOfDay, _isolation.fromDay + configuration.maxIsolation)
         
-        let isolation = Isolation(untilStartOfDay: LocalDay(gregorianDay: _isolation.untilStartOfDay, timeZone: today.timeZone), reason: _isolation.reason)
+        let isolation = Isolation(
+            fromDay: LocalDay(gregorianDay: _isolation.fromDay, timeZone: today.timeZone),
+            untilStartOfDay: LocalDay(gregorianDay: _isolation.untilStartOfDay, timeZone: today.timeZone),
+            reason: _isolation.reason
+        )
         
         if _isolation.untilStartOfDay > today.gregorianDay {
             self = .isolating(

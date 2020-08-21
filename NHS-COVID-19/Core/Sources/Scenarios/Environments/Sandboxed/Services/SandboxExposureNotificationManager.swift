@@ -15,8 +15,8 @@ class SandboxExposureNotificationManager: ExposureNotificationManaging {
     typealias AlertText = Sandbox.Text.ExposureNotification
     
     private let queue = DispatchQueue(label: "SandboxExposureNotificationManager")
-    private let dataProvider = MockScenario.mockDataProvider
     private let host: SandboxHost
+    private var hasPreviouslyAskedForPermission: Bool = false
     
     var instanceAuthorizationStatus: AuthorizationStatus
     
@@ -42,23 +42,38 @@ class SandboxExposureNotificationManager: ExposureNotificationManaging {
     }
     
     func activate(completionHandler: @escaping ErrorHandler) {
-        queue.async {
-            self.instanceAuthorizationStatus = .authorized
-            self.exposureNotificationEnabled = true
+        queue.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            let allowed = self.host.initialState.exposureNotificationsAuthorized
+            self.instanceAuthorizationStatus = allowed ? .authorized : .unknown
+            self.exposureNotificationEnabled = allowed
+            self.hasPreviouslyAskedForPermission = allowed
             self.exposureNotificationStatus = .active
             completionHandler(nil)
         }
     }
     
     func setExposureNotificationEnabled(_ enabled: Bool, completionHandler: @escaping ErrorHandler) {
+        guard enabled, !hasPreviouslyAskedForPermission else {
+            exposureNotificationEnabled = enabled
+            return
+        }
+        
+        hasPreviouslyAskedForPermission = true
+        
         let alert = UIAlertController(
             title: AlertText.authorizationAlertTitle.rawValue,
             message: AlertText.authorizationAlertMessage.rawValue,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: AlertText.authorizationAlertDoNotAllow.rawValue, style: .default, handler: { _ in
-        }))
-        alert.addAction(UIAlertAction(title: AlertText.authorizationAlertAllow.rawValue, style: .default, handler: { _ in
+        
+        alert.addAction(UIAlertAction(title: AlertText.authorizationAlertDoNotAllow.rawValue, style: .default, handler: { _ in }))
+        
+        alert.addAction(UIAlertAction(title: AlertText.authorizationAlertAllow.rawValue, style: .default, handler: { [weak self] _ in
+            self?.instanceAuthorizationStatus = .authorized
+            self?.exposureNotificationEnabled = true
             completionHandler(nil)
         }))
         host.container?.show(alert, sender: nil)

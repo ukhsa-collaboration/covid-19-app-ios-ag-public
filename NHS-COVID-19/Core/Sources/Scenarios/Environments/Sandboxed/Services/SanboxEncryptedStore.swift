@@ -17,6 +17,22 @@ class SandboxEncryptedStore: EncryptedStoring {
             { "isActivated": true }
             """.data(using: .utf8)
         }
+        
+        if let postcode = host.initialState.postcode {
+            if let riskLevel = host.initialState.riskLevel {
+                stored["postcode"] = """
+                {
+                    "postcode": "\(postcode)",
+                    "riskLevel": "\(riskLevel)"
+                }
+                """.data(using: .utf8)!
+            } else {
+                stored["postcode"] = """
+                { "postcode": "\(postcode)" }
+                """.data(using: .utf8)!
+            }
+            
+        }
     }
     
     func dataEncryptor(_ name: String) -> DataEncrypting {

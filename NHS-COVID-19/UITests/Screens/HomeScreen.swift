@@ -8,11 +8,7 @@ struct HomeScreen {
     var app: XCUIApplication
     
     var riskLevelBanner: XCUIElement {
-        app.staticTexts[localized: .risk_level_banner_text(postcode: "SW12", risk: "LOW")]
-    }
-    
-    var aboutButton: XCUIElement {
-        app.buttons[localized: .home_about_button_title_accessibility_label]
+        app.buttons[localized: .risk_level_banner_text(postcode: "SW12", risk: "LOW")]
     }
     
     var diagnoisButton: XCUIElement {
@@ -31,15 +27,27 @@ struct HomeScreen {
         app.buttons[localized: .home_checkin_button_title]
     }
     
-    var moreInfoButton: XCUIElement {
-        app.links[localized: .risk_level_more_info_accessibility_label]
+    var aboutButton: XCUIElement {
+        app.buttons[localized: .home_about_the_app_button_title]
     }
     
-    var aboutTracingButton: XCUIElement {
-        app.links[localized: .home_about_the_app_button_title]
+    var exposureNotificationSwitch: XCUIElement {
+        app.switches[localized: .home_toggle_exposure_notification_title]
     }
     
     var earlyAccessLabel: XCUIElement {
         app.staticTexts[localized: .home_early_access_label]
+    }
+    
+    func isolatingIndicator(date: Date, days: Int) -> XCUIElement {
+        app.staticTexts[localized: .isolation_indicator_accessiblity_label(date: date, days: days)]
+    }
+    
+    var notIsolatingIndicator: XCUIElement {
+        app.staticTexts[localized: .risk_level_indicator_contact_tracing_active]
+    }
+    
+    var disabledContactTracing: XCUIElement {
+        app.staticTexts[localized: .risk_level_indicator_contact_tracing_not_active]
     }
 }

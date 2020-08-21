@@ -15,7 +15,7 @@ class IsolationStateManagerTests: XCTestCase {
         var requestedStateInfo: IsolationStateInfo?
         var requestedCalendarInfo: LocalDay?
         var callbackCount = 0
-        var isolationState = IsolationLogicalState.isolating(Isolation(untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false)), endAcknowledged: false, startAcknowledged: false)
+        var isolationState = IsolationLogicalState.isolating(Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false)), endAcknowledged: false, startAcknowledged: false)
     }
     
     private let stateInfoSubject = PassthroughSubject<IsolationStateInfo?, Never>()

@@ -31,7 +31,7 @@ class UTCHourTests: XCTestCase {
         XCTAssertEqual(utcHour, expectedUTCHour)
     }
     
-    func testCreatingUTCHourWithRoundUpGranularityFiveToZero() {
+    func testCreatingUTCHourWithRoundUpGranularityFiveToFifteen() {
         
         let dateFromUtcHour = UTCHour(year: 2020, month: 12, day: 22, hour: 22, minutes: 5).date
         let utcHour = UTCHour(roundedUpToQuarter: dateFromUtcHour)
@@ -76,20 +76,11 @@ class UTCHourTests: XCTestCase {
         XCTAssertEqual(utcHour, expectedUTCHour)
     }
     
-    func testCreatingUTCHourWithRoundDownGranularityFiftySixToZero() {
+    func testCreatingUTCHourWithRoundDownGranularityFiftySixToFortyFive() {
         
         let dateFromUtcHour = UTCHour(year: 2020, month: 12, day: 22, hour: 22, minutes: 56).date
         let utcHour = UTCHour(roundedDownToQuarter: dateFromUtcHour)
         let expectedUTCHour = UTCHour(year: 2020, month: 12, day: 22, hour: 22, minutes: 45)
-        
-        XCTAssertEqual(utcHour, expectedUTCHour)
-    }
-    
-    func testCreatingUTCHourWithRoundDownGranularityFiftySixToZeroNextDayAndMonthAndYear() {
-        
-        let dateFromUtcHour = UTCHour(year: 2020, month: 12, day: 31, hour: 23, minutes: 56).date
-        let utcHour = UTCHour(roundedDownToQuarter: dateFromUtcHour)
-        let expectedUTCHour = UTCHour(year: 2020, month: 12, day: 31, hour: 23, minutes: 45)
         
         XCTAssertEqual(utcHour, expectedUTCHour)
     }

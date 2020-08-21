@@ -1,0 +1,359 @@
+"onboarding_strapline_title" = "COVID-19";
+"onboarding_strapline_accessiblity_label" = "NHS Covid 19";
+
+"home_strapline_title" = "પરીક્ષણ અને ટ્રેસ";
+"home_strapline_accessiblity_label" = "NHS પરીક્ષણ અને શોધ";
+
+"unrecoverable_error_page_title" = "કમનસીબે, તમે આ એપ ચલાવી શકશો નહીં";
+"unrecoverable_error_title" = "આ થઈ શકે છે:";
+"unrecoverable_error_description" = "પ્રતિબંધિત સેટિંગ્સ (ઉદાહરણ તરીકે, જો આ કંપની ફોન છે, તો).\n
+તમારા ફોન પરની અન્ય એપ સમાન ટેક્નોલોજીનો ઉપયોગ કરી છે અને આ એપને કાર્ય કરતાં રોકી રહી છે.";
+
+"bluetooth_disabled_title" = "બ્લૂટૂથ હમેશાં ચાલુ રાખવું પડશે";
+"bluetooth_disabled_description_1" = "જો તમારું બ્લૂટૂથ બંધ હશે, તો એપ કાર્ય કરશે નહીં. ";
+"bluetooth_disabled_description_2" = "આ એપ ઇન્સ્ટોલ કરેલા અન્ય ફોન નજીક હશે ત્યારે નક્કી કરવા માટે આ એપ બેટરી-સેવિંગ બ્લૂટૂથ લૉ એનર્જીનો ઉપયોગ કરશે. ";
+"bluetooth_disabled_description_3" = "આ એપ તમારું સ્થળ ટ્રેક કરી શકતી નથી અને તમારી ગોપનીયતા સુરક્ષિત રહેશે.";
+"bluetooth_disabled_description_4" = "કૃપા કરી સેટિંગ્સમાં જાઓ અને બ્લૂટૂથ ચાલુ કરો.";
+
+"exposure_notification_disabled_title" = "આ એપને કાર્ય કરવા માટે, તમારે સેટિંગ્સમાં એક્સપોઝર નોટિફિકેશન ચાલુ કરવાની જરૂરિયાત રહેશે.";
+"exposure_notification_disabled_description_1" = "તમને ચેપ લાગવાનુ જોખમ છે કે નહીં તે ઓળખવા માટે, તમારે એક્સપોઝર નોટિફિકેશનનું લક્ષણ સક્રિય કરવું જરૂરી છે.";
+"exposure_notification_disabled_description_2" = "એક્સ્પોઝર લોગિંગ બ્લૂટૂથ દ્વારા, અન્ય વપરાશકર્તાના યાદચ્છિક ID ઇંક્રીપ્ટ કરી અને તમારું પોતાનું યાદચ્છિક ID તેમના ઉપકરણને પાસ કરી, તમારા ઉપકરણ પર મેળવીને કાર્ય કરે છે. આ લક્ષણ કોઈપણ સમયે બંધ કરી શકાય છે, પરંતુ એપ ત્યારબાદ એપ કાર્ય કરશે નહીં.";
+"exposure_notification_disabled_action" = "સેટિંગ્સમાં જાઓ";
+
+"authorization_denied_title" = "આ એપને કાર્ય કરવા માટે, તમારે તમારા ઉપકરણ પર પરવાનગી આપવી જરૂરી છે";
+"authorization_denied_description_1" = "તમારા ફોનની ટેક્નોલૉજી આ એપ માટે કાર્ય કરે તે જરૂરી છે (જેમ કે સંપર્ક ટ્રેસ કરવા માટે બ્લૂટૂથ લો એનર્જી અને વેન્યુ ચેક-ઇન કરવા માટે કેમેરા). એપને કાર્ય કરવા માટે, જ્યારે પુછવામાં આવે ત્યારે ત્યારે તમારે પરવાનગીઑ સ્વીકારવી જરૂરી છે.";
+"authorization_denied_description_2" = "આને તમારો ફોન 'એક્સપોઝર નોટિફિકેશન' અથવા 'એક્સપોઝર લોગિંગ' કહી શકે છે.";
+"authorization_denied_description_3" = "એક્સ્પોઝર લોગિંગ બ્લૂટૂથ દ્વારા, અન્ય વપરાશકર્તાના યાદચ્છિક ID ઇંક્રીપ્ટ કરી અને તમારું પોતાનું યાદચ્છિક ID તેમના ઉપકરણને પાસ કરી, તમારા ઉપકરણ પર મેળવીને કાર્ય કરે છે. આ લક્ષણ કોઈપણ સમયે બંધ કરી શકાય છે, પરંતુ એપ ત્યારબાદ એપ કાર્ય કરશે નહીં.";
+"authorization_denied_action" = "સેટિંગ્સમાં જાઓ";
+
+"authentication_code_title" = "NHS, COVID-19 એપને સુધારવામાં મદદ કરવા માટે તમારો આભાર";
+"authentication_code_description" = "NHS પરીક્ષણ અને ટ્રેસ સેવામાં આ એપ નિર્ણાયક ભાગ ભજવી રહી છે. જેટલા વધુ માણસો આનો ઉપયોગ કરશે, એટલું વધુ અમે તેને સુધારી શકીશું.
+જ્યાં અમે વેક્સિન શોધાવાની રાહ જોઈ રહ્યા છીએ, NHS પરીક્ષણ અને શોધ તેમજ એપ એ આપણે ગમતી વસ્તુઓ તરફ પરત ફરવા માટે શ્રેષ્ઠ રીત છે.";
+"authentication_code_textfield_heading" = "તમારો વિશિષ્ટ કોડ દાખલ કરો";
+"authentication_code_textfield_example" = "ઉદાહરણ: 5apv-enka";
+"authentication_code_textfield_label" = "વિશિષ્ટ કોડ";
+"authentication_code_info_heading" = "હું આ કોડ ક્યાં મેળવી શકીશ?";
+"authentication_code_info_description_1" = "કૃપા કરી ઉપર એક કોડ દાખલ કરો. તમને આ કોડ પત્ર અથવા ઈમેઈલ દ્વારા મળશે, અને તે આવો દેખાશે:";
+"authentication_code_info_example" = "5apv-enka";
+"authentication_code_info_description_2" = "કૃપા કરી નોંધશો કે આ એપનો ઉપયોગ માત્ર 18 વર્ષ અને તેથી ઉપરના લોકો માટે જ છે.";
+"authentication_code_button_title" = "ચાલુ રાખો";
+"authentication_code_error_description" = "કોડ ઓળખી શકાયો નહીં. કૃપા કરી ખાતરી કરો કે તમે માન્ય કોડનો ઉપયોગ કરી રહ્યા છો.";
+
+"start_onboarding_step_title" = "આ એપ આપણને એકબીજાને સલામત રાખવામા મદદ કરે છે";
+"start_onboarding_step_subtitle" = "આ પરીક્ષણ કરાવો અને તેને તમારા પોકેટમાં ટ્રેસ કરવા જેવુ છે.
+અહી કેટલીક ઉપયોગી વસ્તુઓ છે જે તમે આ એપ સાથે કરી શકો છો:";
+"start_onboarding_step_1_header" = "સૂચનાઓ મેળવો";
+"start_onboarding_step_2_header" = "વેન્યુમાં ચેક ઇન કરો";
+"start_onboarding_step_3_header" = "તમારા લક્ષણો તપાસો";
+"start_onboarding_step_4_header" = "એકાંતની ગણતરી";
+"start_onboarding_step_1_description" = "કોરોનાવાયરસ માટે હકારાત્મક રિપોર્ટ થયેલા અન્ય એપ વપરાશકર્તાની નજીક તમે ક્યારે હતા તે શોધી કાઢો.";
+"start_onboarding_step_2_description" = "કોઈપણ પ્રકારના ફોર્મ ભર્યા વિના, બાર અને રેસ્ટોરન્ટ જેવા સ્થળોએ એપના QR કોડ સ્કેનર સાથે ચેક ઇન કરો. જો વેન્યુ પર કોરોનાવાયરસમળશે, તો આ એપ તમને જણાવશે.";
+"start_onboarding_step_3_description" = "અસ્વસ્થ અનુભવો છો? જુઓ કે તમારા લક્ષણો કોરોનાવાયરસના છે કે નહીં અને જો તમને જરૂરિયાત હોય, તો નિ:શુલ્ક પરીક્ષણનો ઓર્ડર આપો.";
+"start_onboarding_step_4_description" = "જો તમે એકાંતમાં હોવ, તો એપ તમને દિવસો ગણી આપશે અને સાચી માહીતી આપશે.";
+"start_onboarding_step_detail" = "કૃપા કરી નોંધશો કે તબીબી શોધખોળ અને વિકાસ માટે આ એપની આ પરીક્ષણ આવ્રુતિ છે અને અંતિમ આવ્રુતિ નથી.";
+"start_onboarding_button_title" = "ચાલુ રાખો";
+"start_onboarding_step_warning" = "યાદ રાખો: આ એપ 18 વર્ષ અને તેથી ઉપરના લોકો માટે છે.";
+
+"postcode_entry_step_title" = "તમારા પોસ્ટકોડનો પહેલો ભાગ દાખલ કરો (પોસ્ટકોડ જિલ્લો)";
+"postcode_entry_example_label" = "ઉદાહરણ: CE1B";
+"postcode_entry_textfield_label" = "પોસ્ટકોડ";
+"postcode_entry_information_title" = "અમને પોસ્ટકોડ જિલ્લાની જરૂરિયાત શા માટે છે?";
+"postcode_entry_information_description_1" = "પોસ્ટકોડ જિલ્લો જુદા જુદા વિસ્તારોમાં કોરોના વાયરસના ફેલાવાને સમજવામાં મદદ કરે છે. આ સુનિશ્ચિત કરે છે કે અમે તમારા વિસ્તાર માટે સંભવત: શ્રેષ્ઠ જાહેર સ્વાસ્થ્ય સલાહ આપી શકીએ છીએ.";
+"postcode_entry_information_description_2" = "ચિંતા કરશો નહીં. તમારા પોસ્ટકોડ જિલ્લાનો ઉપયોગ તમારું સ્થળ ટ્રેક કરવા માટે થશે નહીં.";
+"postcode_entry_continue_button_title" = "ચાલુ રાખો";
+"postcode_entry_error_title" = "અમાન્ય પોસ્ટકોડ જિલ્લા કોડ";
+"postcode_entry_error_description" = "કૃપા કરી તમારો પોસ્ટકોડ જિલ્લા કોડ દાખલ કરો.
+આ પોસ્ટકોડનો પ્રથમ ભાગ છે. ઉદાહરણ તરીકે: E2, L36, PO30";
+
+"permissions_onboarding_step_title" = "પરવાનગીઓ સુયોજીત કરો";
+"exposure_notification_permissions_onboarding_step_heading" = "'એક્સ્પોઝર નોટિફિકેશન'";
+"notification_permissions_onboarding_step_heading" = "સૂચનાઓ";
+"exposure_notification_permissions_onboarding_step_body" = "એપ માટે' 'બ્લૂટૂથ લો એનર્જી' યોગ્ય રીતે કાર્ય કરતી હોવી જોઈએ. તમારા ફોન પર તેને કઇંક અલગ કહેવામા આવતું હોય શકે છે, જેમ કે 'એક્સપોઝર નોટિફિકેશન' અથવા 'એક્સપોઝર લોગિંગ'.";
+"notification_permissions_onboarding_step_body" = "એપ નોટિફિકેશનનો ઉપયોગ કરે છે. ઉદાહરણ તરીકે - તમે કોઈની નજીક સમય પસાર કર્યો હોય જેનું કોરોનાવાયરસ માટે હકારાત્મક પરીક્ષણ આવ્યું હોય, તે તમને જણાવવા માટે.";
+"permissions_onboarding_step_detail" = "એપને યોગ્ય રીતે કાર્ય કરવા માટે, તમારે  'એક્સપોઝર નોટિફિકેશન' ને મંજૂરી આપવી જરૂરી છે.";
+"permissions_continue_button_title" = "ચાલુ રાખો";
+
+"privacy_title" = "તમારી ગોપનીયતાની સુરક્ષા કરી રહી છે";
+"privacy_description_paragraph1" = "NHS માટે તમારી ગોપનીયતા મૂલ્યવાન છે.   એપ વાયરસને ટ્રેસ કરે છે, તે તમને ટ્રેસ નથી કરતી અને તમે કોણ છો, તમે ક્યાં છો અને તમારી સાથે કોણ છે તે નથી જોઈ શકતી. કોઈપણ માહિતી જે તમારા ફોનમાં સંગ્રહિત છે, કેન્દ્રિય ડેટાબેઝમાં નથી. તેનો અર્થ થાય છે કે, જો કોરોનાવાયરસ માટે તમારું પરીક્ષણ હકારાત્મક આવ્યું, તો તમે NHS સાથે તમારો ડેટા શેર કરવાનું પસંદ કરી શકો છો, જેથી અમે અન્ય એપ વપરાશકર્તાઓને સજાગ કરી શકીએ. તમે નિશ્ચિંત રહી શકો છો કે તમારો અંગત ડેટા ક્યારેય તમારો ફોન નહીં છોડે અને તમે હંમેશા અનામી જ રહેશો.";
+"privacy_description_paragraph2" = "તમે પણ તમારો ડેટા નિયંત્રિત કરી શકો છો. એપ 14 દિવસ માટે તમારો ડેટા સંગ્રહિત કરે છે પછી એ રેકોર્ડ કરવામાં આવશે (અને QR કોડ સાથે તમે ચેક-ઇન કરેલા વેન્યુ માટે 21 દિવસ માટે). તમે 'મારો ડેટા દૂર કરો' પસંદ કરીને અથવા એપ અનઇન્સ્ટોલ કરીને કોઈપણ સમયે તમારો ડેટા હટાવી શકો છો. તમારો ફોન હજુ પણ એપ દ્વારા ઉત્પન્ન કરેલો કેટલોક ખૂબ જ પાયાનો ડેટા રાખી શકે છે - આ તમારા ફોનની ઓપરેટિંગ સિસ્ટમ દ્વારા નિયંત્રિત કરવામાં આવે છે. NHS દ્વારા  નહીં.";
+"privacy_description_paragraph4" = "આ એપ સ્વચલિત નિર્ણય લેવાનો ઉપયોગ કરે છે. આનો અર્થ થાય છે કે લોકો નિર્ણયો લેતા નથી. તેથી કોઈપણ તમારો ડેટા જોઈ શકતું નથી.";
+"privacy_notice_label" = "ગોપનીયતા નોટિસ";
+"terms_of_use_label" = "ઉપયોગની શરતો";
+"link_accessibility_hint" = "તમારું બ્રાઉઝર ખોલો";
+"privacy_links_label" = "તમે આ એપ સક્રિય કરો તે પહેલા, કૃપા કરી ગોપનીયતા નોટિસ વાંચો અને ઉપયોગની શરતોને સહમત થાઓ.";
+"privacy_links_accessibility_label" = "મહત્વપૂર્ણ: તમે આ એપ સક્રિય કરો તે પહેલા, કૃપા કરી ગોપનીયતા નોટિસ વાંચો અને ઉપયોગની શરતોને સહમત થાઓ.";
+"privacy_yes_button" = "હું સહમત છું";
+"privacy_no_button" = "ના, આભાર";
+"privacy_no_button_accessibility_label" = "ના,આભાર., હું અસહમત છું";
+"privacy_header" = "તમે નિયંત્રણમાં છે";
+"data_header" = "તમારો ડેટા";
+
+"home_diagnosis_button_title" = "રિપોર્ટના લક્ષણો";
+"home_default_advice_button_title" = "નવીનતમ સલાહ વાંચો";
+"home_isolation_advice_button_title" = "સ્વ-એકાંત સલાહ વાંચો";
+"home_testing_information_button_title" = "નિ:શુલ્ક પરીક્ષણ બુક કરો";
+"home_about_the_app_button_title" = "આ એપ વિષે";
+"home_toggle_exposure_notification_title" = "સંપર્ક ટ્રેસ કરી રહ્યું છે";
+"home_toggle_exposure_notification_on" = "સક્રિય";
+"home_toggle_exposure_notification_off" = "નિષ્ક્રિય";
+"home_checkin_button_title" = "વેન્યુ ચેક-ઇન";
+"home_about_button_title" = "વિષે";
+"home_about_button_title_accessibility_label" = "NHS પરીક્ષણ અને શોધ એપ વિષે";
+"home_early_access_label" = "આ તબીબી શોધખોળ માટે NHS, COVID-19, એપનું એક પ્રારંભિક એક્સેસ જાહેર કરવામાં આવ્યો છે.";
+"numbered_list_item %ld %@" = "%ld, %@";
+
+"risk_level_indicator_contact_tracing_active" = "તમારી એપ સક્રિય છે અને સ્કેન કરી રહી છે";
+"risk_level_indicator_contact_tracing_not_active" = "સંપર્ક ટ્રેસિંગ સક્રિય નથી";
+"risk_level_low" = "ઓછું";
+"risk_level_medium" = "મધ્યમ";
+"risk_level_high" = "ઉચ્ચ";
+"risk_level_banner_text %@ %@" = "%@ વિસ્તારનું જોખમ છે %@";
+"risk_level_more_info" = "વધુ માહિતી";
+"risk_level_more_info_accessibility_label" = "પોસ્ટકોડ જિલ્લા જોખમ ચેતવણીઓ વિષે વધુ માહિતી";
+
+"risk_level_screen_low_body" = "ઓછું - તમારી સ્થાનિક સત્તાનું હાલમાં દેશના અન્ય ભાગોને સમાન ચેપના સ્તર ધરાવતા સાથે \"ઓછા જોખમ\" ધરાવનાર તરીકે મૂલ્યાંકન કર્યું છે";
+"risk_level_screen_medium_body" = "મધ્યમ: દેશના અન્ય ભાગો કરતાં તમારી સ્થાનિક સત્તા, અથવા તમારી નજીકની સ્થાનિક સત્તાને ચેપનું વધુ જોખમ છે. સ્થાનિક વિસ્તારની યોજનાઓ અમલમાં મૂકવામાં આવી છે અને ચેપનું સંક્રમણ ઘટાડવા માટે લક્ષિત કાર્યો કરવામાં આવી રહ્યા છે (દા.ત સંભાળ ઘરોમાં વધારાના પરીક્ષણો અને ઉચ્ચ જોખમ ધરાવતા સમૂહોમાં સામૂહિક જોડાણ વધારીને). કેટલાક વિસ્તારો વધારાના રાષ્ટ્રીય સહકાર મેળવી શકે છે (દા.ત. મોબાઈલ પરીક્ષણ ક્ષમતા)";
+"risk_level_screen_high_body" = "ઉચ્ચ - તમારી સ્થાનિક સત્તા, અથવા નજીકની સ્થાનિક સત્તા, સ્થાનિક વિસ્તારોમાં ઉચ્ચ સ્તરના ચેપના જોખમને ચેપનું સંક્રમણ ઘટાડવા બાકીના ઈંગ્લેન્ડ કરતાં વધારાના પગલાઓ લઈ રહી છે. એક વિગતવાર ક્રિયાત્મક યોજના સ્થાને છે અને રાષ્ટ્રીય સહકાર સાથે સ્થાનિક સ્ત્રોતોમાં વધારો કરવામાં આવી રહ્યો છે.";
+"risk_level_screen_button" = "વિસ્તારના જોખમ- ભયના ધોરણની વ્યાખ્યાઓ";
+"risk_level_screen_title" = "જોખમનું સ્તર";
+"risk_level_screen_close_button" = "બંધ કરો";
+
+"user_notification_explanation" = "એક્સોપોઝર માહીતી ચકાસી રહ્યું છે";
+
+"checkin_open_settings_button_title" = "કેમેરા પરવાનગીને મંજૂરી આપો";
+"checkin_camera_permission_denial_title" = "અધિકૃત NHS, QR કોડ સ્કેન કરીને ચેક ઇન કરો";
+"checkin_camera_permission_denial_explanation" = "આ એપ વેન્યુમાં ચેક ઇન થવા માટે તમારા કેમેરાનો ઉપયોગ કરે છે. કૃપા કરી કેમેરાને અધિકૃત NHS, QR કોડ સ્કેન કરવા માટે પરવાનગી આપો.";
+"checkin_camera_permission_close_button_title" = "બંધ કરો";
+"checkin_camera_failure_title" = "માફ કરશો, તમારો ફોન વેન્યુ ચેક-ઇનને સહકાર કરતો નથી";
+"checkin_camera_failure_description" = "કૃપા કરી જાતે વેન્યુમાં ચેક-ઇન કરો. વધુ માહિતી માટે કર્મચારી વર્ગના સભ્ય સાથે વાત કરો.";
+"checkin_camera_failure_button_title" = "ઘર પર પરત ફરો";
+"checkin_camera_qrcode_scanner_title" = "અધિકૃત NHS, QR કોડ સ્કેન કરીને ચેક ઇન કરો";
+"checkin_camera_qrcode_scanner_status_label" = "QRકોડને નિર્દેશિત કરો";
+"checkin_camera_qrcode_scanner_description_label" = "તમારો ફોન પકડી રાખો જેથી અધિકૃત NHS, QR કોડ ઉપરના વ્યૂફાઈન્ડરમાં દેખાય. જ્યારે તમારો ફોન QR કોડ ઓળખી લે, ત્યારે તે બતાવશે કે તમે સફળતાપૂર્વક ચેક-ઇન કર્યું છે.";
+"checkin_camera_qrcode_scanner_help_button_title %@" = "%@ વેન્યુ ચેક-ઇન વિષે વધુ માહિતી";
+"checkin_camera_qrcode_scanner_help_button_accessibility_label" = "વેન્યુ ચેક-ઇન વિષે વધુ માહિતી";
+"checkin_scanning_failure_title" = "કંઈક ખોટું થયું છે";
+"checkin_scanning_failure_description" = "એવું થઈ શકે કે તમે અમાન્ય અધિકૃત NHS, QR કોડ સ્કેન કરવાનો પ્રયત્ન કરી રહ્યા છો અથવા આ વેન્યુ ઓળખાઈ શક્યું નથી.\n
+કૃપા કરી જાતે વેન્યુમાં ચેક-ઇન કરો. વધુ માહિતી માટે કર્મચારી વર્ગના સભ્ય સાથે વાત કરો.";
+"checkin_scanning_failure_button_title" = "ઘર પર પરત ફરો";
+"checkin_confirmation_explanation" = "સ્કેન કરવા માટે તમારો આભાર, હવે તમે ચેક ઇન કરી શકો છો.
+મધ્યરાત્રે અથવા જ્યારે તમે અન્ય અધિકૃત NHS QR કોડ સ્કેન કરશો ત્યારે તમે આપોઆપ ચેક આઉટ થઈ જશો";
+"checkin_confirmation_button_title" = "ઘર પર પરત ફરો";
+"checkin_wrong_button_title" = "આ ચેક-ઇન રદ્દ કરો";
+"checkin_confirmation_title %@ %@" = "ખાતે “%@” ચેક ઇન કરો %@";
+"checkin_information_title" = "વેન્યુ ચેક-ઇન";
+"checkin_information_how_it_works_section_title" = "તે કઈ રીતે કાર્ય કરે છે";
+"checkin_information_how_it_works_section_description" = "આ એપ અધિકૃત NHS QR કોડનો ઉપયોગ કરી તમે જે સ્થળની મુલાકાત લો તેમાં ઝડપથી અને સરળતાથી ચેક-ઇન કરવામાં મદદ કરે છે.\n
+આ એપનો ઉપયોગ કરી, તમે તાજેતરમાં મુલાકાત લીધેલા વેન્યુમાં જો તમે વાયરસના સંપર્કમાં આવ્યા હોવ તો અમે તમને સજાગ કરી શકીએ છીએ.";
+"checkin_information_how_it_helps_section_title" = "તે કઈ રીતે મદદ કરે છે";
+"checkin_information_how_it_helps_section_description" = "આ એપના લક્ષણો સંપર્ક ટ્રેસિંગને સહકાર આપી વ્યવસાય માટે સરળ બનાવે છે.\n
+તે તમારી ગોપનીયતાની સુરક્ષિત રાખી, તમને અને અન્યોને (તેમજ વેન્યુને) સલામત રહેવામાં મદદ કરે છે.";
+"checkin_information_button_title" = "ચેક ઇન માં પરત ફરો";
+"checkin_qrcode_scanner_close_button_title" = "બંધ કરો";
+"checkin_risky_venue_information_title %@ %@" = "તમે હાલમાં જ એક વેન્યુની મુલાકાત લીધી જ્યાં તમે કોઈ કોરોનાવાયરસ ધરાવનારાના સંપર્ક આવ્યા હોય શકો છો.";
+"checkin_risky_venue_information_description" = "અમે તમને જણાવવા માંગીએ છીએ કે તમે જ્યારે વેન્યુની મુલાકાત લીધી ત્યારે તમે કોરોનાવાયરસના સંપર્કમાં આવ્યા હોવ તેવું બની શકે છે.\n
+જો કે ખૂબ જ નાનું જોખમ છે કે મુલાકાત દરમિયાન તમને ચેપ લાગ્યો હોય, કૃપા કરી સામાજિક અંતર પરની નવીનતમ સલાહો અનુસરવાનું ચાલુ રાખો.\n
+જો તમને કોરોનાવાયરસના લક્ષણો હોય, તો તમારે તુરંત જ સ્વ-અલગ થવાની જરૂરિયાત છે. કૃપા કરી એપ પરનું લક્ષણો તપાસનારાનો ઉપયોગ કરો અને નિ:શુલ્ક પરીક્ષણ બુક કરો.";
+"checkin_risky_venue_information_button_title" = "ઘર પર પરત ફરો";
+
+"qrcoder_scanner_status_starting" = "અધિકૃત NHS, QR કોડ કઈ રીતે સ્કેન કરવો";
+"qrcoder_scanner_status_requesting_permission" = "અધિકૃત NHS, QR કોડ કઈ રીતે સ્કેન કરવો";
+"qrcoder_scanner_status_scanning" = "અધિકૃત NHS, QR કોડ કઈ રીતે સ્કેન કરવો";
+"qrcoder_scanner_status_processing" = "અધિકૃત NHS, QR કોડ કઈ રીતે સ્કેન કરવો";
+"qrcoder_scanner_status_running" = "અધિકૃત NHS, QR કોડ કઈ રીતે સ્કેન કરવો";
+"qrcoder_scanner_status_stopped" = "અધિકૃત NHS, QR કોડ કઈ રીતે સ્કેન કરવો";
+
+"alert_postcode_risk_change_title" = "તમારા વિસ્તારનું જોખમ સ્તર ઊંચું છે.";
+"alert_postcode_risk_change_body" = "વિગતો જોવા માટે અહી ટેપ કરો.";
+"alert_venue_risk_change_title" = "તમે તાજેતરમાં મુલાકાત લીધેલા વેન્યુએ તમે કોરોનાવાયરસના સંપર્કમાં આવી શક્યા હોવ છો.";
+"alert_venue_risk_change_body" = "વિગતો જોવા માટે ટેપ કરો.";
+"alert_isolation_state_change_title" = "તમારી એકાંત સલાહ બદલાઈ ચૂકી છે.";
+"alert_isolation_state_change_body" = "વધુ માહિતી માટે એપ ખોલો.";
+"alert_exposure_detection_title" = "તમે કોઈ એપ વપરાશકર્તાની આસપાસ રહ્યા છો જેને કોરોનાવાયરસ હતો. કૃપા કરી ઘરે રહો.";
+"alert_exposure_detection_body" = "વધુ વિગતો માટે અહી ટેપ કરો.";
+"alert_test_result_received_title" = "તમારા પરીક્ષણના પરિણામો અહી છે.";
+"alert_test_result_received_body" = "વિગતો જોવા માટે અહી ટેપ કરો.";
+"alert_app_availability_changed_title" = "એપની ઉપલબ્ધતા બદલાઈ ચૂકી છે";
+"alert_app_availability_changed_body" = "વિગતો જોવા માટે ટેપ કરો.";
+
+"diagnosis_questionnaire_title" = "લક્ષણો પસંદ કરો";
+"loading" = "લોડ થઈ રહ્યું છે...";
+"loading_failed_action" = "ફરીથી પ્રયત્ન કરો";
+"loading_failed_heading" = "કંઈક ખોટું થયું છે";
+"loading_failed_body" = "ફરીથી પ્રયત્ન કરતાં પહેલા, કૃપા કરી તપાસો કે તમારા ફોનના મોબાઈલ ડેટા સેટિંગ્સ ચાલુ છે, તમારું Wi-Fi જોડાણ (જો તમે ઉપયોગ કરતાં હોવ તો) તપાસો અને ખાતરી કરો કે એરોપ્લેન મોડ બંધ હોય.";
+
+"symptom_card_accessibility_label %@ %@" = "%@. %@";
+"symptom_card_checked" = "તપાસ થઈ ચૂકી છે";
+"symptom_card_unchecked" = "તપાસ નથી થઈ";
+"symptom_onset_select_day %@" = "%@";
+
+"step_accessibility_label %ld %ld" = "માંથી %ld પગલું %ld";
+"step_label %ld %ld" = "%ld / %ld";
+
+"symptom_list_heading" = "તમને જેટલા લાગુ પડતાં હોય એટલા લક્ષણો પસંદ કરો";
+"symptom_list_description" = "જો તમને આમાંથી કોઈ લક્ષણો ન હોય, તો અત્યારે કઈ જ કરવાની જરૂરિયાત નથી. જો તમને આમાંથી કોઈપણ લક્ષણ વિકસિત થાય, તો તેને આ એપ પર રિપોર્ટ કરો અને નિ:શુલ્ક પરીક્ષણ બુક કરો.";
+"symptom_list_primary_action" = "ચાલુ રાખો";
+"symptom_list_secondary_action" = "મને આમાંથી કોઈપણ લક્ષણો નથી";
+"symptom_list_error_heading" = "તેમાં એક સમસ્યા છે";
+"symptom_list_error_description" = "તમારે કોઈ લક્ષણ પસંદ કરવું પડશે અથવા તમે પસંદ કરી શકો છો કે \"મને આમાંથી કોઈ લક્ષણો નથી\".";
+"symptom_list_discard_alert_title" = "પસંદ કરેલા લક્ષણો હટાવો";
+"symptom_list_discard_alert_body" = "પસંદ કરવામાં આવેલા કોઈપણ લક્ષણો હટાવી લેવામાં આવશે.";
+"symptom_list_discard_alert_cancel" = "રદ્દ કરો";
+"symptom_list_discard_alert_discard" = "હટાવો";
+
+"no_symptoms_heading" = "તમને કોરોનાવાયરસ હોવાની સંભાવના નથી";
+"no_symptoms_body_1" = "જો તમને આમાંથી કોઈપણ લક્ષણ વિકસિત થાય, તો તેને આ એપ પર રિપોર્ટ કરો અને નિ:શુલ્ક પરીક્ષણ બુક કરો.";
+"no_symptoms_body_2" = "વધુ સલાહ માટે, કૃપા કરી મુલાકાત લો:";
+"no_symptoms_link" = "NHS 111 ઓનલાઈન";
+"no_symptoms_return_home_button" = "ઘર પર પરત ફરો";
+
+"no_symptoms_isolating_info_isolate_for" = "સ્વ-એકાંત માટે";
+"no_symptoms_isolating_info" = "તમને કોરોનાવાયરસના કોઈ લક્ષણો દેખાતા નથી";
+"no_symptoms_isolating_body" = "હજુ તમને કોરોનાવાયરસના કોઈ લક્ષણો દેખાતા નથી લક્ષણો વિકસિત થવા માટે 14 દિવસ લઈ શકે છે. કૃપા કરી તમારી જાતને અને અન્યોને સલામત રાખવા માટે ઘરે રહો";
+"no_symptoms_isolating_advice" = "વધુ સલાહ માટે, કૃપા કરી મુલાકાત લો:";
+"no_symptoms_isolating_services_link" = "NHS 111 ઓનલાઈન";
+"no_symptoms_isolating_return_home_button" = "ઘર પર પરત ફરો";
+
+"positive_symptoms_please_isolate_for" = "કૃપા કરી  દિવસ માટે એકાંતમાં રહો";
+"positive_symptoms_and_book_a_test" = "અને પરીક્ષણ બુક કરાવો";
+"positive_symptoms_you_might_have_corona" = "તમને કોરોનાવાયરસ હોય શકે છે";
+"positive_symptoms_explanation" = "તમારા લક્ષણો સૂચવે છે કે તમે કોરોનાવાયરસ હોય શકે છે. કૃપા કરી તમારી જાતને અને ઘરને એકાંતમાં રાખો તેમજ નિ:શુલ્ક પરીક્ષણ બુક કરો.";
+"positive_symptoms_link_label" = "વધુ સલાહ માટે, કૃપા કરી નીચે આપેલી લીંકની મુલાકાત લો";
+"positive_symptoms_corona_test_button" = "નિ:શુલ્ક પરીક્ષણ બુક કરો";
+
+"exposure_acknowledgement_self_isolate_for" = "સ્વ-એકાંત માટે";
+"exposure_acknowledgement_warning" = "તમે કોઈની આસપાસ રહ્યા છો જેને કોરોનાવાયરસ હતો. કૃપા કરી તમારી જાતને અને અન્યોને સલામત રાખવા માટે ઘરે રહો.";
+"exposure_acknowledgement_explaination_1" = "જો તમને સ્વસ્થ ન અનુભવાતું હોય, તો તમે વાયરસ હોવાના અને ફેલાવાના ઉચ્ચ જોખમે છો.";
+"exposure_acknowledgement_explaination_2" = "તમારા એકાંતની ગણતરી શરૂ થઈ ચૂકી છે અને તમારે જાણ કરેલા પૂર્ણ સમય માટે સ્વ-એકાંતમાં જતાં રહેવું જોઈએ.";
+"exposure_acknowledgement_link_label" = "વધુ સલાહ માટે, કૃપા કરી મુલાકાત લો:";
+"exposure_acknowledgement_link" = "NHS 111 ઓનલાઈન";
+"exposure_acknowledgement_button" = "હું સમજુ છું";
+
+"isolation_until_date %@ %@" = " %@ સુધી %@";
+"isolation_until_date_title" = "તમારે સ્વ-એકાંત થવાની જરૂરિયાત છે.";
+
+"end_of_isolation_isolate_title" = "સારા સમાચાર!";
+"end_of_isolation_has_passed_description date: %@ time: %@" = "તમારું એકાંત %@  ખાતે દૂર કરવામાં આવશે %@";
+"end_of_isolation_is_near_description date: %@ time: %@" = "તમારું સ્વ-એકાંત %@ એ સમાપ્ત થશે %@";
+"end_of_isolation_finished_description" = "તમારા એકાંતનો સમય હવે પૂર્ણ થયો છું";
+"end_of_isolation_positive_text_no_isolation_title" = "જો કે તમારું પરીક્ષણ સકારાત્મક આવ્યું, પરંતુ તમારો એકાંતનો સમય પૂરો થઈ ચૂક્યો છે";
+"end_of_isolation_isolate_if_have_symptom_warning" = "જો કે, તમને ઉચ્ચ તાપમાન હોય, તો તે જ્યાં સુધી સામાન્ય ન થાય, ત્યાં સુધી સતત એકાંતમાં રહો";
+"end_of_isolation_negative_test_result" = "તમારો કોરોનાવાયરસનું પરીક્ષણ પરિણામ નકારાત્મક છે.";
+"end_of_isolation_explanation_1" = "જ્યારથી તમારું સ્વ-એકાંત શરૂ થયું અને જો તમને કોઈ લક્ષણો દેખાવાના શરૂ થયા હોય અથવા તમને એવું લાગતું હોય કે તમને કોરોનાવાયરસ છે, તો કૃપા કરી એકાંતમાં રહો.";
+"end_of_isolation_explanation_negative_test_result" = "તમારા પરીક્ષણનું પરિણામ દર્શાવે છે, કે પરીક્ષણ વખતે તમને વાયરસ હતો નહીં. જો તમારા લક્ષણો વિકસિત થાય તો તેમને આ એપ પર રિપોર્ટ કરો.";
+"end_of_isolation_link_label" = "વધુ સલાહ માટે, કૃપા કરી મુલાકાત લો:";
+"end_of_isolation_online_services_link" = "NHS 111 ઓનલાઈન";
+"end_of_isolation_corona_back_to_home_button" = "ઘર પર પરત ફરો";
+"end_of_isolation_further_advice_visit" = "વધુ સલાહ માટે, કૃપા કરી મુલાકાત લો:";
+
+"positive_test_result_title" = "એકાંતમાં રહેવાનુ ચાલુ રાખો";
+"positive_test_result_info" = "તમારો કોરોનાવાયરસનું પરીક્ષણ પરિણામ હકારાત્મક છે";
+"positive_test_result_explanation" = "તમારા પરીક્ષણના પરિણામો દર્શાવે છે કે તમને કોરોનાવાયરસ છે. તમને ટેક્સ્ટ કે ઈમેઈલ દ્વારા વધુ માહીતી મોકલવામાં આવશે.";
+"positive_test_results_continue" = "ચાલુ રાખો";
+
+"negative_test_result_with_isolation_title" = "એકાંતમાં રહેવાનુ ચાલુ રાખો";
+"negative_test_result_with_isolation_info" = "તમારો કોરોનાવાયરસનું પરીક્ષણ પરિણામ નકારાત્મક છે. તમને હજૂપણ લક્ષણો વિકસિત થઈ શકે છે, કૃપા કરી અલગતામાં રહો";
+"negative_test_result_with_isolation_explanation" = "તમારા પરીક્ષણના પરિણામો દર્શાવે છે કે જ્યારે તમારું પરીક્ષણ કરવામાં આવ્યું ત્યારે તમને વાયરસ હતો નહીં. તમને ટેક્સ્ટ કે ઈમેઈલ દ્વારા વધુ માહીતી મોકલવામાં આવશે.";
+"negative_test_result_with_isolation_advice" = "વધુ સલાહ માટે, કૃપા કરી મુલાકાત લો:";
+"negative_test_result_with_isolation_service_link" = "NHS 111 ઓનલાઈન";
+"negative_test_result_with_isolation_back_to_home" = "ઘર પર પરત ફરો";
+
+"symptom_review_title" = "લક્ષણોની સમિક્ષા કરો";
+"symptom_review_heading" = "તમારા જવાબોની સમિક્ષા કરો";
+"symptom_review_confirm_heading" = "તમે આ લક્ષણોમાં \"હા\" કહી છે:";
+"symptom_review_deny_heading" = "તમે આ લક્ષણોમાં \"ના\" કહી છે:";
+"symptom_review_date_heading" = "તમને આ અગાઉની કોઈ તારીખ યાદ છે જ્યારે તમને આમાંથી કોઈપણ લક્ષણો વિકસિત થતાં હતા?";
+"symptom_review_date_placeholder" = "તારીખ પસંદ કરો";
+"symptom_review_date_hint" = "તારીખ પસંદ કરનાર માટે ડબલ ટેપ કરો";
+"symptom_review_no_date" = "મને તારીખ યાદ નથી";
+"symptom_review_no_date_accessability_label_checked" = "મને તારીખ યાદ નથી. તપાસ થઈ ચૂકી છે";
+"symptom_review_no_date_accessability_label_not_checked" = "મને તારીખ યાદ નથી તપાસ નથી થઈ";
+"symptom_review_error_description" = "તમારે તારીખ લખવાની જરૂરિયાત રહેશે અથવા પસંદ કરો \"મને તારીખ યાદ નથી\"";
+"symptom_review_button_submit" = "જમા કરો";
+"symptom_review_button" = "બદલાવો";
+"symptom_review_button_accessibility_label %@" = "ના માટે તમારો જવાબ બદલાવો %@";
+
+"virology_testing_information_title" = "પરીક્ષણ માટેની માહિતી";
+
+"virology_book_a_test_title" = "નિ:શુલ્ક પરીક્ષણ બુક કરો";
+"virology_book_a_test_heading" = "પરીક્ષણ કરવામાં આવી રહ્યું છે";
+"virology_book_a_test_paragraph1" = "\"હાલ જ નિ:શુલ્ક પરીક્ષણ બુક કરો\" ને પસંદ કરવાથી તમને આ એપમાંથી સરકારની કોરોનાવાયરસ પરીક્ષણની વેબસાઇટ પર લઈ જવામાં આવશે.";
+"virology_book_a_test_paragraph2" = "એકવાર ત્યાં પહોંચ્યા પછી, પરીક્ષણ કરવાના હેતુથી તમને તમારી અંગત વિગતો દાખલ કરવાનું કહેવામાં આવશે (જેમ કે તમારું સરનામું), પરંતુ ત્યાં તમે દાખલ કરેલી કોઈપણ વિગતો આ એપને આપવામાં આવશે નહીં, અને તમે દાખલ કરેલું કઇંપણ અહી વહેંચવામાં આવશે નહીં";
+"virology_book_a_test_paragraph3" = "એપ અને વેબસાઇટ વચ્ચે એકમાત્ર માહિતી વહેચવામાં આવશે એ છે ડિજિટલ 'ટોકન' જે અમને તમારા પરીક્ષણોના પરિણામો આ એપ પર પરત લઈ આવવામાં મદદ કરશે.";
+"virology_book_a_test_paragraph4" = "પરીક્ષણ પ્રક્રિયામાં ઉપયોગમાં લેવાયેલા કોઈપણ ડેટાનું વર્ણન ગોપનીયતા નોટિસમાં કરવામાં આવેલું છે:";
+"virology_book_a_test_testing_privacy_notice" = "ગોપનીયતા નોટિસનું પરીક્ષણ";
+"virology_book_a_test_paragraph5" = "આ એપ તમે અમને આપેલા ડેટાનો ઉપયોગ કઈ રીતે કરે છે એ પણ તમે એ જોઈ શકો છો:";
+"virology_book_a_test_app_privacy_notice" = "એપ ગોપનીયતા નોટિસ";
+"virology_book_a_test_paragraph6" = "તમે આ એપનો ઉપયોગ માત્ર તમારું પોતાનું પરીક્ષણ કરાવવા માટે કરી શકો છો. અન્ય કોઈનું પરીક્ષણ કરાવવા માટે, સરકારની કોરોનાવાયરસ પરીક્ષણ વેબસાઇટનો ઉપયોગ કરો:";
+"virology_book_a_test_book_a_test_for_someone_else" = "કોઈ અન્ય માટે પરીક્ષણ બુક કરો";
+"virology_book_a_test_button" = "નિ:શુલ્ક પરીક્ષણ હાલ જ બુક કરો";
+
+"about_this_app_title" = "આ એપ વિષે";
+"about_this_app_how_this_app_works_heading" = "આ એપ કઈ રીતે કાર્ય કરે છે";
+"about_this_app_how_this_app_works_paragraph1" = "તમને અને અન્યોને સુરક્ષિત રહેવામાં મદદ કરવા માટે આ એપ સંપર્ક ટ્રેસિંગ ટેક્નોલોજીનો ઉપયોગ કરે છે જેથી આપણે બધા આપણી ગમતી વસ્તુઓ તરફ પરત ફરી શકીએ.";
+"about_this_app_how_this_app_works_paragraph2" = "એપ વપરાશકર્તાની આસપાસના અન્યોને એપ શોધે છે અને લૉગ કરે છે. જો તેમાંથી કોઈ વપરાશકર્તા પછીથી કોરોનાવાયરસ પરીક્ષણ માટે હકારાત્મક નીકળે છે, તો તમે સલાહ સાથે એક ચેતવણી મેળવશો.";
+"about_this_app_how_this_app_works_paragraph3" = "એપ તમને પણ તમારા લક્ષણો રિપોર્ટ કરવાનું કહેશે અને તમને પરીક્ષણની જરૂરિયાત છે કે નહીં તે શોધી આપશે. તમે આ એપનો ઉપયોગ તમે જે સ્થળોએ ચેક-ઇન કરો ત્યાં અધિકૃત NHS QR કોડ સ્કેન કરવા માટે કરી શકો.";
+"about_this_app_how_this_app_works_button" = "આ એપ કઈ રીતે કાર્ય કરે છે";
+"about_this_app_common_questions_heading" = "સામાન્ય પ્રશ્નો";
+"about_this_app_common_questions_description" = "NHS COVID-19 એપ વિષે અને વિશાળ પરીક્ષણ અને ટ્રેસ પ્રોગ્રામ વિષે વધુ જાણવા માટે,  અમારું સામાન્ય પ્રશ્નોના પાનાની મુલાકાત લો.";
+"about_this_app_common_questions_button" = "સામાન્ય પ્રશ્નો";
+"about_this_app_our_policies_heading" = "અમારી નીતિઓ";
+"about_this_app_our_policies_description" = "અમારી નીતિઓનું દસ્તાવેજીકરણ તમને આ એપના વપરાશ અંગે, અમે તમારા ડેટાનો ઉપયોગ કઈ રીતે કરીએ છીએ, અને એપ વપરાશકર્તાના એક્સેસને કઈ રીતે સહકાર આપે છે તે વિષે વધુ મહત્વપૂર્ણ માહીતી આપશે";
+"about_this_app_our_policies_terms_of_use_button" = "ઉપયોગની શરતો";
+"about_this_app_our_policies_privacy_notice_button" = "ગોપનીયતા નોટિસ";
+"about_this_app_our_policies_accessibility_statement_button" = "સુલભતાનું નિવેદન";
+"about_this_app_footer_text" = "આ એપનો ઉપયોગ કરી તમારી જાતને અને અન્યોને સુરક્ષિત કરવા માટે તમારો આભાર";
+
+"about_this_app_my_data_heading" = "તમારા ડેટા વિષે";
+"about_this_app_my_data_description" = "એપ પાસે તમે રજીસ્ટ્રેશનમા નોંધેલા પોસ્ટકોડ જિલ્લાનો, છેલ્લા 21 દિવસમાં તમે ચેક ઇન કરેલા વેન્યુનો ઇતિહાસ, તમારા છેલ્લા પરીક્ષણના પરિણામો અને તમારા લક્ષણોની પ્રારંભિક તારીખનો એક્સેસ છે. તમે સંગ્રહિત કરેલો ડેટા દૂર કરી શકો છો.";
+"about_this_app_my_data_button" = "મારો ડેટા મેનેજ કરો";
+
+"about_this_app_software_information_heading" = "સોફ્ટવેરની જાણકારી";
+"about_this_app_software_information_app_name %@" = "એપનું નામ: %@";
+"about_this_app_software_information_version %@" = "આવ્રુતિ: %@";
+"about_this_app_software_information_date_of_release" = "જાહેર કર્યાની તારીખ: 08/2020";
+"about_this_app_software_information_entity_name_and_address" = "
+સંસ્થાનું નામ અને સરનામું:
+NHS પરીક્ષણ અને શોધ
+ડિપાર્ટમેન્ટ ઓફ હેલ્થ એન્ડ સોશિયલ કેર
+39 Victoria Street
+Westminster
+લંડન
+SW1H 0EU
+UK";
+
+"mydata_title" = "મારો ડેટા";
+"mydata_section_postcode_description" = "પોસ્ટકોડ જિલ્લો";
+"mydata_section_test_result_description" = "અંતિમ પરીક્ષણના પરિણામો લેવાય ચૂક્યા છે";
+"mydata_section_venue_history_description" = "વેન્યુનો ઇતિહાસ";
+"mydata_section_symptoms_description" = "તારીખ પરના લક્ષણો";
+"mydata_section_encounter_description" = "તારીખ એન્કાઉન્ટર કરો";
+"mydata_section_date_description" = "તારીખ";
+"mydata_date_description %@" = "%@";
+"mydata_date_interval_description %@ %@" = "%@";
+"mydata_test_result_positive" = "સકારાત્મક";
+"mydata_test_result_negative" = "નકારાત્મક";
+"mydata_data_deletion_button_title" = "મારો તમામ ડેટા હટાવો";
+"mydata_delete_data_alert_title" = "તમારો એપ ડેટા હટાવવો છે?";
+"mydata_delete_data_alert_description" = "આ એપ દ્વારા વહેંચવામાં આવેલી કોઈપણ માહિતી માત્ર જાહેર સ્વાસ્થ્ય હેતુઓ માટે જ ઉપયોગમાં લેવામાં આવશે. તમે એકવાર સુનિશ્ચિત કરો તે પછી રાખવામા આવેલો ડેટા દૂર કરવામાં આવશે. કૃપા કરી નોંધશો કે તમારો ફોન કેટલીક માહિતી જાળવી રાખશે, જેમ કે અન્ય એપ વપરાશકર્તાના લૉગ એકત્રિત કરવા માટે તમારા ફોને લીધેલો ડેટા. આ ડેટા એપ દ્વારા નિયંત્રિત કરવામાં નથી આવતો, પરંતુ તમારા ફોનની ઓપરેટિંગ સિસ્ટમ દ્વારા કરવામાં આવે છે. જો તમે બાદમાં પણ આ એપનો ઉપયોગ ચાલુ રાખવા માંગતા હોવ, તમારે તેને ફરીથી સુયોજિત કરવી પડશે.";
+"mydata_delete_data_alert_button_title" = "ડેટાને હટાવો";
+
+"accessability_error_os_out_of_date" = "OS જૂનું છે";
+"accessability_error_update_the_app" = "તમારો સોફ્ટવેર અપડેટ કરો";
+"accessability_error_cannot_run_app" = "કમનસીબે, તમે આ એપ ચલાવી શકશો નહીં";
+
+"link_privacy" = "https://www.gov.uk/government/publications/nhs-test-and-trace-app-privacy-information";
+"link_our_policies" = "https://covid19.nhs.uk/our-policies.html";
+"link_faq" = "https://faq.covid19.nhs.uk/";
+"link_about_the_app" = "https://covid19.nhs.uk";
+"link_accessibility_statement" = "https://covid19.nhs.uk/accessibility.html";
+"link_isolation_advice" = "https://faq.covid19.nhs.uk/article/KA-01099/en-us";
+"link_general_advice" = "https://www.gov.uk/coronavirus";
+"link_more_info_on_postcode_risk" = "https://faq.covid19.nhs.uk/article/KA-01101/en-us";
+"link_book_a_test_for_someone_else" = "https://www.nhs.uk/conditions/coronavirus-covid-19/testing-and-tracing/get-a-test-to-check-if-you-have-coronavirus/";
+"link_testing_privacy_notice" = "https://www.gov.uk/government/publications/coronavirus-covid-19-testing-privacy-information/testing-for-coronavirus-privacy-information";
+"link_nhs111_online" = "https://111.nhs.uk/";
+"link_how_this_app_works" = "https://covid19.nhs.uk/about-the-app.html";
+
+"cancel" = "રદ્દ કરો";
+"back" = "પાછા જાઓ";
