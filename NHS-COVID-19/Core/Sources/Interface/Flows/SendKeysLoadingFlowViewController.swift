@@ -34,6 +34,7 @@ public class SendKeysLoadingFlowViewController: UINavigationController {
     
     private enum State {
         case started
+        case confirmation
         case loading
         case failed
     }
@@ -44,11 +45,14 @@ public class SendKeysLoadingFlowViewController: UINavigationController {
         }
     }
     
-    private let endOfIsolation: Date?
+    public typealias Confirmation = () -> Void
+    public typealias InitialViewControllerFactory = (@escaping Confirmation) -> UIViewController
     
-    public init(interactor: Interacting, endOfIsolation: Date?) {
+    private let initialViewControllerFactory: InitialViewControllerFactory
+    
+    public init(interactor: Interacting, initialViewControllerFactory: @escaping InitialViewControllerFactory) {
         self.interactor = interactor
-        self.endOfIsolation = endOfIsolation
+        self.initialViewControllerFactory = initialViewControllerFactory
         super.init(nibName: nil, bundle: nil)
         update()
     }
@@ -60,17 +64,21 @@ public class SendKeysLoadingFlowViewController: UINavigationController {
     func update() {
         switch state {
         case .started:
-            if let endOfIsolation = endOfIsolation {
-                let positiveTestResultInteractor = PositiveTestResultInteractor(didTapContinue: { [weak self] in
+            viewControllers = [initialViewControllerFactory { [weak self] in
+                self?.state = .confirmation
+            }]
+        case .confirmation:
+            let interactor = ConfirmationInteractor(
+                didTapIUnderstand: { [weak self] in
                     self?.state = .loading
-                }, didTapOnlineServicesLink: interactor.didTapOnlineServicesLink)
-                viewControllers = [PositiveTestResultViewController(interactor: positiveTestResultInteractor, isolationEndDate: endOfIsolation)]
-            } else {
-                let positiveTestResultNoIsolationInteractor = PositiveTestResultNoIsolationInteractor(didTapContinue: { [weak self] in
-                    self?.state = .loading
-                }, didTapOnlineServicesLink: interactor.didTapOnlineServicesLink)
-                viewControllers = [PositiveTestResultNoIsolationViewController(interactor: positiveTestResultNoIsolationInteractor)]
-            }
+                },
+                didTapBack: { [weak self] in
+                    self?.dismissProgressView()
+                    self?.state = .started
+                }
+            )
+            presentedValue = ShareKeysConfirmationViewController(interactor: interactor)
+            
         case .loading:
             let loadingViewControllerInteractor = LoadingViewControllerInteractor(didTapCancel: { [weak self] in
                 self?.cancel()
@@ -111,44 +119,6 @@ public class SendKeysLoadingFlowViewController: UINavigationController {
     }
 }
 
-struct PositiveTestResultNoIsolationInteractor: PositiveTestResultNoIsolationViewControllerInteracting {
-    
-    private var _didTapContinue: () -> Void
-    private var _didTapOnlineServicesLink: () -> Void
-    
-    init(didTapContinue: @escaping () -> Void, didTapOnlineServicesLink: @escaping () -> Void) {
-        _didTapContinue = didTapContinue
-        _didTapOnlineServicesLink = didTapOnlineServicesLink
-    }
-    
-    func didTapContinue() {
-        _didTapContinue()
-    }
-    
-    func didTapOnlineServicesLink() {
-        _didTapOnlineServicesLink()
-    }
-}
-
-struct PositiveTestResultInteractor: PositiveTestResultViewControllerInteracting {
-    
-    private var _didTapContinue: () -> Void
-    private var _didTapOnlineServicesLink: () -> Void
-    
-    init(didTapContinue: @escaping () -> Void, didTapOnlineServicesLink: @escaping () -> Void) {
-        _didTapContinue = didTapContinue
-        _didTapOnlineServicesLink = didTapOnlineServicesLink
-    }
-    
-    func didTapContinue() {
-        _didTapContinue()
-    }
-    
-    func didTapOnlineServicesLink() {
-        _didTapOnlineServicesLink()
-    }
-}
-
 private struct LoadingViewControllerInteractor: LoadingViewController.Interacting {
     private let _didTapCancel: () -> Void
     
@@ -177,4 +147,9 @@ private struct LoadingErrorViewControllerInteractor: LoadingErrorViewController.
     func didTapRetry() {
         _didTapRetry()
     }
+}
+
+private struct ConfirmationInteractor: ShareKeysConfirmationViewController.Interacting {
+    var didTapIUnderstand: () -> Void
+    var didTapBack: () -> Void
 }

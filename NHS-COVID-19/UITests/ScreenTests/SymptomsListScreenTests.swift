@@ -18,10 +18,12 @@ class SymptomsListScreenTests: XCTestCase {
             XCTAssert(screen.heading.exists)
             XCTAssert(screen.description.exists)
             XCTAssert(screen.symptomCard(
+                value: SymptomsListViewControllerScenario.symptom1Value,
                 heading: SymptomsListViewControllerScenario.symptom1Heading,
                 content: SymptomsListViewControllerScenario.symptom1Content
             ).exists)
             XCTAssert(screen.symptomCard(
+                value: SymptomsListViewControllerScenario.symptom2Value,
                 heading: SymptomsListViewControllerScenario.symptom2Heading,
                 content: SymptomsListViewControllerScenario.symptom2Content
             ).exists)

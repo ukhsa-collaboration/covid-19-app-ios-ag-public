@@ -7,7 +7,7 @@ import UIKit
 
 public class EnterPostcodeViewController: OnboardingStepViewController {
     
-    public init(submit: @escaping (String) -> Result<Void, Error>) {
+    public init(submit: @escaping (String) -> Result<Void, DisplayableError>) {
         super.init(step: EnterPostcodeStep(submit: submit))
     }
     
@@ -20,7 +20,7 @@ public class EnterPostcodeViewController: OnboardingStepViewController {
 private class EnterPostcodeStep: NSObject, OnboardingStep {
     var footerContent = [UIView]()
     
-    private let submit: (String) -> Result<Void, Error>
+    private let submit: (String) -> Result<Void, DisplayableError>
     
     private var showError = false
     
@@ -34,7 +34,7 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
     let actionTitle = localize(.postcode_entry_continue_button_title)
     let image: UIImage? = UIImage(.onboardingPostcode)
     
-    init(submit: @escaping (String) -> Result<Void, Error>) {
+    init(submit: @escaping (String) -> Result<Void, DisplayableError>) {
         self.submit = submit
     }
     
@@ -55,7 +55,6 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
     
     private lazy var errorDescription: UILabel = {
         let label = UILabel()
-        label.text = localize(.postcode_entry_error_description)
         label.styleAsError()
         label.isHidden = true
         return label
@@ -124,8 +123,9 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
             switch submit(textFieldContent) {
             case .success:
                 break
-            case .failure:
+            case .failure(let error):
                 errorTitle.isHidden = false
+                errorDescription.text = error.localizedDescription
                 errorDescription.isHidden = false
                 informationBox.error()
                 postcodeTextField.layer.borderColor = UIColor(.errorRed).cgColor

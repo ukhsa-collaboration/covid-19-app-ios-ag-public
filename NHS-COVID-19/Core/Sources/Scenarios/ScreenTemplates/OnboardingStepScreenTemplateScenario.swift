@@ -47,6 +47,7 @@ public class OnboardingStepScreenTemplateScenario: Scenario, UITestInspectable {
     }
     
     private struct Step: OnboardingStep {
+        var strapLineStyle: LogoStrapline.Style? = .onboarding
         var footerContent = [UIView]()
         var actionTitle: String
         var content: [UIView]

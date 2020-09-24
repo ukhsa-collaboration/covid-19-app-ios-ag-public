@@ -20,9 +20,9 @@ public class RiskLevelBannerComponentScenario: Scenario {
         func content() -> RiskLevelBanner.ViewModel {
             switch self {
             case .lowRisk:
-                return RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .constant(.low))
+                return RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .low)
             case .highRisk:
-                return RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .constant(.high))
+                return RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .high)
             }
         }
     }
@@ -43,7 +43,7 @@ private struct RiskLevelBannerView: View {
     var body: some View {
         NavigationView {
             List(RiskLevelBannerComponentScenario.Showcases.allCases, id: \.index) {
-                RiskLevelBanner(viewModel: $0.content(), moreInfo: {})
+                RiskLevelBanner(viewModel: $0.content(), tapAction: { _ in })
                 
             }
             .navigationBarItems(trailing: toggleColorSchemeButton)

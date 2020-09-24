@@ -6,49 +6,33 @@ import Localization
 import SwiftUI
 
 public struct NotIsolatingIndicator: View {
-    @State private var animate = false
     @Environment(\.accessibilityReduceMotion) var reduceMotion
     
     fileprivate init() {}
     
-    private func pulsatingCircle(delay: Double) -> some View {
-        Circle()
-            .foregroundColor(Color(.activeScanIndicator))
-            .scaleEffect(animate ? 7 : 0)
-            .opacity(Double(animate ? 0 : 1))
-            .animation(
-                Animation.easeOut(duration: 3)
-                    .repeatForever(autoreverses: false).delay(delay)
-            )
-    }
+    private let badgeSize: CGFloat = 40
     
     public var body: some View {
-        VStack(alignment: .center, spacing: .standardSpacing) {
-            ZStack(alignment: .center) {
+        VStack(alignment: .center, spacing: .doubleSpacing) {
+            ZStack {
                 if self.reduceMotion {
                     Circle()
                         .foregroundColor(Color(.errorRed))
                         .opacity(0.05)
                 } else {
-                    self.pulsatingCircle(delay: 0).onAppear {
-                        if !self.animate {
-                            self.animate = true
-                        }
-                    }
-                    self.pulsatingCircle(delay: 1)
+                    PulsatingCircle(delay: 0, initialDiameter: badgeSize, color: Color(.activeScanIndicator))
+                    PulsatingCircle(delay: 1, initialDiameter: badgeSize, color: Color(.activeScanIndicator))
                 }
                 
-                ZStack {
-                    Circle()
-                        .foregroundColor(Color(.activeScanIndicator))
-                        .overlay(Circle().stroke(Color(.lightSurface), lineWidth: 3))
-                    Image(.tickImage).resizable()
-                        .background(Color.clear)
-                        .foregroundColor(Color(.lightSurface))
-                        .padding(8)
-                }.frame(width: 40, height: 40)
+                Circle()
+                    .foregroundColor(Color(.activeScanIndicator))
+                    .overlay(Circle().stroke(Color(.lightSurface), lineWidth: 3))
+                Image(.tickImage).resizable()
+                    .background(Color.clear)
+                    .foregroundColor(Color(.lightSurface))
+                    .padding(8)
             }
-            .frame(width: 75, height: 75, alignment: .center)
+            .frame(width: badgeSize, height: badgeSize)
             
             Text(.risk_level_indicator_contact_tracing_active)
                 .bold()
@@ -59,6 +43,7 @@ public struct NotIsolatingIndicator: View {
         }
         .frame(height: .appActivityIndicatorMinHeight)
         .accessibilityElement()
+        .contentShape(Rectangle())
         .accessibility(label: Text(localize(.risk_level_indicator_contact_tracing_active)))
         .accessibility(addTraits: .isStaticText)
         .padding(EdgeInsets(top: .bigSpacing, leading: 0, bottom: .bigSpacing, trailing: 0))

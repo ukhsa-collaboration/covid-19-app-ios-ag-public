@@ -11,6 +11,7 @@ class RawStateTests: XCTestCase {
         let rawState = RawState(
             isAppActivated: true,
             appAvailability: .available,
+            completedOnboardingForCurrentSession: false,
             exposureState: ExposureNotificationStateController.CombinedState(
                 activationState: .activated,
                 authorizationState: .authorized,
@@ -35,6 +36,7 @@ class RawStateTests: XCTestCase {
             let rawState = RawState(
                 isAppActivated: true,
                 appAvailability: .unavailable(reason: reason),
+                completedOnboardingForCurrentSession: false,
                 exposureState: ExposureNotificationStateController.CombinedState(
                     activationState: .activated,
                     authorizationState: .authorized,
@@ -53,6 +55,7 @@ class RawStateTests: XCTestCase {
         let rawState = RawState(
             isAppActivated: false,
             appAvailability: .available,
+            completedOnboardingForCurrentSession: false,
             exposureState: ExposureNotificationStateController.CombinedState(
                 activationState: .activated,
                 authorizationState: .authorized,
@@ -64,6 +67,24 @@ class RawStateTests: XCTestCase {
         )
         
         XCTAssertEqual(rawState.logicalState, .pilotActivationRequired)
+    }
+    
+    func testCompletedOnboarding() {
+        let rawState = RawState(
+            isAppActivated: true,
+            appAvailability: .available,
+            completedOnboardingForCurrentSession: true,
+            exposureState: ExposureNotificationStateController.CombinedState(
+                activationState: .activated,
+                authorizationState: .authorized,
+                exposureNotificationState: .active,
+                isEnabled: true
+            ),
+            userNotificationsStatus: .authorized,
+            hasPostcode: true
+        )
+        
+        XCTAssertEqual(rawState.logicalState, .fullyOnboarded)
     }
     
 }

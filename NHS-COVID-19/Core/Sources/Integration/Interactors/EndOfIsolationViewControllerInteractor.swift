@@ -5,6 +5,7 @@
 import Domain
 import Foundation
 import Interface
+import Localization
 
 struct EndOfIsolationViewControllerInteractor: EndOfIsolationViewController.Interacting {
     

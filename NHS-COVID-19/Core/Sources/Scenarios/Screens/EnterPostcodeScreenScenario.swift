@@ -16,21 +16,21 @@ public class EnterPostcodeScreenScenario: Scenario {
     }
     
     public static let continueConfirmationAlertTitle = "Entered Postcode"
+    public static let errorDescription = "[Mock] The postcode you entered is not valid for this app."
     
     static var appController: AppController {
-        let parent = UINavigationController()
-        parent.isNavigationBarHidden = true
-        let postcodeViewController = EnterPostcodeViewController { [weak parent] postcode in
-            switch postcode.uppercased() {
-            case Self.Postcodes.invalid.rawValue:
-                return .failure(TestError())
-            default:
-                parent?.showAlert(title: Self.continueConfirmationAlertTitle, message: postcode)
-                return .success(())
+        
+        return NavigationAppController { parent in
+            EnterPostcodeViewController { postcode in
+                switch postcode.uppercased() {
+                case Self.Postcodes.invalid.rawValue:
+                    return .failure(DisplayableError(testValue: Self.errorDescription))
+                default:
+                    parent.showAlert(title: Self.continueConfirmationAlertTitle, message: postcode)
+                    return .success(())
+                }
             }
         }
-        parent.pushViewController(postcodeViewController, animated: false)
-        return BasicAppController(rootViewController: parent)
     }
 }
 

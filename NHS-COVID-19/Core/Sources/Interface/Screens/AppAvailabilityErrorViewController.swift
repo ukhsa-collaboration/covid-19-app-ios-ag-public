@@ -48,6 +48,7 @@ private struct AppAvailabilityError: ErrorDetail {
     var action: (title: String, act: () -> Void)? = nil
     let title: String
     let description: String?
+    var logoStrapLineStyle: LogoStrapline.Style = .onboarding
     
     var content: [UIView] {
         let label = UILabel()

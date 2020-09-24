@@ -19,12 +19,13 @@ public class ApplicationCoordinator {
     private static let pollingTestResultBackgroundTaskFrequency = 6.0 * 60 * 60 // 6h
     private static let housekeepingJobBackgroundTaskFrequency = 24.0 * 60 * 60 // 1 day
     private static let metricsJobBackgroundTaskFrequency = 24.0 * 60 * 60 // 1 day
+    private static let metricsUploadJobBackgroundTaskFrequency = 24.0 * 60 * 60 // 1 day
     
     private static let logger = Logger(label: "ApplicationCoordinator")
     
     private let application: Application
     private let appAvailabilityManager: AppAvailabilityManager
-    private let appActivationManager: AppActivationManager
+    private var appActivationManager: AppActivationManager?
     private let metricRecoder: MetricReporter
     private let exposureNotificationStateController: ExposureNotificationStateController
     private let userNotificationsStateController: UserNotificationsStateController
@@ -34,26 +35,33 @@ public class ApplicationCoordinator {
     private var backgroundTaskAggregator: BackgroundTaskAggregator?
     private let postcodeStore: PostcodeStore?
     private let exposureDetectionStore: ExposureDetectionStore
-    private let postcodeManager: PostcodeManager?
-    private let detectionExposureManager: DetectionExposureManager
+    private let exposureDetectionManager: ExposureDetectionManager
     private let distributeClient: HTTPClient
     private let selfDiagnosisManager: SelfDiagnosisManager?
     private let checkInContext: CheckInContext?
     private let isolationStateStore: IsolationStateStore
     private let isolationStateManager: IsolationStateManager
     private let isolationConfiguration: CachedResponse<IsolationConfiguration>
+    private let riskyPostcodes: CachedResponse<[Postcode: PostcodeRisk]>?
+    private let postcodeInfo: DomainProperty<(postcode: Postcode, risk: DomainProperty<PostcodeRisk?>)?>?
+    private let savePostcode: (String) -> Result<Void, PostcodeValidationError>
     private let notificationCenter: NotificationCenter
     private let virologyTestingManager: VirologyTestingManager
     private let virologyTestingStateStore: VirologyTestingStateStore
     private let riskScoreNegotiator: RiskScoreNegotiator
     private let circuitBreaker: CircuitBreaker
     private let housekeeper: Housekeeper
-    private let qrCodeScanner: QRCodeScanning
+    private let exposureNotificationReminder: ExposureNotificationReminder
+    private let completedOnboardingForCurrentSession = CurrentValueSubject<Bool, Never>(false)
+    private let appReviewPresenter: AppReviewPresenter
+    public let country: DomainProperty<Country>
     
     public let pasteboardCopier: PasteboardCopying
     
     @Published
     public var state = ApplicationState.starting
+    
+    private var currentDateProvider: () -> Date
     
     public init(services: ApplicationServices, enabledFeatures: [Feature]) {
         application = services.application
@@ -62,6 +70,7 @@ public class ApplicationCoordinator {
         exposureNotificationManager = services.exposureNotificationManager
         distributeClient = services.distributeClient
         pasteboardCopier = services.pasteboardCopier
+        currentDateProvider = services.currentDateProvider
         
         Self.logger.debug("Initialising")
         
@@ -72,14 +81,49 @@ public class ApplicationCoordinator {
             appInfo: services.appInfo
         )
         
-        appActivationManager = AppActivationManager(store: services.encryptedStore, httpClient: services.apiClient)
+        if enabledFeatures.contains(.pilotActivation) {
+            appActivationManager = AppActivationManager(store: services.encryptedStore, httpClient: services.apiClient)
+        } else {
+            appActivationManager = nil
+        }
         
         if enabledFeatures.contains(.riskyPostcode) {
-            postcodeStore = PostcodeStore(store: services.encryptedStore, isValid: services.postcodeValidator.isValid(_:))
-            postcodeManager = PostcodeManager(postcodeStore: postcodeStore!, httpClient: distributeClient)
+            let postcodeStore = PostcodeStore(store: services.encryptedStore)
+            
+            let riskyPostcodes = CachedResponse(
+                httpClient: distributeClient,
+                endpoint: RiskyPostcodesEndpoint(),
+                storage: services.cacheStorage,
+                name: "risky_postcodes",
+                initialValue: [:]
+            )
+            
+            postcodeInfo = postcodeStore.$postcode
+                .map { postcode in
+                    postcode
+                        .map { postcode -> (postcode: Postcode, risk: DomainProperty<PostcodeRisk?>) in
+                            let risk = riskyPostcodes.$value.map { $0[postcode] }.eraseToAnyPublisher().domainProperty()
+                            return (postcode: postcode, risk: risk)
+                        }
+                }
+                .eraseToAnyPublisher()
+                .domainProperty()
+            
+            savePostcode = { (postcodeValue: String) in
+                let result = services.postcodeValidator.validatedPostcode(from: postcodeValue)
+                if case .success(let postcode) = result {
+                    postcodeStore.save(postcode: postcode)
+                }
+                return result.map { _ in }
+            }
+            
+            self.riskyPostcodes = riskyPostcodes
+            self.postcodeStore = postcodeStore
         } else {
-            postcodeManager = nil
             postcodeStore = nil
+            riskyPostcodes = nil
+            postcodeInfo = nil
+            savePostcode = { _ in .success(()) }
         }
         
         isolationConfiguration = CachedResponse(
@@ -98,7 +142,7 @@ public class ApplicationCoordinator {
         
         if enabledFeatures.contains(.selfDiagnosis) {
             selfDiagnosisManager = SelfDiagnosisManager(httpClient: distributeClient) { onsetDay in
-                let info = IndexCaseInfo(selfDiagnosisDay: .today, onsetDay: onsetDay, testInfo: nil)
+                let info = IndexCaseInfo(isolationTrigger: .selfDiagnosis(.today), onsetDay: onsetDay, testInfo: nil)
                 return IsolationState(logicalState: isolationStateStore.set(info))
             }
         } else {
@@ -108,12 +152,15 @@ public class ApplicationCoordinator {
         if enabledFeatures.contains(.venueCheckIn) {
             let checkInsStore = CheckInsStore(store: services.encryptedStore, venueDecoder: services.venueDecoder)
             checkInContext = CheckInContext(
-                cameraStateController: CameraStateController(
-                    manager: services.cameraManager,
-                    notificationCenter: notificationCenter
-                ),
                 checkInsStore: checkInsStore,
-                checkInsManager: CheckInsManager(checkInsStore: checkInsStore, httpClient: distributeClient)
+                checkInsManager: CheckInsManager(checkInsStore: checkInsStore, httpClient: distributeClient),
+                qrCodeScanner: QRCodeScanner(
+                    cameraManager: services.cameraManager,
+                    cameraStateController: CameraStateController(
+                        manager: services.cameraManager,
+                        notificationCenter: notificationCenter
+                    )
+                )
             )
         } else {
             checkInContext = nil
@@ -124,17 +171,19 @@ public class ApplicationCoordinator {
         virologyTestingStateStore = VirologyTestingStateStore(store: services.encryptedStore)
         virologyTestingManager = VirologyTestingManager(
             httpClient: services.apiClient,
-            virologyTestingStateStore: virologyTestingStateStore,
-            userNotificationsManager: services.userNotificationsManager,
-            updateIsolationState: isolationStateStore.set
+            virologyTestingStateCoordinator: VirologyTestingStateCoordinator(
+                virologyTestingStateStore: virologyTestingStateStore,
+                userNotificationsManager: services.userNotificationsManager
+            )
         )
         
         let isolationStateManager = self.isolationStateManager
-        detectionExposureManager = DetectionExposureManager(
+        exposureDetectionManager = ExposureDetectionManager(
             manager: exposureNotificationManager,
             distributionClient: distributeClient,
             submissionClient: services.apiClient,
             encryptedStore: services.encryptedStore,
+            transmissionRiskLevelApplier: services.transmissionRiskLevelApplier,
             interestedInExposureNotifications: { isolationStateManager.state.isolation?.interestedInExposureNotifications ?? true }
         )
         
@@ -147,8 +196,14 @@ public class ApplicationCoordinator {
         )
         
         let postcodeStore = self.postcodeStore
-        metricRecoder = MetricReporter(manager: services.metricManager, client: services.apiClient, encryptedStore: services.encryptedStore) {
-            postcodeStore?.load() ?? ""
+        metricRecoder = MetricReporter(
+            manager: services.metricManager,
+            client: services.apiClient,
+            encryptedStore: services.encryptedStore,
+            currentDateProvider: currentDateProvider,
+            appInfo: services.appInfo
+        ) {
+            postcodeStore?.postcode?.value ?? ""
         }
         
         riskScoreNegotiator = RiskScoreNegotiator(
@@ -177,7 +232,31 @@ public class ApplicationCoordinator {
             virologyTestingStateStore: virologyTestingStateStore
         )
         
-        qrCodeScanner = QRCodeScanner(cameraManager: services.cameraManager)
+        exposureNotificationReminder = ExposureNotificationReminder(
+            userNotificationManager: services.userNotificationsManager,
+            userNotificationStateController: userNotificationsStateController,
+            currentDateProvider: currentDateProvider,
+            exposureNotificationEnabled: exposureNotificationStateController.isEnabledPublisher
+        )
+        
+        if let postcodeStore = postcodeStore {
+            country = postcodeStore.$postcode.map { postcode in
+                if let postcode = postcode {
+                    return services.postcodeValidator.country(for: postcode) ?? Country.england
+                }
+                return Country.england
+            }
+            .eraseToAnyPublisher()
+            .domainProperty()
+        } else {
+            country = Just(Country.england).eraseToAnyPublisher().domainProperty()
+        }
+        
+        appReviewPresenter = AppReviewPresenter(
+            checkInsStore: checkInContext?.checkInsStore,
+            reviewController: services.storeReviewController,
+            currentDateProvider: currentDateProvider
+        )
         
         monitorRawState()
         
@@ -213,21 +292,30 @@ public class ApplicationCoordinator {
             }
             return .appUnavailable(reason)
         case .pilotActivationRequired:
+            guard let appActivationManager = appActivationManager else { return .failedToStart }
             return .pilotActivationRequired(submit: appActivationManager.activate(with:))
         case .failedToStart:
             return .failedToStart
-        case .authorizationOnboarding:
-            return .authorizationOnboarding(requestPermissions: requestPermissions, openURL: application.open)
+        case .onboarding:
+            let completedOnboardingForCurrentSession = self.completedOnboardingForCurrentSession
+            return .onboarding(complete: {
+                completedOnboardingForCurrentSession.value = true
+            }, openURL: application.open)
+        case .authorizationRequired:
+            return .authorizationRequired(requestPermissions: requestPermissions, country: country.currentValue)
         case .canNotRunExposureNotification(let reason):
-            return .canNotRunExposureNotification(reason: disabledReason(from: reason))
-        case .postcodeOnboarding:
-            return .postcodeOnboarding(savePostcode: postcodeStore?.save ?? { _ in })
+            return .canNotRunExposureNotification(reason: disabledReason(from: reason), country: country.currentValue)
+        case .postcodeRequired:
+            return .postcodeRequired(savePostcode: savePostcode)
         case .fullyOnboarded:
             let isolationStateStore = self.isolationStateStore
+            
             return .runningExposureNotification(
                 RunningAppContext(
                     checkInContext: checkInContext,
-                    postcodeStore: postcodeStore,
+                    postcodeInfo: postcodeInfo ?? .constant(nil),
+                    savePostcode: savePostcode,
+                    country: country,
                     openSettings: application.openSettings,
                     openURL: application.open,
                     selfDiagnosisManager: selfDiagnosisManager,
@@ -239,7 +327,8 @@ public class ApplicationCoordinator {
                         .combineLatest(notificationCenter.onApplicationBecameActive) { state, _ in state }
                         .map {
                             IsolationAcknowledgementState(
-                                logicalState: $0, now: Date(),
+                                logicalState: $0,
+                                now: self.currentDateProvider(),
                                 acknowledgeStart: isolationStateStore.acknowldegeStartOfIsolation,
                                 acknowledgeEnd: isolationStateStore.acknowldegeEndOfIsolation
                             )
@@ -254,14 +343,19 @@ public class ApplicationCoordinator {
                         })
                         .eraseToAnyPublisher(),
                     exposureNotificationStateController: exposureNotificationStateController,
-                    virologyTestOrderInfoProvider: virologyTestingManager,
+                    virologyTestingManager: virologyTestingManager,
                     testResultAcknowledgementState: makeResultAcknowledgementState(),
                     symptomsDateAndEncounterDateProvider: isolationStateStore,
                     deleteAllData: { [weak self] in
                         self?.deleteAllData()
                     },
+                    deleteCheckIn: { [weak self] id in
+                        self?.deleteCheckIn(with: id)
+                    },
                     riskyCheckInsAcknowledgementState: makeRiskyCheckInsAcknowledgementState(),
-                    qrCodeScanner: qrCodeScanner
+                    currentDateProvider: currentDateProvider,
+                    exposureNotificationReminder: exposureNotificationReminder,
+                    appReviewPresenter: appReviewPresenter
                 )
             )
         }
@@ -287,79 +381,77 @@ public class ApplicationCoordinator {
             .eraseToAnyPublisher()
     }
     
-    private func positiveAcknowledgement(for token: DiagnosisKeySubmissionToken, endDate: Date) -> TestResultAcknowledgementState.PositiveResultAcknowledgement {
-        TestResultAcknowledgementState.PositiveResultAcknowledgement(acknowledge: { [weak self] in
-            guard let self = self else { return Empty().eraseToAnyPublisher() }
-            
-            if let indexCaseInfo = self.isolationStateStore.isolationInfo.indexCaseInfo {
-                return self.detectionExposureManager.sendKeys(
-                    token: token,
-                    onsetDay: indexCaseInfo.onsetDay,
-                    selfDiagnosisDay: indexCaseInfo.selfDiagnosisDay,
-                    isolationEndDate: endDate
-                )
-                .catch { (error) -> AnyPublisher<Void, Error> in
-                    if (error as NSError).domain == ENErrorDomain {
-                        return Empty().eraseToAnyPublisher()
-                    } else {
-                        return Fail(error: error).eraseToAnyPublisher()
+    private func positiveAcknowledgement(
+        for token: DiagnosisKeySubmissionToken,
+        endDate: Date?,
+        indexCaseInfo: IndexCaseInfo?,
+        completionHandler: @escaping () -> Void
+    ) -> TestResultAcknowledgementState.PositiveResultAcknowledgement {
+        TestResultAcknowledgementState.PositiveResultAcknowledgement(
+            acknowledge: { [weak self] in
+                guard let self = self else { return Empty().eraseToAnyPublisher() }
+                
+                if let indexCaseInfo = indexCaseInfo {
+                    return self.exposureDetectionManager.sendKeys(
+                        for: indexCaseInfo.assumedOnsetDay,
+                        token: token
+                    )
+                    .catch { (error) -> AnyPublisher<Void, Error> in
+                        if (error as NSError).domain == ENErrorDomain {
+                            return Empty().eraseToAnyPublisher()
+                        } else {
+                            return Fail(error: error).eraseToAnyPublisher()
+                        }
                     }
+                    .handleEvents(receiveCompletion: { completion in
+                        switch completion {
+                        case .finished:
+                            completionHandler()
+                        case .failure:
+                            break
+                        }
+                    })
+                    .eraseToAnyPublisher()
+                } else {
+                    completionHandler()
+                    return Result.success(()).publisher.eraseToAnyPublisher()
                 }
-                .handleEvents(receiveCompletion: { completion in
-                    switch completion {
-                    case .finished:
-                        self.virologyTestingStateStore.removeLatestTestResult()
-                    case .failure:
-                        break
-                    }
-                })
-                .eraseToAnyPublisher()
-            } else {
-                self.virologyTestingStateStore.removeLatestTestResult()
-                return Result.success(()).publisher.eraseToAnyPublisher()
-            }
-        }, acknowledgeWithoutSending: { [weak self] in
-            self?.virologyTestingStateStore.removeLatestTestResult()
-        })
+            },
+            acknowledgeWithoutSending: { completionHandler() }
+        )
     }
     
     private func makeResultAcknowledgementState() -> AnyPublisher<TestResultAcknowledgementState, Never> {
         virologyTestingStateStore.$virologyTestResult
-            .combineLatest(isolationStateManager.$state)
-            .map { [weak self] result, isolationState in
+            .combineLatest(isolationStateStore.$isolationStateInfo)
+            .map { [weak self] result, isolationStateInfo in
                 guard let self = self, let result = result else {
                     return TestResultAcknowledgementState.notNeeded
                 }
                 
-                switch (result.testResult, isolationState) {
-                case (.positive, .isolating(let isolation, _, _)):
-                    guard let diagnosisKeySubmissionToken = result.diagnosisKeySubmissionToken else {
-                        return TestResultAcknowledgementState.notNeeded
+                let newIsolationStateInfo = self.isolationStateStore.newIsolationStateInfo(
+                    for: result.testResult,
+                    receivedOn: .today,
+                    npexDay: GregorianDay(date: result.endDate, timeZone: .utc)
+                )
+                
+                let newIsolationState = IsolationLogicalState(stateInfo: newIsolationStateInfo, day: .today)
+                let currentIsolationState = IsolationLogicalState(stateInfo: isolationStateInfo, day: .today)
+                
+                return TestResultAcknowledgementState(
+                    result: result,
+                    newIsolationState: newIsolationState,
+                    currentIsolationState: currentIsolationState,
+                    indexCaseInfo: newIsolationStateInfo.isolationInfo.indexCaseInfo,
+                    positiveAcknowledgement: self.positiveAcknowledgement
+                ) {
+                    self.virologyTestingStateStore.remove(testResult: result)
+                    
+                    self.isolationStateStore.isolationStateInfo = newIsolationStateInfo
+                    
+                    if !newIsolationState.isIsolating {
+                        self.isolationStateStore.acknowldegeEndOfIsolation()
                     }
-                    return TestResultAcknowledgementState.neededForPositiveResult(
-                        self.positiveAcknowledgement(for: diagnosisKeySubmissionToken, endDate: isolation.endDate),
-                        isolationEndDate: isolation.endDate
-                    )
-                case (.positive, _):
-                    guard let diagnosisKeySubmissionToken = result.diagnosisKeySubmissionToken else {
-                        return TestResultAcknowledgementState.notNeeded
-                    }
-                    let endDate = self.isolationStateStore.isolationInfo.indexCaseInfo?.testInfo?.receivedOnDay.startDate(in: .current)
-                    return TestResultAcknowledgementState.neededForPositiveResultNoIsolation(
-                        self.positiveAcknowledgement(for: diagnosisKeySubmissionToken, endDate: endDate ?? Date())
-                    )
-                case (.negative, .isolating(let isolation, _, _)):
-                    return TestResultAcknowledgementState.neededForNegativeResult(
-                        acknowledge: { self.virologyTestingStateStore.removeLatestTestResult() },
-                        isolationEndDate: isolation.endDate
-                    )
-                case (.negative, _):
-                    return TestResultAcknowledgementState.neededForNegativeResultNoIsolation(
-                        acknowledge: {
-                            self.virologyTestingStateStore.removeLatestTestResult()
-                            self.isolationStateStore.acknowldegeEndOfIsolation()
-                        }
-                    )
                 }
             }
             .eraseToAnyPublisher()
@@ -382,11 +474,26 @@ public class ApplicationCoordinator {
             hasPostcode = Just(true).eraseToAnyPublisher()
         }
         
-        return appActivationManager.$isActivated
-            .combineLatest(appAvailabilityManager.$state)
+        var isActivated: AnyPublisher<Bool, Never>
+        
+        if let appActivationManager = appActivationManager {
+            isActivated = appActivationManager.$isActivated.eraseToAnyPublisher()
+        } else {
+            isActivated = Just(true).eraseToAnyPublisher()
+        }
+        
+        return isActivated
+            .combineLatest(appAvailabilityManager.$state, completedOnboardingForCurrentSession)
             .combineLatest(exposureNotificationStateController.combinedState, userNotificationsStateController.$authorizationStatus, hasPostcode)
             .map { f in
-                RawState(isAppActivated: f.0.0, appAvailability: f.0.1, exposureState: f.1, userNotificationsStatus: f.2, hasPostcode: f.3)
+                RawState(
+                    isAppActivated: f.0.0,
+                    appAvailability: f.0.1,
+                    completedOnboardingForCurrentSession: f.0.2,
+                    exposureState: f.1,
+                    userNotificationsStatus: f.2,
+                    hasPostcode: f.3
+                )
             }
             .removeDuplicates()
             .eraseToAnyPublisher()
@@ -407,7 +514,7 @@ public class ApplicationCoordinator {
     
     private func shouldImmediatelyRunBackgroundJobs(in state: ApplicationState) -> Bool {
         switch state {
-        case .runningExposureNotification where postcodeStore != nil && postcodeStore?.riskLevel == nil:
+        case .runningExposureNotification where postcodeStore != nil && riskyPostcodes?.value.isEmpty ?? false:
             // We’re likely in a state that the app is just onboarded.
             // Run background tasks once to fill up our state.
             return true
@@ -435,12 +542,12 @@ public class ApplicationCoordinator {
         var enabledJobs = [BackgroundTaskAggregator.Job]()
         
         let circuitBreaker = self.circuitBreaker
-        let detectionExposureManager = self.detectionExposureManager
+        let exposureDetectionManager = self.exposureDetectionManager
         let riskScoreNegotiator = self.riskScoreNegotiator
         let expsoureNotificationJob = BackgroundTaskAggregator.Job(
             preferredFrequency: Self.exposureDetectionBackgroundTaskFrequency
         ) {
-            detectionExposureManager.detectExposures()
+            exposureDetectionManager.detectExposures(currentDate: self.currentDateProvider())
                 .filterNil()
                 .map { riskInfo in
                     riskScoreNegotiator.receive(riskInfo: riskInfo)
@@ -450,14 +557,12 @@ public class ApplicationCoordinator {
         }
         enabledJobs.append(expsoureNotificationJob)
         
-        if let postcodeManager = self.postcodeManager {
+        let riskyPostcodes = self.riskyPostcodes
+        if let riskyPostcodes = riskyPostcodes {
             let postcodeJob = BackgroundTaskAggregator.Job(
-                preferredFrequency: Self.exposureDetectionBackgroundTaskFrequency
-            ) {
-                postcodeManager.evaluatePostcodeRisk()
-                    .append(Deferred(createPublisher: circuitBreaker.processRiskyVenueApproval))
-                    .eraseToAnyPublisher()
-            }
+                preferredFrequency: Self.exposureDetectionBackgroundTaskFrequency,
+                work: riskyPostcodes.update
+            )
             enabledJobs.append(postcodeJob)
         }
         
@@ -469,9 +574,12 @@ public class ApplicationCoordinator {
             enabledJobs.append(deleteExpiredCheckInJob)
             
             let matchRiskyVenuesJob = BackgroundTaskAggregator.Job(
-                preferredFrequency: Self.matchingRiskyVenuesDeletionBackgroundTaskFrequency,
-                work: checkInContext.checkInsManager.evaluateVenuesRisk
-            )
+                preferredFrequency: Self.matchingRiskyVenuesDeletionBackgroundTaskFrequency
+            ) {
+                checkInContext.checkInsManager.evaluateVenuesRisk()
+                    .append(Deferred(createPublisher: circuitBreaker.processRiskyVenueApproval))
+                    .eraseToAnyPublisher()
+            }
             enabledJobs.append(matchRiskyVenuesJob)
         }
         
@@ -515,15 +623,27 @@ public class ApplicationCoordinator {
             )
         )
         
+        enabledJobs.append(
+            BackgroundTaskAggregator.Job(
+                preferredFrequency: Self.metricsUploadJobBackgroundTaskFrequency,
+                work: metricRecoder.uploadMetrics
+            )
+        )
+        
         return enabledJobs
     }
     
     private func setupChangeNotifiers(using userNotificationsManager: UserNotificationManaging) {
         let changeNotifier = ChangeNotifier(notificationManager: userNotificationsManager)
         
-        if let postcodeStore = postcodeStore {
+        if let postcodeInfo = postcodeInfo {
+            let risk = postcodeInfo
+                .compactMap { $0?.risk }
+                .switchToLatest()
+                .filterNil()
+            
             changeNotifier
-                .alertUserToChanges(in: postcodeStore.$riskLevel, type: .postcode) { $0 != nil }
+                .alertUserToChanges(in: risk, type: .postcode)
                 .store(in: &cancellabes)
         }
         
@@ -548,6 +668,13 @@ public class ApplicationCoordinator {
         }
     }
     
+    public func handleUserNotificationAction(_ action: UserNotificationAction, completion: @escaping () -> Void) {
+        switch action {
+        case .enableExposureNotification:
+            exposureNotificationStateController.enable(completion: completion)
+        }
+    }
+    
     public func performBackgroundTask(task: BackgroundTask) {
         _performBackgroundTask(task: task)
     }
@@ -569,21 +696,26 @@ public class ApplicationCoordinator {
     }
     
     private func deleteAllData() {
-        // start with postcode. This resets the UI immediately; making sure there’s no jitter as we delete everything
+        completedOnboardingForCurrentSession.value = false
         postcodeStore?.delete()
         checkInContext?.checkInsStore.deleteAll()
         isolationStateStore.isolationStateInfo = nil
         exposureDetectionStore.delete()
         virologyTestingStateStore.delete()
     }
+    
+    private func deleteCheckIn(with id: String) {
+        checkInContext?.checkInsStore.delete(checkInId: id)
+    }
+    
 }
 
 private extension NotificationCenter {
     
-    var onApplicationBecameActive: AnyPublisher<Date, Never> {
+    var onApplicationBecameActive: AnyPublisher<Void, Never> {
         publisher(for: UIApplication.didBecomeActiveNotification)
-            .map { _ in Date() }
-            .prepend(Date())
+            .map { _ in () }
+            .prepend(())
             .eraseToAnyPublisher()
     }
     

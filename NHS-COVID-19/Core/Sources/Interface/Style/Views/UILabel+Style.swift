@@ -21,6 +21,13 @@ extension UILabel {
     }
     
     @discardableResult
+    public func styleAsBoldBody() -> Self {
+        textColor = UIColor(.primaryText)
+        setBoldDynamicTextStyle(.body)
+        return self
+    }
+    
+    @discardableResult
     public func styleAsSecondaryBody() -> Self {
         textColor = UIColor(.secondaryText)
         setDynamicTextStyle(.body)
@@ -62,6 +69,7 @@ extension UILabel {
     public func styleAsSecondaryTitle() -> Self {
         textColor = UIColor(.primaryText)
         setDynamicTextStyle(.title2)
+        accessibilityTraits = .header
         return self
     }
     
@@ -74,8 +82,28 @@ extension UILabel {
     }
     
     @discardableResult
+    public func styleAsSectionHeader() -> Self {
+        textColor = UIColor(.sectionHeaderText)
+        setDynamicTextStyle(.body)
+        return self
+    }
+    
+    @discardableResult
+    public func styleAsCaption() -> Self {
+        textColor = UIColor(.secondaryText)
+        setDynamicTextStyle(.caption1)
+        return self
+    }
+    
+    @discardableResult
     public func set(text: String?) -> Self {
         self.text = text
+        return self
+    }
+    
+    @discardableResult
+    public func centralized() -> Self {
+        textAlignment = .center
         return self
     }
     

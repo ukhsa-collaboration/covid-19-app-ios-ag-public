@@ -11,10 +11,19 @@ public protocol ExposureRiskCalculating {
 }
 
 public struct ExposureRiskCalculator: ExposureRiskCalculating {
-    var configuration: ExposureDetectionConfiguration
+    private let configuration: ExposureDetectionConfiguration
+    private let infectiousnessFactorCalculator: InfectiousnessFactorCalculating
     
-    public init(configuration: ExposureDetectionConfiguration) {
+    init(
+        configuration: ExposureDetectionConfiguration,
+        infectiousnessFactorCalculator: InfectiousnessFactorCalculating = InfectiousnessFactorCalculator()
+    ) {
         self.configuration = configuration
+        self.infectiousnessFactorCalculator = infectiousnessFactorCalculator
+    }
+    
+    static func withConfiguration(_ configuration: ExposureDetectionConfiguration) -> ExposureRiskCalculator {
+        return ExposureRiskCalculator(configuration: configuration)
     }
     
     public func isConsideredRisky(riskScore: Double) -> Bool {
@@ -24,8 +33,12 @@ public struct ExposureRiskCalculator: ExposureRiskCalculating {
     func risk(for exposureInfo: ExposureNotificationExposureInfo) -> Double {
         let durations = exposureInfo.attenuationDurations.map { $0.doubleValue }
         let weightedDurations = zip(durations, configuration.durationBucketWeights).map(*)
+        let weightedAttenuationScore = weightedDurations.reduce(0, +)
         
-        return weightedDurations.reduce(0, +)
+        let daysFromOnset: Int = ENTemporaryExposureKey.maxTransmissionRiskLevel - Int(exposureInfo.transmissionRiskLevel)
+        let infectiousnessFactor = infectiousnessFactorCalculator.infectiousnessFactor(for: daysFromOnset)
+        
+        return weightedAttenuationScore * infectiousnessFactor
     }
     
     public func riskInfo(for exposureInfo: [ExposureNotificationExposureInfo]) -> RiskInfo? {
@@ -33,7 +46,7 @@ public struct ExposureRiskCalculator: ExposureRiskCalculating {
             .map {
                 RiskInfo(
                     riskScore: risk(for: $0),
-                    day: GregorianDay(date: $0.date, timeZone: Calendar.utc.timeZone)
+                    day: GregorianDay(date: $0.date, timeZone: .utc)
                 )
             }
             .filter { isConsideredRisky(riskScore: $0.riskScore) }

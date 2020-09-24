@@ -32,7 +32,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         )
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
-        if case .positiveTestResultAckNeeded(_, let isolationEndDate) = state {
+        if case .neededForPositiveResultContinueToIsolate(_, let isolationEndDate) = state {
             XCTAssert(true)
             XCTAssertEqual(date, isolationEndDate)
         }
@@ -41,12 +41,12 @@ class AcknowledgementNeededStateTests: XCTestCase {
     func testNegativeTestResultAckNeededNoIsolation() throws {
         let context = makeRunningAppContext(
             isolationAckState: .notNeeded,
-            testResultAckState: .neededForNegativeResultNoIsolation(acknowledge: {}),
+            testResultAckState: .neededForNegativeResultEndIsolation(acknowledge: {}),
             riskyCheckInsAckState: .notNeeded
         )
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
-        if case .negativeTestResultAckNeeded = state {
+        if case .neededForNegativeResultContinueToIsolate = state {
             XCTAssert(true)
         }
     }
@@ -55,12 +55,12 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let date = Date()
         let context = makeRunningAppContext(
             isolationAckState: .notNeeded,
-            testResultAckState: .neededForNegativeResult(acknowledge: {}, isolationEndDate: date),
+            testResultAckState: .neededForNegativeResultContinueToIsolate(acknowledge: {}, isolationEndDate: date),
             riskyCheckInsAckState: .notNeeded
         )
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
-        if case .negativeTestResultAckNeeded(_, let isolationEndDate) = state {
+        if case .neededForNegativeResultContinueToIsolate(_, let isolationEndDate) = state {
             XCTAssert(true)
             XCTAssertEqual(date, isolationEndDate)
         }
@@ -74,12 +74,12 @@ class AcknowledgementNeededStateTests: XCTestCase {
         )
         let context = makeRunningAppContext(
             isolationAckState: .neededForEnd(isolation, acknowledge: {}),
-            testResultAckState: .neededForNegativeResultNoIsolation(acknowledge: {}),
+            testResultAckState: .neededForNegativeResultEndIsolation(acknowledge: {}),
             riskyCheckInsAckState: .notNeeded
         )
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
-        if case .isolationEndAckNeeded(_, let isolationEndDate, let showAdvisory) = state {
+        if case .neededForEndOfIsolation(_, let isolationEndDate, let showAdvisory) = state {
             XCTAssert(true)
             XCTAssertEqual(isolationEndDate, isolation.endDate)
             XCTAssertEqual(showAdvisory, isolation.isIndexCase)
@@ -101,7 +101,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         
-        if case .positiveTestResultAckNeeded = state {
+        if case .neededForPositiveResultContinueToIsolate = state {
             XCTAssert(true)
         }
     }
@@ -115,13 +115,13 @@ class AcknowledgementNeededStateTests: XCTestCase {
         
         let context = makeRunningAppContext(
             isolationAckState: .neededForEnd(isolation, acknowledge: {}),
-            testResultAckState: .neededForNegativeResultNoIsolation(acknowledge: {}),
+            testResultAckState: .neededForNegativeResultEndIsolation(acknowledge: {}),
             riskyCheckInsAckState: .needed(acknowledge: {}, venueName: "Venue", checkInDate: Date())
         )
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         
-        if case .negativeTestResultAckNeeded = state {
+        if case .neededForNegativeResultContinueToIsolate = state {
             XCTAssert(true)
         }
     }
@@ -137,7 +137,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         
-        if case let .riskyVenueNeeded(_, venueName, checkInDate) = state,
+        if case let .neededForRiskyVenue(_, venueName, checkInDate) = state,
             venueName == expectedVenueName,
             checkInDate == expectedCheckInDate {
             XCTAssert(true)
@@ -151,7 +151,8 @@ class AcknowledgementNeededStateTests: XCTestCase {
     ) -> RunningAppContext {
         RunningAppContext(
             checkInContext: nil,
-            postcodeStore: nil,
+            postcodeInfo: .constant(nil),
+            country: Just(.england).eraseToAnyPublisher().domainProperty(),
             openSettings: {},
             openURL: { _ in },
             selfDiagnosisManager: nil,
@@ -160,18 +161,21 @@ class AcknowledgementNeededStateTests: XCTestCase {
             exposureNotificationStateController: ExposureNotificationStateController(
                 manager: MockExposureNotificationManager()
             ),
-            virologyTestOrderInfoProvider: MockVirologyTestOrderInfoProvider(),
+            virologyTestingManager: MockVirologyTestingManager(),
             testResultAcknowledgementState: Result.success(testResultAckState).publisher.eraseToAnyPublisher(),
             symptomsDateAndEncounterDateProvider: MockSymptomsOnsetDateAndEncounterDateProvider(),
             deleteAllData: {},
+            deleteCheckIn: { _ in },
             riskyCheckInsAcknowledgementState: Result.success(riskyCheckInsAckState).publisher.eraseToAnyPublisher(),
-            qrCodeScanner: MockQRCodeScanner()
+            currentDateProvider: { Date() },
+            exposureNotificationReminder: ExposureNotificationReminder(),
+            appReviewPresenter: AppReviewPresenter(checkInsStore: nil, reviewController: MockStoreReviewController(), currentDateProvider: Date.init)
         )
     }
     
-    private class MockVirologyTestOrderInfoProvider: VirologyTestingTestOrderInfoProviding {
-        func provideTestResult() -> (TestResult, Date)? {
-            nil
+    private class MockVirologyTestingManager: VirologyTestingManaging {
+        func linkExternalTestResult(with token: String) -> AnyPublisher<Void, LinkTestResultError> {
+            Empty().eraseToAnyPublisher()
         }
         
         func provideTestOrderInfo() -> AnyPublisher<TestOrderInfo, NetworkRequestError> {
@@ -187,5 +191,18 @@ class AcknowledgementNeededStateTests: XCTestCase {
         func provideEncounterDate() -> Date? {
             nil
         }
+    }
+}
+
+private extension ExposureNotificationReminder {
+    convenience init() {
+        let manager = MockUserNotificationsManager()
+        let controller = UserNotificationsStateController(manager: manager, notificationCenter: NotificationCenter())
+        self.init(
+            userNotificationManager: manager,
+            userNotificationStateController: controller,
+            currentDateProvider: { Date() },
+            exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
+        )
     }
 }

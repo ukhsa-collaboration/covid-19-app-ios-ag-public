@@ -45,5 +45,6 @@ public class NoActionRecoverableErrorScreenTemplateScenario: Scenario, UITestIns
         var action: (title: String, act: () -> Void)? = nil
         var title: String
         var content: [UIView]
+        var logoStrapLineStyle: LogoStrapline.Style = .onboarding
     }
 }

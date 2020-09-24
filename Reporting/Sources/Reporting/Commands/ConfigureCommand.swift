@@ -82,7 +82,7 @@ struct ConfigureCommand: ParsableCommand {
             "-T",
             "/usr/bin/security"
         )
-        try Bash.run("security", "set-keychain-settings", "-lut", "1000", keychainName)
+        try Bash.run("security", "set-keychain-settings", "-lut", "6000", keychainName)
         try Bash.run("security", "unlock-keychain", "-p", keychainPassword, keychainName)
         try Bash.run("security", "set-key-partition-list", "-S", "apple-tool:,apple:", "-s", "-k", keychainPassword, keychainName)
         

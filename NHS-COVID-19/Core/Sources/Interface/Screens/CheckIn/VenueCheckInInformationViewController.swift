@@ -2,6 +2,7 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Common
 import Foundation
 import Localization
 import UIKit
@@ -16,34 +17,149 @@ public class VenueCheckInInformationViewController: UIViewController {
     
     private let interactor: Interacting
     
-    private var navigationBar: UIView {
-        let navigationBar = UIView()
-        let logoStrapline = LogoStrapline(.nhsBlue, style: .home)
-        navigationBar.addFillingSubview(logoStrapline)
-        return navigationBar
+    private lazy var helpScanningSection: UIView = {
+        createSection(
+            header: localize(.checkin_information_help_scanning_section_title),
+            description: localize(.checkin_information_help_scanning_section_description)
+        )
+    }()
+    
+    private lazy var whatsAQRCodeSection: UIView = {
+        var content = [UIView]()
+        
+        let title = UILabel()
+        title.styleAsTertiaryTitle()
+        title.text = localize(.checkin_information_whats_a_qr_code_section_title)
+        content.append(title)
+        
+        let descriptionLabel = UILabel()
+        descriptionLabel.styleAsBody()
+        descriptionLabel.text = localize(.checkin_information_whats_a_qr_code_section_description_new)
+        content.append(descriptionLabel)
+        
+        let imageDescriptionLabel = UILabel()
+        imageDescriptionLabel.styleAsBody()
+        imageDescriptionLabel.text = localize(.qr_code_poster_description)
+        
+        let imageView = UIImageView(image: UIImage(.qrCodePoster))
+        imageView.contentMode = .scaleAspectFit
+        imageView.isAccessibilityElement = true
+        imageView.accessibilityLabel = localize(.qr_code_poster_accessibility_label)
+        
+        let imageStackView = UIStackView(arrangedSubviews: [imageDescriptionLabel, imageView])
+        imageStackView.axis = .vertical
+        imageStackView.alignment = .leading
+        imageStackView.spacing = .halfSpacing
+        content.append(imageStackView)
+        
+        let imageDescriptionLabelWLS = UILabel()
+        imageDescriptionLabelWLS.styleAsBody()
+        imageDescriptionLabelWLS.text = localize(.qr_code_poster_description_wls)
+        
+        let imageViewWLS = UIImageView(image: UIImage(.qrCodePosterWales))
+        imageViewWLS.contentMode = .scaleAspectFit
+        imageViewWLS.isAccessibilityElement = true
+        imageViewWLS.accessibilityLabel = localize(.qr_code_poster_accessibility_label_wls)
+        
+        let imageStackViewWLS = UIStackView(arrangedSubviews: [imageDescriptionLabelWLS, imageViewWLS])
+        imageStackViewWLS.axis = .vertical
+        imageStackViewWLS.alignment = .leading
+        imageStackViewWLS.spacing = .halfSpacing
+        content.append(imageStackViewWLS)
+        
+        let stackView = UIStackView(arrangedSubviews: content)
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.spacing = .standardSpacing
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = .inner
+        
+        return stackView
+    }()
+    
+    private lazy var howItWorksSection: UIView = {
+        createSection(
+            header: localize(.checkin_information_how_it_works_section_title),
+            description: localize(.checkin_information_how_it_works_section_description)
+        )
+    }()
+    
+    private lazy var howItHelpsSection: UIView = {
+        createSection(
+            header: localize(.checkin_information_how_it_helps_section_title),
+            description: localize(.checkin_information_how_it_helps_section_description)
+        )
+    }()
+    
+    private func createSection(header: String, description: String) -> UIView {
+        var content = [UIView]()
+        
+        let title = UILabel()
+        title.styleAsTertiaryTitle()
+        title.text = header
+        content.append(title)
+        
+        let descriptionLabel = UILabel()
+        descriptionLabel.styleAsBody()
+        descriptionLabel.text = description
+        content.append(descriptionLabel)
+        
+        let stackView = UIStackView(arrangedSubviews: content)
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.spacing = .standardSpacing
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = .inner
+        
+        return stackView
     }
     
-    private var titleLabel: UIView {
-        let label = UILabel()
-        label.styleAsPageHeader()
-        label.text = localize(.checkin_information_title)
-        return label
+    private func createImageSection(
+        header: String,
+        description: String,
+        imageDescription: String,
+        image: UIImage,
+        imageAccessibilityLabel: String
+    ) -> UIView {
+        var content = [UIView]()
+        
+        let title = UILabel()
+        title.styleAsTertiaryTitle()
+        title.text = header
+        content.append(title)
+        
+        let descriptionLabel = UILabel()
+        descriptionLabel.styleAsBody()
+        descriptionLabel.text = description
+        content.append(descriptionLabel)
+        
+        let imageDescriptionLabel = UILabel()
+        imageDescriptionLabel.styleAsBody()
+        imageDescriptionLabel.text = description
+        content.append(imageDescriptionLabel)
+        
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+        imageView.isAccessibilityElement = true
+        imageView.accessibilityLabel = imageAccessibilityLabel
+        content.append(imageView)
+        
+        let stackView = UIStackView(arrangedSubviews: content)
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.spacing = .halfSpacing
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = .inner
+        
+        return stackView
     }
-    
-    private let howItWorksSection = InformationBox.information(
-        title: localize(.checkin_information_how_it_works_section_title),
-        body: [localize(.checkin_information_how_it_works_section_description)]
-    )
-    
-    private let howItHelpsSection = InformationBox.information(
-        title: localize(.checkin_information_how_it_helps_section_title),
-        body: [localize(.checkin_information_how_it_helps_section_description)]
-    )
     
     public init(interactor: Interacting) {
         self.interactor = interactor
         
         super.init(nibName: nil, bundle: nil)
+        
+        title = localize(.checkin_information_title_new)
     }
     
     public required init?(coder: NSCoder) {
@@ -56,9 +172,11 @@ public class VenueCheckInInformationViewController: UIViewController {
         let view = self.view!
         view.styleAsScreenBackground(with: traitCollection)
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: localize(.cancel), style: .plain, target: self, action: #selector(didTapDismiss))
+        
         let content = [
-            navigationBar,
-            titleLabel,
+            helpScanningSection,
+            whatsAQRCodeSection,
             howItWorksSection,
             howItHelpsSection,
         ]
@@ -70,27 +188,16 @@ public class VenueCheckInInformationViewController: UIViewController {
         stackView.layoutMargins = .standard
         stackView.isLayoutMarginsRelativeArrangement = true
         
-        let button = UIButton(type: .system)
-        button.styleAsPrimary()
-        button.setTitle(localize(.checkin_information_button_title), for: .normal)
-        button.addTarget(self, action: #selector(didTapDismiss), for: .touchUpInside)
-        
         let scrollView = UIScrollView()
         scrollView.addFillingSubview(stackView)
         
-        view.addAutolayoutSubview(scrollView)
-        view.addAutolayoutSubview(button)
+        view.addFillingSubview(scrollView)
         
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.widthAnchor.constraint(equalTo: view.widthAnchor),
             scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-            
-            button.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-            button.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
-            button.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: .standardSpacing),
-            button.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -.standardSpacing),
         ])
     }
     

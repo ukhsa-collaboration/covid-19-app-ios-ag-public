@@ -44,7 +44,7 @@ public struct GregorianDay: Equatable, Strideable, Codable, Hashable {
 extension GregorianDay: Comparable {
     public func startDate(in timeZone: TimeZone) -> Date {
         var dateComponents = self.dateComponents
-        dateComponents.calendar?.timeZone = timeZone
+        dateComponents.timeZone = timeZone
         return dateComponents.date!
     }
     

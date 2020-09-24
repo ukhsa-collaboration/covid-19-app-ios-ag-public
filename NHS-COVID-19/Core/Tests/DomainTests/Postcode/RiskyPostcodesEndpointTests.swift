@@ -47,7 +47,11 @@ class RiskyPostcodesEndpointTests: XCTestCase {
         
         let postcodes = try endpoint.parse(response)
         
-        TS.assert(postcodes, equals: [postcode1: PostcodeRisk.high, postcode2: PostcodeRisk.medium, postcode3: PostcodeRisk.low])
+        TS.assert(postcodes, equals: [
+            Postcode(postcode1): PostcodeRisk.high,
+            Postcode(postcode2): PostcodeRisk.medium,
+            Postcode(postcode3): PostcodeRisk.low,
+        ])
     }
     
 }

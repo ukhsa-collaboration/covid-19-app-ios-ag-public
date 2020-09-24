@@ -22,4 +22,8 @@ class WrappingAppController: AppController {
     func performBackgroundTask(task: BackgroundTask) {
         content?.performBackgroundTask(task: task)
     }
+    
+    func handleUserNotificationResponse(_ response: UNNotificationResponse, completionHandler: @escaping () -> Void) {
+        content?.handleUserNotificationResponse(response, completionHandler: completionHandler)
+    }
 }

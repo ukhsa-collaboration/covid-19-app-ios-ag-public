@@ -2,13 +2,14 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Localization
 import XCTest
 
 struct HomeScreen {
     var app: XCUIApplication
     
-    var riskLevelBanner: XCUIElement {
-        app.buttons[localized: .risk_level_banner_text(postcode: "SW12", risk: "LOW")]
+    func riskLevelBanner(for postcode: String, risk: String) -> XCUIElement {
+        app.buttons[verbatim: localizeForCountry(.risk_level_banner_text(postcode: postcode, risk: risk))]
     }
     
     var diagnoisButton: XCUIElement {
@@ -35,10 +36,6 @@ struct HomeScreen {
         app.switches[localized: .home_toggle_exposure_notification_title]
     }
     
-    var earlyAccessLabel: XCUIElement {
-        app.staticTexts[localized: .home_early_access_label]
-    }
-    
     func isolatingIndicator(date: Date, days: Int) -> XCUIElement {
         app.staticTexts[localized: .isolation_indicator_accessiblity_label(date: date, days: days)]
     }
@@ -49,5 +46,17 @@ struct HomeScreen {
     
     var disabledContactTracing: XCUIElement {
         app.staticTexts[localized: .risk_level_indicator_contact_tracing_not_active]
+    }
+    
+    var pauseContactTracingButton: XCUIElement {
+        app.buttons[localized: .exposure_notification_reminder_sheet_hours(hours: 4)]
+    }
+    
+    var reminderAlertTitle: XCUIElement {
+        app.staticTexts[localized: .exposure_notification_reminder_alert_title(hours: 4)]
+    }
+    
+    var reminderAlertButton: XCUIElement {
+        app.buttons[localized: .exposure_notification_reminder_alert_button]
     }
 }

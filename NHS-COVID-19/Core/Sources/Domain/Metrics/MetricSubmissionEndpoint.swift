@@ -8,9 +8,23 @@ import Logging
 import MetricKit
 
 struct MetricsInfo {
-    var payload: MetricPayload
+    var payload: MetricsInfoPayload
     var postalDistrict: String
     var recordedMetrics: [Metric: Int]
+}
+
+enum MetricsInfoPayload {
+    case systemPayload(MetricPayload)
+    case triggeredPayload(TriggeredPayload)
+}
+
+struct TriggeredPayload {
+    var startDate: Date
+    var endDate: Date
+    var deviceModel: String
+    var operatingSystemVersion: String
+    var latestApplicationVersion: String
+    var includesMultipleApplicationVersions: Bool
 }
 
 struct MetricSubmissionEndpoint: HTTPEndpoint {
@@ -84,34 +98,62 @@ private struct SubmissionPayload: Codable {
     var metrics: Metrics
     
     init(_ metrics: MetricsInfo) {
-        analyticsWindow = Period(
-            startDate: metrics.payload.timeStampBegin,
-            endDate: metrics.payload.timeStampEnd
-        )
-        
-        metadata = Metadata(
-            postalDistrict: metrics.postalDistrict,
-            deviceModel: metrics.payload.metaData?.deviceType ?? "",
-            operatingSystemVersion: metrics.payload.metaData?.osVersion ?? "",
-            latestApplicationVersion: metrics.payload.latestApplicationVersion
-        )
-        
-        includesMultipleApplicationVersions = metrics.payload.includesMultipleApplicationVersions
-        
-        let networkTransferMetrics = metrics.payload.networkTransferMetrics ?? MXNetworkTransferMetric()
-        
-        let metricCounts = metrics.payload.metricCounts
-        
-        self.metrics = mutating(Metrics()) {
-            $0.cumulativeWifiUploadBytes = Int(networkTransferMetrics.cumulativeWifiUpload.value(in: .bytes))
-            $0.cumulativeWifiDownloadBytes = Int(networkTransferMetrics.cumulativeWifiDownload.value(in: .bytes))
-            $0.cumulativeCellularUploadBytes = Int(networkTransferMetrics.cumulativeCellularUpload.value(in: .bytes))
-            $0.cumulativeCellularDownloadBytes = Int(networkTransferMetrics.cumulativeCellularDownload.value(in: .bytes))
-            $0.cumulativeDownloadBytes = $0.cumulativeWifiDownloadBytes + $0.cumulativeCellularDownloadBytes
-            $0.cumulativeUploadBytes = $0.cumulativeWifiUploadBytes + $0.cumulativeCellularUploadBytes
+        switch metrics.payload {
+        case .systemPayload(let payload):
+            analyticsWindow = Period(
+                startDate: payload.timeStampBegin,
+                endDate: payload.timeStampEnd
+            )
             
-            for metric in Metric.allCases {
-                $0[keyPath: metric.property] = metrics.recordedMetrics[metric] ?? 0
+            metadata = Metadata(
+                postalDistrict: metrics.postalDistrict,
+                deviceModel: payload.metaData?.deviceType ?? "",
+                operatingSystemVersion: payload.metaData?.osVersion ?? "",
+                latestApplicationVersion: payload.latestApplicationVersion
+            )
+            
+            includesMultipleApplicationVersions = payload.includesMultipleApplicationVersions
+            
+            let networkTransferMetrics = payload.networkTransferMetrics ?? MXNetworkTransferMetric()
+            
+            self.metrics = mutating(Metrics()) {
+                $0.cumulativeWifiUploadBytes = Int(networkTransferMetrics.cumulativeWifiUpload.value(in: .bytes))
+                $0.cumulativeWifiDownloadBytes = Int(networkTransferMetrics.cumulativeWifiDownload.value(in: .bytes))
+                $0.cumulativeCellularUploadBytes = Int(networkTransferMetrics.cumulativeCellularUpload.value(in: .bytes))
+                $0.cumulativeCellularDownloadBytes = Int(networkTransferMetrics.cumulativeCellularDownload.value(in: .bytes))
+                $0.cumulativeDownloadBytes = $0.cumulativeWifiDownloadBytes + $0.cumulativeCellularDownloadBytes
+                $0.cumulativeUploadBytes = $0.cumulativeWifiUploadBytes + $0.cumulativeCellularUploadBytes
+                
+                for metric in Metric.allCases {
+                    $0[keyPath: metric.property] = metrics.recordedMetrics[metric] ?? 0
+                }
+            }
+        case .triggeredPayload(let payload):
+            analyticsWindow = Period(
+                startDate: payload.startDate,
+                endDate: payload.endDate
+            )
+            
+            metadata = Metadata(
+                postalDistrict: metrics.postalDistrict,
+                deviceModel: payload.deviceModel,
+                operatingSystemVersion: payload.operatingSystemVersion,
+                latestApplicationVersion: payload.latestApplicationVersion
+            )
+            
+            includesMultipleApplicationVersions = payload.includesMultipleApplicationVersions
+            
+            self.metrics = mutating(Metrics()) {
+                $0.cumulativeWifiUploadBytes = 0
+                $0.cumulativeWifiDownloadBytes = 0
+                $0.cumulativeCellularUploadBytes = 0
+                $0.cumulativeCellularDownloadBytes = 0
+                $0.cumulativeDownloadBytes = 0
+                $0.cumulativeUploadBytes = 0
+                
+                for metric in Metric.allCases {
+                    $0[keyPath: metric.property] = metrics.recordedMetrics[metric] ?? 0
+                }
             }
         }
     }

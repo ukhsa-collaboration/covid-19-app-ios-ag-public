@@ -43,13 +43,19 @@ class BaseAppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCen
         window.rootViewController = appController?.rootViewController
         self.window = window
         
-        UNUserNotificationCenter.current().delegate = self
+        let notificationCenter = UNUserNotificationCenter.current()
+        notificationCenter.delegate = self
+        UserNotificationActionRegistration.registerUserNotificationActions(notificationCenter: notificationCenter)
         
         return true
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.alert, .badge, .sound])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        appController?.handleUserNotificationResponse(response, completionHandler: completionHandler)
     }
     
 }

@@ -54,7 +54,7 @@ class CheckInsStoreTests: XCTestCase {
                         "minutes": 0
                     },
                     "circuitBreakerApproval" : "pending",
-                    "isRisky" : false
+                    "isRisky" : false,
                 }
             ],
             "riskApprovalTokens": {},
@@ -63,17 +63,14 @@ class CheckInsStoreTests: XCTestCase {
         """# .data(using: .utf8)!
         checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests)
         
-        let expectedCheckIns = [
-            CheckIn(
-                venueId: venueId,
-                venueName: venueName,
-                checkedIn: checkedIn,
-                checkedOut: checkedOut,
-                isRisky: false
-            ),
-        ]
+        let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
         
-        TS.assert(expectedCheckIns, equals: checkInsStore.load())
+        XCTAssertEqual(loadedCheckIns.count, 1)
+        XCTAssertEqual(loadedCheckIns[0].venueId, venueId)
+        XCTAssertEqual(loadedCheckIns[0].venueName, venueName)
+        XCTAssertEqual(loadedCheckIns[0].checkedIn, checkedIn)
+        XCTAssertEqual(loadedCheckIns[0].checkedOut, checkedOut)
+        XCTAssertEqual(loadedCheckIns[0].isRisky, false)
         XCTAssertTrue(checkInsStore.riskyCheckIns.isEmpty)
     }
     
@@ -81,8 +78,121 @@ class CheckInsStoreTests: XCTestCase {
         
         let venueId = "CDEF2345"
         let venueName = "Awesome Shop"
-        let checkInDate = UTCHour(day: GregorianDay(year: 2020, month: 5, day: 15), hour: 5)
-        let checkOutDate = UTCHour(day: GregorianDay(year: 2020, month: 5, day: 15), hour: 7)
+        let checkedIn = UTCHour(day: GregorianDay(year: 2020, month: 5, day: 15), hour: 5)
+        let checkedOut = UTCHour(day: GregorianDay(year: 2020, month: 5, day: 15), hour: 7)
+        
+        encryptedStore.stored["checkins"] = #"""
+        {
+            "checkIns": [
+                {
+                    "venueId" : "\#(venueId)",
+                    "venueName" : "\#(venueName)",
+                    "checkedIn" : {
+                        "day" : {
+                            "year" : 2020,
+                            "month" : 5,
+                            "day" : 15
+                        },
+                        "hour" : 5,
+                        "minutes": 0
+                    },
+                    "checkedOut" : {
+                        "day" : {
+                            "year" : 2020,
+                            "month" : 5,
+                            "day" : 15
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                    "circuitBreakerApproval" : "pending",
+                    "isRisky" : true,
+                }
+            ],
+            "riskApprovalTokens": {},
+            "unacknowldegedRiskyVenueIds": [],
+        }
+        """# .data(using: .utf8)!
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests)
+        
+        let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
+        
+        XCTAssertEqual(loadedCheckIns.count, 1)
+        XCTAssertEqual(loadedCheckIns[0].venueId, venueId)
+        XCTAssertEqual(loadedCheckIns[0].venueName, venueName)
+        XCTAssertEqual(loadedCheckIns[0].checkedIn, checkedIn)
+        XCTAssertEqual(loadedCheckIns[0].checkedOut, checkedOut)
+        XCTAssertEqual(loadedCheckIns[0].isRisky, true)
+        
+        XCTAssertEqual(checkInsStore.riskyCheckIns.count, 1)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].venueId, venueId)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].venueName, venueName)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].checkedIn, checkedIn)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].checkedOut, checkedOut)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].isRisky, true)
+    }
+    
+    func testLoadingNotRiskyCheckInDataWithCheckedInDate() throws {
+        let venueId = "CDEF2345"
+        let venueName = "Awesome Shop"
+        let checkedIn = UTCHour(day: GregorianDay(year: 2020, month: 5, day: 15), hour: 5)
+        let checkedOut = UTCHour(day: GregorianDay(year: 2020, month: 5, day: 15), hour: 7)
+        let id = UUID().uuidString
+        
+        encryptedStore.stored["checkins"] = #"""
+        {
+            "checkIns": [
+                {
+                    "venueId" : "\#(venueId)",
+                    "venueName" : "\#(venueName)",
+                    "checkedIn" : {
+                        "day" : {
+                            "year" : 2020,
+                            "month" : 5,
+                            "day" : 15
+                        },
+                        "hour" : 5,
+                        "minutes": 0
+                    },
+                    "checkedOut" : {
+                        "day" : {
+                            "year" : 2020,
+                            "month" : 5,
+                            "day" : 15
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                    "circuitBreakerApproval" : "pending",
+                    "isRisky" : false,
+                    "id": "\#(id)",
+                }
+            ],
+            "riskApprovalTokens": {},
+            "unacknowldegedRiskyVenueIds": [],
+        }
+        """# .data(using: .utf8)!
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests)
+        
+        let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
+        
+        XCTAssertEqual(loadedCheckIns.count, 1)
+        XCTAssertEqual(loadedCheckIns[0].venueId, venueId)
+        XCTAssertEqual(loadedCheckIns[0].venueName, venueName)
+        XCTAssertEqual(loadedCheckIns[0].checkedIn, checkedIn)
+        XCTAssertEqual(loadedCheckIns[0].checkedOut, checkedOut)
+        XCTAssertEqual(loadedCheckIns[0].isRisky, false)
+        XCTAssertEqual(loadedCheckIns[0].id, id)
+        XCTAssertTrue(checkInsStore.riskyCheckIns.isEmpty)
+    }
+    
+    func testLoadingRiskyCheckInDataWithCheckedInDate() throws {
+        
+        let venueId = "CDEF2345"
+        let venueName = "Awesome Shop"
+        let checkedIn = UTCHour(day: GregorianDay(year: 2020, month: 5, day: 15), hour: 5)
+        let checkedOut = UTCHour(day: GregorianDay(year: 2020, month: 5, day: 15), hour: 7)
+        let id = UUID().uuidString
         
         encryptedStore.stored["checkins"] = #"""
         {
@@ -109,7 +219,8 @@ class CheckInsStoreTests: XCTestCase {
                         "minutes": 0
                     },
                     "circuitBreakerApproval" : "pending",
-                    "isRisky" : true
+                    "isRisky" : true,
+                    "id": "\#(id)",
                 }
             ],
             "riskApprovalTokens": {},
@@ -118,18 +229,23 @@ class CheckInsStoreTests: XCTestCase {
         """# .data(using: .utf8)!
         checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests)
         
-        let expectedCheckIns = [
-            CheckIn(
-                venueId: venueId,
-                venueName: venueName,
-                checkedIn: checkInDate,
-                checkedOut: checkOutDate,
-                isRisky: true
-            ),
-        ]
+        let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
         
-        TS.assert(expectedCheckIns, equals: checkInsStore.load())
-        TS.assert(expectedCheckIns, equals: checkInsStore.riskyCheckIns)
+        XCTAssertEqual(loadedCheckIns.count, 1)
+        XCTAssertEqual(loadedCheckIns[0].venueId, venueId)
+        XCTAssertEqual(loadedCheckIns[0].venueName, venueName)
+        XCTAssertEqual(loadedCheckIns[0].checkedIn, checkedIn)
+        XCTAssertEqual(loadedCheckIns[0].checkedOut, checkedOut)
+        XCTAssertEqual(loadedCheckIns[0].id, id)
+        XCTAssertEqual(loadedCheckIns[0].isRisky, true)
+        
+        XCTAssertEqual(checkInsStore.riskyCheckIns.count, 1)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].venueId, venueId)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].venueName, venueName)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].checkedIn, checkedIn)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].checkedOut, checkedOut)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].id, id)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].isRisky, true)
     }
     
     func testFailedToLoadInvalidCheckIns() {
@@ -258,13 +374,13 @@ class CheckInsStoreTests: XCTestCase {
     func testCheckInWithPayloadSaveSuccess() throws {
         let payload = "UKC19TRACING:1:eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjMifQ.eyJpZCI6IjRXVDU5TTVZIiwib3BuIjoiR292ZXJubWVudCBPZmZpY2UgT2YgSHVtYW4gUmVzb3VyY2VzIn0.ZIvwm9rxiRTm4o-koafL6Bzre9pakcyae8m6_MSyvAl-CFkUgfm6gcXYn4gg5OScKZ1-XayHBGwEdps0RKXs4g"
         
-        let (venueName, _) = try checkInsStore.checkIn(with: payload)
+        let (venueName, _) = try checkInsStore.checkIn(with: payload, currentDate: Date())
         XCTAssertEqual(venueName, "Government Office Of Human Resources")
     }
     
     func testCheckInWithInvalidPayload() throws {
         let payload = UUID().uuidString
-        XCTAssertThrowsError(try checkInsStore.checkIn(with: payload))
+        XCTAssertThrowsError(try checkInsStore.checkIn(with: payload, currentDate: Date()))
     }
     
     func testCheckInAutomaticallyCheckOutAtMidnight() {
@@ -309,6 +425,44 @@ class CheckInsStoreTests: XCTestCase {
         XCTAssertNil(checkInsStore.load())
         checkInsStore.deleteLatest()
         XCTAssertNil(checkInsStore.load())
+    }
+    
+    func testCanDeleteACheckIn() throws {
+        let checkIn1 = UTCHour(year: 2020, month: 5, day: 15, hour: 10, minutes: 40).date
+        let checkIn2 = UTCHour(year: 2020, month: 5, day: 15, hour: 10, minutes: 50).date
+        var c1 = CheckIn(venue: .random(), checkedInDate: checkIn1, isRisky: false)
+        let c2 = CheckIn(venue: .random(), checkedInDate: checkIn2, isRisky: false)
+        
+        checkInsStore.save(c1)
+        c1.checkedOut = c2.checkedIn
+        checkInsStore.save(c2)
+        
+        let checkIns = checkInsStore.load()!
+        
+        checkInsStore.delete(checkInId: c1.id)
+        TS.assert(checkInsStore.load(), equals: [checkIns[1]])
+    }
+    
+    func testCanDeleteOnlyACheckInWithAnUniqueID() throws {
+        let checkIn2 = UTCHour(year: 2020, month: 5, day: 15, hour: 10, minutes: 50).date
+        let checkInDate1_1 = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 15, hour: 10, minute: 37))!
+        let checkInDate1_2 = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 15, hour: 10, minute: 38))!
+        let venue1 = Venue.random()
+        var c1_1 = CheckIn(venue: venue1, checkedInDate: checkInDate1_1, isRisky: false)
+        var c1_2 = CheckIn(venue: venue1, checkedInDate: checkInDate1_2, isRisky: false)
+        let c2 = CheckIn(venue: .random(), checkedInDate: checkIn2, isRisky: false)
+        
+        c1_1.checkedOut = c2.checkedIn
+        c1_2.checkedOut = c2.checkedIn
+        
+        checkInsStore.save(c1_1)
+        checkInsStore.save(c1_2)
+        checkInsStore.save(c2)
+        
+        let checkIns = checkInsStore.load()!
+        
+        checkInsStore.delete(checkInId: checkIns[0].id)
+        TS.assert(checkInsStore.load(), equals: [checkIns[1], checkIns[2]])
     }
 }
 

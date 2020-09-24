@@ -7,6 +7,7 @@ import Common
 import Domain
 import Foundation
 import Interface
+import Localization
 
 struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting {
     let selfDiagnosisManager: SelfDiagnosisManager

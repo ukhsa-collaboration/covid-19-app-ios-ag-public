@@ -7,7 +7,7 @@ import Localization
 import UIKit
 
 public protocol CheckInConfirmationViewControllerInteracting {
-    func goHome()
+    func goHomeAfterCheckIn()
     func wrongCheckIn()
 }
 
@@ -19,12 +19,32 @@ public class CheckInConfirmationViewController: UIViewController {
     private var checkInDetail: CheckInDetail
     private var date: Date
     
-    public init(interactor: Interacting, checkInDetail: CheckInDetail, date: Date = Date()) {
+    public init(interactor: Interacting, checkInDetail: CheckInDetail, date: Date) {
         self.interactor = interactor
         self.checkInDetail = checkInDetail
         self.date = date
         super.init(nibName: nil, bundle: nil)
     }
+    
+    let scrollView = UIScrollView()
+    let wrongCheckInButton = UIButton()
+    let goHomeButton = UIButton()
+    
+    private lazy var regularButtonConstraints = [
+        goHomeButton.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor, constant: .standardSpacing),
+        goHomeButton.bottomAnchor.constraint(equalTo: wrongCheckInButton.topAnchor, constant: -.standardSpacing),
+        
+        wrongCheckInButton.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: -.standardSpacing),
+        wrongCheckInButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -.standardSpacing),
+    ]
+    
+    private lazy var compactButtonConstraints = [
+        goHomeButton.leadingAnchor.constraint(equalTo: wrongCheckInButton.trailingAnchor, constant: .doubleSpacing),
+        goHomeButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -.standardSpacing),
+        
+        wrongCheckInButton.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: .standardSpacing),
+        wrongCheckInButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -.standardSpacing),
+    ]
     
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -40,43 +60,43 @@ public class CheckInConfirmationViewController: UIViewController {
         
         view.styleAsScreenBackground(with: traitCollection)
         
-        let checkImageView = UIImageView(.checkmark)
+        let checkImage = UIImage(.checkTick)
+        let checkImageView = UIImageView(image: checkImage)
         checkImageView.contentMode = .scaleAspectFit
-        checkImageView.tintColor = UIColor(.nhsButtonGreen)
+        checkImageView.tintColor = UIColor(.surface)
+        
+        let checkImageContainer = UIView()
+        checkImageContainer.addAutolayoutSubview(checkImageView)
+        checkImageContainer.backgroundColor = UIColor(.nhsButtonGreen)
+        checkImageContainer.layer.cornerRadius = (checkImage.size.width / 2) + .bigSpacing
         
         NSLayoutConstraint.activate([
-            checkImageView.widthAnchor.constraint(equalToConstant: .confirmationIconImageSize),
-            checkImageView.heightAnchor.constraint(equalToConstant: .confirmationIconImageSize),
+            checkImageView.leadingAnchor.constraint(equalTo: checkImageContainer.leadingAnchor, constant: .bigSpacing),
+            checkImageView.trailingAnchor.constraint(equalTo: checkImageContainer.trailingAnchor, constant: -.bigSpacing),
+            checkImageView.centerYAnchor.constraint(equalTo: checkImageContainer.centerYAnchor),
+            checkImageContainer.heightAnchor.constraint(equalTo: checkImageContainer.widthAnchor),
         ])
         
-        let titleLabel = UILabel()
-        titleLabel.styleAsPageHeader()
-        titleLabel.textAlignment = .center
-        let title = localize(.checkin_confirmation_title(venue: checkInDetail.venueName, date: date))
-        titleLabel.text = title
-        
-        let descriptionLabel = UILabel()
-        descriptionLabel.styleAsBody()
-        descriptionLabel.textAlignment = .center
-        descriptionLabel.text = localize(.checkin_confirmation_explanation)
-        descriptionLabel.numberOfLines = 0
-        
-        let scrollView = UIScrollView()
+        let checkInSuccessLabel = UILabel().styleAsSecondaryTitle().set(text: localize(.checkin_confirmation_title)).centralized()
+        let venueNameLabel = UILabel().styleAsPageHeader().set(text: checkInDetail.venueName).centralized()
+        let dateTimeLabel = UILabel().styleAsTertiaryTitle().set(text: localize(.checkin_confirmation_date(date: date))).centralized()
+        let descriptionLabel = UILabel().styleAsBody().set(text: localize(.checkin_confirmation_explanation)).centralized()
         
         let stackViewContainerView = UIView()
         
-        view.addSubview(scrollView)
         scrollView.addFillingSubview(stackViewContainerView)
-        
         view.addAutolayoutSubview(scrollView)
         
-        let stackView = UIStackView(arrangedSubviews: [checkImageView, titleLabel, descriptionLabel])
+        let stackView = UIStackView(arrangedSubviews: [checkImageContainer, checkInSuccessLabel, venueNameLabel, dateTimeLabel, descriptionLabel])
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.alignment = .center
         stackView.distribution = .fill
         stackView.layoutMargins = .standard
-        stackView.spacing = .standardSpacing
+        stackView.spacing = .doubleSpacing
+        
+        stackView.setCustomSpacing(.standardSpacing, after: checkInSuccessLabel)
+        stackView.setCustomSpacing(.halfSpacing, after: venueNameLabel)
         
         stackViewContainerView.addAutolayoutSubview(stackView)
         
@@ -95,25 +115,12 @@ public class CheckInConfirmationViewController: UIViewController {
             stackViewContainerViewHeightConstraint,
         ])
         
-        let wrongCheckInButton = UIButton()
+        wrongCheckInButton.styleAsLink()
         wrongCheckInButton.setTitle(localize(.checkin_wrong_button_title), for: .normal)
-        wrongCheckInButton.setTitleColor(UIColor(.nhsBlue), for: .normal)
-        wrongCheckInButton.titleLabel?.setDynamicTextStyle(.headline)
-        wrongCheckInButton.titleLabel?.textAlignment = .center
-        
         wrongCheckInButton.addTarget(self, action: #selector(didTapWrongCheckInButton), for: .touchUpInside)
         
         view.addAutolayoutSubview(wrongCheckInButton)
         
-        NSLayoutConstraint.activate([
-            wrongCheckInButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .standardSpacing),
-            wrongCheckInButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.standardSpacing),
-            wrongCheckInButton.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -.standardSpacing),
-            wrongCheckInButton.heightAnchor.constraint(greaterThanOrEqualToConstant: .buttonMinimumHeight),
-            wrongCheckInButton.heightAnchor.constraint(greaterThanOrEqualTo: wrongCheckInButton.titleLabel!.heightAnchor, constant: .standardSpacing),
-        ])
-        
-        let goHomeButton = UIButton()
         goHomeButton.styleAsPrimary()
         goHomeButton.setTitle(localize(.checkin_confirmation_button_title), for: .normal)
         goHomeButton.addTarget(self, action: #selector(didTapGoHomeButton), for: .touchUpInside)
@@ -121,21 +128,42 @@ public class CheckInConfirmationViewController: UIViewController {
         view.addAutolayoutSubview(goHomeButton)
         
         NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: goHomeButton.topAnchor, constant: -.standardSpacing),
+            
+            goHomeButton.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: -.standardSpacing),
+            wrongCheckInButton.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor, constant: .standardSpacing),
+            
+            wrongCheckInButton.widthAnchor.constraint(equalTo: goHomeButton.widthAnchor),
         ])
         
-        NSLayoutConstraint.activate([
-            goHomeButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .standardSpacing),
-            goHomeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.standardSpacing),
-            goHomeButton.bottomAnchor.constraint(equalTo: wrongCheckInButton.topAnchor, constant: -.standardSpacing),
-        ])
+        if traitCollection.verticalSizeClass == .compact {
+            NSLayoutConstraint.activate(compactButtonConstraints)
+        } else {
+            NSLayoutConstraint.activate(regularButtonConstraints)
+        }
+    }
+    
+    override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        guard previousTraitCollection?.verticalSizeClass != traitCollection.verticalSizeClass else {
+            return
+        }
+        
+        if traitCollection.verticalSizeClass == .compact {
+            NSLayoutConstraint.deactivate(regularButtonConstraints)
+            NSLayoutConstraint.activate(compactButtonConstraints)
+        } else {
+            NSLayoutConstraint.deactivate(compactButtonConstraints)
+            NSLayoutConstraint.activate(regularButtonConstraints)
+        }
     }
     
     @objc private func didTapGoHomeButton() {
-        interactor.goHome()
+        interactor.goHomeAfterCheckIn()
     }
     
     @objc private func didTapWrongCheckInButton() {

@@ -239,7 +239,7 @@ private struct PositiveSymptomsViewControllerInteractor: PositiveSymptomsViewCon
     }
     
     public func furtherAdviceLinkTapped() {
-        controller?.interactor.furtherAdviceLinkTapped()
+        controller?.interactor.nhs111LinkTapped()
     }
     
     public func didTapBookTest() {

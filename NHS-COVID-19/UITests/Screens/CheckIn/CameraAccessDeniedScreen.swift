@@ -17,4 +17,8 @@ struct CameraAccessDeniedScreen {
         app.staticTexts[localized: .checkin_camera_permission_denial_explanation]
     }
     
+    var openSettingsButton: XCUIElement {
+        app.buttons[localized: .checkin_open_settings_button_title]
+    }
+    
 }

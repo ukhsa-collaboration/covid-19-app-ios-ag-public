@@ -19,3 +19,8 @@ struct VirologyTestResult: Equatable {
     var testResult: TestResult
     var endDate: Date
 }
+
+struct LinkVirologyTestResultResponse: Equatable {
+    var virologyTestResult: VirologyTestResult
+    var diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken
+}

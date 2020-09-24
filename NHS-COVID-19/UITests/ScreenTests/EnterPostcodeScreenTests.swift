@@ -24,6 +24,18 @@ class EnterPostcodeScreenTests: XCTestCase {
         }
     }
     
+    func testKeyboardDoesntAppearOverTextField() throws {
+        try runner.run { app in
+            let screen = EnterPostcodeScreen(app: app)
+            screen.postcodeTextField.tap()
+            
+            // Add small delay to wait for views' frame update after keyboard appears
+            sleep(1)
+            
+            XCTAssertTrue(screen.postcodeTextField.isHittable)
+        }
+    }
+    
     func testEnteringPostcodeWithContinueButton() throws {
         $runner.report("Happy path") {
             """
@@ -94,8 +106,7 @@ class EnterPostcodeScreenTests: XCTestCase {
             
             screen.postcodeTextField.tap()
             screen.postcodeTextField.typeText(postcode)
-            screen.stepTitle
-                .press(forDuration: 0.1, thenDragTo: screen.postcodeTextField)
+            screen.stepTitle.swipeUp()
             
             XCTAssertFalse(screen.postcodeTextField.hasKeyboardFocus)
         }
@@ -111,7 +122,7 @@ class EnterPostcodeScreenTests: XCTestCase {
             screen.postcodeTextField.typeText("\(postcode)\n")
             
             XCTAssert(screen.errorTitle.exists)
-            XCTAssert(screen.errorDescription.exists)
+            XCTAssert(app.staticTexts[runner.scenario.errorDescription].exists)
         }
     }
     

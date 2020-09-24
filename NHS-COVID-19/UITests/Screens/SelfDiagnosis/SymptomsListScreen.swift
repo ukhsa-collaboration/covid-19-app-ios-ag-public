@@ -24,8 +24,8 @@ struct SymptomsListScreen {
         app.staticTexts[localized: .symptom_list_description]
     }
     
-    func symptomCard(heading: String, content: String) -> XCUIElement {
-        app.buttons[localized: .symptom_card_accessibility_label(heading: heading, content: content)]
+    func symptomCard(value: String, heading: String, content: String) -> XCUIElement {
+        app.buttons[localized: .symptom_card_checkbox_accessibility_label(value: value, heading: heading, content: content)]
     }
     
     var reportButton: XCUIElement {

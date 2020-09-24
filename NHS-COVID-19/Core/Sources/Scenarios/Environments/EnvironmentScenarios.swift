@@ -12,6 +12,12 @@ class DevEnvironmentScenario: EnvironmentScenario {
     static var nameForSorting: String { "1" }
 }
 
+class ExtDevEnvironmentScenario: EnvironmentScenario {
+    static let name = "Ext Dev"
+    static let configuration = EnvironmentConfiguration.extdev
+    static var nameForSorting: String { "1.1" }
+}
+
 class TestEnvironmentScenario: EnvironmentScenario {
     static let name = "Test"
     static let configuration = EnvironmentConfiguration.test

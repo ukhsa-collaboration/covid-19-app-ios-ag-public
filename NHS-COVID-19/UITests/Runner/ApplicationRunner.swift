@@ -26,20 +26,16 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
     
     private var configuration: Configuration
     private var useCaseBuilder: UseCaseBuilder?
+    private var testBundle = Bundle.main
     
-    static func prepare(_ test: XCTestCase) {
-        let testBundle = Bundle(for: type(of: test))
-        Localization.bundle = testBundle
-        UIColor.bundle = testBundle
-        Color.bundle = testBundle
-        UIImage.bundle = testBundle
-        Image.bundle = testBundle
+    mutating func prepare(for test: XCTestCase) {
+        testBundle = Bundle(for: type(of: test))
         test.continueAfterFailure = false
     }
     
     init(configuration: Configuration) {
         self.configuration = configuration
-        if let useCase = configuration.useCase, ProcessInfo().testMode == .report {
+        if let useCase = configuration.useCase, ProcessInfo().testMode == .report || ProcessInfo().testMode == .languages {
             useCaseBuilder = UseCaseBuilder(useCase: useCase)
         }
     }
@@ -93,6 +89,19 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
             #else
             throw XCTSkip("Reporting is only supported on the simulator.")
             #endif
+        case .languages:
+            #warning("Replace this with logic to check if test is needed for the languages test")
+            guard useCaseBuilder != nil else {
+                throw XCTSkip("Not a report use-case.", file: file, line: line)
+            }
+            
+            let initialConfiguration = DeviceConfiguration(from: .shared)
+            
+            try DeviceConfiguration.testConfigurationLanguages.forEach { deviceConfiguration in
+                try runOnce(deviceConfiguration: deviceConfiguration, work: work)
+            }
+            
+            initialConfiguration.configure(.shared)
         }
     }
     
@@ -104,19 +113,29 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
         app.launchEnvironment[Runner.disableAnimations] = configuration.disableAnimations ? "1" : "0"
         app.launchEnvironment[Runner.disableHardwareKeyboard] = "1"
         app.launchArguments = ["-\(Runner.activeScenarioDefaultKey)", Scenario.id] + configuration.initialState.launchArguments
+        
         if let deviceConfiguration = deviceConfiguration {
             app.launchArguments += [
                 "-UIPreferredContentSizeCategoryName", deviceConfiguration.contentSize.rawValue,
                 "-\(Runner.interfaceStyleDefaultKey)", deviceConfiguration.interfaceStyle.rawValue,
+                "-AppleLanguages", "(\(deviceConfiguration.language))",
             ]
+            
+            let localizedTestBundle = testBundle.localizedBundle(for: deviceConfiguration.language) ?? testBundle
+            localizedTestBundle.becomeCurrentForTesting()
+        } else {
+            testBundle.becomeCurrentForTesting()
         }
+        
         app.launch()
         useCaseBuilder?.app = app
         useCaseBuilder?.deviceConfiguration = deviceConfiguration
         defer {
             useCaseBuilder?.app = nil
             useCaseBuilder?.deviceConfiguration = nil
+            testBundle.becomeCurrentForTesting()
         }
+        
         try work(app)
     }
     
@@ -125,6 +144,7 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
 extension ApplicationRunner where Scenario: UITestInspectable {
     
     func inspect(work: (UIViewController) throws -> Void) rethrows {
+        testBundle.becomeCurrentForTesting()
         try work(Scenario.viewControllerForInspecting)
     }
     
@@ -135,6 +155,7 @@ private extension ProcessInfo {
     enum TestMode: String {
         case standard
         case report
+        case languages
     }
     
     var testMode: TestMode {
@@ -148,7 +169,6 @@ private extension ScenarioKind {
     var serializedName: String {
         switch self {
         case .environment: return "Environment"
-        case .flow: return "Flow"
         case .screen: return "Screen"
         case .screenTemplate: return "Screen Template"
         case .component: return "Component"
@@ -156,4 +176,18 @@ private extension ScenarioKind {
         case .prototype: return "Prototype"
         }
     }
+}
+
+private class MainWindowNotReadyError: Error {}
+
+private extension Bundle {
+    
+    func becomeCurrentForTesting() {
+        Localization.bundle = self
+        UIColor.bundle = self
+        Color.bundle = self
+        UIImage.bundle = self
+        Image.bundle = self
+    }
+    
 }

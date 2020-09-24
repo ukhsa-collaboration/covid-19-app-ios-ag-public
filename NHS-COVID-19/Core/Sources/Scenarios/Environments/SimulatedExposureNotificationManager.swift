@@ -91,11 +91,15 @@ private class SimulatedExposureInfo: ENExposureInfo {
     }
     
     override var date: Date {
-        LocalDay.today.advanced(by: -daysAgo).startOfDay
+        GregorianDay.today.advanced(by: -1).startDate(in: .utc)
     }
     
     override var attenuationDurations: [NSNumber] {
         _attenuationDurations
+    }
+    
+    override var transmissionRiskLevel: ENRiskLevel {
+        7
     }
     
 }

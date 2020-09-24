@@ -12,6 +12,15 @@ public enum UserNotificationType: String {
     case exposureDetection
     case testResultReceived
     case appAvailability
+    case exposureNotificationReminder
+}
+
+public enum UserNotificationCategory: String {
+    case exposureNotification
+}
+
+public enum UserNotificationAction: String, CaseIterable {
+    case enableExposureNotification
 }
 
 public protocol UserNotificationManaging {

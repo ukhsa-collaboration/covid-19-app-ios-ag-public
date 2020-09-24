@@ -22,6 +22,10 @@ class SandboxDistributeClient: HTTPClient {
         if request.path == "/distribution/self-isolation" {
             return Result.success(.ok(with: .json(isolationConfig)))
         }
+        if request.path == "/distribution/risky-post-districts" {
+            return .success(.ok(with: .json(riskyPostcodes)))
+        }
+        
         return Result.failure(.rejectedRequest(underlyingError: SimpleError("")))
     }
 }
@@ -53,5 +57,13 @@ private let questionnaire = """
   ],
   "riskThreshold": 0.5,
   "symptomsOnsetWindowDays": 5
+}
+"""
+
+private let riskyPostcodes = """
+{
+    "postDistricts" : {
+        "SW12": "L",
+    }
 }
 """

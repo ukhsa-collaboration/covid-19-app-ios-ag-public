@@ -6,7 +6,7 @@ import Common
 import Foundation
 
 struct CircuitBreakerVenueHandler: RequestHandler {
-    var paths = ["/circuit-breaker/exposure-notification/request"]
+    var paths = ["/circuit-breaker/venue/request"]
     
     var response: Result<HTTPResponse, HTTPRequestError> {
         let response = HTTPResponse.ok(with: .json("""

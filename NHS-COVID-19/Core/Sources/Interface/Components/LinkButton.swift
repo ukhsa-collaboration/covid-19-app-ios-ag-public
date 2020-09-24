@@ -8,13 +8,20 @@ import UIKit
 public class LinkButton: UIControl {
     
     private var title: String
-    private var textAlignment: NSTextAlignment
     private var accessoryImage: UIImage?
+    private var externalLink: Bool
+    private var action: (() -> Void)?
     
-    public required init(title: String, textAlignment: NSTextAlignment = NSTextAlignment.natural, accessoryImage: UIImage? = UIImage(.externalLink)) {
+    public required init(
+        title: String,
+        accessoryImage: UIImage? = UIImage(.externalLink),
+        externalLink: Bool = true,
+        action: (() -> Void)? = nil
+    ) {
         self.title = title
-        self.textAlignment = textAlignment
         self.accessoryImage = accessoryImage
+        self.externalLink = externalLink
+        self.action = action
         super.init(frame: .zero)
         
         setUp()
@@ -27,7 +34,9 @@ public class LinkButton: UIControl {
     private func setUp() {
         isAccessibilityElement = true
         accessibilityTraits = .link
-        accessibilityHint = localize(.link_accessibility_hint)
+        if externalLink {
+            accessibilityHint = localize(.link_accessibility_hint)
+        }
         accessibilityLabel = title
         
         backgroundColor = .clear
@@ -51,32 +60,37 @@ public class LinkButton: UIControl {
         )
         titleLabel.adjustsFontForContentSizeCategory = true
         titleLabel.numberOfLines = 0
-        titleLabel.textAlignment = textAlignment
         titleLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        titleLabel.setContentHuggingPriority(.required, for: .horizontal)
         
         stackView.addArrangedSubview(titleLabel)
         
-        NSLayoutConstraint.activate([
-            heightAnchor.constraint(greaterThanOrEqualToConstant: .hitAreaMinHeight),
-        ])
+        var constraints = [heightAnchor.constraint(greaterThanOrEqualToConstant: .hitAreaMinHeight)]
         
         if let accessoryImage = accessoryImage {
             let externalLinkImageView = UIImageView(image: accessoryImage)
             externalLinkImageView.tintColor = UIColor(.nhsBlue)
             externalLinkImageView.adjustsImageSizeForAccessibilityContentSizeCategory = true
-            externalLinkImageView.setContentHuggingPriority(.required, for: .horizontal)
             externalLinkImageView.setContentCompressionResistancePriority(.required, for: .horizontal)
             
             let imageSize = externalLinkImageView.image!.size
             let aspectRatio = imageSize.height / imageSize.width
             stackView.addArrangedSubview(externalLinkImageView)
             
-            NSLayoutConstraint.activate([
+            constraints.append(contentsOf: [
                 externalLinkImageView.heightAnchor.constraint(equalTo: externalLinkImageView.widthAnchor, multiplier: aspectRatio),
                 externalLinkImageView.heightAnchor.constraint(lessThanOrEqualTo: titleLabel.heightAnchor),
             ])
         }
         
+        NSLayoutConstraint.activate(constraints)
+        
         stackView.addArrangedSubview(UIView())
+        
+        addTarget(self, action: #selector(touchUpInside))
+    }
+    
+    @objc private func touchUpInside() {
+        action?()
     }
 }

@@ -14,7 +14,7 @@ public class BluetoothDisabledScreenScenario: Scenario {
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
-            BluetoothDisabledViewController()
+            BluetoothDisabledViewController(country: .england)
         }
     }
 }

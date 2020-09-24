@@ -8,8 +8,10 @@ extension InformationBox {
     public enum Content {
         case title(String)
         case heading(String)
+        case boldBody(String)
         case body(String)
         case view(UIView)
+        case linkButton(String, UIImage?, () -> Void)
     }
     
     public static func information(color: Style.InformationColor = .darkBlue, _ views: [UIView]) -> InformationBox {
@@ -56,10 +58,14 @@ extension InformationBox {
                 return UILabel().styleAsTertiaryTitle().set(text: text)
             case .heading(let text):
                 return UILabel().styleAsHeading().set(text: text)
+            case .boldBody(let text):
+                return UILabel().styleAsBoldBody().set(text: text)
             case .body(let text):
                 return UILabel().styleAsBody().set(text: text)
             case .view(let view):
                 return view
+            case .linkButton(let text, let image, let action):
+                return LinkButton(title: text, accessoryImage: image, action: action)
             }
         })
     }

@@ -8,6 +8,7 @@ import UIKit
 public enum ColorName: String, CaseIterable, Identifiable {
     case background = "Background"
     case nhsBlue = "NHS Blue"
+    case nhsLightBlue = "NHS Light Blue"
     case nhsButtonGreen = "NHS Button Green"
     case activeScanIndicator = "NHS Active Scan Indicator"
     case secondaryText = "Secondary Text"

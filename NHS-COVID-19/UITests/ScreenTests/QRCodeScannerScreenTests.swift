@@ -13,20 +13,17 @@ class QRCodeScannerScreenTests: XCTestCase {
     func testPermissionRequest() throws {
         try runner.run { app in
             let screen = QRCodeScannerScreen(app: app)
-            XCTAssert(app.staticTexts[runner.scenario.permissionAlertTitle].displayed)
-            
-            app.buttons[runner.scenario.okButtonTitle].tap()
-            
-            XCTAssert(screen.screenTitle.displayed)
+            XCTAssert(screen.screenTitle.exists)
+            XCTAssert(screen.statusLabel.exists)
+            XCTAssert(screen.descriptionLabel.exists)
         }
     }
     
     func testShowVenueCheckInInformation() throws {
         try runner.run { app in
             let screen = QRCodeScannerScreen(app: app)
-            app.buttons[runner.scenario.okButtonTitle].tap()
             screen.helpButton.tap()
-            XCTAssert(app.staticTexts[runner.scenario.showHelpAlertTitle].displayed)
+            XCTAssert(app.staticTexts[runner.scenario.showHelpAlertTitle].exists)
         }
     }
 }

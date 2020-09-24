@@ -53,8 +53,17 @@ public struct SymptomCard: View {
         }
         .buttonStyle(PlainButtonStyle())
         .accessibilityElement()
-        .accessibility(label: Text(verbatim: localize(.symptom_card_accessibility_label(heading: viewModel.heading, content: viewModel.content))))
+        .accessibility(
+            label: Text(
+                verbatim: localize(
+                    .symptom_card_checkbox_accessibility_label(
+                        value: viewModel.isConfirmed ? localize(.symptom_card_checked) : localize(.symptom_card_unchecked),
+                        heading: viewModel.heading,
+                        content: viewModel.content
+                    )
+                )
+            )
+        )
         .accessibility(addTraits: .isButton)
-        .accessibility(value: Text(viewModel.isConfirmed ? localize(.symptom_card_checked) : localize(.symptom_card_unchecked)))
     }
 }

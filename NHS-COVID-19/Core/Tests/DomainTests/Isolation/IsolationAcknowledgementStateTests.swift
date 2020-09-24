@@ -23,7 +23,7 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         }
     }
     
-    func testAcknowledgementNeededAfterIsolation() throws {
+    func testAcknowledgementNeededNoIsolation() throws {
         let day = LocalDay.today
         
         var callbackCount = 0

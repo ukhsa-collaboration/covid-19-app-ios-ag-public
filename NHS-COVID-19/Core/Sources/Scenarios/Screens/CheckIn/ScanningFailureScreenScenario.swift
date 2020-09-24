@@ -11,6 +11,7 @@ public class ScanningFailureScreenScenario: Scenario {
     public static var name: String = "CheckIn - Scanning Failure"
     
     public static let goHomeTapped = "Go home tapped!"
+    public static let showHelpTapped = "Show help tapped!"
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
@@ -32,4 +33,7 @@ private class Interactor: ScanningFailureViewController.Interacting {
         viewController?.showAlert(title: ScanningFailureScreenScenario.goHomeTapped)
     }
     
+    func showHelp() {
+        viewController?.showAlert(title: ScanningFailureScreenScenario.showHelpTapped)
+    }
 }

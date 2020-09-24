@@ -68,22 +68,20 @@ class IsolationStateStore: SymptomsOnsetDateAndEncounterDateProviding {
         return save(isolationInfo)
     }
     
-    func set(testResult: TestResult, receivedOn: GregorianDay) {
-        if let indexCaseInfo = isolationInfo.indexCaseInfo {
-            if let testInfo = indexCaseInfo.testInfo {
-                if case .negative = testInfo.result {
-                    return
-                }
+    func newIsolationStateInfo(for testResult: TestResult, receivedOn: GregorianDay, npexDay: GregorianDay) -> IsolationStateInfo {
+        let isolationInfo = mutating(self.isolationInfo) {
+            if var indexCaseInfo = $0.indexCaseInfo, testResult == .negative || indexCaseInfo.testInfo?.result != .negative {
+                indexCaseInfo.set(testResult: testResult, receivedOn: receivedOn)
+                $0.indexCaseInfo = indexCaseInfo
+            } else {
+                $0.indexCaseInfo = IndexCaseInfo(
+                    isolationTrigger: .manualTestEntry(npexDay: npexDay),
+                    onsetDay: nil,
+                    testInfo: IndexCaseInfo.TestInfo(result: testResult, receivedOnDay: receivedOn)
+                )
             }
-            let isolationInfo = mutating(self.isolationInfo) {
-                $0.indexCaseInfo = mutating($0.indexCaseInfo) {
-                    $0?.testInfo = IndexCaseInfo.TestInfo(result: testResult, receivedOnDay: receivedOn)
-                }
-            }
-            _ = save(isolationInfo)
-        } else {
-            return
         }
+        return IsolationStateInfo(isolationInfo: isolationInfo, configuration: configuration)
     }
     
     func acknowldegeEndOfIsolation() {
@@ -122,7 +120,7 @@ class IsolationStateStore: SymptomsOnsetDateAndEncounterDateProviding {
             return LocalDay(gregorianDay: onsetDay, timeZone: .current).startOfDay
         }
         
-        if let selfDiagnosisDay = isolationInfo.indexCaseInfo?.selfDiagnosisDay {
+        if case .selfDiagnosis(let selfDiagnosisDay) = isolationInfo.indexCaseInfo?.isolationTrigger {
             // onsetDay = selfDiagnosisDay - 2
             let selfDiagnosisDate = LocalDay(gregorianDay: selfDiagnosisDay, timeZone: .current).startOfDay
             return Calendar.current.date(byAdding: DateComponents(day: -2), to: selfDiagnosisDate)!

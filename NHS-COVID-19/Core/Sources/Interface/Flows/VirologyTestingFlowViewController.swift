@@ -13,6 +13,8 @@ public protocol VirologyTestingFlowViewControllerInteracting {
     
     func didTapCopyReferenceCode()
     func didTapOrderTestLink()
+    
+    var acknowledge: (() -> Void)? { get }
 }
 
 public class VirologyTestingFlowViewController: UINavigationController {
@@ -67,7 +69,9 @@ public class VirologyTestingFlowViewController: UINavigationController {
             return LoadingViewController(
                 interactor: LoadingInteractor(
                     _didTapCancel: { [weak self] in
-                        self?.dismiss(animated: true, completion: nil)
+                        guard let self = self else { return }
+                        self.interactor.acknowledge?()
+                        self.dismiss(animated: true, completion: nil)
                     }
                 ),
                 title: localize(.virology_testing_information_title)
@@ -76,7 +80,9 @@ public class VirologyTestingFlowViewController: UINavigationController {
             return LoadingErrorViewController(
                 interacting: LoadingErrorInteractor(
                     _didTapCancel: { [weak self] in
-                        self?.dismiss(animated: true, completion: nil)
+                        guard let self = self else { return }
+                        self.interactor.acknowledge?()
+                        self.dismiss(animated: true, completion: nil)
                     },
                     _didTapRetry: {
                         [weak self] in
@@ -98,6 +104,7 @@ public class VirologyTestingFlowViewController: UINavigationController {
                         guard let self = self else { return }
                         switch completion {
                         case .finished:
+                            self.interactor.acknowledge?()
                             self.interactor.didTapOrderTestLink()
                             self.dismiss(animated: false)
                         case .failure:
@@ -128,6 +135,7 @@ struct LoadingErrorInteractor: LoadingErrorViewController.Interacting {
     var _didTapRetry: () -> Void
     
     public func didTapCancel() {
+        
         _didTapCancel()
     }
     

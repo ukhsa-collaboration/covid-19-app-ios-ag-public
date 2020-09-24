@@ -7,6 +7,7 @@ import UIKit
 
 public protocol ScanningFailureViewControllerInteracting {
     func goHome()
+    func showHelp()
 }
 
 public class ScanningFailureViewController: CheckInStatusViewController {
@@ -17,7 +18,7 @@ public class ScanningFailureViewController: CheckInStatusViewController {
     
     public init(interactor: Interacting) {
         self.interactor = interactor
-        super.init(status: ScanningFailureDetail(goHome: interactor.goHome))
+        super.init(status: ScanningFailureDetail(goHome: interactor.goHome, _showHelp: interactor.showHelp))
     }
     
     required init?(coder: NSCoder) {
@@ -30,10 +31,17 @@ private struct ScanningFailureDetail: StatusDetail {
     let icon = UIImage(.error)
     let title = localize(.checkin_scanning_failure_title)
     let explanation: String? = localize(.checkin_scanning_failure_description)
+    let helpLink: String? = localize(.checkin_scanning_failure_help_link_text)
+    let moreExplanation: String? = localize(.checkin_scanning_failure_more_description)
     let actionButtonTitle = localize(.checkin_scanning_failure_button_title)
     let goHome: () -> Void
+    let _showHelp: () -> Void
     
     func act() {
         goHome()
+    }
+    
+    func showHelp() {
+        _showHelp()
     }
 }

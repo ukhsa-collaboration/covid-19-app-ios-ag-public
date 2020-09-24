@@ -34,6 +34,10 @@ class SandboxSubmissionClient: HTTPClient {
             return Result.success(.ok(with: .empty))
         }
         
+        if request.path == "/submission/diagnosis-keys" {
+            return Result.success(.ok(with: .empty))
+        }
+        
         return Result.failure(.rejectedRequest(underlyingError: SimpleError("")))
     }
 }

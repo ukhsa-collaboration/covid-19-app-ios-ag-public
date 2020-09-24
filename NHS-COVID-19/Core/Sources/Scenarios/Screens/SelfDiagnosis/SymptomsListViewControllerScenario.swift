@@ -16,9 +16,11 @@ public class SymptomsListViewControllerScenario: Scenario {
     public static let reportTapped: String = "Report button tapped"
     public static let noSymptomsTapped: String = "No symptoms button tapped"
     
+    public static let symptom1Value = "unchecked"
     public static let symptom1Heading = "Heading 1 Heading 1 Heading 1"
     public static let symptom1Content = "Content 1 Content 1 Content 1 Content 1 Content 1"
     
+    public static let symptom2Value = "checked"
     public static let symptom2Heading = "Heading 2"
     public static let symptom2Content = "Content 2"
     

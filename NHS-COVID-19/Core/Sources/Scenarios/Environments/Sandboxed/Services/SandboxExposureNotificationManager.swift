@@ -14,7 +14,8 @@ class SandboxExposureNotificationManager: ExposureNotificationManaging {
     
     typealias AlertText = Sandbox.Text.ExposureNotification
     
-    private let queue = DispatchQueue(label: "SandboxExposureNotificationManager")
+//    private let queue = DispatchQueue(label: "SandboxExposureNotificationManager", qos: DispatchQoS.userInteractive)
+    private let queue = DispatchQueue.main // Using this to see if it improve reliability of tests on the CI.
     private let host: SandboxHost
     private var hasPreviouslyAskedForPermission: Bool = false
     
@@ -80,9 +81,19 @@ class SandboxExposureNotificationManager: ExposureNotificationManaging {
     }
     
     func getDiagnosisKeys(completionHandler: @escaping ENGetDiagnosisKeysHandler) {
-        queue.async {
-            completionHandler([], nil)
-        }
+        let alert = UIAlertController(
+            title: AlertText.diagnosisKeyAlertTitle.rawValue,
+            message: AlertText.diagnosisKeyAlertMessage.rawValue,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: AlertText.diagnosisKeyAlertDoNotShare.rawValue, style: .default, handler: { _ in }))
+        
+        alert.addAction(UIAlertAction(title: AlertText.diagnosisKeyAlertShare.rawValue, style: .default, handler: { [weak self] _ in
+            self?.queue.async {
+                completionHandler([], nil)
+            }
+        }))
+        host.container?.show(alert, sender: nil)
     }
     
     func detectExposures(configuration: ENExposureConfiguration, diagnosisKeyURLs: [URL], completionHandler: @escaping ENDetectExposuresHandler) -> Progress {

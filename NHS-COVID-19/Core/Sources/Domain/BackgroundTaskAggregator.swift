@@ -32,7 +32,7 @@ class BackgroundTaskAggregator {
         
         let cancellable = Publishers.Sequence<[Job], Never>(sequence: jobs)
             .flatMap { $0.work() }
-            .collect().eraseToAnyPublisher().sink { [weak self] _ in
+            .collect().sink { [weak self] _ in
                 Self.logger.info("background task completed")
                 Metrics.end(.backgroundTasks)
                 
@@ -45,6 +45,7 @@ class BackgroundTaskAggregator {
             Metrics.end(.backgroundTasks)
             
             cancellable.cancel()
+            backgroundTask.setTaskCompleted(success: false)
             self?.scheduleNextTask()
         }
         
@@ -69,10 +70,29 @@ class BackgroundTaskAggregator {
     
     private func scheduleNextTaskIfNeeded() {
         manager.getPendingRequest { request in
-            if request == nil {
-                self.scheduleNextTask()
+            if let request = request {
+                Self.logger.debug("background task already scheduled", metadata: .describing(request))
+                
+                // Workaround for any potential issues causing background jobs to stall.
+                //
+                // On iOS 13.6 and later, the OS behaviour is changed, so it remembers the task and re-runs it even if
+                // the app is deleted and re-installed.
+                //
+                // Normally this *should* work fine; but this code is a safety net: In case background tasks are stalled
+                // (maybe for reasons similar to iOS 13.5) at least it won’t be indefinite: We just reschedule the job
+                // after 24 hours to nudge the system.
+                switch request.earliestBeginDate {
+                case nil:
+                    Self.logger.warning("existing background task request does not have any begin date. Re-scheduling the task")
+                    self.scheduleNextTask()
+                case .some(let date) where date < Date(timeIntervalSinceNow: -86400):
+                    Self.logger.warning("existing background task requested begin date is older than a day. Re-scheduling the task")
+                    self.scheduleNextTask()
+                default:
+                    break
+                }
             } else {
-                Self.logger.debug("background task already scheduled")
+                self.scheduleNextTask()
             }
         }
     }

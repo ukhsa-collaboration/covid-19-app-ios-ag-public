@@ -1,134 +1,182 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>positive_symptoms_please_isolate_accessibility_label %ld</key>
 	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
+		<key>%ld exposure_notification_reminder_sheet_hours</key>
 		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>other</key>
-			<string>অনুগ্রহ করে %ld দিনের জন্য আইসোলেশনে থাকুন এবং একটি পরীক্ষা বুক (সংরক্ষণ) করুন</string>
-			<key>one</key>
-			<string>অনুগ্রহ করে %ld দিনের জন্য আইসোলেশনে থাকুন এবং একটি পরীক্ষা বুক (সংরক্ষণ) করুন</string>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@hours@</string>
+			<key>hours</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld ঘন্টা</string>
+				<key>other</key>
+				<string>%ld ঘন্টা</string>
+			</dict>
+		</dict>
+		<key>exposure_notification_reminder_alert_title %ld hours</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@hours@</string>
+			<key>hours</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld ঘন্টা পরে কন্ট্যাক্ট ট্রেসিং আবার অন করে দেওয়ার উদ্দেশ্যে মনে করার ব্যবস্থা চালু করে দেবেন।</string>
+				<key>other</key>
+				<string>%ld ঘন্টা পরে কন্ট্যাক্ট ট্রেসিং আবার অন করে দেওয়ার উদ্দেশ্যে মনে করার ব্যবস্থা চালু করে দেবেন।</string>
+			</dict>
+		</dict>
+		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>অনুগ্রহ করে %ld দিনের জন্য নিজেকে আলাদা রাখার থাকুন এবং একটি পরীক্ষা বুক (সংরক্ষণ) করুন</string>
+				<key>other</key>
+				<string>অনুগ্রহ করে %ld দিনের জন্য নিজেকে আলাদা রাখার থাকুন এবং একটি পরীক্ষা বুক করুন</string>
+			</dict>
+		</dict>
+		<key>positive_test_please_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld দিন ধরে নিজেকে আলাদা রাখার চালিয়ে যান</string>
+				<key>other</key>
+				<string>%ld দিন ধরে নিজেকে আলাদা রাখার চালিয়ে যান</string>
+			</dict>
+		</dict>
+		<key>isolation_days_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld দিন বাকি</string>
+				<key>other</key>
+				<string>%ld দিন বাকি</string>
+			</dict>
+		</dict>
+		<key>positive_symptoms_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld দিন</string>
+				<key>other</key>
+				<string>%ld দিন</string>
+			</dict>
+		</dict>
+		<key>isolation_days_subtitle %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>দিন বাকি</string>
+				<key>other</key>
+				<string>দিন বাকি</string>
+			</dict>
+		</dict>
+		<key>exposure_acknowledgement_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld দিন</string>
+				<key>other</key>
+				<string>%ld দিন</string>
+			</dict>
+		</dict>
+		<key>exposure_acknowledgement_please_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>অনুগ্রহ করে %ld দিনের জন্য আইসোলেশনে থাকুন</string>
+				<key>other</key>
+				<string>অনুগ্রহ করে %ld দিনের জন্য আইসোলেশনে থাকুন</string>
+			</dict>
+		</dict>
+		<key>isolation_indicator_accessiblity_label days: %ld date: %@ time: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>আপনার %2$@ পর্যন্ত %3$@ তে সেলফ-আইসোলেশনে থাকা প্রয়োজন। %1$ld দিন বাকি।</string>
+				<key>other</key>
+				<string>আপনার %2$@ পর্যন্ত %3$@ তে সেলফ-আইসোলেশনে থাকা প্রয়োজন। %1$ld দিন বাকি।</string>
+			</dict>
+		</dict>
+		<key>positive_test_start_to_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>অনুগ্রহ করে %ld দিনের জন্য আইসোলেশনে থাকুন</string>
+				<key>other</key>
+				<string>অনুগ্রহ করে %ld দিনের জন্য আইসোলেশনে থাকুন</string>
+			</dict>
 		</dict>
 	</dict>
-	<key>positive_test_please_isolate_accessibility_label %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>other</key>
-			<string>%ld দিন ধরে সেলফ-আইসোলেশন চালিয়ে যান</string>
-			<key>one</key>
-			<string>%ld দিন ধরে সেলফ-আইসোলেশন চালিয়ে যান</string>
-		</dict>
-	</dict>
-	<key>isolation_days_accessibility_label %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>%ld দিন বাকি</string>
-			<key>other</key>
-			<string>%ld দিন বাকি</string>
-		</dict>
-	</dict>
-	<key>positive_symptoms_days %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>%ld দিন</string>
-			<key>other</key>
-			<string>%ld দিন</string>
-		</dict>
-	</dict>
-	<key>isolation_days_subtitle %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>দিন বাকি</string>
-			<key>other</key>
-			<string>দিন বাকি</string>
-		</dict>
-	</dict>
-	<key>exposure_acknowledgement_days %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>one</key>
-			<string>%ld দিন</string>
-			<key>other</key>
-			<string>%ld দিন</string>
-		</dict>
-	</dict>
-	<key>exposure_acknowledgement_please_isolate_accessibility_label %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>other</key>
-			<string>অনুগ্রহ করে %ld দিনের জন্য আইসোলেশনে থাকুন</string>
-			<key>one</key>
-			<string>অনুগ্রহ করে %ld দিনের জন্য আইসোলেশনে থাকুন</string>
-		</dict>
-	</dict>
-	<key>isolation_indicator_accessiblity_label days: %ld date: %@ time: %@</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>d</string>
-			<key>other</key>
-			<string>আপনার %2$@ পর্যন্ত %3$@ তে সেলফ-আইসোলেশনে থাকা প্রয়োজন। %1$ld দিন বাকি।</string>
-			<key>one</key>
-			<string>আপনার %2$@ পর্যন্ত %3$@ তে সেলফ-আইসোলেশনে থাকা প্রয়োজন। %1$ld দিন বাকি।</string>
-		</dict>
-	</dict>
-</dict>
 </plist>

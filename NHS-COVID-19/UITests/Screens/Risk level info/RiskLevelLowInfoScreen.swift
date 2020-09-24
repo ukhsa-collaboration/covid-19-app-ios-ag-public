@@ -14,11 +14,11 @@ struct RiskLevelLowInfoScreen {
     }
     
     var heading: XCUIElement {
-        app.staticTexts[localized: .risk_level_banner_text(postcode: "SW12", risk: "LOW")]
+        app.staticTexts[verbatim: localizeForCountry(.risk_level_banner_text(postcode: "SW12", risk: "LOW"))]
     }
     
     var body: XCUIElement {
-        app.staticTexts[localized: .risk_level_screen_low_body]
+        app.staticTexts[verbatim: localizeForCountry(.risk_level_screen_low_body)]
     }
     
     var linkToWebsiteLinkButton: XCUIElement {

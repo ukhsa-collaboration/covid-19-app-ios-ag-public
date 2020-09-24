@@ -15,16 +15,8 @@ struct PermissionsScreen {
         app.staticTexts[localized: .exposure_notification_permissions_onboarding_step_heading]
     }
     
-    var notificationsHeading: XCUIElement {
-        app.staticTexts[localized: .notification_permissions_onboarding_step_heading]
-    }
-    
     var exposureNotificationBody: XCUIElement {
         app.staticTexts[localized: .exposure_notification_permissions_onboarding_step_body]
-    }
-    
-    var notificationsBody: XCUIElement {
-        app.staticTexts[localized: .notification_permissions_onboarding_step_body]
     }
     
     var continueButton: XCUIElement {

@@ -6,6 +6,7 @@ import Combine
 import Domain
 import Foundation
 import Interface
+import Localization
 
 struct SendKeysLoadingFlowViewControllerInteractor: SendKeysLoadingFlowViewController.Interacting {
     var acknowledgement: TestResultAcknowledgementState.PositiveResultAcknowledgement

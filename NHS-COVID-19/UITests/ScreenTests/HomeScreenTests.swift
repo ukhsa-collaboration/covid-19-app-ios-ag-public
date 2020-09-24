@@ -13,7 +13,7 @@ class SuccessHomeScreenTests: XCTestCase {
     func testBasics() throws {
         try runner.run { app in
             let screen = HomeScreen(app: app)
-            XCTAssert(screen.riskLevelBanner.exists)
+            XCTAssert(screen.riskLevelBanner(for: "SW12", risk: localize(.risk_level_low)).exists)
             XCTAssert(screen.notIsolatingIndicator.exists)
         }
     }
@@ -24,8 +24,8 @@ class SuccessHomeScreenTests: XCTestCase {
             
             let moreInfoButtonAction = app.staticTexts[HomeScreenAlerts.postcodeBannerAlertTitle]
             
-            app.scrollTo(element: screen.riskLevelBanner)
-            screen.riskLevelBanner.tap()
+            app.scrollTo(element: screen.riskLevelBanner(for: "SW12", risk: localize(.risk_level_low)))
+            screen.riskLevelBanner(for: "SW12", risk: localize(.risk_level_low)).tap()
             XCTAssert(moreInfoButtonAction.displayed)
         }
     }
@@ -49,6 +49,16 @@ class SuccessHomeScreenTests: XCTestCase {
             app.scrollTo(element: screen.diagnoisButton)
             screen.diagnoisButton.tap()
             XCTAssert(diagnosisButtonAction.displayed)
+        }
+    }
+    
+    func testExposureNotificationToggle() throws {
+        try runner.run { app in
+            let screen = HomeScreen(app: app)
+            
+            let exposureToggleAction = app.staticTexts[HomeScreenAlerts.exposureNotificationAlertTitle]
+            screen.exposureNotificationSwitch.tap()
+            XCTAssert(exposureToggleAction.displayed)
         }
     }
     
@@ -83,7 +93,7 @@ class DisabledFeaturesHomeScreenTests: XCTestCase {
     func testBasics() throws {
         try runner.run { app in
             let screen = HomeScreen(app: app)
-            XCTAssertFalse(screen.riskLevelBanner.exists)
+            XCTAssertFalse(screen.riskLevelBanner(for: "SW12", risk: localize(.risk_level_low)).exists)
             XCTAssertFalse(screen.diagnoisButton.exists)
             XCTAssertFalse(screen.testingInformationButton.exists)
         }

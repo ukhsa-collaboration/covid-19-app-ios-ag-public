@@ -350,3 +350,11 @@ extension HTTPResponse: CustomDescriptionConvertible {
     }
     
 }
+
+extension Date: CustomDescriptionConvertible {
+    
+    fileprivate var descriptionObject: Description {
+        .string(description)
+    }
+    
+}

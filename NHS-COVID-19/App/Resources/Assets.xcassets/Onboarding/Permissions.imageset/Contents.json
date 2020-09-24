@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Group 2807.pdf",
+      "filename" : "Permission_light.pdf",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,31 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Group 2805 (1).pdf",
+      "filename" : "Permission_dark.pdf",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "contrast",
+          "value" : "high"
+        }
+      ],
+      "filename" : "Permission_high_contrast.pdf",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        },
+        {
+          "appearance" : "contrast",
+          "value" : "high"
+        }
+      ],
+      "filename" : "Permission_dark-1.pdf",
       "idiom" : "universal"
     }
   ],

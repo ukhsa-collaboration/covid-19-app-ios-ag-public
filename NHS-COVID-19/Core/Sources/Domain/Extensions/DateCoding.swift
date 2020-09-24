@@ -26,7 +26,7 @@ private extension ISO8601DateFormatter {
     
     static let withoutFractionalSeconds = ISO8601DateFormatter()
     static let withFractionalSeconds = configuring(ISO8601DateFormatter()) {
-        $0.formatOptions = .withFractionalSeconds
+        $0.formatOptions.insert(.withFractionalSeconds)
     }
     
 }

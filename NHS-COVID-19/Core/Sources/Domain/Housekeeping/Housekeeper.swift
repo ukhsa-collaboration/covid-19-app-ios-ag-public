@@ -10,18 +10,15 @@ class Housekeeper {
     private let getHousekeepingDeletionPeriod: () -> DayDuration
     private let getToday: () -> GregorianDay
     private let getIsolationLogicalState: () -> IsolationLogicalState
-    private let hasPendingTestTokens: () -> Bool
     private let clearData: () -> Void
     
     init(getHousekeepingDeletionPeriod: @escaping () -> DayDuration,
          getToday: @escaping () -> GregorianDay,
          getIsolationLogicalState: @escaping () -> IsolationLogicalState,
-         hasPendingTestTokens: @escaping () -> Bool,
          clearData: @escaping () -> Void) {
         self.getHousekeepingDeletionPeriod = getHousekeepingDeletionPeriod
         self.getToday = getToday
         self.getIsolationLogicalState = getIsolationLogicalState
-        self.hasPendingTestTokens = hasPendingTestTokens
         self.clearData = clearData
     }
     
@@ -32,12 +29,6 @@ class Housekeeper {
             getHousekeepingDeletionPeriod: { isolationStateStore.configuration.housekeepingDeletionPeriod },
             getToday: { .today },
             getIsolationLogicalState: { isolationStateManager.state },
-            hasPendingTestTokens: {
-                guard let tokens = virologyTestingStateStore.virologyTestTokens else {
-                    return false
-                }
-                return !tokens.isEmpty
-            },
             clearData: {
                 virologyTestingStateStore.delete()
                 isolationStateStore.isolationStateInfo = nil
@@ -53,15 +44,9 @@ class Housekeeper {
         
         let housekeepingDeletionPeriod = getHousekeepingDeletionPeriod().days
         let daysSinceEndOfIsolation = isolationEndDate.distance(to: getToday())
-        let hasPendingTasks = hasPendingTestTokens() || isolationLogicalState.hasPendingTasks
         
-        switch daysSinceEndOfIsolation {
-        case 0 ..< housekeepingDeletionPeriod where !hasPendingTasks:
-            fallthrough
-        case housekeepingDeletionPeriod ... .max:
+        if daysSinceEndOfIsolation >= housekeepingDeletionPeriod {
             clearData()
-        default:
-            break
         }
         
         return Empty().eraseToAnyPublisher()

@@ -17,9 +17,9 @@ class ExposureNotificationDetectionControllerTests: XCTestCase {
         let keys = [ENTemporaryExposureKey()]
         exposureManager.diagnosisKeys = keys
         
-        let detectionExposureManager = ExposureNotificationDetectionController(manager: exposureManager)
+        let exposureDetectionManager = ExposureNotificationDetectionController(manager: exposureManager)
         
-        let result = try detectionExposureManager.getDiagnosisKeys().await().get()
+        let result = try exposureDetectionManager.getDiagnosisKeys().await().get()
         
         XCTAssert(keys == result)
         
@@ -30,10 +30,10 @@ class ExposureNotificationDetectionControllerTests: XCTestCase {
         let summary = ENExposureDetectionSummary()
         exposureManager.summary = summary
         
-        let detectionExposureManager = ExposureNotificationDetectionController(manager: exposureManager)
+        let exposureDetectionManager = ExposureNotificationDetectionController(manager: exposureManager)
         
         let urls = [URL(string: UUID().uuidString)!]
-        let result = try detectionExposureManager.detectExposures(configuration: ENExposureConfiguration(), diagnosisKeyURLs: urls)
+        let result = try exposureDetectionManager.detectExposures(configuration: ENExposureConfiguration(), diagnosisKeyURLs: urls)
             .await().get()
         
         XCTAssert(summary === result)
@@ -45,11 +45,11 @@ class ExposureNotificationDetectionControllerTests: XCTestCase {
         let exposures = [ENExposureInfo()]
         exposureManager.exposures = exposures
         
-        let detectionExposureManager = ExposureNotificationDetectionController(manager: exposureManager)
+        let exposureDetectionManager = ExposureNotificationDetectionController(manager: exposureManager)
         
         let summary = ENExposureDetectionSummary()
         
-        let result = try detectionExposureManager.getExposureInfo(summary: summary)
+        let result = try exposureDetectionManager.getExposureInfo(summary: summary)
             .await().get()
         
         XCTAssert(summary === exposureManager.summary)

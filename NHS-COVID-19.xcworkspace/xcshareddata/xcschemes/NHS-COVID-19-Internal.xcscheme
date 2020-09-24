@@ -49,6 +49,9 @@
          <TestPlanReference
             reference = "container:NHS-COVID-19/TestPlans/ReportTests.xctestplan">
          </TestPlanReference>
+         <TestPlanReference
+            reference = "container:NHS-COVID-19/TestPlans/LanguageTests.xctestplan">
+         </TestPlanReference>
       </TestPlans>
    </TestAction>
    <LaunchAction

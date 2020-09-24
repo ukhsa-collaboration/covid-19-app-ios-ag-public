@@ -52,18 +52,3 @@ extension IsolationStateManager {
     }
     
 }
-
-private extension IsolationLogicalState {
-    init(stateInfo: IsolationStateInfo?, day: LocalDay) {
-        guard let stateInfo = stateInfo else {
-            self = .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil)
-            return
-        }
-        
-        self.init(
-            today: day,
-            info: stateInfo.isolationInfo,
-            configuration: stateInfo.configuration
-        )
-    }
-}

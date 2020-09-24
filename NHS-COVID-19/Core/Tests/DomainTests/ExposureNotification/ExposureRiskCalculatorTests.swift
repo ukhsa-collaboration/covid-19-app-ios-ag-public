@@ -73,7 +73,29 @@ class ExposureRiskCalculatorTests: XCTestCase {
         }
     }
     
-    func getRiskCalculator() -> ExposureRiskCalculator {
+    func testAppliesInfectiousnessFactorToRiskScore() {
+        let riskCalculator = getRiskCalculator(infectiousnessFactorCalculator: StubInfectiousnessFactorCalculator(factor: 0.5))
+        let exposure = getExposureInfoWith(
+            attenuationDurations: [300, 300, 300])
+        
+        let riskInfo = riskCalculator.riskInfo(for: [exposure])
+        
+        XCTAssertEqual(riskInfo?.riskScore, 225)
+    }
+    
+    func testCallsInfectiousnessFactorWithNumberOfDaysFromOnset() {
+        let mockInfectiousnessFactorCalculator = StubInfectiousnessFactorCalculator()
+        let riskCalculator = getRiskCalculator(infectiousnessFactorCalculator: mockInfectiousnessFactorCalculator)
+        
+        let exposure = getExposureInfoWith(attenuationDurations: [300, 300, 300], transmissionRiskLevel: 5)
+        
+        _ = riskCalculator.riskInfo(for: [exposure])
+        
+        let expectedDaysFromOnset = 2
+        XCTAssertEqual(mockInfectiousnessFactorCalculator.infectiousnessFactorCalledWith, expectedDaysFromOnset)
+    }
+    
+    func getRiskCalculator(infectiousnessFactorCalculator: InfectiousnessFactorCalculating = StubInfectiousnessFactorCalculator()) -> ExposureRiskCalculator {
         let configuration = ExposureDetectionConfiguration(
             transmitionWeight: 0,
             durationWeight: 0,
@@ -88,12 +110,27 @@ class ExposureRiskCalculatorTests: XCTestCase {
             riskThreshold: 5
         )
         
-        return ExposureRiskCalculator(configuration: configuration)
+        return ExposureRiskCalculator(configuration: configuration, infectiousnessFactorCalculator: infectiousnessFactorCalculator)
     }
+
     
-    func getExposureInfoWith(attenuationDurations: [NSNumber]) -> MockENExposureInfo {
-        let exposure = MockENExposureInfo(attenuationDurations: attenuationDurations, date: Date(), totalRiskScore: 0)
+    func getExposureInfoWith(attenuationDurations: [NSNumber], transmissionRiskLevel: Int = 7) -> MockENExposureInfo {
+        let exposure = MockENExposureInfo(attenuationDurations: attenuationDurations, date: Date(), totalRiskScore: 0, transmissionRiskLevel: ENRiskLevel(transmissionRiskLevel))
         
         return exposure
+    }
+}
+
+fileprivate class StubInfectiousnessFactorCalculator: InfectiousnessFactorCalculating {
+    let factor: Double
+    var infectiousnessFactorCalledWith: Int?
+    
+    init(factor: Double = 1.0) {
+        self.factor = factor
+    }
+    
+    func infectiousnessFactor(for daysFromOnset: Int) -> Double {
+        infectiousnessFactorCalledWith = daysFromOnset
+        return factor
     }
 }

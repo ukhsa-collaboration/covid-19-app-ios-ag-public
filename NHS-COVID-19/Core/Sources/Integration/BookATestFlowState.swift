@@ -21,9 +21,10 @@ enum BookATestFlowState {
             .map { value in
                 if value {
                     return .testOrdering(VirologyTestingFlowInteractor(
-                        virologyTestOrderInfoProvider: context.virologyTestOrderInfoProvider,
+                        virologyTestOrderInfoProvider: context.virologyTestingManager,
                         openURL: context.openURL,
-                        pasteboardCopier: pasteboardCopier
+                        pasteboardCopier: pasteboardCopier,
+                        acknowledge: nil
                     ))
                 } else {
                     return .bookATest(BookATestInfoViewControllerInteractor(

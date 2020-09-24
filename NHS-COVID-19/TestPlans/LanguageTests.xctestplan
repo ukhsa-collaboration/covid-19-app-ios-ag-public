@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "F3882068-DDD0-43EF-8066-5A15FBE05759",
+      "name" : "Configuration 1",
+      "options" : {
+        "environmentVariableEntries" : [
+          {
+            "key" : "test_mode",
+            "value" : "languages"
+          }
+        ]
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:NHS-COVID-19\/NHS-COVID-19.xcodeproj",
+        "identifier" : "89AD485A2461A0B50013EC66",
+        "name" : "UITests"
+      }
+    }
+  ],
+  "version" : 1
+}

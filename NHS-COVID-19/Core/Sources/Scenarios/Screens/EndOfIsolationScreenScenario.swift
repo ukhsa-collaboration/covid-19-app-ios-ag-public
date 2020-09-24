@@ -24,7 +24,8 @@ extension EndOfIsolationScreenScenario {
             return EndOfIsolationViewController(
                 interactor: interactor,
                 isolationEndDate: Date(timeIntervalSinceNow: 7 * 86400),
-                showAdvisory: showAdvisory
+                showAdvisory: showAdvisory,
+                currentDateProvider: { Date() }
             )
         }
     }

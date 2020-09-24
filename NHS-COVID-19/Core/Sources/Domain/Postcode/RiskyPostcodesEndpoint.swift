@@ -11,8 +11,9 @@ struct RiskyPostcodesEndpoint: HTTPEndpoint {
         .get("/distribution/risky-post-districts")
     }
     
-    func parse(_ response: HTTPResponse) throws -> [String: PostcodeRisk] {
-        try JSONDecoder().decode(Payload.self, from: response.body.content).postDistricts
+    func parse(_ response: HTTPResponse) throws -> [Postcode: PostcodeRisk] {
+        let districts = try JSONDecoder().decode(Payload.self, from: response.body.content).postDistricts
+        return Dictionary(districts.map { (Postcode($0), $1) }, uniquingKeysWith: { $1 })
     }
     
 }

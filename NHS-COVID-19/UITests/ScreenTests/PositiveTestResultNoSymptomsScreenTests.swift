@@ -44,10 +44,10 @@ class PositiveTestResultNoIsolationScreenTests: XCTestCase {
 private extension PositiveTestResultNoIsolationScreen {
     
     var onlineServicesLinkAlertTitle: XCUIElement {
-        app.staticTexts[PositiveTestResultScreenScenario.onlineServicesLinkTapped]
+        app.staticTexts[PositiveTestResultNoIsolationScreenScenario.onlineServicesLinkTapped]
     }
     
     var continueAlertTitle: XCUIElement {
-        app.staticTexts[PositiveTestResultScreenScenario.continueTapped]
+        app.staticTexts[PositiveTestResultNoIsolationScreenScenario.continueTapped]
     }
 }

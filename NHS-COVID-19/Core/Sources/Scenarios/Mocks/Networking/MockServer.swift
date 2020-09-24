@@ -29,6 +29,7 @@ class MockServer: HTTPClient {
             SymptomaticQuestionnaireHandler(),
             VirologyTestOrderHandler(dataProvider: dataProvider),
             VirologyTestResultsHandler(dataProvider: dataProvider),
+            LinkVirologyTestResultHandler(dataProvider: dataProvider),
         ]
     }
     

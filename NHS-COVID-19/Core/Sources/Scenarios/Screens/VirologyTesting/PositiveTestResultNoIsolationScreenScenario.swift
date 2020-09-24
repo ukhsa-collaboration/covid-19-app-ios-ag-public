@@ -18,24 +18,23 @@ public class PositiveTestResultNoIsolationScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return PositiveTestResultNoIsolationViewController(interactor: interactor)
+            return NonNegativeTestResultNoIsolationViewController(interactor: interactor)
         }
     }
 }
 
-private class Interactor: PositiveTestResultNoIsolationViewController.Interacting {
-    
-    private weak var viewController: UIViewController?
+private class Interactor: NonNegativeTestResultNoIsolationViewController.Interacting {
+    var didTapCancel: (() -> Void)? { nil }
+    var didTapOnlineServicesLink: () -> Void
+    var didTapPrimaryButton: () -> Void
     
     init(viewController: UIViewController) {
-        self.viewController = viewController
-    }
-    
-    func didTapOnlineServicesLink() {
-        viewController?.showAlert(title: PositiveTestResultNoIsolationScreenScenario.onlineServicesLinkTapped)
-    }
-    
-    func didTapContinue() {
-        viewController?.showAlert(title: PositiveTestResultNoIsolationScreenScenario.continueTapped)
+        didTapOnlineServicesLink = { [weak viewController] in
+            viewController?.showAlert(title: PositiveTestResultNoIsolationScreenScenario.onlineServicesLinkTapped)
+        }
+        
+        didTapPrimaryButton = { [weak viewController] in
+            viewController?.showAlert(title: PositiveTestResultNoIsolationScreenScenario.continueTapped)
+        }
     }
 }

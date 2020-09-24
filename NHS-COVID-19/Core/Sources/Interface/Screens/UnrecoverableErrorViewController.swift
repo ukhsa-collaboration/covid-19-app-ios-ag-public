@@ -20,6 +20,7 @@ public class UnrecoverableErrorViewController: RecoverableErrorViewController {
 private struct NonRecoverableErrorDetail: ErrorDetail {
     let action: (title: String, act: () -> Void)? = nil
     let actionTitle: String? = nil
+    var logoStrapLineStyle: LogoStrapline.Style = .onboarding
     
     let title = localize(.unrecoverable_error_page_title)
     

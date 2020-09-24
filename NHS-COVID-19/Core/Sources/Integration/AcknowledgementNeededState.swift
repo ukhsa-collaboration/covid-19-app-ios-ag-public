@@ -8,56 +8,89 @@ import Foundation
 
 enum AcknowledgementNeededState {
     case notNeeded
-    case positiveTestResultAckNeeded(interactor: SendKeysLoadingFlowViewControllerInteractor, isolationEndDate: Date)
-    case positiveTestResultNoIsolationAckNeeded(interactor: SendKeysLoadingFlowViewControllerInteractor)
-    case negativeTestResultAckNeeded(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
-    case negativeTestResultNoIsolationAckNeeded(interactor: NegativeTestResultViewControllerInteractor)
-    case isolationEndAckNeeded(interactor: EndOfIsolationViewControllerInteractor, isolationEndDate: Date, showAdvisory: Bool)
-    case isolationStartAckNeeded(interactor: ExposureAcknowledgementViewControllerInteractor, isolationEndDate: Date)
-    case riskyVenueNeeded(interactor: RiskyVenueInformationInteractor, venueName: String, checkInDate: Date)
+    case neededForPositiveResultStartToIsolate(interactor: SendKeysLoadingFlowViewControllerInteractor, isolationEndDate: Date)
+    case neededForPositiveResultContinueToIsolate(interactor: SendKeysLoadingFlowViewControllerInteractor, isolationEndDate: Date)
+    case neededForPositiveResultNotIsolating(interactor: SendKeysLoadingFlowViewControllerInteractor)
+    case neededForNegativeResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
+    case neededForNegativeAfterPositiveResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
+    case neededForNegativeResultEndIsolation(interactor: NegativeTestResultViewControllerInteractor)
+    case neededForNegativeResultNotIsolating(interactor: NegativeTestResultNoIsolationViewControllerInteractor)
+    case neededForEndOfIsolation(interactor: EndOfIsolationViewControllerInteractor, isolationEndDate: Date, showAdvisory: Bool)
+    case neededForStartOfIsolation(interactor: ExposureAcknowledgementViewControllerInteractor, isolationEndDate: Date)
+    case neededForRiskyVenue(interactor: RiskyVenueInformationInteractor, venueName: String, checkInDate: Date)
+    case neededForVoidResultContinueToIsolate(interactor: VoidTestResultFlowInteracting, isolationEndDate: Date)
+    case neededForVoidResultNotIsolating(interactor: VoidTestResultFlowInteracting)
     
     static func makeAcknowledgementState(context: RunningAppContext) -> AnyPublisher<AcknowledgementNeededState, Never> {
         context.testResultAcknowledgementState
             .combineLatest(context.isolationAcknowledgementState, context.riskyCheckInsAcknowledgementState)
             .map { testResultAckState, isolationResultAckState, riskyVenueAckState in
                 switch testResultAckState {
-                case .neededForNegativeResult(let acknowledge, let isolationEndDate):
-                    return .negativeTestResultAckNeeded(
+                case .neededForNegativeResultContinueToIsolate(let acknowledge, let isolationEndDate):
+                    return .neededForNegativeResultContinueToIsolate(
                         interactor: NegativeTestResultWithIsolationViewControllerInteractor(
                             _acknowledge: acknowledge, openURL: context.openURL
                         ),
                         isolationEndDate: isolationEndDate
                     )
-                case .neededForNegativeResultNoIsolation(let acknowledge):
-                    return .negativeTestResultNoIsolationAckNeeded(interactor: NegativeTestResultViewControllerInteractor(
+                case .neededForNegativeResultEndIsolation(let acknowledge):
+                    return .neededForNegativeResultEndIsolation(interactor: NegativeTestResultViewControllerInteractor(
                         _acknowledge: acknowledge, openURL: context.openURL
                     ))
-                case .neededForPositiveResult(let acknowledge, let isolationEndDate):
-                    return .positiveTestResultAckNeeded(
+                case .neededForNegativeResultNotIsolating(let acknowledge):
+                    return .neededForNegativeResultNotIsolating(interactor: NegativeTestResultNoIsolationViewControllerInteractor(
+                        _acknowledge: acknowledge, openURL: context.openURL
+                    ))
+                case .neededForNegativeAfterPositiveResultContinueToIsolate(acknowledge: let acknowledge, isolationEndDate: let isolationEndDate):
+                    return .neededForNegativeAfterPositiveResultContinueToIsolate(
+                        interactor: NegativeTestResultWithIsolationViewControllerInteractor(
+                            _acknowledge: acknowledge, openURL: context.openURL
+                        ),
+                        isolationEndDate: isolationEndDate
+                    )
+                case .neededForPositiveResultStartToIsolate(let acknowledge, let isolationEndDate):
+                    return .neededForPositiveResultStartToIsolate(
                         interactor: SendKeysLoadingFlowViewControllerInteractor(acknowledgement: acknowledge, openURL: context.openURL),
                         isolationEndDate: isolationEndDate
                     )
-                case .neededForPositiveResultNoIsolation(let acknowledge):
-                    return .positiveTestResultNoIsolationAckNeeded(
+                case .neededForPositiveResultContinueToIsolate(let acknowledge, let isolationEndDate):
+                    return .neededForPositiveResultContinueToIsolate(
+                        interactor: SendKeysLoadingFlowViewControllerInteractor(acknowledgement: acknowledge, openURL: context.openURL),
+                        isolationEndDate: isolationEndDate
+                    )
+                case .neededForPositiveResultNotIsolating(let acknowledge):
+                    return .neededForPositiveResultNotIsolating(
                         interactor: SendKeysLoadingFlowViewControllerInteractor(acknowledgement: acknowledge, openURL: context.openURL)
                     )
                 case .notNeeded:
                     switch isolationResultAckState {
                     case .neededForEnd(let isolation, let acknowledge):
                         let interactor = EndOfIsolationViewControllerInteractor(acknowledge: acknowledge, openURL: context.openURL)
-                        return .isolationEndAckNeeded(interactor: interactor, isolationEndDate: isolation.endDate, showAdvisory: isolation.reason != .contactCase)
+                        return .neededForEndOfIsolation(interactor: interactor, isolationEndDate: isolation.endDate, showAdvisory: isolation.reason != .contactCase)
                     case .neededForStart(let isolation, let acknowledge):
                         let interactor = ExposureAcknowledgementViewControllerInteractor(openURL: context.openURL, acknowledge: acknowledge)
-                        return .isolationStartAckNeeded(interactor: interactor, isolationEndDate: isolation.endDate)
+                        return .neededForStartOfIsolation(interactor: interactor, isolationEndDate: isolation.endDate)
                     case .notNeeded:
                         switch riskyVenueAckState {
                         case .needed(let acknowledge, let venueName, let checkInDate):
                             let interactor = RiskyVenueInformationInteractor(goHome: acknowledge)
-                            return riskyVenueNeeded(interactor: interactor, venueName: venueName, checkInDate: checkInDate)
+                            return neededForRiskyVenue(interactor: interactor, venueName: venueName, checkInDate: checkInDate)
                         case .notNeeded:
                             return .notNeeded
                         }
                     }
+                    
+                case .neededForVoidResultContinueToIsolate(acknowledge: let acknowledge, isolationEndDate: let isolationEndDate):
+                    
+                    let interactor = VoidTestResultFlowInteractor(
+                        acknowledge: acknowledge
+                    )
+                    return .neededForVoidResultContinueToIsolate(interactor: interactor, isolationEndDate: isolationEndDate)
+                case .neededForVoidResultNotIsolating(acknowledge: let acknowledge):
+                    let interactor = VoidTestResultFlowInteractor(
+                        acknowledge: acknowledge
+                    )
+                    return .neededForVoidResultNotIsolating(interactor: interactor)
                 }
             }
             .eraseToAnyPublisher()

@@ -14,27 +14,21 @@ class VirologyTestingManagerTests: XCTestCase {
     private var manager: VirologyTestingManager!
     private var notificationManager: MockUserNotificationsManager!
     
-    private var isolationStateUpdate: TestResult?
-    private var testResultReceivedDay: GregorianDay?
-    
     override func setUp() {
         mockServer = MockHTTPClient()
         virologyStore = VirologyTestingStateStore(store: MockEncryptedStore())
         notificationManager = MockUserNotificationsManager()
-        isolationStateUpdate = nil
         manager = VirologyTestingManager(
             httpClient: mockServer,
-            virologyTestingStateStore: virologyStore,
-            userNotificationsManager: notificationManager,
-            updateIsolationState: {
-                self.isolationStateUpdate = $0
-                self.testResultReceivedDay = $1
-            }
+            virologyTestingStateCoordinator: VirologyTestingStateCoordinator(
+                virologyTestingStateStore: virologyStore,
+                userNotificationsManager: notificationManager
+            )
         )
     }
     
     func testOrderTestkit() throws {
-        _ = manager.orderTestkit()
+        _ = manager.provideTestOrderInfo()
         XCTAssertEqual(mockServer.amountOfCalls, 1)
     }
     
@@ -44,14 +38,25 @@ class VirologyTestingManagerTests: XCTestCase {
         let pollingToken = PollingToken(value: .random())
         let submissionToken = DiagnosisKeySubmissionToken(value: .random())
         
-        let response = OrderTestkitResponse(
+        let expectedResponse = OrderTestkitResponse(
             testOrderWebsite: testOrderWebsite,
             referenceCode: referenceCode,
             testResultPollingToken: pollingToken,
             diagnosisKeySubmissionToken: submissionToken
         )
         
-        manager.saveOrderTestKitResponse(response)
+        let response = HTTPResponse.ok(with: .json(#"""
+        {
+            "websiteUrlWithQuery": "\#(expectedResponse.testOrderWebsite.absoluteString)",
+            "tokenParameterValue": "\#(expectedResponse.referenceCode.value)",
+            "testResultPollingToken" : "\#(expectedResponse.testResultPollingToken.value)",
+            "diagnosisKeySubmissionToken": "\#(expectedResponse.diagnosisKeySubmissionToken.value)"
+        }
+        """#))
+        
+        mockServer.response = response
+        
+        _ = try manager.provideTestOrderInfo().await().get()
         
         let savedTestTokens = try XCTUnwrap(virologyStore.virologyTestTokens?.first)
         XCTAssertEqual(pollingToken, savedTestTokens.pollingToken)
@@ -66,7 +71,6 @@ class VirologyTestingManagerTests: XCTestCase {
         virologyStore.saveTest(pollingToken: pollingToken, diagnosisKeySubmissionToken: submissionToken)
         virologyStore.saveTest(pollingToken: pollingToken, diagnosisKeySubmissionToken: submissionToken)
         
-        let testDay = GregorianDay.today
         mockServer.response = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
@@ -78,8 +82,6 @@ class VirologyTestingManagerTests: XCTestCase {
         XCTAssertEqual(mockServer.amountOfCalls, 3)
         let storedTokens = try XCTUnwrap(virologyStore.virologyTestTokens)
         XCTAssertEqual(storedTokens.count, 0)
-        XCTAssertEqual(isolationStateUpdate, TestResult.positive)
-        XCTAssertEqual(testResultReceivedDay, testDay)
     }
     
     func testEvaluateTestResultsWithoutResult() throws {
@@ -105,7 +107,6 @@ class VirologyTestingManagerTests: XCTestCase {
         
         virologyStore.saveTest(pollingToken: pollingToken, diagnosisKeySubmissionToken: submissionToken)
         
-        let testDay = GregorianDay.today
         mockServer.response = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
@@ -115,13 +116,11 @@ class VirologyTestingManagerTests: XCTestCase {
         
         _ = try manager.evaulateTestResults().await().get()
         XCTAssertEqual(notificationManager.notificationType, UserNotificationType.testResultReceived)
-        let storedResult = try XCTUnwrap(virologyStore.latestUnacknowledgedTestResult)
+        let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
         XCTAssertEqual(storedResult.testResult, TestResult.positive)
         XCTAssertEqual(storedResult.diagnosisKeySubmissionToken, submissionToken)
         let storedTokens = try XCTUnwrap(virologyStore.virologyTestTokens)
         XCTAssertEqual(storedTokens.count, 0)
-        XCTAssertEqual(isolationStateUpdate, TestResult.positive)
-        XCTAssertEqual(testResultReceivedDay, testDay)
     }
     
     func testEvaluateTestResultsNegative() throws {
@@ -130,7 +129,6 @@ class VirologyTestingManagerTests: XCTestCase {
         
         virologyStore.saveTest(pollingToken: pollingToken, diagnosisKeySubmissionToken: submissionToken)
         
-        let testDay = GregorianDay.today
         mockServer.response = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
@@ -140,13 +138,11 @@ class VirologyTestingManagerTests: XCTestCase {
         
         _ = try manager.evaulateTestResults().await().get()
         XCTAssertEqual(notificationManager.notificationType, UserNotificationType.testResultReceived)
-        let storedResult = try XCTUnwrap(virologyStore.latestUnacknowledgedTestResult)
+        let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
         XCTAssertEqual(storedResult.testResult, TestResult.negative)
         XCTAssertNil(storedResult.diagnosisKeySubmissionToken)
         let storedTokens = try XCTUnwrap(virologyStore.virologyTestTokens)
         XCTAssertEqual(storedTokens.count, 0)
-        XCTAssertEqual(isolationStateUpdate, TestResult.negative)
-        XCTAssertEqual(testResultReceivedDay, testDay)
     }
     
     func testEvaluateTestResultsVoid() throws {
@@ -163,12 +159,69 @@ class VirologyTestingManagerTests: XCTestCase {
         """#))
         
         _ = try manager.evaulateTestResults().await().get()
-        XCTAssertNil(notificationManager.notificationType)
-        XCTAssertNil(virologyStore.latestUnacknowledgedTestResult)
+        XCTAssertEqual(notificationManager.notificationType, UserNotificationType.testResultReceived)
+        let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
+        XCTAssertEqual(storedResult.testResult, TestResult.void)
+        XCTAssertNil(storedResult.diagnosisKeySubmissionToken)
         let storedTokens = try XCTUnwrap(virologyStore.virologyTestTokens)
         XCTAssertEqual(storedTokens.count, 0)
-        XCTAssertNil(isolationStateUpdate)
-        XCTAssertNil(testResultReceivedDay)
+    }
+    
+    func testEvaluateLinkTestResultsPositive() throws {
+        let submissionToken = DiagnosisKeySubmissionToken(value: .random())
+        let ctaToken = String.random()
+        
+        mockServer.response = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "2020-04-23T00:00:00.0000000Z",
+            "testResult": "POSITIVE",
+            "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
+        }
+        """#))
+        
+        _ = try manager.linkExternalTestResult(with: ctaToken).await().get()
+        XCTAssertNil(notificationManager.notificationType)
+        let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
+        XCTAssertEqual(storedResult.testResult, TestResult.positive)
+        XCTAssertEqual(storedResult.diagnosisKeySubmissionToken, submissionToken)
+    }
+    
+    func testEvaluateLinkTestResultsNegative() throws {
+        let submissionToken = DiagnosisKeySubmissionToken(value: .random())
+        let ctaToken = String.random()
+        
+        mockServer.response = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "2020-04-23T00:00:00.0000000Z",
+            "testResult": "NEGATIVE",
+            "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
+        }
+        """#))
+        
+        _ = try manager.linkExternalTestResult(with: ctaToken).await().get()
+        XCTAssertNil(notificationManager.notificationType)
+        let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
+        XCTAssertEqual(storedResult.testResult, TestResult.negative)
+        XCTAssertNil(storedResult.diagnosisKeySubmissionToken)
+    }
+    
+    func testEvaluateLinkTestResultsVoid() throws {
+        let submissionToken = DiagnosisKeySubmissionToken(value: .random())
+        let ctaToken = String.random()
+        
+        mockServer.response = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "2020-04-23T00:00:00.0000000Z",
+            "testResult": "VOID",
+            "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
+        }
+        """#))
+        
+        _ = try manager.linkExternalTestResult(with: ctaToken).await().get()
+        XCTAssertNil(notificationManager.notificationType)
+        let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
+        XCTAssertEqual(storedResult.testResult, TestResult.void)
+        XCTAssertNil(storedResult.diagnosisKeySubmissionToken)
     }
     
     private class MockHTTPClient: HTTPClient {

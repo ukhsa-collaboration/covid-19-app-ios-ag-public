@@ -10,7 +10,11 @@ struct CheckInConfirmationScreen {
     var app: XCUIApplication
     
     var title: XCUIElement {
-        app.staticTexts[localized: .checkin_confirmation_title(venue: CheckInConfirmationScreenScenario.venueName, date: CheckInConfirmationScreenScenario.checkinDate)]
+        app.staticTexts[localized: .checkin_confirmation_title]
+    }
+    
+    func dateTime(_ date: Date) -> XCUIElement {
+        app.staticTexts[localized: .checkin_confirmation_date(date: date)]
     }
     
     var description: XCUIElement {

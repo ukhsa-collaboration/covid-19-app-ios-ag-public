@@ -35,10 +35,6 @@ struct EnterPostcodeScreen {
         app.staticTexts[localized: .postcode_entry_error_title]
     }
     
-    var errorDescription: XCUIElement {
-        app.staticTexts[localized: .postcode_entry_error_description]
-    }
-    
     var continueButton: XCUIElement {
         app.windows["MainWindow"].buttons[localized: .postcode_entry_continue_button_title]
     }

@@ -32,7 +32,7 @@ class VirologyTestResultEndpointTests: XCTestCase {
         """#))
         
         let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = .withFractionalSeconds
+        formatter.formatOptions.insert(.withFractionalSeconds)
         let expectedResponse = VirologyTestResponse.receivedResult(
             VirologyTestResult(testResult: .positive, endDate: try XCTUnwrap(formatter.date(from: date)))
         )

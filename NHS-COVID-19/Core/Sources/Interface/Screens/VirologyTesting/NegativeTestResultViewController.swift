@@ -37,22 +37,19 @@ public class NegativeTestResultViewController: UIViewController {
         let spacer = UIView()
         spacer.heightAnchor.constraint(equalToConstant: .bigSpacing).isActive = true
         
-        let checkmark = UIImageView(.checkmark)
-        checkmark.adjustsImageSizeForAccessibilityContentSizeCategory = true
-        checkmark.tintColor = UIColor(.nhsButtonGreen)
-        checkmark.styleAsDecoration()
+        let image = UIImageView(.isolationEnded)
+        image.adjustsImageSizeForAccessibilityContentSizeCategory = true
+        image.styleAsDecoration()
         
         let titleLabel = UILabel()
         titleLabel.text = localize(.end_of_isolation_isolate_title)
         titleLabel.styleAsPageHeader()
         titleLabel.textAlignment = .center
-        titleLabel.isAccessibilityElement = false
         
         let endOfIsolationLabel = UILabel()
         endOfIsolationLabel.text = localize(.end_of_isolation_finished_description)
         endOfIsolationLabel.styleAsHeading()
         endOfIsolationLabel.textAlignment = .center
-        endOfIsolationLabel.isAccessibilityElement = false
         
         let pleaseIsolateStack = UIStackView(arrangedSubviews: [titleLabel, endOfIsolationLabel])
         pleaseIsolateStack.axis = .vertical
@@ -70,7 +67,7 @@ public class NegativeTestResultViewController: UIViewController {
         let onlineServicesLink = LinkButton(title: localize(.end_of_isolation_online_services_link))
         onlineServicesLink.addTarget(self, action: #selector(didTapOnlineServicesLink), for: .touchUpInside)
         
-        let stack = UIStackView(arrangedSubviews: [spacer, checkmark, pleaseIsolateStack, infobox, explanationLabel, linkLabel, onlineServicesLink])
+        let stack = UIStackView(arrangedSubviews: [spacer, image, pleaseIsolateStack, infobox, explanationLabel, linkLabel, onlineServicesLink])
         stack.axis = .vertical
         stack.spacing = .standardSpacing
         stack.isLayoutMarginsRelativeArrangement = true
@@ -97,12 +94,12 @@ public class NegativeTestResultViewController: UIViewController {
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: bottomButtonStack.topAnchor, constant: -.standardSpacing),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            bottomButtonStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            bottomButtonStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
+            bottomButtonStack.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            bottomButtonStack.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
             bottomButtonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            stack.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
+            stack.widthAnchor.constraint(equalTo: view.readableContentGuide.widthAnchor),
         ])
     }
     

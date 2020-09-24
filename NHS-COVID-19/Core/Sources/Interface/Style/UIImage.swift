@@ -13,9 +13,6 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case logoAlt = "NHSLogoAlt"
     case externalLink = "ExternalLink"
     case noCloud = "NoCloud"
-    case padlock = "Padlock"
-    case medicalRecord = "MedicalRecord"
-    case checkmark = "Check"
     case linkTest = "LinkTest"
     case onboardingPrivacy = "PrivacyScreemBannerImage"
     case tickImage = "TickIcon"
@@ -41,10 +38,27 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case read = "Read"
     case swab = "Swab"
     case pin = "Pin"
+    case checkTick = "CheckTick"
+    case chain = "Chain"
+    case logoWales = "Logo Wales"
+    case qrCodePoster = "QRCodePoster"
+    case qrCodePosterWales = "QRCodePosterWales"
+    case isolationStartIndex = "IsolationStartIndex"
+    case isolationStartContact = "IsolationStartContact"
+    case isolationContinue = "IsolationContinue"
+    case isolationEndedWarning = "IsolationEndedWarning"
+    case isolationEnded = "IsolationEnded"
     
     case riskLevelLow = "RiskLevel/Low"
     case riskLevelMedium = "RiskLevel/Medium"
     case riskLevelHigh = "RiskLevel/High"
+    
+    case symbolRef = "Symbols/Ref"
+    case symbolinfo = "Symbols/Info"
+    case symbolRelease = "Symbols/Release"
+    case symbolManufacturer = "Symbols/Manufacturer"
+    case symbolCE = "Symbols/CE"
+    case symbolInstructionForUse = "Symbols/InstructionForUse"
     
     public var id: ImageName {
         self

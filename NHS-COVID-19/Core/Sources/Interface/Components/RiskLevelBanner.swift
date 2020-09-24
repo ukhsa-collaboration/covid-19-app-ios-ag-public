@@ -9,50 +9,37 @@ import SwiftUI
 
 public struct RiskLevelBanner: View {
     
-    public class ViewModel: ObservableObject {
+    public struct ViewModel {
         public enum RiskLevel: String {
             case low
             case medium
             case high
         }
         
-        public var objectWillChange: ObservableObjectPublisher {
-            $riskLevel.objectWillChange
-        }
-        
-        @InterfaceProperty
-        var riskLevel: RiskLevel?
-        
         var postcode: String
+        var riskLevel: RiskLevel
         
-        public init(postcode: String, riskLevel: InterfaceProperty<RiskLevel?>) {
+        public init(postcode: String, riskLevel: RiskLevel) {
             self.postcode = postcode
-            _riskLevel = riskLevel
+            self.riskLevel = riskLevel
         }
     }
     
-    @ObservedObject private var viewModel: ViewModel
-    private let moreInfo: () -> Void
+    private var viewModel: ViewModel
+    private let tapAction: (ViewModel) -> Void
     
-    public init(viewModel: ViewModel, moreInfo: @escaping () -> Void) {
+    public init(viewModel: ViewModel, tapAction: @escaping (ViewModel) -> Void) {
         self.viewModel = viewModel
-        self.moreInfo = moreInfo
+        self.tapAction = tapAction
     }
     
     public var body: some View {
-        guard let riskLevel = viewModel.riskLevel else {
-            return AnyView(EmptyView())
-        }
-        return AnyView(realBody(riskLevel: riskLevel))
-    }
-    
-    private func realBody(riskLevel: ViewModel.RiskLevel) -> some View {
         NavigationButton(
             imageName: .pin,
-            foregroundColor: riskLevel.color,
+            foregroundColor: viewModel.riskLevel.color,
             backgroundColor: .clear,
-            text: localize(.risk_level_banner_text(postcode: viewModel.postcode, risk: riskLevel.label)),
-            action: moreInfo
+            text: localizeForCountry(.risk_level_banner_text(postcode: viewModel.postcode, risk: viewModel.riskLevel.label)),
+            action: { self.tapAction(self.viewModel) }
         )
     }
     
@@ -63,11 +50,11 @@ private extension RiskLevelBanner.ViewModel.RiskLevel {
     var label: String {
         switch self {
         case .low:
-            return localize(.risk_level_low)
+            return localizeForCountry(.risk_level_low)
         case .medium:
-            return localize(.risk_level_medium)
+            return localizeForCountry(.risk_level_medium)
         case .high:
-            return localize(.risk_level_high)
+            return localizeForCountry(.risk_level_high)
             
         }
     }

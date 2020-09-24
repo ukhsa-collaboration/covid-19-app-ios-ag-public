@@ -2,7 +2,6 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
-import AVFoundation
 import Combine
 import Common
 import Localization
@@ -19,8 +18,6 @@ public struct CheckInDetail {
 }
 
 public protocol CheckInFlowViewControllerInteracting: CameraAccessDeniedViewControllerInteracting {
-    func requestCameraAccess()
-    func createCaptureSession(resultHandler: @escaping ([AVMetadataMachineReadableCodeObject]) -> Void) -> AVCaptureSession?
     func process(_ payload: String) throws -> CheckInDetail
 }
 
@@ -43,6 +40,7 @@ public class CheckInFlowViewController: UINavigationController {
     }
     
     private var cameraPermissionState: AnyPublisher<CameraPermissionState, Never>
+    private let scanner: QRScanner
     private let interactor: Interacting
     
     @Published
@@ -51,19 +49,36 @@ public class CheckInFlowViewController: UINavigationController {
     private var cancellables = [AnyCancellable]()
     
     private var checkInDetail: CheckInDetail!
+    private var currentDateProvider: () -> Date
+    private let goHomeCompletion: () -> Void
     
-    public init(cameraPermissionState: AnyPublisher<CameraPermissionState, Never>, interactor: Interacting) {
+    public init(cameraPermissionState: AnyPublisher<CameraPermissionState, Never>,
+                scanner: QRScanner,
+                interactor: Interacting,
+                currentDateProvider: @escaping () -> Date,
+                goHomeCompletion: @escaping () -> Void) {
         self.cameraPermissionState = cameraPermissionState
+        self.scanner = scanner
         self.interactor = interactor
+        self.currentDateProvider = currentDateProvider
+        self.goHomeCompletion = goHomeCompletion
         super.init(nibName: nil, bundle: nil)
         
         cameraPermissionState
             .sink { [weak self] cameraAuthorizationState in
                 switch cameraAuthorizationState {
                 case .notDetermined, .authorized:
-                    self?.state = .start
+                    return
                 case .denied:
                     self?.state = .permissionDenied
+                }
+            }
+            .store(in: &cancellables)
+        
+        scanner.state
+            .sink { [weak self] scannerState in
+                if scannerState == .failed {
+                    self?.state = .cameraFailure
                 }
             }
             .store(in: &cancellables)
@@ -100,10 +115,9 @@ public class CheckInFlowViewController: UINavigationController {
             let vc = QRCodeScannerViewController(
                 interactor: self,
                 cameraPermissionState: cameraPermissionState,
-                requestCameraAccess: interactor.requestCameraAccess,
-                createCaptureSession: interactor.createCaptureSession,
+                scanner: scanner,
                 completion: { [weak self] payload in
-                    guard let self = self else { return }
+                    guard let self = self, self.state == .start else { return }
                     do {
                         self.checkInDetail = try self.interactor.process(payload)
                         self.state = .confirm
@@ -124,7 +138,11 @@ public class CheckInFlowViewController: UINavigationController {
         case .scanningFailure:
             return ScanningFailureViewController(interactor: self)
         case .confirm:
-            return CheckInConfirmationViewController(interactor: self, checkInDetail: checkInDetail)
+            return CheckInConfirmationViewController(
+                interactor: self,
+                checkInDetail: checkInDetail,
+                date: currentDateProvider()
+            )
         }
     }
     
@@ -140,21 +158,21 @@ extension CheckInFlowViewController: CameraFailureViewController.Interacting, Sc
         dismiss(animated: true, completion: nil)
     }
     
+    public func goHomeAfterCheckIn() {
+        dismiss(animated: true, completion: goHomeCompletion)
+    }
+    
     public func wrongCheckIn() {
         dismiss(animated: true, completion: nil)
     }
     
     public func showHelp() {
-        let viewController = VenueCheckInInformationViewController(interactor: self)
+        let viewController = UINavigationController(rootViewController: VenueCheckInInformationViewController(interactor: self))
         viewController.modalPresentationStyle = .overFullScreen
         present(viewController, animated: true, completion: nil)
     }
     
     public func didTapDismiss() {
         dismiss(animated: true, completion: nil)
-    }
-    
-    public func didFailedToInitializeCamera() {
-        state = .cameraFailure
     }
 }

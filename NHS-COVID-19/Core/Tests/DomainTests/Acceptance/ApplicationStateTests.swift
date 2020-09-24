@@ -26,6 +26,9 @@ class ApplicationStateTests: XCTestCase {
             var cameraManager = MockCameraManager()
             var encryptedStore = MockEncryptedStore()
             var cacheStorage = FileStorage(forCachesOf: .random())
+            var postcodeValidator = mutating(MockPostcodeValidator()) {
+                $0.validPostcodes = [Postcode("B44")]
+            }
         }
         
         var coordinator: ApplicationCoordinator
@@ -50,7 +53,10 @@ class ApplicationStateTests: XCTestCase {
                 venueDecoder: QRCode.forTests,
                 appInfo: AppInfo(bundleId: .random(), version: "1"),
                 pasteboardCopier: MockPasteboardCopier(),
-                postcodeValidator: PostcodeValidator(validPostcodes: ["B44"])
+                postcodeValidator: configuration.postcodeValidator,
+                currentDateProvider: { Date() },
+                storeReviewController: MockStoreReviewController(),
+                transmissionRiskLevelApplier: TransmissionRiskLevelApplier()
             )
             
             coordinator = ApplicationCoordinator(services: services, enabledFeatures: configuration.enabledFeatures)
@@ -111,7 +117,7 @@ class ApplicationStateTests: XCTestCase {
     func testEnteringErrorStateIfAuthorizationDenied() throws {
         try completeExposureNotificationActivation(authorizationStatus: .notAuthorized)
         
-        guard case .canNotRunExposureNotification(.authorizationDenied(let openSettings)) = coordinator.state else {
+        guard case .canNotRunExposureNotification(.authorizationDenied(let openSettings), _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
@@ -124,14 +130,26 @@ class ApplicationStateTests: XCTestCase {
         try completeExposureNotificationActivation(authorizationStatus: .unknown)
         try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
         
-        guard case .authorizationOnboarding(let requestPermissions, let openUrl) = coordinator.state else {
+        guard case .onboarding(let complete, let openUrl) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
-        let url = ExternalLink.privacy.url
+        let url = URL(string: "https://example.com")!
         openUrl(url)
         
         XCTAssertEqual(application.openedURL, url)
+        
+        complete()
+        
+        guard case .postcodeRequired(let savePostcode) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        
+        try savePostcode("B44").get()
+        
+        guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
         
         requestPermissions()
         exposureNotificationManager.instanceAuthorizationStatus = .authorized
@@ -139,7 +157,7 @@ class ApplicationStateTests: XCTestCase {
         exposureNotificationManager.activationCompletionHandler?(nil)
         try completeUserNotificationsAuthorization(authorizationStatus: .authorized)
         
-        guard case .postcodeOnboarding = coordinator.state else {
+        guard case .runningExposureNotification = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
     }
@@ -147,7 +165,7 @@ class ApplicationStateTests: XCTestCase {
     func testEnteringErrorStateIfBluetoothDisabled() throws {
         try completeExposureNotificationActivation(authorizationStatus: .authorized, status: .bluetoothOff)
         
-        guard case .canNotRunExposureNotification(.bluetoothDisabled) = coordinator.state else {
+        guard case .canNotRunExposureNotification(.bluetoothDisabled, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
     }
@@ -156,7 +174,50 @@ class ApplicationStateTests: XCTestCase {
         try completeExposureNotificationActivation(authorizationStatus: .authorized, status: .disabled)
         try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
         
-        guard case .authorizationOnboarding(let requestPermissions, _) = coordinator.state else {
+        guard case .onboarding(let complete, _) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        
+        complete()
+        
+        guard case .postcodeRequired(let savePostcode) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        
+        try savePostcode("B44").get()
+        
+        guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        
+        requestPermissions()
+        enableExposureNotification()
+        exposureNotificationManager.activationCompletionHandler?(nil)
+        
+        try completeUserNotificationsAuthorization(authorizationStatus: .authorized)
+        
+        guard case .runningExposureNotification = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+    }
+    
+    func testDeniedUserNotificationsState() throws {
+        try completeExposureNotificationActivation(authorizationStatus: .unknown)
+        try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
+        
+        guard case .onboarding(let complete, _) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        
+        complete()
+        
+        guard case .postcodeRequired(let savePostcode) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        
+        try savePostcode("B44").get()
+        
+        guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
@@ -164,38 +225,10 @@ class ApplicationStateTests: XCTestCase {
         exposureNotificationManager.instanceAuthorizationStatus = .authorized
         enableExposureNotification()
         exposureNotificationManager.activationCompletionHandler?(nil)
-        try completeUserNotificationsAuthorization(authorizationStatus: .authorized)
         
-        guard case .postcodeOnboarding = coordinator.state else {
-            throw TestError("Unexpected state \(coordinator.state)")
-        }
-    }
-    
-    func testEnteringPostcodeOnboardingAfterSuccessfulPermissionOnboarding() throws {
-        try completeExposureNotificationActivation(authorizationStatus: .authorized, status: .active)
-        try completeUserNotificationsAuthorization(authorizationStatus: .authorized)
-        
-        guard case .postcodeOnboarding = coordinator.state else {
-            throw TestError("Unexpected state \(coordinator.state)")
-        }
-    }
-    
-    // MARK: - User Notifications Authorization Status
-    
-    func testAuthorizedUserNotificationsState() throws {
-        try completeExposureNotificationActivation(authorizationStatus: .authorized, status: .active)
-        try completeUserNotificationsAuthorization(authorizationStatus: .authorized)
-        
-        guard case .postcodeOnboarding = coordinator.state else {
-            throw TestError("Unexpected state \(coordinator.state)")
-        }
-    }
-    
-    func testDeniedUserNotificationsState() throws {
-        try completeExposureNotificationActivation(authorizationStatus: .authorized, status: .active)
         try completeUserNotificationsAuthorization(authorizationStatus: .denied)
         
-        guard case .postcodeOnboarding = coordinator.state else {
+        guard case .runningExposureNotification = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
     }
@@ -204,7 +237,19 @@ class ApplicationStateTests: XCTestCase {
         try completeExposureNotificationActivation(authorizationStatus: .unknown)
         try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
         
-        guard case .authorizationOnboarding(let requestPermissions, _) = coordinator.state else {
+        guard case .onboarding(let complete, _) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        
+        complete()
+        
+        guard case .postcodeRequired(let savePostcode) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        
+        try savePostcode("B44").get()
+        
+        guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
@@ -213,13 +258,9 @@ class ApplicationStateTests: XCTestCase {
         enableExposureNotification()
         exposureNotificationManager.activationCompletionHandler?(nil)
         
-        guard case .authorizationOnboarding = coordinator.state else {
-            throw TestError("Unexpected state \(coordinator.state)")
-        }
-        
         try completeUserNotificationsAuthorization(authorizationStatus: .authorized)
         
-        guard case .postcodeOnboarding = coordinator.state else {
+        guard case .runningExposureNotification = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
     }
@@ -243,7 +284,7 @@ class ApplicationStateTests: XCTestCase {
         let submissionToken = String.random()
         let result = TestResult.negative
         
-        let endDay = now.advanced(by: 5)
+        let endDay = now.advanced(by: -2)
         
         encryptedStore.stored["virology_testing"] = #"""
         {
@@ -270,7 +311,7 @@ class ApplicationStateTests: XCTestCase {
         
         let testResultAcknowledgementState = try testResultAcknowledgementStateResult.get()
         
-        guard case .neededForNegativeResultNoIsolation = testResultAcknowledgementState else {
+        guard case .neededForNegativeResultNotIsolating = testResultAcknowledgementState else {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
     }
@@ -354,7 +395,7 @@ class ApplicationStateTests: XCTestCase {
         
         let testResultAcknowledgementState = try testResultAcknowledgementStateResult.get()
         
-        guard case .neededForNegativeResult = testResultAcknowledgementState else {
+        guard case .neededForNegativeResultContinueToIsolate = testResultAcknowledgementState else {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
     }
@@ -363,12 +404,35 @@ class ApplicationStateTests: XCTestCase {
 private extension ApplicationStateTests {
     
     private func completeRunning() throws {
-        try completeExposureNotificationActivation(authorizationStatus: .authorized, status: .active)
-        try completeUserNotificationsAuthorization(authorizationStatus: .authorized)
-        guard case .postcodeOnboarding(let savePostcode) = coordinator.state else {
+        try completeExposureNotificationActivation(authorizationStatus: .unknown)
+        try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
+        
+        guard case .onboarding(let complete, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
-        try savePostcode("B44")
+        
+        complete()
+        
+        guard case .postcodeRequired(let savePostcode) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        
+        try savePostcode("B44").get()
+        
+        guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        
+        requestPermissions()
+        exposureNotificationManager.instanceAuthorizationStatus = .authorized
+        enableExposureNotification()
+        exposureNotificationManager.activationCompletionHandler?(nil)
+        
+        try completeUserNotificationsAuthorization(authorizationStatus: .authorized)
+        
+        guard case .runningExposureNotification = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
     }
     
     private func completeExposureNotificationActivation(

@@ -56,6 +56,7 @@ public class SymptomListViewController: UIViewController {
             DispatchQueue.main.async {
                 let yPos = self.symptomStack.frame.origin.y + self.symptomStack.arrangedSubviews[symptomIndex].frame.origin.y - .standardSpacing
                 self.scrollView.setContentOffset(CGPoint(x: 0, y: yPos), animated: true)
+                UIAccessibility.post(notification: .screenChanged, argument: self.symptomStack.arrangedSubviews[symptomIndex])
             }
         }
     }
@@ -145,9 +146,9 @@ public class SymptomListViewController: UIViewController {
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            stack.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 1),
+            scrollView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
+            stack.widthAnchor.constraint(equalTo: view.readableContentGuide.widthAnchor, multiplier: 1),
         ])
     }
     
@@ -164,6 +165,7 @@ public class SymptomListViewController: UIViewController {
         case .failure:
             errorBoxVC.view.isHidden = false
             scrollView.setContentOffset(.zero, animated: true)
+            UIAccessibility.post(notification: .layoutChanged, argument: errorBoxVC)
         }
     }
     

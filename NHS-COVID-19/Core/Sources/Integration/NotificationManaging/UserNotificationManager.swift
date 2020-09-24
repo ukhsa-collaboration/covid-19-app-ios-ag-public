@@ -62,6 +62,11 @@ class UserNotificationManager {
                 $0.title = localize(.alert_app_availability_changed_title)
                 $0.body = localize(.alert_app_availability_changed_body)
             }
+        case .exposureNotificationReminder:
+            return configuring(UNMutableNotificationContent()) {
+                $0.title = localize(.exposure_notification_reminder_title)
+                $0.categoryIdentifier = UserNotificationCategory.exposureNotification.rawValue
+            }
         }
     }
 }

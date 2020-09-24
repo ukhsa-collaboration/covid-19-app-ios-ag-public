@@ -7,10 +7,8 @@ import UIKit
 
 public class StartOnboardingViewController: OnboardingStepViewController {
     
-    public init(complete: @escaping () -> Void) {
-        super.init(step: StartOnboardingStep(
-            complete: complete
-        ))
+    public init(complete: @escaping () -> Void, reject: @escaping () -> Void) {
+        super.init(step: StartOnboardingStep(accept: complete, reject: reject))
     }
     
     override public func viewWillAppear(_ animated: Bool) {
@@ -25,8 +23,8 @@ public class StartOnboardingViewController: OnboardingStepViewController {
 }
 
 private class StartOnboardingStep: OnboardingStep {
-    
-    private let complete: () -> Void
+    private let accept: () -> Void
+    fileprivate let alert: Alert?
     
     private lazy var title: UILabel = {
         let label = UILabel()
@@ -38,8 +36,15 @@ private class StartOnboardingStep: OnboardingStep {
     let actionTitle = localize(.start_onboarding_button_title)
     let image: UIImage? = UIImage(.onboardingStart)
     
-    init(complete: @escaping () -> Void) {
-        self.complete = complete
+    init(accept: @escaping () -> Void, reject: @escaping () -> Void) {
+        self.accept = accept
+        alert = Alert(
+            title: .age_confirmation_alert_title,
+            body: .age_confirmation_alert_body,
+            accept: .age_confirmation_alert_accept,
+            reject: .age_confirmation_alert_reject,
+            rejectAction: reject
+        )
     }
     
     private lazy var stepDescription1: UIView = {
@@ -65,26 +70,10 @@ private class StartOnboardingStep: OnboardingStep {
         return label
     }()
     
-    private lazy var detail: UILabel = {
-        let label = UILabel()
-        label.text = localize(.start_onboarding_step_detail)
-        label.styleAsBody()
-        return label
-    }()
-    
-    private lazy var warning: UILabel = {
-        let label = UILabel()
-        label.text = localize(.start_onboarding_step_warning)
-        label.styleAsHeading()
-        return label
-    }()
-    
-    var footerContent: [UIView] {
-        [warning]
-    }
+    var footerContent = [UIView]()
     
     var content: [UIView] {
-        let stackView = UIStackView(arrangedSubviews: [title, subtitle, stepDescription1, stepDescription2, stepDescription3, stepDescription4, detail])
+        let stackView = UIStackView(arrangedSubviews: [title, subtitle, stepDescription1, stepDescription2, stepDescription3, stepDescription4])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -95,6 +84,6 @@ private class StartOnboardingStep: OnboardingStep {
     }
     
     func act() {
-        complete()
+        accept()
     }
 }

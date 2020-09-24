@@ -5,6 +5,7 @@
 import Domain
 import Foundation
 import Interface
+import Localization
 
 public struct BookATestInfoViewControllerInteractor: BookATestInfoViewControllerInteracting {
     

@@ -37,7 +37,7 @@ public class SymptomsReviewViewController: UIViewController {
         return divider
     }
     
-    func symptomStack(imageView: UIImageView, text: String) -> UIStackView {
+    func symptomStack(imageView: UIImageView, text: String, children: [UIView]) -> UIStackView {
         imageView.setContentHuggingPriority(.almostRequest, for: .horizontal)
         
         let label = UILabel()
@@ -51,21 +51,13 @@ public class SymptomsReviewViewController: UIViewController {
         hStack.alignment = .center
         hStack.spacing = .stripeSpacing
         
-        let stack = UIStackView(arrangedSubviews: [hStack, divider()])
+        let stack = UIStackView(arrangedSubviews: [hStack, divider()] + children)
         stack.axis = .vertical
         stack.spacing = .standardSpacing
         return stack
     }
     
-    func dynamicLabel(font: UIFont.TextStyle, color: UIColor, text: String?) -> UILabel {
-        let label = UILabel()
-        label.text = text
-        label.textColor = color
-        label.setDynamicTextStyle(font)
-        return label
-    }
-    
-    private lazy var noDateLabel = dynamicLabel(font: .body, color: UIColor(.primaryText), text: localize(.symptom_review_no_date))
+    private let noDateLabel = UILabel().styleAsBody().set(text: localize(.symptom_review_no_date))
     
     private lazy var noDateStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [noDateUnchecked, noDateChecked, noDateLabel])
@@ -122,7 +114,7 @@ public class SymptomsReviewViewController: UIViewController {
         return button
     }()
     
-    private lazy var dateLabel = dynamicLabel(font: .title3, color: UIColor(.primaryText), text: localize(.symptom_review_date_heading))
+    private let dateLabel = UILabel().styleAsTertiaryTitle().set(text: localize(.symptom_review_date_heading))
     
     private lazy var dateInfoBox = InformationBox.error(dateLabel, dateContainer, noDateContainer)
     
@@ -130,6 +122,14 @@ public class SymptomsReviewViewController: UIViewController {
         let textField = UITextField()
         textField.accessibilityElementsHidden = true
         return textField
+    }()
+    
+    private var confirmButton: UIButton = {
+        let confirmButton = UIButton()
+        confirmButton.styleAsPrimary()
+        confirmButton.setTitle(localize(.symptom_review_button_submit), for: .normal)
+        confirmButton.addTarget(self, action: #selector(confirmSymptoms), for: .touchUpInside)
+        return confirmButton
     }()
     
     var selectedDay: GregorianDay? {
@@ -155,27 +155,37 @@ public class SymptomsReviewViewController: UIViewController {
         return (rowDate, rowString)
     }
     
+    func layoutStack(children: [UIView]) -> UIStackView {
+        mutating(UIStackView(arrangedSubviews: children)) {
+            $0.axis = .vertical
+            $0.spacing = .doubleSpacing
+            $0.isLayoutMarginsRelativeArrangement = true
+            $0.layoutMargins = .standard
+        }
+    }
+    
     override public func viewDidLoad() {
         super.viewDidLoad()
         
         let view = self.view!
         view.styleAsScreenBackground(with: traitCollection)
         
-        let stepLabel = dynamicLabel(font: .caption1, color: UIColor(.secondaryText), text: localize(.step_label(index: 2, count: 2)))
+        let stepLabel = UILabel().styleAsCaption().set(text: localize(.step_label(index: 2, count: 2)))
         stepLabel.accessibilityLabel = localize(.step_accessibility_label(index: 2, count: 2))
         
-        let heading = dynamicLabel(font: .largeTitle, color: UIColor(.primaryText), text: localize(.symptom_review_heading))
+        let heading = UILabel().styleAsPageHeader().set(text: localize(.symptom_review_heading))
         
         let confirmHeaderImage = UIImageView(image: UIImage(systemName: "checkmark"))
         confirmHeaderImage.tintColor = UIColor(.nhsButtonGreen)
-        let confirmStack = symptomStack(imageView: confirmHeaderImage, text: localize(.symptom_review_confirm_heading))
         
         let denyHeaderImage = UIImageView(image: UIImage(systemName: "xmark"))
         denyHeaderImage.tintColor = UIColor(.errorRed)
-        let denyStack = symptomStack(imageView: denyHeaderImage, text: localize(.symptom_review_deny_heading))
+        
+        var confirmedSymptoms = [UIView]()
+        var deniedSymptoms = [UIView]()
         
         for (index, symptom) in symptoms.enumerated() {
-            let symptomLabel = dynamicLabel(font: .headline, color: UIColor(.primaryText), text: symptom.heading)
+            let symptomLabel = UILabel().styleAsBoldBody().set(text: symptom.heading)
             
             let symptomButton = UIButton()
             symptomButton.setTitle(localize(.symptom_review_button), for: .normal)
@@ -190,13 +200,17 @@ public class SymptomsReviewViewController: UIViewController {
             symptomRow.spacing = .standardSpacing
             
             if symptom.isConfirmed {
-                confirmStack.addArrangedSubview(symptomRow)
-                confirmStack.addArrangedSubview(divider())
+                confirmedSymptoms.append(contentsOf: [symptomRow, divider()])
             } else {
-                denyStack.addArrangedSubview(symptomRow)
-                denyStack.addArrangedSubview(divider())
+                deniedSymptoms.append(contentsOf: [symptomRow, divider()])
             }
         }
+        
+        let confirmStack = symptomStack(imageView: confirmHeaderImage, text: localize(.symptom_review_confirm_heading), children: confirmedSymptoms)
+        confirmStack.isHidden = confirmedSymptoms.isEmpty
+        
+        let denyStack = symptomStack(imageView: denyHeaderImage, text: localize(.symptom_review_deny_heading), children: deniedSymptoms)
+        denyStack.isHidden = deniedSymptoms.isEmpty
         
         datePicker.delegate = self
         
@@ -209,7 +223,7 @@ public class SymptomsReviewViewController: UIViewController {
         
         textField.inputAccessoryView = toolbar
         textField.inputView = datePicker
-        textField.font = UIFont.preferredFont(forTextStyle: .headline)
+        textField.font = UIFont.boldSystemFont(ofSize: 16)
         textField.placeholder = localize(.symptom_review_date_placeholder)
         
         let calendarImage = UIImageView(image: UIImage(.calendar))
@@ -228,28 +242,22 @@ public class SymptomsReviewViewController: UIViewController {
         noDateStack.spacing = .standardSpacing
         noDateStack.isUserInteractionEnabled = false
         
-        let confirmButton = UIButton()
-        confirmButton.styleAsPrimary()
-        confirmButton.setTitle(localize(.symptom_review_button_submit), for: .normal)
-        confirmButton.addTarget(self, action: #selector(confirmSymptoms), for: .touchUpInside)
-        
         errorBoxVC.view.backgroundColor = .clear
-        let stack = UIStackView(arrangedSubviews: [errorBoxVC.view, stepLabel, heading, confirmStack, denyStack, dateInfoBox, confirmButton])
-        stack.axis = .vertical
-        stack.spacing = .doubleSpacing
-        stack.isLayoutMarginsRelativeArrangement = true
-        stack.layoutMargins = .largeInset
         
-        scrollView.addFillingSubview(stack)
+        let symptomOptionStack = layoutStack(children: [errorBoxVC.view, stepLabel, heading, confirmStack, denyStack])
+        let buttonStack = layoutStack(children: [confirmButton])
+        let containerStack = layoutStack(children: [symptomOptionStack, dateInfoBox, buttonStack])
+        
+        scrollView.addFillingSubview(containerStack)
         
         view.addAutolayoutSubview(scrollView)
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            stack.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 1),
+            scrollView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
+            containerStack.widthAnchor.constraint(equalTo: view.readableContentGuide.widthAnchor, multiplier: 1),
         ])
     }
     
@@ -263,12 +271,18 @@ public class SymptomsReviewViewController: UIViewController {
         scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: datePicker.frame.height + toolbar.frame.height, right: 0)
         textField.becomeFirstResponder()
         
-        let row = dateSelectionWindow - 1
-        let (rowDate, rowString) = getDay(for: row)
-        selectedDay = rowDate
-        textField.text = rowString
-        dateContainer.accessibilityLabel = rowString
-        datePicker.selectRow(row, inComponent: 0, animated: false)
+        if selectedDay == nil {
+            let row = dateSelectionWindow - 1
+            let (rowDate, rowString) = getDay(for: row)
+            selectedDay = rowDate
+            textField.text = rowString
+            dateContainer.accessibilityValue = rowString
+            datePicker.selectRow(row, inComponent: 0, animated: false)
+        }
+        
+        if #available(iOS 13.7, *) {
+            UIAccessibility.post(notification: .layoutChanged, argument: datePicker)
+        }
     }
     
     @objc func pickNoDate() {
@@ -290,6 +304,8 @@ public class SymptomsReviewViewController: UIViewController {
     @objc func finishDatePicking() {
         scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         view.endEditing(true)
+        confirmButton.becomeFirstResponder()
+        UIAccessibility.post(notification: .layoutChanged, argument: confirmButton)
     }
     
     @objc func confirmSymptoms() {
@@ -300,6 +316,7 @@ public class SymptomsReviewViewController: UIViewController {
             errorBoxVC.view.isHidden = false
             scrollView.setContentOffset(.zero, animated: true)
             dateInfoBox.error()
+            UIAccessibility.post(notification: .layoutChanged, argument: errorBoxVC)
         }
     }
     
@@ -328,6 +345,7 @@ extension SymptomsReviewViewController: UIPickerViewDelegate {
         let (rowDate, rowString) = getDay(for: row)
         selectedDay = rowDate
         textField.text = rowString
+        dateContainer.accessibilityValue = rowString
     }
 }
 

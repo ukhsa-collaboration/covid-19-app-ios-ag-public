@@ -38,9 +38,9 @@ public class NoSymptomsIsolatingViewController: UIViewController {
         let spacer = UIView()
         spacer.heightAnchor.constraint(equalToConstant: .bigSpacing).isActive = true
         
-        let padlock = UIImageView(.padlock)
-        padlock.adjustsImageSizeForAccessibilityContentSizeCategory = true
-        padlock.styleAsDecoration()
+        let image = UIImageView(.isolationStartContact)
+        image.adjustsImageSizeForAccessibilityContentSizeCategory = true
+        image.styleAsDecoration()
         
         let titleLabel = UILabel()
         titleLabel.text = localize(.no_symptoms_isolating_info_isolate_for)
@@ -72,14 +72,11 @@ public class NoSymptomsIsolatingViewController: UIViewController {
         furtherAdviceLabel.text = localize(.no_symptoms_isolating_advice)
         furtherAdviceLabel.styleAsSecondaryBody()
         
-        let onlineServicesLink = LinkButton(
-            title: localize(.no_symptoms_isolating_services_link),
-            textAlignment: .left
-        )
+        let onlineServicesLink = LinkButton(title: localize(.no_symptoms_isolating_services_link))
         
         onlineServicesLink.addTarget(self, action: #selector(didTapOnlineServicesLink), for: .touchUpInside)
         
-        let stack = UIStackView(arrangedSubviews: [spacer, padlock, pleaseIsolateStack, infobox, explanationLabel, furtherAdviceLabel, onlineServicesLink])
+        let stack = UIStackView(arrangedSubviews: [spacer, image, pleaseIsolateStack, infobox, explanationLabel, furtherAdviceLabel, onlineServicesLink])
         stack.axis = .vertical
         stack.spacing = .standardSpacing
         stack.isLayoutMarginsRelativeArrangement = true
@@ -106,12 +103,12 @@ public class NoSymptomsIsolatingViewController: UIViewController {
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: bottomButtonStack.topAnchor, constant: -.standardSpacing),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            bottomButtonStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            bottomButtonStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
+            bottomButtonStack.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            bottomButtonStack.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
             bottomButtonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            stack.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
+            stack.widthAnchor.constraint(equalTo: view.readableContentGuide.widthAnchor),
         ])
     }
     

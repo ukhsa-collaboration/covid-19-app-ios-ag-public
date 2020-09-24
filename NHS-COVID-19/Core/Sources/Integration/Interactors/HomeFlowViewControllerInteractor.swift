@@ -7,27 +7,17 @@ import Common
 import Domain
 import Foundation
 import Interface
+import Localization
 import UIKit
 
 struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
+    func save(postcode: String) -> Result<Void, DisplayableError> {
+        context.savePostcode?(postcode).mapError(DisplayableError.init) ?? .success(())
+    }
     
     var context: RunningAppContext
     var pasteboardCopier: PasteboardCopying
-    
-    var riskLevelInfoViewModel: RiskLevelInfoViewModel? {
-        if let riskLevel = context.postcodeStore?.riskLevel, let postcode = context.postcodeStore?.load() {
-            let riskLevelInfo: RiskLevelInfoViewModel.RiskLevel
-            
-            switch riskLevel {
-            case .low: riskLevelInfo = .low
-            case .medium: riskLevelInfo = .medium
-            case .high: riskLevelInfo = .high
-            }
-            
-            return RiskLevelInfoViewModel(postcode: postcode, riskLevel: riskLevelInfo)
-        }
-        return nil
-    }
+    var currentDateProvider: () -> Date
     
     func makeDiagnosisViewController() -> UIViewController? {
         WrappingViewController {
@@ -45,21 +35,18 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     
     func makeCheckInViewController() -> UIViewController? {
         guard let checkInContext = context.checkInContext else { return nil }
+        
         let interactor = CheckInInteractor(
             _openSettings: context.openSettings,
-            _requestCameraAccess: {
-                checkInContext.cameraStateController.requestAccess()
-            },
-            _createCaptureSession: { resultHandler in
-                self.context.qrCodeScanner.createCaptureSession(resultHandler: resultHandler)
-            },
             _process: {
-                let (venueName, removeCurrentCheckIn) = try checkInContext.checkInsStore.checkIn(with: $0)
+                let (venueName, removeCurrentCheckIn) = try checkInContext.checkInsStore.checkIn(with: $0, currentDate: self.context.currentDateProvider())
                 return CheckInDetail(venueName: venueName, removeCurrentCheckIn: removeCurrentCheckIn)
             }
         )
         
-        let cameraPermissionStatePublisher = checkInContext.cameraStateController.$authorizationState.map { state -> CameraPermissionState in
+        let qrCodeScanner = checkInContext.qrCodeScanner
+        
+        let cameraPermissionStatePublisher = qrCodeScanner.cameraStateController.$authorizationState.map { state -> CameraPermissionState in
             switch state {
             case .notDetermined:
                 return .notDetermined
@@ -70,9 +57,37 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             }
         }.eraseToAnyPublisher()
         
+        qrCodeScanner.reset()
+        let scanner = QRScanner(
+            state: qrCodeScanner.getState().map { state in
+                switch state {
+                case .starting:
+                    return .starting
+                case .failed:
+                    return .failed
+                case .requestingPermission:
+                    return .requestingPermission
+                case .running:
+                    return .running
+                case .scanning:
+                    return .scanning
+                case .processing:
+                    return .processing
+                case .stopped:
+                    return .stopped
+                }
+            }.eraseToAnyPublisher(),
+            startScanning: qrCodeScanner.startScanner,
+            stopScanning: qrCodeScanner.stopScanner,
+            layoutFinished: qrCodeScanner.changeOrientation
+        )
+        
         return CheckInFlowViewController(
             cameraPermissionState: cameraPermissionStatePublisher,
-            interactor: interactor
+            scanner: scanner,
+            interactor: interactor,
+            currentDateProvider: currentDateProvider,
+            goHomeCompletion: context.appReviewPresenter.presentReview
         )
     }
     
@@ -90,21 +105,39 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         }
     }
     
+    func makeLinkTestResultViewController() -> UIViewController? {
+        let interactor = LinkTestResultInteractor(
+            _submit: { testCode in
+                self.context.virologyTestingManager.linkExternalTestResult(with: testCode)
+                    .mapError(DisplayableError.init)
+                    .eraseToAnyPublisher()
+            }
+        )
+        return UINavigationController(rootViewController: LinkTestResultViewController(interactor: interactor))
+    }
+    
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never> {
         context.exposureNotificationStateController.setEnabled(enabled)
+    }
+    
+    public func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn) {
+        context.exposureNotificationReminder.scheduleUserNotification(in: reminderIn.rawValue)
     }
     
     var shouldShowCheckIn: Bool {
         context.checkInContext != nil
     }
     
-    func getAppData() -> AppData {
+    func getMyDataViewModel() -> MyDataViewController.ViewModel {
         let venueHistories = context.checkInContext?.checkInsStore.load()?.map { checkIn -> VenueHistory in
             VenueHistory(
                 id: checkIn.venueId,
                 organisation: checkIn.venueName,
                 checkedIn: checkIn.checkedIn.date,
-                checkedOut: checkIn.checkedOut.date
+                checkedOut: checkIn.checkedOut.date,
+                delete: {
+                    self.context.deleteCheckIn(checkIn.id)
+                }
             )
         } ?? []
         
@@ -115,10 +148,10 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         let symptomsOnsetDate = context.symptomsDateAndEncounterDateProvider.provideSymptomsOnsetDate()
         let encounterDate = context.symptomsDateAndEncounterDateProvider.provideEncounterDate()
         
-        return AppData(
-            postcode: context.postcodeStore?.load(),
-            testResult: testResult,
-            venueHistory: venueHistories,
+        return .init(
+            postcode: context.postcodeInfo.map { $0?.postcode.value }.interfaceProperty,
+            testData: testResult,
+            venueHistories: venueHistories,
             symptomsOnsetDate: symptomsOnsetDate,
             encounterDate: encounterDate
         )
@@ -134,6 +167,22 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     
     func deleteAppData() {
         context.deleteAllData()
+    }
+    
+    func updateVenueHistories(deleting venueHistory: VenueHistory) -> [VenueHistory] {
+        venueHistory.delete()
+        
+        return context.checkInContext?.checkInsStore.load()?.map { checkIn -> VenueHistory in
+            VenueHistory(
+                id: checkIn.venueId,
+                organisation: checkIn.venueName,
+                checkedIn: checkIn.checkedIn.date,
+                checkedOut: checkIn.checkedOut.date,
+                delete: {
+                    self.context.deleteCheckIn(checkIn.id)
+                }
+            )
+        } ?? []
     }
     
     func openTearmsOfUseLink() {
@@ -158,6 +207,10 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     
     func openWebsiteLinkfromRisklevelInfoScreen() {
         context.openURL(ExternalLink.moreInfoOnPostcodeRisk.url)
+    }
+    
+    func openProvideFeedbackLink() {
+        context.openURL(ExternalLink.provideFeedback.url)
     }
     
 }

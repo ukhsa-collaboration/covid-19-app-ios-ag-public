@@ -283,9 +283,7 @@ private extension ENExposureConfiguration {
     
     convenience init(from configuration: Experiment.RequestedConfiguration) {
         self.init()
-        metadata = [
-            AnyHashable("attenuationDurationThresholds"): configuration.attenuationDurationThresholds.map { NSNumber(value: $0) },
-        ]
+        attenuationDurationThresholds = configuration.attenuationDurationThresholds.map { NSNumber(value: $0) }
     }
     
 }

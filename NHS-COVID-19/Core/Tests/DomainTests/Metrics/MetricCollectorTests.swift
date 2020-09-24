@@ -83,7 +83,7 @@ class MetricCollectorTests: XCTestCase {
         """.narmalizedJSON()
         
         date = Date(timeIntervalSinceReferenceDate: 2000)
-        collector.deleteMetrics(notAfter: date)
+        collector.consumeMetrics(notAfter: date)
         
         let actual = store.stored["metrics"]?.normalizingJSON()
         
@@ -92,7 +92,8 @@ class MetricCollectorTests: XCTestCase {
             "entries": [
             { "name": "deletedLastCheckIn", "date": 2001 },
             { "name": "deletedLastCheckIn", "date": 3000 },
-            ]
+            ],
+            "latestWindowEnd": 2000
         }
         """.narmalizedJSON()
         

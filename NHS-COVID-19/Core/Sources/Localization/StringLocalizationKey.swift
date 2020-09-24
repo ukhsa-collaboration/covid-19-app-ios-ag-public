@@ -10,26 +10,17 @@ public enum StringLocalizationKey: String, CaseIterable {
     
     case home_strapline_title
     case home_strapline_accessiblity_label
+    case home_strapline_accessiblity_label_wls
     
     case unrecoverable_error_page_title
     case unrecoverable_error_title
     case unrecoverable_error_description
     
     case bluetooth_disabled_title
-    case bluetooth_disabled_description_1
-    case bluetooth_disabled_description_2
-    case bluetooth_disabled_description_3
-    case bluetooth_disabled_description_4
-    
-    case exposure_notification_disabled_title
-    case exposure_notification_disabled_description_1
-    case exposure_notification_disabled_description_2
-    case exposure_notification_disabled_action
+    case bluetooth_disabled_description
     
     case authorization_denied_title
-    case authorization_denied_description_1
-    case authorization_denied_description_2
-    case authorization_denied_description_3
+    case authorization_denied_description
     case authorization_denied_action
     
     case authentication_code_title
@@ -55,8 +46,6 @@ public enum StringLocalizationKey: String, CaseIterable {
     case start_onboarding_step_3_description
     case start_onboarding_step_4_description
     case start_onboarding_button_title
-    case start_onboarding_step_detail
-    case start_onboarding_step_warning
     
     case postcode_entry_textfield_label
     case postcode_entry_example_label
@@ -67,12 +56,11 @@ public enum StringLocalizationKey: String, CaseIterable {
     case postcode_entry_step_title
     case postcode_entry_error_title
     case postcode_entry_error_description
+    case postcode_entry_error_description_unsupported_country
     
     case permissions_onboarding_step_title
     case exposure_notification_permissions_onboarding_step_heading
-    case notification_permissions_onboarding_step_heading
     case exposure_notification_permissions_onboarding_step_body
-    case notification_permissions_onboarding_step_body
     case permissions_onboarding_step_detail
     case permissions_continue_button_title
     
@@ -101,7 +89,6 @@ public enum StringLocalizationKey: String, CaseIterable {
     case home_toggle_exposure_notification_off
     case home_default_advice_button_title
     case home_isolation_advice_button_title
-    case home_early_access_label
     
     case risk_level_indicator_contact_tracing_active
     case risk_level_indicator_contact_tracing_not_active
@@ -132,6 +119,8 @@ public enum StringLocalizationKey: String, CaseIterable {
     case checkin_camera_qrcode_scanner_help_button_accessibility_label
     case checkin_scanning_failure_title
     case checkin_scanning_failure_description
+    case checkin_scanning_failure_help_link_text
+    case checkin_scanning_failure_more_description
     case checkin_scanning_failure_button_title
     case checkin_camera_qrcode_scanner_title
     case checkin_camera_qrcode_scanner_status_label
@@ -140,12 +129,15 @@ public enum StringLocalizationKey: String, CaseIterable {
     case checkin_confirmation_button_title
     case checkin_wrong_button_title
     case checkin_qrcode_scanner_close_button_title
-    case checkin_information_title
+    case checkin_information_title_new
+    case checkin_information_help_scanning_section_title
+    case checkin_information_help_scanning_section_description
+    case checkin_information_whats_a_qr_code_section_title
+    case checkin_information_whats_a_qr_code_section_description_new
     case checkin_information_how_it_works_section_title
     case checkin_information_how_it_works_section_description
     case checkin_information_how_it_helps_section_title
     case checkin_information_how_it_helps_section_description
-    case checkin_information_button_title
     case checkin_risky_venue_information_description
     case checkin_risky_venue_information_button_title
     
@@ -207,6 +199,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case end_of_isolation_isolate_title
     case end_of_isolation_finished_description
     case end_of_isolation_positive_text_no_isolation_title
+    case end_of_isolation_positive_text_no_isolation_header
     case end_of_isolation_isolate_if_have_symptom_warning
     case end_of_isolation_negative_test_result
     case end_of_isolation_explanation_1
@@ -220,6 +213,11 @@ public enum StringLocalizationKey: String, CaseIterable {
     case positive_test_result_info
     case positive_test_result_explanation
     case positive_test_results_continue
+    case void_test_result_no_isolation_title
+    case void_test_result_no_isolation_header
+    case void_test_result_info
+    case void_test_result_explanation
+    case void_test_results_continue
     
     case negative_test_result_with_isolation_title
     case negative_test_result_with_isolation_info
@@ -227,6 +225,15 @@ public enum StringLocalizationKey: String, CaseIterable {
     case negative_test_result_with_isolation_advice
     case negative_test_result_with_isolation_service_link
     case negative_test_result_with_isolation_back_to_home
+    case negative_test_result_after_positive_info
+    case negative_test_result_after_positive_explanation
+    case negative_test_result_after_positive_button_label
+    case negative_test_result_no_isolation_title
+    case negative_test_result_no_isolation_description
+    case negative_test_result_no_isolation_warning
+    case negative_test_result_no_isolation_link_hint
+    case negative_test_result_no_isolation_link_label
+    case negative_test_result_no_isolation_button_label
     
     case no_symptoms_heading
     case no_symptoms_body_1
@@ -277,6 +284,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case about_this_app_how_this_app_works_paragraph1
     case about_this_app_how_this_app_works_paragraph2
     case about_this_app_how_this_app_works_paragraph3
+    case about_this_app_how_this_app_works_instruction_for_use
     case about_this_app_how_this_app_works_button
     case about_this_app_common_questions_heading
     case about_this_app_common_questions_description
@@ -290,8 +298,15 @@ public enum StringLocalizationKey: String, CaseIterable {
     case about_this_app_my_data_description
     case about_this_app_my_data_button
     case about_this_app_software_information_heading
-    case about_this_app_software_information_entity_name_and_address
-    case about_this_app_software_information_date_of_release
+    case about_this_app_software_information_app_name
+    case about_this_app_software_information_version
+    case about_this_app_software_information_date_of_release_title
+    case about_this_app_software_information_date_of_release_description
+    case about_this_app_software_information_manufacturer_title
+    case about_this_app_software_information_manufacturer_description
+    case about_this_app_feedback_information_title
+    case about_this_app_feedback_information_description
+    case about_this_app_feedback_information_link_title
     case about_this_app_footer_text
     
     case mydata_title
@@ -303,10 +318,13 @@ public enum StringLocalizationKey: String, CaseIterable {
     case mydata_section_date_description
     case mydata_test_result_positive
     case mydata_test_result_negative
+    case mydata_test_result_void
     case mydata_data_deletion_button_title
     case mydata_delete_data_alert_title
     case mydata_delete_data_alert_description
     case mydata_delete_data_alert_button_title
+    case mydata_venue_history_edit_button_title
+    case mydata_venue_history_done_button_title
     
     case accessability_error_os_out_of_date
     case accessability_error_update_the_app
@@ -324,23 +342,76 @@ public enum StringLocalizationKey: String, CaseIterable {
     case link_testing_privacy_notice
     case link_nhs111_online
     case link_how_this_app_works
+    case link_provide_feedback
     
     case cancel
     case back
     
+    case exposure_notification_reminder_button
+    case exposure_notification_reminder_title
+    case exposure_notification_reminder_sheet_title
+    case exposure_notification_reminder_sheet_description
+    case exposure_notification_reminder_sheet_cancel
+    case exposure_notification_reminder_alert_description
+    case exposure_notification_reminder_alert_button
+    
+    case edit_postcode_title
+    
+    case age_confirmation_alert_title
+    case age_confirmation_alert_body
+    case age_confirmation_alert_accept
+    case age_confirmation_alert_reject
+    
+    case below_required_age_title
+    case below_required_age_description
+    
+    case edit_postcode_save_button
+    
+    case link_test_result_title
+    case link_test_result_header
+    case link_test_result_description
+    case link_test_result_enter_code_heading
+    case link_test_result_enter_code_example
+    case link_test_result_enter_code_textfield_label
+    case link_test_result_enter_code_invalid_error
+    case link_test_result_button_title
+    
+    case checkin_confirmation_title
+    
+    case share_keys_confirmation_title
+    case share_keys_confirmation_heading
+    case share_keys_confirmation_info_title
+    case share_keys_confirmation_info_body
+    case share_keys_confirmation_i_understand
+    case home_link_test_result_button_title
+    
+    case network_error_no_internet_connection
+    case network_error_general
+    
+    case delete
+    
+    case qr_code_poster_description
+    case qr_code_poster_description_wls
+    case qr_code_poster_accessibility_label
+    case qr_code_poster_accessibility_label_wls
+    
+    case positive_test_result_start_to_isolate_title
+    case positive_test_result_start_to_isolate_info
+    case positive_test_result_start_to_isolate_explaination
 }
 
-public enum ParameterisedStringLocalizable {
+public enum ParameterisedStringLocalizable: Equatable {
     
     enum Key: String, CaseIterable {
         case numbered_list_item = "numbered_list_item %ld %@"
         case risk_level_banner_text = "risk_level_banner_text %@ %@"
         
-        case checkin_confirmation_title = "checkin_confirmation_title %@ %@"
+        case checkin_confirmation_date = "checkin_confirmation_date %@"
         case checkin_camera_qrcode_scanner_help_button_title = "checkin_camera_qrcode_scanner_help_button_title %@"
         case checkin_risky_venue_information_title = "checkin_risky_venue_information_title %@ %@"
         
         case symptom_card_accessibility_label = "symptom_card_accessibility_label %@ %@"
+        case symptom_card_checkbox_accessibility_label = "symptom_card_checkbox_accessibility_label %@ %@ %@"
         case symptom_onset_select_day = "symptom_onset_select_day %@"
         case step_accessibility_label = "step_accessibility_label %ld %ld"
         case step_label = "step_label %ld %ld"
@@ -353,9 +424,6 @@ public enum ParameterisedStringLocalizable {
         case end_of_isolation_has_passed_description = "end_of_isolation_has_passed_description date: %@ time: %@"
         case end_of_isolation_is_near_description = "end_of_isolation_is_near_description date: %@ time: %@"
         
-        case about_this_app_software_information_app_name = "about_this_app_software_information_app_name %@"
-        case about_this_app_software_information_version = "about_this_app_software_information_version %@"
-        
         case exposure_acknowledgement_days = "exposure_acknowledgement_days %ld"
         case exposure_acknowledgement_please_isolate_accessibility_label = "exposure_acknowledgement_please_isolate_accessibility_label %ld"
         
@@ -365,11 +433,16 @@ public enum ParameterisedStringLocalizable {
         case symptom_review_button_accessibility_label = "symptom_review_button_accessibility_label %@"
         
         case isolation_indicator_accessiblity_label = "isolation_indicator_accessiblity_label days: %ld date: %@ time: %@"
+        
+        case exposure_notification_reminder_sheet_hours = "%ld exposure_notification_reminder_sheet_hours"
+        case exposure_notification_reminder_alert_title = "exposure_notification_reminder_alert_title %ld hours"
+        
+        case positive_test_start_to_isolate_accessibility_label = "positive_test_start_to_isolate_accessibility_label %ld"
     }
     
     case numbered_list_item(index: Int, text: String)
     
-    case checkin_confirmation_title(venue: String, date: Date)
+    case checkin_confirmation_date(date: Date)
     case checkin_camera_qrcode_scanner_help_button_title
     case checkin_risky_venue_information_title(venue: String, date: Date)
     
@@ -382,6 +455,7 @@ public enum ParameterisedStringLocalizable {
     
     case isolation_indicator_accessiblity_label(date: Date, days: Int)
     
+    case symptom_card_checkbox_accessibility_label(value: String, heading: String, content: String)
     case symptom_card_accessibility_label(heading: String, content: String)
     case symptom_onset_select_day(Date)
     
@@ -395,9 +469,6 @@ public enum ParameterisedStringLocalizable {
     case end_of_isolation_has_passed_description(at: Date)
     case end_of_isolation_is_near_description(at: Date)
     
-    case about_this_app_software_information_app_name(name: String)
-    case about_this_app_software_information_version(version: String)
-    
     case exposure_acknowledgement_days(days: Int)
     case exposure_acknowledgement_please_isolate_accessibility_label(days: Int)
     
@@ -406,14 +477,20 @@ public enum ParameterisedStringLocalizable {
     
     case symptom_review_button_accessibility_label(symptom: String)
     
+    case exposure_notification_reminder_sheet_hours(hours: Int)
+    case exposure_notification_reminder_alert_title(hours: Int)
+    
+    case positive_test_start_to_isolate_accessibility_label(days: Int)
+    
     var key: Key {
         switch self {
         case .numbered_list_item: return .numbered_list_item
         case .risk_level_banner_text: return .risk_level_banner_text
-        case .checkin_confirmation_title: return .checkin_confirmation_title
+        case .checkin_confirmation_date: return .checkin_confirmation_date
         case .checkin_risky_venue_information_title: return .checkin_risky_venue_information_title
         case .checkin_camera_qrcode_scanner_help_button_title: return .checkin_camera_qrcode_scanner_help_button_title
         case .symptom_card_accessibility_label: return .symptom_card_accessibility_label
+        case .symptom_card_checkbox_accessibility_label: return .symptom_card_checkbox_accessibility_label
         case .symptom_onset_select_day: return .symptom_onset_select_day
         case .step_accessibility_label: return .step_accessibility_label
         case .step_label: return .step_label
@@ -426,9 +503,6 @@ public enum ParameterisedStringLocalizable {
         case .end_of_isolation_has_passed_description: return .end_of_isolation_has_passed_description
         case .end_of_isolation_is_near_description: return .end_of_isolation_is_near_description
             
-        case .about_this_app_software_information_app_name: return .about_this_app_software_information_app_name
-        case .about_this_app_software_information_version: return .about_this_app_software_information_version
-            
         case .exposure_acknowledgement_days: return .exposure_acknowledgement_days
         case .exposure_acknowledgement_please_isolate_accessibility_label: return .exposure_acknowledgement_please_isolate_accessibility_label
             
@@ -438,6 +512,9 @@ public enum ParameterisedStringLocalizable {
         case .symptom_review_button_accessibility_label: return .symptom_review_button_accessibility_label
             
         case .isolation_indicator_accessiblity_label: return .isolation_indicator_accessiblity_label
+        case .exposure_notification_reminder_sheet_hours: return .exposure_notification_reminder_sheet_hours
+        case .exposure_notification_reminder_alert_title: return .exposure_notification_reminder_alert_title
+        case .positive_test_start_to_isolate_accessibility_label: return .positive_test_start_to_isolate_accessibility_label
         }
     }
     
@@ -447,10 +524,9 @@ public enum ParameterisedStringLocalizable {
             return [index, text]
         case .risk_level_banner_text(let postcode, let risk):
             return [postcode, risk]
-        case .checkin_confirmation_title(let venue, let date):
+        case .checkin_confirmation_date(let date):
             return [
-                venue,
-                DateFormatter.time.string(from: date),
+                DateFormatter.mediumDateShortTime.string(from: date),
             ]
         case .checkin_camera_qrcode_scanner_help_button_title:
             return ["\u{24D8}"]
@@ -461,6 +537,8 @@ public enum ParameterisedStringLocalizable {
             ]
         case .symptom_card_accessibility_label(let heading, let content):
             return [heading, content]
+        case .symptom_card_checkbox_accessibility_label(let value, let heading, let content):
+            return [value, heading, content]
         case .symptom_onset_select_day(let date):
             return [
                 DateFormatter.dayOfYearAllowRelative.string(from: date),
@@ -497,11 +575,6 @@ public enum ParameterisedStringLocalizable {
         case .positive_test_please_isolate_accessibility_label(let days):
             return [days]
             
-        case .about_this_app_software_information_app_name(let name):
-            return [name]
-        case .about_this_app_software_information_version(let version):
-            return [version]
-            
         case .exposure_acknowledgement_days(let days):
             return [days]
         case .exposure_acknowledgement_please_isolate_accessibility_label(let days):
@@ -514,41 +587,57 @@ public enum ParameterisedStringLocalizable {
             
         case .symptom_review_button_accessibility_label(let symptom):
             return [symptom]
+            
+        case .exposure_notification_reminder_sheet_hours(let hours):
+            return [hours]
+        case .exposure_notification_reminder_alert_title(let hours):
+            return [hours]
+        case .positive_test_start_to_isolate_accessibility_label(days: let days):
+            return [days]
         }
     }
     
 }
 
+#warning("Improve handling of language changes in formatters")
+// When this module is used as part of a test (like UI tests) `Localization.bundle` may change at run time.
+// When that happens, we should update the locale as well. `Localization.make` partly handles it, but we also need to
+// regenerate the format by calling `setLocalizedDateFormatFromTemplate` again.
+//
+// For now, this is done by making the formatters that use it generate a new instance each time. This is functionally
+// correct but inefficient.
+
 private extension DateFormatter {
+    
     // For formats, see: https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
-    static let dayOfYear: DateFormatter = {
-        let dateFormatter = DateFormatter()
+    static var dayOfYear: DateFormatter {
+        let dateFormatter = Localization.make(DateFormatter.self)
         dateFormatter.setLocalizedDateFormatFromTemplate("yyyyMMMd")
         return dateFormatter
-    }()
+    }
     
     static let dayOfYearAllowRelative: DateFormatter = {
-        let dateFormatter = DateFormatter()
+        let dateFormatter = Localization.make(DateFormatter.self)
         dateFormatter.timeStyle = .none
         dateFormatter.dateStyle = .medium
         dateFormatter.doesRelativeDateFormatting = true
         return dateFormatter
     }()
     
-    static let monthOfYear: DateFormatter = {
-        let dateFormatter = DateFormatter()
+    static var monthOfYear: DateFormatter {
+        let dateFormatter = Localization.make(DateFormatter.self)
         dateFormatter.setLocalizedDateFormatFromTemplate("yyyyLLL")
         return dateFormatter
-    }()
+    }
     
-    static let time: DateFormatter = {
-        let dateFormatter = DateFormatter()
+    static var time: DateFormatter {
+        let dateFormatter = Localization.make(DateFormatter.self)
         dateFormatter.setLocalizedDateFormatFromTemplate("jjmm")
         return dateFormatter
-    }()
+    }
     
     static let mediumDateShortTime: DateFormatter = {
-        let formatter = DateFormatter()
+        let formatter = Localization.make(DateFormatter.self)
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
         return formatter
@@ -557,7 +646,7 @@ private extension DateFormatter {
 
 private extension DateIntervalFormatter {
     static let dayOfYearInterval: DateIntervalFormatter = {
-        let formatter = DateIntervalFormatter()
+        let formatter = Localization.make(DateIntervalFormatter.self)
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
         return formatter

@@ -88,7 +88,7 @@ class RiskyVenuesEndpointTests: XCTestCase {
         """#))
         
         let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = .withFractionalSeconds
+        formatter.formatOptions.insert(.withFractionalSeconds)
         
         let date = { (string: String) throws -> Date in
             try XCTUnwrap(formatter.date(from: string))

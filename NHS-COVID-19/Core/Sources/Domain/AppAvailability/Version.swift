@@ -51,4 +51,12 @@ struct Version: Comparable {
     private var canonicalRepresentation: String {
         [major, minor, patch].map(String.init).joined()
     }
+    
+    public var readableRepresentation: String {
+        if patch > 0 {
+            return [major, minor, patch].map(String.init).joined(separator: ".")
+        } else {
+            return [major, minor].map(String.init).joined(separator: ".")
+        }
+    }
 }

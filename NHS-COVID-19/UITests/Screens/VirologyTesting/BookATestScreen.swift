@@ -54,6 +54,6 @@ struct BookATestScreen {
     }
     
     var button: XCUIElement {
-        app.buttons[localized: .virology_book_a_test_button]
+        app.links[localized: .virology_book_a_test_button]
     }
 }

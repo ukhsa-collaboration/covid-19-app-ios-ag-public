@@ -125,11 +125,6 @@ private struct JWT {
         payload = raw.payload
         signature = raw.signature
         
-        print(string.split(separator: ".")
-            .map { String($0) }
-            .dropLast()
-            .joined(separator: "."))
-        
         signed = string.split(separator: ".")
             .map { String($0) }
             .dropLast()

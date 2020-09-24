@@ -6,124 +6,60 @@ import Combine
 import Common
 import Foundation
 
-public protocol VirologyTestingTestOrderInfoProviding {
+public protocol VirologyTestingManaging {
     func provideTestOrderInfo() -> AnyPublisher<TestOrderInfo, NetworkRequestError>
-    func provideTestResult() -> (TestResult, Date)?
+    func linkExternalTestResult(with token: String) -> AnyPublisher<Void, LinkTestResultError>
 }
 
-class VirologyTestingManager: VirologyTestingTestOrderInfoProviding {
-    
+class VirologyTestingManager: VirologyTestingManaging {
     private let httpClient: HTTPClient
-    private let virologyTestingStateStore: VirologyTestingStateStore
-    private let userNotificationsManager: UserNotificationManaging
-    private let updateIsolationState: (TestResult, GregorianDay) -> Void
+    private let virologyTestingStateCoordinator: VirologyTestingStateCoordinating
     
     init(
         httpClient: HTTPClient,
-        virologyTestingStateStore: VirologyTestingStateStore,
-        userNotificationsManager: UserNotificationManaging,
-        updateIsolationState: @escaping (TestResult, GregorianDay) -> Void
+        virologyTestingStateCoordinator: VirologyTestingStateCoordinator
     ) {
         self.httpClient = httpClient
-        self.virologyTestingStateStore = virologyTestingStateStore
-        self.userNotificationsManager = userNotificationsManager
-        self.updateIsolationState = updateIsolationState
-    }
-    
-    var virologyTestTokens: [VirologyTestTokens]? {
-        virologyTestingStateStore.virologyTestTokens
+        self.virologyTestingStateCoordinator = virologyTestingStateCoordinator
     }
     
     func provideTestOrderInfo() -> AnyPublisher<TestOrderInfo, NetworkRequestError> {
-        orderTestkit()
+        httpClient.fetch(OrderTestkitEndpoint())
+            .handleEvents(receiveOutput: virologyTestingStateCoordinator.saveOrderTestKitResponse)
             .map { response in
                 TestOrderInfo(testOrderWebsiteURL: response.testOrderWebsite, referenceCode: response.referenceCode)
             }.eraseToAnyPublisher()
     }
     
-    func provideTestResult() -> (TestResult, Date)? {
-        virologyTestingStateStore.latestUnacknowledgedTestResult.map { ($0.testResult, $0.endDate) }
-    }
-    
-    func orderTestkit() -> AnyPublisher<OrderTestkitResponse, NetworkRequestError> {
-        httpClient.fetch(OrderTestkitEndpoint())
-            .handleEvents(receiveOutput: saveOrderTestKitResponse)
+    func evaulateTestResults() -> AnyPublisher<Void, Never> {
+        return Publishers.Sequence<[AnyPublisher<VirologyTestResponse, NetworkRequestError>], NetworkRequestError>(
+            sequence: virologyTestingStateCoordinator.virologyTestTokens.map { tokens in
+                httpClient.fetch(VirologyTestResultEndpoint(), with: tokens.pollingToken)
+                    .handleEvents(receiveOutput: { response in
+                        self.virologyTestingStateCoordinator.handleTestResult(
+                            response,
+                            virologyTestTokens: tokens
+                        )
+                    })
+                    .eraseToAnyPublisher()
+            })
+            .flatMap { $0 }
+            .map { _ in
+                ()
+            }
+            .ensureFinishes(placeholder: ())
             .eraseToAnyPublisher()
     }
     
-    func saveOrderTestKitResponse(_ orderTestKitResponse: OrderTestkitResponse) {
-        virologyTestingStateStore.saveTest(
-            pollingToken: orderTestKitResponse.testResultPollingToken,
-            diagnosisKeySubmissionToken: orderTestKitResponse.diagnosisKeySubmissionToken
-        )
-    }
-    
-    func evaulateTestResults() -> AnyPublisher<Void, Never> {
-        if let virologyTestTokens = virologyTestingStateStore.virologyTestTokens {
-            return Publishers.Sequence<[AnyPublisher<VirologyTestResponse, NetworkRequestError>], NetworkRequestError>(
-                sequence: virologyTestTokens.map { tokens in
-                    httpClient.fetch(VirologyTestResultEndpoint(), with: tokens.pollingToken)
-                        .handleEvents(receiveOutput: { response in
-                            self.handleTestResult(
-                                response,
-                                virologyTestTokens: tokens
-                            )
-                        })
-                        .eraseToAnyPublisher()
-                })
-                .flatMap { $0 }
-                .map { _ in
-                    ()
-                }
-                .replaceError(with: ())
-                .eraseToAnyPublisher()
-            
-        }
-        return Empty().eraseToAnyPublisher()
-    }
-    
-    private func handleTestResult(
-        _ testResult: VirologyTestResponse,
-        virologyTestTokens: VirologyTestTokens
-    ) {
-        switch testResult {
-        case .receivedResult(let result):
-            virologyTestingStateStore.removeTestTokens(virologyTestTokens)
-            switch result.testResult {
-            case .positive:
-                Metrics.signpost(.receivedPositiveTestResult)
-                handlePositiveCase(result: result, diagnosisKeySubmissionToken: virologyTestTokens.diagnosisKeySubmissionToken)
-            case .negative:
-                Metrics.signpost(.receivedNegativeTestResult)
-                handleNegativeCase(result: result)
-            case .void:
-                Metrics.signpost(.receivedVoidTestResult)
-                return
+    func linkExternalTestResult(with token: String) -> AnyPublisher<Void, LinkTestResultError> {
+        httpClient.fetch(LinkVirologyTestResultEndpoint(), with: CTAToken(value: token))
+            .handleEvents(receiveOutput: virologyTestingStateCoordinator.handleLinkTestResult)
+            .mapError(LinkTestResultError.init)
+            .map { _ in
+                ()
             }
-        case .noResultYet:
-            return
-        }
+            .eraseToAnyPublisher()
     }
-    
-    private func handlePositiveCase(result: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken) {
-        sendNotification()
-        virologyTestingStateStore.saveResult(
-            virologyTestResult: result,
-            diagnosisKeySubmissionToken: diagnosisKeySubmissionToken
-        )
-        updateIsolationState(.positive, .today)
-    }
-    
-    private func handleNegativeCase(result: VirologyTestResult) {
-        sendNotification()
-        virologyTestingStateStore.saveResult(virologyTestResult: result, diagnosisKeySubmissionToken: nil)
-        updateIsolationState(.negative, .today)
-    }
-    
-    private func sendNotification() {
-        userNotificationsManager.add(type: .testResultReceived, at: nil, withCompletionHandler: nil)
-    }
-    
 }
 
 public struct TestOrderInfo {

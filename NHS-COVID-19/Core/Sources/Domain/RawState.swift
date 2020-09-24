@@ -7,11 +7,23 @@ import Foundation
 struct RawState: Equatable {
     var isAppActivated: Bool
     var appAvailability: AppAvailabilityLogicalState
+    var completedOnboardingForCurrentSession: Bool
     var exposureState: ExposureNotificationStateController.CombinedState
     var userNotificationsStatus: UserNotificationsStateController.AuthorizationStatus
     var hasPostcode: Bool
     
     var logicalState: LogicalState {
+        let logicalStateIgnoringOnboarding = self.logicalStateIgnoringOnboarding
+        switch logicalStateIgnoringOnboarding {
+        case .postcodeRequired where !completedOnboardingForCurrentSession, .authorizationRequired where !completedOnboardingForCurrentSession:
+            // Show onboarding just before postcode or authorization
+            return .onboarding
+        default:
+            return logicalStateIgnoringOnboarding
+        }
+    }
+    
+    private var logicalStateIgnoringOnboarding: LogicalState {
         switch appAvailability {
         case .available:
             return isAppActivated ? postAvailabilityLogicalState : .pilotActivationRequired
@@ -32,9 +44,13 @@ struct RawState: Equatable {
     }
     
     private var postActivationState: LogicalState {
+        
         switch exposureState.authorizationState {
         case .unknown:
-            return .authorizationOnboarding
+            if hasPostcode {
+                return .authorizationRequired
+            }
+            return .postcodeRequired
         case .restricted:
             return .failedToStart
         case .notAuthorized:
@@ -58,12 +74,15 @@ struct RawState: Equatable {
             case .unknown:
                 return .starting
             case .notDetermined:
-                return .authorizationOnboarding
+                if hasPostcode {
+                    return .authorizationRequired
+                }
+                return .postcodeRequired
             case .authorized, .denied:
                 if hasPostcode {
                     return .fullyOnboarded
                 }
-                return .postcodeOnboarding
+                return .postcodeRequired
             }
         }
     }

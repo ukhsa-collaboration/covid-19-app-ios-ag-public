@@ -93,21 +93,7 @@ public class CheckInsStore {
             $0.checkedIn < date
         }
         
-        let hasCheckInFor = { (venueId: String) in
-            checkInsInfo.checkIns.contains { $0.venueId.caseInsensitiveCompare(venueId) == .orderedSame }
-        }
-        
-        checkInsInfo.unacknowldegedRiskyVenueIds.removeAll { venueId in
-            !hasCheckInFor(venueId)
-        }
-        
-        for venueId in checkInsInfo.riskApprovalTokens.keys {
-            if !hasCheckInFor(venueId) {
-                checkInsInfo.riskApprovalTokens[venueId] = nil
-            }
-        }
-        
-        self.checkInsInfo = checkInsInfo
+        self.checkInsInfo = updateRiskyProperties(checkInsInfo)
     }
     
     func updateRisk(_ venueIds: [String]) {
@@ -155,6 +141,35 @@ public class CheckInsStore {
         }
     }
     
+    func delete(checkInId: String) {
+        guard var checkInsInfo = self.checkInsInfo else { return }
+        checkInsInfo.checkIns.removeAll {
+            $0.id == checkInId
+        }
+        
+        self.checkInsInfo = updateRiskyProperties(checkInsInfo)
+    }
+    
+    private func updateRiskyProperties(_ checkInsInfo: CheckInsWrapper) -> CheckInsWrapper {
+        var copy = checkInsInfo
+        let checkins = copy.checkIns
+        let hasCheckInFor = { (venueId: String) in
+            checkins.contains { $0.venueId.caseInsensitiveCompare(venueId) == .orderedSame }
+        }
+        
+        copy.unacknowldegedRiskyVenueIds.removeAll { venueId in
+            !hasCheckInFor(venueId)
+        }
+        
+        for venueId in copy.riskApprovalTokens.keys {
+            if !hasCheckInFor(venueId) {
+                copy.riskApprovalTokens[venueId] = nil
+            }
+        }
+        
+        return copy
+    }
+    
     func deleteAll() {
         checkInsInfo = nil
     }
@@ -166,9 +181,9 @@ public class CheckInsStore {
         _ = save(checkInsInfo)
     }
     
-    public func checkIn(with payload: String) throws -> (String, () -> Void) {
+    public func checkIn(with payload: String, currentDate: Date) throws -> (String, () -> Void) {
         let venue = try venueDecoder.parse(payload)
-        let checkIn = CheckIn(venue: venue, checkedInDate: Date())
+        let checkIn = CheckIn(venue: venue, checkedInDate: currentDate)
         save(checkIn)
         return (venue.organisation, deleteLatest)
     }

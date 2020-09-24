@@ -6,6 +6,7 @@ import Combine
 import Common
 import Domain
 import Interface
+import Localization
 import UIKit
 
 public class CoordinatedAppController: AppController {
@@ -13,12 +14,15 @@ public class CoordinatedAppController: AppController {
     private let coordinator: ApplicationCoordinator
     let pasteboardCopier: PasteboardCopying
     
-    private var cancellable: AnyCancellable?
+    private var cancellable: [AnyCancellable] = []
     
     public var rootViewController = UIViewController()
     
     private var content: UIViewController? {
         didSet {
+            #warning("Use WrappingViewController")
+            // This avoid code duplication in `content.didSet`
+            oldValue?.dismiss(animated: true, completion: nil)
             oldValue?.remove()
             if let content = content {
                 rootViewController.addFilling(content)
@@ -30,17 +34,28 @@ public class CoordinatedAppController: AppController {
     fileprivate init(coordinator: ApplicationCoordinator) {
         self.coordinator = coordinator
         pasteboardCopier = coordinator.pasteboardCopier
-        cancellable = coordinator.$state
+        coordinator.$state
             .regulate(as: .modelChange)
             .sink { [weak self] state in
                 self?.update(for: state)
-            }
+            }.store(in: &cancellable)
         
+        coordinator.country.sink {
+            Localization.country = $0
+        }.store(in: &cancellable)
         setupUI()
     }
     
     public func performBackgroundTask(task: BackgroundTask) {
         coordinator.performBackgroundTask(task: task)
+    }
+    
+    public func handleUserNotificationResponse(_ response: UNNotificationResponse, completionHandler: @escaping () -> Void) {
+        if let action = UserNotificationAction(rawValue: response.actionIdentifier) {
+            coordinator.handleUserNotificationAction(action, completion: completionHandler)
+        } else {
+            completionHandler()
+        }
     }
     
     private func update(for state: ApplicationState) {
@@ -70,8 +85,8 @@ extension CoordinatedAppController {
     /// - Parameters:
     ///   - environment: Defaults to standard production environment.
     ///   - enabledFeatures: Defaults to all features.
-    public convenience init(environment: Environment = .standard(), enabledFeatures: [Feature] = Feature.allCases) {
-        let services = ApplicationServices(standardServicesFor: environment)
+    public convenience init(environment: Environment = .standard(), enabledFeatures: [Feature] = Feature.productionEnabledFeatures) {
+        let services = ApplicationServices(standardServicesFor: environment, currentDateProvider: { Date() })
         self.init(services: services, enabledFeatures: enabledFeatures)
     }
     

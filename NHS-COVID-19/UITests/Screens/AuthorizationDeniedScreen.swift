@@ -11,16 +11,8 @@ struct AuthorizationDeniedScreen {
         app.staticTexts[localized: .authorization_denied_title]
     }
     
-    var description1: XCUIElement {
-        app.staticTexts[localized: .authorization_denied_description_1]
-    }
-    
-    var description2: XCUIElement {
-        app.staticTexts[localized: .authorization_denied_description_2]
-    }
-    
-    var description3: XCUIElement {
-        app.staticTexts[localized: .authorization_denied_description_3]
+    var description: [XCUIElement] {
+        app.staticTexts[localized: .authorization_denied_description]
     }
     
     var settingsButton: XCUIElement {

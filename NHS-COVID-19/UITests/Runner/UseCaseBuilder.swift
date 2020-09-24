@@ -50,7 +50,7 @@ private extension DeviceConfiguration {
     }
     
     var screenshotTags: [String] {
-        [orientation.tag, contentSize.tag, interfaceStyle.tag]
+        [orientation.tag, contentSize.tag, interfaceStyle.tag, language]
     }
     
 }

@@ -12,13 +12,11 @@ public protocol CameraManaging {
     
     func requestAccess(completionHandler handler: @escaping (AuthorizationStatus) -> Void)
     
-    func createCaptureSession(handler: CaptureSessionOutputHandler) -> AVCaptureSession?
+    func createCaptureSession(handler: CaptureSessionOutputHandler) -> CaptureSession?
     
 }
 
 public class CameraManager: CameraManaging {
-    #warning("Find a better way to save this delegate from being deleted too early")
-    private var delegate: CaptureMetadataOutputObjectsDelegate?
     
     public init() {}
     
@@ -32,7 +30,7 @@ public class CameraManager: CameraManaging {
         }
     }
     
-    public func createCaptureSession(handler: CaptureSessionOutputHandler) -> AVCaptureSession? {
+    public func createCaptureSession(handler: CaptureSessionOutputHandler) -> CaptureSession? {
         let captureSession = AVCaptureSession()
         
         guard let captureDevice = AVCaptureDevice.default(for: .video) else {
@@ -51,13 +49,16 @@ public class CameraManager: CameraManaging {
                 return nil
             }
             
-            delegate = CaptureMetadataOutputObjectsDelegate(handler: handler)
+            let delegate = CaptureMetadataOutputObjectsDelegate(handler: handler)
             captureMetadataOutput.setMetadataObjectsDelegate(delegate, queue: DispatchQueue.main)
             captureMetadataOutput.metadataObjectTypes = [.qr]
+            
+            let sessionContainer = CaptureSession(session: captureSession)
+            sessionContainer.saveDelegate(delegate)
+            return sessionContainer
         } catch {
             return nil
         }
-        return captureSession
     }
 }
 
@@ -69,10 +70,44 @@ class CaptureMetadataOutputObjectsDelegate: NSObject, AVCaptureMetadataOutputObj
     }
     
     public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        handler.handleOutput(metadataObjects)
+        guard let videoPreviewLayer = handler.getVideoPreviewLayer(),
+            let scanViewBounds = handler.getScanViewBounds() else { return }
+        
+        let qrCodes = metadataObjects.compactMap { object -> AVMetadataMachineReadableCodeObject? in
+            guard let code = object as? AVMetadataMachineReadableCodeObject, code.type == .qr else {
+                return nil
+            }
+            
+            return code
+        }
+        
+        qrCodes.first.map { qrCode in
+            guard let barCodeObject = videoPreviewLayer.transformedMetadataObject(for: qrCode) else {
+                return
+            }
+            
+            if let payload = qrCode.stringValue {
+                handler.handleOutput(payload)
+            }
+        }
     }
 }
 
 public struct CaptureSessionOutputHandler {
-    var handleOutput: ([AVMetadataObject]) -> Void
+    public var getScanViewBounds: () -> CGRect?
+    public var getVideoPreviewLayer: () -> AVCaptureVideoPreviewLayer?
+    public var handleOutput: (String) -> Void
+}
+
+public class CaptureSession {
+    var session: AVCaptureSession
+    private var delegate: CaptureMetadataOutputObjectsDelegate?
+    
+    public init(session: AVCaptureSession) {
+        self.session = session
+    }
+    
+    func saveDelegate(_ delegate: CaptureMetadataOutputObjectsDelegate) {
+        self.delegate = delegate
+    }
 }

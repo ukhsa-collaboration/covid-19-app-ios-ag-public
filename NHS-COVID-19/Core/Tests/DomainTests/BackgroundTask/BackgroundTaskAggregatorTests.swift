@@ -48,7 +48,7 @@ class BackgroundTaskAggregatorTests: XCTestCase {
         XCTAssertEqual(earliestBeginDate.timeIntervalSinceNow, relevantFrequency, accuracy: max(1, -2 * before.timeIntervalSinceNow))
     }
     
-    func testBackgroundTaskNotRequestedOnInitIfAlreadyRequested() throws {
+    func testBackgroundTaskNotRequestedOnInitIfAlreadyRequestedAndTaskIsInFuture() throws {
         let work: () -> AnyPublisher<Void, Never> = {
             Empty().eraseToAnyPublisher()
         }
@@ -58,10 +58,45 @@ class BackgroundTaskAggregatorTests: XCTestCase {
         
         let manager = MockProcessingTaskRequestManager()
         manager.request = ProcessingTaskRequest()
+        manager.request?.earliestBeginDate = Date(timeIntervalSinceNow: 100)
         
         _ = BackgroundTaskAggregator(manager: manager, jobs: [job])
         
         XCTAssertEqual(manager.submitCallCount, 0)
+    }
+    
+    func testBackgroundTaskNotRequestedOnInitIfAlreadyRequestedAndTaskDateHasRecentlyPassed() throws {
+        let work: () -> AnyPublisher<Void, Never> = {
+            Empty().eraseToAnyPublisher()
+        }
+        
+        let frequency = 200.0
+        let job = BackgroundTaskAggregator.Job(preferredFrequency: frequency, work: work)
+        
+        let manager = MockProcessingTaskRequestManager()
+        manager.request = ProcessingTaskRequest()
+        manager.request?.earliestBeginDate = Date(timeIntervalSinceNow: -3 * 60)
+        
+        _ = BackgroundTaskAggregator(manager: manager, jobs: [job])
+        
+        XCTAssertEqual(manager.submitCallCount, 0)
+    }
+    
+    func testBackgroundTaskIsRequestedAgainOnInitIfAlreadyRequestedButIsInThePastMoreThanADay() throws {
+        let work: () -> AnyPublisher<Void, Never> = {
+            Empty().eraseToAnyPublisher()
+        }
+        
+        let frequency = 200.0
+        let job = BackgroundTaskAggregator.Job(preferredFrequency: frequency, work: work)
+        
+        let manager = MockProcessingTaskRequestManager()
+        manager.request = ProcessingTaskRequest()
+        manager.request?.earliestBeginDate = Date(timeIntervalSinceNow: -86500)
+        
+        _ = BackgroundTaskAggregator(manager: manager, jobs: [job])
+        
+        XCTAssertEqual(manager.submitCallCount, 1)
     }
     
     func testBackgroundTaskNotRequestedOnInitIfThereAreNoJobs() throws {

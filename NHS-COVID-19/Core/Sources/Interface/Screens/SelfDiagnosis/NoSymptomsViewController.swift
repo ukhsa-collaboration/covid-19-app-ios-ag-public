@@ -33,10 +33,11 @@ public class NoSymptomsViewController: UIViewController {
         view.styleAsScreenBackground(with: traitCollection)
         
         navigationController?.navigationBar.isHidden = true
+        navigationItem.hidesBackButton = true
         
-        let clipboardImage = UIImageView(.medicalRecord)
-        clipboardImage.contentMode = .scaleAspectFit
-        clipboardImage.adjustsImageSizeForAccessibilityContentSizeCategory = true
+        let image = UIImageView(.isolationEnded)
+        image.contentMode = .scaleAspectFit
+        image.adjustsImageSizeForAccessibilityContentSizeCategory = true
         
         let heading = UILabel()
         heading.text = localize(.no_symptoms_heading)
@@ -56,7 +57,7 @@ public class NoSymptomsViewController: UIViewController {
         let link = LinkButton(title: localize(.no_symptoms_link))
         link.addTarget(self, action: #selector(didTapNHS111Link), for: .touchUpInside)
         
-        let contentStack = UIStackView(arrangedSubviews: [clipboardImage, heading, description1, description2, link])
+        let contentStack = UIStackView(arrangedSubviews: [image, heading, description1, description2, link])
         contentStack.axis = .vertical
         contentStack.spacing = .standardSpacing
         contentStack.isLayoutMarginsRelativeArrangement = true
@@ -82,14 +83,14 @@ public class NoSymptomsViewController: UIViewController {
         view.addAutolayoutSubview(buttonStack)
         
         NSLayoutConstraint.activate([
-            contentStack.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
+            contentStack.widthAnchor.constraint(equalTo: view.readableContentGuide.widthAnchor),
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: buttonStack.topAnchor),
             buttonStack.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            buttonStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            buttonStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            buttonStack.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            buttonStack.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
         ])
     }
     

@@ -5,12 +5,29 @@
 import Localization
 import UIKit
 
+public struct OnboardingStepAlert {
+    var title: StringLocalizationKey
+    var body: StringLocalizationKey
+    var accept: StringLocalizationKey
+    var reject: StringLocalizationKey
+    var rejectAction: () -> Void
+}
+
 public protocol OnboardingStep {
+    var strapLineStyle: LogoStrapline.Style? { get }
+    typealias Alert = OnboardingStepAlert
+    
+    var alert: Alert? { get }
     var image: UIImage? { get }
     var actionTitle: String { get }
     var content: [UIView] { get }
     var footerContent: [UIView] { get }
     func act()
+}
+
+public extension OnboardingStep {
+    var strapLineStyle: LogoStrapline.Style? { .onboarding }
+    var alert: Alert? { nil }
 }
 
 open class OnboardingStepViewController: UIViewController {
@@ -36,29 +53,25 @@ open class OnboardingStepViewController: UIViewController {
         imageView.styleAsDecoration()
         imageView.isHidden = (step.image == nil)
         
-        let logoStrapline = LogoStrapline(.nhsBlue, style: .onboarding)
-        
         var content = step.content
         content.insert(imageView, at: 0)
-        content.insert(logoStrapline, at: 0)
+        
+        if let style = step.strapLineStyle {
+            content.insert(LogoStrapline(.nhsBlue, style: style), at: 0)
+        }
         
         let stackView = UIStackView(arrangedSubviews: content)
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
         stackView.spacing = .standardSpacing
-        stackView.layoutMargins = .standard
+        stackView.layoutMargins = UIEdgeInsets(top: .standardSpacing, left: 0, bottom: .standardSpacing, right: 0)
         stackView.isLayoutMarginsRelativeArrangement = true
         
         let scrollView = UIScrollView()
-        scrollView.keyboardDismissMode = .onDrag
         scrollView.addFillingSubview(stackView)
         
         view.addAutolayoutSubview(scrollView)
-        
-        let keyboardIndicatingView = UIView()
-        keyboardIndicatingView.isHidden = true
-        view.addAutolayoutSubview(keyboardIndicatingView)
         
         let button = UIButton(type: .system)
         button.styleAsPrimary()
@@ -69,53 +82,22 @@ open class OnboardingStepViewController: UIViewController {
         footerStack.spacing = .standardSpacing
         view.addAutolayoutSubview(footerStack)
         
+        // Setup keyboard
+        view.setupKeyboardAppearance(pushedView: footerStack)
+        scrollView.keyboardDismissMode = .onDrag
+        
         NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            footerStack.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: .standardSpacing),
-            footerStack.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor, constant: -.standardSpacing),
-            keyboardIndicatingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            keyboardIndicatingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
+            footerStack.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor, constant: .standardSpacing),
+            footerStack.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: -.standardSpacing),
+            
+            stackView.widthAnchor.constraint(equalTo: view.readableContentGuide.widthAnchor),
             
             scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
             footerStack.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: .standardSpacing),
-            footerStack.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor).withPriority(.defaultHigh),
-            footerStack.bottomAnchor.constraint(lessThanOrEqualTo: keyboardIndicatingView.topAnchor, constant: -.standardSpacing),
-            keyboardIndicatingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            footerStack.bottomAnchor.constraint(equalTo: view.readableContentGuide.bottomAnchor).withPriority(.defaultHigh),
         ])
-        
-        // This height will represent the portion of the view covered by a keyboard.
-        // We can honour this constraint _almost_ always. However, this _could_ break temporarily before we get a chance
-        // to respond, for example when device rotates. For this reason, reduce the priorty slightly.
-        let keyboardHeightConstraint = keyboardIndicatingView.heightAnchor.constraint(equalToConstant: 0)
-            .withPriority(.almostRequest)
-        keyboardHeightConstraint.isActive = true
-        
-        for name in [UIApplication.keyboardWillHideNotification, UIApplication.keyboardWillShowNotification] {
-            NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { notification in
-                guard
-                    let endFrame = notification.userInfo?[UIApplication.keyboardFrameEndUserInfoKey] as? CGRect
-                else {
-                    return
-                }
-                
-                let curve = UIView.AnimationCurve(
-                    rawValue: notification.userInfo?[UIApplication.keyboardAnimationCurveUserInfoKey] as? Int ?? 0
-                )
-                let duration = notification.userInfo?[UIApplication.keyboardAnimationDurationUserInfoKey] as? TimeInterval ?? 0
-                
-                UIView.animate(
-                    withDuration: duration, delay: 0,
-                    options: [.curve(from: curve ?? .easeInOut), .beginFromCurrentState],
-                    animations: {
-                        let frameInView = view.convert(endFrame, from: UIScreen.main.coordinateSpace)
-                        keyboardHeightConstraint.constant = max(0, view.bounds.maxY - frameInView.minY)
-                        view.layoutIfNeeded()
-                    }, completion: nil
-                )
-            }
-        }
     }
     
     override public func viewWillAppear(_ animated: Bool) {
@@ -125,25 +107,32 @@ open class OnboardingStepViewController: UIViewController {
     }
     
     @objc private func didSelectAction() {
-        step.act()
-    }
-}
-
-private extension UIView.AnimationOptions {
-    
-    static func curve(from curve: UIView.AnimationCurve) -> UIView.AnimationOptions {
-        switch curve {
-        case .easeInOut:
-            return .curveEaseInOut
-        case .easeIn:
-            return .curveEaseIn
-        case .easeOut:
-            return .curveEaseOut
-        case .linear:
-            return .curveLinear
-        @unknown default:
-            return .curveEaseInOut
+        guard let alert = step.alert else {
+            step.act()
+            return
         }
+        
+        let alertController = UIAlertController(
+            title: localize(alert.title),
+            message: localize(alert.body),
+            preferredStyle: .alert
+        )
+        
+        alertController.addAction(UIAlertAction(
+            title: localize(alert.reject),
+            style: .cancel,
+            handler: { _ in alert.rejectAction() }
+        ))
+        
+        let acceptAction = UIAlertAction(
+            title: localize(alert.accept),
+            style: .default,
+            handler: { [weak self] _ in self?.step.act() }
+        )
+        
+        alertController.addAction(acceptAction)
+        alertController.preferredAction = acceptAction
+        
+        present(alertController, animated: true)
     }
-    
 }

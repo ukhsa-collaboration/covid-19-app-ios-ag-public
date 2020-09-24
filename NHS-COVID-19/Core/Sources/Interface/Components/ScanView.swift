@@ -2,7 +2,6 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
-import AVFoundation
 import Combine
 import Localization
 import UIKit
@@ -10,23 +9,23 @@ import UIKit
 class ScanView: UIView {
     
     static let backgroundAlpha: CGFloat = 0.8
-    static let scanWindowWidthRatio: CGFloat = 0.6
+    static let scanWindowWidthRatio: CGFloat = 0.85
     static let scanWindowCornerRadius: CGFloat = 16.0
     
-    lazy var scanWindowBound: CGRect = {
+    var scanWindowBound: CGRect {
         CGRect(x: scanWindowX, y: scanWindowY, width: scanWindowWidth, height: scanWindowHeight)
-    }()
+    }
     
     var helpHandler: () -> Void
     
-    private var scanWindowWidth: CGFloat
-    private var scanWindowHeight: CGFloat
-    private var scanWindowX: CGFloat
-    private var scanWindowY: CGFloat
+    private var scanWindowWidth: CGFloat = 0
+    private var scanWindowHeight: CGFloat = 0
+    private var scanWindowX: CGFloat = 0
+    private var scanWindowY: CGFloat = 0
     
     private var cancellable: AnyCancellable?
     
-    var cameraState: AnyPublisher<QRCodeScannerViewController.State, Never>
+    var cameraState: AnyPublisher<QRScanner.State, Never>
     
     private lazy var titleLabel: UIView = {
         let titleLabel = UILabel()
@@ -41,7 +40,7 @@ class ScanView: UIView {
     private lazy var statusLabel: UILabel = {
         let statusLabel = UILabel()
         statusLabel.text = localize(.checkin_camera_qrcode_scanner_status_label)
-        statusLabel.styleAsBody()
+        statusLabel.styleAsTertiaryTitle()
         statusLabel.textAlignment = .center
         statusLabel.textColor = UIColor(.surface).resolvedColor(with: .init(userInterfaceStyle: .light))
         return statusLabel
@@ -76,7 +75,12 @@ class ScanView: UIView {
         stackView.spacing = .standardSpacing
         stackView.axis = .vertical
         stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.layoutMargins = .standard
+        stackView.layoutMargins = UIEdgeInsets(
+            top: .doubleSpacing,
+            left: .standardSpacing,
+            bottom: .standardSpacing,
+            right: .standardSpacing
+        )
         return stackView
     }()
     
@@ -86,17 +90,28 @@ class ScanView: UIView {
         return scrollView
     }()
     
-    init(frame: CGRect, cameraState: AnyPublisher<QRCodeScannerViewController.State, Never>, helpHandler: @escaping () -> Void) {
-        
-        scanWindowWidth = Self.scanWindowWidthRatio * frame.size.width
-        scanWindowHeight = scanWindowWidth
-        scanWindowX = 0.5 * (1 - Self.scanWindowWidthRatio) * frame.size.width
-        scanWindowY = 100
-        
+    init(frame: CGRect, cameraState: AnyPublisher<QRScanner.State, Never>, helpHandler: @escaping () -> Void) {
         self.cameraState = cameraState
         self.helpHandler = helpHandler
         
         super.init(frame: frame)
+        
+        contentMode = .redraw
+    }
+    
+    private func calculateScanWindow() {
+        if isPortrait {
+            scanWindowWidth = Self.scanWindowWidthRatio * frame.size.width
+            scanWindowHeight = scanWindowWidth
+            scanWindowX = 0.5 * (1 - Self.scanWindowWidthRatio) * frame.size.width
+            scanWindowY = 100
+        } else {
+            let scanAreaWidth = frame.size.width / 2
+            scanWindowHeight = Self.scanWindowWidthRatio * frame.size.height
+            scanWindowWidth = scanWindowHeight
+            scanWindowX = 0.5 * (scanAreaWidth - scanWindowWidth)
+            scanWindowY = 0.5 * (1 - Self.scanWindowWidthRatio) * frame.size.height
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -105,6 +120,7 @@ class ScanView: UIView {
     
     override public func draw(_ rect: CGRect) {
         super.draw(rect)
+        calculateScanWindow()
         drawScanWindow(rect)
         setupUI()
         setupBindings()
@@ -126,14 +142,26 @@ class ScanView: UIView {
     }
     
     private func setupUI() {
+        scrollView.removeFromSuperview()
         addAutolayoutSubview(scrollView)
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: topAnchor, constant: scanWindowY + scanWindowHeight + .standardSpacing),
-            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            stackView.widthAnchor.constraint(equalTo: widthAnchor),
-        ])
+        
+        if isPortrait {
+            NSLayoutConstraint.activate([
+                scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: scanWindowY + scanWindowHeight - .standardSpacing),
+                scrollView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+                scrollView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+                scrollView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+                stackView.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor),
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+                scrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 2 * scanWindowX + scanWindowWidth),
+                scrollView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+                scrollView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+                stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            ])
+        }
     }
     
     private func setupBindings() {

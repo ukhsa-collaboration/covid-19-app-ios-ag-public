@@ -46,6 +46,7 @@ class SelfDiagnosisFlowTest: XCTestCase {
             let symptomsListScreen = SymptomsListScreen(app: app)
             
             symptomsListScreen.symptomCard(
+                value: localize(.symptom_card_unchecked),
                 heading: Sandbox.Text.SymptomsList.cardHeading.rawValue,
                 content: Sandbox.Text.SymptomsList.cardContent.rawValue
             ).tap()

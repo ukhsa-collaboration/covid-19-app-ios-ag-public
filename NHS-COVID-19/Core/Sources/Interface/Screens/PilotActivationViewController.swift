@@ -103,7 +103,7 @@ private class PilotActivationStep: NSObject, OnboardingStep {
     private let informationBox = InformationBox.information(
         .title(localize(.authentication_code_info_heading)),
         .body(localize(.authentication_code_info_description_1)),
-        .heading(localize(.authentication_code_info_example)),
+        .boldBody(localize(.authentication_code_info_example)),
         .body(localize(.authentication_code_info_description_2))
     )
     
@@ -175,11 +175,8 @@ extension PilotActivationStep: UITextFieldDelegate {
 
 public struct PilotActivationCodeFormatter {
     public static func format(_ code: String) -> String {
-        let allowedChars = CharacterSet.alphanumerics
-        var formattedCode = code
-            .lowercased()
-            .components(separatedBy: allowedChars.inverted)
-            .joined()
+        var formattedCode = code.alphamuneric.lowercased()
+        
         if formattedCode.count > 4 {
             formattedCode.insert("-", at: formattedCode.index(formattedCode.startIndex, offsetBy: 4))
         }

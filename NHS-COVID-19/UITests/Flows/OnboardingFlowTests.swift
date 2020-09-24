@@ -18,32 +18,6 @@ class OnboardingFlowTests: XCTestCase {
         }
         
         try runner.run { app in
-            let pilotActivationScreen = PilotActivationScreen(app: app)
-            XCTAssert(pilotActivationScreen.title.exists)
-            
-            runner.step("Pilot Activation") {
-                """
-                When first opening the app, the user is asked to enter their activation code.
-                """
-            }
-            
-            pilotActivationScreen.textfield.tap()
-            pilotActivationScreen.textfield.typeText("abs6hg91")
-            
-            if runner.isGeneratingReport {
-                #warning("Can we improve this?")
-                // The scrolling of text field into view is still animated. Wait for it to finish
-                usleep(300_000)
-            }
-            
-            runner.step("Pilot Activation - Enter activation code") {
-                """
-                The user types in their activation code, then continues.
-                """
-            }
-            
-            pilotActivationScreen.button.tap()
-            
             let startScreen = StartOnboardingScreen(app: app)
             XCTAssert(startScreen.stepTitle.exists)
             
@@ -55,6 +29,16 @@ class OnboardingFlowTests: XCTestCase {
             }
             
             startScreen.continueButton.tap()
+            
+            runner.step("Onboarding") {
+                """
+                The user is asked to confirm they are above a minimum age requirement.
+                The user indicates they are old enough to use the app.
+                """
+            }
+            
+            XCTAssert(startScreen.ageConfirmationAcceptButton.exists)
+            startScreen.ageConfirmationAcceptButton.tap()
             
             let privacyScreen = PrivacyScreen(app: app)
             XCTAssert(privacyScreen.title.exists)
@@ -75,6 +59,32 @@ class OnboardingFlowTests: XCTestCase {
             }
             
             privacyScreen.agreeButton.tap()
+            
+            let postcodeScreen = EnterPostcodeScreen(app: app)
+            XCTAssert(postcodeScreen.stepTitle.exists)
+            
+            runner.step("Postcode Entry Screen") {
+                """
+                The user is asked to enter their postcode.
+                """
+            }
+            
+            postcodeScreen.postcodeTextField.tap()
+            postcodeScreen.postcodeTextField.typeText("CE1B")
+            
+            if runner.isGeneratingReport {
+                #warning("Can we improve this?")
+                // The scrolling of text field into view is still animated. Wait for it to finish
+                usleep(300_000)
+            }
+            
+            runner.step("Postcode Entry Screen - Enter postcode") {
+                """
+                The user types in their postcode, then continues.
+                """
+            }
+            
+            postcodeScreen.continueButton.tap()
             
             let permissionsScreen = PermissionsScreen(app: app)
             XCTAssert(permissionsScreen.stepTitle.exists)
@@ -109,32 +119,6 @@ class OnboardingFlowTests: XCTestCase {
             }
             
             simulatedUserNotificationAuthorizationScreen.allowButton.tap()
-            
-            let postcodeScreen = EnterPostcodeScreen(app: app)
-            XCTAssert(postcodeScreen.stepTitle.exists)
-            
-            runner.step("Postcode Entry Screen") {
-                """
-                The user is asked to enter their postcode.
-                """
-            }
-            
-            postcodeScreen.postcodeTextField.tap()
-            postcodeScreen.postcodeTextField.typeText("CE1B")
-            
-            if runner.isGeneratingReport {
-                #warning("Can we improve this?")
-                // The scrolling of text field into view is still animated. Wait for it to finish
-                usleep(300_000)
-            }
-            
-            runner.step("Postcode Entry Screen - Enter postcode") {
-                """
-                The user types in their postcode, then continues.
-                """
-            }
-            
-            postcodeScreen.continueButton.tap()
             
             runner.step("Home Screen") {
                 """

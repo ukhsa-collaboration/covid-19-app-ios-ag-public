@@ -2,6 +2,7 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Combine
 import Integration
 import Interface
 import UIKit
@@ -14,7 +15,6 @@ public class VenueCheckInInformationScreenScenario: Scenario {
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
-            parent.setNavigationBarHidden(true, animated: false)
             let interactor = Interactor(viewController: parent)
             return VenueCheckInInformationViewController(interactor: interactor)
         }

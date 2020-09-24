@@ -88,6 +88,18 @@ Accounts in this normally only have read access to other repos.
 
 Personal access token for `REPOS_ACCESS_ACTOR` with repo permissions.
 
+## Access to AWS
+
+Test and App reports get uploaded to an S3 bucket for further visualization and documentation tools to consume. To perform this, a technical user account is used. The build environment authenticates as that user programmatically via access key ID and secret access key. The user's access is limited to the `dev-mobile-build-reports`, where they are permitted to `s3:PutObject`, `s3:GetObject`, `s3:ListBucket` and `s3:DeleteObject`.
+
+### `AWS_ACCESS_KEY_ID`
+
+Access key ID for the technical user.
+
+### `AWS_SECRET_ACCESS_KEY`
+
+Secret access key for the technical user.
+
 ## Apple Development
 
 ### `BASE64_ENCODED_IDENTITY`

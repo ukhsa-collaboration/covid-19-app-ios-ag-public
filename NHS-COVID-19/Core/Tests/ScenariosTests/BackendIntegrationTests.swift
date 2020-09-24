@@ -45,7 +45,7 @@ class BackendIntegrationTests: XCTestCase {
 
 extension BackendIntegrationTests {
     func _testRiskyPostcodes() throws {
-        try runDistributionTest(with: RiskyPostcodesEndpoint(), expectedType: [String: PostcodeRisk].self)
+        try runDistributionTest(with: RiskyPostcodesEndpoint(), expectedType: [Postcode: PostcodeRisk].self)
     }
 }
 

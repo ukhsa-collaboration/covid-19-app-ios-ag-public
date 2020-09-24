@@ -9,7 +9,8 @@ import UIKit
 public class StartOnboardingScreenScenario: Scenario {
     public static let name = "On-boarding - Welcome"
     public static let kind = ScenarioKind.screen
-    public static let continueConfirmationAlertTitle = "Continue tapped"
+    public static let continueConfirmationAlertTitle = "Age confirmation tapped"
+    public static let rejectAlertTitle = "Age rejection tapped"
     public static let moreButtonConfirmationAlertTitle = "More tapped"
     
     static var appController: AppController {
@@ -17,6 +18,9 @@ public class StartOnboardingScreenScenario: Scenario {
             StartOnboardingViewController(
                 complete: {
                     navigationController.showAlert(title: Self.continueConfirmationAlertTitle)
+                },
+                reject: {
+                    navigationController.showAlert(title: Self.rejectAlertTitle)
                 }
             )
         }

@@ -16,7 +16,7 @@ public class RiskLevelLowScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            let viewModel = RiskLevelInfoViewModel(postcode: "SW12", riskLevel: .low)
+            let viewModel = RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .low)
             return RiskLevelInfoViewController(viewModel: viewModel, interactor: interactor)
         }
     }
@@ -32,7 +32,7 @@ public class RiskLevelMediumScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            let viewModel = RiskLevelInfoViewModel(postcode: "SW12", riskLevel: .medium)
+            let viewModel = RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .medium)
             return RiskLevelInfoViewController(viewModel: viewModel, interactor: interactor)
         }
     }
@@ -48,7 +48,7 @@ public class RiskLevelHighScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            let viewModel = RiskLevelInfoViewModel(postcode: "SW12", riskLevel: .high)
+            let viewModel = RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .high)
             return RiskLevelInfoViewController(viewModel: viewModel, interactor: interactor)
         }
     }

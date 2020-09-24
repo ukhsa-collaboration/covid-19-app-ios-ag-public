@@ -16,9 +16,7 @@ class PermissionsScreenTests: XCTestCase {
             
             XCTAssert(screen.stepTitle.exists)
             XCTAssert(screen.exposureNotificationHeading.exists)
-            XCTAssert(screen.notificationsHeading.exists)
             XCTAssert(screen.exposureNotificationBody.exists)
-            XCTAssert(screen.notificationsBody.exists)
             XCTAssert(screen.continueButton.exists)
         }
     }

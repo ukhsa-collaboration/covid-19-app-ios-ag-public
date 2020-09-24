@@ -25,6 +25,7 @@ private struct Payload: Codable {
         var key: Data
         var rollingStartNumber: UInt32
         var rollingPeriod: UInt32
+        var transmissionRiskLevel: UInt8
     }
     
     var diagnosisKeySubmissionToken: String
@@ -38,7 +39,8 @@ extension Payload {
             Payload.TemporaryExposureKey(
                 key: $0.keyData,
                 rollingStartNumber: $0.rollingStartNumber,
-                rollingPeriod: $0.rollingPeriod
+                rollingPeriod: $0.rollingPeriod,
+                transmissionRiskLevel: $0.transmissionRiskLevel
             )
         }
         self.init(

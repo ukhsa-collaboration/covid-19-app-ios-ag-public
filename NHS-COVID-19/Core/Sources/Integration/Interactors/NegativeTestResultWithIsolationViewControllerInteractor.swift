@@ -5,6 +5,7 @@
 import Domain
 import Foundation
 import Interface
+import Localization
 
 struct NegativeTestResultWithIsolationViewControllerInteractor: NegativeTestResultWithIsolationViewController.Interacting {
     var _acknowledge: () -> Void

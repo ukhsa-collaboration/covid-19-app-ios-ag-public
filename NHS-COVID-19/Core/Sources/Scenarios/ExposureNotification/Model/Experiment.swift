@@ -49,7 +49,7 @@ struct Experiment: Codable {
     
     struct DetectionConfiguration: Codable {
         var minimumRiskScore: Int
-        var minimumRiskScoreFullRange: Double
+        var minimumRiskScoreFullRange: Double?
         var attenuationDurationThresholds: [Int]
         var attenuationLevelValues: [Int]
         var attenuationWeight: Double

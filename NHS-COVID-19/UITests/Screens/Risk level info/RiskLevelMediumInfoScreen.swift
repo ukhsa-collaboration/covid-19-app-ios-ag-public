@@ -14,7 +14,7 @@ struct RiskLevelMediumInfoScreen {
     }
     
     var heading: XCUIElement {
-        app.staticTexts[localized: .risk_level_banner_text(postcode: "SW12", risk: "MEDIUM")]
+        app.staticTexts[verbatim:  localizeForCountry(.risk_level_banner_text(postcode: "SW12", risk: "MEDIUM"))]
     }
     
     var body: XCUIElement {

@@ -22,17 +22,6 @@ public struct IsolatingIndicator: View {
         self.percentRemaining = percentRemaining
     }
     
-    private func pulsatingCircle(delay: Double) -> some View {
-        Circle()
-            .foregroundColor(Color(.errorRed))
-            .scaleEffect(animate ? 4 : 0)
-            .opacity(Double(animate ? 0 : 1))
-            .animation(
-                Animation.easeOut(duration: 3)
-                    .repeatForever(autoreverses: false).delay(delay)
-            )
-    }
-    
     struct Arc: Shape {
         private let percent: Double
         
@@ -57,6 +46,8 @@ public struct IsolatingIndicator: View {
         }
     }
     
+    private let badgeSize: CGFloat = 110
+    
     public var body: some View {
         VStack(alignment: .center, spacing: .standardSpacing) {
             Text(verbatim: localize(.isolation_until_date_title))
@@ -78,12 +69,8 @@ public struct IsolatingIndicator: View {
                             self.animate = false
                         }
                 } else {
-                    self.pulsatingCircle(delay: 0).onAppear {
-                        if !self.animate {
-                            self.animate = true
-                        }
-                    }
-                    self.pulsatingCircle(delay: 1)
+                    PulsatingCircle(delay: 0, initialDiameter: badgeSize, color: Color(.errorRed))
+                    PulsatingCircle(delay: 1, initialDiameter: badgeSize, color: Color(.errorRed))
                 }
                 
                 Arc(percent: 1).foregroundColor(Color(.background))
@@ -98,7 +85,7 @@ public struct IsolatingIndicator: View {
                     .fixedSize()
                     .padding(10)
             }
-            .frame(width: 110, height: 110, alignment: .center)
+            .frame(width: badgeSize, height: badgeSize, alignment: .center)
             .padding(.standardSpacing)
             .zIndex(-1)
             
@@ -108,6 +95,7 @@ public struct IsolatingIndicator: View {
                 .fixedSize(horizontal: false, vertical: true)
         }
         .padding(EdgeInsets(top: .bigSpacing, leading: 0, bottom: .tripleSpacing, trailing: 0))
+        .contentShape(Rectangle())
         .accessibilityElement(children: .ignore)
         .accessibility(label: Text(accessibilityLabel))
         .accessibility(addTraits: .isStaticText)

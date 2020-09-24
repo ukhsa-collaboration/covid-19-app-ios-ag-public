@@ -13,6 +13,7 @@ private struct MetricsCache: Codable, DataConvertible {
     }
     
     var entries: [Entry]
+    var latestWindowEnd: Date?
 }
 
 class MetricCollector {
@@ -24,26 +25,27 @@ class MetricCollector {
     @Encrypted
     private var cache: MetricsCache?
     
-    private let makeDate: () -> Date
+    private let currentDateProvider: () -> Date
     
-    init(encryptedStore: EncryptedStoring, makeDate: @escaping () -> Date = Date.init) {
+    init(encryptedStore: EncryptedStoring, currentDateProvider: @escaping () -> Date) {
         _cache = encryptedStore.encrypted("metrics")
-        self.makeDate = makeDate
+        self.currentDateProvider = currentDateProvider
         Self.current = self
     }
     
     func record(_ metric: Metric) {
         Self.logger.debug("record metric", metadata: .describing(metric.rawValue))
-        cache = mutating(cache ?? MetricsCache(entries: [])) {
+        cache = mutating(cache ?? MetricsCache(entries: [], latestWindowEnd: nil)) {
             $0.entries.append(
-                MetricsCache.Entry(name: metric.rawValue, date: makeDate())
+                MetricsCache.Entry(name: metric.rawValue, date: currentDateProvider())
             )
         }
     }
     
-    func deleteMetrics(notAfter date: Date) {
-        cache = mutating(cache ?? MetricsCache(entries: [])) {
+    func consumeMetrics(notAfter date: Date) {
+        cache = mutating(cache ?? MetricsCache(entries: [], latestWindowEnd: nil)) {
             $0.entries.removeAll { $0.date <= date }
+            $0.latestWindowEnd = date
         }
     }
     
@@ -59,6 +61,10 @@ class MetricCollector {
             }
         
         return Dictionary(includedEntries, uniquingKeysWith: +)
+    }
+    
+    func earliestEntryDate() -> Date? {
+        return cache?.latestWindowEnd ?? cache?.entries.map(\.date).min()
     }
     
     static func record(_ metric: Metric) {

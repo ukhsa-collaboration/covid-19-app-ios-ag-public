@@ -11,16 +11,15 @@ class CheckInConfirmationScreenTests: XCTestCase {
     private var runner: ApplicationRunner<CheckInConfirmationScreenScenario>
     
     func testBasics() throws {
-        for _ in 1 ..< 20 {
-            _runner.reset()
-            try runner.run { app in
-                let screen = CheckInConfirmationScreen(app: app)
-                
-                XCTAssertTrue(screen.title.exists)
-                XCTAssertTrue(screen.description.exists)
-                XCTAssertTrue(screen.homeButton.exists)
-                XCTAssertTrue(screen.wrongButton.exists)
-            }
+        try runner.run { app in
+            let screen = CheckInConfirmationScreen(app: app)
+            
+            XCTAssertTrue(screen.title.exists)
+            XCTAssertTrue(screen.description.exists)
+            XCTAssertTrue(screen.homeButton.exists)
+            XCTAssertTrue(screen.wrongButton.exists)
+            XCTAssertTrue(screen.dateTime(CheckInConfirmationScreenScenario.checkinDate).exists)
+            XCTAssertTrue(app.staticTexts[verbatim: CheckInConfirmationScreenScenario.venueName].exists)
         }
     }
     

@@ -18,7 +18,7 @@ extension HomeScreenScenario {
     
     static func postcodeViewModel(parent: UIViewController) -> RiskLevelBanner.ViewModel? {
         if Self.riskyPostcodeEnabled {
-            return RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .constant(.low))
+            return RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .low)
         } else {
             return nil
         }
@@ -37,11 +37,13 @@ extension HomeScreenScenario {
                         exposureNotificationsEnabled.send(enabled)
                     }
                 ),
-                postcodeRiskViewModel: postcodeViewModel(parent: parent),
+                riskLevelBannerViewModel: .constant(postcodeViewModel(parent: parent)),
                 isolationViewModel: RiskLevelIndicator.ViewModel(isolationState: .constant(.notIsolating), paused: .constant(false)),
                 exposureNotificationsEnabled: exposureNotificationsEnabled.removeDuplicates().eraseToAnyPublisher(),
                 showOrderTestButton: .constant(showOrderTestButton),
-                shouldShowSelfDiagnosis: .constant(shouldShowSelfDiagnosis)
+                shouldShowSelfDiagnosis: .constant(shouldShowSelfDiagnosis),
+                userNotificationsEnabled: .constant(false),
+                country: .constant(.england)
             )
         }
     }
@@ -77,9 +79,11 @@ public class HomeScreenAlerts {
     public static let isolationAdviceAlertTitle = "Read isolation advice button tapped."
     public static let checkInAlertTitle = "Check-in into a venue."
     public static let testingInformationAlertTitle = "Testing information button tapped"
-    public static let exposureNotificationAlertTitle = "Exposure notificiatons toggled"
+    public static let exposureNotificationAlertTitle = "Exposure notifications toggled"
     public static let aboutAlertTitle = "About tapped"
+    public static let linkTestResultTitle = "Link test result tapped"
     public static let postcodeBannerAlertTitle = "Postcode banner tapped"
+    public static let scheduleNotificationAlertTitle = "Notification scheduled"
 }
 
 private class Interactor: HomeViewController.Interacting {
@@ -99,7 +103,7 @@ private class Interactor: HomeViewController.Interacting {
         _setExposureNotifcationEnabled = setExposureNotifcationEnabled
     }
     
-    func didTapMoreInfo() {
+    func didTapRiskLevelBanner(viewModel: RiskLevelBanner.ViewModel) {
         viewController?.showAlert(title: HomeScreenAlerts.postcodeBannerAlertTitle)
     }
     
@@ -127,10 +131,18 @@ private class Interactor: HomeViewController.Interacting {
         viewController?.showAlert(title: HomeScreenAlerts.aboutAlertTitle)
     }
     
+    func didTapLinkTestResultButton() {
+        viewController?.showAlert(title: HomeScreenAlerts.linkTestResultTitle)
+    }
+    
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never> {
         viewController?.showAlert(title: HomeScreenAlerts.exposureNotificationAlertTitle)
         _setExposureNotifcationEnabled(enabled)
         return Result.success(()).publisher.eraseToAnyPublisher()
+    }
+    
+    public func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn) {
+        viewController?.showAlert(title: HomeScreenAlerts.scheduleNotificationAlertTitle)
     }
     
     var shouldShowCheckIn: Bool {

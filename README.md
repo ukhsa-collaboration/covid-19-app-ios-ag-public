@@ -10,7 +10,7 @@ All depedencies are fetched using Swift Package Manager. Make sure you have acce
 
 ### Running the app on a simulator
 
-The app requires Xcode 11.6+. There are no other dependencies.
+The app requires Xcode 11.7+. There are no other dependencies.
 
 ### Running the app on a device
 

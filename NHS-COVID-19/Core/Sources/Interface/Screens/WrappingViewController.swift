@@ -11,6 +11,9 @@ public class WrappingViewController: UIViewController {
     
     private var content: UIViewController? {
         didSet {
+            if let presentedViewController = oldValue?.presentedViewController, presentedViewController.modalPresentationStyle != .overFullScreen {
+                oldValue?.dismiss(animated: true, completion: nil)
+            }
             oldValue?.remove()
             if let content = content {
                 addFilling(content)

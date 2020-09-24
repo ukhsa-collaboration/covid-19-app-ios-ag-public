@@ -212,13 +212,48 @@ class _IsolationLogicalStateTests: XCTestCase {
         XCTAssertEqual(state, .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: Isolation(fromDay: .today, untilStartOfDay: endDay, reason: .indexCase(hasPositiveTestResult: true))))
     }
     
+    func testManualTestEntryTriggersIsolation() {
+        let npexDay = LocalDay.today.advanced(by: -2)
+        $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
+            isolationTrigger: .manualTestEntry(npexDay: npexDay.gregorianDay),
+            onsetDay: nil,
+            testInfo: .init(result: .positive, receivedOnDay: .today)
+        )
+        
+        let endDay = npexDay.advanced(by: $state.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days).gregorianDay
+        XCTAssertEqual(state.isolation, Isolation(fromDay: npexDay, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: true)))
+    }
+    
+    func testManualTestEntryWithVoidResultDoesNotTriggerIsolation() {
+        let npexDay = LocalDay.today.advanced(by: -2)
+        $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
+            isolationTrigger: .manualTestEntry(npexDay: npexDay.gregorianDay),
+            onsetDay: nil,
+            testInfo: .init(result: .void, receivedOnDay: .today)
+        )
+        
+        XCTAssertEqual(state, .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil))
+    }
+    
+    func testManualTestEntryWithOldTestDoesNotTriggerIsolation() {
+        let npexDay = LocalDay.today.advanced(by: -12)
+        $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
+            isolationTrigger: .manualTestEntry(npexDay: npexDay.gregorianDay),
+            onsetDay: nil,
+            testInfo: .init(result: .positive, receivedOnDay: .today)
+        )
+        
+        let endDay = npexDay.advanced(by: $state.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days).gregorianDay
+        XCTAssertEqual(state, .isolationFinishedButNotAcknowledged(Isolation(fromDay: npexDay, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: true))))
+    }
+    
 }
 
 private extension IndexCaseInfo {
     
     init(selfDiagnosisDay: GregorianDay, onsetDay: GregorianDay?, testResult: TestResult?) {
         self.init(
-            selfDiagnosisDay: selfDiagnosisDay,
+            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
             onsetDay: onsetDay,
             testInfo: testResult.map { TestInfo(result: $0, receivedOnDay: .today) }
         )

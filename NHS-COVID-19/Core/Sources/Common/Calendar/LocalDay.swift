@@ -6,7 +6,7 @@ import Combine
 import UIKit
 
 /// This represents a day with a specific time zone.
-public struct LocalDay: Equatable {
+public struct LocalDay: Equatable, Hashable {
     public var gregorianDay: GregorianDay
     public var timeZone: TimeZone
     

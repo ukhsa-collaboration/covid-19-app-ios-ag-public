@@ -6,6 +6,7 @@ import Combine
 import Common
 import Domain
 import Interface
+import Localization
 import UIKit
 import UserNotifications
 
@@ -34,25 +35,29 @@ extension CoordinatedAppController {
         case .failedToStart:
             let vc = UnrecoverableErrorViewController()
             return UINavigationController(rootViewController: vc)
-        case .authorizationOnboarding(requestPermissions: let requestPermissions, openURL: let openURL):
+            
+        case .onboarding(let complete, let openURL):
             let interactor = OnboardingInteractor(
-                _requestPermissions: requestPermissions,
+                _complete: complete,
                 _openURL: openURL
             )
             return OnboardingFlowViewController(interactor: interactor)
             
-        case .postcodeOnboarding(savePostcode: let savePostcode):
+        case .authorizationRequired(let requestPermissions, let country):
+            return PermissionsViewController(country: country, submit: requestPermissions)
+            
+        case .postcodeRequired(let savePostcode):
             return EnterPostcodeViewController { postcode in
-                Result { try savePostcode(postcode) }
+                savePostcode(postcode).mapError(DisplayableError.init)
             }
-        case .canNotRunExposureNotification(let reason):
+        case .canNotRunExposureNotification(let reason, let country):
             var vc: UIViewController
             switch reason {
             case let .authorizationDenied(openSettings):
                 let interactor = AuthorizationDeniedInteractor(_openSettings: openSettings)
-                vc = AuthorizationDeniedViewController(interacting: interactor)
+                vc = AuthorizationDeniedViewController(interacting: interactor, country: country)
             case .bluetoothDisabled:
-                vc = BluetoothDisabledViewController()
+                vc = BluetoothDisabledViewController(country: country)
             }
             return UINavigationController(rootViewController: vc)
         case .runningExposureNotification(let context):
@@ -69,66 +74,146 @@ extension CoordinatedAppController {
                     case .notNeeded:
                         return self?.viewControllerForRunningAppIgnoringAcknowledgement(with: context)
                             ?? UIViewController()
-                    case .positiveTestResultAckNeeded(let interactor, let isolationEndDate):
-                        return SendKeysLoadingFlowViewController(interactor: interactor, endOfIsolation: isolationEndDate)
-                    case .positiveTestResultNoIsolationAckNeeded(let interactor):
-                        return SendKeysLoadingFlowViewController(interactor: interactor, endOfIsolation: nil)
-                    case .negativeTestResultAckNeeded(let interactor, let isolationEndDate):
+                    case .neededForPositiveResultStartToIsolate(let interactor, let isolationEndDate):
+                        return SendKeysLoadingFlowViewController(interactor: interactor) { completion in
+                            let interactor = PositiveTestResultWithIsolationInteractor(didTapOnlineServicesLink: interactor.didTapOnlineServicesLink, didTapPrimaryButton: completion)
+                            return NonNegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: isolationEndDate, testResultType: .positive(.start))
+                        }
+                    case .neededForPositiveResultContinueToIsolate(let interactor, let isolationEndDate):
+                        return SendKeysLoadingFlowViewController(interactor: interactor) { completion in
+                            let interactor = PositiveTestResultWithIsolationInteractor(didTapOnlineServicesLink: interactor.didTapOnlineServicesLink, didTapPrimaryButton: completion)
+                            return NonNegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: isolationEndDate, testResultType: .positive(.continue))
+                        }
+                    case .neededForPositiveResultNotIsolating(let interactor):
+                        return SendKeysLoadingFlowViewController(interactor: interactor) { completion in
+                            let interactor = PositiveTestResultNoIsolationInteractor(didTapOnlineServicesLink: interactor.didTapOnlineServicesLink, didTapPrimaryButton: completion)
+                            return NonNegativeTestResultNoIsolationViewController(interactor: interactor)
+                        }
+                    case .neededForNegativeResultContinueToIsolate(let interactor, let isolationEndDate):
                         return NegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: isolationEndDate)
-                    case .negativeTestResultNoIsolationAckNeeded(let interactor):
+                    case .neededForNegativeResultEndIsolation(let interactor):
                         return NegativeTestResultViewController(interactor: interactor)
-                    case .isolationEndAckNeeded(let interactor, let isolationEndDate, let showAdvisory):
+                    case .neededForNegativeResultNotIsolating(let interactor):
+                        return NegativeTestResultNoIsolationViewController(interactor: interactor)
+                    case .neededForNegativeAfterPositiveResultContinueToIsolate(interactor: let interactor, isolationEndDate: let isolationEndDate):
+                        return NegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: isolationEndDate, testResultType: .afterPositive)
+                    case .neededForEndOfIsolation(let interactor, let isolationEndDate, let showAdvisory):
                         return EndOfIsolationViewController(
                             interactor: interactor,
                             isolationEndDate: isolationEndDate,
-                            showAdvisory: showAdvisory
+                            showAdvisory: showAdvisory,
+                            currentDateProvider: context.currentDateProvider
                         )
-                    case .isolationStartAckNeeded(let interactor, let isolationEndDate):
+                    case .neededForStartOfIsolation(let interactor, let isolationEndDate):
                         return ExposureAcknowledgementViewController(
                             interactor: interactor,
                             isolationEndDate: isolationEndDate
                         )
-                    case .riskyVenueNeeded(let interactor, let venueName, let checkInDate):
+                    case .neededForRiskyVenue(let interactor, let venueName, let checkInDate):
                         return RiskyVenueInformationViewController(
                             interactor: interactor,
                             venueName: venueName,
                             checkInDate: checkInDate
                         )
+                    case .neededForVoidResultContinueToIsolate(let interactor, let isolationEndDate):
+                        
+                        let navigationVC = UINavigationController()
+                        
+                        let virologyInteractor = VirologyTestingFlowInteractor(
+                            virologyTestOrderInfoProvider: context.virologyTestingManager,
+                            openURL: context.openURL,
+                            acknowledge: interactor.acknowledge
+                        )
+                        
+                        let bookATestInfoInteractor = BookATestInfoViewControllerInteractor(
+                            didTapBookATest: {
+                                let virologyFlowVC = VirologyTestingFlowViewController(virologyInteractor)
+                                navigationVC.present(virologyFlowVC, animated: true)
+                            },
+                            openURL: context.openURL
+                        )
+                        
+                        let bookATestInfoVC = BookATestInfoViewController(interactor: bookATestInfoInteractor, shouldHaveCancelButton: false)
+                        
+                        let nonNegativeInteractor = VoidTestResultWithIsolationInteractor(
+                            didTapPrimaryButton: {
+                                navigationVC.viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
+                                navigationVC.pushViewController(bookATestInfoVC, animated: true)
+                            },
+                            openURL: context.openURL,
+                            didTapCancel: interactor.acknowledge
+                        )
+                        
+                        let nonNegativeVC = NonNegativeTestResultWithIsolationViewController(interactor: nonNegativeInteractor, isolationEndDate: isolationEndDate, testResultType: .void)
+                        
+                        navigationVC.viewControllers = [nonNegativeVC]
+                        return navigationVC
+                    case .neededForVoidResultNotIsolating(let interactor):
+                        let navigationVC = UINavigationController()
+                        
+                        let virologyInteractor = VirologyTestingFlowInteractor(
+                            virologyTestOrderInfoProvider: context.virologyTestingManager,
+                            openURL: context.openURL,
+                            acknowledge: interactor.acknowledge
+                        )
+                        
+                        let bookATestInfoInteractor = BookATestInfoViewControllerInteractor(
+                            didTapBookATest: {
+                                let virologyFlowVC = VirologyTestingFlowViewController(virologyInteractor)
+                                navigationVC.present(virologyFlowVC, animated: true)
+                            },
+                            openURL: context.openURL
+                        )
+                        
+                        let bookATestInfoVC = BookATestInfoViewController(interactor: bookATestInfoInteractor, shouldHaveCancelButton: false)
+                        
+                        let nonNegativeInteractor = VoidTestResultNoIsolationInteractor(
+                            didTapCancel: interactor.acknowledge,
+                            bookATest: {
+                                navigationVC.viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
+                                navigationVC.pushViewController(bookATestInfoVC, animated: true)
+                            },
+                            openURL: context.openURL
+                        )
+                        
+                        let nonNegativeVC = NonNegativeTestResultNoIsolationViewController(interactor: nonNegativeInteractor, testResultType: .void)
+                        
+                        navigationVC.viewControllers = [nonNegativeVC]
+                        return navigationVC
                     }
                 }
         }
     }
     
     private func viewControllerForRunningAppIgnoringAcknowledgement(with context: RunningAppContext) -> UIViewController {
-        let interactor = HomeFlowViewControllerInteractor(context: context, pasteboardCopier: pasteboardCopier)
+        let interactor = HomeFlowViewControllerInteractor(
+            context: context,
+            pasteboardCopier: pasteboardCopier,
+            currentDateProvider: context.currentDateProvider
+        )
         
-        let postcodeViewModel: RiskLevelBanner.ViewModel?
-        
-        if let postcodeStore = context.postcodeStore {
-            postcodeViewModel = RiskLevelBanner.ViewModel(
-                postcode: postcodeStore.load() ?? "",
-                riskLevel: postcodeStore.$riskLevel.map {
-                    switch $0 {
-                    case nil: return nil
-                    case .low: return .low
-                    case .medium: return .medium
-                    case .high: return .high
+        let riskLevelBannerViewModel = context.postcodeInfo
+            .map { postcodeInfo -> AnyPublisher<RiskLevelBanner.ViewModel?, Never> in
+                guard let postcodeInfo = postcodeInfo else { return Just(nil).eraseToAnyPublisher() }
+                return postcodeInfo.risk
+                    .map(RiskLevelBanner.ViewModel.RiskLevel.init(postcodeRisk:))
+                    .map { riskLevel in
+                        guard let riskLevel = riskLevel else { return nil }
+                        return RiskLevelBanner.ViewModel(postcode: postcodeInfo.postcode.value, riskLevel: riskLevel)
                     }
-                }.property(initialValue: nil)
-            )
-        } else {
-            postcodeViewModel = nil
-        }
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
+            .property(initialValue: nil)
         
         let isolationViewModel = RiskLevelIndicator.ViewModel(
             isolationState: context.isolationState
-                .publisher
                 .mapToInterface(with: .default)
                 .property(initialValue: .notIsolating),
             paused: context.exposureNotificationStateController.isEnabledPublisher.map { !$0 }.property(initialValue: false)
         )
         
-        let showOrderTestButton = context.isolationState.publisher.map { state in
+        let showOrderTestButton = context.isolationState.map { state in
             switch state {
             case .isolate(let isolation):
                 return isolation.canBookTest
@@ -138,20 +223,26 @@ extension CoordinatedAppController {
         }
         .property(initialValue: false)
         
-        let shouldShowSelfDiagnosis = context.isolationState.publisher.map { state in
+        let shouldShowSelfDiagnosis = context.isolationState.map { state in
             if context.selfDiagnosisManager == nil { return false }
             if case .isolate(let isolation) = state { return isolation.canFillQuestionnaire }
             return true
         }
         .property(initialValue: false)
         
+        let userNotificationEnabled = context.exposureNotificationReminder.isNotificationAuthorized.property(initialValue: false)
+        
+        let country = context.country.property(initialValue: context.country.currentValue)
+        
         return HomeFlowViewController(
             interactor: interactor,
-            postcodeViewModel: postcodeViewModel,
+            riskLevelBannerViewModel: riskLevelBannerViewModel,
             isolationViewModel: isolationViewModel,
             exposureNotificationsEnabled: context.exposureNotificationStateController.isEnabledPublisher,
             showOrderTestButton: showOrderTestButton,
-            shouldShowSelfDiagnosis: shouldShowSelfDiagnosis
+            shouldShowSelfDiagnosis: shouldShowSelfDiagnosis,
+            userNotificationsEnabled: userNotificationEnabled,
+            country: country
         )
     }
     
@@ -159,11 +250,11 @@ extension CoordinatedAppController {
 
 private struct OnboardingInteractor: OnboardingFlowViewController.Interacting {
     
-    var _requestPermissions: () -> Void
+    var _complete: () -> Void
     let _openURL: (URL) -> Void
     
-    func requestPermissions() {
-        _requestPermissions()
+    func complete() {
+        _complete()
     }
     
     func didTapPrivacyNotice() {
@@ -172,6 +263,10 @@ private struct OnboardingInteractor: OnboardingFlowViewController.Interacting {
     
     func didTapTermsOfUse() {
         _openURL(ExternalLink.ourPolicies.url)
+    }
+    
+    func didTapAgree() {
+        _complete()
     }
 }
 

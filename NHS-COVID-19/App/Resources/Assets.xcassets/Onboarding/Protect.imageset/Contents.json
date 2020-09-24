@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Group 1249.pdf",
+      "filename" : "Protect_light.pdf",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Group 1249(1).pdf",
+      "filename" : "Protect_dark.pdf",
       "idiom" : "universal"
     },
     {
@@ -21,7 +21,7 @@
           "value" : "high"
         }
       ],
-      "filename" : "Group 1249(2).pdf",
+      "filename" : "Protect_high_contrast.pdf",
       "idiom" : "universal"
     },
     {
@@ -35,7 +35,7 @@
           "value" : "high"
         }
       ],
-      "filename" : "Group 1249(1)-1.pdf",
+      "filename" : "Protect_dark-1.pdf",
       "idiom" : "universal"
     }
   ],

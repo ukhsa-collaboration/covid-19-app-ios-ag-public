@@ -30,12 +30,12 @@ private extension ApplicationServices {
     
     convenience init(developmentServicesFor environment: Environment) {
         #if targetEnvironment(simulator)
-        self.init(standardServicesFor: environment, exposureNotificationManager: SimulatedExposureNotificationManager())
+        self.init(standardServicesFor: environment, exposureNotificationManager: SimulatedExposureNotificationManager(), currentDateProvider: { Date() })
         #else
         if MockScenario.mockDataProvider.useFakeENContacts {
-            self.init(standardServicesFor: environment, exposureNotificationManager: SimulatedExposureNotificationManager())
+            self.init(standardServicesFor: environment, exposureNotificationManager: SimulatedExposureNotificationManager(), currentDateProvider: { Date() })
         } else {
-            self.init(standardServicesFor: environment)
+            self.init(standardServicesFor: environment, currentDateProvider: { Date() })
         }
         #endif
     }

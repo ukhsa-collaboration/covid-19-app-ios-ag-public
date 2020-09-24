@@ -18,13 +18,35 @@ public class QRCodeScannerScreenScenario: Scenario {
     static var appController: AppController {
         let parent = UINavigationController()
         parent.isNavigationBarHidden = true
+        
+        let mock = MockQRCodeScanner()
+        let scanner = QRScanner(
+            state: mock.getState().map { state in
+                switch state {
+                case .starting:
+                    return .starting
+                case .failed:
+                    return .failed
+                case .requestingPermission:
+                    return .requestingPermission
+                case .running:
+                    return .running
+                case .scanning:
+                    return .scanning
+                case .processing:
+                    return .processing
+                case .stopped:
+                    return .stopped
+                }
+            }.eraseToAnyPublisher(),
+            startScanning: mock.startScanner,
+            stopScanning: mock.stopScanner,
+            layoutFinished: mock.changeOrientation
+        )
         let viewController = Interface.QRCodeScannerViewController(
             interactor: Interactor(viewController: parent),
             cameraPermissionState: Just(CameraPermissionState.notDetermined).eraseToAnyPublisher(),
-            requestCameraAccess: {
-                parent.showAlert(title: "Should request for camera permisson.")
-            },
-            createCaptureSession: { _ in nil },
+            scanner: scanner,
             completion: { _ in }
         )
         parent.pushViewController(viewController, animated: false)
@@ -41,6 +63,5 @@ public class QRCodeScannerScreenScenario: Scenario {
             viewController?.showAlert(title: QRCodeScannerScreenScenario.showHelpAlertTitle)
         }
         
-        func didFailedToInitializeCamera() {}
     }
 }

@@ -12,9 +12,11 @@ extension UIButton {
         tintColor = UIColor(.primaryButtonLabel)
         titleLabel?.setDynamicTextStyle(.headline)
         titleLabel?.textAlignment = .center
+        
         NSLayoutConstraint.activate([
             heightAnchor.constraint(greaterThanOrEqualToConstant: .buttonMinimumHeight),
-            heightAnchor.constraint(greaterThanOrEqualTo: titleLabel!.heightAnchor, multiplier: 1, constant: .standardSpacing),
+            heightAnchor.constraint(greaterThanOrEqualTo: titleLabel!.heightAnchor, constant: .standardSpacing),
+            widthAnchor.constraint(equalTo: titleLabel!.widthAnchor, constant: .standardSpacing),
         ])
     }
     
@@ -29,24 +31,36 @@ extension UIButton {
         ])
     }
     
-    public func styleAsLink(text: String) {
+    public func styleAsLink() {
+        setTitleColor(UIColor(.nhsBlue), for: .normal)
+        titleLabel?.setDynamicTextStyle(.headline)
+        titleLabel?.textAlignment = .center
         titleLabel?.attributedText = NSAttributedString(
-            string: text,
+            string: " ",
             attributes: [
                 .underlineStyle: NSUnderlineStyle.single.rawValue,
-                .font: UIFont.preferredFont(forTextStyle: .headline),
-                .foregroundColor: UIColor(.nhsBlue),
             ]
         )
-        setTitleColor(UIColor(.nhsBlue), for: .normal)
-        titleLabel?.adjustsFontForContentSizeCategory = true
-        titleLabel?.numberOfLines = 0
-        titleLabel?.setContentCompressionResistancePriority(.almostRequest, for: .horizontal)
+        NSLayoutConstraint.activate([
+            heightAnchor.constraint(greaterThanOrEqualToConstant: .buttonMinimumHeight),
+            heightAnchor.constraint(greaterThanOrEqualTo: titleLabel!.heightAnchor, multiplier: 1, constant: .standardSpacing),
+        ])
     }
     
     public func styleAsPlain(with color: UIColor) {
         setTitleColor(color, for: .normal)
         titleLabel?.setDynamicTextStyle(.body)
+        titleLabel?.textAlignment = .center
+        
+        NSLayoutConstraint.activate([
+            heightAnchor.constraint(greaterThanOrEqualToConstant: .buttonMinimumHeight),
+            heightAnchor.constraint(greaterThanOrEqualTo: titleLabel!.heightAnchor, constant: .standardSpacing),
+        ])
+    }
+    
+    public func styleAsDestructive() {
+        setTitleColor(UIColor(.errorRed), for: .normal)
+        titleLabel?.setBoldDynamicTextStyle(.body)
         titleLabel?.textAlignment = .center
         
         NSLayoutConstraint.activate([

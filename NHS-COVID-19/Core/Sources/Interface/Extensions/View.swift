@@ -13,6 +13,7 @@ public struct LinkButtonModifier: ViewModifier {
             .accessibilityElement()
             .accessibility(addTraits: .isLink)
             .accessibility(label: Text(text))
+            .accessibility(hint: Text(localize(.link_accessibility_hint)))
     }
 }
 

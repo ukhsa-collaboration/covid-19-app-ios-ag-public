@@ -24,6 +24,10 @@ struct AboutThisAppScreen {
         app.staticTexts[localized: .about_this_app_how_this_app_works_paragraph3]
     }
     
+    var aboutThisAppInstructonForUse: XCUIElement {
+        app.staticTexts[localized: .about_this_app_how_this_app_works_instruction_for_use]
+    }
+    
     var aboutThisAppButton: XCUIElement {
         app.links[localized: .about_this_app_how_this_app_works_button]
     }
@@ -81,19 +85,31 @@ struct AboutThisAppScreen {
     }
     
     var appName: XCUIElement {
-        app.staticTexts[localized: .about_this_app_software_information_app_name(name: AboutThisAppScreenScenario.appName)]
+        app.staticTexts[verbatim: localize(.about_this_app_software_information_app_name) + " " + "NHS-COVID-19"]
     }
     
     var version: XCUIElement {
-        app.staticTexts[localized: .about_this_app_software_information_version(version: AboutThisAppScreenScenario.version)]
+        app.staticTexts[verbatim: localize(.about_this_app_software_information_version) + " " + "1.0"]
     }
     
     var dateOfRelease: XCUIElement {
-        app.staticTexts[localized: .about_this_app_software_information_date_of_release]
+        app.staticTexts[verbatim: localize(.about_this_app_software_information_date_of_release_title) + " " + localize(.about_this_app_software_information_date_of_release_description)]
     }
     
-    var entityNameAndAddress: XCUIElement {
-        app.staticTexts[localized: .about_this_app_software_information_entity_name_and_address]
+    var feedbackInformationTitle: XCUIElement {
+        app.staticTexts[localized: .about_this_app_feedback_information_title]
+    }
+    
+    var feedbackInformationDescription: XCUIElement {
+        app.staticTexts[localized: .about_this_app_feedback_information_description]
+    }
+    
+    var feedbackInformationButton: XCUIElement {
+        app.links[localized: .about_this_app_feedback_information_link_title]
+    }
+    
+    var manufacturer: XCUIElement {
+        app.staticTexts[verbatim: localize(.about_this_app_software_information_manufacturer_title) + " " + localize(.about_this_app_software_information_manufacturer_description)]
     }
     
 }

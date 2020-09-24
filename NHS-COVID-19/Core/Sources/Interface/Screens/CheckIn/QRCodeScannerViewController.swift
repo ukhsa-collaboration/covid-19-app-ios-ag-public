@@ -2,7 +2,6 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
-import AVFoundation
 import Combine
 import Common
 import Localization
@@ -10,14 +9,14 @@ import UIKit
 
 public protocol QRCodeScannerViewControllerInteracting {
     func showHelp()
-    func didFailedToInitializeCamera()
 }
 
-public class QRCodeScannerViewController: UIViewController {
+public class QRScanner {
+    public typealias StartScanning = (UIView, CGRect, @escaping (String) -> Void) -> Void
+    public typealias StopScanning = () -> Void
+    public typealias LayoutFinished = (CGRect, CGRect, UIInterfaceOrientation) -> Void
     
-    public typealias Interacting = QRCodeScannerViewControllerInteracting
-    
-    enum State: Equatable {
+    public enum State: Equatable {
         case starting
         case failed
         case requestingPermission
@@ -27,30 +26,44 @@ public class QRCodeScannerViewController: UIViewController {
         case stopped
     }
     
-    @Published
-    private var state = QRCodeScannerViewController.State.starting {
-        didSet {
-            switch state {
-            case .running:
-                captureSession?.startRunning()
-            case .processing, .stopped:
-                captureSession?.stopRunning()
-            case .failed:
-                interactor.didFailedToInitializeCamera()
-            default:
-                break
-            }
-        }
+    public var state: AnyPublisher<State, Never>
+    
+    private var _startScanning: StartScanning
+    private var _stopScanning: StopScanning
+    private var _layoutFinished: LayoutFinished
+    
+    public init(state: AnyPublisher<State, Never>,
+                startScanning: @escaping StartScanning,
+                stopScanning: @escaping StopScanning,
+                layoutFinished: @escaping LayoutFinished) {
+        self.state = state
+        _startScanning = startScanning
+        _stopScanning = stopScanning
+        _layoutFinished = layoutFinished
     }
     
-    private var captureSession: AVCaptureSession?
-    private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
+    func startScanning(targetView: UIView, scanViewBounds: CGRect, resultHandler: @escaping (String) -> Void) {
+        _startScanning(targetView, scanViewBounds, resultHandler)
+    }
+    
+    func stopScanning() {
+        _stopScanning()
+    }
+    
+    func layoutFinished(viewBounds: CGRect, scanViewBounds: CGRect, orientation: UIInterfaceOrientation) {
+        _layoutFinished(viewBounds, scanViewBounds, orientation)
+    }
+}
+
+public class QRCodeScannerViewController: UIViewController {
+    
+    public typealias Interacting = QRCodeScannerViewControllerInteracting
+    
+    private var scanner: QRScanner
+    
     private var scanView: ScanView!
     
     private var cameraPermissionState: AnyPublisher<CameraPermissionState, Never>
-    private var requestCameraAccess: () -> Void
-    private var createCaptureSession: (@escaping ([AVMetadataMachineReadableCodeObject]) -> Void) -> AVCaptureSession?
-    private var cancellable: AnyCancellable?
     
     private var isCameraSetup: Bool = false
     
@@ -61,15 +74,13 @@ public class QRCodeScannerViewController: UIViewController {
     public init(
         interactor: Interacting,
         cameraPermissionState: AnyPublisher<CameraPermissionState, Never>,
-        requestCameraAccess: @escaping () -> Void,
-        createCaptureSession: @escaping (@escaping ([AVMetadataMachineReadableCodeObject]) -> Void) -> AVCaptureSession?,
+        scanner: QRScanner,
         completion: @escaping (String) -> Void
     ) {
         self.interactor = interactor
         self.cameraPermissionState = cameraPermissionState
-        self.requestCameraAccess = requestCameraAccess
         self.completion = completion
-        self.createCaptureSession = createCaptureSession
+        self.scanner = scanner
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -94,17 +105,12 @@ public class QRCodeScannerViewController: UIViewController {
     
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        setupBindings()
-        if isCameraSetup {
-            state = .running
-        }
+        scanner.startScanning(targetView: view, scanViewBounds: scanView.scanWindowBound, resultHandler: completion)
     }
     
     override public func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if isCameraSetup {
-            state = .stopped
-        }
+        scanner.stopScanning()
     }
     
     override public func accessibilityPerformEscape() -> Bool {
@@ -115,37 +121,13 @@ public class QRCodeScannerViewController: UIViewController {
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        guard let videoPreviewLayer = self.videoPreviewLayer,
-            let connection = videoPreviewLayer.connection else {
-            return
-        }
-        
-        let orientation = UIDevice.current.orientation
-        
-        if connection.isVideoOrientationSupported, let videoOrientation = AVCaptureVideoOrientation(rawValue: orientation.rawValue) {
-            videoPreviewLayer.frame = view.bounds
-            connection.videoOrientation = videoOrientation
-        }
-    }
-    
-    private func setupBindings() {
-        guard cancellable == nil else { return }
-        
-        cancellable = cameraPermissionState
-            .receive(on: RunLoop.main)
-            .sink { cameraState in
-                if cameraState == .authorized {
-                    self.setupCamera()
-                } else if cameraState == .notDetermined {
-                    self.authorize()
-                }
-            }
+        scanner.layoutFinished(viewBounds: view.bounds, scanViewBounds: scanView.scanWindowBound, orientation: view.interfaceOrientation)
     }
     
     private func setupUI() {
         scanView = ScanView(
             frame: view.bounds,
-            cameraState: $state.eraseToAnyPublisher(),
+            cameraState: scanner.state,
             helpHandler: { [weak self] in
                 self?.showHelp()
             }
@@ -163,62 +145,9 @@ public class QRCodeScannerViewController: UIViewController {
         view.addAutolayoutSubview(closeButton)
         
         NSLayoutConstraint.activate([
-            closeButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .standardSpacing),
-            closeButton.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 0),
+            closeButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: .standardSpacing),
+            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
         ])
-    }
-    
-    private func setupCamera() {
-        guard !isCameraSetup else { return }
-        
-        guard let session = createCaptureSession(scan) else {
-            state = .failed
-            return
-        }
-        captureSession = session
-        
-        videoPreviewLayer = AVCaptureVideoPreviewLayer(session: session)
-        videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        videoPreviewLayer?.frame = view.layer.bounds
-        videoPreviewLayer.map { view.layer.insertSublayer($0, at: 0) }
-        
-        isCameraSetup = true
-        
-        state = .running
-    }
-    
-    private func scan(qrCodes: [AVMetadataMachineReadableCodeObject]) {
-        qrCodes.first.map { qrCode in
-            guard let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: qrCode) else {
-                return
-            }
-            
-            guard self.scanView.scanWindowBound.contains(barCodeObject.bounds) else {
-                return
-            }
-            
-            if let payload = qrCode.stringValue {
-                self.state = .scanning
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self.process(payload)
-                }
-            }
-        }
-    }
-    
-    private func process(_ payload: String) {
-        guard state == .scanning else {
-            return
-        }
-        
-        state = .processing
-        
-        completion(payload)
-    }
-    
-    private func authorize() {
-        state = .requestingPermission
-        requestCameraAccess()
     }
     
     private func showHelp() {

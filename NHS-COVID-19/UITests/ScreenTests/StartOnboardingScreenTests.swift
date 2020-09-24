@@ -28,16 +28,29 @@ class StartOnboardingScreenTests: XCTestCase {
         }
     }
     
-    func testComplete() throws {
+    func testAgeCongirmationAccepted() throws {
         try runner.run { app in
             let screen = StartOnboardingScreen(app: app)
-            
-            let completeAction = app.staticTexts[StartOnboardingScreenScenario.continueConfirmationAlertTitle]
-            
             screen.continueButton.tap()
-            XCTAssert(completeAction.displayed)
             
+            XCTAssert(screen.ageConfirmationAcceptButton.exists)
+            screen.ageConfirmationAcceptButton.tap()
+            
+            let accepted = StartOnboardingScreenScenario.continueConfirmationAlertTitle
+            XCTAssert(screen.ageConfirmationAlertHandled(title: accepted).exists)
         }
     }
     
+    func testAgeCongirmationRejected() throws {
+        try runner.run { app in
+            let screen = StartOnboardingScreen(app: app)
+            screen.continueButton.tap()
+            
+            XCTAssert(screen.ageConfirmationRejectButton.exists)
+            screen.ageConfirmationRejectButton.tap()
+            
+            let rejected = StartOnboardingScreenScenario.rejectAlertTitle
+            XCTAssert(screen.ageConfirmationAlertHandled(title: rejected).exists)
+        }
+    }
 }

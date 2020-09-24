@@ -8,7 +8,6 @@ import UIKit
 
 public enum ScenarioKind: CaseIterable, Identifiable {
     case environment
-    case flow
     case screen
     case screenTemplate
     case component
@@ -20,7 +19,6 @@ public enum ScenarioKind: CaseIterable, Identifiable {
     var name: String {
         switch self {
         case .environment: return "Environments"
-        case .flow: return "Flows"
         case .screen: return "Screens"
         case .screenTemplate: return "Screen Templates"
         case .component: return "Components"

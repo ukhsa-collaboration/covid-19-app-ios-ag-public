@@ -38,6 +38,7 @@ public struct PausedIndicator: View {
                 .foregroundColor(Color(.primaryText))
                 .fixedSize(horizontal: false, vertical: true)
         }
+        .contentShape(Rectangle())
         .accessibility(label: Text(localize(.risk_level_indicator_contact_tracing_not_active)))
         .accessibility(addTraits: .isImage)
         .frame(height: 280)

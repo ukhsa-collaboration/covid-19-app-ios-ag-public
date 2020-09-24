@@ -41,7 +41,7 @@ private class Interactor: CheckInConfirmationViewController.Interacting {
         self.viewController = viewController
     }
     
-    func goHome() {
+    func goHomeAfterCheckIn() {
         viewController?.showAlert(title: CheckInConfirmationScreenScenario.didTapGoHome)
     }
     

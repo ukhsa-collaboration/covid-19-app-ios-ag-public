@@ -12,7 +12,7 @@ class SelfDiagnosisManagerTests: XCTestCase {
     
     var selfDiagnosisManager: SelfDiagnosisManager!
     private var isolationState: IsolationState!
-    private let timeZone = Calendar.utc.timeZone
+    private let timeZone = TimeZone.utc
     
     fileprivate let symptoms = [
         (Symptom(title: ["": ""], description: ["": ""], riskWeight: 1), false),

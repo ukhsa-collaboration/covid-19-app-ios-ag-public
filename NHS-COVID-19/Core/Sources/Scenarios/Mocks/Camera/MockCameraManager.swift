@@ -17,8 +17,8 @@ public class MockCameraManager: CameraManaging {
         handler(instanceAuthorizationStatus)
     }
     
-    public func createCaptureSession(handler: CaptureSessionOutputHandler) -> AVCaptureSession? {
+    public func createCaptureSession(handler: CaptureSessionOutputHandler) -> CaptureSession? {
         receivedHandler = handler
-        return AVCaptureSession()
+        return CaptureSession(session: AVCaptureSession())
     }
 }

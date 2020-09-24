@@ -107,12 +107,15 @@ private class LanguageBundle {
             return "\(language): No translation."
         }
         
+        let translation = localize(key)
         if language == "en" {
-            let translation = localize(key)
             if translation.containsForbiddenCharacters {
                 return "\(language): Using forbidden characters."
             }
         }
+//        if translation.isEmpty {
+//            return "\(language): Translation empty."
+//        }
         
         return nil
     }

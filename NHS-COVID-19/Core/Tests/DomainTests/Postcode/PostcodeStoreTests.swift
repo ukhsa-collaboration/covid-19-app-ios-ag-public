@@ -16,10 +16,10 @@ class PostcodeStoreTests: XCTestCase {
         super.setUp()
         
         encryptedStore = MockEncryptedStore()
-        postcodeStore = PostcodeStore(store: encryptedStore) { _ in true }
+        postcodeStore = PostcodeStore(store: encryptedStore)
     }
     
-    func testLoadingPostcodeDataWithLowRisk() {
+    func testLoadingPostcodeDataWithLowRiskV1() {
         encryptedStore.stored["postcode"] = #"""
         {
             "postcode": "P1",
@@ -27,14 +27,13 @@ class PostcodeStoreTests: XCTestCase {
         }
         """# .data(using: .utf8)!
         
-        postcodeStore = PostcodeStore(store: encryptedStore) { _ in true }
+        postcodeStore = PostcodeStore(store: encryptedStore)
         
         XCTAssertTrue(postcodeStore.hasPostcode)
-        XCTAssertEqual("P1", postcodeStore.load())
-        XCTAssertEqual(PostcodeRisk.low, postcodeStore.riskLevel)
+        XCTAssertEqual("P1", postcodeStore.postcode?.value)
     }
     
-    func testLoadingPostcodeDataWithMediumRisk() {
+    func testLoadingPostcodeDataWithMediumRiskV1() {
         encryptedStore.stored["postcode"] = #"""
         {
             "postcode": "P1",
@@ -42,14 +41,13 @@ class PostcodeStoreTests: XCTestCase {
         }
         """# .data(using: .utf8)!
         
-        postcodeStore = PostcodeStore(store: encryptedStore) { _ in true }
+        postcodeStore = PostcodeStore(store: encryptedStore)
         
         XCTAssertTrue(postcodeStore.hasPostcode)
-        XCTAssertEqual("P1", postcodeStore.load())
-        XCTAssertEqual(PostcodeRisk.medium, postcodeStore.riskLevel)
+        XCTAssertEqual("P1", postcodeStore.postcode?.value)
     }
     
-    func testLoadingPostcodeDataWithHighRisk() {
+    func testLoadingPostcodeDataWithHighRiskV1() {
         encryptedStore.stored["postcode"] = #"""
         {
             "postcode": "P1",
@@ -57,26 +55,59 @@ class PostcodeStoreTests: XCTestCase {
         }
         """# .data(using: .utf8)!
         
-        postcodeStore = PostcodeStore(store: encryptedStore) { _ in true }
+        postcodeStore = PostcodeStore(store: encryptedStore)
         
         XCTAssertTrue(postcodeStore.hasPostcode)
-        XCTAssertEqual("P1", postcodeStore.load())
-        XCTAssertEqual(PostcodeRisk.high, postcodeStore.riskLevel)
+        XCTAssertEqual("P1", postcodeStore.postcode?.value)
+    }
+    
+    func testLoadingPostcodeDataWithLowRiskV2() {
+        encryptedStore.stored["postcode"] = #"""
+        {
+            "postcode": "P1"
+        }
+        """# .data(using: .utf8)!
+        
+        postcodeStore = PostcodeStore(store: encryptedStore)
+        
+        XCTAssertTrue(postcodeStore.hasPostcode)
+        XCTAssertEqual("P1", postcodeStore.postcode?.value)
+    }
+    
+    func testLoadingPostcodeDataWithMediumRiskV2() {
+        encryptedStore.stored["postcode"] = #"""
+        {
+            "postcode": "P1"
+        }
+        """# .data(using: .utf8)!
+        
+        postcodeStore = PostcodeStore(store: encryptedStore)
+        
+        XCTAssertTrue(postcodeStore.hasPostcode)
+        XCTAssertEqual("P1", postcodeStore.postcode?.value)
+    }
+    
+    func testLoadingPostcodeDataWithHighRiskV2() {
+        encryptedStore.stored["postcode"] = #"""
+        {
+            "postcode": "P1"
+        }
+        """# .data(using: .utf8)!
+        
+        postcodeStore = PostcodeStore(store: encryptedStore)
+        
+        XCTAssertTrue(postcodeStore.hasPostcode)
+        XCTAssertEqual("P1", postcodeStore.postcode?.value)
     }
     
     func testSavePostcodeSucess() throws {
-        try postcodeStore.save(postcode: "B44")
-        XCTAssertEqual(postcodeStore.load(), "B44")
+        postcodeStore.save(postcode: Postcode("B44"))
+        XCTAssertEqual(postcodeStore.postcode?.value, "B44")
     }
     
     func testDeletePostcode() throws {
-        
-        try postcodeStore.save(postcode: "B44")
+        postcodeStore.save(postcode: Postcode("B44"))
         postcodeStore.delete()
-        XCTAssertNil(postcodeStore.load())
-    }
-    
-    func testNoRiskProvidedByDefault() {
-        XCTAssertNil(postcodeStore.riskLevel)
+        XCTAssertNil(postcodeStore.postcode)
     }
 }

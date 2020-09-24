@@ -5,16 +5,11 @@
 import Combine
 import Foundation
 
-protocol HasWrappedValue {
-    associatedtype Value
-    var wrappedValue: Value { get }
-    var _wrappedValue: Any { get }
-}
-
-public class DomainProperty<Value> {
+public class DomainProperty<Value>: Publisher {
+    public typealias Output = Value
+    public typealias Failure = Never
     
-    public var publisher: AnyPublisher<Value, Never>
-    
+    private var publisher: AnyPublisher<Value, Never>
     private var lastReceivedValue: Value!
     
     public var currentValue: Value {
@@ -34,6 +29,10 @@ public class DomainProperty<Value> {
         
         assert(lastReceivedValue != nil)
     }
+    
+    public func receive<S>(subscriber: S) where S: Subscriber, S.Failure == Never, S.Input == Value {
+        publisher.receive(subscriber: subscriber)
+    }
 }
 
 extension Publisher where Failure == Never {
@@ -43,4 +42,16 @@ extension Publisher where Failure == Never {
         DomainProperty(self)
     }
     
+}
+
+extension DomainProperty {
+    public static func constant(_ value: Value) -> DomainProperty<Value> {
+        DomainProperty(Just(value))
+    }
+}
+
+extension DomainProperty {
+    public func map<T>(_ transform: @escaping (Value) -> T) -> DomainProperty<T> {
+        publisher.map(transform).domainProperty()
+    }
 }

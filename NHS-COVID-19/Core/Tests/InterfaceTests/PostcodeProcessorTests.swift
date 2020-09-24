@@ -65,4 +65,17 @@ class PostcodeProcessorTests: XCTestCase {
         
         XCTAssertEqual(PostcodeProcessor.process(postcode), "C1")
     }
+    
+    func testEmptyString() {
+        let postcode = ""
+        
+        XCTAssertEqual(PostcodeProcessor.process(postcode), "")
+    }
+    
+    func testIgnoreNonAlphanumbericCharacter() {
+        let postcode = " \nL4; ! 3"
+        
+        XCTAssertEqual(PostcodeProcessor.process(postcode), "L4")
+    }
+    
 }

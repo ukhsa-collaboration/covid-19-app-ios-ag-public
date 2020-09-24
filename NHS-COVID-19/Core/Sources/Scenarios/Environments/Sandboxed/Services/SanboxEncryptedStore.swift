@@ -2,6 +2,7 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Common
 import Domain
 import Foundation
 
@@ -19,19 +20,89 @@ class SandboxEncryptedStore: EncryptedStoring {
         }
         
         if let postcode = host.initialState.postcode {
-            if let riskLevel = host.initialState.riskLevel {
-                stored["postcode"] = """
-                {
-                    "postcode": "\(postcode)",
-                    "riskLevel": "\(riskLevel)"
-                }
-                """.data(using: .utf8)!
-            } else {
-                stored["postcode"] = """
-                { "postcode": "\(postcode)" }
-                """.data(using: .utf8)!
+            stored["postcode"] = """
+            { "postcode": "\(postcode)" }
+            """.data(using: .utf8)!
+        }
+        
+        let endDate = host.initialState.testResultEndDateString ?? "610531200"
+        
+        if let testResult = host.initialState.testResult {
+            stored["virology_testing"] = #"""
+            {
+                "unacknowledgedTestResults":[
+                    {
+                        "result":"\#(testResult)",
+                        "endDate":\#(endDate),
+                        "diagnosisKeySubmissionToken":"\#(UUID().uuidString)"
+                    }
+                ]
             }
-            
+            """# .data(using: .utf8)
+        }
+        
+        saveIsolationState()
+    }
+    
+    func saveIsolationState() {
+        guard let isolationCase = Sandbox.Text.IsolationCase(rawValue: host.initialState.isolationCase) else { return }
+        switch isolationCase {
+        case .none:
+            return
+        case .index:
+            let selfDiagnosisDay = GregorianDay.today.advanced(by: -1)
+            stored["isolation_state_info"] = #"""
+            {
+                "configuration" : {
+                    "indexCaseSinceSelfDiagnosisOnset" : 7,
+                    "maxIsolation" : 21,
+                    "contactCase" : 14,
+                    "indexCaseSinceSelfDiagnosisUnknownOnset" : 5,
+                    "housekeepingDeletionPeriod" : 14
+                },
+                "isolationInfo" : {
+                    "hasAcknowledgedEndOfIsolation": false,
+                    "hasAcknowledgedStartOfIsolation": true,
+                    "indexCaseInfo" : {
+                        "selfDiagnosisDay" : {
+                            "day" : \#(selfDiagnosisDay.day),
+                            "month" : \#(selfDiagnosisDay.month),
+                            "year" : \#(selfDiagnosisDay.year)
+                        }
+                    }
+                }
+            }
+            """# .data(using: .utf8)!
+        case .contact:
+            let exposureDay = GregorianDay.today.advanced(by: -2)
+            let isolationFromStartOfDay = GregorianDay.today.advanced(by: -1)
+            stored["isolation_state_info"] = #"""
+            {
+                "configuration" : {
+                    "indexCaseSinceSelfDiagnosisOnset" : 7,
+                    "maxIsolation" : 21,
+                    "contactCase" : 14,
+                    "indexCaseSinceSelfDiagnosisUnknownOnset" : 5,
+                    "housekeepingDeletionPeriod" : 14
+                },
+                "isolationInfo" : {
+                    "hasAcknowledgedEndOfIsolation": false,
+                    "hasAcknowledgedStartOfIsolation": true,
+                    "contactCaseInfo" : {
+                        "exposureDay" : {
+                            "day" : \#(exposureDay.day),
+                            "month" : \#(exposureDay.month),
+                            "year" : \#(exposureDay.year)
+                        },
+                        "isolationFromStartOfDay":{
+                            "year": \#(isolationFromStartOfDay.year),
+                            "month": \#(isolationFromStartOfDay.month),
+                            "day": \#(isolationFromStartOfDay.day)
+                        }
+                    }
+                }
+            }
+            """# .data(using: .utf8)!
         }
     }
     

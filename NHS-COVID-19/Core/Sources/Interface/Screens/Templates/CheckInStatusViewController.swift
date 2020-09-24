@@ -9,10 +9,13 @@ public protocol StatusDetail {
     var title: String { get }
     var icon: UIImage { get }
     var explanation: String? { get }
+    var helpLink: String? { get }
+    var moreExplanation: String? { get }
     var actionButtonTitle: String { get }
     var explanationAligment: NSTextAlignment { get }
     var closeButtonTitle: String? { get }
     func act()
+    func showHelp()
 }
 
 extension StatusDetail {
@@ -20,9 +23,13 @@ extension StatusDetail {
         .center
     }
     
+    var helpLink: String? { nil }
+    var moreExplanation: String? { nil }
     var closeButtonTitle: String? {
         nil
     }
+    
+    func showHelp() {}
 }
 
 open class CheckInStatusViewController: UIViewController {
@@ -45,6 +52,29 @@ open class CheckInStatusViewController: UIViewController {
     
     private lazy var explanationLabel: UIView? = {
         guard let explanation = status.explanation else {
+            return nil
+        }
+        let explanationLabel = UILabel()
+        explanationLabel.styleAsBody()
+        explanationLabel.text = explanation
+        explanationLabel.textAlignment = status.explanationAligment
+        return explanationLabel
+    }()
+    
+    private lazy var helpLinkButton: UIView? = {
+        guard let helpLink = status.helpLink else {
+            return nil
+        }
+        let button = UIButton()
+        button.styleAsLink()
+        button.setTitle(helpLink, for: .normal)
+        button.addTarget(self, action: #selector(didTapHelpLink))
+        button.accessibilityTraits = .link
+        return button
+    }()
+    
+    private lazy var moreExplanationLabel: UIView? = {
+        guard let explanation = status.moreExplanation else {
             return nil
         }
         let explanationLabel = UILabel()
@@ -80,6 +110,12 @@ open class CheckInStatusViewController: UIViewController {
         let stackView = UIStackView(arrangedSubviews: [imageView, titleLabel])
         if let explainationLabel = explanationLabel {
             stackView.addArrangedSubview(explainationLabel)
+        }
+        if let helpLinkButton = helpLinkButton {
+            stackView.addArrangedSubview(helpLinkButton)
+        }
+        if let moreExplanationLabel = moreExplanationLabel {
+            stackView.addArrangedSubview(moreExplanationLabel)
         }
         stackView.axis = .vertical
         stackView.alignment = .center
@@ -119,9 +155,10 @@ open class CheckInStatusViewController: UIViewController {
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: .standardSpacing),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            
             actionButton.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: .standardSpacing),
-            actionButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: .standardSpacing),
-            actionButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -.standardSpacing),
+            actionButton.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor, constant: .standardSpacing),
+            actionButton.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: -.standardSpacing),
             actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -.standardSpacing),
             
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
@@ -132,8 +169,8 @@ open class CheckInStatusViewController: UIViewController {
             
             stackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor),
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: .standardSpacing),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -.standardSpacing),
+            stackView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor, constant: .standardSpacing),
+            stackView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: -.standardSpacing),
             
             stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor).withPriority(.defaultLow),
@@ -153,6 +190,10 @@ open class CheckInStatusViewController: UIViewController {
     
     @objc private func didTapActionButton() {
         status.act()
+    }
+    
+    @objc private func didTapHelpLink() {
+        status.showHelp()
     }
     
     @objc private func closeButtonTapped() {

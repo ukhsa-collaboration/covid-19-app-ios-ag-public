@@ -62,4 +62,14 @@ enum Metrics {
         mxSignpost(.end, log: metricsLogHandle, name: metric.name)
     }
     
+    static func signpostReceived(_ testResult: VirologyTestResult.TestResult) {
+        switch testResult {
+        case .positive:
+            signpost(.receivedPositiveTestResult)
+        case .negative:
+            signpost(.receivedNegativeTestResult)
+        case .void:
+            signpost(.receivedVoidTestResult)
+        }
+    }
 }

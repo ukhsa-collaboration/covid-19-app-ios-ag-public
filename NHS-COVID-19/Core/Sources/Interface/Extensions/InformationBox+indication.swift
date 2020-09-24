@@ -7,7 +7,7 @@ import UIKit
 extension InformationBox {
     public static func indication(text: String, style: Style) -> InformationBox {
         InformationBox(
-            views: [UILabel().styleAsSecondaryTitle().set(text: text)],
+            views: [UILabel().styleAsTertiaryTitle().set(text: text)],
             style: style,
             backgroundColor: UIColor(.surface)
         )

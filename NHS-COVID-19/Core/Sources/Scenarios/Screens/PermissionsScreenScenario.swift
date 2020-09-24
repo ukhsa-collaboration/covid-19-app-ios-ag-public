@@ -15,7 +15,7 @@ public class PermissionsScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             parent.isNavigationBarHidden = true
-            return PermissionsViewController { [weak parent] in
+            return PermissionsViewController(country: .england) { [weak parent] in
                 parent?.showAlert(title: Self.continueConfirmationAlertTitle)
             }
         }

@@ -8,6 +8,7 @@ import UIKit
 public protocol ErrorDetail {
     var title: String { get }
     var content: [UIView] { get }
+    var logoStrapLineStyle: LogoStrapline.Style { get }
     
     var action: (title: String, act: () -> Void)? { get }
 }
@@ -52,7 +53,7 @@ open class RecoverableErrorViewController: UIViewController {
             return button
         }
         
-        let logoStrapline = LogoStrapline(.nhsBlue, style: .onboarding)
+        let logoStrapline = LogoStrapline(.nhsBlue, style: error.logoStrapLineStyle)
         
         var content = error.content
         content.insert(label, at: 0)
@@ -74,16 +75,16 @@ open class RecoverableErrorViewController: UIViewController {
         button.map { view.addAutolayoutSubview($0) }
         
         NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
             scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-            stackView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            stackView.widthAnchor.constraint(equalTo: view.readableContentGuide.widthAnchor),
         ])
         
         if let button = button {
             NSLayoutConstraint.activate([
-                button.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-                button.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
+                button.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+                button.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
                 button.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: .standardSpacing),
                 button.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -.standardSpacing).withPriority(.defaultHigh),
             ])

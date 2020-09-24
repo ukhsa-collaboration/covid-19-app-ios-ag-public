@@ -40,6 +40,15 @@ struct UploadCommand: ParsableCommand {
         )
         
         try result.write(to: validationResultFile)
+        
+        try checkSuccess(validationResultFile: validationResultFile)
+    }
+    
+    func checkSuccess(validationResultFile: URL) throws {
+        let content = try String(contentsOf: validationResultFile, encoding: .utf8)
+        if !content.contains("success-message") {
+            throw CustomError("Upload to App Store Connect failed")
+        }
     }
     
 }

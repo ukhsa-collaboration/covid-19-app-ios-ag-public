@@ -12,14 +12,14 @@ public protocol TestPropConfiguration {
 public protocol TestProp {
     associatedtype Configuration = Void
     
-    static func prepare(_ test: XCTestCase)
     static var defaultConfiguration: Configuration { get }
     init(configuration: Configuration) throws
+    mutating func prepare(for test: XCTestCase)
 }
 
 public extension TestProp {
     
-    static func prepare(_ test: XCTestCase) {}
+    mutating func prepare(for test: XCTestCase) {}
     
 }
 
@@ -56,8 +56,8 @@ public class Propped<Prop: TestProp> {
         switch state {
         case .notInitialized:
             do {
-                Prop.prepare(instance)
-                let value = try Prop(configuration: configuration)
+                var value = try Prop(configuration: configuration)
+                value.prepare(for: instance)
                 state = .initialized(value)
                 instance.addTeardownBlock {
                     self.state = .notInitialized

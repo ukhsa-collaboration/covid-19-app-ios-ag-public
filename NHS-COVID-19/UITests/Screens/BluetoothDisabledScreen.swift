@@ -11,15 +11,7 @@ struct BluetoothDisabledScreen {
         app.staticTexts[localized: .bluetooth_disabled_title]
     }
     
-    var description1: XCUIElement {
-        app.staticTexts[localized: .bluetooth_disabled_description_1]
-    }
-    
-    var description2: XCUIElement {
-        app.staticTexts[localized: .bluetooth_disabled_description_2]
-    }
-    
-    var description3: XCUIElement {
-        app.staticTexts[localized: .bluetooth_disabled_description_3]
+    var description: [XCUIElement] {
+        app.staticTexts[localized: .bluetooth_disabled_description]
     }
 }

@@ -1,8 +1,14 @@
 {
   "images" : [
     {
-      "filename" : "ExternalLink.pdf",
-      "idiom" : "universal"
+      "filename" : "Vector-1.pdf",
+      "idiom" : "universal",
+      "language-direction" : "left-to-right"
+    },
+    {
+      "filename" : "Vector.pdf",
+      "idiom" : "universal",
+      "language-direction" : "right-to-left"
     }
   ],
   "info" : {

@@ -15,7 +15,7 @@ public class AuthorizationDeniedScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return AuthorizationDeniedViewController(interacting: interactor)
+            return AuthorizationDeniedViewController(interacting: interactor, country: .england)
         }
     }
 }

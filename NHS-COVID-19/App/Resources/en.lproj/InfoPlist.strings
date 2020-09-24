@@ -1,1 +1,1 @@
-NSCameraUsageDescription = "This is to scan the official NHS QR codes";
+"NSCameraUsageDescription" = "This is to scan the official NHS QR codes so you can easily check into places like bars and restaurants.";

@@ -12,6 +12,8 @@ extension Interface.TestResult {
             self = .positive
         case .negative:
             self = .negative
+        case .void:
+            self = .void
         }
     }
 }

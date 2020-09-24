@@ -17,4 +17,12 @@ struct QRCodeScannerScreen {
         app.staticTexts[localized: .checkin_camera_qrcode_scanner_help_button_title]
     }
     
+    var statusLabel: XCUIElement {
+        app.staticTexts[localized: .qrcoder_scanner_status_requesting_permission]
+    }
+    
+    var descriptionLabel: XCUIElement {
+        app.staticTexts[localized: .checkin_camera_qrcode_scanner_description_label]
+    }
+    
 }

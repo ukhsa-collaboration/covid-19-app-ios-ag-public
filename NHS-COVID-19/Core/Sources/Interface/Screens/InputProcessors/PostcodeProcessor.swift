@@ -6,11 +6,15 @@ enum PostcodeProcessor {
     private static let maxPostcodeLength = 4
     
     static func process(_ postcode: String) -> String {
-        let uppercasedPostcode = postcode.uppercased()
-        let parts = uppercasedPostcode.split(separator: " ")
-        if let nonEmptyPart = parts.first(where: { substring in !substring.isEmpty }) {
-            return String(nonEmptyPart.prefix(Self.maxPostcodeLength))
+        
+        var result = postcode
+        
+        // Only interested in first part of the string
+        let parts = result.split(separator: " ")
+        if let nonEmptyFirstPartOfThePostcode = parts.first(where: { !$0.isEmpty }) {
+            result = String(nonEmptyFirstPartOfThePostcode)
         }
-        return postcode
+        
+        return String(result.alphamuneric.uppercased().prefix(maxPostcodeLength))
     }
 }

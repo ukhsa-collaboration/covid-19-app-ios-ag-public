@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>%ld exposure_notification_reminder_sheet_hours</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@hours@</string>
+			<key>hours</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>%ld 小时</string>
+			</dict>
+		</dict>
+		<key>exposure_notification_reminder_alert_title %ld hours</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@hours@</string>
+			<key>hours</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>设置提醒在 %ld 小时内重新打开接触追踪。</string>
+			</dict>
+		</dict>
+		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>请隔离 %ld 天并预订测试</string>
+			</dict>
+		</dict>
+		<key>positive_test_please_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>继续自我隔离 %ld 天</string>
+			</dict>
+		</dict>
+		<key>isolation_days_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>还剩%ld天</string>
+			</dict>
+		</dict>
+		<key>positive_symptoms_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>%1$d  天</string>
+			</dict>
+		</dict>
+		<key>isolation_days_subtitle %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>天</string>
+			</dict>
+		</dict>
+		<key>exposure_acknowledgement_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>%ld 小时</string>
+			</dict>
+		</dict>
+		<key>exposure_acknowledgement_please_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>请自我隔离 %ld 天</string>
+			</dict>
+		</dict>
+		<key>isolation_indicator_accessiblity_label days: %ld date: %@ time: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>您需要进行自我隔离，直到%2$@的%3$@。还剩%1$ld天。</string>
+			</dict>
+		</dict>
+		<key>positive_test_start_to_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>请自我隔离 %ld 天</string>
+			</dict>
+		</dict>
+	</dict>
+</plist>

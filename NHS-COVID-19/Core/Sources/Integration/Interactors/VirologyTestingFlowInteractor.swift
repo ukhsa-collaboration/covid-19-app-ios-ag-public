@@ -9,19 +9,25 @@ import Foundation
 import Interface
 
 class VirologyTestingFlowInteractor: VirologyTestingFlowViewController.Interacting {
-    private let virologyTestOrderInfoProvider: VirologyTestingTestOrderInfoProviding
+    var acknowledge: (() -> Void)?
+    
+    private let virologyTestOrderInfoProvider: VirologyTestingManaging
     private let openURL: (URL) -> Void
     private let pasteboardCopier: PasteboardCopying
     
     private var referenceCode: ReferenceCode?
     private var orderWebsiteURL: URL?
     
-    init(virologyTestOrderInfoProvider: VirologyTestingTestOrderInfoProviding,
-         openURL: @escaping (URL) -> Void,
-         pasteboardCopier: PasteboardCopying) {
+    init(
+        virologyTestOrderInfoProvider: VirologyTestingManaging,
+        openURL: @escaping (URL) -> Void,
+        pasteboardCopier: PasteboardCopying = PasteboardCopier(),
+        acknowledge: (() -> Void)?
+    ) {
         self.virologyTestOrderInfoProvider = virologyTestOrderInfoProvider
         self.openURL = openURL
         self.pasteboardCopier = pasteboardCopier
+        self.acknowledge = acknowledge
     }
     
     func fetchVirologyTestingInfo() -> AnyPublisher<InterfaceVirologyTestingInfo, NetworkRequestError> {

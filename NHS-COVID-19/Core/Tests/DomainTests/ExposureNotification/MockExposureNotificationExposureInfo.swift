@@ -10,4 +10,5 @@ struct MockENExposureInfo: ExposureNotificationExposureInfo {
     var attenuationDurations: [NSNumber]
     var date: Date
     var totalRiskScore: ENRiskScore
+    var transmissionRiskLevel: ENRiskLevel
 }

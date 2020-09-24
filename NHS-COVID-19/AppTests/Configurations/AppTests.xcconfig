@@ -1,7 +1,7 @@
 
 #include "../../Configurations/Targets/Test.xcconfig"
 
-PRODUCT_BUNDLE_IDENTIFIER = com.zuhlke.nhs.covid19.AppTests
+PRODUCT_BUNDLE_IDENTIFIER = uk.nhs.covid19.AppTests
 
 INFOPLIST_FILE = AppTests/Configurations/Info.plist
 

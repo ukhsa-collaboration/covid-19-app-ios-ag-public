@@ -22,6 +22,7 @@ struct ReportCommand: ParsableCommand {
             UploadCommand.self,
             VersioningCommand.self,
             DeployLatestCommand.self,
+            GetCommand.self,
         ]
     )
     

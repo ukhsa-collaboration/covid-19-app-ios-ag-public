@@ -2,13 +2,14 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Common
 import Localization
 import UIKit
 
 public class PermissionsViewController: OnboardingStepViewController {
     
-    public init(submit: @escaping () -> Void) {
-        super.init(step: PermissionsStep(submit: submit))
+    public init(country: Country, submit: @escaping () -> Void) {
+        super.init(step: PermissionsStep(country: country, submit: submit))
     }
     
     required init?(coder: NSCoder) {
@@ -19,7 +20,9 @@ public class PermissionsViewController: OnboardingStepViewController {
 
 private class PermissionsStep: NSObject, OnboardingStep {
     var footerContent = [UIView]()
+    var strapLineStyle: LogoStrapline.Style? { .home(country) }
     
+    private let country: Country
     private let submit: () -> Void
     
     private lazy var title: UILabel = {
@@ -32,7 +35,8 @@ private class PermissionsStep: NSObject, OnboardingStep {
     let actionTitle = localize(.permissions_continue_button_title)
     let image: UIImage? = UIImage(.onboardingPermissions)
     
-    init(submit: @escaping () -> Void) {
+    init(country: Country, submit: @escaping () -> Void) {
+        self.country = country
         self.submit = submit
     }
     
@@ -53,15 +57,12 @@ private class PermissionsStep: NSObject, OnboardingStep {
     
     private var exposureNotificationHeading: UILabel { label(for: .exposure_notification_permissions_onboarding_step_heading).styleAsTertiaryTitle() }
     private var exposureNotificationBody: UILabel { label(for: .exposure_notification_permissions_onboarding_step_body).styleAsBody() }
-    private var notificationsHeading: UILabel { label(for: .notification_permissions_onboarding_step_heading).styleAsTertiaryTitle() }
-    private var notificationsBody: UILabel { label(for: .notification_permissions_onboarding_step_body).styleAsBody() }
     private var detail: UILabel { label(for: .permissions_onboarding_step_detail).styleAsBody() }
     
     var content: [UIView] {
         [
             stack(for: [title]),
             stack(for: [exposureNotificationHeading, exposureNotificationBody]),
-            stack(for: [notificationsHeading, notificationsBody]),
             stack(for: [detail]),
         ]
     }

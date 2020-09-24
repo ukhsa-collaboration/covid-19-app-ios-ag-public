@@ -23,6 +23,8 @@ private class LogoStraplineViewController: UIViewController {
     
     override func viewDidLoad() {
         let logoStrapline = LogoStrapline(.nhsBlue, style: .onboarding)
+        logoStrapline.isAccessibilityElement = true
+        logoStrapline.accessibilityElementsHidden = false
         
         let view = self.view!
         view.styleAsScreenBackground(with: traitCollection)

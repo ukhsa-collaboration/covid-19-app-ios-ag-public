@@ -29,8 +29,8 @@ public class PositiveSymptomsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var padlockImageView: UIImageView = {
-        let view = UIImageView(.padlock)
+    private var imageView: UIImageView = {
+        let view = UIImageView(.isolationStartIndex)
         view.adjustsImageSizeForAccessibilityContentSizeCategory = true
         view.styleAsDecoration()
         return view
@@ -102,17 +102,14 @@ public class PositiveSymptomsViewController: UIViewController {
     }()
     
     private lazy var furtherAdviceLink: LinkButton = {
-        let furtherAdviceLink = LinkButton(
-            title: localize(.end_of_isolation_online_services_link),
-            textAlignment: .center
-        )
+        let furtherAdviceLink = LinkButton(title: localize(.end_of_isolation_online_services_link))
         furtherAdviceLink.addTarget(self, action: #selector(didTapFurtherAdviceLink), for: .touchUpInside)
         return furtherAdviceLink
     }()
     
     private lazy var contentStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
-            padlockImageView,
+            imageView,
             pleaseIsolateStack,
             InformationBox.indication.warning(localize(.positive_symptoms_you_might_have_corona)),
             explainationLabel,
@@ -142,11 +139,11 @@ public class PositiveSymptomsViewController: UIViewController {
         view.addAutolayoutSubview(acknowledgementButtonContainer)
         
         NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            acknowledgementButtonContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            acknowledgementButtonContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            contentStack.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
+            acknowledgementButtonContainer.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            acknowledgementButtonContainer.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
+            contentStack.widthAnchor.constraint(equalTo: view.readableContentGuide.widthAnchor),
             
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             acknowledgementButtonContainer.topAnchor.constraint(equalTo: scrollView.bottomAnchor),

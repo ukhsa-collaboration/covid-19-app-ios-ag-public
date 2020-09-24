@@ -51,6 +51,8 @@ public class RecoverableErrorScreenTemplateScenario: Scenario, UITestInspectable
             (actionTitle, act)
         }
         
+        var logoStrapLineStyle: LogoStrapline.Style = .onboarding
+        
         var title: String
         var actionTitle: String
         var content: [UIView]

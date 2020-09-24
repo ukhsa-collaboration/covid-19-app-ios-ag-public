@@ -15,9 +15,7 @@ class BluetoothDisabledScreenTests: XCTestCase {
             let screen = BluetoothDisabledScreen(app: app)
             
             XCTAssert(screen.errorTitle.exists)
-            XCTAssert(screen.description1.exists)
-            XCTAssert(screen.description2.exists)
-            XCTAssert(screen.description3.exists)
+            XCTAssert(screen.description.allExist)
         }
     }
 }

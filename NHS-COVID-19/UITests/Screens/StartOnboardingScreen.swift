@@ -51,4 +51,16 @@ struct StartOnboardingScreen {
     var continueButton: XCUIElement {
         app.windows["MainWindow"].buttons[localized: .start_onboarding_button_title]
     }
+    
+    var ageConfirmationAcceptButton: XCUIElement {
+        app.buttons[localized: .age_confirmation_alert_accept]
+    }
+    
+    var ageConfirmationRejectButton: XCUIElement {
+        app.buttons[localized: .age_confirmation_alert_reject]
+    }
+    
+    func ageConfirmationAlertHandled(title: String) -> XCUIElement {
+        app.staticTexts[title]
+    }
 }

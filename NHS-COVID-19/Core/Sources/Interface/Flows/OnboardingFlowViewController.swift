@@ -5,9 +5,9 @@
 import UIKit
 
 public protocol OnboardingFlowViewControllerInteracting {
-    func requestPermissions()
     func didTapPrivacyNotice()
     func didTapTermsOfUse()
+    func didTapAgree()
 }
 
 public class OnboardingFlowViewController: UINavigationController {
@@ -16,8 +16,8 @@ public class OnboardingFlowViewController: UINavigationController {
     
     private enum State {
         case start
+        case deniedAge
         case privacy
-        case permissions
     }
     
     private let interactor: Interacting
@@ -49,18 +49,13 @@ public class OnboardingFlowViewController: UINavigationController {
         switch state {
         case .start:
             return StartOnboardingViewController(
-                complete: { [weak self] in
-                    guard let self = self else { return }
-                    self.state = .privacy
-                }
+                complete: { [weak self] in self?.state = .privacy },
+                reject: { [weak self] in self?.state = .deniedAge }
             )
         case .privacy:
             return PrivacyViewController(interactor: self)
-        case .permissions:
-            return PermissionsViewController { [weak self] in
-                guard let self = self else { return }
-                self.interactor.requestPermissions()
-            }
+        case .deniedAge:
+            return BelowRequiredAgeErrorViewController()
         }
     }
 }
@@ -75,7 +70,7 @@ extension OnboardingFlowViewController: PrivacyViewController.Interacting {
     }
     
     public func didTapAgree() {
-        state = .permissions
+        interactor.didTapAgree()
     }
     
     public func didTapNoThanks() {
