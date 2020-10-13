@@ -25,6 +25,7 @@ class CircuitBreakerTests: XCTestCase {
             var checkInsStore = NoOpRiskyCheckinsProvider()
             
             var handleContactCase: (RiskInfo) -> Void = { _ in }
+            var handleDontWorryNotification: () -> Void = {}
         }
         
         let circuitBreaker: CircuitBreaker
@@ -34,7 +35,8 @@ class CircuitBreakerTests: XCTestCase {
                 client: configuration.client,
                 exposureInfoProvider: configuration.store,
                 riskyCheckinsProvider: configuration.checkInsStore,
-                handleContactCase: configuration.handleContactCase
+                handleContactCase: configuration.handleContactCase,
+                handleDontWorryNotification: configuration.handleDontWorryNotification
             )
         }
     }
@@ -47,6 +49,11 @@ class CircuitBreakerTests: XCTestCase {
     private var handleContactCase: (RiskInfo) -> Void {
         get { $instance.handleContactCase }
         set { $instance.handleContactCase = newValue }
+    }
+    
+    private var handleDontWorryNotification: () -> Void {
+        get { $instance.handleDontWorryNotification }
+        set { $instance.handleDontWorryNotification = newValue }
     }
     
     private func processPendingApprovals() throws {
@@ -162,5 +169,117 @@ class CircuitBreakerTests: XCTestCase {
         
         XCTAssertTrue(handledContactCase)
         XCTAssertNil(store.exposureInfo)
+    }
+    
+    func testNoDontWorryNotificationWithApprovalYes() throws {
+        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
+        
+        var handledDontWorryNotification = false
+        handleDontWorryNotification = { handledDontWorryNotification = true }
+        circuitBreaker.showDontWorryNotificationIfNeeded = true
+        
+        XCTAssertFalse(handledDontWorryNotification)
+        
+        client.approvalResponse = .init(approvalToken: .init(UUID().uuidString), approval: .yes)
+        try processPendingApprovals()
+        
+        XCTAssertFalse(handledDontWorryNotification)
+    }
+    
+    func testShowDontWorryNotificationWithApprovalPending() throws {
+        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
+        
+        var handledDontWorryNotification = false
+        handleDontWorryNotification = { handledDontWorryNotification = true }
+        circuitBreaker.showDontWorryNotificationIfNeeded = true
+        
+        XCTAssertFalse(handledDontWorryNotification)
+        
+        client.approvalResponse = .init(approvalToken: .init(UUID().uuidString), approval: .pending)
+        try processPendingApprovals()
+        
+        XCTAssertTrue(handledDontWorryNotification)
+    }
+    
+    func testShowDontWorryNotificationWithApprovalNo() throws {
+        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
+        
+        var handledDontWorryNotification = false
+        handleDontWorryNotification = { handledDontWorryNotification = true }
+        circuitBreaker.showDontWorryNotificationIfNeeded = true
+        
+        XCTAssertFalse(handledDontWorryNotification)
+        
+        client.approvalResponse = .init(approvalToken: .init(UUID().uuidString), approval: .no)
+        try processPendingApprovals()
+        
+        XCTAssertTrue(handledDontWorryNotification)
+    }
+    
+    func testShowDontWorryNotificationWithApprovalPendingDoNotShow() throws {
+        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
+        
+        var handledDontWorryNotification = false
+        handleDontWorryNotification = { handledDontWorryNotification = true }
+        circuitBreaker.showDontWorryNotificationIfNeeded = false
+        
+        XCTAssertFalse(handledDontWorryNotification)
+        
+        client.approvalResponse = .init(approvalToken: .init(UUID().uuidString), approval: .pending)
+        try processPendingApprovals()
+        
+        XCTAssertFalse(handledDontWorryNotification)
+    }
+    
+    func testShowDontWorryNotificationWithApprovalNoDoNotShow() throws {
+        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
+        
+        var handledDontWorryNotification = false
+        handleDontWorryNotification = { handledDontWorryNotification = true }
+        circuitBreaker.showDontWorryNotificationIfNeeded = false
+        
+        XCTAssertFalse(handledDontWorryNotification)
+        
+        client.approvalResponse = .init(approvalToken: .init(UUID().uuidString), approval: .no)
+        try processPendingApprovals()
+        
+        XCTAssertFalse(handledDontWorryNotification)
+    }
+    
+    func testShowDontWorryNotificationWithError() throws {
+        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
+        
+        var handledDontWorryNotification = false
+        handleDontWorryNotification = { handledDontWorryNotification = true }
+        circuitBreaker.showDontWorryNotificationIfNeeded = true
+        
+        XCTAssertFalse(handledDontWorryNotification)
+        
+        client.shouldShowError = true
+        try processPendingApprovals()
+        
+        XCTAssertTrue(handledDontWorryNotification)
+    }
+    
+    func testShowDontWorryNotificationWithErrorDoNotShow() throws {
+        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
+        
+        var handledDontWorryNotification = false
+        handleDontWorryNotification = { handledDontWorryNotification = true }
+        circuitBreaker.showDontWorryNotificationIfNeeded = false
+        
+        XCTAssertFalse(handledDontWorryNotification)
+        
+        client.shouldShowError = true
+        try processPendingApprovals()
+        
+        XCTAssertFalse(handledDontWorryNotification)
     }
 }

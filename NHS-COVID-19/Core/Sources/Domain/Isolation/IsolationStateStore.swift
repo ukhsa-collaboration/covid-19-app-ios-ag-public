@@ -98,6 +98,14 @@ class IsolationStateStore: SymptomsOnsetDateAndEncounterDateProviding {
         _ = save(isolationInfo)
     }
     
+    func restartIsolationAcknowledgement() {
+        let isolationInfo = mutating(self.isolationInfo) {
+            $0.hasAcknowledgedStartOfIsolation = true
+            $0.hasAcknowledgedEndOfIsolation = false
+        }
+        _ = save(isolationInfo)
+    }
+    
     private func save(_ isolationInfo: IsolationInfo) -> IsolationLogicalState {
         let configuration = self.configuration
         isolationStateInfo = IsolationStateInfo(
@@ -138,5 +146,20 @@ class IsolationStateStore: SymptomsOnsetDateAndEncounterDateProviding {
         }
         
         return Empty().eraseToAnyPublisher()
+    }
+    
+    func stopSelfIsolation() {
+        guard let indexCaseInfo = isolationStateInfo?.isolationInfo.indexCaseInfo else {
+            return
+        }
+        
+        guard case .selfDiagnosis = indexCaseInfo.isolationTrigger else {
+            return
+        }
+        
+        // Isolation remains unchanged if test result is positive or void
+        if indexCaseInfo.testInfo?.result == nil || indexCaseInfo.testInfo?.result == .negative {
+            isolationStateInfo = nil
+        }
     }
 }

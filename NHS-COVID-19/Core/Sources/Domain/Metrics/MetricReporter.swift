@@ -48,6 +48,12 @@ class MetricReporter: NSObject {
             .eraseToAnyPublisher()
     }
     
+    func didFinishOnboarding() {
+        let today = GregorianDay.today.startDate(in: .utc)
+        let payload = chunkCreator.createTriggeredPayload(dateInterval: DateInterval(start: today, end: today))
+        let info = MetricsInfo(payload: MetricsInfoPayload.triggeredPayload(payload), postalDistrict: getPostcode(), recordedMetrics: [.completedOnboarding: 1])
+        client.fetch(MetricSubmissionEndpoint(), with: info).replaceError(with: ()).sink { _ in }.store(in: &cancellables)
+    }
 }
 
 private extension MetricCollector {

@@ -16,18 +16,18 @@ class BasicStickyFooterScrollingContent: StickyFooterScrollingContent {
     var footerContent: StackContent
     var spacing: CGFloat
     
-    init(scrollingViews: [UIView], footerTopView: UIView, footerBottomView: UIView? = nil) {
+    init(scrollingViews: [StackViewContentProvider], footerTopView: UIView, footerBottomView: UIView? = nil) {
         scrollingContent = BasicContent(
             views: scrollingViews,
             spacing: .standardSpacing,
-            margins: mutating(.largeInset) { $0.bottom = 0 }
+            margins: mutating(.zero) { $0.bottom = 0 }
         )
         
         footerContent = FooterContent(
             topView: footerTopView,
             bottomView: footerBottomView,
             spacing: .standardSpacing,
-            margins: mutating(.largeInset) { $0.top = 0 }
+            margins: mutating(.zero) { $0.top = 0 }
         )
         
         spacing = .doubleSpacing
@@ -35,7 +35,7 @@ class BasicStickyFooterScrollingContent: StickyFooterScrollingContent {
 }
 
 class PrimaryButtonStickyFooterScrollingContent: BasicStickyFooterScrollingContent {
-    init(scrollingViews: [UIView], primaryButton: (title: String, action: () -> Void)) {
+    init(scrollingViews: [StackViewContentProvider], primaryButton: (title: String, action: () -> Void)) {
         super.init(
             scrollingViews: scrollingViews,
             footerTopView: PrimaryButton(title: primaryButton.title, action: primaryButton.action)
@@ -47,9 +47,11 @@ public class StickyFooterScrollingContentView: UIView {
     
     private let scrollView: UIScrollView
     private let footerStack: UIStackView
+    private let scrollingStack: UIStackView
     
     init(content: StickyFooterScrollingContent) {
-        scrollView = UIScrollView(content: content.scrollingContent)
+        scrollingStack = UIStackView(content: content.scrollingContent)
+        scrollView = UIScrollView(stackView: scrollingStack)
         footerStack = UIStackView(content: content.footerContent)
         
         super.init(frame: .zero)
@@ -62,15 +64,18 @@ public class StickyFooterScrollingContentView: UIView {
         scrollView.keyboardDismissMode = .onDrag
         
         NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: readableContentGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: readableContentGuide.trailingAnchor),
             scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            
+            scrollView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             
             footerStack.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: content.spacing),
             
-            footerStack.leadingAnchor.constraint(equalTo: readableContentGuide.leadingAnchor),
-            footerStack.trailingAnchor.constraint(equalTo: readableContentGuide.trailingAnchor),
-            footerStack.bottomAnchor.constraint(equalTo: readableContentGuide.bottomAnchor).withPriority(.defaultHigh),
+            footerStack.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            footerStack.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            footerStack.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor).withPriority(.defaultHigh),
+            
+            scrollingStack.widthAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.widthAnchor),
         ])
     }
     
@@ -81,13 +86,26 @@ public class StickyFooterScrollingContentView: UIView {
     override public func layoutSubviews() {
         super.layoutSubviews()
         
+        let margins: UIEdgeInsets
         if traitCollection.horizontalSizeClass == .compact {
             footerStack.axis = .vertical
             footerStack.distribution = .fill
+            
+            margins = .largeInset
         } else {
             footerStack.axis = .horizontal
             footerStack.distribution = .fillEqually
+            
+            margins = UIEdgeInsets(
+                top: .doubleSpacing,
+                left: readableContentGuide.layoutFrame.minX - safeAreaLayoutGuide.layoutFrame.minX,
+                bottom: .doubleSpacing,
+                right: safeAreaLayoutGuide.layoutFrame.maxX - readableContentGuide.layoutFrame.maxX
+            )
         }
+        
+        scrollingStack.layoutMargins = mutating(margins) { $0.bottom = 0 }
+        footerStack.layoutMargins = mutating(margins) { $0.top = 0 }
     }
 }
 

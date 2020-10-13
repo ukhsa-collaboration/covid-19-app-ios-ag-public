@@ -24,7 +24,7 @@ public protocol HomeFlowViewControllerInteracting {
     func openFAQ()
     func openAccessibilityStatementLink()
     func openHowThisAppWorksLink()
-    func openWebsiteLinkfromRisklevelInfoScreen()
+    func openWebsiteLinkfromRisklevelInfoScreen(url: URL)
     func openProvideFeedbackLink()
     func deleteAppData()
     func updateVenueHistories(deleting venueHistory: VenueHistory) -> [VenueHistory]
@@ -102,7 +102,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         self.aboutThisAppInteractor = aboutThisAppInteractor
     }
     
-    public func didTapRiskLevelBanner(viewModel: RiskLevelBanner.ViewModel) {
+    public func didTapRiskLevelBanner(viewModel: RiskLevelInfoViewController.ViewModel) {
         let viewController = RiskLevelInfoViewController(viewModel: viewModel, interactor: riskLevelInteractor)
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.modalPresentationStyle = .overFullScreen
@@ -222,8 +222,8 @@ private struct RiskLevelInfoInteractor: RiskLevelInfoViewController.Interacting 
         self.interactor = interactor
     }
     
-    public func didTapWebsiteLink() {
-        interactor.openWebsiteLinkfromRisklevelInfoScreen()
+    public func didTapWebsiteLink(url: URL) {
+        interactor.openWebsiteLinkfromRisklevelInfoScreen(url: url)
     }
 }
 

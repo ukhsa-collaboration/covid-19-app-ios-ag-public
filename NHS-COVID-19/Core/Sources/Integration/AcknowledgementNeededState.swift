@@ -13,7 +13,6 @@ enum AcknowledgementNeededState {
     case neededForPositiveResultNotIsolating(interactor: SendKeysLoadingFlowViewControllerInteractor)
     case neededForNegativeResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
     case neededForNegativeAfterPositiveResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
-    case neededForNegativeResultEndIsolation(interactor: NegativeTestResultViewControllerInteractor)
     case neededForNegativeResultNotIsolating(interactor: NegativeTestResultNoIsolationViewControllerInteractor)
     case neededForEndOfIsolation(interactor: EndOfIsolationViewControllerInteractor, isolationEndDate: Date, showAdvisory: Bool)
     case neededForStartOfIsolation(interactor: ExposureAcknowledgementViewControllerInteractor, isolationEndDate: Date)
@@ -33,10 +32,6 @@ enum AcknowledgementNeededState {
                         ),
                         isolationEndDate: isolationEndDate
                     )
-                case .neededForNegativeResultEndIsolation(let acknowledge):
-                    return .neededForNegativeResultEndIsolation(interactor: NegativeTestResultViewControllerInteractor(
-                        _acknowledge: acknowledge, openURL: context.openURL
-                    ))
                 case .neededForNegativeResultNotIsolating(let acknowledge):
                     return .neededForNegativeResultNotIsolating(interactor: NegativeTestResultNoIsolationViewControllerInteractor(
                         _acknowledge: acknowledge, openURL: context.openURL

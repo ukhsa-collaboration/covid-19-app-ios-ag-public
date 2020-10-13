@@ -22,7 +22,7 @@ class SandboxDistributeClient: HTTPClient {
         if request.path == "/distribution/self-isolation" {
             return Result.success(.ok(with: .json(isolationConfig)))
         }
-        if request.path == "/distribution/risky-post-districts" {
+        if request.path == "/distribution/risky-post-districts-v2" {
             return .success(.ok(with: .json(riskyPostcodes)))
         }
         
@@ -64,6 +64,16 @@ private let riskyPostcodes = """
 {
     "postDistricts" : {
         "SW12": "L",
+    },
+    "riskLevels" : {
+        "L": {
+            "colorScheme": "green",
+            "name": { "en": "[postcode] is in Local Alert Level 1" },
+            "heading": {},
+            "content": {},
+            "linkTitle": {},
+            "linkUrl": {}
+        }
     }
 }
 """

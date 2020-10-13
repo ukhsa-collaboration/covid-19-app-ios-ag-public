@@ -26,7 +26,7 @@ enum LogicalState: Equatable {
 
 public struct RunningAppContext {
     public var checkInContext: CheckInContext?
-    public var postcodeInfo: DomainProperty<(postcode: Postcode, risk: DomainProperty<PostcodeRisk?>)?>
+    public var postcodeInfo: DomainProperty<(postcode: Postcode, risk: DomainProperty<RiskyPostcodeEndpointManager.PostcodeRisk?>)?>
     public var savePostcode: ((String) -> Result<Void, PostcodeValidationError>)?
     public var country: DomainProperty<Country>
     public var openSettings: () -> Void
@@ -45,6 +45,7 @@ public struct RunningAppContext {
     public var currentDateProvider: () -> Date
     public var exposureNotificationReminder: ExposureNotificationReminder
     public var appReviewPresenter: AppReviewPresenter
+    public var stopSelfIsolation: () -> Void
 }
 
 public enum ApplicationState {
@@ -83,7 +84,7 @@ public enum ApplicationState {
     case onboarding(complete: () -> Void, openURL: (URL) -> Void)
     
     /// Application requires onboarding.
-    case authorizationRequired(requestPermissions: () -> Void, country: Country)
+    case authorizationRequired(requestPermissions: () -> Void, country: DomainProperty<Country>)
     
     /// Application is set up, but can not run exposure detection. See `reason`.
     ///

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>%ld exposure_notification_reminder_sheet_hours</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@hours@</string>
+			<key>hours</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld sacad</string>
+				<key>other</key>
+				<string>%ld sacadood</string>
+			</dict>
+		</dict>
+		<key>exposure_notification_reminder_alert_title %ld hours</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@hours@</string>
+			<key>hours</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Dejinta xusuusin si loo shido raad-raacista shakhsiga markay tahay %ld saacadii.</string>
+				<key>other</key>
+				<string>Dejinta xusuusin si loo shido raad-raacista shakhsiga markay tahay %ld saacadood.</string>
+			</dict>
+		</dict>
+		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Fadlan is-go'doomi ilaa %ld maalin oo ballanso baaritaan</string>
+				<key>other</key>
+				<string>Fadlan is-go'doomi ilaa %ld maalmood oo ballanso baaritaan</string>
+			</dict>
+		</dict>
+		<key>positive_test_please_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Sii wad is-go'doomintada ila %ld maalin</string>
+				<key>other</key>
+				<string>Sii wad is-go'doomintada ila %ld maalmood</string>
+			</dict>
+		</dict>
+		<key>isolation_days_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld maalin ayaa ka hartay</string>
+				<key>other</key>
+				<string>%ld maalmood ayaa ka hartay</string>
+			</dict>
+		</dict>
+		<key>positive_symptoms_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld maalin</string>
+				<key>other</key>
+				<string>%ld maalmood</string>
+			</dict>
+		</dict>
+		<key>isolation_days_subtitle %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>maalin ayaa ka hartay</string>
+				<key>other</key>
+				<string>maalmood ayaa ka hartay</string>
+			</dict>
+		</dict>
+		<key>exposure_acknowledgement_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld maalin</string>
+				<key>other</key>
+				<string>%ld maalmood</string>
+			</dict>
+		</dict>
+		<key>exposure_acknowledgement_please_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Fadlan isgo'doomi ila %ld maalin</string>
+				<key>other</key>
+				<string>Fadlan isgo'doomi ila %ld maalmood</string>
+			</dict>
+		</dict>
+		<key>isolation_indicator_accessiblity_label days: %ld date: %@ time: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Waxaad u baahan tahay inaad is-go'doomisid ila %2$@ markay tahay %3$@. %1$ld maalin ayaa ka hartay.</string>
+				<key>other</key>
+				<string>Waxaad u baahan tahay inaad is-go'doomisid ila %2$@ markay tahay %3$@.  %1$ld maalmood ayaa ka hartay.</string>
+			</dict>
+		</dict>
+		<key>positive_test_start_to_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Isgo'doomi ilaa %ld maalin</string>
+				<key>other</key>
+				<string>Isgo'doomi ilaa %ld maalmood</string>
+			</dict>
+		</dict>
+	</dict>
+</plist>

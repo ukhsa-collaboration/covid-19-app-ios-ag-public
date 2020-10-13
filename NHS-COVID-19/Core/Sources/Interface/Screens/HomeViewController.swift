@@ -8,7 +8,7 @@ import Localization
 import SwiftUI
 
 public protocol HomeViewControllerInteracting {
-    func didTapRiskLevelBanner(viewModel: RiskLevelBanner.ViewModel)
+    func didTapRiskLevelBanner(viewModel: RiskLevelInfoViewController.ViewModel)
     func didTapDiagnosisButton()
     func didTapAdviceButton()
     func didTapIsolationAdviceButton()

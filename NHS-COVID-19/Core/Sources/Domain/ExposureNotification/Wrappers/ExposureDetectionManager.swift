@@ -55,10 +55,10 @@ struct ExposureDetectionManager {
             .eraseToAnyPublisher()
     }
     
-    private func riskInfo(for increment: Increment, using riskCalculator: ExposureRiskCalculating) -> AnyPublisher<RiskInfo?, Error> {
-        Deferred { () -> AnyPublisher<RiskInfo?, Error> in
+    private func riskInfo(for increment: Increment, using riskCalculator: ExposureRiskCalculating) -> AnyPublisher<ExposureRiskInfo?, Error> {
+        Deferred { () -> AnyPublisher<ExposureRiskInfo?, Error> in
             guard self.interestedInExposureNotifications() else {
-                return Empty<RiskInfo?, Error>().eraseToAnyPublisher()
+                return Empty<ExposureRiskInfo?, Error>().eraseToAnyPublisher()
             }
             return self.client.getExposureKeys(for: increment)
                 .mapError { $0 as Error }
@@ -94,13 +94,13 @@ struct ExposureDetectionManager {
         }.eraseToAnyPublisher()
     }
     
-    func detectExposures(currentDate: Date) -> AnyPublisher<RiskInfo?, Never> {
+    func detectExposures(currentDate: Date) -> AnyPublisher<ExposureRiskInfo?, Never> {
         client.getConfiguration()
             .catch { _ in Empty() }
             .map(riskCalculator)
-            .flatMap { riskCalculator -> AnyPublisher<RiskInfo?, Never> in
+            .flatMap { riskCalculator -> AnyPublisher<ExposureRiskInfo?, Never> in
                 
-                var risks: AnyPublisher<RiskInfo?, Error> = Empty().eraseToAnyPublisher()
+                var risks: AnyPublisher<ExposureRiskInfo?, Error> = Empty().eraseToAnyPublisher()
                 
                 let oldestDownloadDate = Calendar.utc.date(byAdding: Self.oldestDownloadDate, to: currentDate)!
                 var lastCheckDate = self.exposureDetectionStore.load()?.lastKeyDownloadDate ?? oldestDownloadDate
@@ -122,7 +122,7 @@ struct ExposureDetectionManager {
                 return risks
                     .ensureFinishes(placeholder: nil)
                     .prepend(nil) // TODO: Why is this necessary? `last()` won’t complete if we complete with an empty upstream.
-                    .scan(nil) { lhs, rhs -> RiskInfo? in
+                    .scan(nil) { lhs, rhs -> ExposureRiskInfo? in
                         switch (lhs, rhs) {
                         case (.some(let lhs), .some(let rhs)):
                             return lhs.isHigherPriority(than: rhs) ? lhs : rhs

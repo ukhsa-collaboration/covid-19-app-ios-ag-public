@@ -22,44 +22,38 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
     }
     
     init(interactor: Interacting, isolationEndDate: Date, testResultType: TestResultType) {
-        var scrollingViews = [
-            UIImageView(testResultType.image).styleAsDecoration(),
-            UIStackView(content: BasicContent(
-                views: [
-                    UILabel()
-                        .styleAsHeading()
-                        .set(text: testResultType.title)
-                        .isAccessibilityElement(false)
-                        .centralized(),
-                    UILabel()
-                        .styleAsPageHeader()
-                        .set(text: localize(.positive_symptoms_days(days: Self.daysRemaining(isolationEndDate))))
-                        .isAccessibilityElement(false)
-                        .centralized(),
-                ],
-                spacing: .standardSpacing,
-                margins: .zero
-            ))
-                .accessibilityTraits([.staticText, .header])
-                .isAccessibilityElement(true)
-                .accessibilityLabel(testResultType.titleAccessibilityLabel(daysRemaining: Self.daysRemaining(isolationEndDate))),
-            InformationBox.indication.badNews(testResultType.infoText),
-        ]
-        
-        scrollingViews += testResultType.explanationText.map {
-            UILabel().styleAsSecondaryBody().set(text: $0)
-        }
-        
-        scrollingViews += [
-            UILabel().styleAsSecondaryBody().set(text: localize(.end_of_isolation_link_label)),
-            LinkButton(
-                title: localize(.end_of_isolation_online_services_link),
-                action: interactor.didTapOnlineServicesLink
-            ),
-        ]
-        
         super.init(
-            scrollingViews: scrollingViews,
+            scrollingViews: [
+                UIImageView(testResultType.image).styleAsDecoration(),
+                UIStackView(content: BasicContent(
+                    views: [
+                        UILabel()
+                            .styleAsHeading()
+                            .set(text: testResultType.title)
+                            .isAccessibilityElement(false)
+                            .centralized(),
+                        UILabel()
+                            .styleAsPageHeader()
+                            .set(text: localize(.positive_symptoms_days(days: Self.daysRemaining(isolationEndDate))))
+                            .isAccessibilityElement(false)
+                            .centralized(),
+                    ],
+                    spacing: .standardSpacing,
+                    margins: .zero
+                ))
+                    .accessibilityTraits([.staticText, .header])
+                    .isAccessibilityElement(true)
+                    .accessibilityLabel(testResultType.titleAccessibilityLabel(daysRemaining: Self.daysRemaining(isolationEndDate))),
+                InformationBox.indication.badNews(testResultType.infoText),
+                testResultType.explanationText.map {
+                    UILabel().styleAsSecondaryBody().set(text: $0)
+                },
+                UILabel().styleAsSecondaryBody().set(text: localize(.end_of_isolation_link_label)),
+                LinkButton(
+                    title: localize(.end_of_isolation_online_services_link),
+                    action: interactor.didTapOnlineServicesLink
+                ),
+            ],
             primaryButton: (title: testResultType.primaryButtonText, action: interactor.didTapPrimaryButton)
         )
     }

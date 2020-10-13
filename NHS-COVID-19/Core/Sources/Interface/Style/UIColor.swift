@@ -31,6 +31,11 @@ public enum ColorName: String, CaseIterable, Identifiable {
     case styleRed = "Style/Red"
     case styleBlue = "Style/Blue"
     
+    case riskLevelGreen = "RiskLevel/Green"
+    case riskLevelYellow = "RiskLevel/Yellow"
+    case riskLevelAmber = "RiskLevel/Amber"
+    case riskLevelRed = "RiskLevel/Red"
+    
     public var id: ColorName {
         self
     }

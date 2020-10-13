@@ -44,7 +44,7 @@ extension CoordinatedAppController {
             return OnboardingFlowViewController(interactor: interactor)
             
         case .authorizationRequired(let requestPermissions, let country):
-            return PermissionsViewController(country: country, submit: requestPermissions)
+            return PermissionsViewController(country: country.interfaceProperty, submit: requestPermissions)
             
         case .postcodeRequired(let savePostcode):
             return EnterPostcodeViewController { postcode in
@@ -90,13 +90,11 @@ extension CoordinatedAppController {
                             return NonNegativeTestResultNoIsolationViewController(interactor: interactor)
                         }
                     case .neededForNegativeResultContinueToIsolate(let interactor, let isolationEndDate):
-                        return NegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: isolationEndDate)
-                    case .neededForNegativeResultEndIsolation(let interactor):
-                        return NegativeTestResultViewController(interactor: interactor)
+                        return NegativeTestResultWithIsolationViewController(interactor: interactor, viewModel: .init(isolationEndDate: isolationEndDate, testResultType: .firstResult))
                     case .neededForNegativeResultNotIsolating(let interactor):
                         return NegativeTestResultNoIsolationViewController(interactor: interactor)
                     case .neededForNegativeAfterPositiveResultContinueToIsolate(interactor: let interactor, isolationEndDate: let isolationEndDate):
-                        return NegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: isolationEndDate, testResultType: .afterPositive)
+                        return NegativeTestResultWithIsolationViewController(interactor: interactor, viewModel: .init(isolationEndDate: isolationEndDate, testResultType: .afterPositive))
                     case .neededForEndOfIsolation(let interactor, let isolationEndDate, let showAdvisory):
                         return EndOfIsolationViewController(
                             interactor: interactor,
@@ -112,8 +110,7 @@ extension CoordinatedAppController {
                     case .neededForRiskyVenue(let interactor, let venueName, let checkInDate):
                         return RiskyVenueInformationViewController(
                             interactor: interactor,
-                            venueName: venueName,
-                            checkInDate: checkInDate
+                            viewModel: .init(venueName: venueName, checkInDate: checkInDate)
                         )
                     case .neededForVoidResultContinueToIsolate(let interactor, let isolationEndDate):
                         
@@ -196,10 +193,9 @@ extension CoordinatedAppController {
             .map { postcodeInfo -> AnyPublisher<RiskLevelBanner.ViewModel?, Never> in
                 guard let postcodeInfo = postcodeInfo else { return Just(nil).eraseToAnyPublisher() }
                 return postcodeInfo.risk
-                    .map(RiskLevelBanner.ViewModel.RiskLevel.init(postcodeRisk:))
-                    .map { riskLevel in
+                    .map { riskLevel -> RiskLevelBanner.ViewModel? in
                         guard let riskLevel = riskLevel else { return nil }
-                        return RiskLevelBanner.ViewModel(postcode: postcodeInfo.postcode.value, riskLevel: riskLevel)
+                        return RiskLevelBanner.ViewModel(postcode: postcodeInfo.postcode, risk: riskLevel)
                     }
                     .eraseToAnyPublisher()
             }

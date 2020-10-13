@@ -45,9 +45,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>অনুগ্রহ করে %ld দিনের জন্য নিজেকে আলাদা রাখার থাকুন এবং একটি পরীক্ষা বুক (সংরক্ষণ) করুন</string>
+				<string>অনুগ্রহ করে %ld দিনের জন্য বিচ্ছিন্ন থাকুনএবং একটি পরীক্ষা বুক করুন</string>
 				<key>other</key>
-				<string>অনুগ্রহ করে %ld দিনের জন্য নিজেকে আলাদা রাখার থাকুন এবং একটি পরীক্ষা বুক করুন</string>
+				<string>অনুগ্রহ করে %ld দিনের জন্য বিচ্ছিন্ন থাকুনএবং একটি পরীক্ষা বুক করুন</string>
 			</dict>
 		</dict>
 		<key>positive_test_please_isolate_accessibility_label %ld</key>
@@ -61,9 +61,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>%ld দিন ধরে নিজেকে আলাদা রাখার চালিয়ে যান</string>
+				<string>%ld দিন ধরে স্ব-বিচ্ছিন্ন থাকুন</string>
 				<key>other</key>
-				<string>%ld দিন ধরে নিজেকে আলাদা রাখার চালিয়ে যান</string>
+				<string>%ld দিন ধরে স্ব-বিচ্ছিন্ন থাকুন</string>
 			</dict>
 		</dict>
 		<key>isolation_days_accessibility_label %ld</key>
@@ -141,9 +141,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>অনুগ্রহ করে %ld দিনের জন্য আইসোলেশনে থাকুন</string>
+				<string>অনুগ্রহ করে %ld দিনের জন্য বিচ্ছিন্ন থাকুন</string>
 				<key>other</key>
-				<string>অনুগ্রহ করে %ld দিনের জন্য আইসোলেশনে থাকুন</string>
+				<string>অনুগ্রহ করে %ld দিনের জন্য বিচ্ছিন্ন থাকুন</string>
 			</dict>
 		</dict>
 		<key>isolation_indicator_accessiblity_label days: %ld date: %@ time: %@</key>
@@ -157,9 +157,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>আপনার %2$@ পর্যন্ত %3$@ তে সেলফ-আইসোলেশনে থাকা প্রয়োজন। %1$ld দিন বাকি।</string>
+				<string>আপনাকে %3$@-এ %2$@ পর্যন্ত স্ব-বিচ্ছিন্ন থাকতে হবে । %1$ld দিন বাকি আছে।</string>
 				<key>other</key>
-				<string>আপনার %2$@ পর্যন্ত %3$@ তে সেলফ-আইসোলেশনে থাকা প্রয়োজন। %1$ld দিন বাকি।</string>
+				<string>আপনাকে %3$@-এ %2$@ পর্যন্ত স্ব-বিচ্ছিন্ন থাকতে হবে। %1$ld দিন বাকি আছে।</string>
 			</dict>
 		</dict>
 		<key>positive_test_start_to_isolate_accessibility_label %ld</key>
@@ -173,9 +173,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>অনুগ্রহ করে %ld দিনের জন্য আইসোলেশনে থাকুন</string>
+				<string>অনুগ্রহ করে %ld দিনের জন্য স্ব-বিচ্ছিন্ন থাকুন</string>
 				<key>other</key>
-				<string>অনুগ্রহ করে %ld দিনের জন্য আইসোলেশনে থাকুন</string>
+				<string>অনুগ্রহ করে %ld দিনের জন্য স্ব-বিচ্ছিন্ন থাকুন</string>
 			</dict>
 		</dict>
 	</dict>

@@ -15,9 +15,11 @@ struct ConfigureMocksView: View {
         NavigationView {
             List {
                 Section(header: Text(verbatim: "Postcode Risk")) {
-                    TextFieldRow(label: "High Risk", text: $dataProvider.highRiskPostcodes)
-                    TextFieldRow(label: "Medium Risk", text: $dataProvider.mediumRiskPostcodes)
-                    TextFieldRow(label: "Low Risk", text: $dataProvider.lowRiskPostcodes)
+                    TextFieldRow(label: "Red Risk", text: $dataProvider.redPostcodes)
+                    TextFieldRow(label: "Amber Risk", text: $dataProvider.amberPostcodes)
+                    TextFieldRow(label: "Yellow Risk", text: $dataProvider.yellowPostcodes)
+                    TextFieldRow(label: "Green Risk", text: $dataProvider.greenPostcodes)
+                    TextFieldRow(label: "Neutral Risk", text: $dataProvider.neutralPostcodes)
                 }
                 Section(header: Text(verbatim: "Check In")) {
                     TextFieldRow(label: "High Risk Venue IDs", text: $dataProvider.riskyVenueIDs)

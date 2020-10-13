@@ -15,14 +15,17 @@ public class RiskLevelBannerComponentScenario: Scenario {
     
     enum Showcases: CaseIterable {
         case lowRisk
+        case mediumRisk
         case highRisk
         
         func content() -> RiskLevelBanner.ViewModel {
             switch self {
             case .lowRisk:
-                return RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .low)
+                return RiskLevelBanner.ViewModel(postcode: .init("SW12"), risk: .v1(.low))
+            case .mediumRisk:
+                return RiskLevelBanner.ViewModel(postcode: .init("SW12"), risk: .v1(.medium))
             case .highRisk:
-                return RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .high)
+                return RiskLevelBanner.ViewModel(postcode: .init("SW12"), risk: .v1(.high))
             }
         }
     }

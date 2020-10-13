@@ -17,7 +17,7 @@ public class NegativeTestResultWithIsolationScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return NegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: 12 * 86400))
+            return NegativeTestResultWithIsolationViewController(interactor: interactor, viewModel: .init(isolationEndDate: Date(timeIntervalSinceNow: 12 * 86400), testResultType: .firstResult))
         }
     }
 }
@@ -31,7 +31,7 @@ public class NegativeTestResultAfterPositiveWithIsolationScreenScenario: Scenari
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return NegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: 12 * 86400), testResultType: .afterPositive)
+            return NegativeTestResultWithIsolationViewController(interactor: interactor, viewModel: .init(isolationEndDate: Date(timeIntervalSinceNow: 12 * 86400), testResultType: .afterPositive))
         }
     }
 }
@@ -45,10 +45,10 @@ private class Interactor: NegativeTestResultWithIsolationViewController.Interact
     }
     
     func didTapOnlineServicesLink() {
-        viewController?.showAlert(title: NegativeTestResultScreenScenario.onlineServicesLinkTapped)
+        viewController?.showAlert(title: NegativeTestResultWithIsolationScreenScenario.onlineServicesLinkTapped)
     }
     
     func didTapReturnHome() {
-        viewController?.showAlert(title: NegativeTestResultScreenScenario.returnHomeTapped)
+        viewController?.showAlert(title: NegativeTestResultWithIsolationScreenScenario.returnHomeTapped)
     }
 }

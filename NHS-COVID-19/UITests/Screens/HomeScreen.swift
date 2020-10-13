@@ -8,8 +8,8 @@ import XCTest
 struct HomeScreen {
     var app: XCUIApplication
     
-    func riskLevelBanner(for postcode: String, risk: String) -> XCUIElement {
-        app.buttons[verbatim: localizeForCountry(.risk_level_banner_text(postcode: postcode, risk: risk))]
+    func riskLevelBanner(for postcode: String, title: String) -> XCUIElement {
+        app.buttons[verbatim: title.replacingOccurrences(of: "[postcode]", with: postcode)]
     }
     
     var diagnoisButton: XCUIElement {
@@ -49,11 +49,11 @@ struct HomeScreen {
     }
     
     var pauseContactTracingButton: XCUIElement {
-        app.buttons[localized: .exposure_notification_reminder_sheet_hours(hours: 4)]
+        app.buttons[localized: .exposure_notification_reminder_sheet_hours(hours: 8)]
     }
     
     var reminderAlertTitle: XCUIElement {
-        app.staticTexts[localized: .exposure_notification_reminder_alert_title(hours: 4)]
+        app.staticTexts[localized: .exposure_notification_reminder_alert_title(hours: 8)]
     }
     
     var reminderAlertButton: XCUIElement {

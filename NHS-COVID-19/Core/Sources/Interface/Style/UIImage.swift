@@ -49,9 +49,11 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case isolationEndedWarning = "IsolationEndedWarning"
     case isolationEnded = "IsolationEnded"
     
-    case riskLevelLow = "RiskLevel/Low"
-    case riskLevelMedium = "RiskLevel/Medium"
-    case riskLevelHigh = "RiskLevel/High"
+    case riskLevelNeutral = "RiskLevel/Neutral"
+    case riskLevelGreen = "RiskLevel/Green"
+    case riskLevelYellow = "RiskLevel/Yellow"
+    case riskLevelAmber = "RiskLevel/Amber"
+    case riskLevelRed = "RiskLevel/Red"
     
     case symbolRef = "Symbols/Ref"
     case symbolinfo = "Symbols/Info"
@@ -59,6 +61,8 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case symbolManufacturer = "Symbols/Manufacturer"
     case symbolCE = "Symbols/CE"
     case symbolInstructionForUse = "Symbols/InstructionForUse"
+    
+    case stopIsolation = "StopIsolation"
     
     public var id: ImageName {
         self

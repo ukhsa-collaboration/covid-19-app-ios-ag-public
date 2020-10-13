@@ -29,14 +29,14 @@ class HomeFlowTests: XCTestCase {
         try runner.run { app in
             let homeScreen = HomeScreen(app: app)
             
-            XCTAssert(homeScreen.riskLevelBanner(for: postcode, risk: localize(.risk_level_low)).exists)
+            XCTAssert(homeScreen.riskLevelBanner(for: postcode, title: "[postcode] is in Local Alert Level 1").exists)
             
             runner.step("More Info") {
                 """
                 Users can go to Risk level more info screen
                 """
             }
-            homeScreen.riskLevelBanner(for: postcode, risk: localize(.risk_level_low)).tap()
+            homeScreen.riskLevelBanner(for: postcode, title: "[postcode] is in Local Alert Level 1").tap()
             app.buttons[localize(.risk_level_screen_close_button)].tap()
             
             runner.step("Diagnosis") {
@@ -87,7 +87,7 @@ class HomeFlowTests: XCTestCase {
         try runner.run { app in
             let homeScreen = HomeScreen(app: app)
             
-            XCTAssert(homeScreen.riskLevelBanner(for: postcode, risk: localize(.risk_level_low)).exists)
+            XCTAssert(homeScreen.riskLevelBanner(for: postcode, title: "[postcode] is in Local Alert Level 1").exists)
             
             runner.step("Disable Contact tracing") {
                 """
@@ -139,7 +139,7 @@ class HomeFlowTests: XCTestCase {
         try runner.run { app in
             let homeScreen = HomeScreen(app: app)
             
-            XCTAssert(homeScreen.riskLevelBanner(for: postcode, risk: localize(.risk_level_low)).exists)
+            XCTAssert(homeScreen.riskLevelBanner(for: postcode, title: "[postcode] is in Local Alert Level 1").exists)
             
             runner.step("Disable Contact tracing") {
                 """

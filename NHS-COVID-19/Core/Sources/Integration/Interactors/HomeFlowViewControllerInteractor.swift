@@ -205,8 +205,8 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         context.openURL(ExternalLink.howThisAppWorks.url)
     }
     
-    func openWebsiteLinkfromRisklevelInfoScreen() {
-        context.openURL(ExternalLink.moreInfoOnPostcodeRisk.url)
+    func openWebsiteLinkfromRisklevelInfoScreen(url: URL) {
+        context.openURL(url)
     }
     
     func openProvideFeedbackLink() {

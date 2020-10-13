@@ -250,4 +250,71 @@ class IsolationStateStoreTests: XCTestCase {
         XCTAssertEqual(expectedExposureDate, providedExposureDate)
     }
     
+    func testStopSelfIsolationWhenSelfDiagnosisAndNoTestInfo() throws {
+        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
+
+        store.set(IndexCaseInfo(
+            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
+            onsetDay: nil,
+            testInfo: nil
+        ))
+        
+        store.stopSelfIsolation()
+        XCTAssertNil(store.isolationStateInfo)
+    }
+    
+    func testStopSelfIsolationWhenSelfDiagnosisAndTestResultPositive() throws {
+        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
+        let testDay = GregorianDay(year: 2020, month: 7, day: 13)
+        
+        store.set(IndexCaseInfo(
+            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
+            onsetDay: nil,
+            testInfo: IndexCaseInfo.TestInfo(result: .positive, receivedOnDay: testDay)
+        ))
+        
+        store.stopSelfIsolation()
+        XCTAssertNotNil(store.isolationStateInfo)
+    }
+    
+    func testStopSelfIsolationWhenSelfDiagnosisAndTestResultNegative() throws {
+        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
+        let testDay = GregorianDay(year: 2020, month: 7, day: 13)
+        
+        store.set(IndexCaseInfo(
+            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
+            onsetDay: nil,
+            testInfo: IndexCaseInfo.TestInfo(result: .negative, receivedOnDay: testDay)
+        ))
+        
+        store.stopSelfIsolation()
+        XCTAssertNil(store.isolationStateInfo)
+    }
+    
+    func testStopSelfIsolationWhenSelfDiagnosisAndTestResultVoid() throws {
+        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
+        let testDay = GregorianDay(year: 2020, month: 7, day: 13)
+        
+        store.set(IndexCaseInfo(
+            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
+            onsetDay: nil,
+            testInfo: IndexCaseInfo.TestInfo(result: .void, receivedOnDay: testDay)
+        ))
+        
+        store.stopSelfIsolation()
+        XCTAssertNotNil(store.isolationStateInfo)
+    }
+    
+    func testStopSelfIsolationWhenManualEntry() throws {
+        let npexDay = GregorianDay(year: 2020, month: 7, day: 12)
+        
+        store.set(IndexCaseInfo(
+            isolationTrigger: .manualTestEntry(npexDay: npexDay),
+            onsetDay: nil,
+            testInfo: nil
+        ))
+        
+        store.stopSelfIsolation()
+        XCTAssertNotNil(store.isolationStateInfo)
+    }
 }

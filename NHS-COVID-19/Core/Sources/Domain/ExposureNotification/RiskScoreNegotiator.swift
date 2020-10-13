@@ -22,10 +22,13 @@ struct RiskScoreNegotiator {
         self.deleteRiskScore = deleteRiskScore
     }
     
-    func receive(riskInfo: RiskInfo) {
-        if getIsolationState() == .noNeedToIsolate {
+    func saveIfNeeded(exposureRiskInfo: ExposureRiskInfo) -> Bool {
+        if getIsolationState() == .noNeedToIsolate, exposureRiskInfo.isConsideredRisky {
+            let riskInfo = RiskInfo(riskScore: exposureRiskInfo.riskScore, day: exposureRiskInfo.day)
             saveRiskScore(riskInfo)
+            return true
         }
+        return false
     }
     
     func deleteRiskIfIsolating() -> AnyCancellable {

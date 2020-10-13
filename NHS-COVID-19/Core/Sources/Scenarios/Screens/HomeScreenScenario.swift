@@ -18,7 +18,7 @@ extension HomeScreenScenario {
     
     static func postcodeViewModel(parent: UIViewController) -> RiskLevelBanner.ViewModel? {
         if Self.riskyPostcodeEnabled {
-            return RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .low)
+            return RiskLevelBanner.ViewModel(postcode: .init("SW12"), risk: .v1(.low))
         } else {
             return nil
         }
@@ -103,7 +103,7 @@ private class Interactor: HomeViewController.Interacting {
         _setExposureNotifcationEnabled = setExposureNotifcationEnabled
     }
     
-    func didTapRiskLevelBanner(viewModel: RiskLevelBanner.ViewModel) {
+    func didTapRiskLevelBanner(viewModel: RiskLevelInfoViewController.ViewModel) {
         viewController?.showAlert(title: HomeScreenAlerts.postcodeBannerAlertTitle)
     }
     

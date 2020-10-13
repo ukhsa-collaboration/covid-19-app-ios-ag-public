@@ -29,9 +29,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>رابطے کا پتہ لگانے کو Id% گھنٹوں میں دوبارہ فعال کرنے کے لئے یاددہانی سیٹ کریں۔</string>
+				<string>رابطے کا پتہ لگانے کو Id% گھنٹے میں دوبارہ فعال کرنے کے لئے یاددہانی سیٹ کریں۔</string>
 				<key>other</key>
-				<string>رابطے کا پتہ لگانے کو Id% گھنٹوں میں دوبارہ فعال کرنے کے لئے یاددہانی سیٹ کریں۔</string>
+				<string>رابطے کا سراغ لگانے کو Id% گھنٹوں میں دوبارہ فعال کرنے کے لئے یاددہانی سیٹ کریں۔</string>
 			</dict>
 		</dict>
 		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>
@@ -47,7 +47,7 @@
 				<key>one</key>
 				<string>براہ کرم %ld دن کے لئے علیحدگی اختیار کریں اور ٹیسٹ بک کروائیں</string>
 				<key>other</key>
-				<string>براہ کرم %ld دن کے لئے علیحدگی اختیار کریں اور ٹیسٹ بک کروائیں</string>
+				<string>براہ کرم %ld دنوں کے لئے علیحدگی اختیار کریں اور ٹیسٹ بک کروائیں</string>
 			</dict>
 		</dict>
 		<key>positive_test_please_isolate_accessibility_label %ld</key>
@@ -109,7 +109,7 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>دن باقی ہیں</string>
+				<string>دن باقی ہے</string>
 				<key>other</key>
 				<string>دن باقی ہیں</string>
 			</dict>
@@ -143,7 +143,7 @@
 				<key>one</key>
 				<string>براہ کرم %ld دن کے لئے علیحدگی اختیار کریں</string>
 				<key>other</key>
-				<string>براہ کرم %ld دن کے لئے علیحدگی اختیار کریں</string>
+				<string>براہ کرم %ld دنوں کے لئے علیحدگی اختیار کریں</string>
 			</dict>
 		</dict>
 		<key>isolation_indicator_accessiblity_label days: %ld date: %@ time: %@</key>
@@ -157,9 +157,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>آپ کو %2$@ کو %3$@ بجے تک  خود کو علیحدہ کرنے کی ضرورت ہے۔ %1$ld دن باقی ہیں۔</string>
+				<string>آپ کو %2$@ کو %3$@ بجے تک خود کو علیحدہ کرنے کی ضرورت ہے۔ %1$ld دن باقی ہے۔</string>
 				<key>other</key>
-				<string>آپ کو &gt;%2$@ کو %3$@ بجے تک  خود کو علیحدہ کرنے کی ضرورت ہے۔ %1$ld دن باقی ہیں۔</string>
+				<string>آپ کو  %2$@کو %3$@ بجے تک خود کو علیحدہ کرنے کی ضرورت ہے۔ %1$ld دن باقی ہیں۔</string>
 			</dict>
 		</dict>
 		<key>positive_test_start_to_isolate_accessibility_label %ld</key>
@@ -175,7 +175,7 @@
 				<key>one</key>
 				<string>براہ کرم %ld دن کے لئے علیحدگی اختیار کریں</string>
 				<key>other</key>
-				<string>براہ کرم %ld دن کے لئے علیحدگی اختیار کریں</string>
+				<string>براہ کرم %ld دنوں کے لئے علیحدگی اختیار کریں</string>
 			</dict>
 		</dict>
 	</dict>

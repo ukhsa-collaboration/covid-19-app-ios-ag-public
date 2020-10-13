@@ -71,6 +71,8 @@ public class QRCodeScannerViewController: UIViewController {
     
     private var interactor: Interacting
     
+    private var orientationCancellable: AnyCancellable?
+    
     public init(
         interactor: Interacting,
         cameraPermissionState: AnyPublisher<CameraPermissionState, Never>,
@@ -91,6 +93,13 @@ public class QRCodeScannerViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        orientationCancellable = NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification).sink { [weak self] _ in
+            self?.layoutFinished()
+        }
+    }
+    
+    func layoutFinished() {
+        scanner.layoutFinished(viewBounds: view.bounds, scanViewBounds: scanView.scanWindowBound, orientation: view.interfaceOrientation)
     }
     
     override public func viewWillAppear(_ animated: Bool) {
@@ -113,15 +122,14 @@ public class QRCodeScannerViewController: UIViewController {
         scanner.stopScanning()
     }
     
+    override public func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        layoutFinished()
+    }
+    
     override public func accessibilityPerformEscape() -> Bool {
         dismiss(animated: true, completion: nil)
         return true
-    }
-    
-    override public func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        scanner.layoutFinished(viewBounds: view.bounds, scanViewBounds: scanView.scanWindowBound, orientation: view.interfaceOrientation)
     }
     
     private func setupUI() {

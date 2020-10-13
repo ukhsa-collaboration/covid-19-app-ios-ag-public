@@ -13,6 +13,7 @@ public enum UserNotificationType: String {
     case testResultReceived
     case appAvailability
     case exposureNotificationReminder
+    case exposureDontWorry
 }
 
 public enum UserNotificationCategory: String {

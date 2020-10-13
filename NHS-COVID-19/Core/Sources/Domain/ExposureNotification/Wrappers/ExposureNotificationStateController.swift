@@ -101,7 +101,6 @@ class ExposureNotificationStateController: ObservableObject {
     func setEnabled(_ enabled: Bool, completion: @escaping () -> Void) {
         guard enabled != isEnabled else {
             completion()
-            Metrics.signpost(.completedOnboarding)
             return
         }
         manager.setExposureNotificationEnabled(enabled) { _ in

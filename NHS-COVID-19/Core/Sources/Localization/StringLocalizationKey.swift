@@ -398,6 +398,19 @@ public enum StringLocalizationKey: String, CaseIterable {
     case positive_test_result_start_to_isolate_title
     case positive_test_result_start_to_isolate_info
     case positive_test_result_start_to_isolate_explaination
+    
+    case isolation_payment_info_title
+    case isolation_payment_info_header
+    case isolation_payment_info_description
+    case isolation_payment_info_button
+    
+    case stop_isolation_title
+    case stop_isolation_heading
+    case stop_isolation_body
+    case stop_isolation_countdown_button
+    
+    case dont_worry_notification_title
+    case dont_worry_notification_body
 }
 
 public enum ParameterisedStringLocalizable: Equatable {

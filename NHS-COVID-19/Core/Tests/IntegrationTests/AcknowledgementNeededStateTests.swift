@@ -41,7 +41,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
     func testNegativeTestResultAckNeededNoIsolation() throws {
         let context = makeRunningAppContext(
             isolationAckState: .notNeeded,
-            testResultAckState: .neededForNegativeResultEndIsolation(acknowledge: {}),
+            testResultAckState: .neededForNegativeResultNotIsolating(acknowledge: {}),
             riskyCheckInsAckState: .notNeeded
         )
         
@@ -74,7 +74,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         )
         let context = makeRunningAppContext(
             isolationAckState: .neededForEnd(isolation, acknowledge: {}),
-            testResultAckState: .neededForNegativeResultEndIsolation(acknowledge: {}),
+            testResultAckState: .neededForNegativeResultNotIsolating(acknowledge: {}),
             riskyCheckInsAckState: .notNeeded
         )
         
@@ -115,7 +115,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         
         let context = makeRunningAppContext(
             isolationAckState: .neededForEnd(isolation, acknowledge: {}),
-            testResultAckState: .neededForNegativeResultEndIsolation(acknowledge: {}),
+            testResultAckState: .neededForNegativeResultNotIsolating(acknowledge: {}),
             riskyCheckInsAckState: .needed(acknowledge: {}, venueName: "Venue", checkInDate: Date())
         )
         
@@ -169,7 +169,8 @@ class AcknowledgementNeededStateTests: XCTestCase {
             riskyCheckInsAcknowledgementState: Result.success(riskyCheckInsAckState).publisher.eraseToAnyPublisher(),
             currentDateProvider: { Date() },
             exposureNotificationReminder: ExposureNotificationReminder(),
-            appReviewPresenter: AppReviewPresenter(checkInsStore: nil, reviewController: MockStoreReviewController(), currentDateProvider: Date.init)
+            appReviewPresenter: AppReviewPresenter(checkInsStore: nil, reviewController: MockStoreReviewController(), currentDateProvider: Date.init),
+            stopSelfIsolation: {}
         )
     }
     

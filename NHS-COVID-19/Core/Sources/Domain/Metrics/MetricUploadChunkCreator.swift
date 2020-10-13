@@ -45,7 +45,7 @@ struct MetricUploadChunkCreator {
         return info
     }
     
-    private func createTriggeredPayload(dateInterval: DateInterval) -> TriggeredPayload {
+    func createTriggeredPayload(dateInterval: DateInterval) -> TriggeredPayload {
         TriggeredPayload(
             startDate: dateInterval.start,
             endDate: dateInterval.end,

@@ -14,7 +14,7 @@ class ExposureRiskCalculatorTests: XCTestCase {
         
         let riskInfo = riskCalculator.riskInfo(for: [exposure])
         
-        XCTAssertNil(riskInfo)
+        XCTAssertEqual(riskInfo?.riskScore, 0.0)
     }
     
     func testWeightingAppliedToExposure() {
@@ -31,7 +31,7 @@ class ExposureRiskCalculatorTests: XCTestCase {
         let parameterisedTestCases: [([NSNumber], Double?)] = [
             ([1800, 0, 0], 1800.0),
             ([0, 1800, 0], 900.0),
-            ([0, 0, 1800], nil),
+            ([0, 0, 1800], 0.0),
             ([300, 300, 300], 450.0),
             ([0, 300, 300], 150.0),
             ([300, 0, 300], 300.0),
@@ -112,7 +112,6 @@ class ExposureRiskCalculatorTests: XCTestCase {
         
         return ExposureRiskCalculator(configuration: configuration, infectiousnessFactorCalculator: infectiousnessFactorCalculator)
     }
-
     
     func getExposureInfoWith(attenuationDurations: [NSNumber], transmissionRiskLevel: Int = 7) -> MockENExposureInfo {
         let exposure = MockENExposureInfo(attenuationDurations: attenuationDurations, date: Date(), totalRiskScore: 0, transmissionRiskLevel: ENRiskLevel(transmissionRiskLevel))
@@ -121,7 +120,7 @@ class ExposureRiskCalculatorTests: XCTestCase {
     }
 }
 
-fileprivate class StubInfectiousnessFactorCalculator: InfectiousnessFactorCalculating {
+private class StubInfectiousnessFactorCalculator: InfectiousnessFactorCalculating {
     let factor: Double
     var infectiousnessFactorCalledWith: Int?
     

@@ -106,6 +106,7 @@ struct HomeView: View {
         return ScrollView {
             VStack(spacing: .standardSpacing) {
                 Strapline(country: self.country)
+                    .zIndex(1)
                 
                 VStack(spacing: .halfSpacing) {
                     riskLevelbanner

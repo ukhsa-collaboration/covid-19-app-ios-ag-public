@@ -2,6 +2,8 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Combine
+import Common
 import Integration
 import Interface
 import UIKit
@@ -15,7 +17,7 @@ public class PermissionsScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             parent.isNavigationBarHidden = true
-            return PermissionsViewController(country: .england) { [weak parent] in
+            return PermissionsViewController(country: .constant(.england)) { [weak parent] in
                 parent?.showAlert(title: Self.continueConfirmationAlertTitle)
             }
         }

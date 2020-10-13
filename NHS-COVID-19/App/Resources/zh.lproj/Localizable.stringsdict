@@ -69,7 +69,7 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>other</key>
-				<string>还剩%ld天</string>
+				<string>%ld 几天</string>
 			</dict>
 		</dict>
 		<key>positive_symptoms_days %ld</key>

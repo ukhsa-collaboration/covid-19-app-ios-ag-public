@@ -23,6 +23,7 @@ public class ScrollingContentView: UIView {
             
             stackView.leadingAnchor.constraint(equalTo: scrollView.readableContentGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: scrollView.readableContentGuide.trailingAnchor),
+            stackView.widthAnchor.constraint(equalTo: scrollView.readableContentGuide.widthAnchor),
             stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
         ])

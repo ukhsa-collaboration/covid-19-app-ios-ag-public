@@ -10,95 +10,39 @@ public protocol NoSymptomsViewControllerInteracting {
     func didTapNHS111Link()
 }
 
-public class NoSymptomsViewController: UIViewController {
-    
+private class NoSymptomsContent: PrimaryButtonStickyFooterScrollingContent {
     public typealias Interacting = NoSymptomsViewControllerInteracting
     
-    private let interactor: Interacting
+    public init(interactor: Interacting) {
+        super.init(
+            scrollingViews: [
+                UIImageView(.isolationEnded).styleAsDecoration(),
+                UILabel().set(text: localize(.no_symptoms_heading)).styleAsPageHeader(),
+                UILabel().set(text: localize(.no_symptoms_body_1)).styleAsBody(),
+                UILabel().set(text: localize(.no_symptoms_body_2)).styleAsBody(),
+                LinkButton(title: localize(.no_symptoms_link), action: interactor.didTapNHS111Link),
+            ],
+            primaryButton: (
+                title: localize(.no_symptoms_return_home_button),
+                action: interactor.didTapReturnHome
+            )
+        )
+    }
+}
+
+public class NoSymptomsViewController: StickyFooterScrollingContentViewController {
+    public typealias Interacting = NoSymptomsViewControllerInteracting
     
     public init(interactor: Interacting) {
-        self.interactor = interactor
-        
-        super.init(nibName: nil, bundle: nil)
+        super.init(content: NoSymptomsContent(interactor: interactor))
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override public func viewDidLoad() {
-        super.viewDidLoad()
-        
-        let view = self.view!
-        view.styleAsScreenBackground(with: traitCollection)
-        
-        navigationController?.navigationBar.isHidden = true
-        navigationItem.hidesBackButton = true
-        
-        let image = UIImageView(.isolationEnded)
-        image.contentMode = .scaleAspectFit
-        image.adjustsImageSizeForAccessibilityContentSizeCategory = true
-        
-        let heading = UILabel()
-        heading.text = localize(.no_symptoms_heading)
-        heading.textColor = UIColor(.primaryText)
-        heading.font = UIFont.preferredFont(forTextStyle: .largeTitle)
-        heading.numberOfLines = 0
-        heading.adjustsFontForContentSizeCategory = true
-        
-        let description1 = UILabel()
-        description1.text = localize(.no_symptoms_body_1)
-        description1.styleAsBody()
-        
-        let description2 = UILabel()
-        description2.text = localize(.no_symptoms_body_2)
-        description2.styleAsBody()
-        
-        let link = LinkButton(title: localize(.no_symptoms_link))
-        link.addTarget(self, action: #selector(didTapNHS111Link), for: .touchUpInside)
-        
-        let contentStack = UIStackView(arrangedSubviews: [image, heading, description1, description2, link])
-        contentStack.axis = .vertical
-        contentStack.spacing = .standardSpacing
-        contentStack.isLayoutMarginsRelativeArrangement = true
-        contentStack.layoutMargins = .standard
-        
-        let scrollView = UIScrollView()
-        scrollView.addFillingSubview(contentStack)
-        
-        view.addAutolayoutSubview(scrollView)
-        
-        let returnHomeButton = UIButton()
-        returnHomeButton.setTitle(localize(.no_symptoms_return_home_button), for: .normal)
-        returnHomeButton.styleAsPrimary()
-        returnHomeButton.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        returnHomeButton.addTarget(self, action: #selector(didTapReturnHome), for: .touchUpInside)
-        
-        let buttonStack = UIStackView(arrangedSubviews: [returnHomeButton])
-        buttonStack.axis = .vertical
-        buttonStack.spacing = .standardSpacing
-        buttonStack.isLayoutMarginsRelativeArrangement = true
-        buttonStack.layoutMargins = .standard
-        
-        view.addAutolayoutSubview(buttonStack)
-        
-        NSLayoutConstraint.activate([
-            contentStack.widthAnchor.constraint(equalTo: view.readableContentGuide.widthAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: buttonStack.topAnchor),
-            buttonStack.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            buttonStack.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
-            buttonStack.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
-        ])
-    }
-    
-    @objc func didTapReturnHome() {
-        interactor.didTapReturnHome()
-    }
-    
-    @objc func didTapNHS111Link() {
-        interactor.didTapNHS111Link()
+    override public func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
     }
 }

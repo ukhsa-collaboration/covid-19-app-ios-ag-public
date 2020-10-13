@@ -198,7 +198,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             completionHandler: {}
         )
         
-        if case TestResultAcknowledgementState.neededForNegativeResultEndIsolation = state {} else {
+        if case TestResultAcknowledgementState.neededForNegativeResultNotIsolating = state {} else {
             XCTFail("Unexpected state \(state)")
         }
     }

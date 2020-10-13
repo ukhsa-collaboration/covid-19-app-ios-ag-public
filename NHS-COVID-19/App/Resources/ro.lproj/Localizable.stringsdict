@@ -13,11 +13,11 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>%1$d oră</string>
+				<string>%ld oră</string>
 				<key>few</key>
-				<string>%1$d ore</string>
+				<string>%ld ore</string>
 				<key>other</key>
-				<string>%1$d ore</string>
+				<string>%ld ore</string>
 			</dict>
 		</dict>
 		<key>exposure_notification_reminder_alert_title %ld hours</key>

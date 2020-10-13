@@ -20,7 +20,7 @@ private class AboutThisAppContent: StackContent {
     
     typealias Interacting = AboutThisAppContentInteracting
     
-    let views: [UIView]
+    let views: [StackViewContentProvider]
     var spacing: CGFloat = .bigSpacing
     var margins: UIEdgeInsets = .standard
     

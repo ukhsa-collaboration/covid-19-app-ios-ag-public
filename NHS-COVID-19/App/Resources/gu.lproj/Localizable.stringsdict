@@ -61,9 +61,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>%ld દિવસ માટે સેલ્ફ-આઇસોલેશનમાં રહેવાનુ ચાલુ રાખો</string>
+				<string>%ld દિવસ માટે સેલ્ફ-આઇસોલેશનમાં રહેવાનું ચાલુ રાખો</string>
 				<key>other</key>
-				<string>%ld દિવસો માટે આઇસોલેશનમાં રહેવાનુ ચાલુ રાખો</string>
+				<string>%ld દિવસો માટે આઇસોલેશનમાં રહેવાનું ચાલુ રાખો</string>
 			</dict>
 		</dict>
 		<key>isolation_days_accessibility_label %ld</key>
@@ -173,9 +173,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>કૃપા કરી %ld દિવસ માટે આઇસોલેશનમાં રહો</string>
+				<string>%ld દિવસ માટે સેલ્ફ-આઇસોલેશનમાં રહો</string>
 				<key>other</key>
-				<string>કૃપા કરી %ld દિવસો માટે આઇસોલેશનમાં રહો</string>
+				<string>%ld દિવસો માટે સેલ્ફ-આઇસોલેશનમાં રહો</string>
 			</dict>
 		</dict>
 	</dict>

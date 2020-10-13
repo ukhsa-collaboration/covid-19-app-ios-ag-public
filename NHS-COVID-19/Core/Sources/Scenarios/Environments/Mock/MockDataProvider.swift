@@ -15,22 +15,36 @@ class MockDataProvider: ObservableObject {
         _objectWillChange.eraseToAnyPublisher()
     }
     
-    @UserDefault("mocks.highRiskPostcodes", defaultValue: "")
-    var highRiskPostcodes: String {
+    @UserDefault("mocks.redPostcodes", defaultValue: "")
+    var redPostcodes: String {
         didSet {
             _objectWillChange.send()
         }
     }
     
-    @UserDefault("mocks.mediumRiskPostcodes", defaultValue: "")
-    var mediumRiskPostcodes: String {
+    @UserDefault("mocks.amberPostcodes", defaultValue: "")
+    var amberPostcodes: String {
         didSet {
             _objectWillChange.send()
         }
     }
     
-    @UserDefault("mocks.lowRiskPostcodes", defaultValue: "")
-    var lowRiskPostcodes: String {
+    @UserDefault("mocks.yellowPostcodes", defaultValue: "")
+    var yellowPostcodes: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.greenPostcodes", defaultValue: "")
+    var greenPostcodes: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.neutralPostcodes", defaultValue: "")
+    var neutralPostcodes: String {
         didSet {
             _objectWillChange.send()
         }

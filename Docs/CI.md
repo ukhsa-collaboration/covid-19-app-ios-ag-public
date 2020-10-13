@@ -19,6 +19,9 @@ Since this document is manually updated, parts of it may be out of date. If you 
   - [Access to other repos](#access-to-other-repos)
     - [`REPOS_ACCESS_ACTOR`](#repos_access_actor)
     - [`REPOS_ACCESS_TOKEN`](#repos_access_token)
+  - [Access to AWS](#access-to-aws)
+    - [`AWS_ACCESS_KEY_ID`](#aws_access_key_id)
+    - [`AWS_SECRET_ACCESS_KEY`](#aws_secret_access_key)
   - [Apple Development](#apple-development)
     - [`BASE64_ENCODED_IDENTITY`](#base64_encoded_identity)
     - [`IDENTITY_PASSWORD`](#identity_password)
@@ -26,6 +29,9 @@ Since this document is manually updated, parts of it may be out of date. If you 
   - [App Store Connect](#app-store-connect)
     - [`ASC_USERNAME`](#asc_username)
     - [`ASC_PASSWORD`](#asc_password)
+  - [Access to Lokalise](#access-to-lokalise)
+    - [`LOKALISE_PROJECT_ID`](#lokalise_project_id)
+    - [`LOKALISE_API_TOKEN`](#lokalise_api_token)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -125,3 +131,15 @@ An App Store Connect username (for example to be used with `altool`). This accou
 ### `ASC_PASSWORD`
 
 The (app-specific) password for `ASC_USERNAME`.
+
+## Access to Lokalise
+
+Copy for the app is managed in Lokalise. We use a script to download the latest copy and import it to the app. 
+
+### `LOKALISE_PROJECT_ID`
+
+The project id for this project on Lokalise.
+
+### `LOKALISE_API_TOKEN`
+
+The API token from Lokalise to get access to the copy for this project

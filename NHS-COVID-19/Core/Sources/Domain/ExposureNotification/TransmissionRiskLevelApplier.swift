@@ -1,8 +1,10 @@
+//
+// Copyright © 2020 NHSX. All rights reserved.
+//
 
-
-import Foundation
-import ExposureNotification
 import Common
+import ExposureNotification
+import Foundation
 
 public class TransmissionRiskLevelApplier {
     private static let priorDaysThreshold = -2
@@ -29,12 +31,10 @@ public class TransmissionRiskLevelApplier {
 
 private extension ENTemporaryExposureKey {
     var gregorianDay: GregorianDay {
-        get {
-            // rollingStartNumber is the number of 10 minute periods since 1970
-            // so we multiply by 60 * 10 to convert to seconds
-            let timeSince1970 = TimeInterval(rollingStartNumber * 60 * 10)
-            let date = Date(timeIntervalSince1970: timeSince1970)
-            return GregorianDay(date: date, timeZone: .current)
-        }
+        // rollingStartNumber is the number of 10 minute periods since 1970
+        // so we multiply by 60 * 10 to convert to seconds
+        let timeSince1970 = TimeInterval(rollingStartNumber * 60 * 10)
+        let date = Date(timeIntervalSince1970: timeSince1970)
+        return GregorianDay(date: date, timeZone: .current)
     }
 }

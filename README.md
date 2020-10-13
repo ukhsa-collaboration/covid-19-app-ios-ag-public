@@ -28,4 +28,5 @@ You should then be able to build and run on a device.
 * [App Architecture](Docs/AppArchitecture.md) provides high level description of how the code is structured.
 * [CI Workflows](Docs/CI.md) documents how we use GitHub Actions.
 * [Development Guides](Docs/Development/Guides)
+  * [PRs](Docs/Development/Guides/PRs.md) documents our approach to raising and reviewing PRs.
   * [Using `Domain`](Docs/Development/Guides/UsingDomain.md) is a good starting point for learning how the app’s backend works. 

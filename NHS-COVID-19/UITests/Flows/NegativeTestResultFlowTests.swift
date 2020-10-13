@@ -47,9 +47,7 @@ class NegativeTestResultFlowTests: XCTestCase {
                 """
             }
             
-            let homeScreen = HomeScreen(app: app)
-            
-            XCTAssert(homeScreen.riskLevelBanner(for: postcode, risk: localize(.risk_level_low)).exists)
+            app.checkBackOnHomeScreen(postcode: postcode)
             
         }
     }
@@ -69,9 +67,9 @@ class NegativeTestResultFlowTests: XCTestCase {
                 The user can return to the homescreen
                 """
             }
-            let negativeTestResultScreen = NegativeTestResultScreen(app: app)
+            let negativeTestResultScreen = NegativeTestResultNoIsolationScreen(app: app)
             
-            XCTAssertTrue(negativeTestResultScreen.endOfIsolationLabel.exists)
+            XCTAssertTrue(negativeTestResultScreen.description.exists)
             
             negativeTestResultScreen.returnHomeButton.tap()
             
@@ -81,9 +79,7 @@ class NegativeTestResultFlowTests: XCTestCase {
                 """
             }
             
-            let homeScreen = HomeScreen(app: app)
-            
-            XCTAssert(homeScreen.riskLevelBanner(for: postcode, risk: localize(.risk_level_low)).exists)
+            app.checkBackOnHomeScreen(postcode: postcode)
             
         }
     }
@@ -115,10 +111,7 @@ class NegativeTestResultFlowTests: XCTestCase {
                 """
             }
             
-            let homeScreen = HomeScreen(app: app)
-            
-            XCTAssert(homeScreen.riskLevelBanner(for: postcode, risk: localize(.risk_level_low)).exists)
-            
+            app.checkBackOnHomeScreen(postcode: postcode)
         }
     }
 }

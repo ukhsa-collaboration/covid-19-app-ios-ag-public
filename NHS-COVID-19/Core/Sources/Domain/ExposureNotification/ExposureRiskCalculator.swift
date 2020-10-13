@@ -6,7 +6,7 @@ import Common
 import ExposureNotification
 
 public protocol ExposureRiskCalculating {
-    func riskInfo(for exposureInfo: [ExposureNotificationExposureInfo]) -> RiskInfo?
+    func riskInfo(for exposureInfo: [ExposureNotificationExposureInfo]) -> ExposureRiskInfo?
     func createExposureNotificationConfiguration() -> ENExposureConfiguration
 }
 
@@ -41,15 +41,16 @@ public struct ExposureRiskCalculator: ExposureRiskCalculating {
         return weightedAttenuationScore * infectiousnessFactor
     }
     
-    public func riskInfo(for exposureInfo: [ExposureNotificationExposureInfo]) -> RiskInfo? {
+    public func riskInfo(for exposureInfo: [ExposureNotificationExposureInfo]) -> ExposureRiskInfo? {
         let riskScore = exposureInfo
-            .map {
-                RiskInfo(
-                    riskScore: risk(for: $0),
-                    day: GregorianDay(date: $0.date, timeZone: .utc)
+            .map { exposure -> ExposureRiskInfo in
+                let riskScore = risk(for: exposure)
+                return ExposureRiskInfo(
+                    riskScore: riskScore,
+                    day: GregorianDay(date: exposure.date, timeZone: .utc),
+                    isConsideredRisky: isConsideredRisky(riskScore: riskScore)
                 )
             }
-            .filter { isConsideredRisky(riskScore: $0.riskScore) }
             .max { $1.isHigherPriority(than: $0) }
         
         return riskScore

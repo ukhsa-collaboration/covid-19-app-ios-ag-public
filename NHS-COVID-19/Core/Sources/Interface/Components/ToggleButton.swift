@@ -33,9 +33,29 @@ public struct ToggleButton: View {
                 .foregroundColor(Color(.primaryText))
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.standardSpacing)
+                .adjustActivationPointForSimulator()
         }
         .background(Color(.surface))
         .clipShape(RoundedRectangle(cornerRadius: .menuButtonCornerRadius))
         .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.04), radius: .stripeWidth, x: 0, y: 0)
     }
+}
+
+private extension View {
+    
+    func adjustActivationPointForSimulator() -> some View {
+        #if targetEnvironment(simulator)
+        #warning("Review if an Xcode update fixes this.")
+        // There seem to be an issue causing this element to have incorrect activation point, but *only* with Xcode 12
+        // and on the simulator; causing UI tests to fail.
+        if UIApplication.shared.userInterfaceLayoutDirection == .leftToRight {
+            return accessibility(activationPoint: UnitPoint(x: 0.9, y: 0.5))
+        } else {
+            return accessibility(activationPoint: UnitPoint(x: 0.1, y: 0.5))
+        }
+        #else
+        return self
+        #endif
+    }
+    
 }

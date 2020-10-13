@@ -37,17 +37,17 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>zero</key>
-				<string>Gosod nodyn atgoffa i droi olrhain cyswllt ymlaen mewn %ld awr.</string>
+				<string>Gosod nodyn atgoffa i droi olrhain cysylltiadau ymlaen mewn %ld awr.</string>
 				<key>one</key>
-				<string>Gosod nodyn atgoffa i droi olrhain cyswllt ymlaen mewn %ld awr.</string>
+				<string>Gosod nodyn atgoffa i droi olrhain cysylltiadau ymlaen mewn %ld awr.</string>
 				<key>two</key>
-				<string>Gosod nodyn atgoffa i droi olrhain cyswllt ymlaen mewn %ld awr.</string>
+				<string>Gosod nodyn atgoffa i droi olrhain cysylltiadau ymlaen mewn %ld awr.</string>
 				<key>few</key>
-				<string>Gosod nodyn atgoffa i droi olrhain cyswllt ymlaen mewn %ld awr.</string>
+				<string>Gosod nodyn atgoffa i droi olrhain cysylltiadau ymlaen mewn %ld awr.</string>
 				<key>many</key>
-				<string>Gosod nodyn atgoffa i droi olrhain cyswllt ymlaen mewn %ld awr.</string>
+				<string>Gosod nodyn atgoffa i droi olrhain cysylltiadau ymlaen mewn %ld awr.</string>
 				<key>other</key>
-				<string>Gosod nodyn atgoffa i droi olrhain cyswllt ymlaen mewn %ld awr.</string>
+				<string>Gosod nodyn atgoffa i droi olrhain cysylltiadau ymlaen mewn %ld awr.</string>
 			</dict>
 		</dict>
 		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>

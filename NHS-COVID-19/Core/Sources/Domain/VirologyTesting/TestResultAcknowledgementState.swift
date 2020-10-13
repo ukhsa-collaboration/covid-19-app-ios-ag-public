@@ -8,7 +8,6 @@ import Foundation
 public enum TestResultAcknowledgementState {
     case notNeeded
     case neededForNegativeResultContinueToIsolate(acknowledge: () -> Void, isolationEndDate: Date)
-    case neededForNegativeResultEndIsolation(acknowledge: () -> Void)
     case neededForNegativeResultNotIsolating(acknowledge: () -> Void)
     case neededForNegativeAfterPositiveResultContinueToIsolate(acknowledge: () -> Void, isolationEndDate: Date)
     case neededForPositiveResultStartToIsolate(PositiveResultAcknowledgement, isolationEndDate: Date)
@@ -99,7 +98,7 @@ public enum TestResultAcknowledgementState {
                 acknowledge: completionHandler
             )
         case (.negative, .isolationFinishedButNotAcknowledged):
-            self = TestResultAcknowledgementState.neededForNegativeResultEndIsolation(
+            self = TestResultAcknowledgementState.neededForNegativeResultNotIsolating(
                 acknowledge: completionHandler
             )
         case (.void, .isolating(let isolation, _, _)):

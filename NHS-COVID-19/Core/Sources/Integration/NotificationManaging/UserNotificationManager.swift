@@ -67,6 +67,11 @@ class UserNotificationManager {
                 $0.title = localize(.exposure_notification_reminder_title)
                 $0.categoryIdentifier = UserNotificationCategory.exposureNotification.rawValue
             }
+        case .exposureDontWorry:
+            return configuring(UNMutableNotificationContent()) {
+                $0.title = localize(.dont_worry_notification_title)
+                $0.body = localize(.dont_worry_notification_body)
+            }
         }
     }
 }

@@ -9,10 +9,10 @@ import XCTest
 
 class RiskyPostcodesEndpointTests: XCTestCase {
     
-    private let endpoint = RiskyPostcodesEndpoint()
+    let endpoint = RiskyPostcodesEndpointV2()
     
     func testEncoding() throws {
-        let expected = HTTPRequest.get("/distribution/risky-post-districts")
+        let expected = HTTPRequest.get("/distribution/risky-post-districts-v2")
         
         let actual = try endpoint.request(for: ())
         
@@ -22,36 +22,70 @@ class RiskyPostcodesEndpointTests: XCTestCase {
     func testDecodingEmptyList() throws {
         let response = HTTPResponse.ok(with: .json(#"""
         {
-            "postDistricts" : {}
+            "postDistricts" : {},
+            "riskLevels": {}
         }
         """#))
         
-        let postcodes = try endpoint.parse(response)
+        let riskyPostcodes = try endpoint.parse(response)
         
-        XCTAssert(postcodes.isEmpty)
+        XCTAssert(riskyPostcodes.isEmpty)
     }
     
     func testDecodingListWithPostcodes() throws {
         let postcode1 = String.random()
         let postcode2 = String.random()
         let postcode3 = String.random()
-        let response = HTTPResponse.ok(with: .json(#"""
+        
+        let riskIndicator1 = String.random()
+        let riskIndicator2 = String.random()
+        let riskIndicator3 = String.random()
+        
+        let response = HTTPResponse.ok(with: .json("""
         {
-            "postDistricts" : {
-                "\#(postcode1)": "H",
-                "\#(postcode2)": "M",
-                "\#(postcode3)": "L",
+            "postDistricts": {
+                "\(postcode1)": "\(riskIndicator1)",
+                "\(postcode2)": "\(riskIndicator2)",
+                "\(postcode3)": "\(riskIndicator3)"
+            },
+            "riskLevels": {
+                "\(riskIndicator1)": {
+                    "colorScheme": "green",
+                    "name": {
+                        "en": "Tier 2"
+                    },
+                    "heading": {
+                        "en": "Data from NHS shows…"
+                    },
+                    "content": {
+                        "en": "Your local authority…"
+                    },
+                    "linkTitle": {
+                        "en": "Restrictions in your area"
+                    },
+                    "linkUrl": {
+                        "en": "https://gov.uk/somewhere"
+                    }
+                }
             }
         }
-        """#))
+        """))
         
-        let postcodes = try endpoint.parse(response)
+        let riskyPostcodes = try endpoint.parse(response)
         
-        TS.assert(postcodes, equals: [
-            Postcode(postcode1): PostcodeRisk.high,
-            Postcode(postcode2): PostcodeRisk.medium,
-            Postcode(postcode3): PostcodeRisk.low,
-        ])
+        let expected = RiskyPostcodes.RiskStyle(
+            colorScheme: .green,
+            name: [Locale(identifier: "en"): "Tier 2"],
+            heading: [Locale(identifier: "en"): "Data from NHS shows…"],
+            content: [Locale(identifier: "en"): "Your local authority…"],
+            linkTitle: [Locale(identifier: "en"): "Restrictions in your area"],
+            linkUrl: [Locale(identifier: "en"): "https://gov.uk/somewhere"]
+        )
+        
+        TS.assert(riskyPostcodes.riskStyle(for: Postcode(postcode1))?.style, equals: expected)
+        TS.assert(riskyPostcodes.riskStyle(for: Postcode(postcode1))?.id, equals: riskIndicator1)
+        XCTAssertNil(riskyPostcodes.riskStyle(for: Postcode(postcode2)))
+        XCTAssertNil(riskyPostcodes.riskStyle(for: Postcode(postcode3)))
     }
     
 }

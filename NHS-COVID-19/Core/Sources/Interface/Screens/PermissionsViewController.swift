@@ -8,7 +8,7 @@ import UIKit
 
 public class PermissionsViewController: OnboardingStepViewController {
     
-    public init(country: Country, submit: @escaping () -> Void) {
+    public init(country: InterfaceProperty<Country>, submit: @escaping () -> Void) {
         super.init(step: PermissionsStep(country: country, submit: submit))
     }
     
@@ -20,9 +20,9 @@ public class PermissionsViewController: OnboardingStepViewController {
 
 private class PermissionsStep: NSObject, OnboardingStep {
     var footerContent = [UIView]()
-    var strapLineStyle: LogoStrapline.Style? { .home(country) }
+    var strapLineStyle: LogoStrapline.Style? { .home(country.wrappedValue) }
     
-    private let country: Country
+    private let country: InterfaceProperty<Country>
     private let submit: () -> Void
     
     private lazy var title: UILabel = {
@@ -35,7 +35,7 @@ private class PermissionsStep: NSObject, OnboardingStep {
     let actionTitle = localize(.permissions_continue_button_title)
     let image: UIImage? = UIImage(.onboardingPermissions)
     
-    init(country: Country, submit: @escaping () -> Void) {
+    init(country: InterfaceProperty<Country>, submit: @escaping () -> Void) {
         self.country = country
         self.submit = submit
     }

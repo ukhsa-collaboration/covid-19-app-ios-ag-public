@@ -19,8 +19,7 @@ public class RiskyVenueInformationScreenScenario: Scenario {
             let interactor = Interactor(viewController: parent)
             return RiskyVenueInformationViewController(
                 interactor: interactor,
-                venueName: venueName,
-                checkInDate: checkInDate
+                viewModel: .init(venueName: venueName, checkInDate: checkInDate)
             )
         }
     }

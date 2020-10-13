@@ -25,10 +25,13 @@ class NoOpRiskyCheckinsProvider: RiskyCheckinsProvider {
 }
 
 class CircuitBreaker {
+    public var showDontWorryNotificationIfNeeded = false
+    
     private let client: CircuitBreakingClient
     private let exposureInfoProvider: ExposureInfoProvider
     private let riskyCheckinsProvider: RiskyCheckinsProvider
     private let handleContactCase: (RiskInfo) -> Void
+    private let handleDontWorryNotification: () -> Void
     
     private enum Resolution: Equatable {
         case proceed
@@ -40,12 +43,14 @@ class CircuitBreaker {
         client: CircuitBreakingClient,
         exposureInfoProvider: ExposureInfoProvider,
         riskyCheckinsProvider: RiskyCheckinsProvider,
-        handleContactCase: @escaping (RiskInfo) -> Void
+        handleContactCase: @escaping (RiskInfo) -> Void,
+        handleDontWorryNotification: @escaping () -> Void
     ) {
         self.client = client
         self.exposureInfoProvider = exposureInfoProvider
         self.riskyCheckinsProvider = riskyCheckinsProvider
         self.handleContactCase = handleContactCase
+        self.handleDontWorryNotification = handleDontWorryNotification
     }
     
     func processPendingApprovals() -> AnyPublisher<Void, Never> {
@@ -67,7 +72,12 @@ class CircuitBreaker {
                 guard let self = self else { return }
                 if resoltion == .proceed {
                     self.handleContactCase(riskInfo)
+                } else if self.showDontWorryNotificationIfNeeded {
+                    self.handleDontWorryNotification()
                 }
+                
+                self.showDontWorryNotificationIfNeeded = false
+                
                 switch resoltion {
                 case .proceed, .ignore:
                     self.exposureInfoProvider.exposureInfo = nil
@@ -75,6 +85,13 @@ class CircuitBreaker {
                     self.exposureInfoProvider.exposureInfo?.approvalToken = token
                 }
             })
+            .catch { _ -> Empty<Resolution, Never> in
+                if self.showDontWorryNotificationIfNeeded {
+                    self.handleDontWorryNotification()
+                }
+                self.showDontWorryNotificationIfNeeded = false
+                return Empty<Resolution, Never>()
+            }
             .map { _ in }
             .eraseToAnyPublisher()
     }
@@ -107,11 +124,12 @@ class CircuitBreaker {
                     self.riskyCheckinsProvider.riskApprovalTokens[venueId] = token
                 }
             })
+            .catch { _ in Empty<Resolution, Never>() }
             .map { _ in }
             .eraseToAnyPublisher()
     }
     
-    private func getCircuitBreakerResolution(for type: CircuitBreakerType, existingToken: CircuitBreakerApprovalToken?) -> AnyPublisher<Resolution, Never> {
+    private func getCircuitBreakerResolution(for type: CircuitBreakerType, existingToken: CircuitBreakerApprovalToken?) -> AnyPublisher<Resolution, Error> {
         if let approvalToken = existingToken {
             return getCircuitBreakerPermission(for: type, with: approvalToken)
         }
@@ -127,11 +145,11 @@ class CircuitBreaker {
                     return .askAgain(response.approvalToken)
                 }
             }
-            .catch { _ in Empty<Resolution, Never>() }
+            .mapError { $0 as Error }
             .eraseToAnyPublisher()
     }
     
-    private func getCircuitBreakerPermission(for type: CircuitBreakerType, with approvalToken: CircuitBreakingClient.ApprovalToken) -> AnyPublisher<Resolution, Never> {
+    private func getCircuitBreakerPermission(for type: CircuitBreakerType, with approvalToken: CircuitBreakingClient.ApprovalToken) -> AnyPublisher<Resolution, Error> {
         client.fetchResolution(for: type, with: approvalToken)
             .map { response in
                 switch response.approval {
@@ -143,7 +161,7 @@ class CircuitBreaker {
                     return .askAgain(approvalToken)
                 }
             }
-            .catch { _ in Empty<Resolution, Never>() }
+            .mapError { $0 as Error }
             .eraseToAnyPublisher()
     }
 }

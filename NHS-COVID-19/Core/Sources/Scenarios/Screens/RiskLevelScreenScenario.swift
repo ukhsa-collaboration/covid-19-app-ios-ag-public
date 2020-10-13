@@ -16,8 +16,8 @@ public class RiskLevelLowScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            let viewModel = RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .low)
-            return RiskLevelInfoViewController(viewModel: viewModel, interactor: interactor)
+            let viewModel = RiskLevelBanner.ViewModel(postcode: .init("SW12"), risk: .v1(.low))
+            return RiskLevelInfoViewController(viewModel: viewModel.riskLevelInfoViewModel, interactor: interactor)
         }
     }
 }
@@ -32,8 +32,8 @@ public class RiskLevelMediumScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            let viewModel = RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .medium)
-            return RiskLevelInfoViewController(viewModel: viewModel, interactor: interactor)
+            let viewModel = RiskLevelBanner.ViewModel(postcode: .init("SW12"), risk: .v1(.medium))
+            return RiskLevelInfoViewController(viewModel: viewModel.riskLevelInfoViewModel, interactor: interactor)
         }
     }
 }
@@ -48,8 +48,8 @@ public class RiskLevelHighScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            let viewModel = RiskLevelBanner.ViewModel(postcode: "SW12", riskLevel: .high)
-            return RiskLevelInfoViewController(viewModel: viewModel, interactor: interactor)
+            let viewModel = RiskLevelBanner.ViewModel(postcode: .init("SW12"), risk: .v1(.high))
+            return RiskLevelInfoViewController(viewModel: viewModel.riskLevelInfoViewModel, interactor: interactor)
         }
     }
 }
@@ -62,7 +62,7 @@ private class Interactor: RiskLevelInfoViewController.Interacting {
         self.viewController = viewController
     }
     
-    func didTapWebsiteLink() {
+    func didTapWebsiteLink(url: URL) {
         viewController?.showAlert(title: RiskLevelLowScreenScenario.linkButtonTaped)
     }
     

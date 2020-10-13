@@ -78,9 +78,7 @@ class PositiveTestResultsFlowTest: XCTestCase {
                 """
             }
             
-            let homeScreen = HomeScreen(app: app)
-            
-            XCTAssert(homeScreen.riskLevelBanner(for: postcode, risk: localize(.risk_level_low)).exists)
+            app.checkBackOnHomeScreen(postcode: postcode)
             
         }
     }
@@ -136,9 +134,7 @@ class PositiveTestResultsFlowTest: XCTestCase {
                 """
             }
             
-            let homeScreen = HomeScreen(app: app)
-            
-            XCTAssert(homeScreen.riskLevelBanner(for: postcode, risk: localize(.risk_level_low)).exists)
+            app.checkBackOnHomeScreen(postcode: postcode)
             
         }
     }
@@ -194,10 +190,7 @@ class PositiveTestResultsFlowTest: XCTestCase {
                 """
             }
             
-            let homeScreen = HomeScreen(app: app)
-            
-            XCTAssert(homeScreen.riskLevelBanner(for: postcode, risk: localize(.risk_level_low)).exists)
-            
+            app.checkBackOnHomeScreen(postcode: postcode)
         }
     }
     

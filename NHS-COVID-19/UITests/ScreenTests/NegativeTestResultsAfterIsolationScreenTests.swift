@@ -41,14 +41,3 @@ class NegativeTestResultNoIsolationScreenTests: XCTestCase {
         }
     }
 }
-
-private extension NegativeTestResultScreen {
-    
-    var onlineServicesLinkAlertTitle: XCUIElement {
-        app.staticTexts[NegativeTestResultScreenScenario.onlineServicesLinkTapped]
-    }
-    
-    var returnHomeAlertTitle: XCUIElement {
-        app.staticTexts[NegativeTestResultScreenScenario.returnHomeTapped]
-    }
-}

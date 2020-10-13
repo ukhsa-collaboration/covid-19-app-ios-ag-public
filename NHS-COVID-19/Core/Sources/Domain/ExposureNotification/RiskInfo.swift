@@ -4,14 +4,25 @@
 
 import Common
 
-public struct RiskInfo: Codable, Equatable {
+protocol RiskData {
+    var riskScore: Double { get }
+    var day: GregorianDay { get }
+}
+
+public struct RiskInfo: Codable, Equatable, RiskData {
     var riskScore: Double
     var day: GregorianDay
 }
 
-extension RiskInfo {
+public struct ExposureRiskInfo: RiskData {
+    var riskScore: Double
+    var day: GregorianDay
+    var isConsideredRisky: Bool
+}
+
+extension RiskData {
     
-    func isHigherPriority(than other: RiskInfo) -> Bool {
+    func isHigherPriority(than other: RiskData) -> Bool {
         if day > other.day { return true }
         if day < other.day { return false }
         return riskScore > other.riskScore

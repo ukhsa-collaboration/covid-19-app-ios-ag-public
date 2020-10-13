@@ -103,6 +103,10 @@ public func localizeForCountry(_ localizable: ParameterisedStringLocalizable) ->
     return string.isEmpty ? String(format: localizable.key.rawValue, arguments: localizable.arguments) : string
 }
 
+public func localizeForCountryAndSplit(_ key: StringLocalizationKey) -> [String] {
+    localizeForCountry(key).split(separator: "\n").map(String.init)
+}
+
 public func localize(_ localizable: ParameterisedStringLocalizable) -> String {
     let format = Localization.localize(localizable.key)
     let string = String(format: format, arguments: localizable.arguments)
