@@ -2,6 +2,7 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Common
 import Domain
 import Foundation
 import TestSupport
@@ -96,6 +97,33 @@ class FileStorageTests: XCTestCase {
         
         XCTAssertFalse(storage.hasContent(for: ""))
         
+    }
+    
+    func testAllFileNames() throws {
+        let content = Data.random()
+        let file1 = String.random()
+        let file2 = String.random()
+        let file3 = String.random()
+        
+        try content.write(to: folder.appendingPathComponent(file1))
+        try content.write(to: folder.appendingPathComponent(file2))
+        try content.write(to: folder.appendingPathComponent(file3))
+        
+        let allFileNames = try XCTUnwrap(storage.allFileNames())
+        XCTAssertEqual(allFileNames.count, 3)
+        XCTAssertTrue(allFileNames.contains(file1))
+        XCTAssertTrue(allFileNames.contains(file2))
+        XCTAssertTrue(allFileNames.contains(file3))
+    }
+    
+    func testModificationDate() throws {
+        let date = UTCHour(year: 2020, month: 10, day: 1, hour: 22).date
+        let content = Data.random()
+        let fileName = "file"
+        try content.write(to: folder.appendingPathComponent(fileName))
+        try fileManager.setAttributes([.modificationDate: date], ofItemAtPath: folder.appendingPathComponent(fileName).path)
+        
+        XCTAssertEqual(date, storage.modificationDate(fileName))
     }
     
 }

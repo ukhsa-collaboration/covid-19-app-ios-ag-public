@@ -54,6 +54,7 @@ class VoidTestResultFlowTests: XCTestCase {
             
             XCTAssertTrue(bookTestScreen.title.exists)
             
+            app.scrollTo(element: bookTestScreen.button)
             bookTestScreen.button.tap()
             
             runner.step("Homescreen") {
@@ -62,7 +63,7 @@ class VoidTestResultFlowTests: XCTestCase {
                 """
             }
             
-            app.checkBackOnHomeScreen(postcode: postcode)
+            app.checkOnHomeScreen(postcode: postcode)
         }
     }
     
@@ -98,6 +99,7 @@ class VoidTestResultFlowTests: XCTestCase {
             
             XCTAssertTrue(bookTestScreen.title.exists)
             
+            app.scrollTo(element: bookTestScreen.button)
             bookTestScreen.button.tap()
             
             runner.step("Homescreen") {
@@ -106,7 +108,7 @@ class VoidTestResultFlowTests: XCTestCase {
                 """
             }
             
-            app.checkBackOnHomeScreen(postcode: postcode)
+            app.checkOnHomeScreen(postcode: postcode)
         }
     }
 }

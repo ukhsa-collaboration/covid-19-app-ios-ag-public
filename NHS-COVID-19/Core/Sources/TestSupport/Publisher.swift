@@ -26,7 +26,19 @@ extension Publisher {
                 receiveCompletion: { completion in
                     switch completion {
                     case .finished:
-                        break
+                        if Output.Type.self == Void.Type.self {
+                            #warning("Improve semantics of this function")
+                            // technically, `await` is designed to fail if we never send a value. If we complete, but do not receive
+                            // a value, we should still throw an error, but `timedOut` it should be `finishedWithoutValue`.
+                            // Indeed, this method should also probably throw if we receive _multiple_ values.
+                            //
+                            // In many places were we're using `await`, we do not actually care about the output, we're just
+                            // interesting in completion. Consider breaking this method into two: one that awaits a single value (like
+                            // here), another that awaits completion and returns an array of received values (which could be empty)
+                            complete(.success(() as! Self.Output))
+                        } else {
+                            break
+                        }
                     case .failure(let error):
                         complete(.failure(error))
                     }

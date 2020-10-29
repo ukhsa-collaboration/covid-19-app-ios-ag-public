@@ -8,10 +8,12 @@ import UserNotifications
 public enum UserNotificationType: String {
     case postcode
     case venue
+    case venueIsolate
     case isolationState
     case exposureDetection
     case testResultReceived
     case appAvailability
+    case latestAppVersionAvailable
     case exposureNotificationReminder
     case exposureDontWorry
 }

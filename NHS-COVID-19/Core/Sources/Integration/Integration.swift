@@ -102,10 +102,17 @@ extension CoordinatedAppController {
                             showAdvisory: showAdvisory,
                             currentDateProvider: context.currentDateProvider
                         )
-                    case .neededForStartOfIsolation(let interactor, let isolationEndDate):
-                        return ExposureAcknowledgementViewController(
+                    case .neededForStartOfIsolationExposureDetection(let interactor, let isolationEndDate):
+                        return ContactCaseAcknowledgementViewController(
                             interactor: interactor,
-                            isolationEndDate: isolationEndDate
+                            isolationEndDate: isolationEndDate,
+                            type: .exposureDetection
+                        )
+                    case .neededForStartOfIsolationRiskyVenue(let interactor, let isolationEndDate):
+                        return ContactCaseAcknowledgementViewController(
+                            interactor: interactor,
+                            isolationEndDate: isolationEndDate,
+                            type: .riskyVenue
                         )
                     case .neededForRiskyVenue(let interactor, let venueName, let checkInDate):
                         return RiskyVenueInformationViewController(

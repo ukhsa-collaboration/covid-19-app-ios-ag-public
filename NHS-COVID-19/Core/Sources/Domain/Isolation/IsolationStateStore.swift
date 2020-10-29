@@ -141,25 +141,10 @@ class IsolationStateStore: SymptomsOnsetDateAndEncounterDateProviding {
         if isolationStateInfo?.isolationInfo.contactCaseInfo != nil {
             Metrics.signpost(.contactCaseBackgroundTick)
         }
-        if isolationStateInfo?.isolationInfo.contactCaseInfo != nil {
+        if isolationStateInfo?.isolationInfo.indexCaseInfo != nil {
             Metrics.signpost(.indexCaseBackgroundTick)
         }
         
         return Empty().eraseToAnyPublisher()
-    }
-    
-    func stopSelfIsolation() {
-        guard let indexCaseInfo = isolationStateInfo?.isolationInfo.indexCaseInfo else {
-            return
-        }
-        
-        guard case .selfDiagnosis = indexCaseInfo.isolationTrigger else {
-            return
-        }
-        
-        // Isolation remains unchanged if test result is positive or void
-        if indexCaseInfo.testInfo?.result == nil || indexCaseInfo.testInfo?.result == .negative {
-            isolationStateInfo = nil
-        }
     }
 }

@@ -78,7 +78,7 @@ class PositiveTestResultsFlowTest: XCTestCase {
                 """
             }
             
-            app.checkBackOnHomeScreen(postcode: postcode)
+            app.checkOnHomeScreen(postcode: postcode)
             
         }
     }
@@ -134,7 +134,7 @@ class PositiveTestResultsFlowTest: XCTestCase {
                 """
             }
             
-            app.checkBackOnHomeScreen(postcode: postcode)
+            app.checkOnHomeScreen(postcode: postcode)
             
         }
     }
@@ -190,7 +190,7 @@ class PositiveTestResultsFlowTest: XCTestCase {
                 """
             }
             
-            app.checkBackOnHomeScreen(postcode: postcode)
+            app.checkOnHomeScreen(postcode: postcode)
         }
     }
     

@@ -27,7 +27,7 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         let day = LocalDay.today
         
         var callbackCount = 0
-        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: .contactCase)
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: .contactCase(.exposureDetection))
         let state = IsolationAcknowledgementState(
             logicalState: .isolationFinishedButNotAcknowledged(isolation),
             now: Date(),
@@ -51,7 +51,7 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         let day = LocalDay.today
         
         var callbackCount = 0
-        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: .contactCase)
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: .contactCase(.exposureDetection))
         let state = IsolationAcknowledgementState(
             logicalState: .isolating(isolation, endAcknowledged: false, startAcknowledged: false),
             now: Date(),
@@ -76,7 +76,7 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         let day = LocalDay.today
         
         var callbackCount = 0
-        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: .contactCase)
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: .contactCase(.exposureDetection))
         let state = IsolationAcknowledgementState(
             logicalState: .isolating(isolation, endAcknowledged: false, startAcknowledged: true),
             now: Date(),
@@ -99,7 +99,7 @@ class IsolationAcknowledgementStateTests: XCTestCase {
     func testAcknowledgementNotNeededWhenAcknowledgedStartAndEnd() throws {
         let day = LocalDay.today
         
-        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: .contactCase)
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: .contactCase(.exposureDetection))
         let state = IsolationAcknowledgementState(
             logicalState: .isolating(isolation, endAcknowledged: true, startAcknowledged: true),
             now: Date(),

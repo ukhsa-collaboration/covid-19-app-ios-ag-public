@@ -72,8 +72,8 @@ extension BackendIntegrationTests {
         let result = try submissionclient.fetch(OrderTestkitEndpoint()).await(timeout: 5).get()
         let diagnosisKeySubmissionToken = result.diagnosisKeySubmissionToken
         let keys = [
-            ENTemporaryExposureKey(),
-            ENTemporaryExposureKey(),
+            TemporaryExposureKey(exposureKey: ENTemporaryExposureKey(), onsetDay: .today),
+            TemporaryExposureKey(exposureKey: ENTemporaryExposureKey(), onsetDay: .today),
         ]
         try runSubmissionTest(with: DiagnosisKeySubmissionEndPoint(token: diagnosisKeySubmissionToken), input: keys, expectedType: Void.self)
     }
@@ -81,9 +81,9 @@ extension BackendIntegrationTests {
 
 extension BackendIntegrationTests {
     func _testDailyKeysDownload() throws {
-        let detectionClient = ExposureDetectionClient(
+        let detectionClient = ExposureDetectionEndpointManager(
             distributionClient: distributionClient,
-            submissionClient: submissionclient
+            fileStorage: FileStorage(forCachesOf: .random())
         )
         
         let zipManager = try detectionClient.getExposureKeys(for: .daily(.today)).await(timeout: 5).get()
@@ -98,9 +98,9 @@ extension BackendIntegrationTests {
     }
     
     func _testHourlyKeysDownload() throws {
-        let detectionClient = ExposureDetectionClient(
+        let detectionClient = ExposureDetectionEndpointManager(
             distributionClient: distributionClient,
-            submissionClient: submissionclient
+            fileStorage: FileStorage(forCachesOf: .random())
         )
         let zipManager = try detectionClient.getExposureKeys(for: .twoHourly(.today, .init(value: 0))).await(timeout: 5).get()
         let fileManager = FileManager()

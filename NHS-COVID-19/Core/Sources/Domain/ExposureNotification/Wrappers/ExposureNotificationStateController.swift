@@ -160,7 +160,7 @@ private extension ExposureNotificationStateController.State {
     
     init(_ status: ExposureNotificationManaging.Status) {
         switch status {
-        case .unknown:
+        case .unknown, .unauthorized, .paused:
             self = .unknown
         case .active:
             self = .active

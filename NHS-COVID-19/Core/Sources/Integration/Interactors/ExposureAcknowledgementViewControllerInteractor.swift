@@ -7,7 +7,7 @@ import Foundation
 import Interface
 import Localization
 
-struct ExposureAcknowledgementViewControllerInteractor: ExposureAcknowledgementViewController.Interacting {
+struct ExposureAcknowledgementViewControllerInteractor: ContactCaseAcknowledgementViewController.Interacting {
     private let openURL: (URL) -> Void
     private var _acknowledge: () -> Void
     

@@ -41,7 +41,7 @@ public class MockExposureNotificationManager: ExposureNotificationManaging {
     
     public var summary: ENExposureDetectionSummary = ENExposureDetectionSummary()
     
-    public var exposures: [ENExposureInfo] = [
+    public var exposureInfo: [ENExposureInfo] = [
         ENExposureInfo(),
         ENExposureInfo(),
     ]
@@ -72,11 +72,31 @@ public class MockExposureNotificationManager: ExposureNotificationManaging {
     public func getExposureInfo(summary: ENExposureDetectionSummary, userExplanation: String, completionHandler: @escaping ENGetExposureInfoHandler) -> Progress {
         self.summary = summary
         
-        completionHandler(createExposure?() ?? exposures, nil)
+        completionHandler(createExposure?() ?? exposureInfo, nil)
         return Progress()
     }
     
     public func getExposureInfo(summary: ENExposureDetectionSummary, completionHandler: @escaping ENGetExposureInfoHandler) {
         _ = getExposureInfo(summary: summary, userExplanation: UUID().uuidString, completionHandler: completionHandler)
+    }
+    
+    @available(iOS 13.7, *)
+    public func getExposureWindows(summary: ENExposureDetectionSummary, completionHandler: @escaping ENGetExposureWindowsHandler) -> Progress {
+        return Progress()
+    }
+}
+
+@available(iOS 13.7, *)
+public class MockWindowsExposureNotificationManager: MockExposureNotificationManager {
+    var exposureWindows: [ENExposureWindow] = [
+        ENExposureWindow(),
+    ]
+    
+    @available(iOS 13.7, *)
+    override public func getExposureWindows(summary: ENExposureDetectionSummary, completionHandler: @escaping ENGetExposureWindowsHandler) -> Progress {
+        self.summary = summary
+        
+        completionHandler(exposureWindows, nil)
+        return Progress()
     }
 }

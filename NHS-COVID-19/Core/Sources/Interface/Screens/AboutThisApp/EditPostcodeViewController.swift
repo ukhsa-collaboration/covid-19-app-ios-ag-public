@@ -30,7 +30,7 @@ private class EditPostcodeContent: StickyFooterScrollingContent {
     
     private let delegate: TextFieldDelegate
     let scrollingContent: StackContent
-    let footerContent: StackContent
+    let footerContent: StackContent?
     let spacing: CGFloat = .doubleSpacing
     
     public init(interactor: Interacting) {

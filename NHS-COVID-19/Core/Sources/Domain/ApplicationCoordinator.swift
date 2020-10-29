@@ -7,6 +7,7 @@ import Common
 import ExposureNotification
 import Foundation
 import Logging
+import RiskScore
 import UIKit
 
 public class ApplicationCoordinator {
@@ -25,7 +26,6 @@ public class ApplicationCoordinator {
     
     private let application: Application
     private let appAvailabilityManager: AppAvailabilityManager
-    private var appActivationManager: AppActivationManager?
     private let metricRecoder: MetricReporter
     private let exposureNotificationStateController: ExposureNotificationStateController
     private let userNotificationsStateController: UserNotificationsStateController
@@ -35,13 +35,12 @@ public class ApplicationCoordinator {
     private var backgroundTaskAggregator: BackgroundTaskAggregator?
     private let postcodeStore: PostcodeStore?
     private let exposureDetectionStore: ExposureDetectionStore
+    private let exposureKeysManager: ExposureKeysManager
     private let exposureDetectionManager: ExposureDetectionManager
     private let distributeClient: HTTPClient
     private let selfDiagnosisManager: SelfDiagnosisManager?
     private let checkInContext: CheckInContext?
-    private let isolationStateStore: IsolationStateStore
-    private let isolationStateManager: IsolationStateManager
-    private let isolationConfiguration: CachedResponse<IsolationConfiguration>
+    private let isolationContext: IsolationContext
     private let riskyPostcodeEndpointManager: RiskyPostcodeEndpointManager?
     private let postcodeInfo: DomainProperty<(postcode: Postcode, risk: DomainProperty<RiskyPostcodeEndpointManager.PostcodeRisk?>)?>?
     private let savePostcode: (String) -> Result<Void, PostcodeValidationError>
@@ -51,6 +50,7 @@ public class ApplicationCoordinator {
     private let riskScoreNegotiator: RiskScoreNegotiator
     private let circuitBreaker: CircuitBreaker
     private let housekeeper: Housekeeper
+    private let diagnosisKeyCacheHouskeeper: DiagnosisKeyCacheHousekeeper
     private let exposureNotificationReminder: ExposureNotificationReminder
     private let completedOnboardingForCurrentSession = CurrentValueSubject<Bool, Never>(false)
     private let appReviewPresenter: AppReviewPresenter
@@ -82,12 +82,6 @@ public class ApplicationCoordinator {
             appInfo: services.appInfo
         )
         
-        if enabledFeatures.contains(.pilotActivation) {
-            appActivationManager = AppActivationManager(store: services.encryptedStore, httpClient: services.apiClient)
-        } else {
-            appActivationManager = nil
-        }
-        
         if enabledFeatures.contains(.riskyPostcode) {
             let postcodeStore = PostcodeStore(store: services.encryptedStore)
             
@@ -116,24 +110,24 @@ public class ApplicationCoordinator {
             savePostcode = { _ in .success(()) }
         }
         
-        isolationConfiguration = CachedResponse(
-            httpClient: distributeClient,
-            endpoint: IsolationConfigurationEndpoint(),
-            storage: services.cacheStorage,
-            name: "isolation_configuration",
-            initialValue: .default
+        isolationContext = IsolationContext(
+            isolationConfiguration: CachedResponse(
+                httpClient: distributeClient,
+                endpoint: IsolationConfigurationEndpoint(),
+                storage: services.cacheStorage,
+                name: "isolation_configuration",
+                initialValue: .default
+            ),
+            encryptedStore: services.encryptedStore,
+            notificationCenter: notificationCenter,
+            currentDateProvider: currentDateProvider
         )
-        
-        let isolationConfiguration = self.isolationConfiguration
-        let isolationStateStore = IsolationStateStore(store: services.encryptedStore) { isolationConfiguration.value }
-        self.isolationStateStore = isolationStateStore
-        
-        isolationStateManager = IsolationStateManager(stateStore: isolationStateStore, notificationCenter: notificationCenter)
+        let isolationContext = self.isolationContext
         
         if enabledFeatures.contains(.selfDiagnosis) {
             selfDiagnosisManager = SelfDiagnosisManager(httpClient: distributeClient) { onsetDay in
                 let info = IndexCaseInfo(isolationTrigger: .selfDiagnosis(.today), onsetDay: onsetDay, testInfo: nil)
-                return IsolationState(logicalState: isolationStateStore.set(info))
+                return IsolationState(logicalState: isolationContext.isolationStateStore.set(info))
             }
         } else {
             selfDiagnosisManager = nil
@@ -164,17 +158,37 @@ public class ApplicationCoordinator {
             virologyTestingStateCoordinator: VirologyTestingStateCoordinator(
                 virologyTestingStateStore: virologyTestingStateStore,
                 userNotificationsManager: services.userNotificationsManager
-            )
+            ),
+            ctaTokenValidator: CTATokenValidator()
         )
         
-        let isolationStateManager = self.isolationStateManager
+        let isolationStateManager = isolationContext.isolationStateManager
+        let controller = ExposureNotificationDetectionController(manager: exposureNotificationManager)
+        let exposureRiskManager: ExposureRiskManaging
+        if #available(iOS 13.7, *) {
+            exposureRiskManager = ExposureWindowRiskManager(
+                controller: controller,
+                riskCalculator: ExposureWindowRiskCalculator(
+                    dateProvider: currentDateProvider,
+                    isolationLength: isolationContext.isolationConfiguration.value.contactCase
+                )
+            )
+        } else {
+            exposureRiskManager = ExposureRiskManager(controller: controller)
+        }
+        
+        exposureKeysManager = ExposureKeysManager(
+            controller: controller,
+            submissionClient: services.apiClient
+        )
+        
         exposureDetectionManager = ExposureDetectionManager(
-            manager: exposureNotificationManager,
+            controller: controller,
             distributionClient: distributeClient,
-            submissionClient: services.apiClient,
+            fileStorage: services.cacheStorage,
             encryptedStore: services.encryptedStore,
-            transmissionRiskLevelApplier: services.transmissionRiskLevelApplier,
-            interestedInExposureNotifications: { isolationStateManager.state.isolation?.interestedInExposureNotifications ?? true }
+            interestedInExposureNotifications: { isolationStateManager.state.isolation?.interestedInExposureNotifications ?? true },
+            exposureRiskManager: exposureRiskManager
         )
         
         exposureNotificationStateController = ExposureNotificationStateController(manager: exposureNotificationManager)
@@ -216,8 +230,8 @@ public class ApplicationCoordinator {
             exposureInfoProvider: exposureDetectionStore,
             riskyCheckinsProvider: checkInContext?.checkInsStore ?? NoOpRiskyCheckinsProvider(),
             handleContactCase: { riskInfo in
-                let contactCaseInfo = ContactCaseInfo(exposureDay: riskInfo.day, isolationFromStartOfDay: .today)
-                isolationStateStore.set(contactCaseInfo)
+                let contactCaseInfo = ContactCaseInfo(exposureDay: riskInfo.day, isolationFromStartOfDay: .today, trigger: .exposureDetection)
+                isolationContext.isolationStateStore.set(contactCaseInfo)
                 services.userNotificationsManager.removePending(type: .exposureDontWorry)
                 services.userNotificationsManager.add(type: .exposureDetection, at: nil, withCompletionHandler: nil)
             },
@@ -225,9 +239,15 @@ public class ApplicationCoordinator {
         )
         
         housekeeper = Housekeeper(
-            isolationStateStore: isolationStateStore,
+            isolationStateStore: isolationContext.isolationStateStore,
             isolationStateManager: isolationStateManager,
             virologyTestingStateStore: virologyTestingStateStore
+        )
+        
+        diagnosisKeyCacheHouskeeper = DiagnosisKeyCacheHousekeeper(
+            fileStorage: services.cacheStorage,
+            exposureDetectionStore: exposureDetectionStore,
+            currentDateProvider: currentDateProvider
         )
         
         exposureNotificationReminder = ExposureNotificationReminder(
@@ -289,9 +309,6 @@ public class ApplicationCoordinator {
                 reason = .appTooOld(updateAvailable: updateAvailable, descriptions: descriptions)
             }
             return .appUnavailable(reason)
-        case .pilotActivationRequired:
-            guard let appActivationManager = appActivationManager else { return .failedToStart }
-            return .pilotActivationRequired(submit: appActivationManager.activate(with:))
         case .failedToStart:
             return .failedToStart
         case .onboarding:
@@ -306,7 +323,7 @@ public class ApplicationCoordinator {
         case .postcodeRequired:
             return .postcodeRequired(savePostcode: savePostcode)
         case .fullyOnboarded:
-            let isolationStateStore = self.isolationStateStore
+            let isolationStateStore = isolationContext.isolationStateStore
             
             return .runningExposureNotification(
                 RunningAppContext(
@@ -317,29 +334,11 @@ public class ApplicationCoordinator {
                     openSettings: application.openSettings,
                     openURL: application.open,
                     selfDiagnosisManager: selfDiagnosisManager,
-                    isolationState: isolationStateManager.$state
+                    isolationState: isolationContext.isolationStateManager.$state
                         .map(IsolationState.init)
                         .domainProperty(),
                     testInfo: isolationStateStore.$isolationStateInfo.map { $0?.isolationInfo.indexCaseInfo?.testInfo }.domainProperty(),
-                    isolationAcknowledgementState: isolationStateManager.$state
-                        .combineLatest(notificationCenter.onApplicationBecameActive, notificationCenter.today) { state, _, _ in state }
-                        .map {
-                            IsolationAcknowledgementState(
-                                logicalState: $0,
-                                now: self.currentDateProvider(),
-                                acknowledgeStart: isolationStateStore.acknowldegeStartOfIsolation,
-                                acknowledgeEnd: isolationStateStore.acknowldegeEndOfIsolation
-                            )
-                        }
-                        .removeDuplicates(by: { (currentState, newState) -> Bool in
-                            switch (currentState, newState) {
-                            case (.notNeeded, .notNeeded): return true
-                            case (.neededForEnd(let isolation1, _), .neededForEnd(let isolation2, _)): return isolation1 == isolation2
-                            case (.neededForStart(let isolation1, _), .neededForStart(let isolation2, _)): return isolation1 == isolation2
-                            default: return false
-                            }
-                        })
-                        .eraseToAnyPublisher(),
+                    isolationAcknowledgementState: isolationContext.makeIsolationAcknowledgementState(),
                     exposureNotificationStateController: exposureNotificationStateController,
                     virologyTestingManager: virologyTestingManager,
                     testResultAcknowledgementState: makeResultAcknowledgementState(),
@@ -353,8 +352,7 @@ public class ApplicationCoordinator {
                     riskyCheckInsAcknowledgementState: makeRiskyCheckInsAcknowledgementState(),
                     currentDateProvider: currentDateProvider,
                     exposureNotificationReminder: exposureNotificationReminder,
-                    appReviewPresenter: appReviewPresenter,
-                    stopSelfIsolation: isolationStateStore.stopSelfIsolation
+                    appReviewPresenter: appReviewPresenter
                 )
             )
         }
@@ -391,7 +389,7 @@ public class ApplicationCoordinator {
                 guard let self = self else { return Empty().eraseToAnyPublisher() }
                 
                 if let indexCaseInfo = indexCaseInfo {
-                    return self.exposureDetectionManager.sendKeys(
+                    return self.exposureKeysManager.sendKeys(
                         for: indexCaseInfo.assumedOnsetDay,
                         token: token
                     )
@@ -422,13 +420,14 @@ public class ApplicationCoordinator {
     
     private func makeResultAcknowledgementState() -> AnyPublisher<TestResultAcknowledgementState, Never> {
         virologyTestingStateStore.$virologyTestResult
-            .combineLatest(isolationStateStore.$isolationStateInfo, notificationCenter.today)
+            .combineLatest(isolationContext.isolationStateStore.$isolationStateInfo, notificationCenter.today)
             .map { [weak self] result, isolationStateInfo, _ in
                 guard let self = self, let result = result else {
                     return TestResultAcknowledgementState.notNeeded
                 }
                 
-                let newIsolationStateInfo = self.isolationStateStore.newIsolationStateInfo(
+                let isolationStateStore = self.isolationContext.isolationStateStore
+                let newIsolationStateInfo = isolationStateStore.newIsolationStateInfo(
                     for: result.testResult,
                     receivedOn: .today,
                     npexDay: GregorianDay(date: result.endDate, timeZone: .utc)
@@ -446,14 +445,14 @@ public class ApplicationCoordinator {
                 ) {
                     self.virologyTestingStateStore.remove(testResult: result)
                     
-                    self.isolationStateStore.isolationStateInfo = newIsolationStateInfo
+                    isolationStateStore.isolationStateInfo = newIsolationStateInfo
                     
                     if !newIsolationState.isIsolating {
-                        self.isolationStateStore.acknowldegeEndOfIsolation()
+                        isolationStateStore.acknowldegeEndOfIsolation()
                     }
                     
                     if !currentIsolationState.isIsolating, newIsolationState.isIsolating {
-                        self.isolationStateStore.restartIsolationAcknowledgement()
+                        isolationStateStore.restartIsolationAcknowledgement()
                     }
                 }
             }
@@ -477,22 +476,13 @@ public class ApplicationCoordinator {
             hasPostcode = Just(true).eraseToAnyPublisher()
         }
         
-        var isActivated: AnyPublisher<Bool, Never>
-        
-        if let appActivationManager = appActivationManager {
-            isActivated = appActivationManager.$isActivated.eraseToAnyPublisher()
-        } else {
-            isActivated = Just(true).eraseToAnyPublisher()
-        }
-        
-        return isActivated
-            .combineLatest(appAvailabilityManager.$state, completedOnboardingForCurrentSession)
+        return appAvailabilityManager.$state
+            .combineLatest(completedOnboardingForCurrentSession)
             .combineLatest(exposureNotificationStateController.combinedState, userNotificationsStateController.$authorizationStatus, hasPostcode)
             .map { f in
                 RawState(
-                    isAppActivated: f.0.0,
-                    appAvailability: f.0.1,
-                    completedOnboardingForCurrentSession: f.0.2,
+                    appAvailability: f.0.0,
+                    completedOnboardingForCurrentSession: f.0.1,
                     exposureState: f.1,
                     userNotificationsStatus: f.2,
                     hasPostcode: f.3
@@ -548,20 +538,25 @@ public class ApplicationCoordinator {
         let exposureDetectionManager = self.exposureDetectionManager
         let riskScoreNegotiator = self.riskScoreNegotiator
         let handleDontWorryNotification = self.handleDontWorryNotification
+        let diagnosisKeyCacheHouskeeper = self.diagnosisKeyCacheHouskeeper
         let expsoureNotificationJob = BackgroundTaskAggregator.Job(
             preferredFrequency: Self.exposureDetectionBackgroundTaskFrequency
         ) {
-            exposureDetectionManager.detectExposures(currentDate: self.currentDateProvider())
-                .filterNil()
-                .map { riskInfo in
-                    let riskHandled = riskScoreNegotiator.saveIfNeeded(exposureRiskInfo: riskInfo)
-                    if !riskHandled {
-                        handleDontWorryNotification()
-                    } else {
-                        circuitBreaker.showDontWorryNotificationIfNeeded = true
-                    }
-                }
+            diagnosisKeyCacheHouskeeper.deleteFilesOlderThanADay()
+                .append(
+                    exposureDetectionManager.detectExposures(currentDate: self.currentDateProvider())
+                        .filterNil()
+                        .map { riskInfo in
+                            let riskHandled = riskScoreNegotiator.saveIfNeeded(exposureRiskInfo: riskInfo)
+                            if !riskHandled, riskInfo.shouldShowDontWorryNotification {
+                                handleDontWorryNotification()
+                            } else {
+                                circuitBreaker.showDontWorryNotificationIfNeeded = true
+                            }
+                        }
+                )
                 .append(Deferred(createPublisher: circuitBreaker.processExposureNotificationApproval))
+                .append(Deferred(createPublisher: diagnosisKeyCacheHouskeeper.deleteNotNeededFiles))
                 .eraseToAnyPublisher()
         }
         enabledJobs.append(expsoureNotificationJob)
@@ -605,23 +600,9 @@ public class ApplicationCoordinator {
         enabledJobs.append(housekeepingJob)
         
         enabledJobs.append(
-            BackgroundTaskAggregator.Job(
-                preferredFrequency: Self.metricsJobBackgroundTaskFrequency,
-                work: isolationStateStore.recordMetrics
-            )
-        )
-        
-        enabledJobs.append(
-            BackgroundTaskAggregator.Job(
-                preferredFrequency: Self.metricsJobBackgroundTaskFrequency,
-                work: isolationStateManager.recordMetrics
-            )
-        )
-        
-        enabledJobs.append(
-            BackgroundTaskAggregator.Job(
-                preferredFrequency: Self.housekeepingJobBackgroundTaskFrequency,
-                work: isolationConfiguration.update
+            contentsOf: isolationContext.makeBackgroundJobs(
+                metricsFrequency: Self.metricsJobBackgroundTaskFrequency,
+                housekeepingFrequenzy: Self.housekeepingJobBackgroundTaskFrequency
             )
         )
         
@@ -668,7 +649,7 @@ public class ApplicationCoordinator {
             .store(in: &cancellabes)
         
         IsolationStateChangeNotifier(notificationManager: userNotificationsManager)
-            .alertUserToChanges(in: isolationStateManager.$state)
+            .alertUserToChanges(in: isolationContext.isolationStateManager.$state)
             .store(in: &cancellabes)
     }
     
@@ -710,24 +691,13 @@ public class ApplicationCoordinator {
         completedOnboardingForCurrentSession.value = false
         postcodeStore?.delete()
         checkInContext?.checkInsStore.deleteAll()
-        isolationStateStore.isolationStateInfo = nil
+        isolationContext.isolationStateStore.isolationStateInfo = nil
         exposureDetectionStore.delete()
         virologyTestingStateStore.delete()
     }
     
     private func deleteCheckIn(with id: String) {
         checkInContext?.checkInsStore.delete(checkInId: id)
-    }
-    
-}
-
-private extension NotificationCenter {
-    
-    var onApplicationBecameActive: AnyPublisher<Void, Never> {
-        publisher(for: UIApplication.didBecomeActiveNotification)
-            .map { _ in () }
-            .prepend(())
-            .eraseToAnyPublisher()
     }
     
 }

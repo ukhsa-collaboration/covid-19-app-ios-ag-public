@@ -29,7 +29,7 @@ class HomeFlowTests: XCTestCase {
         try runner.run { app in
             let homeScreen = HomeScreen(app: app)
             
-            XCTAssert(homeScreen.riskLevelBanner(for: postcode, title: "[postcode] is in Local Alert Level 1").exists)
+            app.checkOnHomeScreen(postcode: postcode)
             
             runner.step("More Info") {
                 """
@@ -87,7 +87,7 @@ class HomeFlowTests: XCTestCase {
         try runner.run { app in
             let homeScreen = HomeScreen(app: app)
             
-            XCTAssert(homeScreen.riskLevelBanner(for: postcode, title: "[postcode] is in Local Alert Level 1").exists)
+            app.checkOnHomeScreen(postcode: postcode)
             
             runner.step("Disable Contact tracing") {
                 """
@@ -139,7 +139,7 @@ class HomeFlowTests: XCTestCase {
         try runner.run { app in
             let homeScreen = HomeScreen(app: app)
             
-            XCTAssert(homeScreen.riskLevelBanner(for: postcode, title: "[postcode] is in Local Alert Level 1").exists)
+            app.checkOnHomeScreen(postcode: postcode)
             
             runner.step("Disable Contact tracing") {
                 """

@@ -10,7 +10,7 @@ struct DiagnosisKeySubmissionEndPoint: HTTPEndpoint {
     
     var token: DiagnosisKeySubmissionToken
     
-    func request(for input: [ENTemporaryExposureKey]) throws -> HTTPRequest {
+    func request(for input: [TemporaryExposureKey]) throws -> HTTPRequest {
         let payload = Payload(token: token, diagnosisKeys: input)
         let encoding = JSONEncoder()
         let body = try encoding.encode(payload)
@@ -21,26 +21,28 @@ struct DiagnosisKeySubmissionEndPoint: HTTPEndpoint {
 }
 
 private struct Payload: Codable {
-    struct TemporaryExposureKey: Codable {
+    struct ExposureKey: Codable {
         var key: Data
         var rollingStartNumber: UInt32
         var rollingPeriod: UInt32
         var transmissionRiskLevel: UInt8
+        var daysSinceOnsetOfSymptoms: Int
     }
     
     var diagnosisKeySubmissionToken: String
-    var temporaryExposureKeys: [TemporaryExposureKey]
+    var temporaryExposureKeys: [ExposureKey]
 }
 
 extension Payload {
     
-    fileprivate init(token: DiagnosisKeySubmissionToken, diagnosisKeys: [ENTemporaryExposureKey]) {
+    fileprivate init(token: DiagnosisKeySubmissionToken, diagnosisKeys: [TemporaryExposureKey]) {
         let keys = diagnosisKeys.map {
-            Payload.TemporaryExposureKey(
+            Payload.ExposureKey(
                 key: $0.keyData,
                 rollingStartNumber: $0.rollingStartNumber,
                 rollingPeriod: $0.rollingPeriod,
-                transmissionRiskLevel: $0.transmissionRiskLevel
+                transmissionRiskLevel: $0.transmissionRiskLevel,
+                daysSinceOnsetOfSymptoms: $0.daysSinceOnsetOfSymptoms
             )
         }
         self.init(

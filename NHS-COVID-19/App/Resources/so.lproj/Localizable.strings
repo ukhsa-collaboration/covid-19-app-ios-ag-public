@@ -5,7 +5,7 @@
 "unrecoverable_error_page_title" = "Nasiib daro, ma ka shaqeysin kartid app-kan";
 "unrecoverable_error_title" = "Tan waxaa sababi kara:";
 "unrecoverable_error_description" = "Xaddidaadda qaybtaada isku-hagaajinta (tusaale ahaan, haddii tani ay tahay telefoon shirkadeed).\n\nApp kale oo telefoonkaaga ku jira ayaa adeegsanaya isla tiknoolijiyada oo ka joojinaya app-kani inuu shaqeeyo.";
-"bluetooth_disabled_title" = "Si uu app-kan u shaqeeyo, Bluetooth-ku marwalba wuxuu ubaahan yahay in oo shidnaado";
+"bluetooth_disabled_title" = "Si uu app-kan u shaqeeyo, Bluetooth-ku marwalba wuxuu ubaahan yahay in uu shidnaado";
 "bluetooth_disabled_description_1" = "Haddii uu Bluetooth-ku ka dansan yahay, app-ku ma shaqeyn doono.";
 "bluetooth_disabled_description_2" = "App-ku wuxuu adeegsadaa batari-keydinta 'tamarta yar ee Bluetooth' si uu u hubiyo goorta u dhow telefoon kale oo app-kan lagu rakibay.";
 "bluetooth_disabled_description_3" = "Ha walwelin - app-kan lama socon karo goobtaada sirtaadanna ayaa weli la ilaalinayaa.";
@@ -30,7 +30,7 @@
 "authentication_code_info_description_2" = "Fadlan la soco, app-kan waxaa isticmaali karaa dadka jira 16 sano iyo wixii ka weyn oo keliya.";
 "authentication_code_button_title" = "Sii wad";
 "authentication_code_error_description" = "Koodhkaaga lama aqoonsan. Fadlan hubso inaad isticmaaleyso koodh sax ah.";
-"start_onboarding_step_title" = "Barnaamijkani (app) wuxuu inaga caawinayaa ino midba midka kale aamin ka dhigno";
+"start_onboarding_step_title" = "Barnaamijkani (app) wuxuu inaga caawinayaa in aan ka shaqayno badqaabkeena";
 "start_onboarding_step_subtitle" = "Waxaad naga caawin doontaa inaan ka rayno COVID-19 adoo la wadaagaya macluumaad qarsoodi ah oo ku saabsan fayraska gobolkaaga iyo caafimaadka bulshada markii aad isticmaasho barnaamijka.";
 "start_onboarding_step_1_header" = "Hel ogeysiinta";
 "start_onboarding_step_2_header" = "Iska xaadirinta goobaha";
@@ -68,7 +68,7 @@
 "privacy_yes_button" = "Waan oggolahay";
 "privacy_no_button" = "Maya, mahadsanid";
 "privacy_no_button_accessibility_label" = "Maya mahadsanid, ma oggoli";
-"privacy_header" = "Adiga aya xakameynaya";
+"privacy_header" = "Adiga ayaa xakameynaya";
 "data_header" = "Xogtaada";
 "home_diagnosis_button_title" = "Hubi astaamaha";
 "home_default_advice_button_title" = "Akhri talooyinka ugu dambeeya";
@@ -93,7 +93,7 @@
 "risk_level_screen_low_body" = "Yar- maamulka deegaankaaga ayaa hadda loo qiimeeyaa inuu yahay 'halis yar', oo leh heerar caabuq la mid ah inta badan qaybaha kale ee dalka";
 "risk_level_screen_medium_body" = "Dhex-dhexaad - maamulka deegaankaaga, ama maamulka deegaanka maxaliga ah ee jaarka ah, wuxuu leeyahay heerar sare oo ah infekshan ah.  Fadlan raac talooyinka qaranka.";
 "risk_level_screen_high_body" = "Sare - Maamulka deegaankaaga, ama maamulka deegaanka ee jaarka ah, ayaa u isticmaalaya talaabooyin dheeri ah kuwaaso kaashanayaa kuwa u degsan England intiisa kale iyo Wales (tusaale ahaan xiritaan) si loo yareeyo faafitaanka cudurka sababta la xiriira heerarka sare ee caabuqa aagga. Qorshe waxqabad ah oo faahfaahsan ayaa jira isla markaana kheyraadka maxalliga ah waxaa lagu buuxinayaa taageero qaran.";
-"risk_level_screen_title" = "Heerka khatarta";
+"risk_level_screen_title" = "Heerka Digniinta Maxaliga ah ee Covid";
 "risk_level_screen_close_button" = "Xidh";
 "user_notification_explanation" = "Xaqiijinta macluumaadka soo-gaadhista";
 "checkin_open_settings_button_title" = "U oggolow rukhsadaha kamaradda";
@@ -119,7 +119,7 @@
 "checkin_information_button_title" = "Ku noqo soo xadiiritaanka";
 "checkin_qrcode_scanner_close_button_title" = "Xidh";
 "checkin_risky_venue_information_title %@ %@" = "Dhawaan ayaad booqatay goob laga yaabo inaad kasoo qaaday coronavirus";
-"checkin_risky_venue_information_description" = "Waxaan ku ogeysiineynaa in lagaa yaabo inaad soo qaadatay coronavirus markii aad banaanka joogtay.\n\nIn kasta oo ay jiraan halis yar oo ah in aad cudurka qaadday, fadlan si raac talooyinka ugu dambeeyay ee kala fogaanshaha bulshada.\n\nHaddii aad leedahay wax astaamaha coronavirus ah, waa inaad isla markaaba Is-go'doomiisa. Taas micnaheedu waa inaad guriga joogto adigoon aan lagu soo booqan. Fadlan isticmaal astaan hubiyaha ee barnamiijka ku taala isla markaana samayso ballan shaybaar oo lacag la'aan ah haddii aad sidaa lagula talaliyay. Wac 119 haddii aad leedahay su'aalo.\n\nKeliya baaritaan samayso haddii aad leedahay astaamaha coronavirus.";
+"checkin_risky_venue_information_description" = "Waxaan ku ogeysiineynaa in lagaa yaabo in aad qaadday coronavirus markii aad banaanka joogtay.\n\nIn kasta oo ay jiraan halis yar oo ah in aad cudurka qaadday, fadlan si raac talooyinka ugu dambeeyay ee kala fogaanshaha bulshada.\n\nHaddii aad leedahay wax astaamaha coronavirus ah, waa inaad isla markaaba Is-go'doomiisa. Taas micnaheedu waa inaad guriga joogto adigoon aan lagu soo booqan. Fadlan isticmaal astaan hubiyaha ee barnamiijka ku taala isla markaana samayso ballan shaybaar oo lacag la'aan ah haddii aad sidaa lagula talaliyay. Wac 119 haddii aad leedahay su'aalo.\n\nKeliya baaritaan samayso haddii aad leedahay astaamaha coronavirus.";
 "checkin_risky_venue_information_button_title" = "Ku noqo Bogga-hoyga";
 "qrcoder_scanner_status_starting" = "Sida loo iskaan gareeyo koodh rasmi ah oo NHS QR ah";
 "qrcoder_scanner_status_requesting_permission" = "Sida loo iskaan gareeyo koodh rasmi ah oo NHS QR ah";
@@ -149,8 +149,8 @@
 "symptom_onset_select_day %@" = "%@";
 "step_accessibility_label %ld %ld" = "Tallaabada%ld  oo ka ah %ld";
 "step_label %ld %ld" = "Tallabada %ld of %ld";
-"symptom_list_heading" = "Xulo inta ugu badan ee calaamadaha sida adiga ku quseeysa";
-"symptom_list_description" = "Haddii aadan qabin mid ka mid ah astaamahan, uma baahnid inaad wax sameyso haddadaan. Haddii aad yeelato mid ka mid ah astaamahan, ka sheeg barnaamijkan (app) oo dalbo shaybaar lacag la'aan ah isla ah isla markiiba.";
+"symptom_list_heading" = "Xulo calaamadaha inta ugu badan ee adiga ku khuseeysa";
+"symptom_list_description" = "Haddii aadan qabin mid ka mid ah astaamahan, uma baahnid inaad wax sameyso haddadaan. Haddii aad yeelato mid ka mid ah astaamahan, ka sheeg barnaamijkan (app) oo dalbo shaybaar lacag la'aan ah isla markiiba.";
 "symptom_list_primary_action" = "Sii wad";
 "symptom_list_secondary_action" = "Ma lihi astaamahan midkood";
 "symptom_list_error_heading" = "Dhibaato ayaa jirta";
@@ -202,7 +202,7 @@
 "positive_test_result_explanation" = "Natiijada baaritaankaaga waxay muujineysaa inaad qabtid fayras wakhtiga baaritaanka. Waxaa maclumaad dheeraad ah laguu soo diray iimayl, qoraal ama telefoonka. Haddii aad ka yar tahay 18, waxaa lagugula talinayaa inaad tusto fariintan qof weyn oo aad ku kalsoon tahay.\n\nHa welwelin - dadka badankood astaamahoodu waa kuwo fudud. Si kastaba ha noqotee, haddii astaamahaaga ka sii darayaan markaa waa inaad wacdaa 111 ama booqo nhs.uk si aad u hesho talo dheeraad ah.";
 "positive_test_results_continue" = "Sii wad";
 "void_test_result_info" = "Waan garan kari waynay in aad qabtay cudurka coronavirus.";
-"void_test_result_explanation" = "Ma ogaan karno inaad qabtay coronavirus markii baaritaanka la sameeyay waana inaad mar labaad baaritaanka qaadataa. Haddii aad ka yar tahay 18, waxaa lagugula talinayaa inaad tusto fariintan qof weyn oo aad ku kalsoon tahay.";
+"void_test_result_explanation" = "Ma ogaan karno inaad qabtay coronavirus markii baaritaanka la sameeyay waana inaad mar labaad baaritaanka martaa. Haddii aad ka yar tahay 18, waxaa lagugula talinayaa inaad tusto fariintan qof weyn oo aad ku kalsoon tahay.";
 "void_test_results_continue" = "Ballanso baaritaan lacag la'aan ah";
 "negative_test_result_with_isolation_title" = "Sii wad inaad is-go'doomiso ilaa";
 "negative_test_result_with_isolation_info" = "Natiijada baaritaankaaga coronavirus waxay caddaynaysaa in aadan qabin cudurka laakin weli waxaa kusoo bixi karaan astaamaha, markaa waa inaad is-go'doomisaa.";
@@ -301,12 +301,12 @@
 "age_confirmation_alert_title" = "Ma jirtaa 16 sano ama in ka weyn?";
 "age_confirmation_alert_body" = "Waa inaad ahaataa 16 sano ama ka weyn si aad u adeegsato barnaamijkan.";
 "age_confirmation_alert_accept" = "Waan ka waynahay 16 sano";
-"age_confirmation_alert_reject" = "Waxaan ka yarahay 16";
+"age_confirmation_alert_reject" = "Waan ka yarahay 16";
 "below_required_age_title" = "Waad ku mahadsantahay danayntaada. Nasiib darro, barnaamijkan waxaa loogu talagalay oo keliya dadka da'doodu tahay 16 sano ama ka weyn.";
 "below_required_age_description" = "Barnaamijkan waxaa loogu talagalay oo keliya dadka da'doodu tahay 16 sano ama ka weyn.";
 "edit_postcode_save_button" = "Keydso";
 "link_book_a_test_for_someone_else" = "https://www.nhs.uk/condition/coronavirus-covid-19/testing-and-tracing/get-a-test-to-check-if-you-have-coronavirus/";
-"bluetooth_disabled_description" = "App-ku wuxuu adeegsadaa Bluetooth si uu u ogaado goorta uu u dhow yahay telefoon kale oo app-kan lagu rakibay. Haddii uu Bluetooth ka dansan yahay, app-kan ma shaqayn doono.\n\nApp-kan wuxuu isticmaalaa 'Bluetooth-ka Tamarta Yar' - tiknoloojiyad batari kaydinta.\n\nFadlan aad qaybta isku-hagaajinta oo dar Bluetooth.";
+"bluetooth_disabled_description" = "App-ku wuxuu adeegsadaa Bluetooth si uu u ogaado goorta uu u dhow yahay telefoon kale oo app-kan lagu rakibay. Haddii uu Bluetooth ka dansan yahay, app-kan ma shaqayn doono.\n\nApp-kan wuxuu isticmaalaa 'Bluetooth-ka Tamarta Yar' - tiknooloojiyada batari kaydinta.\n\nFadlan aad qaybta isku-hagaajinta oo dar Bluetooth.";
 "authorization_denied_description" = "Barnaamijkan wuxuu adeegsadaa 'Exposure Notifications' si uu kuu ogeysiiyo haddii aad kulantay isticmaaleyaasha kale ee barnaamijka kuwaas oo laga helay cudurka Coronavirus.\n\nTelefoonkaagu wuxuu u qaadan karaa kuwan in ay yihiin 'Ogeysiisyada Exposure' ama 'Exposure Logging'";
 "checkin_camera_qrcode_scanner_title" = "Isku soo xaadiri goob adigoo iskaan garanaysaa koodhka rasmiga ah ee NHS QR";
 "checkin_confirmation_title" = "Soo xaadirista waa lagu guuleystay";
@@ -316,7 +316,7 @@
 "end_of_isolation_isolate_if_have_symptom_warning" = "Si kastaba ha noqotee, haddii aad leedahay heerkul sarreeya, sii wad inaad gooni is-go'doomisid ilaa uu caadi ku soo noqdo";
 "negative_test_result_no_isolation_warning" = "Si kastaba ha noqotee, haddii aad leedahay heerkul sarreeya, sii wad inaad gooni is-go'doomisid ilaa uu caadi ku soo noqdo";
 "mydata_data_deletion_button_title" = "Tirtir dhammaan xogtayda";
-"privacy_description_paragraph1" = "Adeegga Caafimaadka Qaranka (NHS) ayaa qiimeeya asturnaantaada. App-ka ayaa dabagal ku haya fayraska, kumana raaci karo mana arki karo cidda aad tahay, meesha aad joogto ama cidda kula joogta. \n\nMacluumaad kasta waxaa lagu kaydiyaa telefoonkaaga, oo laguma keydiyo keydka dhexe. Taasi waxay ka dhigan tahay haddii laga hilo coronavirus, waxaad dooran kartaa inaad la wadaagto xogtaada NHS si aan ugu digno dadka kale ee adeegsada barnaamijka (app). Waad hubsan kartaa in xogta shaqsiyeed waligeed telefoonkaaga ka baxeyso oo aad qarsoodi ahaan u noqon doonto waqti kasta.";
+"privacy_description_paragraph1" = "Adeegga Caafimaadka Qaranka (NHS) ayaa qiimeeya asturnaantaada. App-ka ayaa dabagal ku haya fayraska, kumana raaci karo mana arki karo cidda aad tahay, meesha aad joogto ama cidda kula joogta. \n\nMacluumaad kasta waxaa lagu kaydiyaa telefoonkaaga, oo laguma keydiyo keydka dhexe. Taasi waxay ka dhigan tahay haddii laga helo coronavirus, waxaad dooran kartaa inaad la wadaagto xogtaada NHS si aan ugu digno dadka kale ee adeegsada barnaamijka (app). Waad hubsan kartaa in xogta shaqsiyeed waligeed telefoonkaaga ka baxeyso oo aad qarsoodi ahaan u noqon doonto waqti kasta.";
 "accessability_error_os_out_of_date" = "Cusboonaysii software-kaaga";
 "accessability_error_update_the_app" = "Cusboonaysii barnaamijkan";
 "positive_symptoms_explanation" = "Astaamahaagu waxay muujinayaan inaad yeelan karto coronavirus. Fadlan go'doomi naftaada iyo qof kasta oo kale oo qoyskaaga ka tirsan. Taas micnaheedu waa inaad guriga joogto adigoon aan lagu soo booqan. Sidoo kale waa inaad isla markiiba ballansataa shaybaar bilaash ah.\n\nFadlan guriga joog si aad u ilaaliso amaanka naftaada iyo dadka kaleba.";
@@ -332,12 +332,12 @@
 "TBD_submit_symptoms_title" = "Fadlan xaqiiji oo soo gudbi astaamahaaga";
 "TBD_share_symptoms_description" = "Macluumaadka aad dhiibtay waxaa loo isticmaali doonaa in lagu caawiyo ilaalinta bulshadaada iyo NHS-ta. NHS waxay u baahan tahay xog sax ah oo ku saabsan tirada dadka astaamaha qaba.\n\nWadajir ahaan waxaan gacan ka geysan karnaa badbaadinta nafaha, ilaalinta NHS, iyo caawinta joojinta faafitaanka coronavirus-ka ee UK.";
 "TBD_share_symptoms_agree" = "Gudbi astaamaha";
-"link_test_result_header" = "Gali koodhka aad kaga heshay adeegga baaritaanka iimayl ama SMS ahaan natiijada baaritaankaaga";
+"link_test_result_header" = "Gali koodhka aad ka heshay adeegga baaritaanka iimayl ama SMS ahaan natiijada baaritaankaaga";
 "link_test_result_description" = "Uma baahnid inaad tan sameyso haddii aad app-ka ka ballansatay baaritaan.";
 "link_test_result_enter_code_heading" = "Gali koodhka baaritaankaga";
 "link_test_result_enter_code_invalid_error" = "Koodhka lama aqoonsan Fadlan hubso inaad isticmaaleyso koodh sax ah.";
 "about_this_app_feedback_information_link_title" = "Macluumaadka jawaab celinta";
-"checkin_information_help_scanning_section_description" = "Haddii aad galeyso goob (tusaale ahaan, baar ama makhaayad) oo u ku dhegan waraqda koodhka rasmiga ah ee NHS QR, isticmaal barnaamijkan si aad u iskaan garayso. Barnaamijkan ayaa markaas iska diiwaangeliya wakhtiga aad soo gashay goobta.\n\nAdoo adeegsanaya goobta soo-xaadirinta, waxaad awoodi doontaa inaad hesho ogeysiin haddii dadka qaba coronavirus-ka ay soo booqdaan isla goobta wakhti la mid ah wakhtiga aad adigu soo booqatay.  Ogeysiinta waxaa ku jiri doonaa talobixin khuseysa, sida in laga fiirsado astaamaha coronavirus.\n\nHaddii aadan awoodin inaad iskaanto koodhka QR oo aad u baahan tahay inaad si kale u hubiso, fadlan la hadal xubin ka mid ah shaqaalaha.";
+"checkin_information_help_scanning_section_description" = "Haddii aadan awoodin inaad iskaanto koodhka QR oo aad u baahan tahay inaad si kale u hubiso, fadlan la hadal xubin ka mid ah shaqaalaha.";
 "checkin_information_whats_a_qr_code_section_title" = "Sidaan oo gartaa koodhka rasmiga ah ee NHS QR ah?";
 "checkin_information_whats_a_qr_code_section_description_new" = "Tani waa sida ay u egtahay warqad sawir ah rasmiga ah ee koodhadhka NHS QR Ingiriisiga/Welsh . U adeegso kamaradda telefoonkaaga si aad u iskaan-garayso koodhka QR taasoo ah afar geesta siman ee dhex kujirta.";
 "about_this_app_software_information_date_of_release_description" = "09/2020";
@@ -381,7 +381,7 @@
 "negative_test_result_no_isolation_button_label" = "Sii wad";
 "network_error_no_internet_connection" = "Internet la'aan. Fadlan ku xir shabakadaada ama WiFi oo isku day markale.";
 "network_error_general" = "Waxbaa qaldamay. Fadlan iskuday markale.";
-"void_test_result_no_isolation_title" = "Ma ogaan karno inaad qabtay coronavirus markii baaritaanka la sameeyay waana inaad mar labaad baaritaanka qaadataa. Haddii aad ka yar tahay 18, waxaa lagugula talinayaa inaad tusto fariintan qof weyn oo aad ku kalsoon tahay.";
+"void_test_result_no_isolation_title" = "Ma ogaan karno inaad qabtay coronavirus markii baaritaanka la sameeyay waana inaad mar labaad baaritaanka martaa. Haddii aad ka yar tahay 18, waxaa lagugula talinayaa inaad tusto fariintan qof weyn oo aad ku kalsoon tahay.";
 "qr_code_poster_description" = "Waraqda sawirka koodhka NHS QR ee Ingiriisiga:";
 "qr_code_poster_description_wls" = "Waraqda sawirka koodhka NHS QR ee Welsh:";
 "qr_code_poster_accessibility_label" = "Tani waa tusaale ka mid ah waraaqaha rasmiga ah ee QR-ka Ingiriisiga";
@@ -390,7 +390,7 @@
 "negative_test_result_after_positive_explanation" = "Natiijadaada baaritaanka hadda waxay muujineysaa inaadan qabin fayraska wakhtiga baaritaanka. Haddii aad isku aragto astaamo ku soo sheeg barnaamijkan. Haddii aad ka yar tahay 18, waxaa lagugula talinayaa inaad farriintan u tuustid qof weyn oo aad ku kalsoon tahay.";
 "positive_test_result_start_to_isolate_explaination" = "Natiijada baaritaankaaga waxay muujineysaa inaad qabtid fayras wakhtiga baaritaanka. Waxaa maclumaad dheeraad ah laguu soo diray iimayl, qoraal ama telefoonka. Haddii aad ka yar tahay 18, waxaa lagugula talinayaa inaad tusto fariintan qof weyn oo aad ku kalsoon tahay.";
 "negative_test_result_after_positive_button_label" = "Sii wad";
-"checkin_information_title_new" = "Caawinta baarista koodhka QR";
+"checkin_information_title_new" = "Faahfaahin dheeraad ah oo ku saabsan soo-galida goobta";
 "positive_test_result_start_to_isolate_title" = "Is-go'doomin ilaa";
 "positive_test_result_start_to_isolate_info" = "Natiijada baaritaankaaga coronavirus waxay caddaynaysaa in aad qabtid cudurka";
 "end_of_isolation_positive_text_no_isolation_header" = "Natiijada baaritaanka";
@@ -413,3 +413,12 @@
 "stop_isolation_countdown_button" = "";
 "dont_worry_notification_title" = "Hubinta Soo-gaarista COVID-19 wala Dhammeeyay";
 "dont_worry_notification_body" = "Ha welwelin, waan qiimeynay halistaada mana loo baahna in tallaabo la qaado xilligan. Fadlan sii wad feejignaanta oo raac talooyinka ugu dambeeya ee ku saabsan kala fogaanshaha bulshada.";
+"checkin_information_description" = "Haddii aad galeyso goob (tusaale ahaan, baar ama makhaayad) oo u ku dhegan waraqda koodhka rasmiga ah ee NHS QR, isticmaal barnaamijkan si aad u iskaan garayso. Barnaamijkan ayaa markaas iska diiwaangeliya wakhtiga aad soo gashay goobta.\n\nAdoo adeegsanaya goobta soo-xaadirinta, waxaad awoodi doontaa inaad hesho ogeysiin haddii dadka qaba coronavirus-ka ay soo booqdaan isla goobta wakhti la mid ah wakhtiga aad adigu soo booqatay.  Ogeysiinta waxaa ku jiri doonaa talobixin khuseysa, sida in laga fiirsado astaamaha coronavirus.";
+"update_app_button_title" = "";
+"alert_venue_risk_isolate_title" = "";
+"alert_venue_risk_isolate_body" = "";
+"risky_venue_isolation_report_symptoms" = "";
+"risky_venue_isolation_warning" = "";
+"risky_venue_isolation_description" = "";
+"alert_latest_app_version_update_title" = "";
+"alert_latest_app_version_update_body" = "";

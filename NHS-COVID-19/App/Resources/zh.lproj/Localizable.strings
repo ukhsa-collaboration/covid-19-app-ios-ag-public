@@ -102,7 +102,7 @@
 "checkin_camera_failure_title" = "抱歉，您的手机不支持场所签到";
 "checkin_camera_failure_description" = "请找到另一种签到方法。 向工作人员寻求帮助。";
 "checkin_camera_failure_button_title" = "返回首页";
-"checkin_camera_qrcode_scanner_status_label" = "如何扫描NHS官方QR码";
+"checkin_camera_qrcode_scanner_status_label" = "如何扫描官方的 NHS QR码";
 "checkin_camera_qrcode_scanner_description_label" = "拿起手机，让官方的 NHS QR 出现在手机上方的框中。当您的手机识别出 QR 后，即表示您已成功签入。";
 "checkin_camera_qrcode_scanner_help_button_title %@" = "%@有关场所签到的更多信息";
 "checkin_camera_qrcode_scanner_help_button_accessibility_label" = "有关场所签到的更多信息";
@@ -121,12 +121,12 @@
 "checkin_risky_venue_information_title %@ %@" = "您最近到过有冠状病毒的场所";
 "checkin_risky_venue_information_description" = "谨在此通知您，您外出时可能曾被暴露在冠状病毒里。\n\n尽管感染的风险很小，请遵循有关社交距离的最新建议。\n\n如果您有冠状病毒的症状，则需要立即进行自我隔离。这意味着您要待在家里而且不得有访客。请使用本应用程序上的症状检查器；如果本应用程序建议您进行检测，请服从建议；如果有疑问，请致电119。\n\n请仅在您确实出现了新冠病毒感染症状的情况下才要求测试。";
 "checkin_risky_venue_information_button_title" = "返回首页";
-"qrcoder_scanner_status_starting" = "如何扫描NHS官方QR码";
-"qrcoder_scanner_status_requesting_permission" = "如何扫描NHS官方QR码";
+"qrcoder_scanner_status_starting" = "如何扫描官方的 NHS QR码";
+"qrcoder_scanner_status_requesting_permission" = "如何扫描官方的 NHS QR码";
 "qrcoder_scanner_status_scanning" = "扫描NHS官方QR码";
 "qrcoder_scanner_status_processing" = "扫描NHS官方QR码";
-"qrcoder_scanner_status_running" = "如何扫描NHS官方QR码";
-"qrcoder_scanner_status_stopped" = "如何扫描NHS官方QR码";
+"qrcoder_scanner_status_running" = "如何扫描官方的 NHS QR码";
+"qrcoder_scanner_status_stopped" = "如何扫描官方的 NHS QR码";
 "alert_postcode_risk_change_title" = "您所在地区的风险级别已更改。";
 "alert_postcode_risk_change_body" = "点击以查看详细信息。";
 "alert_venue_risk_change_title" = "您可能在最近到过的场所接触过冠状病毒。";
@@ -337,7 +337,7 @@
 "link_test_result_enter_code_heading" = "输入您的测试代码";
 "link_test_result_enter_code_invalid_error" = "无法识别您的代码。 请确保您使用的是有效代码。";
 "about_this_app_feedback_information_link_title" = "反馈信息";
-"checkin_information_help_scanning_section_description" = "如果您进入一个有官方 NHS QR 码海报的场所（例如，酒吧或餐馆），请使用该应用程序来进行扫码。 该应用程序会记录您进入场所的时间。\n\n通过使用该场所签到功能，如果携带冠状病毒的人在相同时间到访过同一场所，您就会接到一个通知。  通知将会包括相关建议，例如，留心冠状病毒症状。\n\n如果您不能扫描QR，需要通过其他方式进行检查，请与工作人员说明。";
+"checkin_information_help_scanning_section_description" = "如果您不能扫描QR，需要通过其他方式进行检查，请与工作人员说明。";
 "checkin_information_whats_a_qr_code_section_title" = "如何识别官方NHS QR码？";
 "checkin_information_whats_a_qr_code_section_description_new" = "这是官方NHS QR码的海报。用您手机摄像头扫描中间那个正方形的QR码。";
 "about_this_app_software_information_date_of_release_description" = "09/2020";
@@ -390,7 +390,7 @@
 "negative_test_result_after_positive_explanation" = "最新检测结果表明，在做检测时您没有感染病毒。如果您确实出现症状，请在本应用程序上进行报告。如果您还未满 18 岁，建议您将此消息拿提供给您信任的成年人。";
 "positive_test_result_start_to_isolate_explaination" = "检测结果表明，在做检测时您已经感染上了病毒。有关部门已通过电子邮件、短信或电话向您发送了更多的信息。如果您还未满 18 岁，建议您将此消息拿提供给您信任的成年人。";
 "negative_test_result_after_positive_button_label" = "继续";
-"checkin_information_title_new" = "帮助扫描QR码";
+"checkin_information_title_new" = "有关场所签到的更多信息";
 "positive_test_result_start_to_isolate_title" = "自我隔离";
 "positive_test_result_start_to_isolate_info" = "您的冠状病毒测试结果为阳性";
 "end_of_isolation_positive_text_no_isolation_header" = "您的检测结果";
@@ -413,3 +413,12 @@
 "stop_isolation_countdown_button" = "";
 "dont_worry_notification_title" = "COVID-19暴露检查完成";
 "dont_worry_notification_body" = "不用担心，我们已经评估了您的风险，目前无需采取任何措施。 请继续保持警惕，并遵循有关社交距离的最新建议。";
+"checkin_information_description" = "如果您进入一个有官方 NHS QR 码海报的场所（例如，酒吧或餐馆），请使用该应用程序来进行扫码。 该应用程序会记录您进入场所的时间。\n\n通过使用该场所签到功能，如果携带冠状病毒的人在相同时间到访过同一场所，您就会接到一个通知。  通知将会包括相关建议，例如，留心冠状病毒症状。";
+"update_app_button_title" = "";
+"alert_venue_risk_isolate_title" = "";
+"alert_venue_risk_isolate_body" = "";
+"risky_venue_isolation_report_symptoms" = "";
+"risky_venue_isolation_warning" = "";
+"risky_venue_isolation_description" = "";
+"alert_latest_app_version_update_title" = "";
+"alert_latest_app_version_update_body" = "";

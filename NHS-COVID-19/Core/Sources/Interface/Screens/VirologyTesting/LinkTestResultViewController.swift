@@ -68,6 +68,7 @@ public class LinkTestResultViewController: UIViewController {
     
     private lazy var testCodeTextField: UITextField = {
         let textField = UITextField()
+        textField.keyboardType = .asciiCapable
         textField.borderStyle = .roundedRect
         textField.delegate = self
         textField.layer.borderWidth = 2
@@ -76,12 +77,19 @@ public class LinkTestResultViewController: UIViewController {
         textField.font = UIFont.preferredFont(forTextStyle: .body)
         textField.adjustsFontForContentSizeCategory = true
         textField.autocorrectionType = .no
-        textField.returnKeyType = .continue
         textField.enablesReturnKeyAutomatically = true
         textField.addTarget(self, action: #selector(valueChanged), for: .editingChanged)
         textField.rightView = spinner
         NSLayoutConstraint.activate([textField.heightAnchor.constraint(greaterThanOrEqualToConstant: .hitAreaMinHeight)])
         return textField
+    }()
+    
+    private lazy var submitButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.styleAsPrimary()
+        button.setTitle(localize(.link_test_result_button_title), for: .normal)
+        button.addTarget(self, action: #selector(didSelectAction), for: .touchUpInside)
+        return button
     }()
     
     private lazy var informationBox: InformationBox = InformationBox.error(
@@ -138,12 +146,8 @@ public class LinkTestResultViewController: UIViewController {
         let keyboardIndicatingView = UIView()
         keyboardIndicatingView.isHidden = true
         view.addAutolayoutSubview(keyboardIndicatingView)
-        
-        let button = UIButton(type: .system)
-        button.styleAsPrimary()
-        button.setTitle(localize(.link_test_result_button_title), for: .normal)
-        button.addTarget(self, action: #selector(didSelectAction), for: .touchUpInside)
-        let footerStack = UIStackView(arrangedSubviews: [button])
+
+        let footerStack = UIStackView(arrangedSubviews: [submitButton])
         footerStack.axis = .vertical
         footerStack.spacing = .standardSpacing
         view.addAutolayoutSubview(footerStack)
@@ -182,6 +186,7 @@ public class LinkTestResultViewController: UIViewController {
     
     private func submit() {
         CATransaction.disableActions {
+            submitButton.isEnabled = false
             testCodeTextField.rightViewMode = .always
         }
         
@@ -192,6 +197,7 @@ public class LinkTestResultViewController: UIViewController {
                 .sink(
                     receiveCompletion: { [weak self] completion in
                         CATransaction.disableActions {
+                            self?.submitButton.isEnabled = true
                             self?.testCodeTextField.rightViewMode = .never
                         }
                         

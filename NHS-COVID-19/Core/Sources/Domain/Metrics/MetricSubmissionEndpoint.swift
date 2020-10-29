@@ -14,7 +14,6 @@ struct MetricsInfo {
 }
 
 enum MetricsInfoPayload {
-    case systemPayload(MetricPayload)
     case triggeredPayload(TriggeredPayload)
 }
 
@@ -99,35 +98,6 @@ private struct SubmissionPayload: Codable {
     
     init(_ metrics: MetricsInfo) {
         switch metrics.payload {
-        case .systemPayload(let payload):
-            analyticsWindow = Period(
-                startDate: payload.timeStampBegin,
-                endDate: payload.timeStampEnd
-            )
-            
-            metadata = Metadata(
-                postalDistrict: metrics.postalDistrict,
-                deviceModel: payload.metaData?.deviceType ?? "",
-                operatingSystemVersion: payload.metaData?.osVersion ?? "",
-                latestApplicationVersion: payload.latestApplicationVersion
-            )
-            
-            includesMultipleApplicationVersions = payload.includesMultipleApplicationVersions
-            
-            let networkTransferMetrics = payload.networkTransferMetrics ?? MXNetworkTransferMetric()
-            
-            self.metrics = mutating(Metrics()) {
-                $0.cumulativeWifiUploadBytes = Int(networkTransferMetrics.cumulativeWifiUpload.value(in: .bytes))
-                $0.cumulativeWifiDownloadBytes = Int(networkTransferMetrics.cumulativeWifiDownload.value(in: .bytes))
-                $0.cumulativeCellularUploadBytes = Int(networkTransferMetrics.cumulativeCellularUpload.value(in: .bytes))
-                $0.cumulativeCellularDownloadBytes = Int(networkTransferMetrics.cumulativeCellularDownload.value(in: .bytes))
-                $0.cumulativeDownloadBytes = $0.cumulativeWifiDownloadBytes + $0.cumulativeCellularDownloadBytes
-                $0.cumulativeUploadBytes = $0.cumulativeWifiUploadBytes + $0.cumulativeCellularUploadBytes
-                
-                for metric in Metric.allCases {
-                    $0[keyPath: metric.property] = metrics.recordedMetrics[metric] ?? 0
-                }
-            }
         case .triggeredPayload(let payload):
             analyticsWindow = Period(
                 startDate: payload.startDate,

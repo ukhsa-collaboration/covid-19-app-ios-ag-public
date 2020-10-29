@@ -337,7 +337,7 @@
 "link_test_result_enter_code_heading" = "اپنا ٹیسٹ کوڈ داخل کریں";
 "link_test_result_enter_code_invalid_error" = "کوڈ نہیں پہچانا گیا۔ براہ کرم یقینی بنائیں کہ آپ درست کوڈ استعمال کر رہے ہوں۔";
 "about_this_app_feedback_information_link_title" = "فیڈ بیک معلومات";
-"checkin_information_help_scanning_section_description" = "اگرآپ کسی مُقام میں داخل ہورہےہیں (مثلاً، کوئی بار یا ایک ریسٹورنٹ) جہاں این ایچ ایس کا سرکاری کیوآرکوڈ پوسٹرموجود ہے، تواُسےاسکین کرنےکےلئےیہ ایپ استعمال کریں۔ تب ایپ اُس وقت کا اندراج کرلیتی ہےجب آپ اُس مقام میں داخل ہوتےہیں۔\n\nوینیوچیک ان استعمال کرنےسے، آپ ایک اطلاع حاصل کرنےکےقابل ہونگے کہ اگرکورونا وائرس کے ساتھ کوئی لوگ اُسی وقت اُس مُقام  پر آئے ہیں  جس وقت آپ  آئے ہیں۔  اطلاع  میں مُتعلقہ مشورہ شامل ہوگا، جیسا کہ کورونا وائرس کی علامات  پر نظر رکھنا ۔\n\nاگر آپ کیو آر کوڈ اسکین کرنے کے اہل نہیں ہیں اور دوسرے طریقے سے چیک ان کرنا چاہتے ہیں، تو براہ کرم عملہ کے کسی رکن سے بات کریں۔";
+"checkin_information_help_scanning_section_description" = "اگر آپ کیو آر کوڈ اسکین کرنے کے اہل نہیں ہیں اور دوسرے طریقے سے چیک ان کرنا چاہتے ہیں، تو براہ کرم عملہ کے کسی رکن سے بات کریں۔";
 "checkin_information_whats_a_qr_code_section_title" = "میں ایک آفیشل NHS کیو آر کوڈ کی کیسے شناخت کروں؟";
 "checkin_information_whats_a_qr_code_section_description_new" = "ایک آفیشل انگلش/ویلش NHS کیو آر کوڈ پوسٹر اس طرح دکھائی دیتا ہے۔ کیو آر کوڈ کو اسکین کرنے کے لئے اپنے فون کے کیمرا کو استعمال کریں جو درمیان میں ایک اسکوائر ہوتا ہے۔";
 "about_this_app_software_information_date_of_release_description" = "09/2020";
@@ -390,7 +390,7 @@
 "negative_test_result_after_positive_explanation" = "آپ کے موجودہ ٹیسٹ کے نتیجے سے ظاہر ہوتا ہے کہ ٹیسٹ ہونے کے وقت آپ میں وائرس موجود نہیں تھا۔ اگر آپ میں علامات ظاہر ہو جائیں تو اس ایپ پر ان کی اطلاع دیں۔ اگر آپ کی عمر 18 سال سے کم ہے تو آپ کو مشورہ دیا جاتا ہے کہ یہ پیغام کسی قابل اعتماد بالغ کو دکھائیں۔";
 "positive_test_result_start_to_isolate_explaination" = "آپ کے ٹیسٹ کے نتیجے سے ظاہر ہوتا ہے کہ ٹیسٹ کے وقت آپ میں وائرس موجود تھا۔ آپ کو ای میل، ٹیکسٹ یا فون کے ذریعے مزید معلومات بھیجی گئی ہیں۔ اگر آپ کی عمر 18 سال سے کم ہے تو آپ کو مشورہ دیا جاتا ہے کہ یہ پیغام کسی قابل اعتماد بالغ کو دکھائیں۔";
 "negative_test_result_after_positive_button_label" = "جاری رکھیں";
-"checkin_information_title_new" = "ایک کیو آر کوڈ کو اسکین کرنے میں مدد";
+"checkin_information_title_new" = "مقام پر چیک ان کے متعلق مزید معلومات";
 "positive_test_result_start_to_isolate_title" = "ذیل کے لئے خود کو علیحدہ کریں";
 "positive_test_result_start_to_isolate_info" = "آپ کے کوروناوائرس کے ٹیسٹ کا نتیجہ مثبت ہے۔";
 "end_of_isolation_positive_text_no_isolation_header" = "آپکےٹیسٹ کا نتیجہ";
@@ -413,3 +413,12 @@
 "stop_isolation_countdown_button" = "";
 "dont_worry_notification_title" = "کوویڈ 19- افشا کی پڑتال مکمل ";
 "dont_worry_notification_body" = "پریشان نہ ہوں ، ہم نے آپ کے خطرے  کی تشخیص کی ہے  اور اس وقت کارروائی کرنے کی ضرورت نہیں ہے۔ براہ کرم چوکس رہیں اور معاشرتی دوری سے متعلق تازہ ترین مشورے پر عمل کریں۔";
+"checkin_information_description" = "اگرآپ کسی مُقام میں داخل ہورہےہیں (مثلاً، کوئی بار یا ایک ریسٹورنٹ) جہاں این ایچ ایس کا سرکاری کیوآرکوڈ پوسٹرموجود ہے، تواُسےاسکین کرنےکےلئےیہ ایپ استعمال کریں۔ تب ایپ اُس وقت کا اندراج کرلیتی ہےجب آپ اُس مقام میں داخل ہوتےہیں۔\n\nوینیوچیک ان استعمال کرنےسے، آپ ایک اطلاع حاصل کرنےکےقابل ہونگے کہ اگرکورونا وائرس کے ساتھ کوئی لوگ اُسی وقت اُس مُقام  پر آئے ہیں  جس وقت آپ  آئے ہیں۔  اطلاع  میں مُتعلقہ مشورہ شامل ہوگا، جیسا کہ کورونا وائرس کی علامات  پر نظر رکھنا ۔";
+"update_app_button_title" = "";
+"alert_venue_risk_isolate_title" = "";
+"alert_venue_risk_isolate_body" = "";
+"risky_venue_isolation_report_symptoms" = "";
+"risky_venue_isolation_warning" = "";
+"risky_venue_isolation_description" = "";
+"alert_latest_app_version_update_title" = "";
+"alert_latest_app_version_update_body" = "";

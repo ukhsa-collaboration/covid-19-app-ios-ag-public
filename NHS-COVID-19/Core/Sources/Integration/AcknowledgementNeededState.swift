@@ -15,7 +15,8 @@ enum AcknowledgementNeededState {
     case neededForNegativeAfterPositiveResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
     case neededForNegativeResultNotIsolating(interactor: NegativeTestResultNoIsolationViewControllerInteractor)
     case neededForEndOfIsolation(interactor: EndOfIsolationViewControllerInteractor, isolationEndDate: Date, showAdvisory: Bool)
-    case neededForStartOfIsolation(interactor: ExposureAcknowledgementViewControllerInteractor, isolationEndDate: Date)
+    case neededForStartOfIsolationExposureDetection(interactor: ExposureAcknowledgementViewControllerInteractor, isolationEndDate: Date)
+    case neededForStartOfIsolationRiskyVenue(interactor: ExposureAcknowledgementViewControllerInteractor, isolationEndDate: Date)
     case neededForRiskyVenue(interactor: RiskyVenueInformationInteractor, venueName: String, checkInDate: Date)
     case neededForVoidResultContinueToIsolate(interactor: VoidTestResultFlowInteracting, isolationEndDate: Date)
     case neededForVoidResultNotIsolating(interactor: VoidTestResultFlowInteracting)
@@ -61,10 +62,15 @@ enum AcknowledgementNeededState {
                     switch isolationResultAckState {
                     case .neededForEnd(let isolation, let acknowledge):
                         let interactor = EndOfIsolationViewControllerInteractor(acknowledge: acknowledge, openURL: context.openURL)
-                        return .neededForEndOfIsolation(interactor: interactor, isolationEndDate: isolation.endDate, showAdvisory: isolation.reason != .contactCase)
+                        return .neededForEndOfIsolation(interactor: interactor, isolationEndDate: isolation.endDate, showAdvisory: !isolation.isContactCaseOnly)
                     case .neededForStart(let isolation, let acknowledge):
                         let interactor = ExposureAcknowledgementViewControllerInteractor(openURL: context.openURL, acknowledge: acknowledge)
-                        return .neededForStartOfIsolation(interactor: interactor, isolationEndDate: isolation.endDate)
+                        if isolation.reason == .contactCase(.exposureDetection) {
+                            return .neededForStartOfIsolationExposureDetection(interactor: interactor, isolationEndDate: isolation.endDate)
+                        } else {
+                            return .neededForStartOfIsolationRiskyVenue(interactor: interactor, isolationEndDate: isolation.endDate)
+                        }
+                        
                     case .notNeeded:
                         switch riskyVenueAckState {
                         case .needed(let acknowledge, let venueName, let checkInDate):

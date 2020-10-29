@@ -66,7 +66,7 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testApprovalTokenIsStoredIfRiskScoreExistsAndRespondIsPending() throws {
-        store.save(riskInfo: RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5)))
+        store.save(riskInfo: RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5)))
         let approvalTokenString = CircuitBreakerApprovalToken(.random())
         
         client.approvalResponse = .init(approvalToken: approvalTokenString, approval: .pending)
@@ -75,7 +75,7 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testRiskIsClearedIsNotStoredIfRiskScoreExistsAndRespondIsYes() throws {
-        store.save(riskInfo: RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5)))
+        store.save(riskInfo: RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5)))
         let approvalTokenString = CircuitBreakerApprovalToken(.random())
         
         client.approvalResponse = .init(approvalToken: approvalTokenString, approval: .yes)
@@ -84,7 +84,7 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testRiskIsClearedIsNotStoredIfRiskScoreExistsAndRespondIsNo() throws {
-        store.save(riskInfo: RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5)))
+        store.save(riskInfo: RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5)))
         let approvalTokenString = CircuitBreakerApprovalToken(.random())
         
         client.approvalResponse = .init(approvalToken: approvalTokenString, approval: .no)
@@ -93,14 +93,14 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testResolutionEndpointIsCalledIfApprovalTokenExists() throws {
-        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        let riskInfo = RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         store.exposureInfo = ExposureInfo(approvalToken: .init(UUID().uuidString), riskInfo: riskInfo)
         try processPendingApprovals()
         XCTAssertNotNil(client.resolutionRequest)
     }
     
     func testSecondCircuitBreakerCheckCallsResolutionEndpointIfApprovalIsPending() throws {
-        store.save(riskInfo: RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5)))
+        store.save(riskInfo: RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5)))
         
         client.approvalResponse = .init(approvalToken: .init(UUID().uuidString), approval: .pending)
         try processPendingApprovals()
@@ -111,7 +111,7 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testSecondCircuitBreakerCheckCallsResolutionEndpointIfApprovalIsYes() throws {
-        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        let riskInfo = RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         store.save(riskInfo: riskInfo)
         
         client.approvalResponse = .init(approvalToken: .init(UUID().uuidString), approval: .yes)
@@ -124,7 +124,7 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testSecondCircuitBreakerCheckCallsResolutionEndpointIfApprovalIsNo() throws {
-        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        let riskInfo = RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         store.save(riskInfo: riskInfo)
         
         client.approvalResponse = .init(approvalToken: .init(UUID().uuidString), approval: .no)
@@ -137,7 +137,7 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testThirdCircuitBreakerCheckCallsResolutionEndpointIfApprovalIsStillPending() throws {
-        store.save(riskInfo: RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5)))
+        store.save(riskInfo: RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5)))
         
         client.approvalResponse = .init(approvalToken: .init(UUID().uuidString), approval: .pending)
         try processPendingApprovals()
@@ -157,7 +157,7 @@ class CircuitBreakerTests: XCTestCase {
         
         XCTAssertFalse(handledContactCase)
         
-        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        let riskInfo = RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
         XCTAssertFalse(handledContactCase)
         
@@ -172,7 +172,7 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testNoDontWorryNotificationWithApprovalYes() throws {
-        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        let riskInfo = RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
         
         var handledDontWorryNotification = false
@@ -188,7 +188,7 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testShowDontWorryNotificationWithApprovalPending() throws {
-        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        let riskInfo = RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
         
         var handledDontWorryNotification = false
@@ -204,7 +204,7 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testShowDontWorryNotificationWithApprovalNo() throws {
-        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        let riskInfo = RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
         
         var handledDontWorryNotification = false
@@ -220,7 +220,7 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testShowDontWorryNotificationWithApprovalPendingDoNotShow() throws {
-        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        let riskInfo = RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
         
         var handledDontWorryNotification = false
@@ -236,7 +236,7 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testShowDontWorryNotificationWithApprovalNoDoNotShow() throws {
-        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        let riskInfo = RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
         
         var handledDontWorryNotification = false
@@ -252,7 +252,7 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testShowDontWorryNotificationWithError() throws {
-        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        let riskInfo = RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
         
         var handledDontWorryNotification = false
@@ -268,7 +268,7 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testShowDontWorryNotificationWithErrorDoNotShow() throws {
-        let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+        let riskInfo = RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
         
         var handledDontWorryNotification = false

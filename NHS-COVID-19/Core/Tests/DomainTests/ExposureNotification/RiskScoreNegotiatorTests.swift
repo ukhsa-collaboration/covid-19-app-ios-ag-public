@@ -19,10 +19,10 @@ class RiskScoreNegotiatorTests: XCTestCase {
             deleteRiskScore: {}
         )
         
-        let result = negotiator.saveIfNeeded(exposureRiskInfo: ExposureRiskInfo(riskScore: 7.5, day: .today, isConsideredRisky: true))
+        let result = negotiator.saveIfNeeded(exposureRiskInfo: ExposureRiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .today, isConsideredRisky: true))
         
         XCTAssertTrue(result)
-        XCTAssertEqual(riskInfo, RiskInfo(riskScore: 7.5, day: .today))
+        XCTAssertEqual(riskInfo, RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .today))
     }
     
     func testRiskScoreIsNotSavedWhenIsolating() {
@@ -35,7 +35,7 @@ class RiskScoreNegotiatorTests: XCTestCase {
             deleteRiskScore: {}
         )
         
-        let result = negotiator.saveIfNeeded(exposureRiskInfo: ExposureRiskInfo(riskScore: 7.5, day: .today, isConsideredRisky: true))
+        let result = negotiator.saveIfNeeded(exposureRiskInfo: ExposureRiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .today, isConsideredRisky: true))
         
         XCTAssertFalse(result)
         XCTAssertNil(riskInfo)
@@ -51,7 +51,7 @@ class RiskScoreNegotiatorTests: XCTestCase {
             deleteRiskScore: {}
         )
         
-        let result = negotiator.saveIfNeeded(exposureRiskInfo: ExposureRiskInfo(riskScore: 7.5, day: .today, isConsideredRisky: false))
+        let result = negotiator.saveIfNeeded(exposureRiskInfo: ExposureRiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .today, isConsideredRisky: false))
         
         XCTAssertFalse(result)
         XCTAssertNil(riskInfo)

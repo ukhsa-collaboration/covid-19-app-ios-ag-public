@@ -17,7 +17,7 @@ class IsolationStateTests: XCTestCase {
     }
     
     func testInitializingNotIsolatingWhenNotAcknowledged() {
-        let state = IsolationState(logicalState: .isolationFinishedButNotAcknowledged(Isolation(fromDay: .today, untilStartOfDay: .today, reason: .contactCase)))
+        let state = IsolationState(logicalState: .isolationFinishedButNotAcknowledged(Isolation(fromDay: .today, untilStartOfDay: .today, reason: .contactCase(.exposureDetection))))
         
         TS.assert(state, equals: .noNeedToIsolate)
     }

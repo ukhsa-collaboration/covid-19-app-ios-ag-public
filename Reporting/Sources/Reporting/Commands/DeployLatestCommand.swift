@@ -18,12 +18,6 @@ struct DeployLatestCommand: ParsableCommand {
     @Option(help: "Name of scheme to export.")
     var scheme: String
     
-    @Option(help: "Tag prefix.")
-    var tagPrefix: String
-    
-    @Option(help: "Path to xcconfig file managing the version/build number.")
-    var xcconfig: String
-    
     @Option(help: "App Store Connect username.")
     var username: String
     
@@ -33,19 +27,13 @@ struct DeployLatestCommand: ParsableCommand {
     @Option(help: "Path to a folder used for the output. This is where the ipa and validation results will be saved.")
     var exportPath: String
     
+    @Option(help: "Git tag for the this upload")
+    var tag: String
+    
     func run() throws {
         let fileManager = FileManager()
         let currentDirectory = URL(fileURLWithPath: fileManager.currentDirectoryPath)
         let exportURL = URL(fileURLWithPath: exportPath, relativeTo: currentDirectory)
-        
-        let tag = try self.tag()
-        
-        let tags = try Git.tags()
-        
-        guard !tags.contains(tag) else {
-            print("No new version available to upload")
-            return
-        }
         
         print("Archiving…")
         var exportCommand = ExportCommand()
@@ -69,17 +57,4 @@ struct DeployLatestCommand: ParsableCommand {
         try Git.createTag(named: tag)
         try Git.push(includingTags: true)
     }
-    
-    private func tag() throws -> String {
-        let fileManager = FileManager()
-        let currentDirectory = URL(fileURLWithPath: fileManager.currentDirectoryPath)
-        let configURL = URL(fileURLWithPath: xcconfig, relativeTo: currentDirectory)
-        
-        let xcodeConfig = try XcodeConfiguration(url: configURL)
-        
-        let version = try xcodeConfig.value(for: "VERSION")
-        let buildNumber = try xcodeConfig.value(for: "BUILD_NUMBER")
-        return "\(tagPrefix)-v\(version)-\(buildNumber)"
-    }
-    
 }

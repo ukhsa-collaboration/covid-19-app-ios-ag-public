@@ -25,7 +25,6 @@ public class ApplicationServices {
     let postcodeValidator: PostcodeValidating
     let currentDateProvider: () -> Date
     let storeReviewController: StoreReviewControlling
-    let transmissionRiskLevelApplier: TransmissionRiskLevelApplier
     
     public init(
         application: Application,
@@ -45,8 +44,7 @@ public class ApplicationServices {
         pasteboardCopier: PasteboardCopying,
         postcodeValidator: PostcodeValidating,
         currentDateProvider: @escaping () -> Date,
-        storeReviewController: StoreReviewControlling,
-        transmissionRiskLevelApplier: TransmissionRiskLevelApplier
+        storeReviewController: StoreReviewControlling
     ) {
         self.application = application
         self.exposureNotificationManager = exposureNotificationManager
@@ -66,7 +64,6 @@ public class ApplicationServices {
         self.postcodeValidator = postcodeValidator
         self.currentDateProvider = currentDateProvider
         self.storeReviewController = storeReviewController
-        self.transmissionRiskLevelApplier = transmissionRiskLevelApplier
     }
     
 }

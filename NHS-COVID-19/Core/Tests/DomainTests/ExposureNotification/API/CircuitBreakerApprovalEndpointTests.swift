@@ -9,7 +9,7 @@ import XCTest
 
 class CircuitBreakerApprovalEndpointTests: XCTestCase {
     
-    private let riskInfo = RiskInfo(riskScore: 8, day: GregorianDay.today.advanced(by: -2))
+    private let riskInfo = RiskInfo(riskScore: 8, riskScoreVersion: 1, day: GregorianDay.today.advanced(by: -2))
     private let endpoint = CircuitBreakerApprovalEndpoint()
     typealias Response = CircuitBreakerApprovalEndpoint.Response
     
@@ -31,7 +31,8 @@ class CircuitBreakerApprovalEndpointTests: XCTestCase {
         {
             "matchedKeyCount" : 1,
             "daysSinceLastExposure": 2,
-            "maximumRiskScore" : 8
+            "maximumRiskScore" : 8,
+            "riskCalculationVersion": 1
         }
         """#))
             .withCanonicalJSONBody()

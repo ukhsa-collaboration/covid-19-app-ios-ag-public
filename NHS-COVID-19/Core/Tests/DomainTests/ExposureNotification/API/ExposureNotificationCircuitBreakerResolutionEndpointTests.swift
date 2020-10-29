@@ -9,7 +9,7 @@ import XCTest
 
 class ExposureNotificationCircuitBreakerResolutionEndpointTests: XCTestCase {
     
-    private let riskInfo = RiskInfo(riskScore: 7.5, day: .init(year: 2020, month: 5, day: 5))
+    private let riskInfo = RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
     private lazy var endpoint = CircuitBreakerResolutionEndpoint(type: .exposureNotification(self.riskInfo))
     typealias Payload = CircuitBreakerApprovalToken
     typealias Response = CircuitBreakerResolutionEndpoint.Response

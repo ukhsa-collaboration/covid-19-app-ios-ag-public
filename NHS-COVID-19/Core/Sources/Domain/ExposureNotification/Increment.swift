@@ -19,3 +19,15 @@ extension Increment {
         }
     }
 }
+
+extension Increment {
+    static let IdentifierPrefix = "increment_"
+    var identifier: String {
+        switch self {
+        case .twoHourly:
+            return "\(Self.IdentifierPrefix)twoHourly_\(parse())"
+        case .daily:
+            return "\(Self.IdentifierPrefix)daily_\(parse())"
+        }
+    }
+}

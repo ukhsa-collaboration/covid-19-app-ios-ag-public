@@ -55,8 +55,7 @@ class ApplicationStateTests: XCTestCase {
                 pasteboardCopier: MockPasteboardCopier(),
                 postcodeValidator: configuration.postcodeValidator,
                 currentDateProvider: { Date() },
-                storeReviewController: MockStoreReviewController(),
-                transmissionRiskLevelApplier: TransmissionRiskLevelApplier()
+                storeReviewController: MockStoreReviewController()
             )
             
             coordinator = ApplicationCoordinator(services: services, enabledFeatures: configuration.enabledFeatures)

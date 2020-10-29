@@ -77,6 +77,11 @@ class SimulatedExposureNotificationManager: ExposureNotificationManaging {
     func getExposureInfo(summary: ENExposureDetectionSummary, completionHandler: @escaping ENGetExposureInfoHandler) {
         _ = getExposureInfo(summary: summary, userExplanation: UUID().uuidString, completionHandler: completionHandler)
     }
+    
+    @available(iOS 13.7, *)
+    func getExposureWindows(summary: ENExposureDetectionSummary, completionHandler: @escaping ENGetExposureWindowsHandler) -> Progress {
+        return Progress()
+    }
 }
 
 private class SimulatedExposureInfo: ENExposureInfo {

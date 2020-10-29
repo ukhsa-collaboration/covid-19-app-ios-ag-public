@@ -4,8 +4,8 @@
 
 import Combine
 import Common
-import ExposureNotification
 import Foundation
+import RiskScore
 
 public struct ExposureDetectionConfiguration {
     var transmitionWeight: Double
@@ -24,6 +24,16 @@ public struct ExposureDetectionConfiguration {
     
     var riskThreshold: Double
     
+    var daysSinceOnsetToInfectiousness: [Int]
+    
+    var infectiousnessWeights: [Double]
+    
+    var reportTypeWhenMissing: Int
+    
+    var v2RiskThreshold: Double
+    
+    var riskScoreCalculatorConfig: RiskScoreCalculatorConfiguration
+    
     public init(
         transmitionWeight: Double,
         durationWeight: Double,
@@ -35,7 +45,12 @@ public struct ExposureDetectionConfiguration {
         attenuation: [Int],
         thresholds: [Int],
         durationBucketWeights: [Double],
-        riskThreshold: Double
+        riskThreshold: Double,
+        daysSinceOnsetToInfectiousness: [Int],
+        infectiousnessWeights: [Double],
+        reportTypeWhenMissing: Int,
+        v2RiskThreshold: Double,
+        riskScoreCalculatorConfig: RiskScoreCalculatorConfiguration
     ) {
         self.transmitionWeight = transmitionWeight
         self.durationWeight = durationWeight
@@ -50,11 +65,13 @@ public struct ExposureDetectionConfiguration {
         
         self.durationBucketWeights = durationBucketWeights
         self.riskThreshold = riskThreshold
+        
+        self.daysSinceOnsetToInfectiousness = daysSinceOnsetToInfectiousness
+        self.infectiousnessWeights = infectiousnessWeights
+        self.reportTypeWhenMissing = reportTypeWhenMissing
+        
+        self.v2RiskThreshold = v2RiskThreshold
+        
+        self.riskScoreCalculatorConfig = riskScoreCalculatorConfig
     }
-}
-
-protocol ExposureDetectingClient {
-    func post(token: DiagnosisKeySubmissionToken, diagnosisKeys: [ENTemporaryExposureKey]) -> AnyPublisher<Void, NetworkRequestError>
-    func getExposureKeys(for increment: Increment) -> AnyPublisher<ZIPManager, NetworkRequestError>
-    func getConfiguration() -> AnyPublisher<ExposureDetectionConfiguration, NetworkRequestError>
 }

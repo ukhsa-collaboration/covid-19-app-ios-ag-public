@@ -249,7 +249,7 @@
 "about_this_app_our_policies_description" = "تُقدِّم لك سياساتنا معلومات مهمة حول كيفية استخدام التطبيق واستخدامنا لبياناتك وكيف روعي تصميم التطبيق بحيث يتسنى لجميع الأشخاص استخدامه.";
 "about_this_app_our_policies_terms_of_use_button" = "شروط الاستخدام";
 "about_this_app_our_policies_privacy_notice_button" = "إشعار الخصوصية";
-"about_this_app_our_policies_accessibility_statement_button" = "بيان إمكانية الوصول";
+"about_this_app_our_policies_accessibility_statement_button" = "بيان إمكانية الاطلاع";
 "about_this_app_footer_text" = "شكرًا لك على حماية نفسك والآخرين عن طريق استخدامك لهذا التطبيق.";
 "about_this_app_my_data_heading" = "نبذة عن بياناتك";
 "about_this_app_my_data_description" = "يستطيع هذا التطبيق الوصول إلى الرمز البريدي للمقاطعة الذي أضفته أثناء التسجيل وتاريخ الأماكن التي سجَّلت الدخول إليها مؤخرًا خلال آخر 14 يومًا ونتيجة الاختبار الأخير الذي أجريته وتاريخ بداية ظهور الأعراض لديك. وعندما تستخدم رموز QR لتسجيل الدخول إلى الأماكن، فإن البيانات المتعلقة بالمكان تُخزَّن لمدة 21 يومًا، ويمكنك تأكيد البيانات المُخزَّنة متى شئت.";
@@ -337,7 +337,7 @@
 "link_test_result_enter_code_heading" = "أدخل رمز الاختبار";
 "link_test_result_enter_code_invalid_error" = "لم يتم التعرّف على رمزك. يرجى التأكد من استخدامك لرمزٍ صالحٍ.";
 "about_this_app_feedback_information_link_title" = "معلومات حول آراء المستخدمين";
-"checkin_information_help_scanning_section_description" = "يجب استخدام هذا التطبيق عند دخولك إلى مكانٍ ما (حانة أو مطعم على سبيل المثال) يشتمل على أحد ملصقات الاستجابة السريعة المُقدمة من هيئة الخدمات الصحية الوطنية \"NHS QR\" لإجراء مسح ضوئي للملصق؛ علمًا بأن التطبيق يقوم بعد ذلك بتسجيل وقت دخولك إلى المكان.\n\nعند استخدامك لخاصية تسجيل الدخول إلى مكانٍ ما، سيكون بمقدورك استلام إخطارٍ إذا كان هناك أشخاصٌ مصابون بفيروس كورونا يرتادون هذا المكان في نفس الوقت. وسيتضمن الإخطار النصائح ذات الصلة، مثل التحقق من الأعراض المصاحبة للإصابة بفيروس كورونا.\n\nإذا تعذّر عليك إجراء مسح ضوئي لأحد رموز QR وتحتاج إلى تسجيل الدخول بطريقة أخرى، يرجى التحدّث مع أحد الموظفين.";
+"checkin_information_help_scanning_section_description" = "إذا تعذّر عليك إجراء مسح ضوئي لأحد رموز QR وتحتاج إلى تسجيل الدخول بطريقة أخرى، يرجى التحدّث مع أحد الموظفين.";
 "checkin_information_whats_a_qr_code_section_title" = "كيف يمكنني التعرّف على أحد رموز NHS QR الرسمية؟";
 "checkin_information_whats_a_qr_code_section_description_new" = "هذا هو الشكل الذي يبدو عليه ملصق رمز الاستجابة السريعة NHS QR الرسمي الإنجليزي/الويلزي. استخدم كاميرا هاتفك لإجراء مسح ضوئي لرمز QR المُوضَّح في المربع الموجود في المنتصف.\n";
 "about_this_app_software_information_date_of_release_description" = "09/2020";
@@ -390,7 +390,7 @@
 "negative_test_result_after_positive_explanation" = "تُظهر نتيجة الاختبار الحالي الذي أجريته أنك لم تكن مُصابًا بالفيروس في وقت إجراء الاختبار. إذا ظهرت عليك أيٌّ من الأعراض، فيجب الإبلاغ عنها في التطبيق. إذا كان عمرك يقل عن 18 عامًا، فإننا نوصيك بعرض هذه الرسالة على شخصٍ بالغٍ محل ثقة لديك.";
 "positive_test_result_start_to_isolate_explaination" = "تُظهر نتيجة الاختبار الذي أجريته أنك كنت مُصابًا بالفيروس في وقت إجراء الاختبار. لقد أرسلنا إليك المزيد من المعلومات عبر البريد الإلكتروني أو رسالة نصية أو الهاتف. إذا كان عمرك يقل عن 18 عامًا، فإننا نوصيك بعرض هذه الرسالة على شخصٍ بالغٍ محل ثقة لديك.";
 "negative_test_result_after_positive_button_label" = "استمرار";
-"checkin_information_title_new" = "المساعدة في إجراء مسح ضوئي لأحد رموز QR";
+"checkin_information_title_new" = "المزيد من المعلومات حول تسجيل الدخول إلى الأماكن";
 "positive_test_result_start_to_isolate_title" = "تطبيق العزل الذاتي لمدة";
 "positive_test_result_start_to_isolate_info" = "نتيجة اختبار الكشف عن إصابتك بفيروس كورونا إيجابية";
 "end_of_isolation_positive_text_no_isolation_header" = "نتيجة اختبارك";
@@ -413,3 +413,12 @@
 "stop_isolation_countdown_button" = "";
 "dont_worry_notification_title" = "اكتمل الفحص المتعلق بالتعرّض لفيروس كوفيد-19";
 "dont_worry_notification_body" = "لا داعي للقلق، لقد أجرينا تقييمًا لمدى الخطورة لديك وليس هناك ما يدعو إلى اتخاذ أي إجراءٍ في الوقت الراهن. نُهيب بكم الاستمرار في توخي الحيطة واتباع أحدث النصائح المتعلقة بالتباعد الجسدي.";
+"checkin_information_description" = "يجب استخدام هذا التطبيق عند دخولك إلى مكانٍ ما (حانة أو مطعم على سبيل المثال) يشتمل على أحد ملصقات الاستجابة السريعة المُقدمة من هيئة الخدمات الصحية الوطنية \"NHS QR\" لإجراء مسح ضوئي للملصق؛ علمًا بأن التطبيق يقوم بعد ذلك بتسجيل وقت دخولك إلى المكان.\n\nعند استخدامك لخاصية تسجيل الدخول إلى مكانٍ ما، سيكون بمقدورك استلام إخطارٍ إذا كان هناك أشخاصٌ مصابون بفيروس كورونا يرتادون هذا المكان في نفس الوقت. وسيتضمن الإخطار النصائح ذات الصلة، مثل التحقق من الأعراض المصاحبة للإصابة بفيروس كورونا.";
+"update_app_button_title" = "";
+"alert_venue_risk_isolate_title" = "";
+"alert_venue_risk_isolate_body" = "";
+"risky_venue_isolation_report_symptoms" = "";
+"risky_venue_isolation_warning" = "";
+"risky_venue_isolation_description" = "";
+"alert_latest_app_version_update_title" = "";
+"alert_latest_app_version_update_body" = "";

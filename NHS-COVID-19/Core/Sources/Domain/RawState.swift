@@ -5,7 +5,6 @@
 import Foundation
 
 struct RawState: Equatable {
-    var isAppActivated: Bool
     var appAvailability: AppAvailabilityLogicalState
     var completedOnboardingForCurrentSession: Bool
     var exposureState: ExposureNotificationStateController.CombinedState
@@ -26,7 +25,7 @@ struct RawState: Equatable {
     private var logicalStateIgnoringOnboarding: LogicalState {
         switch appAvailability {
         case .available:
-            return isAppActivated ? postAvailabilityLogicalState : .pilotActivationRequired
+            return postAvailabilityLogicalState
         case .unavailable(let reason):
             return .appUnavailable(reason)
         }

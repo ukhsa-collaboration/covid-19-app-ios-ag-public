@@ -8,7 +8,7 @@ import Foundation
 public struct Isolation: Equatable {
     public enum Reason: Equatable {
         case indexCase(hasPositiveTestResult: Bool)
-        case contactCase
+        case contactCase(ContactCaseTrigger)
         case bothCases
     }
     
@@ -60,4 +60,12 @@ extension Isolation {
         }
     }
     
+    public var isContactCaseOnly: Bool {
+        switch reason {
+        case .indexCase, .bothCases:
+            return false
+        case .contactCase:
+            return true
+        }
+    }
 }

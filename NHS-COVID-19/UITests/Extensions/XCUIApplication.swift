@@ -5,7 +5,7 @@
 import XCTest
 
 extension XCUIApplication {
-    func checkBackOnHomeScreen(postcode: String) {
+    func checkOnHomeScreen(postcode: String) {
         let homeScreen = HomeScreen(app: self)
         
         #warning("Remove this after resolving the accessiblity hack for iOS 14 in HomeViewController")

@@ -62,7 +62,7 @@ class IsolationStateStoreTests: XCTestCase {
         TS.assert(store.isolationInfo, equals: IsolationInfo(indexCaseInfo: nil, contactCaseInfo: nil))
     }
     
-    func testLoadingEmptyIndexCaseInfo() throws {
+    func testLoadingOldData() throws {
         $instance.encryptedStore.stored["isolation_state_info"] = #"""
         {
             "configuration" : {
@@ -126,7 +126,81 @@ class IsolationStateStoreTests: XCTestCase {
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
-                isolationFromStartOfDay: isolationFromStartOfDay
+                isolationFromStartOfDay: isolationFromStartOfDay,
+                trigger: .exposureDetection
+            )
+        )
+        
+        TS.assert(store.isolationInfo, equals: expectedIsolationInfo)
+    }
+    
+    func testLoadingNewData() throws {
+        $instance.encryptedStore.stored["isolation_state_info"] = #"""
+        {
+            "configuration" : {
+                "indexCaseSinceSelfDiagnosisOnset" : 7,
+                "maxIsolation" : 21,
+                "contactCase" : 14,
+                "indexCaseSinceSelfDiagnosisUnknownOnset" : 5,
+                "housekeepingDeletionPeriod" : 14
+            },
+            "isolationInfo" : {
+                "hasAcknowledgedEndOfIsolation": true,
+                "hasAcknowledgedStartOfIsolation": false,
+                "contactCaseInfo" : {
+                    "exposureDay" : {
+                        "day" : 11,
+                        "month" : 7,
+                        "year" : 2020
+                    },
+                    "isolationFromStartOfDay":{
+                        "year": 2020,
+                        "month": 7,
+                        "day": 13
+                    },
+                    "trigger": "exposureDetection"
+                },
+                "indexCaseInfo" : {
+                    "selfDiagnosisDay" : {
+                        "day" : 12,
+                        "month" : 7,
+                        "year" : 2020
+                    },
+                    "onsetDay" : {
+                        "day" : 10,
+                        "month" : 7,
+                        "year" : 2020
+                    },
+                    "testInfo": {
+                        "result" : "positive",
+                        "receivedOnDay" : {
+                            "day" : 14,
+                            "month" : 7,
+                            "year" : 2020
+                        }
+                    }
+                }
+            }
+        }
+        """# .data(using: .utf8)!
+        
+        let onsetDay = GregorianDay(year: 2020, month: 7, day: 10)
+        let exposureDay = GregorianDay(year: 2020, month: 7, day: 11)
+        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
+        let isolationFromStartOfDay = GregorianDay(year: 2020, month: 7, day: 13)
+        let testReceivedDay = GregorianDay(year: 2020, month: 7, day: 14)
+        
+        let expectedIsolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: true,
+            indexCaseInfo: IndexCaseInfo(
+                isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
+                onsetDay: onsetDay,
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, receivedOnDay: testReceivedDay)
+            ),
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: isolationFromStartOfDay,
+                trigger: .exposureDetection
             )
         )
         
@@ -149,7 +223,8 @@ class IsolationStateStoreTests: XCTestCase {
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
-                isolationFromStartOfDay: .today
+                isolationFromStartOfDay: .today,
+                trigger: .exposureDetection
             )
         )
         
@@ -239,7 +314,8 @@ class IsolationStateStoreTests: XCTestCase {
             indexCaseInfo: nil,
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
-                isolationFromStartOfDay: .today
+                isolationFromStartOfDay: .today,
+                trigger: .exposureDetection
             )
         )
         
@@ -248,73 +324,5 @@ class IsolationStateStoreTests: XCTestCase {
         let expectedExposureDate = LocalDay(gregorianDay: exposureDay, timeZone: .current).startOfDay
         
         XCTAssertEqual(expectedExposureDate, providedExposureDate)
-    }
-    
-    func testStopSelfIsolationWhenSelfDiagnosisAndNoTestInfo() throws {
-        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
-
-        store.set(IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: nil,
-            testInfo: nil
-        ))
-        
-        store.stopSelfIsolation()
-        XCTAssertNil(store.isolationStateInfo)
-    }
-    
-    func testStopSelfIsolationWhenSelfDiagnosisAndTestResultPositive() throws {
-        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
-        let testDay = GregorianDay(year: 2020, month: 7, day: 13)
-        
-        store.set(IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: nil,
-            testInfo: IndexCaseInfo.TestInfo(result: .positive, receivedOnDay: testDay)
-        ))
-        
-        store.stopSelfIsolation()
-        XCTAssertNotNil(store.isolationStateInfo)
-    }
-    
-    func testStopSelfIsolationWhenSelfDiagnosisAndTestResultNegative() throws {
-        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
-        let testDay = GregorianDay(year: 2020, month: 7, day: 13)
-        
-        store.set(IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: nil,
-            testInfo: IndexCaseInfo.TestInfo(result: .negative, receivedOnDay: testDay)
-        ))
-        
-        store.stopSelfIsolation()
-        XCTAssertNil(store.isolationStateInfo)
-    }
-    
-    func testStopSelfIsolationWhenSelfDiagnosisAndTestResultVoid() throws {
-        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
-        let testDay = GregorianDay(year: 2020, month: 7, day: 13)
-        
-        store.set(IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: nil,
-            testInfo: IndexCaseInfo.TestInfo(result: .void, receivedOnDay: testDay)
-        ))
-        
-        store.stopSelfIsolation()
-        XCTAssertNotNil(store.isolationStateInfo)
-    }
-    
-    func testStopSelfIsolationWhenManualEntry() throws {
-        let npexDay = GregorianDay(year: 2020, month: 7, day: 12)
-        
-        store.set(IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: npexDay),
-            onsetDay: nil,
-            testInfo: nil
-        ))
-        
-        store.stopSelfIsolation()
-        XCTAssertNotNil(store.isolationStateInfo)
     }
 }

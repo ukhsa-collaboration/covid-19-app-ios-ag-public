@@ -57,8 +57,7 @@ private extension ApplicationServices {
             pasteboardCopier: MockPasteboardCopier(),
             postcodeValidator: SandboxPostcodeValidator(),
             currentDateProvider: { Date() },
-            storeReviewController: StoreReviewController(),
-            transmissionRiskLevelApplier: TransmissionRiskLevelApplier()
+            storeReviewController: StoreReviewController()
         )
     }
     

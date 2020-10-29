@@ -14,6 +14,7 @@ public class LinkTestResultScreenScenario: Scenario {
     public enum TestCodes: String {
         case invalid = "ABC"
         case valid = "abcd1234"
+        case delayed = "DE"
     }
     
     public static let continueConfirmationAlertTitle = "Entered test code"
@@ -33,6 +34,9 @@ public class LinkTestResultScreenScenario: Scenario {
             switch testCode.uppercased() {
             case LinkTestResultScreenScenario.TestCodes.invalid.rawValue:
                 return Result.failure(DisplayableError(testValue: LinkTestResultScreenScenario.invalidCodeError)).publisher.eraseToAnyPublisher()
+            case LinkTestResultScreenScenario.TestCodes.delayed.rawValue:
+                viewController.showAlert(title: LinkTestResultScreenScenario.continueConfirmationAlertTitle, message: testCode)
+                return Result.success(()).publisher.delay(for: 1, scheduler: RunLoop.main).eraseToAnyPublisher()
             default:
                 viewController.showAlert(title: LinkTestResultScreenScenario.continueConfirmationAlertTitle, message: testCode)
                 return Result.success(()).publisher.eraseToAnyPublisher()

@@ -50,8 +50,9 @@ class UserNotificationsStateController {
                 self.authorizationStatus = .authorized
             case .denied:
                 self.authorizationStatus = .denied
-            case .provisional:
-                assertionFailure("this should never happen")
+            case .provisional, .ephemeral:
+                assertionFailure("these should not happen")
+                self.authorizationStatus = .denied
             @unknown default:
                 self.authorizationStatus = .authorized
             }

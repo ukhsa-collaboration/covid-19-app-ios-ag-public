@@ -60,7 +60,7 @@ class CheckInsManagerTests: XCTestCase {
         save(c2)
         
         riskyVenues = [
-            RiskyVenue(id: .random(), riskyInterval: UTCHour.riskyTimeInterval),
+            RiskyVenue(id: .random(), riskyInterval: UTCHour.riskyTimeInterval, messageType: .inform),
         ]
         try checkInsManager.evaluateVenuesRisk().await().get()
         let riskyvenueIds = try XCTUnwrap(self.riskyvenueIds)
@@ -76,7 +76,7 @@ class CheckInsManagerTests: XCTestCase {
         save(c2)
         
         riskyVenues = [
-            RiskyVenue(id: v1.id.lowercased(), riskyInterval: UTCHour.riskyTimeInterval),
+            RiskyVenue(id: v1.id.lowercased(), riskyInterval: UTCHour.riskyTimeInterval, messageType: .inform),
         ]
         try checkInsManager.evaluateVenuesRisk().await().get()
         let riskyvenueIds = try XCTUnwrap(self.riskyvenueIds)
@@ -90,7 +90,7 @@ class CheckInsManagerTests: XCTestCase {
         save(checkIn)
         
         riskyVenues = [
-            RiskyVenue(id: v1.id, riskyInterval: UTCHour.riskyTimeInterval),
+            RiskyVenue(id: v1.id, riskyInterval: UTCHour.riskyTimeInterval, messageType: .inform),
         ]
         
         try checkInsManager.evaluateVenuesRisk().await().get()
@@ -104,7 +104,7 @@ class CheckInsManagerTests: XCTestCase {
         save(checkIn)
         
         riskyVenues = [
-            RiskyVenue(id: v1.id, riskyInterval: UTCHour.riskyTimeInterval),
+            RiskyVenue(id: v1.id, riskyInterval: UTCHour.riskyTimeInterval, messageType: .inform),
         ]
         
         try checkInsManager.evaluateVenuesRisk().await().get()
@@ -118,7 +118,7 @@ class CheckInsManagerTests: XCTestCase {
         save(checkIn)
         
         riskyVenues = [
-            RiskyVenue(id: v1.id, riskyInterval: UTCHour.riskyTimeInterval),
+            RiskyVenue(id: v1.id, riskyInterval: UTCHour.riskyTimeInterval, messageType: .inform),
         ]
         
         try checkInsManager.evaluateVenuesRisk().await().get()
@@ -132,7 +132,7 @@ class CheckInsManagerTests: XCTestCase {
         save(checkIn)
         
         riskyVenues = [
-            RiskyVenue(id: v1.id, riskyInterval: UTCHour.riskyTimeInterval),
+            RiskyVenue(id: v1.id, riskyInterval: UTCHour.riskyTimeInterval, messageType: .inform),
         ]
         
         try checkInsManager.evaluateVenuesRisk().await().get()
@@ -146,7 +146,7 @@ class CheckInsManagerTests: XCTestCase {
         save(checkIn)
         
         riskyVenues = [
-            RiskyVenue(id: v1.id, riskyInterval: UTCHour.riskyTimeInterval),
+            RiskyVenue(id: v1.id, riskyInterval: UTCHour.riskyTimeInterval, messageType: .inform),
         ]
         
         try checkInsManager.evaluateVenuesRisk().await().get()
@@ -160,7 +160,7 @@ class CheckInsManagerTests: XCTestCase {
         save(checkIn)
         
         riskyVenues = [
-            RiskyVenue(id: v1.id, riskyInterval: UTCHour.riskyTimeInterval),
+            RiskyVenue(id: v1.id, riskyInterval: UTCHour.riskyTimeInterval, messageType: .inform),
         ]
         
         try checkInsManager.evaluateVenuesRisk().await().get()

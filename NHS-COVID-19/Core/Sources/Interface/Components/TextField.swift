@@ -24,7 +24,6 @@ class TextField: UITextField {
         font = UIFont.preferredFont(forTextStyle: .body)
         adjustsFontForContentSizeCategory = true
         autocorrectionType = .no
-        returnKeyType = .continue
         enablesReturnKeyAutomatically = true
         NSLayoutConstraint.activate([heightAnchor.constraint(greaterThanOrEqualToConstant: .hitAreaMinHeight)])
         

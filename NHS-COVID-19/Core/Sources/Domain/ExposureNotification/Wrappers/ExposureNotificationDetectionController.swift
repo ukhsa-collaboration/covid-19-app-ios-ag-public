@@ -22,7 +22,7 @@ public class ExposureNotificationDetectionController {
         diagnosisKeyURLs: [URL]
     ) -> AnyPublisher<ENExposureDetectionSummary, Error> {
         Future { [weak self] promise in
-            Self.logger.debug("detecting exposures")
+            Self.logger.debug("detecting exposures from \(diagnosisKeyURLs.count / 2) batches")
             self?.manager.detectExposures(configuration: configuration, diagnosisKeyURLs: diagnosisKeyURLs) { summary, error in
                 if let error = error {
                     Self.logger.info("detecting exposure failed", metadata: .describing(error))
@@ -49,6 +49,25 @@ public class ExposureNotificationDetectionController {
                 if let info = info {
                     Self.logger.debug("received exposure info", metadata: .describing(info))
                     promise(.success(info))
+                }
+            }
+        }.eraseToAnyPublisher()
+    }
+    
+    @available(iOS 13.7, *)
+    public func getExposureWindows(
+        summary: ENExposureDetectionSummary
+    ) -> AnyPublisher<[ENExposureWindow], Error> {
+        Future { [weak self] promise in
+            Self.logger.debug("getting exposure windows")
+            self?.manager.getExposureWindows(summary: summary) { windows, error in
+                if let error = error {
+                    Self.logger.info("getting exposure windows failed", metadata: .describing(error))
+                    promise(.failure(error))
+                }
+                if let windows = windows {
+                    Self.logger.debug("received exposure windows", metadata: .describing(windows))
+                    promise(.success(windows))
                 }
             }
         }.eraseToAnyPublisher()

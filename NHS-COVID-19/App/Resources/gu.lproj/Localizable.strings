@@ -337,7 +337,7 @@
 "link_test_result_enter_code_heading" = "તમારા ટેસ્ટ કોડને દાખલ કરો";
 "link_test_result_enter_code_invalid_error" = "કોડ ઓળખી શકાયો નહીં. કૃપા કરી ખાતરી કરો કે તમે માન્ય કોડનો ઉપયોગ કરી રહ્યા છો.";
 "about_this_app_feedback_information_link_title" = "ફીડબૅક માહિતી";
-"checkin_information_help_scanning_section_description" = "જો તમે કોઈ એક સ્થળમાં પ્રવેશ કરી રહયા હો (દાખલા તરીકે બાર અથવા રેસ્ટોરા) કે જેઓની પાસે ઓફિશ્યલ NHS QR કોડ પોસ્ટર હોય તો, આ એપનો ઉપયોગ કરી તેને સ્કેન કરો. તમે સ્થળમાં દાખલ થયાના સમયની ત્યારબાદ એપ રજિસ્ટરકરે છે.\n\nસ્થળની તપાસનો ઉપયોગ કરવાથી, જો કોરોનાવાઈરસવાળા લોકોએ તમારી માફક એકજ સરખા સમયે એકજ સરખા સ્થળની મુલાકાત લીધી હોય તો તમને સૂચના મળી શકે.  આવી સૂચનામાં પ્રત્યેક સલાહનો સમાવેશ થઈ શકે, જેમકે કોરોનાવાઈરસ રોગના લક્ષણોને માટે સાવધાન રહેવું.\n\nજો તમે QR કોડ સ્કેન કરવામાં સમર્થ નથી અને તમારે અન્ય રીતે ચેક ઇન કરવાની જરૂર છે, તો કૃપા કરીને સ્ટાફના સભ્ય સાથે વાત કરો.";
+"checkin_information_help_scanning_section_description" = "જો તમે QR કોડ સ્કેન કરવામાં સમર્થ નથી અને તમારે અન્ય રીતે ચેક ઇન કરવાની જરૂર છે, તો કૃપા કરીને સ્ટાફના સભ્ય સાથે વાત કરો.";
 "checkin_information_whats_a_qr_code_section_title" = "હું એક ઓફિશ્યલ NHS QR કોડને કેવી રીતે ઓળખી શકું?";
 "checkin_information_whats_a_qr_code_section_description_new" = "અધિકૃત ઇંગ્લિશ/વેલ્શ NHS QR કોડ પોસ્ટર આવું દેખાય છે. QR કોડ જે મધ્યમાં એક ચોરસ છે તેને સ્કેન કરવા માટે તમારા ફોન કેમેરાનો ઉપયોગ કરો.";
 "about_this_app_software_information_date_of_release_description" = "09/2020";
@@ -390,7 +390,7 @@
 "negative_test_result_after_positive_explanation" = "તમારા વર્તમાન પરીક્ષણનું પરિણામ એ બતાવે છે કે પરીક્ષણના સમયે, તમને વાયરસનો ચેપ ન હતો. જો તમે લક્ષણો વિકસિત કરો છો, તો આ એપ પર તેમની જાણ કરો. જો તમારી ઉંમર 18 વર્ષથી ઓછી છે, તો તમને કોઈ વિશ્વાસપાત્ર વયસ્ક વ્યક્તિને આ સંદેશ બતાવવાની સલાહ આપવામાં આવે છે.";
 "positive_test_result_start_to_isolate_explaination" = "તમારા પરીક્ષણનું પરિણામ એ બતાવે છે કે પરીક્ષણના સમયે તમને વાયરસનો ચેપ હતો. તમને ઇમેઇલ, ટેક્સ્ટ અથવા ફોન દ્વારા વધુ માહિતી મોકલવામાં આવી છે. જો તમારી ઉંમર 18 વર્ષથી ઓછી છે, તો તમને કોઈ વિશ્વાસપાત્ર વયસ્ક વ્યક્તિને આ સંદેશ બતાવવાની સલાહ આપવામાં આવે છે.";
 "negative_test_result_after_positive_button_label" = "ચાલુ રાખો";
-"checkin_information_title_new" = "QR કોડ સ્કેન કરવામાં મદદ કરો";
+"checkin_information_title_new" = "વેન્યુ ચેક-ઇન વિશે વધુ માહિતી";
 "positive_test_result_start_to_isolate_title" = "માટે સેલ્ફ-આઇસોલેટ થાવ";
 "positive_test_result_start_to_isolate_info" = "તમારા કોરોનાવાયરસનું ટેસ્ટ પરિણામ સકારાત્મક છે";
 "end_of_isolation_positive_text_no_isolation_header" = "તમારી ટેસ્ટનું પરિણામ";
@@ -413,3 +413,12 @@
 "stop_isolation_countdown_button" = "";
 "dont_worry_notification_title" = "COVID-19 એકસપોઝર માટેની તપાસ પૂરી";
 "dont_worry_notification_body" = "ફિકર- ચિંતા કરશો નહિ, અમે તમારા જોખમ- ભયની તપાસી કરી છે અને આ સમયે કોઈ પગલા લેવાની જરૂર નથી. કૃપા કરી સાવધ રહેવાનું ચાલુ રાખી અને સોશિયલ ડિસ્ટંસ વિષેની તાજેતર સલાહ- સૂચન અનુસરો.";
+"checkin_information_description" = "જો તમે કોઈ એક સ્થળમાં પ્રવેશ કરી રહયા હો (દાખલા તરીકે બાર અથવા રેસ્ટોરા) કે જેઓની પાસે ઓફિશ્યલ NHS QR કોડ પોસ્ટર હોય તો, આ એપનો ઉપયોગ કરી તેને સ્કેન કરો. તમે સ્થળમાં દાખલ થયાના સમયની ત્યારબાદ એપ રજિસ્ટરકરે છે.\n\nસ્થળની તપાસનો ઉપયોગ કરવાથી, જો કોરોનાવાઈરસવાળા લોકોએ તમારી માફક એકજ સરખા સમયે એકજ સરખા સ્થળની મુલાકાત લીધી હોય તો તમને સૂચના મળી શકે.  આવી સૂચનામાં પ્રત્યેક સલાહનો સમાવેશ થઈ શકે, જેમકે કોરોનાવાઈરસ રોગના લક્ષણોને માટે સાવધાન રહેવું.";
+"update_app_button_title" = "";
+"alert_venue_risk_isolate_title" = "";
+"alert_venue_risk_isolate_body" = "";
+"risky_venue_isolation_report_symptoms" = "";
+"risky_venue_isolation_warning" = "";
+"risky_venue_isolation_description" = "";
+"alert_latest_app_version_update_title" = "";
+"alert_latest_app_version_update_body" = "";

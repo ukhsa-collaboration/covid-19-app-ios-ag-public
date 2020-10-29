@@ -15,7 +15,6 @@ enum LogicalState: Equatable {
     
     case starting
     case appUnavailable(AppAvailabilityLogicalState.UnavailabilityReason)
-    case pilotActivationRequired
     case failedToStart
     case onboarding
     case authorizationRequired
@@ -45,7 +44,6 @@ public struct RunningAppContext {
     public var currentDateProvider: () -> Date
     public var exposureNotificationReminder: ExposureNotificationReminder
     public var appReviewPresenter: AppReviewPresenter
-    public var stopSelfIsolation: () -> Void
 }
 
 public enum ApplicationState {
@@ -71,6 +69,9 @@ public enum ApplicationState {
     
     /// Application is disabled.
     case appUnavailable(AppUnavailabilityReason)
+    
+    #warning("Remove this")
+    // This case never happens. If you have a minute, remove it, along with all the dead code resulting from that.
     
     /// The user must activate this app first
     case pilotActivationRequired(submit: (String) -> AnyPublisher<Void, Error>)

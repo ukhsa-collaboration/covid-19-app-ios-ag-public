@@ -17,6 +17,27 @@ public class VenueCheckInInformationViewController: UIViewController {
     
     private let interactor: Interacting
     
+    private lazy var checkinDescriptionSection: UIView = {
+        var content = [UIView]()
+        
+        localizeAndSplit(.checkin_information_description)
+            .forEach {
+                let descriptionLabel = UILabel()
+                descriptionLabel.styleAsBody()
+                descriptionLabel.text = String($0)
+                content.append(descriptionLabel)
+            }
+        
+        let stackView = UIStackView(arrangedSubviews: content)
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = .standardSpacing
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = .inner
+        
+        return stackView
+    }()
+    
     private lazy var helpScanningSection: UIView = {
         createSection(
             header: localize(.checkin_information_help_scanning_section_title),
@@ -175,6 +196,7 @@ public class VenueCheckInInformationViewController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: localize(.cancel), style: .plain, target: self, action: #selector(didTapDismiss))
         
         let content = [
+            checkinDescriptionSection,
             helpScanningSection,
             whatsAQRCodeSection,
             howItWorksSection,

@@ -36,14 +36,29 @@ class LinkTestResultScreenTests: XCTestCase {
             screen.testCodeTextField.tap()
             screen.testCodeTextField.typeText(code)
             
-            if runner.isGeneratingReport {
-                // TODO: Can we improve this?
-                // The scrolling of text field into view is still animated. Wait for it to finish
-                usleep(300_000)
-            }
-            
             screen.continueButton.tap()
             
+            XCTAssert(app.staticTexts[runner.scenario.continueConfirmationAlertTitle].exists)
+            XCTAssert(app.staticTexts[code].exists)
+            
+        }
+    }
+    
+    func testEnteringDelayedTokenWithContinueButton() throws {
+        try runner.run { app in
+            let screen = LinkTestResultScreen(app: app)
+            
+            let code = runner.scenario.TestCodes.delayed.rawValue.lowercased()
+            
+            XCTAssert(screen.header.exists)
+            
+            screen.testCodeTextField.tap()
+            screen.testCodeTextField.typeText(code)
+            
+            screen.continueButton.tap()
+            XCTAssertFalse(screen.continueButton.isEnabled)
+            sleep(1)
+            XCTAssertTrue(screen.continueButton.isEnabled)
             XCTAssert(app.staticTexts[runner.scenario.continueConfirmationAlertTitle].exists)
             XCTAssert(app.staticTexts[code].exists)
             

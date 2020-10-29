@@ -126,6 +126,46 @@ class AcknowledgementNeededStateTests: XCTestCase {
         }
     }
     
+    func testIsolationStartAckRiskyVenueNeeded() throws {
+        let isolation = Isolation(
+            fromDay: .today,
+            untilStartOfDay: .today,
+            reason: .contactCase(.riskyVenue)
+        )
+        
+        let context = makeRunningAppContext(
+            isolationAckState: .neededForStart(isolation, acknowledge: {}),
+            testResultAckState: .notNeeded,
+            riskyCheckInsAckState: .notNeeded
+        )
+        
+        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
+        
+        if case .neededForStartOfIsolationRiskyVenue = state {
+            XCTAssert(true)
+        }
+    }
+    
+    func testIsolationStartAckExposureDetectionNeeded() throws {
+        let isolation = Isolation(
+            fromDay: .today,
+            untilStartOfDay: .today,
+            reason: .contactCase(.exposureDetection)
+        )
+        
+        let context = makeRunningAppContext(
+            isolationAckState: .neededForStart(isolation, acknowledge: {}),
+            testResultAckState: .notNeeded,
+            riskyCheckInsAckState: .notNeeded
+        )
+        
+        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
+        
+        if case .neededForStartOfIsolationExposureDetection = state {
+            XCTAssert(true)
+        }
+    }
+    
     func testRiskyVenueAlertNeeded() throws {
         let expectedVenueName = "Venue"
         let expectedCheckInDate = Date()
@@ -169,8 +209,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
             riskyCheckInsAcknowledgementState: Result.success(riskyCheckInsAckState).publisher.eraseToAnyPublisher(),
             currentDateProvider: { Date() },
             exposureNotificationReminder: ExposureNotificationReminder(),
-            appReviewPresenter: AppReviewPresenter(checkInsStore: nil, reviewController: MockStoreReviewController(), currentDateProvider: Date.init),
-            stopSelfIsolation: {}
+            appReviewPresenter: AppReviewPresenter(checkInsStore: nil, reviewController: MockStoreReviewController(), currentDateProvider: Date.init)
         )
     }
     

@@ -39,8 +39,7 @@ extension ApplicationServices {
             pasteboardCopier: PasteboardCopier(),
             postcodeValidator: PostcodeValidator(),
             currentDateProvider: currentDateProvider,
-            storeReviewController: StoreReviewController(),
-            transmissionRiskLevelApplier: TransmissionRiskLevelApplier()
+            storeReviewController: StoreReviewController()
         )
     }
     

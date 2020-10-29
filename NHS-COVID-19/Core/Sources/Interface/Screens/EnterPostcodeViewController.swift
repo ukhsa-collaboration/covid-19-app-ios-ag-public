@@ -62,6 +62,7 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
     
     private lazy var postcodeTextField: UITextField = {
         let textField = UITextField()
+        textField.keyboardType = .asciiCapable
         textField.borderStyle = .roundedRect
         textField.delegate = self
         textField.layer.borderWidth = 2
@@ -72,7 +73,6 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
         textField.textContentType = .postalCode
         textField.autocapitalizationType = .allCharacters
         textField.autocorrectionType = .no
-        textField.returnKeyType = .continue
         textField.enablesReturnKeyAutomatically = true
         textField.addTarget(self, action: #selector(valueChanged), for: .editingChanged)
         

@@ -5,6 +5,12 @@
 import Foundation
 
 struct RiskyVenue: Equatable {
+    enum MessageType {
+        case inform
+        case isolate
+    }
+    
     var id: String
     var riskyInterval: DateInterval
+    var messageType: MessageType
 }

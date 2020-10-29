@@ -15,8 +15,8 @@ struct DiagnosisKeyDailyEndpoint: HTTPEndpoint {
         )
     }
     
-    func parse(_ response: HTTPResponse) throws -> ZIPManager {
-        ZIPManager(data: response.body.content)
+    func parse(_ response: HTTPResponse) throws -> Data {
+        response.body.content
     }
 }
 
@@ -30,12 +30,12 @@ struct DiagnosisKeyTwoHourlyEndpoint: HTTPEndpoint {
         )
     }
     
-    func parse(_ response: HTTPResponse) throws -> ZIPManager {
-        ZIPManager(data: response.body.content)
+    func parse(_ response: HTTPResponse) throws -> Data {
+        response.body.content
     }
 }
 
-private extension Increment {
+extension Increment {
     func parse() -> String {
         switch self {
         case .twoHourly(let day, let hour):

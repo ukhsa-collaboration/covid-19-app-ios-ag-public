@@ -153,6 +153,33 @@ public enum TestResult: String, Codable, Equatable {
 struct ContactCaseInfo: Codable, Equatable {
     var exposureDay: GregorianDay
     var isolationFromStartOfDay: GregorianDay
+    var trigger: ContactCaseTrigger
+    
+    private enum CodingKeys: String, CodingKey {
+        case exposureDay
+        case isolationFromStartOfDay
+        case trigger
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        exposureDay = try container.decode(GregorianDay.self, forKey: .exposureDay)
+        isolationFromStartOfDay = try container.decode(GregorianDay.self, forKey: .isolationFromStartOfDay)
+        trigger = try container.decodeIfPresent(ContactCaseTrigger.self, forKey: .trigger) ?? .exposureDetection
+    }
+}
+
+extension ContactCaseInfo {
+    init(exposureDay: GregorianDay, isolationFromStartOfDay: GregorianDay, trigger: ContactCaseTrigger) {
+        self.exposureDay = exposureDay
+        self.isolationFromStartOfDay = isolationFromStartOfDay
+        self.trigger = trigger
+    }
+}
+
+public enum ContactCaseTrigger: String, Codable, Equatable {
+    case exposureDetection
+    case riskyVenue
 }
 
 // After experimenting with how best to deal with calendar related types, it feels like the right balance for this
@@ -304,7 +331,11 @@ extension _Isolation {
     
     /// Assuming `IndexCaseInfo` is `nil`
     fileprivate init?(contactCaseInfo: ContactCaseInfo, configuration: IsolationConfiguration) {
-        self.init(fromDay: contactCaseInfo.isolationFromStartOfDay, untilStartOfDay: contactCaseInfo.exposureDay + configuration.contactCase, reason: .contactCase)
+        self.init(
+            fromDay: contactCaseInfo.isolationFromStartOfDay,
+            untilStartOfDay: contactCaseInfo.exposureDay + configuration.contactCase,
+            reason: .contactCase(contactCaseInfo.trigger)
+        )
     }
     
 }

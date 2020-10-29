@@ -11,7 +11,6 @@ public enum Feature: CaseIterable {
     case selfDiagnosisUpload
     case selfIsolation
     case testKitOrder
-    case pilotActivation
     
     public static let productionEnabledFeatures: [Feature] = [.riskyPostcode, .venueCheckIn, .selfDiagnosis, .selfDiagnosisUpload, .selfIsolation, .testKitOrder]
 }

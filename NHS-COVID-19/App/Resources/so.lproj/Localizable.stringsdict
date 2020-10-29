@@ -178,5 +178,21 @@
 				<string>Isgo'doomi ilaa %ld maalmood</string>
 			</dict>
 		</dict>
+		<key>risky_venue_isolation_title_accessibility %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string/>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
 	</dict>
 </plist>

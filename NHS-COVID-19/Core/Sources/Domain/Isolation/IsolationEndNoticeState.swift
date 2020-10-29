@@ -17,7 +17,7 @@ public enum IsolationAcknowledgementState {
             self = .neededForEnd(isolation, acknowledge: acknowledgeEnd)
         case .isolating(_, endAcknowledged: true, startAcknowledged: true):
             self = .notNeeded
-        case .isolating(let isolation, _, false) where isolation.reason == .contactCase:
+        case .isolating(let isolation, _, false) where isolation.isContactCaseOnly:
             self = .neededForStart(isolation, acknowledge: acknowledgeStart)
         case .isolating(let isolation, _, _):
             let endDate = isolation.endDate

@@ -13,6 +13,6 @@ protocol RequestHandler {
 
 extension RequestHandler {
     func hasResponse(for path: String) -> Bool {
-        return paths.contains { $0.hasPrefix(path) }
+        return paths.contains { path.hasPrefix($0) }
     }
 }

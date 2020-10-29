@@ -10,6 +10,7 @@ extension TextField {
     func styleForPostcodeEntry() -> Self {
         autocapitalizationType = .allCharacters
         textContentType = .postalCode
+        keyboardType = .asciiCapable
         return self
     }
 }

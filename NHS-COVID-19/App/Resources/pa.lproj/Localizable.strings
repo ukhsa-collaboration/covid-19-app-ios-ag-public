@@ -337,7 +337,7 @@
 "link_test_result_enter_code_heading" = "ਆਪਣਾ ਟੈਸਟ ਕੋਡ ਦਰਜ ਕਰੋ";
 "link_test_result_enter_code_invalid_error" = "ਕੋਡ ਪਛਾਣਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਇਹ ਯਕੀਨੀ ਬਣਾਓ ਕਿ ਤੁਸੀਂ ਇੱਕ ਵੈਧ ਕੋਡ ਵਰਤ ਰਹੇ ਹੋ।";
 "about_this_app_feedback_information_link_title" = "ਫੀਡਬੈਕ ਜਾਣਕਾਰੀ";
-"checkin_information_help_scanning_section_description" = "ਜੇ ਤੁਸੀਂ ਕਿਸੇ ਅਜਿਹੀ ਜਗ੍ਹਾ (ਉਦਾਹਰਣ ਦੇ ਤੌਰ ’ਤੇ ਇਕ ਬਾਰ ਜਾਂ ਰੈਸਟੋਰੈਂਟ) ਵਿਚ ਦਾਖਲ ਹੋ ਰਹੇ ਹੋ ਜਿੱਥੇ ਇਕ ਅਧਿਕਾਰਤ ਐਨ ਐਚ ਐਸ ਕਿਊ ਆਰ (NHS QR) ਕੋਡ ਪੋਸਟਰ ਲੱਗਿਆ ਹੋਇਆ ਹੈ, ਤਾਂ ਇਸਨੂੰ ਸਕੈਨ ਕਰਨ ਲਈ ਇਸ ਐਪ ਦੀ ਵਰਤੋਂ ਕਰੋ। ਇਸ ਦੇ ਬਾਅਦ ਇਹ ਐਪ ਉਸ ਸਮੇਂ ਨੂੰ ਦਰਜ ਕਰ ਲੈਂਦੀ ਹੈ ਜਦੋਂ ਤੁਸੀਂ ਸਥਾਨ ਵਿਚ ਦਾਖਲ ਹੋਏ ਸੀ।\n\nਸਥਾਨ ਦੇ ਚੈੱਕ-ਇਨ ਨੂੰ ਵਰਤਣ 'ਤੇ ਤੁਸੀਂ ਇਕ ਨੋਟੀਫਿਕੇਸ਼ਨ ਪ੍ਰਾਪਤ ਕਰਨ ਦੇ ਸਮਰੱਥ ਹੋਵੋਗੇ ਜੇ ਕੋਰੋਨਾਵਾਇਰਸ ਨਾਲ ਗ੍ਰਸਤ ਲੋਕ ਉਸ ਸਥਾਨ 'ਤੇ ਓਸੇ ਸਮੇਂ ਗਏ ਹੋਣ ਜਿਸ ਸਮੇਂ ਤੁਸੀਂ ਗਏ ਸੀ। ਇਸ ਨੋਟੀਫਿਕੇਸ਼ਨ ਵਿਚ ਢੁੱਕਵੀਂ ਸਲਾਹ ਹੋਏਗੀ, ਜਿਵੇਂ ਕਿ ਕੋਰੋਨਾਵਾਇਰਸ ਦੇ ਲੱਛਣਾਂ 'ਤੇ ਨਿਗ੍ਹਾ ਰੱਖਣਾ।\n\nਜੇ ਤੁਸੀਂ QR ਕੋਡ ਨੂੰ ਸਕੈਨ ਕਰਨ ਦੇ ਯੋਗ ਨਹੀਂ ਹੋ ਅਤੇ ਕਿਸੇ ਹੋਰ ਤਰੀਕੇ ਨਾਲ ਚੈੱਕ ਇਨ ਕਰਨ ਦੀ ਜ਼ਰੂਰਤ ਹੈ, ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਸਟਾਫ ਦੇ ਇੱਕ ਮੈਂਬਰ ਨਾਲ ਗੱਲ ਕਰੋ।";
+"checkin_information_help_scanning_section_description" = "ਜੇ ਤੁਸੀਂ QR ਕੋਡ ਨੂੰ ਸਕੈਨ ਕਰਨ ਦੇ ਯੋਗ ਨਹੀਂ ਹੋ ਅਤੇ ਕਿਸੇ ਹੋਰ ਤਰੀਕੇ ਨਾਲ ਚੈੱਕ ਇਨ ਕਰਨ ਦੀ ਜ਼ਰੂਰਤ ਹੈ, ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਸਟਾਫ ਦੇ ਇੱਕ ਮੈਂਬਰ ਨਾਲ ਗੱਲ ਕਰੋ।";
 "checkin_information_whats_a_qr_code_section_title" = "ਮੈਂ ਇੱਕ ਅਧਿਕਾਰਤ NHS QR ਕੋਡ ਨੂੰ ਕਿਵੇਂ ਪਛਾਣ ਸਕਦਾ ਹਾਂ?";
 "checkin_information_whats_a_qr_code_section_description_new" = "ਅਧਿਕਾਰਤ ਇੰਗਲਿਸ਼/ਵੈਲਸ਼ NHS QR ਕੋਡ ਪੋਸਟਰ ਅਜਿਹਾ ਦਿਸਦਾ ਹੈ। QR ਕੋਡ ਨੂੰ ਸਕੈਨ ਕਰਨ ਲਈ ਆਪਣੇ ਫੋਨ ਕੈਮਰਾ ਦੀ ਵਰਤੋਂ ਕਰੋ ਜੋ ਕਿ ਵਿਚਕਾਰ ਵਿੱਚ ਇੱਕ ਵਰਗ ਹੈ।";
 "about_this_app_software_information_date_of_release_description" = "09/2020";
@@ -390,7 +390,7 @@
 "negative_test_result_after_positive_explanation" = "ਤੁਹਾਡਾ ਮੌਜੂਦਾ ਟੈਸਟ ਦਾ ਨਤੀਜਾ ਇਹ ਦਿਖਾਉਂਦਾ ਹੈ ਕਿ ਟੈਸਟ ਕਰਵਾਉਣ ਸਮੇਂ ਤੁਹਾਡੇ ਅੰਦਰ ਵਾਇਰਸ ਨਹੀਂ ਸੀ। ਜੇ ਤੁਹਾਨੂੰ ਲੱਛਣ ਹੁੰਦੇ ਵੀ ਹਨ, ਤਾਂ ਇਸ ਐਪ ਤੇ ਉਨ੍ਹਾਂ ਬਾਰੇ ਰਿਪੋਰਟ ਕਰੋ। ਜੇ ਤੁਹਾਡੀ ਉਮਰ 18 ਸਾਲ ਤੋਂ ਘੱਟ ਹੈ ਤਾਂ ਤੁਹਾਨੂੰ ਇੱਕ ਭਰੋਸੇਮੰਦ ਬਾਲਗ ਨੂੰ ਇਹ ਸੰਦੇਸ਼ ਦਿਖਾਉਣ ਦੀ ਸਲਾਹ ਦਿੱਤੀ ਜਾਂਦੀ ਹੈ।";
 "positive_test_result_start_to_isolate_explaination" = "ਤੁਹਾਡੇ ਟੈਸਟ ਦਾ ਨਤੀਜਾ ਇਹ ਦਿਖਾਉਂਦਾ ਹੈ ਕਿ ਟੈਸਟ ਕਰਵਾਉਣ ਸਮੇਂ ਤੁਹਾਡੇ ਸਰੀਰ ਅੰਦਰ ਵਾਇਰਸ ਸੀ। ਤੁਹਾਨੂੰ ਈਮੇਲ, ਟੈਕਸਟ ਜਾਂ ਫ਼ੋਨ ਰਾਹੀਂ ਜ਼ਿਆਦਾ ਜਾਣਕਾਰੀ ਭੇਜੀ ਗਈ ਹੈ। ਜੇ ਤੁਹਾਡੀ ਉਮਰ 18 ਸਾਲ ਤੋਂ ਘੱਟ ਹੈ ਤਾਂ ਤੁਹਾਨੂੰ ਇੱਕ ਭਰੋਸੇਮੰਦ ਬਾਲਗ ਨੂੰ ਇਹ ਸੰਦੇਸ਼ ਦਿਖਾਉਣ ਦੀ ਸਲਾਹ ਦਿੱਤੀ ਜਾਂਦੀ ਹੈ।";
 "negative_test_result_after_positive_button_label" = "ਜਾਰੀ ਰੱਖੋ";
-"checkin_information_title_new" = "ਇੱਕ QR ਕੋਡ ਨੂੰ ਸਕੈਨ ਕਰਨ ਵਿੱਚ ਸਹਾਇਤਾ";
+"checkin_information_title_new" = "ਕਿਸੇ ਥਾਂ ‘ਤੇ ਚੈੱਕ-ਇਨ ਬਾਰੇ ਵਧੇਰੇ ਜਾਣਕਾਰੀ";
 "positive_test_result_start_to_isolate_title" = "ਇਸ ਸਮੇਂ ਲਈ ਸੈਲਫ-ਆਈਸੋਲੇਟ ਕਰੋ";
 "positive_test_result_start_to_isolate_info" = "ਤੁਹਾਡਾ ਕੋਰੋਨਾਵਾਇਰਸ ਟੈਸਟ ਦਾ ਨਤੀਜਾ ਪਾਜ਼ਿਟਿਵ ਹੈ";
 "end_of_isolation_positive_text_no_isolation_header" = "ਤੁਹਾਡਾ ਟੈਸਟ ਨਤੀਜਾ";
@@ -413,3 +413,12 @@
 "stop_isolation_countdown_button" = "";
 "dont_worry_notification_title" = "ਕੋਵਿਡ-19 ਸੰਪਰਕ ਚੈੱਕ ਸੰਪੂਰਨ";
 "dont_worry_notification_body" = "ਚਿੰਤਾ ਨਾ ਕਰੋ, ਅਸੀਂ ਤੁਹਾਡੇ ਜ਼ੋਖਮ ਦਾ ਮੁਲਾਂਕਣ ਕਰ ਲਿਆ ਹੈ ਅਤੇ ਇਸ ਸਮੇਂ ਕਾਰਵਾਈ ਕਰਨ ਦੀ ਜ਼ਰੂਰਤ ਨਹੀਂ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਚੇਤੰਨ ਰਹਿਣਾ ਜਾਰੀ ਰੱਖੋ ਅਤੇ ਸਮਾਜਕ ਦੂਰੀ ਸਬੰਧੀ ਨਵੀਨਤਮ ਸਲਾਹ ਦੀ ਪਾਲਣਾ ਕਰੋ।";
+"checkin_information_description" = "ਜੇ ਤੁਸੀਂ ਕਿਸੇ ਅਜਿਹੀ ਜਗ੍ਹਾ (ਉਦਾਹਰਣ ਦੇ ਤੌਰ ’ਤੇ ਇਕ ਬਾਰ ਜਾਂ ਰੈਸਟੋਰੈਂਟ) ਵਿਚ ਦਾਖਲ ਹੋ ਰਹੇ ਹੋ ਜਿੱਥੇ ਇਕ ਅਧਿਕਾਰਤ ਐਨ ਐਚ ਐਸ ਕਿਊ ਆਰ (NHS QR) ਕੋਡ ਪੋਸਟਰ ਲੱਗਿਆ ਹੋਇਆ ਹੈ, ਤਾਂ ਇਸਨੂੰ ਸਕੈਨ ਕਰਨ ਲਈ ਇਸ ਐਪ ਦੀ ਵਰਤੋਂ ਕਰੋ। ਇਸ ਦੇ ਬਾਅਦ ਇਹ ਐਪ ਉਸ ਸਮੇਂ ਨੂੰ ਦਰਜ ਕਰ ਲੈਂਦੀ ਹੈ ਜਦੋਂ ਤੁਸੀਂ ਸਥਾਨ ਵਿਚ ਦਾਖਲ ਹੋਏ ਸੀ।\n\nਸਥਾਨ ਦੇ ਚੈੱਕ-ਇਨ ਨੂੰ ਵਰਤਣ 'ਤੇ ਤੁਸੀਂ ਇਕ ਨੋਟੀਫਿਕੇਸ਼ਨ ਪ੍ਰਾਪਤ ਕਰਨ ਦੇ ਸਮਰੱਥ ਹੋਵੋਗੇ ਜੇ ਕੋਰੋਨਾਵਾਇਰਸ ਨਾਲ ਗ੍ਰਸਤ ਲੋਕ ਉਸ ਸਥਾਨ 'ਤੇ ਓਸੇ ਸਮੇਂ ਗਏ ਹੋਣ ਜਿਸ ਸਮੇਂ ਤੁਸੀਂ ਗਏ ਸੀ। ਇਸ ਨੋਟੀਫਿਕੇਸ਼ਨ ਵਿਚ ਢੁੱਕਵੀਂ ਸਲਾਹ ਹੋਏਗੀ, ਜਿਵੇਂ ਕਿ ਕੋਰੋਨਾਵਾਇਰਸ ਦੇ ਲੱਛਣਾਂ 'ਤੇ ਨਿਗ੍ਹਾ ਰੱਖਣਾ।";
+"update_app_button_title" = "";
+"alert_venue_risk_isolate_title" = "";
+"alert_venue_risk_isolate_body" = "";
+"risky_venue_isolation_report_symptoms" = "";
+"risky_venue_isolation_warning" = "";
+"risky_venue_isolation_description" = "";
+"alert_latest_app_version_update_title" = "";
+"alert_latest_app_version_update_body" = "";

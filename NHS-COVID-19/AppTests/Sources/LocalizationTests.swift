@@ -103,6 +103,10 @@ private class LanguageBundle {
     }
     
     func errorMessage<Key: RawRepresentable>(for key: Key) -> String? where Key.RawValue == String {
+        guard language == "en" else {
+            return nil // No checks on non-base language for now.
+        }
+        
         if !hasLocalizedValue(for: key) {
             return "\(language): No translation."
         }
@@ -113,9 +117,6 @@ private class LanguageBundle {
                 return "\(language): Using forbidden characters."
             }
         }
-//        if translation.isEmpty {
-//            return "\(language): Translation empty."
-//        }
         
         return nil
     }

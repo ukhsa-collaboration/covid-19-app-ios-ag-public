@@ -16,10 +16,9 @@ class ExposureNotificationDetectionControllerTests: XCTestCase {
         let exposureManager = MockExposureNotificationManager()
         let keys = [ENTemporaryExposureKey()]
         exposureManager.diagnosisKeys = keys
+        let exposureDetectionController = ExposureNotificationDetectionController(manager: exposureManager)
         
-        let exposureDetectionManager = ExposureNotificationDetectionController(manager: exposureManager)
-        
-        let result = try exposureDetectionManager.getDiagnosisKeys().await().get()
+        let result = try exposureDetectionController.getDiagnosisKeys().await().get()
         
         XCTAssert(keys == result)
         
@@ -29,11 +28,10 @@ class ExposureNotificationDetectionControllerTests: XCTestCase {
         let exposureManager = MockExposureNotificationManager()
         let summary = ENExposureDetectionSummary()
         exposureManager.summary = summary
-        
-        let exposureDetectionManager = ExposureNotificationDetectionController(manager: exposureManager)
+        let exposureDetectionController = ExposureNotificationDetectionController(manager: exposureManager)
         
         let urls = [URL(string: UUID().uuidString)!]
-        let result = try exposureDetectionManager.detectExposures(configuration: ENExposureConfiguration(), diagnosisKeyURLs: urls)
+        let result = try exposureDetectionController.detectExposures(configuration: ENExposureConfiguration(), diagnosisKeyURLs: urls)
             .await().get()
         
         XCTAssert(summary === result)
@@ -43,16 +41,29 @@ class ExposureNotificationDetectionControllerTests: XCTestCase {
     func testGetExposureInfo() throws {
         let exposureManager = MockExposureNotificationManager()
         let exposures = [ENExposureInfo()]
-        exposureManager.exposures = exposures
-        
-        let exposureDetectionManager = ExposureNotificationDetectionController(manager: exposureManager)
-        
+        exposureManager.exposureInfo = exposures
+        let exposureDetectionController = ExposureNotificationDetectionController(manager: exposureManager)
         let summary = ENExposureDetectionSummary()
         
-        let result = try exposureDetectionManager.getExposureInfo(summary: summary)
+        let result = try exposureDetectionController.getExposureInfo(summary: summary)
             .await().get()
         
         XCTAssert(summary === exposureManager.summary)
         XCTAssert(result == exposures)
+    }
+    
+    @available(iOS 13.7, *)
+    func testGetExposureWindows() throws {
+        let mockExposureManager = MockWindowsExposureNotificationManager()
+        let passedSummary = ENExposureDetectionSummary()
+        let expectedWindows = [ENExposureWindow()]
+        mockExposureManager.exposureWindows = expectedWindows
+        let exposureDetectionController = ExposureNotificationDetectionController(manager: mockExposureManager)
+        
+        let windows = try exposureDetectionController.getExposureWindows(summary: passedSummary)
+            .await().get()
+        
+        XCTAssertEqual(passedSummary, mockExposureManager.summary)
+        XCTAssertEqual(expectedWindows, windows)
     }
 }

@@ -15,7 +15,8 @@ struct CircuitBreakerApprovalEndpoint: HTTPEndpoint {
             data = try encoder.encode(ExposureNotificationRequstPayload(
                 maximumRiskScore: riskInfo.riskScore,
                 daysSinceLastExposure: riskInfo.day.distance(to: .today),
-                matchedKeyCount: 1
+                matchedKeyCount: 1,
+                riskCalculationVersion: riskInfo.riskScoreVersion
             ))
         case .riskyVenue(let venueId):
             data = try encoder.encode(VenueRequstPayload(venueId: venueId))
@@ -49,4 +50,5 @@ private struct ExposureNotificationRequstPayload: Codable {
     var maximumRiskScore: Double
     var daysSinceLastExposure: Int
     var matchedKeyCount: Int
+    var riskCalculationVersion: Int
 }

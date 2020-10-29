@@ -93,7 +93,7 @@
 "risk_level_screen_low_body" = "Düşük - yerel idareniz mevcut durumda bölgenizi 'düşük riskli' olarak tanımlamaktadır; enfeksiyon seviyeleri ülkenin birçok diğer bölgesine benzerdir";
 "risk_level_screen_medium_body" = "Orta - yerel idareniz veya komşu bir yerel idare, yüksek veya artan enfeksiyon seviyelerine sahiptir. Lütfen ulusal yönergeleri takip edin.";
 "risk_level_screen_high_body" = "Yüksek - yerel idareniz veya komşunuz olan bir bölgenin idaresi, yerel bölgede enfeksiyon seviyelerinin yüksek olması nedeniyle enfeksiyon yayılımını azaltmak üzere İngiltere ve Galler geri kalanında uygulanandan daha fazla tedbir (ör. sokağa çıkma yasakları) uygulamaktadır. Ayrıntılı bir eylem planı uygulamaya konulmuştur ve ulusal çaplı destekle birlikte yerel kaynaklar artırılmaktadır.";
-"risk_level_screen_title" = "Risk seviyesi";
+"risk_level_screen_title" = "Yerel Covid Uyarı Seviyesi";
 "risk_level_screen_close_button" = "Kapat";
 "user_notification_explanation" = "Maruz kalma bilgileri doğrulanıyor";
 "checkin_open_settings_button_title" = "Kamera izinlerini etkinleştir";
@@ -337,7 +337,7 @@
 "link_test_result_enter_code_heading" = "Test kodunuzu girin";
 "link_test_result_enter_code_invalid_error" = "Kod tanınmadı. Lütfen geçerli bir kod kullandığınızdan emin olun.";
 "about_this_app_feedback_information_link_title" = "Fikrinizi bildirin";
-"checkin_information_help_scanning_section_description" = "Resmi bir NHS QR koduna sahip bir mekana giriyorsanız (örneğin, bir bara ya da restorana), kodu taramak için bu uygulamayı kullanın. Uygulama, sonrasında bir mekana giriş zamanınızı kaydeder.\n\nMekana giriş özelliğini kullanarak, koronavirüslü kişilerin aynı mekanı sizinle benzer zamanlarda ziyaret etmesi durumunda bir bildirim alabileceksiniz.  Bildirim, koronavürüs belirtilerine dikkat edilmesi gibi ilgili tavsiyeler de içerecektir.\n\nQR kodunu tarayamıyorsanız ve başka bir şekilde kontrol etmeniz gerekiyorsa, lütfen bir personel ile konuşun.";
+"checkin_information_help_scanning_section_description" = "QR kodunu tarayamıyorsanız ve başka bir şekilde kontrol etmeniz gerekiyorsa, lütfen bir personel ile konuşun.";
 "checkin_information_whats_a_qr_code_section_title" = "Resmi bir NHS QR kodunu nasıl tanırım?";
 "checkin_information_whats_a_qr_code_section_description_new" = "Resmi NHS QR kodu posterinin görüntüsü budur. Ortadaki karede olan QR kodunu taramak için telefon kameranızı kullanın.";
 "about_this_app_software_information_date_of_release_description" = "09/2020";
@@ -390,7 +390,7 @@
 "negative_test_result_after_positive_explanation" = "Test sonucu testin yapıldığı anda sizde virüs olmadığını göstermektedir. Eğer sizde belirtiler gelişirse bu uygulama yoluyla bildirin. Eğer 18 yaşın altındaysanız bu mesajı  güvendiğiniz bir yetişkine göstermeniz tavsiye edilir.";
 "positive_test_result_start_to_isolate_explaination" = "Test sonucunuz testin yapıldığı anda sizde virüs olduğunu göstermektedir. E-posta, SMS mesajı ya da telefon yoluyla size daha fazla bilgi gönderildi. Eğer 18 yaşın altındaysanız bu mesajı  güvendiğiniz bir yetişkine göstermeniz tavsiye edilir.";
 "negative_test_result_after_positive_button_label" = "Devam";
-"checkin_information_title_new" = "QR Kodunun taranması için yardım alın";
+"checkin_information_title_new" = "Mekanlara giriş yapma konusunda daha fazla bilgi";
 "positive_test_result_start_to_isolate_title" = "Kişisel karantina süresi";
 "positive_test_result_start_to_isolate_info" = "Koronavirüs test sonucunuz pozitif";
 "end_of_isolation_positive_text_no_isolation_header" = "Test sonucunuz";
@@ -413,3 +413,12 @@
 "stop_isolation_countdown_button" = "";
 "dont_worry_notification_title" = "COVID-19 Maruz Kalma Kontrolü Tamamlandı";
 "dont_worry_notification_body" = "Merak etmeyin, riskinizi değerlendirdik ve şu anda herhangi birşey yapmanıza gerek yoktur. Lütfen dikkat etmeye ve sosyal mesafe ile ilgili en son tavsiyelere uymaya devam edin.";
+"checkin_information_description" = "Resmi bir NHS QR koduna sahip bir mekana giriyorsanız (örneğin, bir bara ya da restorana), kodu taramak için bu uygulamayı kullanın. Uygulama, sonrasında bir mekana giriş zamanınızı kaydeder.\n\nMekana giriş özelliğini kullanarak, koronavirüslü kişilerin aynı mekanı sizinle benzer zamanlarda ziyaret etmesi durumunda bir bildirim alabileceksiniz.  Bildirim, koronavürüs belirtilerine dikkat edilmesi gibi ilgili tavsiyeler de içerecektir.";
+"update_app_button_title" = "";
+"alert_venue_risk_isolate_title" = "";
+"alert_venue_risk_isolate_body" = "";
+"risky_venue_isolation_report_symptoms" = "";
+"risky_venue_isolation_warning" = "";
+"risky_venue_isolation_description" = "";
+"alert_latest_app_version_update_title" = "";
+"alert_latest_app_version_update_body" = "";

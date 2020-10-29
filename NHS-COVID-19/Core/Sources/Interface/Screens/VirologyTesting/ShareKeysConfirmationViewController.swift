@@ -16,7 +16,7 @@ private class ShareKeysConfirmationContent: StickyFooterScrollingContent {
     static let infoboxInset = (.stripeWidth + .stripeSpacing)
     
     var scrollingContent: StackContent
-    var footerContent: StackContent
+    var footerContent: StackContent?
     var spacing: CGFloat
     
     init(interactor: Interacting) {

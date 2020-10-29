@@ -22,7 +22,7 @@ extension RiskLevelInfoViewController {
 }
 
 extension RiskLevelInfoViewController {
-    private class Content: BasicStickyFooterScrollingContent {
+    private class Content: PrimaryLinkButtonStickyFooterScrollingContent {
         typealias Interacting = RiskLevelInfoInteracting
         
         init(viewModel: ViewModel, interactor: Interacting) {
@@ -37,10 +37,13 @@ extension RiskLevelInfoViewController {
                         UILabel().set(text: $0).styleAsBody()
                     },
                 ],
-                footerTopView: PrimaryLinkButton(title: viewModel.linkTitle) {
-                    guard let url = viewModel.linkURL else { return }
-                    interactor.didTapWebsiteLink(url: url)
-                }
+                primaryLinkButton: (
+                    title: viewModel.linkTitle,
+                    action: {
+                        guard let url = viewModel.linkURL else { return }
+                        interactor.didTapWebsiteLink(url: url)
+                    }
+                )
             )
         }
     }

@@ -16,6 +16,7 @@ build
 /AppReport
 /TestResults.xcresult
 doc_gen
+TestResultsSummary
 
 # Build Artefacts
 /Scenarios

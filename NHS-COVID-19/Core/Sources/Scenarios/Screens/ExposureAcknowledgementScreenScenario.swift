@@ -18,15 +18,16 @@ public class ExposureAcknowledgementScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return ExposureAcknowledgementViewController(
+            return ContactCaseAcknowledgementViewController(
                 interactor: interactor,
-                isolationEndDate: Date(timeIntervalSinceNow: 14 * 86400)
+                isolationEndDate: Date(timeIntervalSinceNow: 14 * 86400),
+                type: .exposureDetection
             )
         }
     }
 }
 
-private class Interactor: ExposureAcknowledgementViewController.Interacting {
+private class Interactor: ContactCaseAcknowledgementViewController.Interacting {
     func didTapOnlineLink() {}
     
     private weak var viewController: UIViewController?

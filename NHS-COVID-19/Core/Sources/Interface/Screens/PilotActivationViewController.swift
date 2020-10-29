@@ -69,6 +69,7 @@ private class PilotActivationStep: NSObject, OnboardingStep {
     
     private lazy var authenticationCodeTextField: UITextField = {
         let textField = UITextField()
+        textField.keyboardType = .asciiCapable
         textField.borderStyle = .roundedRect
         textField.delegate = self
         textField.layer.borderWidth = 2
@@ -79,7 +80,6 @@ private class PilotActivationStep: NSObject, OnboardingStep {
         textField.textContentType = .oneTimeCode
         textField.autocapitalizationType = .none
         textField.autocorrectionType = .no
-        textField.returnKeyType = .continue
         textField.enablesReturnKeyAutomatically = true
         textField.addTarget(self, action: #selector(valueChanged), for: .editingChanged)
         textField.rightView = spinner

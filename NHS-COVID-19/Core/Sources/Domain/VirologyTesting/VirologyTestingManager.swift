@@ -14,13 +14,16 @@ public protocol VirologyTestingManaging {
 class VirologyTestingManager: VirologyTestingManaging {
     private let httpClient: HTTPClient
     private let virologyTestingStateCoordinator: VirologyTestingStateCoordinating
+    private let ctaTokenValidator: CTATokenValidating
     
     init(
         httpClient: HTTPClient,
-        virologyTestingStateCoordinator: VirologyTestingStateCoordinator
+        virologyTestingStateCoordinator: VirologyTestingStateCoordinator,
+        ctaTokenValidator: CTATokenValidating
     ) {
         self.httpClient = httpClient
         self.virologyTestingStateCoordinator = virologyTestingStateCoordinator
+        self.ctaTokenValidator = ctaTokenValidator
     }
     
     func provideTestOrderInfo() -> AnyPublisher<TestOrderInfo, NetworkRequestError> {
@@ -52,13 +55,18 @@ class VirologyTestingManager: VirologyTestingManaging {
     }
     
     func linkExternalTestResult(with token: String) -> AnyPublisher<Void, LinkTestResultError> {
-        httpClient.fetch(LinkVirologyTestResultEndpoint(), with: CTAToken(value: token))
-            .handleEvents(receiveOutput: virologyTestingStateCoordinator.handleLinkTestResult)
-            .mapError(LinkTestResultError.init)
-            .map { _ in
-                ()
-            }
-            .eraseToAnyPublisher()
+        if ctaTokenValidator.validate(token) {
+            return httpClient.fetch(LinkVirologyTestResultEndpoint(), with: CTAToken(value: token))
+                .handleEvents(receiveOutput: virologyTestingStateCoordinator.handleLinkTestResult)
+                .mapError(LinkTestResultError.init)
+                .map { _ in
+                    ()
+                }
+                .eraseToAnyPublisher()
+        } else {
+            return Result.failure(LinkTestResultError.invalidCode).publisher.eraseToAnyPublisher()
+        }
+        
     }
 }
 

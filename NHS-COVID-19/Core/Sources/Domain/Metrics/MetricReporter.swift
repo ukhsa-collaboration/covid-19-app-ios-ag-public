@@ -55,13 +55,3 @@ class MetricReporter: NSObject {
         client.fetch(MetricSubmissionEndpoint(), with: info).replaceError(with: ()).sink { _ in }.store(in: &cancellables)
     }
 }
-
-private extension MetricCollector {
-    
-    func consumeMetrics(for payload: MXMetricPayload) -> [Metric: Int] {
-        let interval = DateInterval(start: payload.timeStampBegin, end: payload.timeStampEnd)
-        defer { consumeMetrics(notAfter: interval.end) }
-        return recordedMetrics(in: interval)
-    }
-    
-}

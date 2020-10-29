@@ -9,6 +9,7 @@ import UIKit
 public protocol CheckInConfirmationViewControllerInteracting {
     func goHomeAfterCheckIn()
     func wrongCheckIn()
+    func didTapVenueCheckinMoreInfoButton()
 }
 
 public class CheckInConfirmationViewController: UIViewController {
@@ -45,6 +46,16 @@ public class CheckInConfirmationViewController: UIViewController {
         wrongCheckInButton.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: .standardSpacing),
         wrongCheckInButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -.standardSpacing),
     ]
+    
+    private lazy var venueCheckinMoreInfoButton: UIView = {
+        let venueCheckinMoreInfoButton = UIButton()
+        let venueCheckinMoreInfoButtonTitle = localize(.checkin_camera_qrcode_scanner_help_button_accessibility_label)
+        venueCheckinMoreInfoButton.styleAsLink()
+        venueCheckinMoreInfoButton.setTitle(venueCheckinMoreInfoButtonTitle, for: .normal)
+        venueCheckinMoreInfoButton.accessibilityLabel = localize(.checkin_camera_qrcode_scanner_help_button_accessibility_label)
+        venueCheckinMoreInfoButton.addTarget(self, action: #selector(didTapVenueCheckinMoreInfoButton), for: .touchUpInside)
+        return venueCheckinMoreInfoButton
+    }()
     
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -87,7 +98,7 @@ public class CheckInConfirmationViewController: UIViewController {
         scrollView.addFillingSubview(stackViewContainerView)
         view.addAutolayoutSubview(scrollView)
         
-        let stackView = UIStackView(arrangedSubviews: [checkImageContainer, checkInSuccessLabel, venueNameLabel, dateTimeLabel, descriptionLabel])
+        let stackView = UIStackView(arrangedSubviews: [checkImageContainer, checkInSuccessLabel, venueNameLabel, dateTimeLabel, descriptionLabel, venueCheckinMoreInfoButton])
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.alignment = .center
@@ -160,6 +171,10 @@ public class CheckInConfirmationViewController: UIViewController {
             NSLayoutConstraint.deactivate(compactButtonConstraints)
             NSLayoutConstraint.activate(regularButtonConstraints)
         }
+    }
+    
+    @objc private func didTapVenueCheckinMoreInfoButton() {
+        interactor.didTapVenueCheckinMoreInfoButton()
     }
     
     @objc private func didTapGoHomeButton() {

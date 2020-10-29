@@ -16,15 +16,9 @@ public protocol AboutThisAppContentInteracting {
     func didTapProvideFeedback()
 }
 
-private class AboutThisAppContent: StackContent {
+extension AboutThisAppViewController {
     
-    typealias Interacting = AboutThisAppContentInteracting
-    
-    let views: [StackViewContentProvider]
-    var spacing: CGFloat = .bigSpacing
-    var margins: UIEdgeInsets = .standard
-    
-    init(interactor: Interacting, appName: String?, version: String?) {
+    static func content(interactor: Interacting, appName: String?, version: String?) -> [UIView] {
         
         func makeStackView(with symbol: ImageName, and title: String) -> UIStackView {
             let icon = UIImageView(symbol).color(.primaryText).styleAsDecoration()
@@ -162,7 +156,7 @@ private class AboutThisAppContent: StackContent {
             return indentedStackView
         }()
         
-        views = [
+        let views = [
             InformationBox.information.purple([
                 .heading(.about_this_app_how_this_app_works_heading),
                 .body(.about_this_app_how_this_app_works_paragraph1),
@@ -204,6 +198,8 @@ private class AboutThisAppContent: StackContent {
             UILabel().set(text: localize(.about_this_app_footer_text)).styleAsHeading().centralized(),
             UIImageView(.onboardingStart).styleAsDecoration(),
         ]
+        
+        return views
     }
     
 }
@@ -212,7 +208,7 @@ public class AboutThisAppViewController: ScrollingContentViewController {
     public typealias Interacting = AboutThisAppContentInteracting
     
     public init(interactor: Interacting, appName: String?, version: String?) {
-        super.init(content: AboutThisAppContent(interactor: interactor, appName: appName, version: version))
+        super.init(views: Self.content(interactor: interactor, appName: appName, version: version))
         title = localize(.about_this_app_title)
     }
     

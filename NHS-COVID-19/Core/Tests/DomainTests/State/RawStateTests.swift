@@ -9,7 +9,6 @@ class RawStateTests: XCTestCase {
     
     func testAppStaysInLoadingStateUntilWeKnowNotificationStatus() {
         let rawState = RawState(
-            isAppActivated: true,
             appAvailability: .available,
             completedOnboardingForCurrentSession: false,
             exposureState: ExposureNotificationStateController.CombinedState(
@@ -34,7 +33,6 @@ class RawStateTests: XCTestCase {
         
         for reason in reasons {
             let rawState = RawState(
-                isAppActivated: true,
                 appAvailability: .unavailable(reason: reason),
                 completedOnboardingForCurrentSession: false,
                 exposureState: ExposureNotificationStateController.CombinedState(
@@ -51,27 +49,8 @@ class RawStateTests: XCTestCase {
         }
     }
     
-    func testRequiringPilotActivation() {
-        let rawState = RawState(
-            isAppActivated: false,
-            appAvailability: .available,
-            completedOnboardingForCurrentSession: false,
-            exposureState: ExposureNotificationStateController.CombinedState(
-                activationState: .activated,
-                authorizationState: .authorized,
-                exposureNotificationState: .active,
-                isEnabled: true
-            ),
-            userNotificationsStatus: .unknown,
-            hasPostcode: true
-        )
-        
-        XCTAssertEqual(rawState.logicalState, .pilotActivationRequired)
-    }
-    
     func testCompletedOnboarding() {
         let rawState = RawState(
-            isAppActivated: true,
             appAvailability: .available,
             completedOnboardingForCurrentSession: true,
             exposureState: ExposureNotificationStateController.CombinedState(

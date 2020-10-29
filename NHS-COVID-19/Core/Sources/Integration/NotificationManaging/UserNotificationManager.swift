@@ -42,6 +42,11 @@ class UserNotificationManager {
                 $0.title = localize(.alert_venue_risk_change_title)
                 $0.body = localize(.alert_venue_risk_change_body)
             }
+        case .venueIsolate:
+            return configuring(UNMutableNotificationContent()) {
+                $0.title = localize(.alert_venue_risk_isolate_title)
+                $0.body = localize(.alert_venue_risk_isolate_body)
+            }
         case .isolationState:
             return configuring(UNMutableNotificationContent()) {
                 $0.title = localize(.alert_isolation_state_change_title)
@@ -61,6 +66,11 @@ class UserNotificationManager {
             return configuring(UNMutableNotificationContent()) {
                 $0.title = localize(.alert_app_availability_changed_title)
                 $0.body = localize(.alert_app_availability_changed_body)
+            }
+        case .latestAppVersionAvailable:
+            return configuring(UNMutableNotificationContent()) {
+                $0.title = localize(.alert_latest_app_version_update_title)
+                $0.body = localize(.alert_latest_app_version_update_body)
             }
         case .exposureNotificationReminder:
             return configuring(UNMutableNotificationContent()) {

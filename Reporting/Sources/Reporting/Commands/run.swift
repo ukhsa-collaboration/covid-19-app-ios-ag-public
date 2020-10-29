@@ -23,6 +23,8 @@ struct ReportCommand: ParsableCommand {
             VersioningCommand.self,
             DeployLatestCommand.self,
             GetCommand.self,
+            GitTagForNewVersion.self,
+            TestResultsSummaryCommand.self,
         ]
     )
     

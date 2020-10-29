@@ -12,57 +12,136 @@ import XCTest
 
 class ExposureDetectionManagerTests: XCTestCase {
     private var store: MockEncryptedStore!
-    private var enManager: MockExposureNotificationManager!
     private var client: MockHTTPClient!
-    private var transmissionRiskLevelApplier: TransmissionRiskLevelApplier!
+    private var controller: MockController!
     
     override func setUp() {
         store = MockEncryptedStore()
-        enManager = MockExposureNotificationManager()
         client = MockHTTPClient()
-        transmissionRiskLevelApplier = TransmissionRiskLevelApplier()
+        controller = MockController()
+    }
+    
+    private class MockController: ExposureNotificationDetectionController {
+        var summaryToReturn: ENExposureDetectionSummary = ENExposureDetectionSummary()
+        var diagnosisKeys: [ENTemporaryExposureKey] = []
+        var exposureInfos: [MockExposureInfo] = []
+        var countOfDiagnosisKeyURLsRequested = 0
+        
+        init() {
+            super.init(manager: MockExposureNotificationManager())
+        }
+        
+        override public func detectExposures(
+            configuration: ENExposureConfiguration,
+            diagnosisKeyURLs: [URL]
+        ) -> AnyPublisher<ENExposureDetectionSummary, Error> {
+            countOfDiagnosisKeyURLsRequested += diagnosisKeyURLs.count
+            return Result.Publisher(summaryToReturn).eraseToAnyPublisher()
+        }
+        
+        override public func getExposureInfo(
+            summary: ENExposureDetectionSummary
+        ) -> AnyPublisher<[ENExposureInfo], Error> {
+            return Result.Publisher(exposureInfos).eraseToAnyPublisher()
+        }
+        
+        override public func getDiagnosisKeys() -> AnyPublisher<[ENTemporaryExposureKey], Error> {
+            return Result.Publisher(diagnosisKeys).eraseToAnyPublisher()
+        }
     }
     
     func testExposureDetection() throws {
         let manager = ExposureDetectionManager(
-            manager: enManager,
+            controller: controller,
             distributionClient: client,
-            submissionClient: client,
+            fileStorage: FileStorage(forCachesOf: .random()),
             encryptedStore: store,
-            transmissionRiskLevelApplier: transmissionRiskLevelApplier,
-            riskCalculator: MockRiskCalculator.init,
-            interestedInExposureNotifications: { true }
+            interestedInExposureNotifications: { true },
+            exposureRiskManager: MockExposureRiskManager()
         )
         
         XCTAssertNoThrow(try manager.detectExposures(currentDate: Date()).await().get())
+    }
+    
+    func testExposureDetectionStoreSavesTheLastCheckedDateWithNoNetworkCallsIfNotInterested() throws {
+        let manager = ExposureDetectionManager(
+            controller: controller,
+            distributionClient: client,
+            fileStorage: FileStorage(forCachesOf: .random()),
+            encryptedStore: store,
+            interestedInExposureNotifications: { false },
+            exposureRiskManager: MockExposureRiskManager()
+        )
+        
+        let currentDate = Date()
+        
+        XCTAssertNoThrow(try manager.detectExposures(currentDate: currentDate).prepend(nil).await().get())
+        let exposureDetectionStore = ExposureDetectionStore(store: store)
+        TS.assert(exposureDetectionStore.load()?.lastKeyDownloadDate, equals: currentDate)
     }
     
     func testExposureDetectionDownloadCount() throws {
         let minimumNumberOfDailyDownloads = 13
         
         let manager = ExposureDetectionManager(
-            manager: enManager,
+            controller: controller,
             distributionClient: client,
-            submissionClient: client,
+            fileStorage: FileStorage(forCachesOf: .random()),
             encryptedStore: store,
-            transmissionRiskLevelApplier: transmissionRiskLevelApplier,
-            riskCalculator: MockRiskCalculator.init,
-            interestedInExposureNotifications: { true }
+            interestedInExposureNotifications: { true },
+            exposureRiskManager: MockExposureRiskManager()
         )
         
         XCTAssertNoThrow(try manager.detectExposures(currentDate: Date()).await().get())
-        XCTAssertTrue(client.requestCount >= minimumNumberOfDailyDownloads)
+        XCTAssertTrue(client.batchEndpointCallCount >= minimumNumberOfDailyDownloads)
+    }
+    
+    func testExposureDetectionProcessesEachFileSeparatelyWhenInIncrementalMode() throws {
+        let riskManager = configuring(MockExposureRiskManager()) {
+            $0.preferredProcessingMode = .incremental
+        }
+        
+        let manager = ExposureDetectionManager(
+            controller: controller,
+            distributionClient: client,
+            fileStorage: FileStorage(forCachesOf: .random()),
+            encryptedStore: store,
+            interestedInExposureNotifications: { true },
+            exposureRiskManager: riskManager
+        )
+        
+        XCTAssertNoThrow(try manager.detectExposures(currentDate: Date()).await().get())
+        XCTAssertEqual(controller.countOfDiagnosisKeyURLsRequested, client.batchEndpointCallCount * MockHTTPClient.numberOfFilesInZip)
+        XCTAssertEqual(riskManager.riskInfoCalledWith.count, client.batchEndpointCallCount)
+    }
+    
+    func testExposureDetectionProcessesAllFileInBulkWhenInBulkMode() throws {
+        let riskManager = configuring(MockExposureRiskManager()) {
+            $0.preferredProcessingMode = .bulk
+        }
+        
+        let manager = ExposureDetectionManager(
+            controller: controller,
+            distributionClient: client,
+            fileStorage: FileStorage(forCachesOf: .random()),
+            encryptedStore: store,
+            interestedInExposureNotifications: { true },
+            exposureRiskManager: riskManager
+        )
+        
+        XCTAssertNoThrow(try manager.detectExposures(currentDate: Date()).await().get())
+        XCTAssertEqual(controller.countOfDiagnosisKeyURLsRequested, client.batchEndpointCallCount * MockHTTPClient.numberOfFilesInZip)
+        XCTAssertEqual(riskManager.riskInfoCalledWith.count, 1)
     }
     
     func testExposureDetectionStoresLastCheckDate() throws {
         let manager = ExposureDetectionManager(
-            manager: enManager,
+            controller: controller,
             distributionClient: client,
-            submissionClient: client,
+            fileStorage: FileStorage(forCachesOf: .random()),
             encryptedStore: store,
-            transmissionRiskLevelApplier: transmissionRiskLevelApplier,
-            riskCalculator: MockRiskCalculator.init,
-            interestedInExposureNotifications: { true }
+            interestedInExposureNotifications: { true },
+            exposureRiskManager: MockExposureRiskManager()
         )
         
         XCTAssertNoThrow(try manager.detectExposures(currentDate: Date()).await().get())
@@ -71,105 +150,93 @@ class ExposureDetectionManagerTests: XCTestCase {
     
     func testDetectExposureMaxRiskCorrect() throws {
         let maximumRiskScore: ENRiskScore = 84
+        let controller = MockController()
+        controller.exposureInfos = [MockExposureInfo(riskScore: maximumRiskScore)]
         
-        var risk = maximumRiskScore
-        enManager.createExposure = {
-            defer {
-                risk -= 1
-            }
-            return [MockExposureInfo(riskScore: risk)]
-        }
-        
+        let mockExposureRiskManager = MockExposureRiskManager()
+        mockExposureRiskManager.riskInfoToReturn = ExposureRiskInfo(riskScore: Double(maximumRiskScore), riskScoreVersion: 1, day: GregorianDay.today, isConsideredRisky: false)
         let manager = ExposureDetectionManager(
-            manager: enManager,
+            controller: controller,
             distributionClient: client,
-            submissionClient: client,
+            fileStorage: FileStorage(forCachesOf: .random()),
             encryptedStore: store,
-            transmissionRiskLevelApplier: transmissionRiskLevelApplier,
-            riskCalculator: MockRiskCalculator.init,
-            interestedInExposureNotifications: { true }
+            interestedInExposureNotifications: { true },
+            exposureRiskManager: mockExposureRiskManager
         )
         
         let result = try manager.detectExposures(currentDate: Date()).await().get()
+        
         XCTAssertNotNil(store.stored["background_task_state"])
         XCTAssertEqual(result?.riskScore, Double(maximumRiskScore))
     }
     
-    /*
-     
-     For better testing, key renewal happens at 6 PM (18:00) - This means we always need to ensure that the key from
-     the day before StartKeyPeriod is also included in the submitted list
-     */
-    func testFiltersOutKeysWithTransmissionRiskLevelOfZero() throws {
-        let client = MockHTTPClient()
-        let calendar = Calendar.current
-        
-        let onsetDay = GregorianDay(dateComponents: DateComponents(year: 2020, month: 7, day: 12))
-        
-        var diagnosisKeys = [ENTemporaryExposureKey]()
-        (1 ... 14).forEach { index in
-            let diagnosisKey = ENTemporaryExposureKey()
-            var date = DateComponents(year: 2020, month: 7, day: index, hour: 18)
-            date.calendar = calendar
-            diagnosisKey.keyData = String.random().data
-            diagnosisKey.rollingStartNumber = UInt32(exactly: date.date!.timeIntervalSince1970 / (60 * 10))!
-            diagnosisKey.rollingPeriod = UInt32(24 * (60 / 10)) // Amount of 10 minute periods in 24 hours
-            diagnosisKeys.append(diagnosisKey)
-        }
-        
-        enManager.diagnosisKeys = diagnosisKeys
-        
-        class MockTransmissionRiskLevelApplier: TransmissionRiskLevelApplier {
-            var calledWithOnsetDay: GregorianDay?
-            override func applyTransmissionRiskLevels(for keys: [ENTemporaryExposureKey], onsetDay: GregorianDay) -> [ENTemporaryExposureKey] {
-                calledWithOnsetDay = onsetDay
-                return keys.sorted { $0.rollingStartNumber < $1.rollingStartNumber }
-                    .enumerated()
-                    .map { (i, key) -> ENTemporaryExposureKey in
-                        key.transmissionRiskLevel = i < 10 ? 0 : 1
-                        return key
-                    }
-            }
-        }
-        let mockTransmissionRiskLevelApplier = MockTransmissionRiskLevelApplier()
-        
+    func testUseExposureRiskManagerToCalculateRiskInfo() throws {
+        let exposureRiskManager = MockExposureRiskManager()
+        let expectedRiskInfo = ExposureRiskInfo(riskScore: 1000.0, riskScoreVersion: 1, day: GregorianDay.today, isConsideredRisky: false)
+        exposureRiskManager.riskInfoToReturn = expectedRiskInfo
+        let expectedSummary = ENExposureDetectionSummary()
+        let controller = MockController()
+        controller.summaryToReturn = expectedSummary
         let manager = ExposureDetectionManager(
-            manager: enManager,
+            controller: controller,
             distributionClient: client,
-            submissionClient: client,
+            fileStorage: FileStorage(forCachesOf: .random()),
             encryptedStore: store,
-            transmissionRiskLevelApplier: mockTransmissionRiskLevelApplier,
-            riskCalculator: MockRiskCalculator.init,
-            interestedInExposureNotifications: { true }
+            interestedInExposureNotifications: { true },
+            exposureRiskManager: exposureRiskManager
         )
         
-        _ = try manager.sendKeys(for: onsetDay, token: DiagnosisKeySubmissionToken(value: String.random())).await()
+        let riskInfo = try manager.detectExposures(currentDate: Date()).await().get()
         
-        let requestBody = try XCTUnwrap(client.lastRequest?.body)
-        let decoder = JSONDecoder()
-        let payload = try decoder.decode(Payload.self, from: requestBody.content)
-        XCTAssertEqual(payload.temporaryExposureKeys.count, 4)
+        XCTAssertEqual(exposureRiskManager.riskInfoCalledWith.last, expectedSummary)
+        XCTAssertEqual(riskInfo?.riskScore, expectedRiskInfo.riskScore)
+        XCTAssertEqual(riskInfo?.day, expectedRiskInfo.day)
+    }
+    
+    func testDetectExposuresOnlyWithinGivenFrequency() throws {
+        let riskManager = MockExposureRiskManager()
+        riskManager.checkFrequency = 4 * 60 * 60
+        let manager = ExposureDetectionManager(
+            controller: controller,
+            distributionClient: client,
+            fileStorage: FileStorage(forCachesOf: .random()),
+            encryptedStore: store,
+            interestedInExposureNotifications: { true },
+            exposureRiskManager: riskManager
+        )
         
-        let keysInPeriod = Array(diagnosisKeys[10 ... 13])
-        keysInPeriod.forEach { key in
-            let payloadKey = Payload.TemporaryExposureKey(
-                key: key.keyData,
-                rollingStartNumber: key.rollingStartNumber,
-                rollingPeriod: key.rollingPeriod,
-                transmissionRiskLevel: key.transmissionRiskLevel
-            )
-            
-            XCTAssertTrue(payload.temporaryExposureKeys.contains(payloadKey))
+        let currentDate = Date()
+        let lastDownloadDate = currentDate.advanced(by: -3 * 60 * 60)
+        
+        let exposureDetectionStore = ExposureDetectionStore(store: store)
+        exposureDetectionStore.save(lastKeyDownloadDate: lastDownloadDate)
+        
+        XCTAssertNoThrow(try manager.detectExposures(currentDate: currentDate).prepend(nil).await().get())
+        
+        TS.assert(exposureDetectionStore.load()?.lastKeyDownloadDate, equals: lastDownloadDate)
+        XCTAssertEqual(client.batchEndpointCallCount, 0)
+    }
+    
+    private class MockExposureRiskManager: ExposureRiskManaging {
+        var riskInfoCalledWith = [ENExposureDetectionSummary]()
+        var riskInfoToReturn: ExposureRiskInfo?
+        var checkFrequency: TimeInterval = 2 * 60 * 60
+        
+        var preferredProcessingMode = ProcessingMode.incremental
+        
+        func riskInfo(for summary: ENExposureDetectionSummary, configuration: ExposureDetectionConfiguration) -> AnyPublisher<ExposureRiskInfo?, Error> {
+            riskInfoCalledWith.append(summary)
+            return Result.Publisher(riskInfoToReturn).eraseToAnyPublisher()
         }
-        XCTAssertEqual(mockTransmissionRiskLevelApplier.calledWithOnsetDay, onsetDay)
     }
     
     private class MockHTTPClient: HTTPClient {
-        var requestCount = 0
+        static let numberOfFilesInZip = 2
+        
+        var batchEndpointCallCount = 0
         var lastRequest: HTTPRequest?
         
         func perform(_ request: HTTPRequest) -> AnyPublisher<HTTPResponse, HTTPRequestError> {
-            requestCount += 1
             lastRequest = request
             
             if request.path == "/distribution/exposure-configuration" {
@@ -177,12 +244,9 @@ class ExposureDetectionManagerTests: XCTestCase {
             }
             
             if request.path.starts(with: "/distribution/daily/") || request.path.starts(with: "/distribution/two-hourly/") {
+                batchEndpointCallCount += 1
                 let response = HTTPResponse(httpUrlResponse: HTTPURLResponse(), bodyContent: getZip())
                 return Result.success(response).publisher.eraseToAnyPublisher()
-            }
-            
-            if request.path == "/submission/diagnosis-keys" {
-                return Result.success(.ok(with: .empty)).publisher.eraseToAnyPublisher()
             }
             
             let error = HTTPRequestError.rejectedRequest(underlyingError: TestError(""))
@@ -195,18 +259,6 @@ class ExposureDetectionManagerTests: XCTestCase {
             let decodedData = Data(base64Encoded: base64Zip)!
             return decodedData
         }
-    }
-    
-    private struct Payload: Codable {
-        struct TemporaryExposureKey: Codable, Equatable {
-            var key: Data
-            var rollingStartNumber: UInt32
-            var rollingPeriod: UInt32
-            var transmissionRiskLevel: UInt8
-        }
-        
-        var diagnosisKeySubmissionToken: String
-        var temporaryExposureKeys: [TemporaryExposureKey]
     }
     
 }
@@ -237,6 +289,43 @@ private let exposureConfiguration = """
     "riskCalculation": {
         "durationBucketWeights": [1.0, 0.5, 0.0],
         "riskThreshold": 20.0
+    },
+    "v2RiskCalculation": {
+        "daysSinceOnsetToInfectiousness": [
+            0, 0, 0, 0, 0, 0, 0, 0, 0,
+            1, 1, 1,
+            2, 2, 2, 2, 2, 2,
+            1, 1, 1, 1, 1, 1,
+            0, 0, 0, 0, 0
+        ],
+        "infectiousnessWeights": [0.0, 0.4, 1.0],
+        "reportTypeWhenMissing": 1,
+        "riskThreshold": 0.0
+    },
+    "riskScore": {
+        "sampleResolution": 1.0,
+        "expectedDistance": 0.1,
+        "minimumDistance": 1.0,
+        "rssiParameters" : {
+            "weightCoefficient": 0.1270547531082051,
+            "intercept": 4.2309333657856945,
+            "covariance": 0.4947614361027773
+        },
+        "powerLossParameters": {
+            "wavelength": 0.125,
+            "pathLossFactor": 20.0,
+            "refDeviceLoss": 0.0
+        },
+        "observationType": "log",
+        "initialData": {
+            "mean": 2.0,
+            "covariance": 10.0
+        },
+        "smootherParameters": {
+            "alpha": 1.0,
+            "beta": 0.0,
+            "kappa": 0.0
+        }
     }
 }
 """

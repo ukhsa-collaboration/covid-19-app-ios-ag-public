@@ -42,6 +42,7 @@ let package = Package(
         .package(name: "AppConfiguration", url: "https://github.com/nhsx/covid-19-app-configuration-public.git", .branch("master")),
         .package(name: "ZIPFoundation", url: "https://github.com/weichsel/ZIPFoundation.git", from: "0.9.11"),
         .package(name: "swift-log", url: "https://github.com/apple/swift-log.git", from: "1.2.0"),
+        .package(name: "RiskScore", url: "https://github.com/nhsx/riskscore-swift-public", .upToNextMajor(from: "3.2.0")),
     ],
     targets: [
         .target(
@@ -68,6 +69,7 @@ let package = Package(
             dependencies: [
                 "Common",
                 "ZIPFoundation",
+                "RiskScore",
             ]
         ),
         .target(

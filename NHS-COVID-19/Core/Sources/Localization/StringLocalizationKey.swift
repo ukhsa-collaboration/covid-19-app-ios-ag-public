@@ -13,6 +13,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case home_strapline_accessiblity_label_wls
     
     case unrecoverable_error_page_title
+    case update_app_button_title
     case unrecoverable_error_title
     case unrecoverable_error_description
     
@@ -130,6 +131,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case checkin_wrong_button_title
     case checkin_qrcode_scanner_close_button_title
     case checkin_information_title_new
+    case checkin_information_description
     case checkin_information_help_scanning_section_title
     case checkin_information_help_scanning_section_description
     case checkin_information_whats_a_qr_code_section_title
@@ -152,6 +154,8 @@ public enum StringLocalizationKey: String, CaseIterable {
     case alert_postcode_risk_change_body
     case alert_venue_risk_change_title
     case alert_venue_risk_change_body
+    case alert_venue_risk_isolate_title
+    case alert_venue_risk_isolate_body
     case alert_isolation_state_change_title
     case alert_isolation_state_change_body
     case alert_exposure_detection_title
@@ -160,6 +164,8 @@ public enum StringLocalizationKey: String, CaseIterable {
     case alert_test_result_received_body
     case alert_app_availability_changed_title
     case alert_app_availability_changed_body
+    case alert_latest_app_version_update_title
+    case alert_latest_app_version_update_body
     
     case diagnosis_questionnaire_title
     case loading
@@ -404,13 +410,12 @@ public enum StringLocalizationKey: String, CaseIterable {
     case isolation_payment_info_description
     case isolation_payment_info_button
     
-    case stop_isolation_title
-    case stop_isolation_heading
-    case stop_isolation_body
-    case stop_isolation_countdown_button
-    
     case dont_worry_notification_title
     case dont_worry_notification_body
+    
+    case risky_venue_isolation_report_symptoms
+    case risky_venue_isolation_warning
+    case risky_venue_isolation_description
 }
 
 public enum ParameterisedStringLocalizable: Equatable {
@@ -451,6 +456,8 @@ public enum ParameterisedStringLocalizable: Equatable {
         case exposure_notification_reminder_alert_title = "exposure_notification_reminder_alert_title %ld hours"
         
         case positive_test_start_to_isolate_accessibility_label = "positive_test_start_to_isolate_accessibility_label %ld"
+        
+        case risky_venue_isolation_title_accessibility = "risky_venue_isolation_title_accessibility %ld"
     }
     
     case numbered_list_item(index: Int, text: String)
@@ -495,6 +502,8 @@ public enum ParameterisedStringLocalizable: Equatable {
     
     case positive_test_start_to_isolate_accessibility_label(days: Int)
     
+    case risky_venue_isolation_title_accessibility(days: Int)
+    
     var key: Key {
         switch self {
         case .numbered_list_item: return .numbered_list_item
@@ -528,6 +537,7 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .exposure_notification_reminder_sheet_hours: return .exposure_notification_reminder_sheet_hours
         case .exposure_notification_reminder_alert_title: return .exposure_notification_reminder_alert_title
         case .positive_test_start_to_isolate_accessibility_label: return .positive_test_start_to_isolate_accessibility_label
+        case .risky_venue_isolation_title_accessibility: return .risky_venue_isolation_title_accessibility
         }
     }
     
@@ -606,6 +616,8 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .exposure_notification_reminder_alert_title(let hours):
             return [hours]
         case .positive_test_start_to_isolate_accessibility_label(days: let days):
+            return [days]
+        case .risky_venue_isolation_title_accessibility(days: let days):
             return [days]
         }
     }

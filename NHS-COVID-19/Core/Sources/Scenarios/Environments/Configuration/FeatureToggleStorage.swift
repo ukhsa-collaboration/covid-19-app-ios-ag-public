@@ -24,9 +24,6 @@ struct FeatureToggleStorage {
     @UserDefault("scenario.toggle.test_kit_order", defaultValue: Feature.productionEnabledFeatures.contains(.testKitOrder))
     var testKitOrderToggle: Bool
     
-    @UserDefault("scenario.toggle.pilot_activation", defaultValue: Feature.productionEnabledFeatures.contains(.pilotActivation))
-    var pilotActivationToggle: Bool
-    
     static func getEnabledFeatures() -> [Feature] {
         let store = FeatureToggleStorage()
         var enabledFeatures = [Feature]()
@@ -49,10 +46,6 @@ struct FeatureToggleStorage {
         if store.testKitOrderToggle {
             enabledFeatures.append(.testKitOrder)
         }
-        if store.pilotActivationToggle {
-            enabledFeatures.append(.pilotActivation)
-        }
-        
         return enabledFeatures
     }
     

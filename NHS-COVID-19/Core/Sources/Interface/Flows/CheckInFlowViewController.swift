@@ -166,6 +166,10 @@ extension CheckInFlowViewController: CameraFailureViewController.Interacting, Sc
         dismiss(animated: true, completion: nil)
     }
     
+    public func didTapVenueCheckinMoreInfoButton() {
+        showHelp()
+    }
+    
     public func showHelp() {
         let viewController = UINavigationController(rootViewController: VenueCheckInInformationViewController(interactor: self))
         viewController.modalPresentationStyle = .overFullScreen

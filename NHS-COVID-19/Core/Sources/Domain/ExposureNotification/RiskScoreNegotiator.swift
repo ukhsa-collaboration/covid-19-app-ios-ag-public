@@ -3,8 +3,12 @@
 //
 
 import Combine
+import Logging
 
 struct RiskScoreNegotiator {
+    
+    private static let logger = Logger(label: "ExposureNotification")
+    
     private var saveRiskScore: (RiskInfo) -> Void
     private var getIsolationState: () -> IsolationState
     private var isolationState: AnyPublisher<IsolationState, Never>
@@ -23,8 +27,14 @@ struct RiskScoreNegotiator {
     }
     
     func saveIfNeeded(exposureRiskInfo: ExposureRiskInfo) -> Bool {
+        Self.logger.info("calculated risk info", metadata: .describing(exposureRiskInfo))
         if getIsolationState() == .noNeedToIsolate, exposureRiskInfo.isConsideredRisky {
-            let riskInfo = RiskInfo(riskScore: exposureRiskInfo.riskScore, day: exposureRiskInfo.day)
+            Self.logger.info("risk score is significant. Saving it.")
+            let riskInfo = RiskInfo(
+                riskScore: exposureRiskInfo.riskScore,
+                riskScoreVersion: exposureRiskInfo.riskScoreVersion,
+                day: exposureRiskInfo.day
+            )
             saveRiskScore(riskInfo)
             return true
         }

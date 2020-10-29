@@ -11,6 +11,7 @@ public class CheckInConfirmationScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name: String = "CheckIn - Confirmation"
     
+    public static let didTapVenueCheckinMoreInfo = "Venue checkin more info tapped!"
     public static let didTapGoHome = "Back to home tapped!"
     public static let didTapWrongCheckIn = "Cancel this check-in tapped!"
     
@@ -34,7 +35,6 @@ public class CheckInConfirmationScreenScenario: Scenario {
 }
 
 private class Interactor: CheckInConfirmationViewController.Interacting {
-    
     private weak var viewController: UIViewController?
     
     init(viewController: UIViewController) {
@@ -49,4 +49,7 @@ private class Interactor: CheckInConfirmationViewController.Interacting {
         viewController?.showAlert(title: CheckInConfirmationScreenScenario.didTapWrongCheckIn)
     }
     
+    func didTapVenueCheckinMoreInfoButton() {
+        viewController?.showAlert(title: CheckInConfirmationScreenScenario.didTapVenueCheckinMoreInfo)
+    }
 }

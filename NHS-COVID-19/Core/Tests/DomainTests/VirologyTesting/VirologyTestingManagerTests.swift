@@ -13,17 +13,20 @@ class VirologyTestingManagerTests: XCTestCase {
     private var virologyStore: VirologyTestingStateStore!
     private var manager: VirologyTestingManager!
     private var notificationManager: MockUserNotificationsManager!
+    private var validator: MockCTATokenValidator!
     
     override func setUp() {
         mockServer = MockHTTPClient()
         virologyStore = VirologyTestingStateStore(store: MockEncryptedStore())
         notificationManager = MockUserNotificationsManager()
+        validator = MockCTATokenValidator()
         manager = VirologyTestingManager(
             httpClient: mockServer,
             virologyTestingStateCoordinator: VirologyTestingStateCoordinator(
                 virologyTestingStateStore: virologyStore,
                 userNotificationsManager: notificationManager
-            )
+            ),
+            ctaTokenValidator: validator
         )
     }
     
@@ -224,6 +227,28 @@ class VirologyTestingManagerTests: XCTestCase {
         XCTAssertNil(storedResult.diagnosisKeySubmissionToken)
     }
     
+    func testEvaluateLinkTestResultsInvalidToken() throws {
+        let submissionToken = DiagnosisKeySubmissionToken(value: .random())
+        let ctaToken = String.random()
+        
+        validator.shouldFail = true
+        
+        mockServer.response = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "2020-04-23T00:00:00.0000000Z",
+            "testResult": "VOID",
+            "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
+        }
+        """#))
+        
+        let error = try manager.linkExternalTestResult(with: ctaToken).await()
+        XCTAssertNil(notificationManager.notificationType)
+        
+        if case .failure(.invalidCode) = error { } else {
+            XCTFail()
+        }
+    }
+    
     private class MockHTTPClient: HTTPClient {
         var amountOfCalls = 0
         var response: HTTPResponse?
@@ -237,6 +262,14 @@ class VirologyTestingManagerTests: XCTestCase {
                 return Empty().eraseToAnyPublisher()
             }
             
+        }
+    }
+    
+    private class MockCTATokenValidator: CTATokenValidating {
+        var shouldFail: Bool = false
+        
+        func validate(_ token: String) -> Bool {
+            return !shouldFail
         }
     }
 }

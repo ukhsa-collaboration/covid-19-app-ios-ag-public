@@ -113,8 +113,6 @@ class ConfigurationViewController: UIViewController {
             return "Self Isolation"
         case .testKitOrder:
             return "Test Kit Order"
-        case .pilotActivation:
-            return "Pilot activation"
         }
     }
     

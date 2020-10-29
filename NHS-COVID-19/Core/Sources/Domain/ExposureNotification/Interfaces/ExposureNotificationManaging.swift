@@ -33,4 +33,8 @@ public protocol ExposureNotificationManaging {
     func getExposureInfo(summary: ENExposureDetectionSummary, userExplanation: String, completionHandler: @escaping ENGetExposureInfoHandler) -> Progress
     
     func getExposureInfo(summary: ENExposureDetectionSummary, completionHandler: @escaping ENGetExposureInfoHandler)
+    
+    @available(iOS 13.7, *)
+    @discardableResult
+    func getExposureWindows(summary: ENExposureDetectionSummary, completionHandler: @escaping ENGetExposureWindowsHandler) -> Progress
 }

@@ -30,7 +30,7 @@ class ExposureDetectionStoreTests: XCTestCase {
         XCTAssertEqual(exposureDetectionInfo.lastKeyDownloadDate, date)
     }
     
-    func testCanLoadRiskInfo() throws {
+    func testCanLoadRiskInfoOld() throws {
         
         encryptedStore.stored["background_task_state"] = """
         {
@@ -49,7 +49,31 @@ class ExposureDetectionStoreTests: XCTestCase {
         """.data(using: .utf8)
         
         let exposureDetectionInfo = try XCTUnwrap(exposureDetectionStore.load())
-        let expectedRiskInfo = RiskInfo(riskScore: 5.5, day: .init(year: 2020, month: 5, day: 5))
+        let expectedRiskInfo = RiskInfo(riskScore: 5.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
+        XCTAssertEqual(exposureDetectionInfo.exposureInfo?.riskInfo, expectedRiskInfo)
+    }
+    
+    func testCanLoadRiskInfoNew() throws {
+        
+        encryptedStore.stored["background_task_state"] = """
+        {
+            "exposureInfo": {
+                "riskInfo": {
+                    "riskScore": 5.5,
+                    "day": {
+                        "year": 2020,
+                        "month": 5,
+                        "day": 5
+                    },
+                    "riskScoreVersion": 2
+                }
+            }
+        }
+        
+        """.data(using: .utf8)
+        
+        let exposureDetectionInfo = try XCTUnwrap(exposureDetectionStore.load())
+        let expectedRiskInfo = RiskInfo(riskScore: 5.5, riskScoreVersion: 2, day: .init(year: 2020, month: 5, day: 5))
         XCTAssertEqual(exposureDetectionInfo.exposureInfo?.riskInfo, expectedRiskInfo)
     }
     
@@ -97,14 +121,14 @@ class ExposureDetectionStoreTests: XCTestCase {
     }
     
     func testSaveRiskInfo() {
-        let riskInfo = RiskInfo(riskScore: 5.5, day: .init(year: 2020, month: 5, day: 5))
+        let riskInfo = RiskInfo(riskScore: 5.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         exposureDetectionStore.save(riskInfo: riskInfo)
         XCTAssertEqual(exposureDetectionStore.load()?.exposureInfo?.riskInfo, riskInfo)
     }
     
     func testSaveExposureInfoToken() {
         let approvalTokenString = UUID().uuidString
-        let riskInfo = RiskInfo(riskScore: 5.5, day: .init(year: 2020, month: 5, day: 5))
+        let riskInfo = RiskInfo(riskScore: 5.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         exposureDetectionStore.exposureInfo = ExposureInfo(approvalToken: .init(approvalTokenString), riskInfo: riskInfo)
         XCTAssertEqual(exposureDetectionStore.load()?.exposureInfo?.approvalToken, .init(approvalTokenString))
     }
@@ -116,14 +140,14 @@ class ExposureDetectionStoreTests: XCTestCase {
     }
     
     func testDeletingRiskScore() {
-        exposureDetectionStore.save(riskInfo: RiskInfo(riskScore: 5.5, day: .init(year: 2020, month: 5, day: 5)))
+        exposureDetectionStore.save(riskInfo: RiskInfo(riskScore: 5.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5)))
         exposureDetectionStore.delete()
         XCTAssertNil(exposureDetectionStore.load()?.exposureInfo?.riskInfo)
     }
     
     func testDeletingApprovalToken() {
         let approvalTokenString = UUID().uuidString
-        let riskInfo = RiskInfo(riskScore: 5.5, day: .init(year: 2020, month: 5, day: 5))
+        let riskInfo = RiskInfo(riskScore: 5.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         exposureDetectionStore.exposureInfo = ExposureInfo(approvalToken: .init(approvalTokenString), riskInfo: riskInfo)
         exposureDetectionStore.delete()
         XCTAssertNil(exposureDetectionStore.load()?.exposureInfo?.approvalToken)
@@ -131,7 +155,7 @@ class ExposureDetectionStoreTests: XCTestCase {
     
     func testDeletingExposureInfo() {
         let approvalTokenString = UUID().uuidString
-        let riskInfo = RiskInfo(riskScore: 5.5, day: .init(year: 2020, month: 5, day: 5))
+        let riskInfo = RiskInfo(riskScore: 5.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         exposureDetectionStore.exposureInfo = ExposureInfo(approvalToken: .init(approvalTokenString), riskInfo: riskInfo)
         exposureDetectionStore.delete()
         XCTAssertNil(exposureDetectionStore.exposureInfo)

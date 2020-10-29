@@ -61,8 +61,7 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case symbolManufacturer = "Symbols/Manufacturer"
     case symbolCE = "Symbols/CE"
     case symbolInstructionForUse = "Symbols/InstructionForUse"
-    
-    case stopIsolation = "StopIsolation"
+    case appUpdateImage = "AppUpdateImage"
     
     public var id: ImageName {
         self

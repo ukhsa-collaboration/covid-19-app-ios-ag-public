@@ -9,7 +9,7 @@ public protocol IsolationPaymentInfoViewControllerInteracting {
     func didTapApply()
 }
 
-private class IsolationPaymentInfoContent: BasicStickyFooterScrollingContent {
+private class IsolationPaymentInfoContent: PrimaryLinkButtonStickyFooterScrollingContent {
     public typealias Interacting = IsolationPaymentInfoViewControllerInteracting
     
     private let interactor: Interacting
@@ -22,7 +22,7 @@ private class IsolationPaymentInfoContent: BasicStickyFooterScrollingContent {
                 UILabel().styleAsPageHeader().set(text: localize(.isolation_payment_info_header)),
                 UILabel().styleAsBody().set(text: localize(.isolation_payment_info_description)),
             ],
-            footerTopView: PrimaryLinkButton(
+            primaryLinkButton: (
                 title: localize(.isolation_payment_info_button),
                 action: interactor.didTapApply
             )
