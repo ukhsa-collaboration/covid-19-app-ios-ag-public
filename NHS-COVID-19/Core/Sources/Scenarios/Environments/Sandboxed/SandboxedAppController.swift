@@ -53,7 +53,7 @@ private extension ApplicationServices {
             encryptedStore: SandboxEncryptedStore(host: host),
             cacheStorage: FileStorage(forCachesOf: UUID().uuidString),
             venueDecoder: QRCode.fake,
-            appInfo: AppInfo(bundleId: UUID().uuidString, version: "1"),
+            appInfo: AppInfo(bundleId: UUID().uuidString, version: "3.10", buildNumber: "1"),
             pasteboardCopier: MockPasteboardCopier(),
             postcodeValidator: SandboxPostcodeValidator(),
             currentDateProvider: { Date() },

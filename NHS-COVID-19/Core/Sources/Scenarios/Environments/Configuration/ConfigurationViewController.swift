@@ -30,16 +30,6 @@ class ConfigurationViewController: UIViewController {
         title.styleAsPageHeader()
         title.text = "Feature-Toggle"
         
-        let riskyPostcode = createToggle(
-            feature: .riskyPostcode,
-            isOn: featureToggleStorage.riskyPostcodeToggle,
-            action: #selector(toggleRiskyPostcode)
-        )
-        let venueCheckIn = createToggle(
-            feature: .venueCheckIn,
-            isOn: featureToggleStorage.venueCheckInToggle,
-            action: #selector(toggleVenueCheckIn)
-        )
         let selfDiagnosis = createToggle(
             feature: .selfDiagnosis,
             isOn: featureToggleStorage.selfDiagnosisToggle,
@@ -63,8 +53,6 @@ class ConfigurationViewController: UIViewController {
         
         let stackView = UIStackView(arrangedSubviews: [
             title,
-            riskyPostcode,
-            venueCheckIn,
             selfDiagnosis,
             selfDiagnosisUpload,
             selfIsolating,
@@ -101,10 +89,6 @@ class ConfigurationViewController: UIViewController {
     
     func getFeatureString(feature: Feature) -> String {
         switch feature {
-        case .riskyPostcode:
-            return "Risky Postcodes"
-        case .venueCheckIn:
-            return "Venue Check-In"
         case .selfDiagnosis:
             return "Self Diagnosis"
         case .selfDiagnosisUpload:
@@ -114,14 +98,6 @@ class ConfigurationViewController: UIViewController {
         case .testKitOrder:
             return "Test Kit Order"
         }
-    }
-    
-    @objc private func toggleRiskyPostcode() {
-        featureToggleStorage.riskyPostcodeToggle.toggle()
-    }
-    
-    @objc private func toggleVenueCheckIn() {
-        featureToggleStorage.venueCheckInToggle.toggle()
     }
     
     @objc private func toggleSelfDiagnosis() {

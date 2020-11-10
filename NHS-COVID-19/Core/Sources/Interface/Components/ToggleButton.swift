@@ -48,6 +48,8 @@ private extension View {
         #warning("Review if an Xcode update fixes this.")
         // There seem to be an issue causing this element to have incorrect activation point, but *only* with Xcode 12
         // and on the simulator; causing UI tests to fail.
+        //
+        // Last tested on Xcode 12.1 and this is still needed.
         if UIApplication.shared.userInterfaceLayoutDirection == .leftToRight {
             return accessibility(activationPoint: UnitPoint(x: 0.95, y: 0.5))
         } else {

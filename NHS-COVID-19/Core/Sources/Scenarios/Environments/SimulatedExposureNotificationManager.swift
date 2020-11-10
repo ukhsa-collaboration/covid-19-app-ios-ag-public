@@ -80,6 +80,10 @@ class SimulatedExposureNotificationManager: ExposureNotificationManaging {
     
     @available(iOS 13.7, *)
     func getExposureWindows(summary: ENExposureDetectionSummary, completionHandler: @escaping ENGetExposureWindowsHandler) -> Progress {
+        let windows = repeatElement(SimulatedRiskyExposureWindow(daysAgo: dataProvider.contactDaysAgo), count: dataProvider.numberOfContacts)
+        queue.async {
+            completionHandler(Array(windows), nil)
+        }
         return Progress()
     }
 }
@@ -96,7 +100,7 @@ private class SimulatedExposureInfo: ENExposureInfo {
     }
     
     override var date: Date {
-        GregorianDay.today.advanced(by: -1).startDate(in: .utc)
+        GregorianDay.today.advanced(by: -daysAgo).startDate(in: .utc)
     }
     
     override var attenuationDurations: [NSNumber] {
@@ -105,6 +109,62 @@ private class SimulatedExposureInfo: ENExposureInfo {
     
     override var transmissionRiskLevel: ENRiskLevel {
         7
+    }
+    
+}
+
+@available(iOS 13.7, *)
+private class SimulatedRiskyExposureWindow: ENExposureWindow {
+    
+    private let daysAgo: Int
+    
+    init(daysAgo: Int) {
+        self.daysAgo = daysAgo
+        super.init()
+    }
+    
+    override var date: Date {
+        GregorianDay.today.advanced(by: -daysAgo).startDate(in: .utc)
+    }
+    
+    override var infectiousness: ENInfectiousness {
+        .high
+    }
+    
+    override var scanInstances: [ENScanInstance] {
+        [
+            SimulatedScanInstance(minimumAttenuation: 97, secondsSinceLastScan: 201),
+            SimulatedScanInstance(minimumAttenuation: 85, secondsSinceLastScan: 225),
+            SimulatedScanInstance(minimumAttenuation: 83, secondsSinceLastScan: 279),
+            SimulatedScanInstance(minimumAttenuation: 64, secondsSinceLastScan: 215),
+            SimulatedScanInstance(minimumAttenuation: 78, secondsSinceLastScan: 263),
+            SimulatedScanInstance(minimumAttenuation: 83, secondsSinceLastScan: 211),
+            SimulatedScanInstance(minimumAttenuation: 73, secondsSinceLastScan: 228),
+            SimulatedScanInstance(minimumAttenuation: 76, secondsSinceLastScan: 183),
+            SimulatedScanInstance(minimumAttenuation: 66, secondsSinceLastScan: 189),
+            SimulatedScanInstance(minimumAttenuation: 70, secondsSinceLastScan: 190),
+        ]
+    }
+    
+}
+
+@available(iOS 13.7, *)
+private class SimulatedScanInstance: ENScanInstance {
+    
+    private var _minimumAttenuation: ENAttenuation
+    private var _secondsSinceLastScan: Int
+    
+    init(minimumAttenuation: ENAttenuation, secondsSinceLastScan: Int) {
+        _minimumAttenuation = minimumAttenuation
+        _secondsSinceLastScan = secondsSinceLastScan
+    }
+    
+    override var minimumAttenuation: ENAttenuation {
+        _minimumAttenuation
+    }
+    
+    override var secondsSinceLastScan: Int {
+        _secondsSinceLastScan
     }
     
 }

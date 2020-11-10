@@ -18,12 +18,6 @@ protocol RiskyCheckinsProvider {
 extension ExposureDetectionStore: ExposureInfoProvider {}
 extension CheckInsStore: RiskyCheckinsProvider {}
 
-class NoOpRiskyCheckinsProvider: RiskyCheckinsProvider {
-    var riskyCheckIns = [CheckIn]()
-    var riskApprovalTokens = [String: CircuitBreakerApprovalToken]()
-    func set(_ approval: CircuitBreakerApproval, for venueId: String) {}
-}
-
 class CircuitBreaker {
     public var showDontWorryNotificationIfNeeded = false
     

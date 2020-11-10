@@ -92,4 +92,8 @@ class VersionTests: XCTestCase {
         try XCTAssert(Version("6.5.9") < Version("6.5.10"))
     }
     
+    func testVersionWithFewerVersionDigitsCanStillBeBigger() throws {
+        try XCTAssert(Version("5.10.0") < Version("6.0.0"))
+    }
+    
 }

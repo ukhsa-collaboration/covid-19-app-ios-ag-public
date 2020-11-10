@@ -84,63 +84,50 @@ private extension RiskLevelBanner.ViewModel.ColorScheme {
             backgroundColor: Color(backgroundColor),
             singleColor: true,
             fontColor: Color(fontColor),
-            contentColorScheme: contentColorScheme
+            borderColor: Color(borderColor)
         )
     }
     
     var fontColor: ColorName {
-        switch self {
-        case .neutral:
-            return .primaryText
-        case .green:
-            return .primaryText
-        case .yellow:
-            return .primaryText
-        case .amber:
-            return .primaryText
-        case .red:
-            return .surface
-        }
+        return .primaryText
     }
     
     var iconColor: ColorName {
         switch self {
         case .neutral:
-            return .secondaryText
+            return .nhsLightBlue
         case .green:
-            return .primaryText
+            return .riskLevelIconGreen
         case .yellow:
-            return .primaryText
+            return .riskLevelIconYellow
         case .amber:
-            return .primaryText
+            return .riskLevelIconAmber
         case .red:
-            return .surface
+            return .riskLevelIconRed
         }
     }
     
     var backgroundColor: ColorName {
         switch self {
         case .neutral:
-            return .surface
+            return .riskLevelBackgroundNeutral
         case .green:
-            return .riskLevelGreen
+            return .riskLevelBackgroundGreen
         case .yellow:
-            return .riskLevelYellow
+            return .riskLevelBackgroundYellow
         case .amber:
-            return .riskLevelAmber
+            return .riskLevelBackgroundAmber
         case .red:
-            return .riskLevelRed
+            return .riskLevelBackgroundRed
         }
     }
     
-    var contentColorScheme: NavigationButton.ContentColorScheme {
+    var borderColor: ColorName {
         switch self {
         case .neutral:
-            return .matchEnvironment
-        case .green, .yellow, .amber:
-            return .override(.light)
-        case .red:
-            return .matchEnvironment
+            return .riskLevelBorderNeutral
+        default:
+            return iconColor
         }
     }
     

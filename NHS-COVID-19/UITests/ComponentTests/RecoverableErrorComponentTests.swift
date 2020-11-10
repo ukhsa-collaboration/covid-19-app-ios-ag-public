@@ -38,6 +38,10 @@ class RecoverableErrorComponentTests: XCTestCase {
                     $0.label = runner.scenario.actionTitle
                     $0.traits = .button
                 },
+                .element {
+                    $0.label = runner.scenario.secondaryActionTitle
+                    $0.traits = .button
+                },
             ])
         }
         try runner.run { app in
@@ -55,6 +59,13 @@ class RecoverableErrorComponentTests: XCTestCase {
         }
     }
     
+    func testSecondaryAction() throws {
+        try runner.run { app in
+            app.secondaryActionButton.tap()
+            XCTAssert(app.secondaryButtonActionResult.exists)
+        }
+    }
+    
 }
 
 private extension XCUIApplication {
@@ -67,6 +78,10 @@ private extension XCUIApplication {
         buttons[RecoverableErrorScreenTemplateScenario.actionTitle]
     }
     
+    var secondaryActionButton: XCUIElement {
+        buttons[RecoverableErrorScreenTemplateScenario.secondaryActionTitle]
+    }
+    
     var customContent: XCUIElement {
         staticTexts[RecoverableErrorScreenTemplateScenario.customViewContent]
     }
@@ -77,6 +92,10 @@ private extension XCUIApplication {
     
     var actionResult: XCUIElement {
         staticTexts[RecoverableErrorScreenTemplateScenario.didPerformActionTitle]
+    }
+    
+    var secondaryButtonActionResult: XCUIElement {
+        staticTexts[RecoverableErrorScreenTemplateScenario.didPerformSecondaryActionTitle]
     }
     
 }

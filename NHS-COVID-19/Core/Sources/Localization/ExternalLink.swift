@@ -16,6 +16,7 @@ public enum ExternalLink {
     case bookATestForSomeoneElse
     case testingPrivacyNotice
     case nhs111Online
+    case exposureFAQs
     case howThisAppWorks
     case provideFeedback
     
@@ -47,6 +48,8 @@ public enum ExternalLink {
             return localizeURL(.link_how_this_app_works)
         case .provideFeedback:
             return localizeURL(.link_provide_feedback)
+        case .exposureFAQs:
+            return localizeURL(.link_exposure_faq)
         }
     }
 }

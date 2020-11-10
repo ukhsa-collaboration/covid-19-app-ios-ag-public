@@ -22,7 +22,7 @@ class CircuitBreakerTests: XCTestCase {
                 ExposureDetectionStore(store: encryptedStore)
             }
             
-            var checkInsStore = NoOpRiskyCheckinsProvider()
+            fileprivate var checkInsStore = NoOpRiskyCheckinsProvider()
             
             var handleContactCase: (RiskInfo) -> Void = { _ in }
             var handleDontWorryNotification: () -> Void = {}
@@ -282,4 +282,10 @@ class CircuitBreakerTests: XCTestCase {
         
         XCTAssertFalse(handledDontWorryNotification)
     }
+}
+
+private class NoOpRiskyCheckinsProvider: RiskyCheckinsProvider {
+    var riskyCheckIns = [CheckIn]()
+    var riskApprovalTokens = [String: CircuitBreakerApprovalToken]()
+    func set(_ approval: CircuitBreakerApproval, for venueId: String) {}
 }

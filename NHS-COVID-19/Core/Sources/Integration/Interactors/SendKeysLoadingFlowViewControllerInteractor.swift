@@ -17,6 +17,10 @@ struct SendKeysLoadingFlowViewControllerInteractor: SendKeysLoadingFlowViewContr
         openURL(ExternalLink.nhs111Online.url)
     }
     
+    func didTapExposureFAQLink() {
+        openURL(ExternalLink.exposureFAQs.url)
+    }
+    
     func shareKeys() -> AnyPublisher<Void, Error> {
         acknowledgement.acknowledge().regulate(as: .modelChange)
     }

@@ -10,6 +10,7 @@ import UIKit
 public protocol NonNegativeTestResultWithIsolationViewControllerInteracting {
     var didTapOnlineServicesLink: () -> Void { get }
     var didTapPrimaryButton: () -> Void { get }
+    var didTapExposureFAQLink: () -> Void { get }
     var didTapCancel: (() -> Void)? { get }
 }
 
@@ -48,6 +49,14 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
                 testResultType.explanationText.map {
                     UILabel().styleAsSecondaryBody().set(text: $0)
                 },
+                testResultType.showExposureFAQ ?
+                    [
+                        UILabel().set(text: localize(.exposure_faqs_link_label)).styleAsSecondaryBody(),
+                        LinkButton(
+                            title: localize(.exposure_faqs_link_button_title),
+                            action: interactor.didTapExposureFAQLink
+                        ),
+                    ] : [],
                 UILabel().styleAsSecondaryBody().set(text: localize(.end_of_isolation_link_label)),
                 LinkButton(
                     title: localize(.end_of_isolation_online_services_link),
@@ -155,6 +164,15 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
             return localize(.positive_test_result_info)
         case .positive(.start):
             return localize(.positive_test_result_start_to_isolate_info)
+        }
+    }
+    
+    var showExposureFAQ: Bool {
+        switch self {
+        case .void:
+            return false
+        case .positive:
+            return true
         }
     }
     

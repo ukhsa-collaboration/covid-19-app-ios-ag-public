@@ -27,6 +27,10 @@ struct PositiveTestResultStartIsolationScreen {
         app.links[localized: .end_of_isolation_online_services_link]
     }
     
+    var exposureFAQLink: XCUIElement {
+        app.links[localized: .exposure_faqs_link_button_title]
+    }
+    
     var continueButton: XCUIElement {
         app.buttons[localized: .positive_test_results_continue]
     }

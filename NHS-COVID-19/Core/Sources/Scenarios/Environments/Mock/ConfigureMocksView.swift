@@ -36,6 +36,8 @@ struct ConfigureMocksView: View {
                 Section(header: Text(verbatim: "App Availability")) {
                     TextFieldRow(label: "Minimum OS version", text: $dataProvider.minimumOSVersion)
                     TextFieldRow(label: "Minimum app version", text: $dataProvider.minimumAppVersion)
+                    TextFieldRow(label: "Recommended app version", text: $dataProvider.recommendedAppVersion)
+                    TextFieldRow(label: "Recommended OS version", text: $dataProvider.recommendedOSVersion)
                     TextFieldRow(label: "Latest app version", text: $dataProvider.latestAppVersion)
                 }
                 Section(header: Text(verbatim: "Exposure Notification")) {

@@ -17,6 +17,7 @@ class PositiveTestResultStartIsolationScreenTests: XCTestCase {
             XCTAssert(screen.indicationLabel.exists)
             XCTAssert(screen.explanationLabel.exists)
             XCTAssert(screen.onlineServicesLink.exists)
+            XCTAssert(screen.exposureFAQLink.exists)
             XCTAssert(screen.continueButton.exists)
         }
     }
@@ -27,6 +28,15 @@ class PositiveTestResultStartIsolationScreenTests: XCTestCase {
             
             screen.onlineServicesLink.tap()
             XCTAssert(screen.onlineServicesLinkAlertTitle.exists)
+        }
+    }
+    
+    func testTapExposureFAQ() throws {
+        try runner.run { app in
+            let screen = PositiveTestResultStartIsolationScreen(app: app)
+            
+            screen.exposureFAQLink.tap()
+            XCTAssert(screen.exposureFAQLinkAlertTitle.exists)
         }
     }
     
@@ -44,6 +54,10 @@ private extension PositiveTestResultStartIsolationScreen {
     
     var onlineServicesLinkAlertTitle: XCUIElement {
         app.staticTexts[PositiveTestResultStartIsolationScreenScenario.onlineServicesLinkTapped]
+    }
+    
+    var exposureFAQLinkAlertTitle: XCUIElement {
+        app.staticTexts[PositiveTestResultStartIsolationScreenScenario.exposureFAQLinkTapped]
     }
     
     var continueAlertTitle: XCUIElement {

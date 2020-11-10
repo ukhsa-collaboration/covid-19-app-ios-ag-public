@@ -12,9 +12,9 @@ public protocol QRCodeScannerViewControllerInteracting {
 }
 
 public class QRScanner {
-    public typealias StartScanning = (UIView, CGRect, @escaping (String) -> Void) -> Void
+    public typealias StartScanning = (UIView, @escaping (String) -> Void) -> Void
     public typealias StopScanning = () -> Void
-    public typealias LayoutFinished = (CGRect, CGRect, UIInterfaceOrientation) -> Void
+    public typealias LayoutFinished = (CGRect, UIInterfaceOrientation) -> Void
     
     public enum State: Equatable {
         case starting
@@ -42,16 +42,16 @@ public class QRScanner {
         _layoutFinished = layoutFinished
     }
     
-    func startScanning(targetView: UIView, scanViewBounds: CGRect, resultHandler: @escaping (String) -> Void) {
-        _startScanning(targetView, scanViewBounds, resultHandler)
+    func startScanning(targetView: UIView, resultHandler: @escaping (String) -> Void) {
+        _startScanning(targetView, resultHandler)
     }
     
     func stopScanning() {
         _stopScanning()
     }
     
-    func layoutFinished(viewBounds: CGRect, scanViewBounds: CGRect, orientation: UIInterfaceOrientation) {
-        _layoutFinished(viewBounds, scanViewBounds, orientation)
+    func layoutFinished(viewBounds: CGRect, orientation: UIInterfaceOrientation) {
+        _layoutFinished(viewBounds, orientation)
     }
 }
 
@@ -99,7 +99,7 @@ public class QRCodeScannerViewController: UIViewController {
     }
     
     func layoutFinished() {
-        scanner.layoutFinished(viewBounds: view.bounds, scanViewBounds: scanView.scanWindowBound, orientation: view.interfaceOrientation)
+        scanner.layoutFinished(viewBounds: view.bounds, orientation: view.interfaceOrientation)
     }
     
     override public func viewWillAppear(_ animated: Bool) {
@@ -114,7 +114,7 @@ public class QRCodeScannerViewController: UIViewController {
     
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        scanner.startScanning(targetView: view, scanViewBounds: scanView.scanWindowBound, resultHandler: completion)
+        scanner.startScanning(targetView: view, resultHandler: completion)
     }
     
     override public func viewDidDisappear(_ animated: Bool) {

@@ -178,7 +178,7 @@ public class CheckInsStore {
         let checkInsInfo = mutating(self.checkInsInfo) {
             $0?.unacknowldegedRiskyVenueIds = []
         }
-        _ = save(checkInsInfo)
+        save(checkInsInfo)
     }
     
     public func checkIn(with payload: String, currentDate: Date) throws -> (String, () -> Void) {

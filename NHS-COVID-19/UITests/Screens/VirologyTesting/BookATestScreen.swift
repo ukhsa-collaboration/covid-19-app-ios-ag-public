@@ -17,16 +17,8 @@ struct BookATestScreen {
         app.staticTexts[localized: .virology_book_a_test_heading]
     }
     
-    var paragraph1: XCUIElement {
-        app.staticTexts[localized: .virology_book_a_test_paragraph1]
-    }
-    
-    var paragraph2: XCUIElement {
-        app.staticTexts[localized: .virology_book_a_test_paragraph2]
-    }
-    
-    var paragraph3: XCUIElement {
-        app.staticTexts[localized: .virology_book_a_test_paragraph3]
+    var description: [XCUIElement] {
+        app.staticTexts[localized: .virology_book_a_test_description]
     }
     
     var paragraph4: XCUIElement {
@@ -35,10 +27,6 @@ struct BookATestScreen {
     
     var paragraph5: XCUIElement {
         app.staticTexts[localized: .virology_book_a_test_paragraph5]
-    }
-    
-    var paragraph6: XCUIElement {
-        app.staticTexts[localized: .virology_book_a_test_paragraph6]
     }
     
     var testingPrivacyNotice: XCUIElement {

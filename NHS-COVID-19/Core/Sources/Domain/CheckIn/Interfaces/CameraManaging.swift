@@ -70,9 +70,6 @@ class CaptureMetadataOutputObjectsDelegate: NSObject, AVCaptureMetadataOutputObj
     }
     
     public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        guard let videoPreviewLayer = handler.getVideoPreviewLayer(),
-            let scanViewBounds = handler.getScanViewBounds() else { return }
-        
         let qrCodes = metadataObjects.compactMap { object -> AVMetadataMachineReadableCodeObject? in
             guard let code = object as? AVMetadataMachineReadableCodeObject, code.type == .qr else {
                 return nil
@@ -82,10 +79,6 @@ class CaptureMetadataOutputObjectsDelegate: NSObject, AVCaptureMetadataOutputObj
         }
         
         qrCodes.first.map { qrCode in
-            guard let barCodeObject = videoPreviewLayer.transformedMetadataObject(for: qrCode) else {
-                return
-            }
-            
             if let payload = qrCode.stringValue {
                 handler.handleOutput(payload)
             }
@@ -94,8 +87,6 @@ class CaptureMetadataOutputObjectsDelegate: NSObject, AVCaptureMetadataOutputObj
 }
 
 public struct CaptureSessionOutputHandler {
-    public var getScanViewBounds: () -> CGRect?
-    public var getVideoPreviewLayer: () -> AVCaptureVideoPreviewLayer?
     public var handleOutput: (String) -> Void
 }
 

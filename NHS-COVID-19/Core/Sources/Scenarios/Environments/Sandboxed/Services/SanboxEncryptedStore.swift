@@ -41,6 +41,10 @@ class SandboxEncryptedStore: EncryptedStoring {
             """# .data(using: .utf8)
         }
         
+        stored["policy_version"] = """
+        { "lastAcceptedWithAppVersion": "\(host.initialState.lastAcceptedWithAppVersion)" }
+        """.data(using: .utf8)!
+        
         saveIsolationState()
     }
     

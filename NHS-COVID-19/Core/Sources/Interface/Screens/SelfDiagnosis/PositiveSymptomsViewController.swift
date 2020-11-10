@@ -10,6 +10,7 @@ public protocol PositiveSymptomsViewControllerInteracting {
     func didTapBookTest()
     func didTapCancel()
     func furtherAdviceLinkTapped()
+    func exposureFAQsLinkTapped()
 }
 
 extension PositiveSymptomsViewController {
@@ -53,11 +54,17 @@ extension PositiveSymptomsViewController {
                     localizeAndSplit(.positive_symptoms_explanation).map {
                         UILabel().set(text: $0).styleAsBody()
                     },
+                    UILabel().set(text: localize(.exposure_faqs_link_label)).styleAsBody(),
+                    LinkButton(
+                        title: localize(.exposure_faqs_link_button_title),
+                        action: interactor.exposureFAQsLinkTapped
+                    ),
                     UILabel().set(text: localize(.positive_symptoms_link_label)).styleAsBody(),
                     LinkButton(
                         title: localize(.end_of_isolation_online_services_link),
                         action: interactor.furtherAdviceLinkTapped
                     ),
+                    
                 ],
                 primaryButton: (
                     title: localize(.positive_symptoms_corona_test_button),

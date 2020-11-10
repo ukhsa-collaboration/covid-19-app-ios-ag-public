@@ -253,15 +253,15 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>zero</key>
-				<string/>
+				<string>Hunanynyswch am %ld diwrnod</string>
 				<key>one</key>
 				<string>Hunanynyswch am %ld diwrnod</string>
 				<key>two</key>
-				<string/>
+				<string>Hunanynyswch am %ld diwrnod</string>
 				<key>few</key>
-				<string/>
+				<string>Hunanynyswch am %ld diwrnod</string>
 				<key>many</key>
-				<string/>
+				<string>Hunanynyswch am %ld diwrnod</string>
 				<key>other</key>
 				<string>Hunanynyswch am %ld diwrnod</string>
 			</dict>
@@ -269,7 +269,7 @@
 		<key>risky_venue_isolation_title_accessibility %ld</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
-			<string/>
+			<string>%#@days@</string>
 			<key>days</key>
 			<dict>
 				<key>NSStringFormatSpecTypeKey</key>

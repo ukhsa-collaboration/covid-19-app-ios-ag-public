@@ -24,18 +24,6 @@ public enum StringLocalizationKey: String, CaseIterable {
     case authorization_denied_description
     case authorization_denied_action
     
-    case authentication_code_title
-    case authentication_code_description
-    case authentication_code_textfield_heading
-    case authentication_code_textfield_example
-    case authentication_code_info_heading
-    case authentication_code_info_description_1
-    case authentication_code_info_example
-    case authentication_code_info_description_2
-    case authentication_code_button_title
-    case authentication_code_error_description
-    case authentication_code_textfield_label
-    
     case start_onboarding_step_title
     case start_onboarding_step_subtitle
     case start_onboarding_step_1_header
@@ -193,7 +181,8 @@ public enum StringLocalizationKey: String, CaseIterable {
     case positive_symptoms_explanation
     case positive_symptoms_corona_test_button
     case positive_symptoms_link_label
-    
+    case exposure_faqs_link_label
+    case exposure_faqs_link_button_title
     case exposure_acknowledgement_self_isolate_for
     case exposure_acknowledgement_warning
     case exposure_acknowledgement_explaination_1
@@ -274,14 +263,11 @@ public enum StringLocalizationKey: String, CaseIterable {
     
     case virology_book_a_test_title
     case virology_book_a_test_heading
-    case virology_book_a_test_paragraph1
-    case virology_book_a_test_paragraph2
-    case virology_book_a_test_paragraph3
+    case virology_book_a_test_description
     case virology_book_a_test_paragraph4
     case virology_book_a_test_testing_privacy_notice
     case virology_book_a_test_paragraph5
     case virology_book_a_test_app_privacy_notice
-    case virology_book_a_test_paragraph6
     case virology_book_a_test_book_a_test_for_someone_else
     case virology_book_a_test_button
     
@@ -349,6 +335,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case link_nhs111_online
     case link_how_this_app_works
     case link_provide_feedback
+    case link_exposure_faq
     
     case cancel
     case back
@@ -416,6 +403,12 @@ public enum StringLocalizationKey: String, CaseIterable {
     case risky_venue_isolation_report_symptoms
     case risky_venue_isolation_warning
     case risky_venue_isolation_description
+    
+    case ask_me_later_button_title
+    
+    case policy_update_title
+    case policy_update_description
+    case policy_update_button
 }
 
 public enum ParameterisedStringLocalizable: Equatable {

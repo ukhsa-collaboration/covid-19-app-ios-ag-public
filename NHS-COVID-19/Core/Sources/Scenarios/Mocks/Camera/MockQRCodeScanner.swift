@@ -20,7 +20,7 @@ public class MockQRCodeScanner: QRCodeScanning {
         Just(state).eraseToAnyPublisher()
     }
     
-    public func startScanner(targetView: UIView, scanViewBounds: CGRect, resultHandler: @escaping (String) -> Void) {
+    public func startScanner(targetView: UIView, resultHandler: @escaping (String) -> Void) {
         if showPermissionAlert {
             state = .requestingPermission
             showPermissionAlert = false
@@ -33,7 +33,7 @@ public class MockQRCodeScanner: QRCodeScanning {
         state = .stopped
     }
     
-    public func changeOrientation(viewBounds: CGRect, scanViewBounds: CGRect, orientation: UIInterfaceOrientation) {}
+    public func changeOrientation(viewBounds: CGRect, orientation: UIInterfaceOrientation) {}
     
     public func reset() {}
     

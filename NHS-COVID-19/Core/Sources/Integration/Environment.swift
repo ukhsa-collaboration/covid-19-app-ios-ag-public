@@ -16,18 +16,23 @@ public struct Environment {
     var venueDecoder: QRCode
     var backgroundTaskIdentifier: String
     var identifier: String
+    var appInfo: AppInfo
 }
 
 public extension Environment {
     
     static func standard(with configuration: EnvironmentConfiguration = .production) -> Environment {
-        Environment(
+        let appInfo = AppInfo(for: .main)
+        let userAgentHeaderValue = "p=iOS,o=\(Version.iOSVersion.readableRepresentation),v=\(appInfo.version.readableRepresentation),b=\(appInfo.buildNumber)"
+        
+        return Environment(
             distributionClient: AppHTTPClient(for: configuration.distributionRemote, kind: .distribution),
-            apiClient: AppHTTPClient(for: configuration.submissionRemote, kind: .submission),
+            apiClient: AppHTTPClient(for: configuration.submissionRemote, kind: .submission(userAgentHeaderValue: userAgentHeaderValue)),
             iTunesClient: URLSessionHTTPClient(remote: HTTPRemote.iTunes),
             venueDecoder: QRCode(for: .qrCodes),
             backgroundTaskIdentifier: BackgroundTaskIdentifiers(in: .main).exposureNotification!,
-            identifier: configuration.identifier
+            identifier: configuration.identifier,
+            appInfo: appInfo
         )
     }
     
@@ -38,7 +43,8 @@ public extension Environment {
             iTunesClient: client,
             venueDecoder: QRCode(for: .qrCodes),
             backgroundTaskIdentifier: BackgroundTaskIdentifiers(in: .main).exposureNotification!,
-            identifier: "mock"
+            identifier: "mock",
+            appInfo: AppInfo(for: .main)
         )
     }
     

@@ -27,10 +27,6 @@ extension CoordinatedAppController {
                 let vc = AppAvailabilityErrorViewController(viewModel: .init(errorType: .appTooOld(updateAvailable: updateAvailable), descriptions: descriptions))
                 return UINavigationController(rootViewController: vc)
             }
-        case .pilotActivationRequired(let submit):
-            return PilotActivationViewController {
-                submit($0).regulate(as: .modelChange)
-            }
             
         case .failedToStart:
             let vc = UnrecoverableErrorViewController()
@@ -60,8 +56,24 @@ extension CoordinatedAppController {
                 vc = BluetoothDisabledViewController(country: country)
             }
             return UINavigationController(rootViewController: vc)
+        case .policyAcceptanceRequired(let saveCurrentVersion, let openURL):
+            let interactor = PolicyUpdateInteractor(
+                saveCurrentVersion: saveCurrentVersion,
+                openURL: openURL
+            )
+            return PolicyUpdateViewController(interactor: interactor)
         case .runningExposureNotification(let context):
             return viewControllerForRunningApp(with: context)
+        case .recommmededUpdate(let reason):
+            switch reason {
+            case .newRecommendedAppUpdate(let title, let descriptions, let dismissAction):
+                let vc = AppAvailabilityErrorViewController(viewModel: .init(errorType: .recommendingAppUpdate(title: title), descriptions: descriptions, secondaryBtnAction: dismissAction))
+                return vc
+            case .newRecommendedOSupdate(let title, let descriptions, let dismissAction):
+                let vc = AppAvailabilityErrorViewController(viewModel: .init(errorType: .recommendingOSUpdate(title: title), descriptions: descriptions, secondaryBtnAction: dismissAction))
+                return vc
+            }
+            
         }
     }
     
@@ -76,12 +88,20 @@ extension CoordinatedAppController {
                             ?? UIViewController()
                     case .neededForPositiveResultStartToIsolate(let interactor, let isolationEndDate):
                         return SendKeysLoadingFlowViewController(interactor: interactor) { completion in
-                            let interactor = PositiveTestResultWithIsolationInteractor(didTapOnlineServicesLink: interactor.didTapOnlineServicesLink, didTapPrimaryButton: completion)
+                            let interactor = PositiveTestResultWithIsolationInteractor(
+                                didTapOnlineServicesLink: interactor.didTapOnlineServicesLink,
+                                didTapExposureFAQLink: interactor.didTapExposureFAQLink,
+                                didTapPrimaryButton: completion
+                            )
                             return NonNegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: isolationEndDate, testResultType: .positive(.start))
                         }
                     case .neededForPositiveResultContinueToIsolate(let interactor, let isolationEndDate):
                         return SendKeysLoadingFlowViewController(interactor: interactor) { completion in
-                            let interactor = PositiveTestResultWithIsolationInteractor(didTapOnlineServicesLink: interactor.didTapOnlineServicesLink, didTapPrimaryButton: completion)
+                            let interactor = PositiveTestResultWithIsolationInteractor(
+                                didTapOnlineServicesLink: interactor.didTapOnlineServicesLink,
+                                didTapExposureFAQLink: interactor.didTapExposureFAQLink,
+                                didTapPrimaryButton: completion
+                            )
                             return NonNegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: isolationEndDate, testResultType: .positive(.continue))
                         }
                     case .neededForPositiveResultNotIsolating(let interactor):
@@ -279,5 +299,18 @@ private struct AuthorizationDeniedInteractor: AuthorizationDeniedViewController.
     
     func didTapSettings() {
         _openSettings()
+    }
+}
+
+private struct PolicyUpdateInteractor: PolicyUpdateViewController.Interacting {
+    var saveCurrentVersion: () -> Void
+    let openURL: (URL) -> Void
+    
+    func didTapContinue() {
+        saveCurrentVersion()
+    }
+    
+    func didTapTermsOfUse() {
+        openURL(ExternalLink.ourPolicies.url)
     }
 }

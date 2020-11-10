@@ -14,6 +14,7 @@ public class ExposureAcknowledgementScreenScenario: Scenario {
     public static var name: String = "Exposure Notification Acknowledgement"
     
     public static let acknowledgedNotification: String = "I Understand Tapped"
+    public static let exposureFAQTapped = "Exposure FAQ Link tapped"
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
@@ -38,5 +39,9 @@ private class Interactor: ContactCaseAcknowledgementViewController.Interacting {
     
     func acknowledge() {
         viewController?.showAlert(title: ExposureAcknowledgementScreenScenario.acknowledgedNotification)
+    }
+    
+    func exposureFAQsLinkTapped() {
+        viewController?.showAlert(title: RiskyVenueAcknowledgementScreenScenario.exposureFAQTapped)
     }
 }

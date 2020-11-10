@@ -9,7 +9,7 @@ class RawStateTests: XCTestCase {
     
     func testAppStaysInLoadingStateUntilWeKnowNotificationStatus() {
         let rawState = RawState(
-            appAvailability: .available,
+            appAvailability: AppAvailabilityMetadata(titles: [:], descriptions: [:], state: .available),
             completedOnboardingForCurrentSession: false,
             exposureState: ExposureNotificationStateController.CombinedState(
                 activationState: .activated,
@@ -18,7 +18,9 @@ class RawStateTests: XCTestCase {
                 isEnabled: true
             ),
             userNotificationsStatus: .unknown,
-            hasPostcode: true
+            hasPostcode: true,
+            shouldRecommendUpdate: true,
+            shouldShowPolicyUpdate: false
         )
         
         XCTAssertEqual(rawState.logicalState, .starting)
@@ -26,14 +28,14 @@ class RawStateTests: XCTestCase {
     
     func testAppUnavailable() {
         let reasons: [AppAvailabilityLogicalState.UnavailabilityReason] = [
-            .iOSTooOld(descriptions: [:]),
-            .appTooOld(updateAvailable: true, descriptions: [:]),
-            .appTooOld(updateAvailable: false, descriptions: [:]),
+            .iOSTooOld,
+            .appTooOld(updateAvailable: true),
+            .appTooOld(updateAvailable: false),
         ]
         
         for reason in reasons {
             let rawState = RawState(
-                appAvailability: .unavailable(reason: reason),
+                appAvailability: AppAvailabilityMetadata(titles: [:], descriptions: [:], state: .unavailable(reason: reason)),
                 completedOnboardingForCurrentSession: false,
                 exposureState: ExposureNotificationStateController.CombinedState(
                     activationState: .activated,
@@ -42,16 +44,18 @@ class RawStateTests: XCTestCase {
                     isEnabled: true
                 ),
                 userNotificationsStatus: .authorized,
-                hasPostcode: true
+                hasPostcode: true,
+                shouldRecommendUpdate: true,
+                shouldShowPolicyUpdate: true
             )
             
-            XCTAssertEqual(rawState.logicalState, .appUnavailable(reason))
+            XCTAssertEqual(rawState.logicalState, .appUnavailable(reason, descriptions: [:]))
         }
     }
     
-    func testCompletedOnboarding() {
+    func testShowPolicyUpdate() {
         let rawState = RawState(
-            appAvailability: .available,
+            appAvailability: AppAvailabilityMetadata(titles: [:], descriptions: [:], state: .available),
             completedOnboardingForCurrentSession: true,
             exposureState: ExposureNotificationStateController.CombinedState(
                 activationState: .activated,
@@ -60,10 +64,71 @@ class RawStateTests: XCTestCase {
                 isEnabled: true
             ),
             userNotificationsStatus: .authorized,
-            hasPostcode: true
+            hasPostcode: true,
+            shouldRecommendUpdate: true,
+            shouldShowPolicyUpdate: true
+        )
+        
+        XCTAssertEqual(rawState.logicalState, .policyAcceptanceRequired)
+    }
+    
+    func testCompletedOnboarding() {
+        let rawState = RawState(
+            appAvailability: AppAvailabilityMetadata(titles: [:], descriptions: [:], state: .available),
+            completedOnboardingForCurrentSession: true,
+            exposureState: ExposureNotificationStateController.CombinedState(
+                activationState: .activated,
+                authorizationState: .authorized,
+                exposureNotificationState: .active,
+                isEnabled: true
+            ),
+            userNotificationsStatus: .authorized,
+            hasPostcode: true,
+            shouldRecommendUpdate: true,
+            shouldShowPolicyUpdate: false
         )
         
         XCTAssertEqual(rawState.logicalState, .fullyOnboarded)
+    }
+    
+    func testShowAppRecommendedUpdate() {
+        let appAvailability = AppAvailabilityMetadata(titles: [:], descriptions: [:], state: .recommending(reason: .appOlderThanRecommended(version: Version(major: 1))))
+        let rawState = RawState(
+            appAvailability: appAvailability,
+            completedOnboardingForCurrentSession: false,
+            exposureState: ExposureNotificationStateController.CombinedState(
+                activationState: .activated,
+                authorizationState: .authorized,
+                exposureNotificationState: .active,
+                isEnabled: true
+            ),
+            userNotificationsStatus: .authorized,
+            hasPostcode: true,
+            shouldRecommendUpdate: true,
+            shouldShowPolicyUpdate: true
+        )
+        
+        XCTAssertEqual(rawState.logicalState, .recommendingUpdate(.appOlderThanRecommended(version: Version(major: 1)), titles: [:], descriptions: [:]))
+    }
+    
+    func testShowOSRecommendedUpdate() {
+        let appAvailability = AppAvailabilityMetadata(titles: [:], descriptions: [:], state: .recommending(reason: .iOSOlderThanRecommended(version: Version(major: 14))))
+        let rawState = RawState(
+            appAvailability: appAvailability,
+            completedOnboardingForCurrentSession: false,
+            exposureState: ExposureNotificationStateController.CombinedState(
+                activationState: .activated,
+                authorizationState: .authorized,
+                exposureNotificationState: .active,
+                isEnabled: true
+            ),
+            userNotificationsStatus: .authorized,
+            hasPostcode: true,
+            shouldRecommendUpdate: true,
+            shouldShowPolicyUpdate: false
+        )
+        
+        XCTAssertEqual(rawState.logicalState, .recommendingUpdate(.iOSOlderThanRecommended(version: Version(major: 14)), titles: [:], descriptions: [:]))
     }
     
 }

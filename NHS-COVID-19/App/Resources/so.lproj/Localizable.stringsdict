@@ -157,9 +157,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Waxaad u baahan tahay inaad is-go'doomisid ila %2$@ markay tahay %3$@. %1$ld maalin ayaa ka hartay.</string>
+				<string>Waxaad u baahan tahay inaad isu-go’doomisid ila %2$@ markay tahay %3$@. %1$ld maalin ayaa ka hartay.</string>
 				<key>other</key>
-				<string>Waxaad u baahan tahay inaad is-go'doomisid ila %2$@ markay tahay %3$@.  %1$ld maalmood ayaa ka hartay.</string>
+				<string>Waxaad u baahan tahay inaad isu-go’doomisid ila %2$@ markay tahay %3$@.  %1$ld maalmood ayaa ka hartay.</string>
 			</dict>
 		</dict>
 		<key>positive_test_start_to_isolate_accessibility_label %ld</key>
@@ -181,7 +181,7 @@
 		<key>risky_venue_isolation_title_accessibility %ld</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
-			<string/>
+			<string>%#@days@</string>
 			<key>days</key>
 			<dict>
 				<key>NSStringFormatSpecTypeKey</key>

@@ -13,23 +13,32 @@ public struct AppHTTPClient: HTTPClient {
     
     public enum RemoteKind {
         case distribution
-        case submission
+        case submission(userAgentHeaderValue: String)
     }
     
     private let client: HTTPClient
     private let responseVerifier: HTTPResponseVerifying
     
     public init(for remote: Remote, kind: RemoteKind) {
-        client = URLSessionHTTPClient(
-            remote: HTTPRemote(for: remote),
-            session: URLSession(for: remote)
-        )
+        
+        let httpRemote: HTTPRemote
+        
         switch kind {
         case .distribution:
+            httpRemote = HTTPRemote(for: remote)
             responseVerifier = HTTPResponseTimestampedSignatureVerifier(for: remote)
-        case .submission:
+        case .submission(let userAgentHeaderValue):
+            httpRemote = HTTPRemote(
+                for: remote,
+                additionalHeaders: ["User-Agent": userAgentHeaderValue]
+            )
             responseVerifier = HTTPResponseRequestBoundSignatureVerifier(for: remote)
         }
+        
+        client = URLSessionHTTPClient(
+            remote: httpRemote,
+            session: URLSession(for: remote)
+        )
     }
     
     public func perform(_ request: HTTPRequest) -> AnyPublisher<HTTPResponse, HTTPRequestError> {
@@ -43,11 +52,12 @@ public struct AppHTTPClient: HTTPClient {
 
 private extension HTTPRemote {
     
-    init(for remote: Remote) {
+    init(for remote: Remote, additionalHeaders: [String: String] = [:]) {
+        let headers = remote.headers.merging(additionalHeaders) { current, _ in current }
         self.init(
             host: remote.host,
             path: remote.path,
-            headers: HTTPHeaders(fields: remote.headers)
+            headers: HTTPHeaders(fields: headers)
         )
     }
     

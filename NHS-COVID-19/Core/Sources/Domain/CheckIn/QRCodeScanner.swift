@@ -8,9 +8,9 @@ import UIKit
 
 public protocol QRCodeScanning {
     func getState() -> AnyPublisher<QRCodeScannerState, Never>
-    func startScanner(targetView: UIView, scanViewBounds: CGRect, resultHandler: @escaping (String) -> Void)
+    func startScanner(targetView: UIView, resultHandler: @escaping (String) -> Void)
     func stopScanner()
-    func changeOrientation(viewBounds: CGRect, scanViewBounds: CGRect, orientation: UIInterfaceOrientation)
+    func changeOrientation(viewBounds: CGRect, orientation: UIInterfaceOrientation)
     func reset()
 }
 
@@ -35,7 +35,6 @@ public class QRCodeScanner: QRCodeScanning {
     private var isCameraSetup: Bool = false
     
     private var targetView: UIView?
-    private var scanViewBounds: CGRect?
     private var resultHandler: ((String) -> Void)?
     private var captureSession: CaptureSession?
     private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
@@ -50,12 +49,11 @@ public class QRCodeScanner: QRCodeScanning {
         $state.eraseToAnyPublisher()
     }
     
-    public func startScanner(targetView: UIView, scanViewBounds: CGRect, resultHandler: @escaping (String) -> Void) {
+    public func startScanner(targetView: UIView, resultHandler: @escaping (String) -> Void) {
         guard cancellable == nil else { return }
         
         self.targetView = targetView
         self.resultHandler = resultHandler
-        self.scanViewBounds = scanViewBounds
         
         cancellable = cameraStateController.$authorizationState
             .receive(on: RunLoop.main)
@@ -102,13 +100,11 @@ public class QRCodeScanner: QRCodeScanning {
         }
     }
     
-    public func changeOrientation(viewBounds: CGRect, scanViewBounds: CGRect, orientation: UIInterfaceOrientation) {
+    public func changeOrientation(viewBounds: CGRect, orientation: UIInterfaceOrientation) {
         guard let videoPreviewLayer = self.videoPreviewLayer,
             let connection = videoPreviewLayer.connection else {
             return
         }
-        
-        self.scanViewBounds = scanViewBounds
         
         if connection.isVideoOrientationSupported, let videoOrientation = AVCaptureVideoOrientation(rawValue: orientation.rawValue) {
             videoPreviewLayer.frame = viewBounds
@@ -119,12 +115,6 @@ public class QRCodeScanner: QRCodeScanning {
     private func createCaptureSession(resultHandler: @escaping (String) -> Void) -> CaptureSession? {
         
         let handler = CaptureSessionOutputHandler(
-            getScanViewBounds: {
-                self.scanViewBounds
-            },
-            getVideoPreviewLayer: {
-                self.videoPreviewLayer
-            },
             handleOutput: { payload in
                 self.state = .scanning
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -132,7 +122,6 @@ public class QRCodeScanner: QRCodeScanning {
                     self.state = .processing
                     resultHandler(payload)
                 }
-                
             }
         )
         
@@ -145,7 +134,6 @@ public class QRCodeScanner: QRCodeScanning {
         cancellable = nil
         isCameraSetup = false
         targetView = nil
-        scanViewBounds = nil
         resultHandler = nil
         captureSession = nil
         videoPreviewLayer = nil

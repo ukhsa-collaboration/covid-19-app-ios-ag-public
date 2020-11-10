@@ -7,10 +7,6 @@ import Localization
 import SwiftUI
 
 public struct NavigationButton: View {
-    public enum ContentColorScheme {
-        case matchEnvironment
-        case override(SwiftUI.ColorScheme)
-    }
     
     public class ColorScheme {
         var iconColor: Color
@@ -22,7 +18,7 @@ public struct NavigationButton: View {
             singleColor == true ? imageBackgroundColor : Color(.surface)
         }
         
-        var contentColorScheme: ContentColorScheme
+        var borderColor: Color
         
         init(
             iconColor: Color,
@@ -30,14 +26,14 @@ public struct NavigationButton: View {
             backgroundColor: Color,
             singleColor: Bool,
             fontColor: Color,
-            contentColorScheme: ContentColorScheme
+            borderColor: Color
         ) {
             self.iconColor = iconColor
             self.foregroundColor = foregroundColor
             imageBackgroundColor = backgroundColor
             self.singleColor = singleColor
             self.fontColor = fontColor
-            self.contentColorScheme = contentColorScheme
+            self.borderColor = borderColor
         }
         
         static func standard(foregroundColor: Color, imageBackgroundColor: Color) -> ColorScheme {
@@ -47,7 +43,7 @@ public struct NavigationButton: View {
                 backgroundColor: imageBackgroundColor,
                 singleColor: false,
                 fontColor: Color(.primaryText),
-                contentColorScheme: .matchEnvironment
+                borderColor: Color(.clear)
             )
         }
     }
@@ -59,8 +55,6 @@ public struct NavigationButton: View {
     var font: Font
     var fontWeight: Font.Weight?
     var colorScheme: ColorScheme
-    
-    @SwiftUI.Environment(\.colorScheme) var environmentColorScheme
     
     public init(
         imageName: ImageName,
@@ -101,15 +95,6 @@ public struct NavigationButton: View {
         self.colorScheme = colorScheme
     }
     
-    private var contentColorScheme: SwiftUI.ColorScheme {
-        switch colorScheme.contentColorScheme {
-        case .matchEnvironment:
-            return environmentColorScheme
-        case .override(let colorScheme):
-            return colorScheme
-        }
-    }
-    
     public var body: some View {
         Button(action: action) {
             ZStack(alignment: .leading) {
@@ -124,7 +109,6 @@ public struct NavigationButton: View {
                             .frame(width: 30, height: 30)
                     }
                     .frame(width: .menuButtonColorWidth)
-                    .colorScheme(contentColorScheme)
                     HStack(spacing: .standardSpacing) {
                         Text(text)
                             .font(font)
@@ -138,11 +122,13 @@ public struct NavigationButton: View {
                             .foregroundColor(colorScheme.iconColor)
                             .frame(width: 30)
                     }
-                    .colorScheme(contentColorScheme)
                     .padding(.standardSpacing)
                     .background(colorScheme.backgroundColor)
                 }
-            }
+            }.overlay(
+                RoundedRectangle(cornerRadius: .menuButtonCornerRadius)
+                    .stroke(colorScheme.borderColor, lineWidth: 1)
+            )
         }
         .background(colorScheme.backgroundColor)
         .clipShape(RoundedRectangle(cornerRadius: .menuButtonCornerRadius))

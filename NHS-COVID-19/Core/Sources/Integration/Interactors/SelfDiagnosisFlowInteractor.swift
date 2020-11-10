@@ -63,6 +63,11 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
     func nhs111LinkTapped() {
         openURL(ExternalLink.nhs111Online.url)
     }
+    
+    func exposureFAQsLinkTapped() {
+        openURL(ExternalLink.exposureFAQs.url)
+        
+    }
 }
 
 extension SelfDiagnosisFlowInteractor: BookATestInfoViewControllerInteracting {

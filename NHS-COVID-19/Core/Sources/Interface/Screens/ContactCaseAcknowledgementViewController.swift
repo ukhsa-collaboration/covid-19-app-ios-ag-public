@@ -10,6 +10,7 @@ import UIKit
 public protocol ContactCaseAcknowledgementViewControllerInteracting {
     func acknowledge()
     func didTapOnlineLink()
+    func exposureFAQsLinkTapped()
 }
 
 private class ContactCaseAcknowledgementContent: PrimaryButtonStickyFooterScrollingContent {
@@ -34,6 +35,11 @@ private class ContactCaseAcknowledgementContent: PrimaryButtonStickyFooterScroll
             pleaseIsolateStack,
             InformationBox.indication.warning(type.warning),
             type.content,
+            UILabel().set(text: localize(.exposure_faqs_link_label)).styleAsBody(),
+            LinkButton(
+                title: localize(.exposure_faqs_link_button_title),
+                action: interactor.exposureFAQsLinkTapped
+            ),
             UILabel()
                 .styleAsBody()
                 .set(text: localize(.exposure_acknowledgement_link_label)),

@@ -6,12 +6,6 @@ import Common
 import Domain
 
 struct FeatureToggleStorage {
-    @UserDefault("scenario.toggle.risky_postcode", defaultValue: Feature.productionEnabledFeatures.contains(.riskyPostcode))
-    var riskyPostcodeToggle: Bool
-    
-    @UserDefault("scenario.toggle.venue_check_in", defaultValue: Feature.productionEnabledFeatures.contains(.venueCheckIn))
-    var venueCheckInToggle: Bool
-    
     @UserDefault("scenario.toggle.self_diagnosis", defaultValue: Feature.productionEnabledFeatures.contains(.selfDiagnosis))
     var selfDiagnosisToggle: Bool
     
@@ -28,12 +22,6 @@ struct FeatureToggleStorage {
         let store = FeatureToggleStorage()
         var enabledFeatures = [Feature]()
         
-        if store.riskyPostcodeToggle {
-            enabledFeatures.append(.riskyPostcode)
-        }
-        if store.venueCheckInToggle {
-            enabledFeatures.append(.venueCheckIn)
-        }
         if store.selfDiagnosisToggle {
             enabledFeatures.append(.selfDiagnosis)
         }

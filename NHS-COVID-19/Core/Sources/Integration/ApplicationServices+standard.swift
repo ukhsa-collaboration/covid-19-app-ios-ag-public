@@ -35,7 +35,7 @@ extension ApplicationServices {
             encryptedStore: EncryptedStore(service: environment.identifier),
             cacheStorage: FileStorage(forCachesOf: environment.identifier),
             venueDecoder: environment.venueDecoder,
-            appInfo: AppInfo(for: .main),
+            appInfo: environment.appInfo,
             pasteboardCopier: PasteboardCopier(),
             postcodeValidator: PostcodeValidator(),
             currentDateProvider: currentDateProvider,

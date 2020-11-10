@@ -13,7 +13,9 @@ public class RecoverableErrorScreenTemplateScenario: Scenario, UITestInspectable
     public static let straplineTitle = "NHS Covid 19"
     public static let errorTitle = "We are showing you this screen if you can resolve an error"
     public static let actionTitle = "Act now"
+    public static let secondaryActionTitle = "Act now (secondary)"
     public static let didPerformActionTitle = "You acted!"
+    public static let didPerformSecondaryActionTitle = "You acted (secondary)!"
     public static let customViewContent = "This is some custom content we show for this step."
     public static let customViewContent2 = "We can have multiple items that show one after another."
     public static let customViewContent3 = """
@@ -23,18 +25,20 @@ public class RecoverableErrorScreenTemplateScenario: Scenario, UITestInspectable
     static var appController: AppController {
         let navigation = UINavigationController()
         navigation.isNavigationBarHidden = true
-        let content = viewController { [weak navigation] in
+        let content = viewController(act: { [weak navigation] in
             navigation?.showAlert(title: didPerformActionTitle)
-        }
+        }, secondaryAct: { [weak navigation] in
+            navigation?.showAlert(title: didPerformSecondaryActionTitle)
+        }, isPrimaryButtonLink: false)
         navigation.pushViewController(content, animated: false)
         return BasicAppController(rootViewController: navigation)
     }
     
     public static var viewControllerForInspecting: UIViewController {
-        viewController(act: {})
+        viewController(act: {}, secondaryAct: {}, isPrimaryButtonLink: false)
     }
     
-    private static func viewController(act: @escaping () -> Void) -> UIViewController {
+    private static func viewController(act: @escaping () -> Void, secondaryAct: @escaping () -> Void, isPrimaryButtonLink: Bool) -> UIViewController {
         let content = [customViewContent, customViewContent2, customViewContent3].map { text -> UIView in
             let label = UILabel()
             label.styleAsBody()
@@ -43,7 +47,8 @@ public class RecoverableErrorScreenTemplateScenario: Scenario, UITestInspectable
         }
         
         let error = Error(title: errorTitle, actionTitle: actionTitle, content: content, act: act)
-        return RecoverableErrorViewController(error: error)
+        let secondaryBtnAction = (title: secondaryActionTitle, act: secondaryAct)
+        return RecoverableErrorViewController(error: error, isPrimaryLinkBtn: isPrimaryButtonLink, secondaryBtnAction: secondaryBtnAction)
     }
     
     private struct Error: ErrorDetail {

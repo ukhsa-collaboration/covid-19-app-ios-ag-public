@@ -45,9 +45,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Lütfen %ld gün kendinizi karantinaya alın ve bir test yaptırın</string>
+				<string>Lütfen kendinizi %ld gün boyunca karantinaya alın ve bir test yaptırın</string>
 				<key>other</key>
-				<string>Lütfen %ld gün kendinizi karantinaya alın ve bir test yaptırın</string>
+				<string>Lütfen kendinizi %ld gün boyunca karantinaya alın ve bir test yaptırın</string>
 			</dict>
 		</dict>
 		<key>positive_test_please_isolate_accessibility_label %ld</key>
@@ -141,9 +141,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Lütfen %ld gün kendinizi karantinaya alın</string>
+				<string>Lütfen kendinizi %ld gün boyunca karantinaya alın</string>
 				<key>other</key>
-				<string>Lütfen %ld gün kendinizi karantinaya alın</string>
+				<string>Lütfen kendinizi %ld gün boyunca karantinaya alın</string>
 			</dict>
 		</dict>
 		<key>isolation_indicator_accessiblity_label days: %ld date: %@ time: %@</key>
@@ -173,15 +173,15 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Lütfen %ld gün kendinizi karantinaya alın</string>
+				<string>Lütfen kendinizi %ld gün boyunca karantinaya alın</string>
 				<key>other</key>
-				<string>Lütfen %ld gün kendinizi karantinaya alın</string>
+				<string>Lütfen kendinizi %ld gün boyunca karantinaya alın</string>
 			</dict>
 		</dict>
 		<key>risky_venue_isolation_title_accessibility %ld</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
-			<string/>
+			<string>%#@days@</string>
 			<key>days</key>
 			<dict>
 				<key>NSStringFormatSpecTypeKey</key>

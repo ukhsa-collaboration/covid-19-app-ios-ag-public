@@ -20,6 +20,7 @@ public protocol SelfDiagnosisFlowViewControllerInteracting: BookATestInfoViewCon
     func openTestkitOrder()
     func furtherAdviceLinkTapped()
     func nhs111LinkTapped()
+    func exposureFAQsLinkTapped()
 }
 
 public class SelfDiagnosisFlowViewController: UINavigationController {
@@ -244,6 +245,10 @@ private struct PositiveSymptomsViewControllerInteractor: PositiveSymptomsViewCon
     
     public func didTapBookTest() {
         controller?.state = .bookATest
+    }
+    
+    public func exposureFAQsLinkTapped() {
+        controller?.interactor.exposureFAQsLinkTapped()
     }
 }
 

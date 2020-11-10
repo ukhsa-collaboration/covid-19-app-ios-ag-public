@@ -24,7 +24,7 @@ class BackendIntegrationTests: XCTestCase {
         
         let configuration = EnvironmentConfiguration.test
         distributionClient = AppHTTPClient(for: configuration.distributionRemote, kind: .distribution)
-        submissionclient = AppHTTPClient(for: configuration.submissionRemote, kind: .submission)
+        submissionclient = AppHTTPClient(for: configuration.submissionRemote, kind: .submission(userAgentHeaderValue: "p=iOS,o=14.0.1,v=3.8,b=229"))
     }
     
     fileprivate func runDistributionTest<T: HTTPEndpoint, ResultType>(with endpoint: T, expectedType: ResultType.Type) throws where T.Input == Void, T.Output == ResultType {

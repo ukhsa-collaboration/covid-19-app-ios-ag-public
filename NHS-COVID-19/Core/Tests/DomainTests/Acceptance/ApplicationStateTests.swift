@@ -51,7 +51,7 @@ class ApplicationStateTests: XCTestCase {
                 encryptedStore: configuration.encryptedStore,
                 cacheStorage: configuration.cacheStorage,
                 venueDecoder: QRCode.forTests,
-                appInfo: AppInfo(bundleId: .random(), version: "1"),
+                appInfo: AppInfo(bundleId: .random(), version: "3.10", buildNumber: "1"),
                 pasteboardCopier: MockPasteboardCopier(),
                 postcodeValidator: configuration.postcodeValidator,
                 currentDateProvider: { Date() },
@@ -162,7 +162,7 @@ class ApplicationStateTests: XCTestCase {
     }
     
     func testEnteringErrorStateIfBluetoothDisabled() throws {
-        try completeExposureNotificationActivation(authorizationStatus: .authorized, status: .bluetoothOff)
+        try completeRunningWithBluetoothDisabled()
         
         guard case .canNotRunExposureNotification(.bluetoothDisabled, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
@@ -434,6 +434,34 @@ private extension ApplicationStateTests {
         }
     }
     
+    private func completeRunningWithBluetoothDisabled() throws {
+        try completeExposureNotificationActivation(authorizationStatus: .unknown)
+        try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
+        
+        guard case .onboarding(let complete, _) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        
+        complete()
+        
+        guard case .postcodeRequired(let savePostcode) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        
+        try savePostcode("B44").get()
+        
+        guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        
+        requestPermissions()
+        exposureNotificationManager.instanceAuthorizationStatus = .authorized
+        enableExposureNotification(finalState: .bluetoothOff)
+        exposureNotificationManager.activationCompletionHandler?(nil)
+        
+        try completeUserNotificationsAuthorization(authorizationStatus: .authorized)
+    }
+    
     private func completeExposureNotificationActivation(
         authorizationStatus: ExposureNotificationManaging.AuthorizationStatus,
         status: ExposureNotificationManaging.Status = .unknown
@@ -455,10 +483,10 @@ private extension ApplicationStateTests {
         userNoticationsManager.getSettingsCompletionHandler?(authorizationStatus)
     }
     
-    private func enableExposureNotification(file: StaticString = #file, line: UInt = #line) {
+    private func enableExposureNotification(file: StaticString = #file, line: UInt = #line, finalState: ExposureNotificationManaging.Status = .active) {
         // since this is KVO notified, make sure the manager has actually asked us about this before we change values
         XCTAssertEqual(exposureNotificationManager.setExposureNotificationEnabledValue, true, "Did not ask for state update", file: file, line: line)
-        exposureNotificationManager.exposureNotificationStatus = .active
+        exposureNotificationManager.exposureNotificationStatus = finalState
         exposureNotificationManager.exposureNotificationEnabled = true
         exposureNotificationManager.setExposureNotificationEnabledCompletionHandler?(nil)
     }

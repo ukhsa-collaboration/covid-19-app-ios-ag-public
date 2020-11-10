@@ -2,7 +2,6 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
-import Common
 import CryptoKit
 import Foundation
 
@@ -17,6 +16,7 @@ public struct HTTPResponseRequestBoundSignatureVerifier: HTTPResponseVerifying {
     }
     
     public func prepare(_ request: HTTPRequest) -> HTTPRequest {
+        
         let preparedHeaders = mutating(request.headers) {
             $0.requestId = UUID().uuidString
         }

@@ -19,6 +19,7 @@ class PositiveSymptomsScreenTests: XCTestCase {
             XCTAssert(screen.explanationLabel.exists)
             XCTAssert(screen.bookTestButton.exists)
             XCTAssert(screen.furtherAdviceButton.exists)
+            XCTAssert(screen.exposureFAQLink.exists)
         }
     }
     
@@ -39,6 +40,14 @@ class PositiveSymptomsScreenTests: XCTestCase {
             XCTAssert(screen.furtherAdviceAlertTitle.exists)
         }
     }
+    
+    func testExposureFAQ() throws {
+        try runner.run { app in
+            let screen = PositiveSymptomsScreen(app: app)
+            screen.exposureFAQLink.tap()
+            XCTAssert(screen.exposureFAQTappedTitle.exists)
+        }
+    }
 }
 
 private extension PositiveSymptomsScreen {
@@ -48,5 +57,9 @@ private extension PositiveSymptomsScreen {
     
     var furtherAdviceAlertTitle: XCUIElement {
         app.staticTexts[PositiveSymptomsScreenScenario.furtherAdviceTapped]
+    }
+    
+    var exposureFAQTappedTitle: XCUIElement {
+        app.staticTexts[PositiveSymptomsScreenScenario.exposureFAQstapped]
     }
 }

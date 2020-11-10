@@ -5,16 +5,19 @@
 import Foundation
 
 struct RawState: Equatable {
-    var appAvailability: AppAvailabilityLogicalState
+    var appAvailability: AppAvailabilityMetadata
     var completedOnboardingForCurrentSession: Bool
     var exposureState: ExposureNotificationStateController.CombinedState
     var userNotificationsStatus: UserNotificationsStateController.AuthorizationStatus
     var hasPostcode: Bool
+    var shouldRecommendUpdate: Bool
+    var shouldShowPolicyUpdate: Bool
     
     var logicalState: LogicalState {
         let logicalStateIgnoringOnboarding = self.logicalStateIgnoringOnboarding
         switch logicalStateIgnoringOnboarding {
-        case .postcodeRequired where !completedOnboardingForCurrentSession, .authorizationRequired where !completedOnboardingForCurrentSession:
+        case .postcodeRequired where !completedOnboardingForCurrentSession,
+             .authorizationRequired where !completedOnboardingForCurrentSession:
             // Show onboarding just before postcode or authorization
             return .onboarding
         default:
@@ -23,11 +26,15 @@ struct RawState: Equatable {
     }
     
     private var logicalStateIgnoringOnboarding: LogicalState {
-        switch appAvailability {
+        switch appAvailability.state {
         case .available:
             return postAvailabilityLogicalState
         case .unavailable(let reason):
-            return .appUnavailable(reason)
+            return .appUnavailable(reason, descriptions: appAvailability.descriptions)
+        case .recommending(let reason) where shouldRecommendUpdate:
+            return .recommendingUpdate(reason, titles: appAvailability.titles, descriptions: appAvailability.descriptions)
+        case .recommending:
+            return postAvailabilityLogicalState
         }
     }
     
@@ -42,19 +49,34 @@ struct RawState: Equatable {
         }
     }
     
-    private var postActivationState: LogicalState {
-        
+    private var authorizationErrorState: LogicalState? {
         switch exposureState.authorizationState {
-        case .unknown:
-            if hasPostcode {
-                return .authorizationRequired
-            }
-            return .postcodeRequired
+        case .unknown, .authorized:
+            return nil
         case .restricted:
             return .failedToStart
         case .notAuthorized:
             return .canNotRunExposureNotification(.authorizationDenied)
-        case .authorized:
+        }
+    }
+    
+    private var postActivationState: LogicalState {
+        if let authorizationErrorState = authorizationErrorState {
+            return authorizationErrorState
+        }
+        
+        guard hasPostcode else {
+            return .postcodeRequired
+        }
+        
+        guard !shouldShowPolicyUpdate else {
+            return .policyAcceptanceRequired
+        }
+        
+        switch exposureState.authorizationState {
+        case .unknown:
+            return .authorizationRequired
+        default:
             return postAuthorizedState
         }
     }
@@ -73,15 +95,9 @@ struct RawState: Equatable {
             case .unknown:
                 return .starting
             case .notDetermined:
-                if hasPostcode {
-                    return .authorizationRequired
-                }
-                return .postcodeRequired
+                return .authorizationRequired
             case .authorized, .denied:
-                if hasPostcode {
-                    return .fullyOnboarded
-                }
-                return .postcodeRequired
+                return .fullyOnboarded
             }
         }
     }

@@ -16,12 +16,9 @@ class BookATestScreenTests: XCTestCase {
             XCTAssertTrue(screen.title.exists)
             
             XCTAssertTrue(screen.heading.exists)
-            XCTAssertTrue(screen.paragraph1.exists)
-            XCTAssertTrue(screen.paragraph2.exists)
-            XCTAssertTrue(screen.paragraph3.exists)
+            XCTAssertTrue(screen.description.allExist)
             XCTAssertTrue(screen.paragraph4.exists)
             XCTAssertTrue(screen.paragraph5.exists)
-            XCTAssertTrue(screen.paragraph6.exists)
             XCTAssertTrue(screen.testingPrivacyNotice.exists)
             XCTAssertTrue(screen.appPrivacyNotice.exists)
             XCTAssertTrue(screen.bookATestForSomeoneElse.exists)

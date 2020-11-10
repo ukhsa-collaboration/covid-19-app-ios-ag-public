@@ -65,6 +65,9 @@ public enum Sandbox {
         @TestInjected("sandbox.postcode")
         public var postcode: String?
         
+        @TestInjected("sandbox.lastAcceptedWithAppVersion", defaultValue: "3.10")
+        public var lastAcceptedWithAppVersion: String
+        
         @TestInjected("sandbox.scannedQRCode", defaultValue: Text.validQRCode)
         public var scannedQRCode: String
         

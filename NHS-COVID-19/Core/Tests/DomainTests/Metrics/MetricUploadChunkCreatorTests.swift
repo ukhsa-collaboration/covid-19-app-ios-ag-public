@@ -18,7 +18,7 @@ class MetricUploadChunkCreatorTests: XCTestCase {
         collector = MetricCollector(encryptedStore: MockEncryptedStore(), currentDateProvider: { self.currentDate })
         creator = MetricUploadChunkCreator(
             collector: collector,
-            appInfo: AppInfo(bundleId: .random(), version: Self.appVersion),
+            appInfo: AppInfo(bundleId: .random(), version: Self.appVersion, buildNumber: "1"),
             getPostcode: { String.random() },
             currentDateProvider: { self.currentDate }
         )

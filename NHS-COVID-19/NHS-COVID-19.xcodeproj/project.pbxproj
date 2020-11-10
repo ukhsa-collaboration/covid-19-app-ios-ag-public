@@ -18,8 +18,6 @@
 		133FF52524E18D1E0057F756 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 133FF52724E18D1E0057F756 /* Localizable.stringsdict */; };
 		1348C45624B474C100E76BD0 /* EncryptedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1348C45524B474C100E76BD0 /* EncryptedTests.swift */; };
 		135D25DC24B386E9004EE9CE /* FileStoredTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135D25DB24B386E9004EE9CE /* FileStoredTests.swift */; };
-		13BCFAD724CF2CC50086E4D5 /* PilotActivationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BCFAD624CF2CC50086E4D5 /* PilotActivationScreen.swift */; };
-		13BCFAD924CF2CDA0086E4D5 /* PilotActivationScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BCFAD824CF2CDA0086E4D5 /* PilotActivationScreenTests.swift */; };
 		13C110AD250FC05100EA0367 /* StraplineComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C110AC250FC05100EA0367 /* StraplineComponentTests.swift */; };
 		13D88D6024BF4315007A8B39 /* SymptomReviewScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13D88D5F24BF4315007A8B39 /* SymptomReviewScreenTests.swift */; };
 		13D88D6224BF4327007A8B39 /* SymptomReviewScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13D88D6124BF4327007A8B39 /* SymptomReviewScreen.swift */; };
@@ -132,6 +130,8 @@
 		958D5F6624FFB917005C4C36 /* VoidTestResultFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958D5F6524FFB917005C4C36 /* VoidTestResultFlowTests.swift */; };
 		95A95E6324A0CA8B00BCF307 /* UnrecoverableErrorScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A95E6224A0CA8B00BCF307 /* UnrecoverableErrorScreenTests.swift */; };
 		95A95E6524A0CAC100BCF307 /* UnrecoverableErrorScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A95E6424A0CAC100BCF307 /* UnrecoverableErrorScreen.swift */; };
+		95ACF681254161C2007CE01B /* PolicyUpdateScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95ACF680254161C2007CE01B /* PolicyUpdateScreen.swift */; };
+		95ACF68725416227007CE01B /* PolicyUpdateScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95ACF68625416227007CE01B /* PolicyUpdateScreenTests.swift */; };
 		95B52FFD2490B7530076580F /* PrivacyScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B52FFC2490B7530076580F /* PrivacyScreenTests.swift */; };
 		95B52FFF2490B7C90076580F /* PrivacyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B52FFE2490B7C90076580F /* PrivacyScreen.swift */; };
 		95B53001249218FC0076580F /* LinkButtonComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B53000249218FC0076580F /* LinkButtonComponentTests.swift */; };
@@ -190,8 +190,6 @@
 		133FF52824E18D230057F756 /* pa */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = pa; path = pa.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		1348C45524B474C100E76BD0 /* EncryptedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptedTests.swift; sourceTree = "<group>"; };
 		135D25DB24B386E9004EE9CE /* FileStoredTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStoredTests.swift; sourceTree = "<group>"; };
-		13BCFAD624CF2CC50086E4D5 /* PilotActivationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PilotActivationScreen.swift; sourceTree = "<group>"; };
-		13BCFAD824CF2CDA0086E4D5 /* PilotActivationScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PilotActivationScreenTests.swift; sourceTree = "<group>"; };
 		13C110AC250FC05100EA0367 /* StraplineComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StraplineComponentTests.swift; sourceTree = "<group>"; };
 		13C2F1A024E54F2E00A1421E /* cy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = cy; path = cy.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		13C2F1A124E54F2E00A1421E /* cy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cy; path = cy.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -341,6 +339,8 @@
 		958FB6ED25276C170007685B /* so */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = so; path = so.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		95A95E6224A0CA8B00BCF307 /* UnrecoverableErrorScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnrecoverableErrorScreenTests.swift; sourceTree = "<group>"; };
 		95A95E6424A0CAC100BCF307 /* UnrecoverableErrorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnrecoverableErrorScreen.swift; sourceTree = "<group>"; };
+		95ACF680254161C2007CE01B /* PolicyUpdateScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyUpdateScreen.swift; sourceTree = "<group>"; };
+		95ACF68625416227007CE01B /* PolicyUpdateScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyUpdateScreenTests.swift; sourceTree = "<group>"; };
 		95B52FFC2490B7530076580F /* PrivacyScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyScreenTests.swift; sourceTree = "<group>"; };
 		95B52FFE2490B7C90076580F /* PrivacyScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyScreen.swift; sourceTree = "<group>"; };
 		95B53000249218FC0076580F /* LinkButtonComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkButtonComponentTests.swift; sourceTree = "<group>"; };
@@ -524,7 +524,6 @@
 				22CDCECD24CAE9070047B203 /* AboutThisAppScreenTests.swift */,
 				DDB9DC2D2501017700DFD867 /* MyDataScreenTests.swift */,
 				133E8D5024CCA675002828DB /* BookATestScreenTests.swift */,
-				13BCFAD824CF2CDA0086E4D5 /* PilotActivationScreenTests.swift */,
 				7F95D6C524D02D5B009C3B70 /* RiskyVenueInformationScreenTests.swift */,
 				223A9BB424D1A0270055582E /* NegativeTestResultWithIsolationScreenTests.swift */,
 				22B2D35524D1E47100814CEC /* NoSymptomsIsolatingScreenTests.swift */,
@@ -537,6 +536,7 @@
 				95004AFE25078BB400BD6F76 /* NegativeAfterPositiveTestResultScreenTests.swift */,
 				951A4D77251E1B0700CF9F0B /* IsolationPaymentInfoScreenTests.swift */,
 				9577F0B1252F73D80096FD78 /* RiskyVenueIsolationAcknowledgementScreenTests.swift */,
+				95ACF68625416227007CE01B /* PolicyUpdateScreenTests.swift */,
 			);
 			path = ScreenTests;
 			sourceTree = "<group>";
@@ -799,12 +799,12 @@
 				94AA418024C186E70073E493 /* LoadingFailedScreen.swift */,
 				22CDCECB24CAE3810047B203 /* AboutThisAppScreen.swift */,
 				7F59ECEF24C9D85C002987D3 /* MyDataScreen.swift */,
-				13BCFAD624CF2CC50086E4D5 /* PilotActivationScreen.swift */,
 				2285DAB024E5749F002FD1DA /* Risk level info */,
 				DDF8A86D24EBD3A30064A6FC /* BelowRequiredAgeErrorScreen.swift */,
 				9540BB0824F64B60004EF339 /* LinkTestResultScreen.swift */,
 				951A4D75251E1AB900CF9F0B /* IsolationPaymentInfoScreen.swift */,
 				9577F0A7252F72040096FD78 /* RiskyVenueIsolationAcknowledgmentScreen.swift */,
+				95ACF680254161C2007CE01B /* PolicyUpdateScreen.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -1127,7 +1127,6 @@
 				9577F0B2252F73D80096FD78 /* RiskyVenueIsolationAcknowledgementScreenTests.swift in Sources */,
 				222C188D24F016F9002C6CF6 /* VoidTestResultScreenTests.swift in Sources */,
 				222C188B24F016B8002C6CF6 /* VoidTestResultNoIsolationScreen.swift in Sources */,
-				13BCFAD924CF2CDA0086E4D5 /* PilotActivationScreenTests.swift in Sources */,
 				2285DAAE24E57454002FD1DA /* RiskLevelHighInfoScreen.swift in Sources */,
 				DD1FE2BE24DAC84700AD88B7 /* SimulatedUserNotificationAuthorizationScreen.swift in Sources */,
 				9540BB0924F64B60004EF339 /* LinkTestResultScreen.swift in Sources */,
@@ -1145,6 +1144,7 @@
 				953A953824A0D74800725940 /* RecoverableErrorComponentTests.swift in Sources */,
 				222C188F24F01B37002C6CF6 /* VoidTestResultWithIsolationScreenTests.swift in Sources */,
 				22B2D35424D1E28B00814CEC /* NoSymptomsIsolatingScreen.swift in Sources */,
+				95ACF68725416227007CE01B /* PolicyUpdateScreenTests.swift in Sources */,
 				893E46F7247023D300F9AAF6 /* UseCaseBuilder.swift in Sources */,
 				893E46F92470305200F9AAF6 /* DeviceConfiguration.swift in Sources */,
 				950F961724FFC3EE00A5A1BA /* PositiveTestResultFlowTests.swift in Sources */,
@@ -1180,7 +1180,6 @@
 				9428217924BE039400C42D24 /* PositiveSymptomsScreen.swift in Sources */,
 				133E8D4F24CCA55E002828DB /* BookATestScreen.swift in Sources */,
 				89C3DC842462BA1E001338E3 /* XCUIElementQuery.swift in Sources */,
-				13BCFAD724CF2CC50086E4D5 /* PilotActivationScreen.swift in Sources */,
 				94894E3F24CABD4500D6CDA7 /* PositiveTestResultNoSymptomsScreenTests.swift in Sources */,
 				22B2D35624D1E47100814CEC /* NoSymptomsIsolatingScreenTests.swift in Sources */,
 				133E8D5124CCA675002828DB /* BookATestScreenTests.swift in Sources */,
@@ -1223,6 +1222,7 @@
 				22CDCECE24CAE9070047B203 /* AboutThisAppScreenTests.swift in Sources */,
 				95B53001249218FC0076580F /* LinkButtonComponentTests.swift in Sources */,
 				13C110AD250FC05100EA0367 /* StraplineComponentTests.swift in Sources */,
+				95ACF681254161C2007CE01B /* PolicyUpdateScreen.swift in Sources */,
 				9428217B24BE063000C42D24 /* PositiveSymptomsScreenTests.swift in Sources */,
 				951A4D78251E1B0700CF9F0B /* IsolationPaymentInfoScreenTests.swift in Sources */,
 				9409ED2D24BC941F00847D58 /* SymptomsListScreen.swift in Sources */,

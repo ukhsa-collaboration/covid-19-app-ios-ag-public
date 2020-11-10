@@ -14,6 +14,7 @@ public class PositiveSymptomsScreenScenario: Scenario {
     public static let bookTestTapped: String = "Book test button tapped"
     public static let cancelTapped: String = "Cancel tapped"
     public static let furtherAdviceTapped: String = "Further advice tapped"
+    public static let exposureFAQstapped = "Exposure FAQs tapped"
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
@@ -41,5 +42,9 @@ private class Interactor: PositiveSymptomsViewController.Interacting {
     
     func furtherAdviceLinkTapped() {
         viewController?.showAlert(title: PositiveSymptomsScreenScenario.furtherAdviceTapped)
+    }
+    
+    func exposureFAQsLinkTapped() {
+        viewController?.showAlert(title: PositiveSymptomsScreenScenario.exposureFAQstapped)
     }
 }

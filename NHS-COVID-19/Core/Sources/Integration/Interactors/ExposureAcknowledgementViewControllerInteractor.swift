@@ -23,4 +23,8 @@ struct ExposureAcknowledgementViewControllerInteractor: ContactCaseAcknowledgeme
     func didTapOnlineLink() {
         openURL(ExternalLink.nhs111Online.url)
     }
+    
+    func exposureFAQsLinkTapped() {
+        openURL(ExternalLink.exposureFAQs.url)
+    }
 }

@@ -14,12 +14,14 @@ enum LogicalState: Equatable {
     }
     
     case starting
-    case appUnavailable(AppAvailabilityLogicalState.UnavailabilityReason)
+    case appUnavailable(AppAvailabilityLogicalState.UnavailabilityReason, descriptions: [Locale: String])
+    case recommendingUpdate(AppAvailabilityLogicalState.RecommendationReason, titles: [Locale: String], descriptions: [Locale: String])
     case failedToStart
     case onboarding
+    case postcodeRequired
+    case policyAcceptanceRequired
     case authorizationRequired
     case canNotRunExposureNotification(ExposureDetectionDisabledReason)
-    case postcodeRequired
     case fullyOnboarded
 }
 
@@ -56,6 +58,14 @@ public enum ApplicationState {
         case appTooOld(updateAvailable: Bool, descriptions: [Locale: String])
     }
     
+    public enum RecommendedUpdateReason {
+        /// Recommended App update is availbale
+        case newRecommendedAppUpdate(title: [Locale: String], descriptions: [Locale: String], dismissAction: () -> Void)
+        
+        /// Recommended iOS update is available
+        case newRecommendedOSupdate(title: [Locale: String], descriptions: [Locale: String], dismissAction: () -> Void)
+    }
+    
     public enum ExposureDetectionDisabledReason {
         /// Authorization is denied by the user.
         case authorizationDenied(openSettings: () -> Void)
@@ -70,11 +80,8 @@ public enum ApplicationState {
     /// Application is disabled.
     case appUnavailable(AppUnavailabilityReason)
     
-    #warning("Remove this")
-    // This case never happens. If you have a minute, remove it, along with all the dead code resulting from that.
-    
-    /// The user must activate this app first
-    case pilotActivationRequired(submit: (String) -> AnyPublisher<Void, Error>)
+    /// RecommendedUpdate
+    case recommmededUpdate(RecommendedUpdateReason)
     
     /// Application can’t finish starting. There’s no standard way for the user to recover from this.
     ///
@@ -94,6 +101,9 @@ public enum ApplicationState {
     
     /// Application requires postcode
     case postcodeRequired(savePostcode: (_ postcode: String) -> Result<Void, PostcodeValidationError>)
+    
+    /// Application requires user acknowledge/acceptance of new policies
+    case policyAcceptanceRequired(saveCurrentVersion: () -> Void, openURL: (URL) -> Void)
     
     /// Application is properly set up and is running exposure detection
     case runningExposureNotification(RunningAppContext)

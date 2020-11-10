@@ -272,4 +272,14 @@ public class MyDataViewController: UITableViewController {
             }
         }
     }
+    
+    override public func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
+        super.tableView(tableView, willBeginEditingRowAt: indexPath)
+        publishedIsEditing = true
+    }
+    
+    override public func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
+        super.tableView(tableView, didEndEditingRowAt: indexPath)
+        publishedIsEditing = false
+    }
 }

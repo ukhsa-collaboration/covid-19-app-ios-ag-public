@@ -10,7 +10,10 @@ import XCTest
 class HTTPResponseRequestBoundSignatureVerifierTests: XCTestCase {
     
     private let request = HTTPRequest.post("/activation/request", body: .plain(Data.random()), headers: HTTPHeaders(fields: ["Request-Id": "D96CB6DC-6DE2-4ABF-8FDE-DF1A3D643D94"]))
-    private let verifier = HTTPResponseRequestBoundSignatureVerifier(key: .sample, id: .keyIdentifier)
+    private let verifier = HTTPResponseRequestBoundSignatureVerifier(
+        key: .sample,
+        id: .keyIdentifier
+    )
     
     func testPrepareAddsARequestId() throws {
         let preparedRequest = verifier.prepare(request)
@@ -176,5 +179,4 @@ private extension String {
     static let signatureHeaderWithMisNamedHeaderParts = #"""
     notKeyId="b4c27bf3-8a76-4d2b-b91c-2152e7710a57",signature="MEUCIQCCKbkfx8XundFbI8oQJmD11qIjsNUqYbybSNKn5mt3bQIgDJAbpXxgBO0YIPHoRMNlUxBcimd28znJoKF/YQBDUaM="
     """#
-    
 }

@@ -12,6 +12,8 @@ public class AppAvailabilityErrorViewController: RecoverableErrorViewController 
         public enum ErrorType {
             case iOSTooOld
             case appTooOld(updateAvailable: Bool)
+            case recommendingAppUpdate(title: [Locale: String])
+            case recommendingOSUpdate(title: [Locale: String])
             
             fileprivate var title: String {
                 switch self {
@@ -21,6 +23,9 @@ public class AppAvailabilityErrorViewController: RecoverableErrorViewController 
                     return localize(.accessability_error_update_the_app)
                 case .appTooOld(updateAvailable: false):
                     return localize(.accessability_error_cannot_run_app)
+                case .recommendingAppUpdate(title: let title), .recommendingOSUpdate(title: let title):
+                    let language = Bundle.preferredLocalizations(from: title.keys.map { $0.identifier }).first ?? "en-GB"
+                    return title[Locale(identifier: language)] ?? ""
                 }
             }
         }
@@ -29,23 +34,34 @@ public class AppAvailabilityErrorViewController: RecoverableErrorViewController 
         var descriptions: [Locale: String]
         var appUpdateAction: (() -> Void)?
         var appUpdateImage: UIImage?
+        var secondaryBtnAction: (() -> Void)?
         
-        public init(errorType: ErrorType, descriptions: [Locale: String]) {
+        public init(errorType: ErrorType, descriptions: [Locale: String], secondaryBtnAction: (() -> Void)? = nil) {
             title = errorType.title
             self.descriptions = descriptions
+            self.secondaryBtnAction = secondaryBtnAction
             switch errorType {
             case .appTooOld(updateAvailable: let updateAvailable):
                 if updateAvailable {
-                    appUpdateAction = {
-                        if let url = URL(string: downloadAppLink) {
-                            #warning("Do not use the app singleton in the view controller")
-                            UIApplication.shared.open(url)
-                        }
-                    }
-                    appUpdateImage = UIImage.init(named: ImageName.appUpdateImage.rawValue)
+                    appUpdateAction = updateAvailable ? downloadAppAction() : nil
+                    appUpdateImage = UIImage(named: ImageName.appUpdateImage.rawValue)
                 }
             case .iOSTooOld:
-                appUpdateImage = UIImage.init(named: ImageName.appUpdateImage.rawValue)
+                appUpdateImage = UIImage(named: ImageName.appUpdateImage.rawValue)
+            case .recommendingAppUpdate(title: _):
+                appUpdateAction = downloadAppAction()
+                appUpdateImage = UIImage(named: ImageName.appUpdateImage.rawValue)
+            case .recommendingOSUpdate(title: _):
+                appUpdateImage = UIImage(named: ImageName.appUpdateImage.rawValue)
+            }
+        }
+        
+        private func downloadAppAction() -> () -> Void {
+            return {
+                if let url = URL(string: downloadAppLink) {
+                    #warning("Do not use the app singleton in the view controller")
+                    UIApplication.shared.open(url)
+                }
             }
         }
     }
@@ -59,6 +75,11 @@ public class AppAvailabilityErrorViewController: RecoverableErrorViewController 
             action = (title: localize(.update_app_button_title), act: act)
         }
         
+        var secondaryBtnAction: (title: String, act: () -> Void)?
+        if let act = viewModel.secondaryBtnAction {
+            secondaryBtnAction = (title: localize(.ask_me_later_button_title), act: act)
+        }
+        
         var updateImageView: UIImageView?
         if let image = viewModel.appUpdateImage {
             updateImageView = UIImageView()
@@ -66,8 +87,7 @@ public class AppAvailabilityErrorViewController: RecoverableErrorViewController 
             updateImageView?.image = image
         }
         
-        
-        super.init(error: AppAvailabilityError(imageView: updateImageView, action: action, title: viewModel.title, description: description), isPrimaryLinkBtn: true)
+        super.init(error: AppAvailabilityError(imageView: updateImageView, action: action, title: viewModel.title, description: description), isPrimaryLinkBtn: true, secondaryBtnAction: secondaryBtnAction)
     }
     
     required init?(coder: NSCoder) {

@@ -9,12 +9,16 @@ import UIKit
 
 class AppAvailabilityManager {
     
+    // To make it easier to test app availability features, always use the production app bundle, even when using the
+    // Scenarios app.
+    private static let productionAppBundleId = "uk.nhs.covid19.production"
+    
     private let availability: CachedResponse<AppAvailability>
     private let latestAppVersion: CachedResponse<Version>
     private var cancellable: AnyCancellable?
     
     @Published
-    public private(set) var state: AppAvailabilityLogicalState = .available
+    public private(set) var metadata: AppAvailabilityMetadata = .initial
     
     init(distributeClient: HTTPClient, iTunesClient: HTTPClient, cacheStorage: FileStorage, appInfo: AppInfo) {
         availability = CachedResponse(
@@ -26,14 +30,14 @@ class AppAvailabilityManager {
         )
         latestAppVersion = CachedResponse(
             httpClient: iTunesClient,
-            endpoint: AppStoreVersionLookupEndpoint(bundleId: appInfo.bundleId),
+            endpoint: AppStoreVersionLookupEndpoint(bundleId: Self.productionAppBundleId),
             storage: cacheStorage,
             name: "latest_app_version",
             initialValue: Version(major: 0)
         )
         
         cancellable = availability.$value.combineLatest(latestAppVersion.$value).sink { [weak self] availability, latestAppVersion in
-            self?.state = AppAvailabilityLogicalState(
+            self?.metadata = AppAvailabilityMetadata(
                 availability: availability,
                 iOSVersion: .iOSVersion,
                 appVersion: appInfo.version,
@@ -53,20 +57,46 @@ class AppAvailabilityManager {
 private extension AppAvailability {
     
     static let initial = AppAvailability(
-        iOSVersion: VersionRequirement(minimumSupported: Version(major: 0), descriptions: [:]),
-        appVersion: VersionRequirement(minimumSupported: Version(major: 0), descriptions: [:])
+        iOSVersion: VersionRequirement(
+            minimumSupported: Version(major: 0),
+            descriptions: [:]
+        ),
+        recommendediOSVersion: RecommendationRequirement(
+            minimumRecommended: Version(major: 0),
+            titles: [:],
+            descriptions: [:]
+        ),
+        appVersion: VersionRequirement(
+            minimumSupported: Version(major: 0),
+            descriptions: [:]
+        ),
+        recommendedAppVersion: RecommendationRequirement(
+            minimumRecommended: Version(major: 0),
+            titles: [:],
+            descriptions: [:]
+        )
     )
     
 }
 
-private extension Version {
+extension Version {
     
     init(_ version: OperatingSystemVersion) {
         self.init(major: version.majorVersion, minor: version.minorVersion, patch: version.patchVersion)
     }
     
-    static let iOSVersion: Version = {
+    public static let iOSVersion: Version = {
         Version(ProcessInfo.processInfo.operatingSystemVersion)
     }()
+    
+}
+
+private extension AppAvailabilityMetadata {
+    
+    static let initial = AppAvailabilityMetadata(
+        titles: [:],
+        descriptions: [:],
+        state: .available
+    )
     
 }

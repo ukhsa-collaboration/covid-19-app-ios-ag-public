@@ -10,6 +10,14 @@ struct AppAvailability: Equatable {
         var descriptions: [Locale: String]
     }
     
+    struct RecommendationRequirement: Equatable {
+        var minimumRecommended: Version
+        var titles: [Locale: String]
+        var descriptions: [Locale: String]
+    }
+    
     var iOSVersion: VersionRequirement
+    var recommendediOSVersion: RecommendationRequirement
     var appVersion: VersionRequirement
+    var recommendedAppVersion: RecommendationRequirement
 }

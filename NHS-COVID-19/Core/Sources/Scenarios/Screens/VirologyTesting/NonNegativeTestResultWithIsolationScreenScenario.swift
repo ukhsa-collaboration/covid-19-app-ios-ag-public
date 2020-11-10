@@ -16,13 +16,14 @@ protocol NonNegativeTestResultWithIsolationScreenScenario: Scenario {
 extension NonNegativeTestResultWithIsolationScreenScenario {
     public static var kind: ScenarioKind { .screen }
     public static var onlineServicesLinkTapped: String { "Online services link tapped" }
+    public static var exposureFAQLinkTapped: String { "Exposure FAQ link tapped" }
     public static var primaryButtonTapped: String { "Primary button tapped" }
     public static var noThanksLinkTapped: String { "No thanks link tapped" }
     public static var daysToIsolate: Int { 7 }
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
-            let interactor = Interactor(viewController: parent, buttonAlertText: primaryButtonTapped, cancelTappedAlertText: nil, onlineServicesTappedText: Self.onlineServicesLinkTapped)
+            let interactor = Interactor(viewController: parent, buttonAlertText: primaryButtonTapped, cancelTappedAlertText: nil, onlineServicesTappedText: Self.onlineServicesLinkTapped, exposureFAQTappedText: Self.exposureFAQLinkTapped)
             return NonNegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: Double(daysToIsolate) * 86400), testResultType: Self.testResultType)
         }
     }
@@ -45,12 +46,17 @@ public class VoidTestResultWithIsolationScreenScenario: NonNegativeTestResultWit
 
 private class Interactor: NonNegativeTestResultWithIsolationViewController.Interacting {
     var didTapOnlineServicesLink: () -> Void
+    var didTapExposureFAQLink: () -> Void
     var didTapPrimaryButton: () -> Void
     var didTapCancel: (() -> Void)?
     
-    init(viewController: UIViewController, buttonAlertText: String, cancelTappedAlertText: String?, onlineServicesTappedText: String) {
+    init(viewController: UIViewController, buttonAlertText: String, cancelTappedAlertText: String?, onlineServicesTappedText: String, exposureFAQTappedText: String) {
         didTapOnlineServicesLink = { [weak viewController] in
             viewController?.showAlert(title: onlineServicesTappedText)
+        }
+        
+        didTapExposureFAQLink = { [weak viewController] in
+            viewController?.showAlert(title: exposureFAQTappedText)
         }
         
         didTapPrimaryButton = { [weak viewController] in

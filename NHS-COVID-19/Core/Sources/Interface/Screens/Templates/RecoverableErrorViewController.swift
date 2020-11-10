@@ -23,12 +23,14 @@ open class RecoverableErrorViewController: UIViewController {
     
     private let error: ErrorDetail
     private var isPrimaryLinkBtn: Bool = false
+    private var secondaryBtnAction: (title: String, act: () -> Void)?
     
     // MARK: - init
     
-    public init(error: ErrorDetail, isPrimaryLinkBtn: Bool = false) {
+    public init(error: ErrorDetail, isPrimaryLinkBtn: Bool = false, secondaryBtnAction: (title: String, act: () -> Void)? = nil) {
         self.error = error
         self.isPrimaryLinkBtn = isPrimaryLinkBtn
+        self.secondaryBtnAction = secondaryBtnAction
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -58,6 +60,11 @@ open class RecoverableErrorViewController: UIViewController {
             self.isPrimaryLinkBtn ? self.primaryLinkBtn(title: action.title, act: action.act) : self.systemBtn(title: action.title, act: action.act)
         }
         
+        var secondaryBtn: UIView?
+        if let action = secondaryBtnAction {
+            secondaryBtn = linkBtn(title: action.title, act: action.act)
+        }
+        
         let logoStrapline = LogoStrapline(.nhsBlue, style: error.logoStrapLineStyle)
         
         var content = error.content
@@ -81,6 +88,7 @@ open class RecoverableErrorViewController: UIViewController {
         
         view.addAutolayoutSubview(scrollView)
         button.map { view.addAutolayoutSubview($0) }
+        secondaryBtn.map { view.addAutolayoutSubview($0) }
         
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
@@ -94,9 +102,19 @@ open class RecoverableErrorViewController: UIViewController {
                 button.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
                 button.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
                 button.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: .standardSpacing),
-                button.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -.standardSpacing).withPriority(.defaultHigh),
+                button.bottomAnchor.constraint(equalTo: secondaryBtn != nil ? secondaryBtn!.topAnchor : view.layoutMarginsGuide.bottomAnchor, constant: -.standardSpacing).withPriority(.defaultHigh),
             ])
-        } else {
+        }
+        
+        if let secondaryBtn = secondaryBtn {
+            NSLayoutConstraint.activate([
+                secondaryBtn.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+                secondaryBtn.topAnchor.constraint(equalTo: button != nil ? button!.bottomAnchor : scrollView.bottomAnchor, constant: -.standardSpacing).withPriority(.defaultHigh),
+                secondaryBtn.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -.standardSpacing).withPriority(.defaultHigh),
+            ])
+        }
+        
+        if button == nil && secondaryBtn == nil {
             NSLayoutConstraint.activate([
                 scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
@@ -108,6 +126,10 @@ open class RecoverableErrorViewController: UIViewController {
     
     @objc private func didTapActionButton() {
         error.action?.act()
+    }
+    
+    @objc private func didTapSecondaryButton() {
+        secondaryBtnAction?.act()
     }
     
     // MARK: - Views
@@ -122,5 +144,13 @@ open class RecoverableErrorViewController: UIViewController {
     
     private func primaryLinkBtn(title: String, act: @escaping () -> Void) -> UIView {
         return PrimaryLinkButton(title: title, action: act)
+    }
+    
+    private func linkBtn(title: String, act: @escaping () -> Void) -> UIView {
+        let btn = UIButton(type: .system)
+        btn.styleAsLink()
+        btn.setTitle(title, for: .normal)
+        btn.addTarget(self, action: #selector(didTapSecondaryButton), for: .touchUpInside)
+        return btn
     }
 }

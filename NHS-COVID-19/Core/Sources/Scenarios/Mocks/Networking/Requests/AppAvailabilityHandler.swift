@@ -25,6 +25,24 @@ struct AppAvailabilityHandler: RequestHandler {
         "en-GB": "[Placeholder] this copy will be provided by the backend."
         }
         },
+        "recommendedAppVersion": {
+        "value": "\#(dataProvider.recommendedAppVersion)",
+        "title": {
+        "en-GB": "[Placeholder] this copy will be provided by the backend."
+        },
+        "description": {
+        "en-GB": "[Placeholder] this copy will be provided by the backend."
+        }
+        },
+        "recommendedOSVersion": {
+        "value": "\#(dataProvider.recommendedOSVersion)",
+        "title": {
+        "en-GB": "[Placeholder] this copy will be provided by the backend."
+        },
+        "description": {
+        "en-GB": "[Placeholder] this copy will be provided by the backend."
+        }
+        },
         }
         """#))
         return Result.success(response)

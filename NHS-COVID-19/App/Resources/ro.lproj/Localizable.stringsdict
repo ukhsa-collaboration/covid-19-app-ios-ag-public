@@ -203,7 +203,7 @@
 		<key>risky_venue_isolation_title_accessibility %ld</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
-			<string/>
+			<string>%#@days@</string>
 			<key>days</key>
 			<dict>
 				<key>NSStringFormatSpecTypeKey</key>

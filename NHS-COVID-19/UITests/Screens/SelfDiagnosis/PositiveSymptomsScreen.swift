@@ -28,4 +28,8 @@ struct PositiveSymptomsScreen {
     var furtherAdviceButton: XCUIElement {
         app.links[localized: .end_of_isolation_online_services_link]
     }
+    
+    var exposureFAQLink: XCUIElement {
+        app.links[localized: .exposure_faqs_link_button_title]
+    }
 }

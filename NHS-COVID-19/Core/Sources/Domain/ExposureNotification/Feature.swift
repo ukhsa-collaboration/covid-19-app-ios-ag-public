@@ -5,12 +5,10 @@
 import Foundation
 
 public enum Feature: CaseIterable {
-    case riskyPostcode
-    case venueCheckIn
     case selfDiagnosis
     case selfDiagnosisUpload
     case selfIsolation
     case testKitOrder
     
-    public static let productionEnabledFeatures: [Feature] = [.riskyPostcode, .venueCheckIn, .selfDiagnosis, .selfDiagnosisUpload, .selfIsolation, .testKitOrder]
+    public static let productionEnabledFeatures: [Feature] = [.selfDiagnosis, .selfDiagnosisUpload, .selfIsolation, .testKitOrder]
 }

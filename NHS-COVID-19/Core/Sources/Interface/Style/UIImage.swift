@@ -48,6 +48,7 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case isolationContinue = "IsolationContinue"
     case isolationEndedWarning = "IsolationEndedWarning"
     case isolationEnded = "IsolationEnded"
+    case policy = "Policy"
     
     case riskLevelNeutral = "RiskLevel/Neutral"
     case riskLevelGreen = "RiskLevel/Green"

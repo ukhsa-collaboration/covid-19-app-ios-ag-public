@@ -92,6 +92,20 @@ class MockDataProvider: ObservableObject {
         }
     }
     
+    @UserDefault("mocks.recommendedAppVersion", defaultValue: "1.0.0")
+    var recommendedAppVersion: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.recommendedOSVersion", defaultValue: "1.0.0")
+    var recommendedOSVersion: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
     @UserDefault("mocks.receivedTestResult", defaultValue: 0)
     var receivedTestResult: Int {
         didSet {

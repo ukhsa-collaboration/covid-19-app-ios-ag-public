@@ -4,7 +4,7 @@
 
 import Foundation
 
-struct Version: Comparable {
+public struct Version: Comparable {
     private var major: Int
     private var minor: Int
     private var patch: Int
@@ -43,13 +43,13 @@ struct Version: Comparable {
         self.patch = patch
     }
     
-    static func < (lhs: Self, rhs: Self) -> Bool {
+    public static func < (lhs: Self, rhs: Self) -> Bool {
         lhs.canonicalRepresentation
             .compare(rhs.canonicalRepresentation, options: .numeric, range: nil, locale: nil) == .orderedAscending
     }
     
     private var canonicalRepresentation: String {
-        [major, minor, patch].map(String.init).joined()
+        [major, minor, patch].map(String.init).joined(separator: ".")
     }
     
     public var readableRepresentation: String {
@@ -59,4 +59,5 @@ struct Version: Comparable {
             return [major, minor].map(String.init).joined(separator: ".")
         }
     }
+    
 }

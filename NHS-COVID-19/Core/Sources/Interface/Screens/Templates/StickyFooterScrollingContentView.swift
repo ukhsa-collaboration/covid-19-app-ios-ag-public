@@ -97,6 +97,7 @@ public class StickyFooterScrollingContentView: UIView {
         } else {
             NSLayoutConstraint.activate([
                 scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                scrollingStack.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor),
             ])
         }
         
