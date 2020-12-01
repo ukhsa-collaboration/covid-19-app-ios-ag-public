@@ -19,6 +19,7 @@ class NegativeTestResultFlowTests: XCTestCase {
         $runner.initialState.userNotificationsAuthorized = false
         $runner.initialState.cameraAuthorized = true
         $runner.initialState.postcode = postcode
+        $runner.initialState.localAuthorityId = "E09000022"
         $runner.initialState.testResult = "negative"
     }
     

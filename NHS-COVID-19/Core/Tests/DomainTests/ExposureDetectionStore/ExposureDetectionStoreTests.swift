@@ -160,4 +160,17 @@ class ExposureDetectionStoreTests: XCTestCase {
         exposureDetectionStore.delete()
         XCTAssertNil(exposureDetectionStore.exposureInfo)
     }
+    
+    func testSaveIfNeededSavesRisky() {
+        let exposureRiskInfo = ExposureRiskInfo(riskScore: 5.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5), isConsideredRisky: true)
+        let riskInfo = RiskInfo(riskScore: 5.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
+        XCTAssert(exposureDetectionStore.saveIfNeeded(exposureRiskInfo: exposureRiskInfo))
+        XCTAssertEqual(exposureDetectionStore.load()?.exposureInfo?.riskInfo, riskInfo)
+    }
+    
+    func testSaveIfNeededDoesNotSaveNotRisky() {
+        let exposureRiskInfo = ExposureRiskInfo(riskScore: 5.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5), isConsideredRisky: false)
+        XCTAssertFalse(exposureDetectionStore.saveIfNeeded(exposureRiskInfo: exposureRiskInfo))
+        XCTAssertNil(exposureDetectionStore.load()?.exposureInfo)
+    }
 }

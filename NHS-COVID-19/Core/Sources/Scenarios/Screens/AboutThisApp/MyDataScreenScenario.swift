@@ -13,6 +13,8 @@ public class MyDataScreenScenario: Scenario {
     public static var name: String = "My Data"
     
     public static let postcode = "SW21"
+    public static var localAuthority: String? = "Local Authority 1"
+    
     public static let didTapEditPostcode = "Tapped edit postcode"
     public static let confirmedDeleteAllData = "Confirmed delete all data"
     
@@ -73,6 +75,7 @@ public class MyDataScreenScenario: Scenario {
             MyDataViewController(
                 viewModel: .init(
                     postcode: .constant(postcode),
+                    localAuthority: .constant(localAuthority),
                     testData: (testResult, testResultDate),
                     venueHistories: venueHistories,
                     symptomsOnsetDate: symptomsDate,

@@ -6,7 +6,6 @@ import Combine
 import Common
 import Foundation
 import Logging
-import MetricKit
 
 class MetricReporter: NSObject {
     
@@ -19,7 +18,6 @@ class MetricReporter: NSObject {
     private var cancellables = [AnyCancellable]()
     
     init(
-        manager: MetricManaging,
         client: HTTPClient,
         encryptedStore: EncryptedStoring,
         currentDateProvider: @escaping () -> Date,

@@ -14,7 +14,8 @@ class SelfDiagnosisFlowTest: XCTestCase {
         $runner.initialState.isPilotActivated = true
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = true
-        $runner.initialState.postcode = "CE1B"
+        $runner.initialState.postcode = "SW12"
+        $runner.initialState.localAuthorityId = "E09000022"
     }
     
     func testPositiveSymptomsPath() throws {
@@ -27,7 +28,8 @@ class SelfDiagnosisFlowTest: XCTestCase {
         
         try runner.run { app in
             let homeScreen = HomeScreen(app: app)
-            XCTAssert(homeScreen.notIsolatingIndicator.exists)
+            
+            app.checkOnHomeScreenNotIsolating()
             
             runner.step("Home Screen") {
                 """
@@ -107,7 +109,7 @@ class SelfDiagnosisFlowTest: XCTestCase {
             
             let date = GregorianDay.today.advanced(by: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset).startDate(in: .current)
             
-            XCTAssert(homeScreen.isolatingIndicator(date: date, days: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset).exists)
+            app.checkOnHomeScreenIsolating(date: date)
         }
     }
 }

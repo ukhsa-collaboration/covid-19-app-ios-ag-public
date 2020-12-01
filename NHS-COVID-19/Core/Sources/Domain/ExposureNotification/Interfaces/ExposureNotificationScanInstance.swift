@@ -10,6 +10,7 @@ import RiskScore
 protocol ExposureNotificationScanInstance {
     var minimumAttenuation: ENAttenuation { get }
     var secondsSinceLastScan: Int { get }
+    var typicalAttenuation: ENAttenuation { get }
 }
 
 @available(iOS 13.7, *)

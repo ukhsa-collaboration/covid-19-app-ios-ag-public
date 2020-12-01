@@ -27,14 +27,6 @@ extension BookATestInfoViewController {
                 title: localize(.virology_book_a_test_app_privacy_notice),
                 action: interactor.didTapAppPrivacyNotice
             ),
-            PrimaryLinkButton(
-                title: localize(.virology_book_a_test_button),
-                action: interactor.didTapBookATest
-            ),
-            SecondaryLinkButton(
-                title: localize(.virology_book_a_test_book_a_test_for_someone_else),
-                action: interactor.didTapBookATestForSomeoneElse
-            ),
         ]
     }
 }
@@ -46,7 +38,35 @@ public class BookATestInfoViewController: ScrollingContentViewController {
     
     public init(interactor: Interacting, shouldHaveCancelButton: Bool) {
         self.shouldHaveCancelButton = shouldHaveCancelButton
-        super.init(views: Self.content(interactor: interactor))
+        
+        let contentStack = UIStackView(
+            arrangedSubviews: Self.content(interactor: interactor).flatMap { $0.content }
+        )
+        contentStack.axis = .vertical
+        contentStack.spacing = .standardSpacing
+        
+        let buttonStack = UIStackView(
+            arrangedSubviews: [
+                PrimaryLinkButton(
+                    title: localize(.virology_book_a_test_button),
+                    action: interactor.didTapBookATest
+                ),
+                SecondaryLinkButton(
+                    title: localize(.virology_book_a_test_book_a_test_for_someone_else),
+                    action: interactor.didTapBookATestForSomeoneElse
+                ),
+            ]
+        )
+        buttonStack.axis = .vertical
+        buttonStack.spacing = .standardSpacing
+        
+        let stackContent = [contentStack, buttonStack]
+        let stackView = UIStackView(arrangedSubviews: stackContent)
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        stackView.spacing = .standardSpacing
+        
+        super.init(views: [stackView])
     }
     
     required init?(coder: NSCoder) {

@@ -46,6 +46,27 @@ extension CoordinatedAppController {
             return EnterPostcodeViewController { postcode in
                 savePostcode(postcode).mapError(DisplayableError.init)
             }
+        case .postcodeAndLocalAuthorityRequired(let openURL, let getLocalAuthorities, let storeLocalAuthority):
+            let interactor = LocalAuthorityOnboardingIteractor(
+                openURL: openURL,
+                getLocalAuthorities: getLocalAuthorities,
+                storeLocalAuthority: storeLocalAuthority
+            )
+            return LocalAuthorityFlowViewController(interactor)
+        case .localAuthorityRequired(let postcode, let localAuthorities, let openURL, let storeLocalAuthority):
+            let localAuthoritiesForPostcode = Dictionary(uniqueKeysWithValues: localAuthorities.map { (UUID(), $0) })
+            
+            let interactor = LocalAuthorityUpdateIteractor(
+                postcode: postcode,
+                localAuthoritiesForPostcode: localAuthoritiesForPostcode,
+                openURL: openURL,
+                storeLocalAuthority: storeLocalAuthority
+            )
+            let viewModel = LocalAuthorityFlowViewModel(
+                postcode: postcode.value,
+                localAuthorities: localAuthoritiesForPostcode.map { Interface.LocalAuthority(id: $0.key, name: $0.value.name) }
+            )
+            return LocalAuthorityFlowViewController(interactor, viewModel: viewModel)
         case .canNotRunExposureNotification(let reason, let country):
             var vc: UIViewController
             switch reason {
@@ -64,7 +85,7 @@ extension CoordinatedAppController {
             return PolicyUpdateViewController(interactor: interactor)
         case .runningExposureNotification(let context):
             return viewControllerForRunningApp(with: context)
-        case .recommmededUpdate(let reason):
+        case .recommendedUpdate(let reason):
             switch reason {
             case .newRecommendedAppUpdate(let title, let descriptions, let dismissAction):
                 let vc = AppAvailabilityErrorViewController(viewModel: .init(errorType: .recommendingAppUpdate(title: title), descriptions: descriptions, secondaryBtnAction: dismissAction))
@@ -115,11 +136,11 @@ extension CoordinatedAppController {
                         return NegativeTestResultNoIsolationViewController(interactor: interactor)
                     case .neededForNegativeAfterPositiveResultContinueToIsolate(interactor: let interactor, isolationEndDate: let isolationEndDate):
                         return NegativeTestResultWithIsolationViewController(interactor: interactor, viewModel: .init(isolationEndDate: isolationEndDate, testResultType: .afterPositive))
-                    case .neededForEndOfIsolation(let interactor, let isolationEndDate, let showAdvisory):
+                    case .neededForEndOfIsolation(let interactor, let isolationEndDate, let isIndexCase):
                         return EndOfIsolationViewController(
                             interactor: interactor,
                             isolationEndDate: isolationEndDate,
-                            showAdvisory: showAdvisory,
+                            isIndexCase: isIndexCase,
                             currentDateProvider: context.currentDateProvider
                         )
                     case .neededForStartOfIsolationExposureDetection(let interactor, let isolationEndDate):
@@ -210,9 +231,9 @@ extension CoordinatedAppController {
     }
     
     private func viewControllerForRunningAppIgnoringAcknowledgement(with context: RunningAppContext) -> UIViewController {
+        
         let interactor = HomeFlowViewControllerInteractor(
             context: context,
-            pasteboardCopier: pasteboardCopier,
             currentDateProvider: context.currentDateProvider
         )
         
@@ -222,7 +243,11 @@ extension CoordinatedAppController {
                 return postcodeInfo.risk
                     .map { riskLevel -> RiskLevelBanner.ViewModel? in
                         guard let riskLevel = riskLevel else { return nil }
-                        return RiskLevelBanner.ViewModel(postcode: postcodeInfo.postcode, risk: riskLevel)
+                        return RiskLevelBanner.ViewModel(
+                            postcode: postcodeInfo.postcode,
+                            localAuthority: postcodeInfo.localAuthority,
+                            risk: riskLevel
+                        )
                     }
                     .eraseToAnyPublisher()
             }
@@ -247,7 +272,6 @@ extension CoordinatedAppController {
         .property(initialValue: false)
         
         let shouldShowSelfDiagnosis = context.isolationState.map { state in
-            if context.selfDiagnosisManager == nil { return false }
             if case .isolate(let isolation) = state { return isolation.canFillQuestionnaire }
             return true
         }
@@ -312,5 +336,104 @@ private struct PolicyUpdateInteractor: PolicyUpdateViewController.Interacting {
     
     func didTapTermsOfUse() {
         openURL(ExternalLink.ourPolicies.url)
+    }
+}
+
+class LocalAuthorityOnboardingIteractor: LocalAuthorityFlowViewController.Interacting {
+    private let openURL: (URL) -> Void
+    private let getLocalAuthorities: (Postcode) -> Result<Set<Domain.LocalAuthority>, PostcodeValidationError>
+    private let storeLocalAuthority: (Postcode, Domain.LocalAuthority) -> Result<Void, LocalAuthorityUnsupportedCountryError>
+    
+    private var postcode: Postcode?
+    private var localAuthoritiesForPostcode: [UUID: Domain.LocalAuthority]?
+    
+    init(
+        openURL: @escaping (URL) -> Void,
+        getLocalAuthorities: @escaping (Postcode) -> Result<Set<Domain.LocalAuthority>, PostcodeValidationError>,
+        storeLocalAuthority: @escaping (Postcode, Domain.LocalAuthority) -> Result<Void, LocalAuthorityUnsupportedCountryError>
+    ) {
+        self.openURL = openURL
+        self.getLocalAuthorities = getLocalAuthorities
+        self.storeLocalAuthority = storeLocalAuthority
+    }
+    
+    func localAuthorities(for postcode: String) -> Result<[Interface.LocalAuthority], DisplayableError> {
+        return getLocalAuthorities(Postcode(postcode))
+            .map { authoritySet in
+                self.postcode = Postcode(postcode)
+                self.localAuthoritiesForPostcode = Dictionary(uniqueKeysWithValues: authoritySet.map { (UUID(), $0) })
+                return localAuthoritiesForPostcode!.map {
+                    Interface.LocalAuthority(id: $0.key, name: $0.value.name)
+                }
+            }
+            .mapError(DisplayableError.init)
+    }
+    
+    func confirmLocalAuthority(_ localAuthority: Interface.LocalAuthority?) -> Result<Void, LocalAuthoritySelectionError> {
+        if let localAuthority = localAuthority {
+            if let postcode = self.postcode,
+                let authority = localAuthoritiesForPostcode?[localAuthority.id] {
+                
+                return storeLocalAuthority(postcode, authority).mapError(LocalAuthoritySelectionError.init)
+            } else {
+                assertionFailure("This should not be possible.")
+                return Result.failure(.unsupportedCountry)
+            }
+        } else {
+            return Result.failure(.emptySelection)
+        }
+        
+    }
+    
+    func didTapGovUKLink() {
+        openURL(ExternalLink.visitUKgov.url)
+    }
+}
+
+private struct LocalAuthorityUpdateIteractor: LocalAuthorityFlowViewController.Interacting {
+    private let openURL: (URL) -> Void
+    private let storeLocalAuthority: (Postcode, Domain.LocalAuthority) -> Result<Void, LocalAuthorityUnsupportedCountryError>
+    private let postcode: Postcode
+    private let localAuthoritiesForPostcode: [UUID: Domain.LocalAuthority]
+    
+    init(
+        postcode: Postcode,
+        localAuthoritiesForPostcode: [UUID: Domain.LocalAuthority],
+        openURL: @escaping (URL) -> Void,
+        storeLocalAuthority: @escaping (Postcode, Domain.LocalAuthority) -> Result<Void, LocalAuthorityUnsupportedCountryError>
+    ) {
+        self.postcode = postcode
+        self.localAuthoritiesForPostcode = localAuthoritiesForPostcode
+        self.openURL = openURL
+        self.storeLocalAuthority = storeLocalAuthority
+    }
+    
+    #warning("Find a better way to avoid implementing this function")
+    func localAuthorities(for postcode: String) -> Result<[Interface.LocalAuthority], DisplayableError> {
+        assertionFailure("This should never be called.")
+        return Result.success(localAuthoritiesForPostcode.map { Interface.LocalAuthority(id: $0.key, name: $0.value.name) })
+    }
+    
+    func confirmLocalAuthority(_ localAuthority: Interface.LocalAuthority?) -> Result<Void, LocalAuthoritySelectionError> {
+        if let localAuthority = localAuthority {
+            if let authority = localAuthoritiesForPostcode[localAuthority.id] {
+                return storeLocalAuthority(postcode, authority).mapError(LocalAuthoritySelectionError.init)
+            } else {
+                preconditionFailure("Local Authority id must be in the list")
+            }
+        } else {
+            return Result.failure(.emptySelection)
+        }
+        
+    }
+    
+    func didTapGovUKLink() {
+        openURL(ExternalLink.visitUKgov.url)
+    }
+}
+
+extension LocalAuthoritySelectionError {
+    init(_ error: LocalAuthorityUnsupportedCountryError) {
+        self = .unsupportedCountry
     }
 }

@@ -10,84 +10,7 @@ import XCTest
 @testable import Integration
 @testable import Scenarios
 
-class ApplicationStateTests: XCTestCase {
-    
-    struct Instance: TestProp {
-        struct Configuration: TestPropConfiguration {
-            var application = MockApplication()
-            var enabledFeatures = Feature.allCases
-            var exposureNotificationManager = MockExposureNotificationManager()
-            var userNotificationsManager = MockUserNotificationsManager()
-            var processingTaskRequestManager = MockProcessingTaskRequestManager()
-            var notificationCenter = NotificationCenter()
-            var distributeClient = MockHTTPClient()
-            var apiClient = MockHTTPClient()
-            var iTunesClient = MockHTTPClient()
-            var cameraManager = MockCameraManager()
-            var encryptedStore = MockEncryptedStore()
-            var cacheStorage = FileStorage(forCachesOf: .random())
-            var postcodeValidator = mutating(MockPostcodeValidator()) {
-                $0.validPostcodes = [Postcode("B44")]
-            }
-        }
-        
-        var coordinator: ApplicationCoordinator
-        
-        init(configuration: Configuration) {
-            configuration.encryptedStore.stored["activation"] = """
-            { "isActivated": true }
-            """.data(using: .utf8)!
-            let services = ApplicationServices(
-                application: configuration.application,
-                exposureNotificationManager: configuration.exposureNotificationManager,
-                userNotificationsManager: configuration.userNotificationsManager,
-                processingTaskRequestManager: configuration.processingTaskRequestManager,
-                metricManager: MockMetricManager(),
-                notificationCenter: configuration.notificationCenter,
-                distributeClient: configuration.distributeClient,
-                apiClient: configuration.apiClient,
-                iTunesClient: configuration.iTunesClient,
-                cameraManager: configuration.cameraManager,
-                encryptedStore: configuration.encryptedStore,
-                cacheStorage: configuration.cacheStorage,
-                venueDecoder: QRCode.forTests,
-                appInfo: AppInfo(bundleId: .random(), version: "3.10", buildNumber: "1"),
-                pasteboardCopier: MockPasteboardCopier(),
-                postcodeValidator: configuration.postcodeValidator,
-                currentDateProvider: { Date() },
-                storeReviewController: MockStoreReviewController()
-            )
-            
-            coordinator = ApplicationCoordinator(services: services, enabledFeatures: configuration.enabledFeatures)
-        }
-    }
-    
-    @Propped
-    private var instance: Instance
-    
-    private var application: MockApplication {
-        $instance.application
-    }
-    
-    private var exposureNotificationManager: MockExposureNotificationManager {
-        $instance.exposureNotificationManager
-    }
-    
-    private var userNoticationsManager: MockUserNotificationsManager {
-        $instance.userNotificationsManager
-    }
-    
-    private var notificationCenter: NotificationCenter {
-        $instance.notificationCenter
-    }
-    
-    private var encryptedStore: MockEncryptedStore {
-        $instance.encryptedStore
-    }
-    
-    private var coordinator: ApplicationCoordinator {
-        instance.coordinator
-    }
+class ApplicationStateTests: AcceptanceTestCase {
     
     private var cancellabes = [AnyCancellable]()
     
@@ -140,11 +63,11 @@ class ApplicationStateTests: XCTestCase {
         
         complete()
         
-        guard case .postcodeRequired(let savePostcode) = coordinator.state else {
+        guard case .postcodeAndLocalAuthorityRequired(_, _, let savePostcode) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
-        try savePostcode("B44").get()
+        try savePostcode(.init("B44"), LocalAuthority(name: "Local Authority 1", id: .init("LA1"), country: .england)).get()
         
         guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
@@ -179,11 +102,11 @@ class ApplicationStateTests: XCTestCase {
         
         complete()
         
-        guard case .postcodeRequired(let savePostcode) = coordinator.state else {
+        guard case .postcodeAndLocalAuthorityRequired(_, _, let savePostcode) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
-        try savePostcode("B44").get()
+        try savePostcode(.init("B44"), LocalAuthority(name: "Local Authority 1", id: .init("LA1"), country: .england)).get()
         
         guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
@@ -210,11 +133,11 @@ class ApplicationStateTests: XCTestCase {
         
         complete()
         
-        guard case .postcodeRequired(let savePostcode) = coordinator.state else {
+        guard case .postcodeAndLocalAuthorityRequired(_, _, let savePostcode) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
-        try savePostcode("B44").get()
+        try savePostcode(.init("B44"), LocalAuthority(name: "Local Authority 1", id: .init("LA1"), country: .england)).get()
         
         guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
@@ -242,11 +165,11 @@ class ApplicationStateTests: XCTestCase {
         
         complete()
         
-        guard case .postcodeRequired(let savePostcode) = coordinator.state else {
+        guard case .postcodeAndLocalAuthorityRequired(_, _, let savePostcode) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
-        try savePostcode("B44").get()
+        try savePostcode(.init("B44"), LocalAuthority(name: "Local Authority 1", id: .init("LA1"), country: .england)).get()
         
         guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
@@ -398,97 +321,4 @@ class ApplicationStateTests: XCTestCase {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
     }
-}
-
-private extension ApplicationStateTests {
-    
-    private func completeRunning() throws {
-        try completeExposureNotificationActivation(authorizationStatus: .unknown)
-        try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
-        
-        guard case .onboarding(let complete, _) = coordinator.state else {
-            throw TestError("Unexpected state \(coordinator.state)")
-        }
-        
-        complete()
-        
-        guard case .postcodeRequired(let savePostcode) = coordinator.state else {
-            throw TestError("Unexpected state \(coordinator.state)")
-        }
-        
-        try savePostcode("B44").get()
-        
-        guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
-            throw TestError("Unexpected state \(coordinator.state)")
-        }
-        
-        requestPermissions()
-        exposureNotificationManager.instanceAuthorizationStatus = .authorized
-        enableExposureNotification()
-        exposureNotificationManager.activationCompletionHandler?(nil)
-        
-        try completeUserNotificationsAuthorization(authorizationStatus: .authorized)
-        
-        guard case .runningExposureNotification = coordinator.state else {
-            throw TestError("Unexpected state \(coordinator.state)")
-        }
-    }
-    
-    private func completeRunningWithBluetoothDisabled() throws {
-        try completeExposureNotificationActivation(authorizationStatus: .unknown)
-        try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
-        
-        guard case .onboarding(let complete, _) = coordinator.state else {
-            throw TestError("Unexpected state \(coordinator.state)")
-        }
-        
-        complete()
-        
-        guard case .postcodeRequired(let savePostcode) = coordinator.state else {
-            throw TestError("Unexpected state \(coordinator.state)")
-        }
-        
-        try savePostcode("B44").get()
-        
-        guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
-            throw TestError("Unexpected state \(coordinator.state)")
-        }
-        
-        requestPermissions()
-        exposureNotificationManager.instanceAuthorizationStatus = .authorized
-        enableExposureNotification(finalState: .bluetoothOff)
-        exposureNotificationManager.activationCompletionHandler?(nil)
-        
-        try completeUserNotificationsAuthorization(authorizationStatus: .authorized)
-    }
-    
-    private func completeExposureNotificationActivation(
-        authorizationStatus: ExposureNotificationManaging.AuthorizationStatus,
-        status: ExposureNotificationManaging.Status = .unknown
-    ) throws {
-        guard case .starting = coordinator.state else {
-            throw TestError("Unexpected state \(coordinator.state)")
-        }
-        
-        exposureNotificationManager.instanceAuthorizationStatus = authorizationStatus
-        exposureNotificationManager.exposureNotificationStatus = status
-        exposureNotificationManager.exposureNotificationEnabled = (status == .active)
-        exposureNotificationManager.activationCompletionHandler?(nil)
-    }
-    
-    private func completeUserNotificationsAuthorization(
-        authorizationStatus: MockUserNotificationsManager.AuthorizationStatus
-    ) throws {
-        notificationCenter.post(Notification(name: UIApplication.didBecomeActiveNotification))
-        userNoticationsManager.getSettingsCompletionHandler?(authorizationStatus)
-    }
-    
-    private func enableExposureNotification(file: StaticString = #file, line: UInt = #line, finalState: ExposureNotificationManaging.Status = .active) {
-        // since this is KVO notified, make sure the manager has actually asked us about this before we change values
-        XCTAssertEqual(exposureNotificationManager.setExposureNotificationEnabledValue, true, "Did not ask for state update", file: file, line: line)
-        exposureNotificationManager.exposureNotificationStatus = finalState
-        exposureNotificationManager.exposureNotificationEnabled = true
-        exposureNotificationManager.setExposureNotificationEnabledCompletionHandler?(nil)
-    }
-    
 }

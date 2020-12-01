@@ -29,4 +29,10 @@ class RiskInfoTests: XCTestCase {
         let risk = ExposureRiskInfo(riskScore: 100, riskScoreVersion: 2, day: GregorianDay(year: 2020, month: 4, day: 17), isConsideredRisky: true)
         XCTAssertFalse(risk.shouldShowDontWorryNotification)
     }
+    
+    func testRiskyInfoIsPrioritised() {
+        let lowerRisk = ExposureRiskInfo(riskScore: 100, riskScoreVersion: 1, day: GregorianDay(year:2020, month: 4, day: 17), isConsideredRisky: false)
+        let higherRisk = ExposureRiskInfo(riskScore: 200, riskScoreVersion: 1, day: GregorianDay(year:2020, month: 4, day: 16), isConsideredRisky: true)
+        XCTAssert(higherRisk.isHigherPriority(than: lowerRisk))
+    }
 }

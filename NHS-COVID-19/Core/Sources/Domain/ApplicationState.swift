@@ -19,6 +19,8 @@ enum LogicalState: Equatable {
     case failedToStart
     case onboarding
     case postcodeRequired
+    case postcodeAndLocalAuthorityRequired
+    case localAuthorityRequired
     case policyAcceptanceRequired
     case authorizationRequired
     case canNotRunExposureNotification(ExposureDetectionDisabledReason)
@@ -27,12 +29,17 @@ enum LogicalState: Equatable {
 
 public struct RunningAppContext {
     public var checkInContext: CheckInContext?
-    public var postcodeInfo: DomainProperty<(postcode: Postcode, risk: DomainProperty<RiskyPostcodeEndpointManager.PostcodeRisk?>)?>
+    public var postcodeInfo: DomainProperty<(postcode: Postcode, localAuthority: LocalAuthority?, risk: DomainProperty<RiskyPostcodeEndpointManager.PostcodeRisk?>)?>
     public var savePostcode: ((String) -> Result<Void, PostcodeValidationError>)?
     public var country: DomainProperty<Country>
     public var openSettings: () -> Void
     public var openURL: (URL) -> Void
+    
+    #warning("This type does not need to be optional")
+    // Currently this is only optional so we can create a `RunningAppContext` easily in tests.
+    // Instead of exposing the type directly, we should have an protocol so we can mock it more easily.
     public var selfDiagnosisManager: SelfDiagnosisManager?
+    
     public var isolationState: DomainProperty<IsolationState>
     public var testInfo: DomainProperty<IndexCaseInfo.TestInfo?>
     public var isolationAcknowledgementState: AnyPublisher<IsolationAcknowledgementState, Never>
@@ -46,7 +53,12 @@ public struct RunningAppContext {
     public var currentDateProvider: () -> Date
     public var exposureNotificationReminder: ExposureNotificationReminder
     public var appReviewPresenter: AppReviewPresenter
+    public var getLocalAuthorities: GetLocalAuthorities?
+    public var storeLocalAuthorities: StoreLocalAuthorities?
 }
+
+public typealias GetLocalAuthorities = (_ postcode: Postcode) -> Result<Set<LocalAuthority>, PostcodeValidationError>
+public typealias StoreLocalAuthorities = (_ postcode: Postcode, _ localAuthority: LocalAuthority) -> Result<Void, LocalAuthorityUnsupportedCountryError>
 
 public enum ApplicationState {
     
@@ -81,7 +93,7 @@ public enum ApplicationState {
     case appUnavailable(AppUnavailabilityReason)
     
     /// RecommendedUpdate
-    case recommmededUpdate(RecommendedUpdateReason)
+    case recommendedUpdate(RecommendedUpdateReason)
     
     /// Application can’t finish starting. There’s no standard way for the user to recover from this.
     ///
@@ -101,6 +113,21 @@ public enum ApplicationState {
     
     /// Application requires postcode
     case postcodeRequired(savePostcode: (_ postcode: String) -> Result<Void, PostcodeValidationError>)
+    
+    /// Application requires postcode and local authority
+    case postcodeAndLocalAuthorityRequired(
+        openURL: (URL) -> Void,
+        getLocalAuthorities: GetLocalAuthorities,
+        storeLocalAuthority: StoreLocalAuthorities
+    )
+    
+    /// Application already has a postcode and requires a local Authority
+    case localAuthorityRequired(
+        postcode: Postcode,
+        localAuthorities: Set<LocalAuthority>,
+        openURL: (URL) -> Void,
+        storeLocalAuthority: StoreLocalAuthorities
+    )
     
     /// Application requires user acknowledge/acceptance of new policies
     case policyAcceptanceRequired(saveCurrentVersion: () -> Void, openURL: (URL) -> Void)

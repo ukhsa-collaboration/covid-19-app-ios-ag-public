@@ -50,6 +50,41 @@ class MockDataProvider: ObservableObject {
         }
     }
     
+    @UserDefault("mocks.redLocalAuthorities", defaultValue: "")
+    var redLocalAuthorities: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.amberLocalAuthorities", defaultValue: "")
+    var amberLocalAuthorities: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.yellowLocalAuthorities", defaultValue: "")
+    var yellowLocalAuthorities: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.greenLocalAuthorities", defaultValue: "")
+    var greenLocalAuthorities: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.neutralLocalAuthorities", defaultValue: "")
+    var neutralLocalAuthorities: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
     @UserDefault("mocks.riskyVenueIDs", defaultValue: "")
     var riskyVenueIDs: String {
         didSet {

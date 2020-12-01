@@ -12,28 +12,51 @@ struct TestResultsSummaryCommand: ParsableCommand {
         abstract: "Produces coverage and testresults (test summary) text files."
     )
     
-    @Argument(help: "Path to TestResults json file")
-    var testResults: String
+    @Argument(help: "Path to test result bundle")
+    var testResultBundle: String
+    
+    @Option(help: "Path to use for the Test Results Summary files.")
+    var output: String
     
     func run() throws {
         let fileManager = FileManager()
         let currentDirectory = URL(fileURLWithPath: fileManager.currentDirectoryPath)
-        let testResultURL = URL(fileURLWithPath: testResults, relativeTo: currentDirectory)
+        let outputFolder = URL(fileURLWithPath: output, relativeTo: currentDirectory)
+        try fileManager.createDirectory(at: outputFolder, withIntermediateDirectories: true, attributes: nil)
         
-        let data = try Data(contentsOf: testResultURL, options: .mappedIfSafe)
+        let testResultsJSONData = try Bash.runAndCapture(
+            "xcrun xccov view",
+            "--report",
+            "--json", testResultBundle
+        )
         
-        // Transform TestResults
+        // Write coverage test result
         
         let testSummaryReportGenerator = TestSummaryReportGenerator()
-        let coverageData = try testSummaryReportGenerator.createCoverageSummary(from: data)
+        let coverageData = try testSummaryReportGenerator.createCoverageSummary(from: testResultsJSONData)
+        try coverageData.write(to: outputFolder.appendingPathComponent("coverage").appendingPathExtension("txt"))
         
-        // Write coverage data to text file
+        // Write Test results
+        let actionsInvocationRecordData = try Bash.runAndCapture(
+            "xcrun xcresulttool get",
+            "--format",
+            "json",
+            "--path", testResultBundle
+        )
         
-        let coverageTextURL = testResultURL
-            .deletingLastPathComponent()
-            .appendingPathComponent("coverage")
-            .appendingPathExtension("txt")
+        let actionsInvocationRecordJSONData = try JSONDecoder().decode(ActionsInvocationRecord.self, from: actionsInvocationRecordData)
+        if let testReferenceID = actionsInvocationRecordJSONData.actions.first?.actionResult.testsRef.id {
+            let testResultsSummaryJSONData = try Bash.runAndCapture(
+                "xcrun xcresulttool get",
+                "--format",
+                "json",
+                "--path", testResultBundle,
+                "--id", testReferenceID
+            )
+            
+            let coverageData = try testSummaryReportGenerator.createTestResultSummary(from: testResultsSummaryJSONData)
+            try coverageData.write(to: outputFolder.appendingPathComponent("testResults").appendingPathExtension("txt"))
+        }
         
-        try coverageData.write(to: coverageTextURL)
     }
 }

@@ -44,7 +44,7 @@ class HousekeeperTests: XCTestCase {
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
             isolationLogicalState: IsolationLogicalState.isolating(
-                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 26, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false)), endAcknowledged: false, startAcknowledged: false
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 26, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)), endAcknowledged: false, startAcknowledged: false
             )
         )
         _ = housekeeper.executeHousekeeping()
@@ -57,7 +57,7 @@ class HousekeeperTests: XCTestCase {
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
             isolationLogicalState: IsolationLogicalState.isolationFinishedButNotAcknowledged(
-                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 23, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false))
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 23, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true))
             )
         )
         _ = housekeeper.executeHousekeeping()
@@ -72,7 +72,7 @@ class HousekeeperTests: XCTestCase {
             deletionPeriod: 4,
             today: GregorianDay(year: 2020, month: 7, day: 24),
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet:
-                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 20, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false))
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 20, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true))
             )
         )
         _ = housekeeper.executeHousekeeping()
@@ -85,7 +85,7 @@ class HousekeeperTests: XCTestCase {
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet:
-                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 8, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false))
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 8, timeZone: .current), reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true))
             )
         )
         _ = housekeeper.executeHousekeeping()

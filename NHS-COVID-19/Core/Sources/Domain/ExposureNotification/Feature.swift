@@ -5,10 +5,7 @@
 import Foundation
 
 public enum Feature: CaseIterable {
-    case selfDiagnosis
-    case selfDiagnosisUpload
-    case selfIsolation
-    case testKitOrder
+    case localAuthority
     
-    public static let productionEnabledFeatures: [Feature] = [.selfDiagnosis, .selfDiagnosisUpload, .selfIsolation, .testKitOrder]
+    public static let productionEnabledFeatures: [Feature] = [.localAuthority]
 }

@@ -26,13 +26,10 @@ struct ExportCommand: ParsableCommand {
     
     private func withArchive(perform work: (URL) throws -> Void) throws {
         let fileManager = FileManager()
-        
         let currentDirectory = URL(fileURLWithPath: fileManager.currentDirectoryPath)
+        let exportArchiveURL = URL(fileURLWithPath: exportPath, relativeTo: currentDirectory)
         
-        let temp = try fileManager.url(for: .itemReplacementDirectory, in: .userDomainMask, appropriateFor: currentDirectory, create: true)
-        defer { try? fileManager.removeItem(at: temp) }
-        
-        let archiveURL = temp
+        let archiveURL = exportArchiveURL
             .appendingPathComponent("archive")
             .appendingPathExtension("xcarchive")
         

@@ -22,6 +22,7 @@ class PositiveTestResultsFlowTest: XCTestCase {
         $runner.initialState.userNotificationsAuthorized = false
         $runner.initialState.cameraAuthorized = true
         $runner.initialState.postcode = postcode
+        $runner.initialState.localAuthorityId = "E09000022"
         $runner.initialState.testResult = "positive"
         try $runner.initialState.set(testResultEndDate: today.advanced(by: -2).startOfDay)
     }

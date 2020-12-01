@@ -83,7 +83,9 @@ public enum TestResultAcknowledgementState {
                     completionHandler
                 )
             )
-        case (.negative, .isolating(let isolation, _, _)) where isolation.reason == .indexCase(hasPositiveTestResult: true):
+        case (.negative, .isolating(let isolation, _, _)) where isolation.reason == .indexCase(hasPositiveTestResult: true, isSelfDiagnosed: false):
+            fallthrough
+        case (.negative, .isolating(let isolation, _, _)) where isolation.reason == .indexCase(hasPositiveTestResult: true, isSelfDiagnosed: true):
             self = TestResultAcknowledgementState.neededForNegativeAfterPositiveResultContinueToIsolate(
                 acknowledge: completionHandler,
                 isolationEndDate: isolation.endDate

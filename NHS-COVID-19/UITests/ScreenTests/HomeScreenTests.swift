@@ -13,7 +13,7 @@ class SuccessHomeScreenTests: XCTestCase {
     func testBasics() throws {
         try runner.run { app in
             let screen = HomeScreen(app: app)
-            XCTAssert(screen.riskLevelBanner(for: "SW12", title: "[postcode] area risk level is LOW").exists)
+            XCTAssert(screen.riskLevelBanner(for: "SW12", title: "[postcode] is in Local Alert Level 1").exists)
             XCTAssert(screen.notIsolatingIndicator.exists)
         }
     }
@@ -24,8 +24,8 @@ class SuccessHomeScreenTests: XCTestCase {
             
             let moreInfoButtonAction = app.staticTexts[HomeScreenAlerts.postcodeBannerAlertTitle]
             
-            app.scrollTo(element: screen.riskLevelBanner(for: "SW12", title: "[postcode] area risk level is LOW"))
-            screen.riskLevelBanner(for: "SW12", title: "[postcode] area risk level is LOW").tap()
+            app.scrollTo(element: screen.riskLevelBanner(for: "SW12", title: "[postcode] is in Local Alert Level 1"))
+            screen.riskLevelBanner(for: "SW12", title: "[postcode] is in Local Alert Level 1").tap()
             XCTAssert(moreInfoButtonAction.displayed)
         }
     }

@@ -34,7 +34,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolating(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false)),
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)),
             endAcknowledged: false,
             startAcknowledged: true
         )
@@ -61,7 +61,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolating(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false)),
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)),
             endAcknowledged: false,
             startAcknowledged: true
         )
@@ -88,7 +88,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolationFinishedButNotAcknowledged(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false))
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true))
         )
         
         let state = TestResultAcknowledgementState(
@@ -159,7 +159,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolating(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false)),
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)),
             endAcknowledged: false,
             startAcknowledged: true
         )
@@ -186,7 +186,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolationFinishedButNotAcknowledged(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false))
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true))
         )
         
         let state = TestResultAcknowledgementState(
@@ -234,7 +234,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolating(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: true)),
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: true, isSelfDiagnosed: true)),
             endAcknowledged: false,
             startAcknowledged: true
         )
@@ -261,7 +261,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolating(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false)),
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)),
             endAcknowledged: false,
             startAcknowledged: true
         )
@@ -311,7 +311,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolationFinishedButNotAcknowledged(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false))
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true))
         )
         
         let state = TestResultAcknowledgementState(

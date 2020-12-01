@@ -27,14 +27,16 @@ extension InformationBox {
         orange: ([Content]) -> InformationBox,
         lightBlue: ([Content]) -> InformationBox,
         turquoise: ([Content]) -> InformationBox,
-        darkBlue: ([Content]) -> InformationBox
+        darkBlue: ([Content]) -> InformationBox,
+        pink: ([Content]) -> InformationBox
     ) {
         (
             { .information(color: .purple, $0) },
             { .information(color: .orange, $0) },
             { .information(color: .lightBlue, $0) },
             { .information(color: .turquoise, $0) },
-            { .information(color: .darkBlue, $0) }
+            { .information(color: .darkBlue, $0) },
+            { .information(color: .pink, $0) }
         )
         
     }

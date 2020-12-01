@@ -217,7 +217,7 @@ public class SymptomsReviewViewController: UIViewController {
         toolbar.sizeToFit()
         
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(finishDatePicking))
+        let doneButton = UIBarButtonItem(title: localize(.done), style: .done, target: self, action: #selector(finishDatePicking))
         doneButton.tintColor = UIColor(.nhsBlue)
         toolbar.setItems([spacer, doneButton], animated: false)
         

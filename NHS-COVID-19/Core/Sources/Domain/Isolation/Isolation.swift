@@ -7,9 +7,9 @@ import Foundation
 
 public struct Isolation: Equatable {
     public enum Reason: Equatable {
-        case indexCase(hasPositiveTestResult: Bool)
+        case indexCase(hasPositiveTestResult: Bool, isSelfDiagnosed: Bool)
         case contactCase(ContactCaseTrigger)
-        case bothCases
+        case bothCases(hasPositiveTestResult: Bool, isSelfDiagnosed: Bool)
     }
     
     public var fromDay: LocalDay
@@ -37,12 +37,12 @@ extension Isolation {
         switch reason {
         case .bothCases, .contactCase:
             return false
-        case .indexCase(let hasPositiveTestResult):
+        case .indexCase(let hasPositiveTestResult, _):
             return !hasPositiveTestResult
         }
     }
     
-    var isIndexCase: Bool {
+    public var isIndexCase: Bool {
         switch reason {
         case .indexCase, .bothCases:
             return true
@@ -60,7 +60,7 @@ extension Isolation {
         }
     }
     
-    public var isContactCaseOnly: Bool {
+    var isContactCaseOnly: Bool {
         switch reason {
         case .indexCase, .bothCases:
             return false

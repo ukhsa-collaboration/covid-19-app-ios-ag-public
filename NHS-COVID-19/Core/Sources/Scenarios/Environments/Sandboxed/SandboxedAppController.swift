@@ -44,7 +44,6 @@ private extension ApplicationServices {
             exposureNotificationManager: SandboxExposureNotificationManager(host: host),
             userNotificationsManager: SandboxUserNotificationsManager(host: host),
             processingTaskRequestManager: MockProcessingTaskRequestManager(),
-            metricManager: MockMetricManager(),
             notificationCenter: NotificationCenter(),
             distributeClient: SandboxDistributeClient(),
             apiClient: SandboxSubmissionClient(),
@@ -54,7 +53,6 @@ private extension ApplicationServices {
             cacheStorage: FileStorage(forCachesOf: UUID().uuidString),
             venueDecoder: QRCode.fake,
             appInfo: AppInfo(bundleId: UUID().uuidString, version: "3.10", buildNumber: "1"),
-            pasteboardCopier: MockPasteboardCopier(),
             postcodeValidator: SandboxPostcodeValidator(),
             currentDateProvider: { Date() },
             storeReviewController: StoreReviewController()

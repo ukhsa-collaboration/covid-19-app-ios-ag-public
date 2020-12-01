@@ -10,12 +10,14 @@ struct LookUpHandler: RequestHandler {
     
     var dataProvider: MockDataProvider
     
+    private let productionAppBundleId = "uk.nhs.covid19.production"
+    
     var response: Result<HTTPResponse, HTTPRequestError> {
         let response = HTTPResponse.ok(with: .json(#"""
         {
         "results": [
         {
-        "bundleId": "\#(Bundle.main.bundleIdentifier!)",
+        "bundleId": "\#(productionAppBundleId)",
         "version": "\#(dataProvider.latestAppVersion)"
         }
         ]

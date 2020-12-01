@@ -22,7 +22,7 @@ class ExposureWindowRiskManagerTests: XCTestCase {
     override func setUp() {
         configuration = .dummyForTesting
         controller = MockController()
-        riskCalculator = MockExposureWindowRiskCalculator(dateProvider: { Date() }, isolationLength: DayDuration(10))
+        riskCalculator = MockExposureWindowRiskCalculator(dateProvider: { Date() }, isolationLength: DayDuration(10), submitExposureWindows: { _ in })
         manager = ExposureWindowRiskManager(controller: controller, riskCalculator: riskCalculator)
     }
     

@@ -21,7 +21,8 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
         riskCalculator = ExposureWindowRiskCalculator(
             infectiousnessFactorCalculator: infectiousnessFactorCalculator,
             dateProvider: dateProvider,
-            isolationLength: DayDuration(10)
+            isolationLength: DayDuration(10),
+            submitExposureWindows: { _ in }
         )
     }
     
@@ -29,7 +30,7 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
         let expectedAttenuation = UInt8(45)
         let expectedSecondsSinceLastScan = 180
         let expectedScanInstances = [ScanInstance(attenuationValue: expectedAttenuation, secondsSinceLastScan: expectedSecondsSinceLastScan)]
-        let scanInstances: [ExposureNotificationScanInstance] = [MockScanInstance(minimumAttenuation: expectedAttenuation, secondsSinceLastScan: expectedSecondsSinceLastScan)]
+        let scanInstances: [ExposureNotificationScanInstance] = [MockScanInstance(minimumAttenuation: expectedAttenuation, secondsSinceLastScan: expectedSecondsSinceLastScan, typicalAttenuation: 1)]
         let exposureWindows: [ExposureNotificationExposureWindow] = [MockExposureWindow(enScanInstances: scanInstances, date: Date(), infectiousness: .standard)]
         
         _ = riskCalculator.riskInfo(
@@ -101,10 +102,12 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
         let oldDate = calendar.date(from: DateComponents(year: 2020, month: 7, day: 9))
         dateProvider = { Date.dateFrom(year: 2020, month: 7, day: 20) }
         
+        var submittedWindows = [(ExposureNotificationExposureWindow, ExposureRiskInfo)]()
         let riskCalculator = ExposureWindowRiskCalculator(
             infectiousnessFactorCalculator: MockExposureWindowInfectiousnessFactorCalculator(),
             dateProvider: dateProvider,
-            isolationLength: DayDuration(10)
+            isolationLength: DayDuration(10),
+            submitExposureWindows: { windowInfo in submittedWindows.append(contentsOf: windowInfo) }
         )
         
         let exposureRiskInfo = riskCalculator.riskInfo(
@@ -114,6 +117,7 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
         )
         
         XCTAssertNil(exposureRiskInfo)
+        XCTAssertTrue(submittedWindows.isEmpty)
     }
     
     func testReturnsMostRecentRiskyExposureInfo() {
@@ -124,7 +128,7 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
                 return answers.removeFirst()
             }
         }
-
+        
         let riskyScore = 540.0
         let (olderDate, newerDate, newestDate) = getThreeConsecutiveDates()
         let dateProvider = { Date.dateFrom(year: 2020, month: 7, day: 4) }
@@ -138,22 +142,25 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
         var config = ExposureDetectionConfiguration.dummyForTesting
         config.v2RiskThreshold = 100.0
         
+        var submittedWindows = [(ExposureNotificationExposureWindow, ExposureRiskInfo)]()
         let riskCalc = ExposureWindowRiskCalculator(
             infectiousnessFactorCalculator: MockExposureWindowInfectiousnessFactorCalculator(),
             dateProvider: dateProvider,
-            isolationLength: DayDuration(10)
+            isolationLength: DayDuration(10),
+            submitExposureWindows: { windowInfo in submittedWindows.append(contentsOf: windowInfo) }
         )
         
         let riskInfo = riskCalc.riskInfo(for: getWindowsForDates(dates: [olderDate, newerDate, newestDate]), configuration: config, riskScoreCalculator: StubRiskScoreCalculator())
         
         XCTAssertEqual(riskInfo, expectedRiskInfo)
+        XCTAssertEqual(submittedWindows.count, 2)
     }
     
     private func getThreeConsecutiveDates() -> (Date, Date, Date) {
         let calendar = Calendar.utc
-        let olderDate = calendar.date(from: DateComponents(year:2020, month: 7, day: 1))!
-        let newerDate = calendar.date(from: DateComponents(year:2020, month: 7, day: 2))!
-        let newestDate = calendar.date(from: DateComponents(year:2020, month: 7, day: 3))!
+        let olderDate = calendar.date(from: DateComponents(year: 2020, month: 7, day: 1))!
+        let newerDate = calendar.date(from: DateComponents(year: 2020, month: 7, day: 2))!
+        let newestDate = calendar.date(from: DateComponents(year: 2020, month: 7, day: 3))!
         
         return (olderDate, newerDate, newestDate)
     }
@@ -193,6 +200,7 @@ struct MockExposureWindow: ExposureNotificationExposureWindow {
 struct MockScanInstance: ExposureNotificationScanInstance {
     let minimumAttenuation: ENAttenuation
     let secondsSinceLastScan: Int
+    let typicalAttenuation: ENAttenuation
 }
 
 extension Date {

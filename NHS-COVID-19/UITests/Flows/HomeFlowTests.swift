@@ -18,62 +18,7 @@ class HomeFlowTests: XCTestCase {
         $runner.initialState.userNotificationsAuthorized = false
         $runner.initialState.cameraAuthorized = true
         $runner.initialState.postcode = postcode
-    }
-    
-    func testHappyPath() throws {
-        $runner.report(scenario: "HomeFlow", "Happy path") {
-            """
-            Users see the home screen and navigates to the different subpages
-            """
-        }
-        try runner.run { app in
-            let homeScreen = HomeScreen(app: app)
-            
-            app.checkOnHomeScreen(postcode: postcode)
-            
-            runner.step("More Info") {
-                """
-                Users can go to Risk level more info screen
-                """
-            }
-            homeScreen.riskLevelBanner(for: postcode, title: "[postcode] is in Local Alert Level 1").tap()
-            app.buttons[localize(.risk_level_screen_close_button)].tap()
-            
-            runner.step("Diagnosis") {
-                """
-                Users can navigate to self diagnosis page
-                """
-            }
-            homeScreen.diagnoisButton.tap()
-            
-            app.buttons[localize(.cancel)].tap()
-            
-            runner.step("Check-In") {
-                """
-                Users can navigate to checkin page
-                """
-            }
-            
-            homeScreen.checkInButton.tap()
-            
-            app.buttons[localize(.checkin_qrcode_scanner_close_button_title)].tap()
-            
-            runner.step("Disable Contact tracing") {
-                """
-                Users can disable contact tracing
-                """
-            }
-            
-            runner.step("About") {
-                """
-                Users can navigate to about page
-                """
-            }
-            homeScreen.aboutButton.tap()
-            
-            app.buttons[localize(.back)].tap()
-            
-        }
+        $runner.initialState.localAuthorityId = "E09000022"
     }
     
     func testContactTracingOffReminder() throws {

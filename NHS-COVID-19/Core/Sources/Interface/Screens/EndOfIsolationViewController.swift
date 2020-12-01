@@ -22,11 +22,11 @@ private class EndOfIsolationContent: PrimaryButtonStickyFooterScrollingContent {
         }
     }
     
-    public init(interactor: Interacting, isolationEndDate: Date, showAdvisory: Bool, currentDateProvider: @escaping () -> Date) {
+    public init(interactor: Interacting, isolationEndDate: Date, isIndexCase: Bool, currentDateProvider: @escaping () -> Date) {
         super.init(
             scrollingViews: [
-                UIImageView(.isolationEnded).styleAsDecoration().isHidden(!showAdvisory),
-                UIImageView(.isolationEndedWarning).styleAsDecoration().isHidden(showAdvisory),
+                UIImageView(.isolationEnded).styleAsDecoration().isHidden(!isIndexCase),
+                UIImageView(.isolationEndedWarning).styleAsDecoration().isHidden(isIndexCase),
                 UILabel()
                     .set(text: localize(.end_of_isolation_isolate_title))
                     .styleAsPageHeader()
@@ -37,11 +37,7 @@ private class EndOfIsolationContent: PrimaryButtonStickyFooterScrollingContent {
                     .centralized(),
                 
                 InformationBox.indication.warning(localize(.end_of_isolation_isolate_if_have_symptom_warning))
-                    .isHidden(!showAdvisory),
-                UILabel()
-                    .set(text: localize(.end_of_isolation_explanation_1))
-                    .styleAsBody()
-                    .isHidden(showAdvisory),
+                    .isHidden(!isIndexCase),
                 UILabel().set(text: localize(.end_of_isolation_link_label)).styleAsBody(),
                 LinkButton(
                     title: localize(.end_of_isolation_online_services_link),
@@ -59,11 +55,11 @@ private class EndOfIsolationContent: PrimaryButtonStickyFooterScrollingContent {
 public class EndOfIsolationViewController: StickyFooterScrollingContentViewController {
     public typealias Interacting = EndOfIsolationViewControllerInteracting
     
-    public init(interactor: Interacting, isolationEndDate: Date, showAdvisory: Bool, currentDateProvider: @escaping () -> Date) {
+    public init(interactor: Interacting, isolationEndDate: Date, isIndexCase: Bool, currentDateProvider: @escaping () -> Date) {
         super.init(content: EndOfIsolationContent(
             interactor: interactor,
             isolationEndDate: isolationEndDate,
-            showAdvisory: showAdvisory,
+            isIndexCase: isIndexCase,
             currentDateProvider: currentDateProvider
         ))
     }

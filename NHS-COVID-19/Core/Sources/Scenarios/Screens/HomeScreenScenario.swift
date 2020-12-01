@@ -3,6 +3,7 @@
 //
 
 import Combine
+import Domain
 import Integration
 import Interface
 import UIKit
@@ -18,7 +19,18 @@ extension HomeScreenScenario {
     
     static func postcodeViewModel(parent: UIViewController) -> RiskLevelBanner.ViewModel? {
         if Self.riskyPostcodeEnabled {
-            return RiskLevelBanner.ViewModel(postcode: .init("SW12"), risk: .v1(.low))
+            return RiskLevelBanner.ViewModel(
+                postcode: "SW12",
+                colorScheme: .green,
+                title: "SW12 is in Local Alert Level 1",
+                infoTitle: "SW12 is in Local Alert Level 1",
+                heading: [],
+                body: [],
+                linkTitle: "Restrictions in your area",
+                linkURL: nil,
+                footer: [],
+                policies: []
+            )
         } else {
             return nil
         }

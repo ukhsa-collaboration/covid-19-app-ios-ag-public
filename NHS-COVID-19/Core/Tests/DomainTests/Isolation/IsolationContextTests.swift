@@ -38,7 +38,7 @@ class IsolationContextTests: XCTestCase {
     }
     
     func testMakeIsolationAcknowledgementStatePublishesState() throws {
-        let isolation = Isolation(fromDay: .today, untilStartOfDay: .today, reason: .bothCases)
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: .today, reason: .bothCases(hasPositiveTestResult: false, isSelfDiagnosed: true))
         isolationContext.isolationStateManager.state = .isolationFinishedButNotAcknowledged(isolation)
         
         let ackState = try isolationContext.makeIsolationAcknowledgementState().await().get()

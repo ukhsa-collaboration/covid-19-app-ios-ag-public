@@ -5,7 +5,6 @@
 import Common
 import Foundation
 import Logging
-import MetricKit
 
 struct MetricsInfo {
     var payload: MetricsInfoPayload
@@ -76,6 +75,12 @@ private struct SubmissionPayload: Codable {
         var receivedPositiveTestResult = 0
         var receivedNegativeTestResult = 0
         var receivedVoidTestResult = 0
+        var receivedVoidTestResultEnteredManually = 0
+        var receivedPositiveTestResultEnteredManually = 0
+        var receivedNegativeTestResultEnteredManually = 0
+        var receivedVoidTestResultViaPolling = 0
+        var receivedPositiveTestResultViaPolling = 0
+        var receivedNegativeTestResultViaPolling = 0
         
         // How many times background tasks ran
         var totalBackgroundTasks = 0
@@ -86,6 +91,11 @@ private struct SubmissionPayload: Codable {
         // Background ticks (max: runningNormallyBackgroundTick)
         var isIsolatingBackgroundTick = 0
         var hasHadRiskyContactBackgroundTick = 0
+        var hasSelfDiagnosedBackgroundTick = 0
+        var hasTestedPositiveBackgroundTick = 0
+        var isIsolatingForSelfDiagnosedBackgroundTick = 0
+        var isIsolatingForTestedPositiveBackgroundTick = 0
+        var isIsolatingForHadRiskyContactBackgroundTick = 0
         var hasSelfDiagnosedPositiveBackgroundTick = 0
         var encounterDetectionPausedBackgroundTick = 0
 //        var collectedMetric = 0
@@ -137,19 +147,6 @@ private extension Measurement where UnitType: Dimension {
     
 }
 
-private extension MetricPayload {
-    
-    var metricCounts: [String: Int] {
-        guard let signpostMetrics = signpostMetrics else { return [:] }
-        
-        return Dictionary(uniqueKeysWithValues: signpostMetrics.lazy
-            .filter { $0.signpostCategory == Metrics.category }
-            .map { ($0.signpostName, $0.totalCount) }
-        )
-    }
-    
-}
-
 private extension Metric {
     
     var property: WritableKeyPath<SubmissionPayload.Metrics, Int> {
@@ -164,10 +161,21 @@ private extension Metric {
         case .receivedNegativeTestResult: return \.receivedNegativeTestResult
         case .receivedVoidTestResult: return \.receivedVoidTestResult
         case .contactCaseBackgroundTick: return \.hasHadRiskyContactBackgroundTick
+        case .selfDiagnosedBackgroundTick: return \.hasSelfDiagnosedBackgroundTick
+        case .testedPositiveBackgroundTick: return \.hasTestedPositiveBackgroundTick
+        case .isolatedForSelfDiagnosedBackgroundTick: return \.isIsolatingForSelfDiagnosedBackgroundTick
+        case .isolatedForTestedPositiveBackgroundTick: return \.isIsolatingForTestedPositiveBackgroundTick
+        case .isolatedForHadRiskyContactBackgroundTick: return \.isIsolatingForHadRiskyContactBackgroundTick
         case .indexCaseBackgroundTick: return \.hasSelfDiagnosedPositiveBackgroundTick
         case .isolationBackgroundTick: return \.isIsolatingBackgroundTick
         case .pauseTick: return \.encounterDetectionPausedBackgroundTick
         case .runningNormallyTick: return \.runningNormallyBackgroundTick
+        case .receivedVoidTestResultEnteredManually: return \.receivedVoidTestResultEnteredManually
+        case .receivedPositiveTestResultEnteredManually: return \.receivedPositiveTestResultEnteredManually
+        case .receivedNegativeTestResultEnteredManually: return \.receivedNegativeTestResultEnteredManually
+        case .receivedVoidTestResultViaPolling: return \.receivedVoidTestResultViaPolling
+        case .receivedPositiveTestResultViaPolling: return \.receivedPositiveTestResultViaPolling
+        case .receivedNegativeTestResultViaPolling: return \.receivedNegativeTestResultViaPolling
         }
     }
     

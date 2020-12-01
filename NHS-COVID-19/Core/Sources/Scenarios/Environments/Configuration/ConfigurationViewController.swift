@@ -26,42 +26,28 @@ class ConfigurationViewController: UIViewController {
         view.styleAsScreenBackground(with: traitCollection)
         view.insetsLayoutMarginsFromSafeArea = true
         
-        let title = UILabel()
-        title.styleAsPageHeader()
-        title.text = "Feature-Toggle"
+        let disclaimer = UILabel()
+        disclaimer.styleAsBody()
+        disclaimer.text = """
+        Use these toggles to turn on and off experimental features.
         
-        let selfDiagnosis = createToggle(
-            feature: .selfDiagnosis,
-            isOn: featureToggleStorage.selfDiagnosisToggle,
-            action: #selector(toggleSelfDiagnosis)
-        )
-        let selfDiagnosisUpload = createToggle(
-            feature: .selfDiagnosisUpload,
-            isOn: featureToggleStorage.selfDiagnosisUploadToggle,
-            action: #selector(toggleSelfDiagnosisUpload)
-        )
-        let selfIsolating = createToggle(
-            feature: .selfIsolation,
-            isOn: featureToggleStorage.selfIsolationToggle,
-            action: #selector(toggleSelfIsolation)
-        )
-        let testKitOrder = createToggle(
-            feature: .testKitOrder,
-            isOn: featureToggleStorage.testKitOrderToggle,
-            action: #selector(toggleTestKitOrder)
+        Although that should normally not be the case, note that in rare situations the app may behave incorrectly if \
+        the feature toggle is changed after onboarding.
+        """
+        
+        let localAuthority = createToggle(
+            feature: .localAuthority,
+            isOn: featureToggleStorage.localAuthorityToggle,
+            action: #selector(toggleLocalAuthority)
         )
         
         let stackView = UIStackView(arrangedSubviews: [
-            title,
-            selfDiagnosis,
-            selfDiagnosisUpload,
-            selfIsolating,
-            testKitOrder,
-        ]
-        )
+            localAuthority,
+            disclaimer,
+        ])
         
         stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
+        stackView.distribution = .fill
         stackView.spacing = .standardSpacing
         view.addAutolayoutSubview(stackView)
         
@@ -89,32 +75,15 @@ class ConfigurationViewController: UIViewController {
     
     func getFeatureString(feature: Feature) -> String {
         switch feature {
-        case .selfDiagnosis:
-            return "Self Diagnosis"
-        case .selfDiagnosisUpload:
-            return "Self Diagnosis Upload"
-        case .selfIsolation:
-            return "Self Isolation"
-        case .testKitOrder:
-            return "Test Kit Order"
+        case .localAuthority:
+            return "Local Authority"
         }
     }
     
-    @objc private func toggleSelfDiagnosis() {
-        featureToggleStorage.selfDiagnosisToggle.toggle()
+    @objc private func toggleLocalAuthority() {
+        featureToggleStorage.localAuthorityToggle.toggle()
     }
     
-    @objc private func toggleSelfDiagnosisUpload() {
-        featureToggleStorage.selfDiagnosisUploadToggle.toggle()
-    }
-    
-    @objc private func toggleSelfIsolation() {
-        featureToggleStorage.selfIsolationToggle.toggle()
-    }
-    
-    @objc private func toggleTestKitOrder() {
-        featureToggleStorage.testKitOrderToggle.toggle()
-    }
 }
 
 extension CaseIterable where Self: Equatable {

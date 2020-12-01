@@ -11,65 +11,67 @@ public protocol PolicyUpdateViewControllerInteracting {
     func didTapTermsOfUse()
 }
 
-struct PolicyUpdateContent {
+public class PolicyUpdateViewController: OnboardingStepViewController {
     public typealias Interacting = PolicyUpdateViewControllerInteracting
     
-    var views: [StackViewContentProvider]
-    
-    private let interactor: Interacting
-    
     public init(interactor: Interacting) {
-        self.interactor = interactor
-        
-        views = [
-            LogoStrapline(.nhsBlue, style: .onboarding),
-            UIImageView(.policy).styleAsDecoration(),
-            UILabel().styleAsPageHeader().set(text: localize(.policy_update_title)),
-            localizeAndSplit(.policy_update_description).map { UILabel().styleAsBody().set(text: String($0)) },
-            LinkButton(
-                title: localize(.terms_of_use_label),
-                action: interactor.didTapTermsOfUse
-            ),
-        ]
-        
-        let contentStack = UIStackView(arrangedSubviews: views.flatMap { $0.content })
-        contentStack.axis = .vertical
-        contentStack.spacing = .standardSpacing
-        
-        let button = PrimaryButton(
-            title: localize(.policy_update_button),
-            action: interactor.didTapContinue
-        )
-        
-        let stackContent = [contentStack, button]
-        let stackView = UIStackView(arrangedSubviews: stackContent)
-        stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
-        stackView.spacing = .standardSpacing
-        
-        views = [stackView]
-        
-    }
-}
-
-public class PolicyUpdateViewController: ScrollingContentViewController {
-    public typealias Interacting = PolicyUpdateViewControllerInteracting
-    
-    private let content: PolicyUpdateContent
-    
-    public init(interactor: Interacting) {
-        content = PolicyUpdateContent(interactor: interactor)
-        super.init(views: content.views)
+        super.init(step: PolicyUpdateStep(interactor: interactor))
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override public func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        navigationController?.setNavigationBarHidden(true, animated: true)
+}
+
+private class PolicyUpdateStep: NSObject, OnboardingStep {
+    var footerContent = [UIView]()
+    var strapLineStyle: LogoStrapline.Style? { .onboarding }
+    
+    public typealias Interacting = PolicyUpdateViewControllerInteracting
+    private let interactor: Interacting
+    
+    private lazy var title: UILabel = {
+        let label = UILabel()
+        label.text = localize(.policy_update_title)
+        label.styleAsPageHeader()
+        return label
+    }()
+    
+    let actionTitle = localize(.policy_update_button)
+    let image: UIImage? = UIImage(.policy)
+    
+    init(interactor: Interacting) {
+        self.interactor = interactor
     }
     
+    func label(for localizationKey: StringLocalizationKey) -> UILabel {
+        let label = UILabel()
+        label.text = localize(localizationKey)
+        return label
+    }
+    
+    func stack(for labels: [UIView]) -> UIStackView {
+        let stackView = UIStackView(arrangedSubviews: labels)
+        stackView.axis = .vertical
+        stackView.spacing = .halfSpacing
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = .inner
+        return stackView
+    }
+    
+    var content: [UIView] {
+        [
+            stack(for: [title]),
+            stack(for: localizeAndSplit(.policy_update_description).map { UILabel().styleAsBody().set(text: String($0)) }),
+            stack(for: [LinkButton(
+                title: localize(.terms_of_use_label),
+                action: interactor.didTapTermsOfUse
+            )]),
+        ]
+    }
+    
+    func act() {
+        interactor.didTapContinue()
+    }
 }

@@ -8,31 +8,53 @@ import UIKit
 extension MyDataViewController {
     class PostcodeCell: UITableViewCell {
         static let reuseIdentifier = String(describing: self)
-        let titleLabel: UILabel
+        let postcodeLabel: UILabel
+        let localAuthorityLabel: UILabel
+        
+        let stack: UIStackView = {
+            let stack = UIStackView()
+            stack.axis = .vertical
+            stack.alignment = .firstBaseline
+            stack.distribution = .fillProportionally
+            stack.spacing = .halfSpacing
+            return stack
+        }()
         
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-            titleLabel = UILabel().styleAsBody()
+            postcodeLabel = UILabel().styleAsBody()
+            localAuthorityLabel = UILabel().styleAsBody()
             super.init(style: style, reuseIdentifier: reuseIdentifier)
             backgroundColor = UIColor(.surface)
-            contentView.addReadableSubview(titleLabel, inset: .standardSpacing)
+            stack.addArrangedSubview(localAuthorityLabel)
+            stack.addArrangedSubview(postcodeLabel)
+            contentView.addCellContentSubview(stack, inset: .standardSpacing)
         }
         
         var postcode: (InterfaceProperty<String?>)? {
             didSet {
                 postcode?.sink { [weak self] postcode in
-                    self?.titleLabel.text = postcode
+                    self?.postcodeLabel.text = postcode
                 }
             }
         }
         
-        private func setting(postcode: InterfaceProperty<String?>) -> PostcodeCell {
+        var localAuthority: (InterfaceProperty<String?>)? {
+            didSet {
+                localAuthority?.sink { [weak self] authority in
+                    self?.localAuthorityLabel.text = authority
+                }
+            }
+        }
+        
+        private func setting(postcode: InterfaceProperty<String?>, localAuthority: InterfaceProperty<String?>) -> PostcodeCell {
             self.postcode = postcode
+            self.localAuthority = localAuthority
             return self
         }
         
-        static func create(tableView: UITableView, postcode: InterfaceProperty<String?>) -> PostcodeCell {
+        static func create(tableView: UITableView, postcode: InterfaceProperty<String?>, localAuthority: InterfaceProperty<String?>) -> PostcodeCell {
             let dequeued = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as? PostcodeCell
-            return (dequeued ?? PostcodeCell()).setting(postcode: postcode)
+            return (dequeued ?? PostcodeCell()).setting(postcode: postcode, localAuthority: localAuthority)
         }
         
         required init?(coder: NSCoder) {

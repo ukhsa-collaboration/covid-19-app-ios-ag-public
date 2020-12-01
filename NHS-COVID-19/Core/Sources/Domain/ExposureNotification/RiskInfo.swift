@@ -8,12 +8,16 @@ protocol RiskData {
     var riskScore: Double { get }
     var riskScoreVersion: Int { get }
     var day: GregorianDay { get }
+    var isConsideredRisky: Bool { get }
 }
 
 public struct RiskInfo: Codable, Equatable, RiskData {
     var riskScore: Double
     var riskScoreVersion: Int
     var day: GregorianDay
+    var isConsideredRisky: Bool {
+        true
+    }
     
     private enum CodingKeys: String, CodingKey {
         case riskScore
@@ -46,9 +50,20 @@ public struct ExposureRiskInfo: RiskData {
     }
 }
 
+extension ExposureRiskInfo {
+    init(riskScore: Double, riskScoreVersion: Int, day: GregorianDay, riskThreshold: Double) {
+        self.riskScore = riskScore
+        self.riskScoreVersion = riskScoreVersion
+        self.day = day
+        self.isConsideredRisky = riskScore >= riskThreshold
+    }
+}
+
 extension RiskData {
     
     func isHigherPriority(than other: RiskData) -> Bool {
+        if isConsideredRisky && !other.isConsideredRisky { return true }
+        if !isConsideredRisky && other.isConsideredRisky { return false }
         if day > other.day { return true }
         if day < other.day { return false }
         return riskScore > other.riskScore

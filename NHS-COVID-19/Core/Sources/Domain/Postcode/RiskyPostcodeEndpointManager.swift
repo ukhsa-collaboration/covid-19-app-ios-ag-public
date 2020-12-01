@@ -6,31 +6,33 @@ import Combine
 import Common
 
 public class RiskyPostcodeEndpointManager {
-    public enum PostcodeRisk: Equatable {
-        case v1(Domain.PostcodeRisk)
-        case v2(id: String, style: RiskyPostcodes.RiskStyle)
+    public struct PostcodeRisk: Equatable {
+        public enum RiskType {
+            case postcode
+            case localAuthority
+        }
         
-        var id: String {
-            switch self {
-            case .v1(let risk):
-                return risk.rawValue
-            case .v2(let id, _):
-                return id
-            }
+        let id: String
+        public let style: RiskyPostcodes.RiskStyle
+        public let type: RiskType
+        
+        public init(id: String, style: RiskyPostcodes.RiskStyle, type: RiskType) {
+            self.id = id
+            self.style = style
+            self.type = type
         }
     }
     
-    private let cachedResponseV1: CachedResponse<[Postcode: Domain.PostcodeRisk]>
     private let cachedResponseV2: CachedResponse<RiskyPostcodes>
     private var cancellable: AnyCancellable?
     
-    let postcodeInfo: DomainProperty<(postcode: Postcode, risk: DomainProperty<PostcodeRisk?>)?>
+    let postcodeInfo: DomainProperty<(postcode: Postcode, localAuthority: LocalAuthority?, risk: DomainProperty<PostcodeRisk?>)?>
     
     var isEmpty: Bool {
-        cachedResponseV2.value.isEmpty && cachedResponseV1.value.isEmpty
+        cachedResponseV2.value.isEmpty
     }
     
-    init(distributeClient: HTTPClient, storage: FileStorage, postcode: AnyPublisher<Postcode?, Never>) {
+    init(distributeClient: HTTPClient, storage: FileStorage, postcode: AnyPublisher<Postcode?, Never>, localAuthority: AnyPublisher<LocalAuthority?, Never>) {
         let cachedResponseV2 = CachedResponse(
             httpClient: distributeClient,
             endpoint: RiskyPostcodesEndpointV2(),
@@ -39,40 +41,28 @@ public class RiskyPostcodeEndpointManager {
             initialValue: RiskyPostcodes(postDistricts: [:], riskLevels: [:])
         )
         
-        let cachedResponseV1 = CachedResponse(
-            httpClient: distributeClient,
-            endpoint: RiskyPostcodesEndpointV1(),
-            storage: storage,
-            name: "risky_postcodes",
-            initialValue: [:]
-        )
-        
-        postcodeInfo = postcode.map { postcode -> (postcode: Postcode, risk: DomainProperty<PostcodeRisk?>)? in
+        postcodeInfo = postcode.combineLatest(localAuthority) { postcode, localAuthority -> (postcode: Postcode, localAuthority: LocalAuthority?, risk: DomainProperty<PostcodeRisk?>)? in
             guard let postcode = postcode else { return nil }
-            let risk = cachedResponseV1.$value.combineLatest(cachedResponseV2.$value)
-                .map { v1, v2 -> PostcodeRisk? in
-                    if let v2Risk = v2.riskStyle(for: postcode) {
-                        return .v2(id: v2Risk.id, style: v2Risk.style)
-                    } else if let v1Risk = v1[postcode] {
-                        return .v1(v1Risk)
+            let risk = cachedResponseV2.$value
+                .map { v2 -> PostcodeRisk? in
+                    if let localAuthority = localAuthority,
+                        let v2LocalAuthorityRisk = v2.riskStyle(for: localAuthority.id) {
+                        return PostcodeRisk(id: v2LocalAuthorityRisk.id, style: v2LocalAuthorityRisk.style, type: .localAuthority)
+                    } else if let v2Risk = v2.riskStyle(for: postcode) {
+                        return PostcodeRisk(id: v2Risk.id, style: v2Risk.style, type: .postcode)
                     } else {
                         return nil
                     }
                 }
                 .domainProperty()
-            
-            return (postcode, risk)
+            return (postcode, localAuthority, risk)
         }
         .domainProperty()
         
-        self.cachedResponseV1 = cachedResponseV1
         self.cachedResponseV2 = cachedResponseV2
     }
     
     func update() -> AnyPublisher<Void, Never> {
-        cachedResponseV2.update()
-            // make sure we fetch v1 after v2; so we first use data from v2 if available
-            .append(Deferred(createPublisher: cachedResponseV1.update))
-            .eraseToAnyPublisher()
+        cachedResponseV2.update().eraseToAnyPublisher()
     }
 }

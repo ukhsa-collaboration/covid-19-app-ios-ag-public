@@ -17,6 +17,10 @@ struct MyDataScreen {
         app.staticTexts[localized: .mydata_section_postcode_description]
     }
     
+    var localAuthoritySectionHeader: XCUIElement {
+        app.staticTexts[localized: .mydata_section_LocalAuthority_description]
+    }
+    
     var testResultSectionHeader: XCUIElement {
         app.staticTexts[localized: .mydata_section_test_result_description]
     }
@@ -35,6 +39,10 @@ struct MyDataScreen {
     
     func postcodeCell(postcode: String) -> XCUIElement {
         app.staticTexts[verbatim: postcode]
+    }
+    
+    func postcodeAndLocalAuthorityCell(postcode: String, localAuthority: String) -> [XCUIElement] {
+        [app.staticTexts[verbatim: postcode], app.staticTexts[verbatim: localAuthority]]
     }
     
     var editPostcodeButton: XCUIElement {

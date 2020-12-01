@@ -28,6 +28,15 @@ public protocol OnboardingStep {
 public extension OnboardingStep {
     var strapLineStyle: LogoStrapline.Style? { .onboarding }
     var alert: Alert? { nil }
+    
+    func stack(for labels: [UILabel], spacing: CGFloat) -> UIStackView {
+        let stackView = UIStackView(arrangedSubviews: labels)
+        stackView.axis = .vertical
+        stackView.spacing = spacing
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = .inner
+        return stackView
+    }
 }
 
 open class OnboardingStepViewController: UIViewController {

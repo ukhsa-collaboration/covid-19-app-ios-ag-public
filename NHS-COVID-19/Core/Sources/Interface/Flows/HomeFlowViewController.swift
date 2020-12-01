@@ -29,6 +29,7 @@ public protocol HomeFlowViewControllerInteracting {
     func deleteAppData()
     func updateVenueHistories(deleting venueHistory: VenueHistory) -> [VenueHistory]
     func save(postcode: String) -> Result<Void, DisplayableError>
+    func makeLocalAuthorityOnboardingIteractor() -> LocalAuthorityFlowViewController.Interacting?
 }
 
 public enum ExposureNotificationReminderIn: Int, CaseIterable {
@@ -236,9 +237,16 @@ private struct MyDataViewInteractor: MyDataViewController.Interacting {
         deleteAppData = interactor.deleteAppData
         updateVenueHistories = interactor.updateVenueHistories
         didTapEditPostcode = { [weak flowController] in
-            let interactor = EditPostcodeInteractor(flowController: flowController, interactor: interactor)
-            let viewController = EditPostcodeViewController(interactor: interactor)
-            flowController?.pushViewController(viewController, animated: true)
+            
+            if let localAuthorityInteractor = interactor.makeLocalAuthorityOnboardingIteractor() {
+                let localAuthorityFlowVC = LocalAuthorityFlowViewController(localAuthorityInteractor, isEditMode: true)
+                localAuthorityFlowVC.modalPresentationStyle = .fullScreen
+                flowController?.present(localAuthorityFlowVC, animated: true)
+            } else {
+                let interactor = EditPostcodeInteractor(flowController: flowController, interactor: interactor)
+                let viewController = EditPostcodeViewController(interactor: interactor, isLocalAuthorityEnabled: false)
+                flowController?.pushViewController(viewController, animated: true)
+            }
         }
     }
 }

@@ -303,6 +303,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     
     case mydata_title
     case mydata_section_postcode_description
+    case mydata_section_LocalAuthority_description
     case mydata_section_test_result_description
     case mydata_section_venue_history_description
     case mydata_section_symptoms_description
@@ -336,6 +337,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case link_how_this_app_works
     case link_provide_feedback
     case link_exposure_faq
+    case link_visit_uk_gov
     
     case cancel
     case back
@@ -349,6 +351,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case exposure_notification_reminder_alert_button
     
     case edit_postcode_title
+    case edit_postcode_continue_button
     
     case age_confirmation_alert_title
     case age_confirmation_alert_body
@@ -409,6 +412,20 @@ public enum StringLocalizationKey: String, CaseIterable {
     case policy_update_title
     case policy_update_description
     case policy_update_button
+    
+    case local_authority_information_title
+    case local_authority_information_description
+    case local_authority_information_button
+    case local_authority_confirmation_title
+    case local_authority_confirmation_description
+    case local_authority_confirmation_button
+    case local_authority_visit_gov_uk_link_title
+    case local_authority_error_title
+    case local_authority_error_description
+    case local_authority_unsupported_country_error_title
+    case local_authority_unsupported_country_error_description
+    
+    case done
 }
 
 public enum ParameterisedStringLocalizable: Equatable {
@@ -451,6 +468,11 @@ public enum ParameterisedStringLocalizable: Equatable {
         case positive_test_start_to_isolate_accessibility_label = "positive_test_start_to_isolate_accessibility_label %ld"
         
         case risky_venue_isolation_title_accessibility = "risky_venue_isolation_title_accessibility %ld"
+        
+        case local_authority_confirmation_heading = "local_authority_confirmation_heading %@ %@"
+        
+        case local_authority_card_checkbox_accessibility_label = "local_authority_card_checkbox_accessibility_label %@ %@"
+        case local_authority_screen_description = "local_authority_screen_description %@"
     }
     
     case numbered_list_item(index: Int, text: String)
@@ -497,6 +519,11 @@ public enum ParameterisedStringLocalizable: Equatable {
     
     case risky_venue_isolation_title_accessibility(days: Int)
     
+    case local_authority_confirmation_heading(postcode: String, localAuthority: String)
+    
+    case local_authority_card_checkbox_accessibility_label(value: String, content: String)
+    case local_authority_screen_description(postcode: String)
+    
     var key: Key {
         switch self {
         case .numbered_list_item: return .numbered_list_item
@@ -531,6 +558,11 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .exposure_notification_reminder_alert_title: return .exposure_notification_reminder_alert_title
         case .positive_test_start_to_isolate_accessibility_label: return .positive_test_start_to_isolate_accessibility_label
         case .risky_venue_isolation_title_accessibility: return .risky_venue_isolation_title_accessibility
+            
+        case .local_authority_confirmation_heading: return .local_authority_confirmation_heading
+        case .local_authority_card_checkbox_accessibility_label: return .local_authority_card_checkbox_accessibility_label
+        case .local_authority_screen_description: return .local_authority_screen_description
+            
         }
     }
     
@@ -612,6 +644,12 @@ public enum ParameterisedStringLocalizable: Equatable {
             return [days]
         case .risky_venue_isolation_title_accessibility(days: let days):
             return [days]
+        case .local_authority_confirmation_heading(let postcode, let localAuthority):
+            return [postcode, localAuthority]
+        case .local_authority_card_checkbox_accessibility_label(let value, let content):
+            return [value, content]
+        case .local_authority_screen_description(let postcode):
+            return [postcode]
         }
     }
     

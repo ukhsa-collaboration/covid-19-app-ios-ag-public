@@ -19,10 +19,16 @@ struct RiskyPostcodesEndpointV2: HTTPEndpoint {
 
 public struct RiskyPostcodes: Decodable {
     var postDistricts: PostDistricts
+    var localAuthorities: LocalAuthorities?
     var riskLevels: RiskLevels
     
     func riskStyle(for postcode: Postcode) -> (id: String, style: RiskStyle)? {
         guard let riskIndicator = postDistricts[postcode] else { return nil }
+        return riskLevels[riskIndicator].map { (riskIndicator.value, $0) }
+    }
+    
+    func riskStyle(for localAuthority: LocalAuthorityId) -> (id: String, style: RiskStyle)? {
+        guard let riskIndicator = localAuthorities?[localAuthority] else { return nil }
         return riskLevels[riskIndicator].map { (riskIndicator.value, $0) }
     }
     
@@ -47,6 +53,22 @@ extension RiskyPostcodes {
             values.isEmpty
         }
     }
+    
+    public struct LocalAuthorities: ExpressibleByDictionaryLiteral {
+        private var values: [LocalAuthorityId: RiskIndicator]
+        
+        public init(dictionaryLiteral elements: (LocalAuthorityId, RiskyPostcodes.RiskIndicator)...) {
+            values = Dictionary(elements, uniquingKeysWith: { $1 })
+        }
+        
+        subscript(_ localAuthority: LocalAuthorityId) -> RiskIndicator? {
+            values[localAuthority]
+        }
+        
+        var isEmpty: Bool {
+            values.isEmpty
+        }
+    }
 }
 
 extension RiskyPostcodes.PostDistricts: Decodable {
@@ -56,6 +78,17 @@ extension RiskyPostcodes.PostDistricts: Decodable {
         let stringValues = try container.decode([String: RiskyPostcodes.RiskIndicator].self)
         values = Dictionary(uniqueKeysWithValues: stringValues.map { key, value in
             (Postcode(key), value)
+        })
+    }
+}
+
+extension RiskyPostcodes.LocalAuthorities: Decodable {
+    // Synthesised Decodable conformance doesn't work with custom keys in dictionaries
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let stringValues = try container.decode([String: RiskyPostcodes.RiskIndicator].self)
+        values = Dictionary(uniqueKeysWithValues: stringValues.map { key, value in
+            (LocalAuthorityId(key), value)
         })
     }
 }
@@ -114,5 +147,20 @@ extension RiskyPostcodes {
         public var content: LocaleString
         public var linkTitle: LocaleString
         public var linkUrl: LocaleString
+        public var policyData: PolicyData?
+    }
+    
+    public struct PolicyData: Decodable, Equatable {
+        public var localAuthorityRiskTitle: LocaleString
+        public var heading: LocaleString
+        public var content: LocaleString
+        public var footer: LocaleString
+        public var policies: [Policy]
+    }
+    
+    public struct Policy: Decodable, Equatable {
+        public var policyIcon: String
+        public var policyHeading: LocaleString
+        public var policyContent: LocaleString
     }
 }

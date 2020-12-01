@@ -208,10 +208,16 @@ enum IsolationLogicalState: Equatable {
         var _isolation: _Isolation
         switch (_contactIsolation, _indexIsolation) {
         case (.some(let c), .some(let i)):
+            var positiveTestResult = false
+            var selfDiagnosed = false
+            if case .indexCase(let hasPositiveTestResult, let hasSelfDiagnosed) = i.reason {
+                positiveTestResult = hasPositiveTestResult
+                selfDiagnosed = hasSelfDiagnosed
+            }
             _isolation = _Isolation(
                 fromDay: min(c.fromDay, i.fromDay),
                 untilStartOfDay: max(c.untilStartOfDay, i.untilStartOfDay),
-                reason: .bothCases
+                reason: .bothCases(hasPositiveTestResult: positiveTestResult, isSelfDiagnosed: selfDiagnosed)
             )
         case (.some(let s), nil), (nil, .some(let s)):
             _isolation = s
@@ -302,29 +308,35 @@ extension _Isolation {
             return nil
         case (_, .void, .manualTestEntry):
             return nil
-        case (_, .negative, _):
+        case (_, .negative, .selfDiagnosis(_)):
             self.init(
                 fromDay: indexCaseInfo.isolationTrigger.startDay,
                 untilStartOfDay: indexCaseInfo.testInfo!.receivedOnDay,
-                reason: .indexCase(hasPositiveTestResult: false)
+                reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)
             )
         case (.none, _, .selfDiagnosis(let selfDiagnosisDay)):
             self.init(
                 fromDay: selfDiagnosisDay,
                 untilStartOfDay: selfDiagnosisDay + configuration.indexCaseSinceSelfDiagnosisUnknownOnset,
-                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive)
+                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, isSelfDiagnosed: true)
             )
         case (.none, _, .manualTestEntry(let npexDay)):
             self.init(
                 fromDay: npexDay,
                 untilStartOfDay: npexDay + configuration.indexCaseSinceNPEXDayNoSelfDiagnosis,
-                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive)
+                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, isSelfDiagnosed: false)
             )
-        case (.some(let day), _, let isolationTrigger):
+        case (.some(let day), _, .manualTestEntry(npexDay: _)):
             self.init(
-                fromDay: isolationTrigger.startDay,
+                fromDay: indexCaseInfo.isolationTrigger.startDay,
                 untilStartOfDay: day + configuration.indexCaseSinceSelfDiagnosisOnset,
-                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive)
+                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, isSelfDiagnosed: false)
+            )
+        case (.some(let day), _, .selfDiagnosis(_)):
+            self.init(
+                fromDay: indexCaseInfo.isolationTrigger.startDay,
+                untilStartOfDay: day + configuration.indexCaseSinceSelfDiagnosisOnset,
+                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, isSelfDiagnosed: true)
             )
         }
     }

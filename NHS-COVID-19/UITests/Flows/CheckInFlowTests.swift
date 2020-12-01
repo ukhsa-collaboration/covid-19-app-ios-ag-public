@@ -16,6 +16,7 @@ class CheckInFlowTests: XCTestCase {
         $runner.initialState.userNotificationsAuthorized = true
         $runner.initialState.cameraAuthorized = false
         $runner.initialState.postcode = "SW12"
+        $runner.initialState.localAuthorityId = "E09000022"
         $runner.initialState.qrCodeScanTime = 0.5
     }
     
@@ -27,6 +28,8 @@ class CheckInFlowTests: XCTestCase {
         }
         try runner.run { app in
             let homeScreen = HomeScreen(app: app)
+            
+            app.checkOnHomeScreenNotIsolating()
             
             XCTAssert(homeScreen.checkInButton.exists)
             
@@ -86,6 +89,8 @@ class CheckInFlowTests: XCTestCase {
         try runner.run { app in
             let homeScreen = HomeScreen(app: app)
             
+            app.checkOnHomeScreenNotIsolating()
+            
             XCTAssert(homeScreen.checkInButton.exists)
             
             runner.step("Home Screen") {
@@ -122,6 +127,8 @@ class CheckInFlowTests: XCTestCase {
         }
         try runner.run { app in
             let homeScreen = HomeScreen(app: app)
+            
+            app.checkOnHomeScreenNotIsolating()
             
             XCTAssert(homeScreen.checkInButton.exists)
             
@@ -174,6 +181,8 @@ class CheckInFlowTests: XCTestCase {
         try runner.run { app in
             let homeScreen = HomeScreen(app: app)
             
+            app.checkOnHomeScreenNotIsolating()
+            
             XCTAssert(homeScreen.checkInButton.exists)
             
             runner.step("Home Screen") {
@@ -217,6 +226,8 @@ class CheckInFlowTests: XCTestCase {
         }
         try runner.run { app in
             let homeScreen = HomeScreen(app: app)
+            
+            app.checkOnHomeScreenNotIsolating()
             
             XCTAssert(homeScreen.checkInButton.exists)
             

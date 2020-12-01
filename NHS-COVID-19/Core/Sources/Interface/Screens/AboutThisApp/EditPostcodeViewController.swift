@@ -33,7 +33,7 @@ private class EditPostcodeContent: StickyFooterScrollingContent {
     let footerContent: StackContent?
     let spacing: CGFloat = .doubleSpacing
     
-    public init(interactor: Interacting) {
+    public init(interactor: Interacting, primaryBtnTitle: String) {
         let errorTitle = UILabel()
         let errorDescription = UILabel()
         let textField = TextField(process: PostcodeProcessor.process)
@@ -85,7 +85,7 @@ private class EditPostcodeContent: StickyFooterScrollingContent {
         )
         
         footerContent = BasicContent(
-            views: [PrimaryButton(title: localize(.edit_postcode_save_button), action: action)],
+            views: [PrimaryButton(title: primaryBtnTitle, action: action)],
             spacing: .standardSpacing,
             margins: mutating(.largeInset) { $0.top = 0 }
         )
@@ -97,9 +97,9 @@ public class EditPostcodeViewController: StickyFooterScrollingContentViewControl
     
     private let interactor: Interacting
     
-    public init(interactor: Interacting) {
+    public init(interactor: Interacting, isLocalAuthorityEnabled: Bool) {
         self.interactor = interactor
-        super.init(content: EditPostcodeContent(interactor: interactor))
+        super.init(content: EditPostcodeContent(interactor: interactor, primaryBtnTitle: isLocalAuthorityEnabled ? localize(.edit_postcode_continue_button) : localize(.edit_postcode_save_button)))
         title = localize(.edit_postcode_title)
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: localize(.cancel), style: .plain, target: self, action: #selector(didTapCancel))
     }

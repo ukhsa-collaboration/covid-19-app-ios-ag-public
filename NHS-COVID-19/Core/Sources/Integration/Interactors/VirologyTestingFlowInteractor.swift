@@ -13,7 +13,6 @@ class VirologyTestingFlowInteractor: VirologyTestingFlowViewController.Interacti
     
     private let virologyTestOrderInfoProvider: VirologyTestingManaging
     private let openURL: (URL) -> Void
-    private let pasteboardCopier: PasteboardCopying
     
     private var referenceCode: ReferenceCode?
     private var orderWebsiteURL: URL?
@@ -21,12 +20,10 @@ class VirologyTestingFlowInteractor: VirologyTestingFlowViewController.Interacti
     init(
         virologyTestOrderInfoProvider: VirologyTestingManaging,
         openURL: @escaping (URL) -> Void,
-        pasteboardCopier: PasteboardCopying = PasteboardCopier(),
         acknowledge: (() -> Void)?
     ) {
         self.virologyTestOrderInfoProvider = virologyTestOrderInfoProvider
         self.openURL = openURL
-        self.pasteboardCopier = pasteboardCopier
         self.acknowledge = acknowledge
     }
     
@@ -37,12 +34,6 @@ class VirologyTestingFlowInteractor: VirologyTestingFlowViewController.Interacti
                 self.orderWebsiteURL = response.testOrderWebsiteURL
                 return InterfaceVirologyTestingInfo(referenceCode: response.referenceCode.value)
             }.eraseToAnyPublisher()
-    }
-    
-    func didTapCopyReferenceCode() {
-        if let referenceCode = referenceCode {
-            pasteboardCopier.copyToPasteboard(value: referenceCode.value)
-        }
     }
     
     func didTapOrderTestLink() {

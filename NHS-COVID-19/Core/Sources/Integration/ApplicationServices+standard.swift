@@ -8,7 +8,6 @@ import Domain
 import ExposureNotification
 import Foundation
 import Logging
-import MetricKit
 import UIKit
 
 extension ApplicationServices {
@@ -26,7 +25,6 @@ extension ApplicationServices {
                 identifier: environment.backgroundTaskIdentifier,
                 scheduler: BGTaskScheduler.shared
             ),
-            metricManager: MXMetricManager.shared,
             notificationCenter: .default,
             distributeClient: environment.distributionClient,
             apiClient: environment.apiClient,
@@ -36,7 +34,6 @@ extension ApplicationServices {
             cacheStorage: FileStorage(forCachesOf: environment.identifier),
             venueDecoder: environment.venueDecoder,
             appInfo: environment.appInfo,
-            pasteboardCopier: PasteboardCopier(),
             postcodeValidator: PostcodeValidator(),
             currentDateProvider: currentDateProvider,
             storeReviewController: StoreReviewController()

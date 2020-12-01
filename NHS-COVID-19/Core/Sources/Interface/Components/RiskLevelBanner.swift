@@ -21,10 +21,13 @@ extension RiskLevelBanner {
             postcode: String,
             colorScheme: ColorScheme,
             title: String,
+            infoTitle: String,
             heading: [String],
             body: [String],
             linkTitle: String,
-            linkURL: URL?
+            linkURL: URL?,
+            footer: [String],
+            policies: [RiskLevelInfoViewController.Policy]
         ) {
             self.postcode = postcode
             self.colorScheme = colorScheme
@@ -46,10 +49,13 @@ extension RiskLevelBanner {
             riskLevelInfoViewModel = RiskLevelInfoViewController.ViewModel(
                 image: image,
                 title: title,
+                infoTitle: infoTitle,
                 heading: heading,
                 body: body,
                 linkTitle: linkTitle,
-                linkURL: linkURL
+                linkURL: linkURL,
+                footer: footer,
+                policies: policies
             )
         }
     }

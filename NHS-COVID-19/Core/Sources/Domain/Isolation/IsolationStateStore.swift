@@ -70,6 +70,8 @@ class IsolationStateStore: SymptomsOnsetDateAndEncounterDateProviding {
     
     func newIsolationStateInfo(for testResult: TestResult, receivedOn: GregorianDay, npexDay: GregorianDay) -> IsolationStateInfo {
         let isolationInfo = mutating(self.isolationInfo) {
+            guard testResult != .void else { return }
+            
             if var indexCaseInfo = $0.indexCaseInfo, testResult == .negative || indexCaseInfo.testInfo?.result != .negative {
                 indexCaseInfo.set(testResult: testResult, receivedOn: receivedOn)
                 $0.indexCaseInfo = indexCaseInfo
@@ -141,8 +143,14 @@ class IsolationStateStore: SymptomsOnsetDateAndEncounterDateProviding {
         if isolationStateInfo?.isolationInfo.contactCaseInfo != nil {
             Metrics.signpost(.contactCaseBackgroundTick)
         }
-        if isolationStateInfo?.isolationInfo.indexCaseInfo != nil {
+        if let indexCaseInfo = isolationStateInfo?.isolationInfo.indexCaseInfo {
             Metrics.signpost(.indexCaseBackgroundTick)
+            if indexCaseInfo.testInfo?.result == .positive {
+                Metrics.signpost(.testedPositiveBackgroundTick)
+            }
+            if case .selfDiagnosis = indexCaseInfo.isolationTrigger {
+                Metrics.signpost(.selfDiagnosedBackgroundTick)
+            }
         }
         
         return Empty().eraseToAnyPublisher()

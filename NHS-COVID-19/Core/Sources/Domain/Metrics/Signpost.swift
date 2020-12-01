@@ -3,7 +3,6 @@
 //
 
 import Foundation
-import MetricKit
 
 enum Metric: String, CaseIterable {
     case backgroundTasks
@@ -16,10 +15,21 @@ enum Metric: String, CaseIterable {
     case receivedNegativeTestResult
     case receivedVoidTestResult
     case contactCaseBackgroundTick
+    case selfDiagnosedBackgroundTick
+    case testedPositiveBackgroundTick
+    case isolatedForSelfDiagnosedBackgroundTick
+    case isolatedForTestedPositiveBackgroundTick
+    case isolatedForHadRiskyContactBackgroundTick
     case indexCaseBackgroundTick
     case isolationBackgroundTick
     case pauseTick
     case runningNormallyTick
+    case receivedVoidTestResultEnteredManually
+    case receivedPositiveTestResultEnteredManually
+    case receivedNegativeTestResultEnteredManually
+    case receivedVoidTestResultViaPolling
+    case receivedPositiveTestResultViaPolling
+    case receivedNegativeTestResultViaPolling
     
     var name: StaticString {
         switch self {
@@ -37,6 +47,17 @@ enum Metric: String, CaseIterable {
         case .isolationBackgroundTick: return "isolationBackgroundTick"
         case .pauseTick: return "pauseTick"
         case .runningNormallyTick: return "runningNormallyTick"
+        case .receivedVoidTestResultEnteredManually: return "receivedVoidTestResultEnteredManually"
+        case .receivedPositiveTestResultEnteredManually: return "receivedPositiveTestResultEnteredManually"
+        case .receivedNegativeTestResultEnteredManually: return "receivedNegativeTestResultEnteredManually"
+        case .receivedVoidTestResultViaPolling: return "receivedVoidTestResultViaPolling"
+        case .receivedPositiveTestResultViaPolling: return "receivedPositiveTestResultViaPolling"
+        case .receivedNegativeTestResultViaPolling: return "receivedNegativeTestResultViaPolling"
+        case .selfDiagnosedBackgroundTick: return "selfDiagnosedBackgroundTick"
+        case .testedPositiveBackgroundTick: return "testedPositiveBackgroundTick"
+        case .isolatedForSelfDiagnosedBackgroundTick: return "isolatedForSelfDiagnosedBackgroundTick"
+        case .isolatedForTestedPositiveBackgroundTick: return "isolatedForTestedPositiveBackgroundTick"
+        case .isolatedForHadRiskyContactBackgroundTick: return "isolatedForHadRiskyContactBackgroundTick"
         }
     }
     
@@ -45,24 +66,17 @@ enum Metric: String, CaseIterable {
 enum Metrics {
     static let category = "AppMetrics"
     
-    private static let metricsLogHandle = MXMetricManager.makeLogHandle(category: category)
-    
     static func begin(_ metric: Metric) {
-        mxSignpost(.begin, log: metricsLogHandle, name: metric.name)
         MetricCollector.record(metric)
     }
     
-    static func end(_ metric: Metric) {
-        mxSignpost(.end, log: metricsLogHandle, name: metric.name)
-    }
+    static func end(_ metric: Metric) {}
     
     static func signpost(_ metric: Metric) {
         MetricCollector.record(metric)
-        mxSignpost(.begin, log: metricsLogHandle, name: metric.name)
-        mxSignpost(.end, log: metricsLogHandle, name: metric.name)
     }
     
-    static func signpostReceived(_ testResult: VirologyTestResult.TestResult) {
+    private static func signpostReceived(_ testResult: VirologyTestResult.TestResult) {
         switch testResult {
         case .positive:
             signpost(.receivedPositiveTestResult)
@@ -72,4 +86,33 @@ enum Metrics {
             signpost(.receivedVoidTestResult)
         }
     }
+    
+    static func signpostReceivedFromManual(testResult: VirologyTestResult.TestResult) {
+        
+        Self.signpostReceived(testResult)
+        
+        switch testResult {
+        case .positive:
+            signpost(.receivedPositiveTestResultEnteredManually)
+        case .negative:
+            signpost(.receivedNegativeTestResultEnteredManually)
+        case .void:
+            signpost(.receivedVoidTestResultEnteredManually)
+        }
+    }
+    
+    static func signpostReceivedViaPolling(testResult: VirologyTestResult.TestResult) {
+        
+        Self.signpostReceived(testResult)
+        
+        switch testResult {
+        case .positive:
+            signpost(.receivedPositiveTestResultViaPolling)
+        case .negative:
+            signpost(.receivedNegativeTestResultViaPolling)
+        case .void:
+            signpost(.receivedVoidTestResultViaPolling)
+        }
+    }
+    
 }

@@ -18,6 +18,7 @@ public class EditPostcodeScreenScenario: Scenario {
     public static let continueConfirmationAlertTitle = "Entered Postcode"
     public static let cancelTappedAlert = "Tapped Cancel"
     public static let errorDescription = "[Mock] The postcode you entered is not valid for this app."
+    public static let primaryBtnTitle = "Save"
     
     static var appController: AppController {
         let parent = UINavigationController()
@@ -38,7 +39,7 @@ public class EditPostcodeScreenScenario: Scenario {
             }
         )
         
-        let postcodeViewController = EditPostcodeViewController(interactor: interactor)
+        let postcodeViewController = EditPostcodeViewController(interactor: interactor, isLocalAuthorityEnabled: false)
         parent.pushViewController(postcodeViewController, animated: false)
         return BasicAppController(rootViewController: parent)
     }

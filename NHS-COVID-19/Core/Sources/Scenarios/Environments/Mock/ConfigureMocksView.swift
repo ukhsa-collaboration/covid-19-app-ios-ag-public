@@ -21,6 +21,13 @@ struct ConfigureMocksView: View {
                     TextFieldRow(label: "Green Risk", text: $dataProvider.greenPostcodes)
                     TextFieldRow(label: "Neutral Risk", text: $dataProvider.neutralPostcodes)
                 }
+                Section(header: Text(verbatim: "Local Authorities Risk")) {
+                    TextFieldRow(label: "Red Risk", text: $dataProvider.redLocalAuthorities)
+                    TextFieldRow(label: "Amber Risk", text: $dataProvider.amberLocalAuthorities)
+                    TextFieldRow(label: "Yellow Risk", text: $dataProvider.yellowLocalAuthorities)
+                    TextFieldRow(label: "Green Risk", text: $dataProvider.greenLocalAuthorities)
+                    TextFieldRow(label: "Neutral Risk", text: $dataProvider.neutralLocalAuthorities)
+                }
                 Section(header: Text(verbatim: "Check In")) {
                     TextFieldRow(label: "High Risk Venue IDs", text: $dataProvider.riskyVenueIDs)
                 }

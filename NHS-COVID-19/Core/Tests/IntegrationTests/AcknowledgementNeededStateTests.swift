@@ -70,7 +70,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let isolation = Isolation(
             fromDay: .today,
             untilStartOfDay: .today,
-            reason: .indexCase(hasPositiveTestResult: false)
+            reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)
         )
         let context = makeRunningAppContext(
             isolationAckState: .neededForEnd(isolation, acknowledge: {}),
@@ -90,7 +90,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let isolation = Isolation(
             fromDay: .today,
             untilStartOfDay: .today,
-            reason: .indexCase(hasPositiveTestResult: false)
+            reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)
         )
         
         let context = makeRunningAppContext(
@@ -110,7 +110,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let isolation = Isolation(
             fromDay: .today,
             untilStartOfDay: .today,
-            reason: .indexCase(hasPositiveTestResult: false)
+            reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)
         )
         
         let context = makeRunningAppContext(

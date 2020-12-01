@@ -8,7 +8,7 @@ import Interface
 import UIKit
 
 public protocol EndOfIsolationScreenScenario {
-    static var showAdvisory: Bool { get }
+    static var isIndexCase: Bool { get }
 }
 
 extension EndOfIsolationScreenScenario {
@@ -24,7 +24,7 @@ extension EndOfIsolationScreenScenario {
             return EndOfIsolationViewController(
                 interactor: interactor,
                 isolationEndDate: Date(timeIntervalSinceNow: 7 * 86400),
-                showAdvisory: showAdvisory,
+                isIndexCase: isIndexCase,
                 currentDateProvider: { Date() }
             )
         }
@@ -32,12 +32,12 @@ extension EndOfIsolationScreenScenario {
 }
 
 public class EndOfIsolationWithAdvisoryScreenScenario: EndOfIsolationScreenScenario, Scenario {
-    public static let showAdvisory = true
+    public static let isIndexCase = true
     public static let name: String = "End of Isolation – Index Case"
 }
 
 public class EndOfIsolationWithoutAdvisoryScreenScenario: EndOfIsolationScreenScenario, Scenario {
-    public static let showAdvisory = false
+    public static let isIndexCase = false
     public static let name: String = "End of Isolation – Contact Case"
     
 }

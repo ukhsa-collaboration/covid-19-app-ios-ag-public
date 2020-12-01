@@ -8,8 +8,8 @@ protocol VirologyTestingStateCoordinating {
     var virologyTestTokens: [VirologyTestTokens] { get }
     
     func saveOrderTestKitResponse(_ orderTestKitResponse: OrderTestkitResponse)
-    func handleTestResult(_ testResult: VirologyTestResponse, virologyTestTokens: VirologyTestTokens)
-    func handleLinkTestResult(_ testResult: LinkVirologyTestResultResponse)
+    func handlePollingTestResult(_ testResult: VirologyTestResponse, virologyTestTokens: VirologyTestTokens)
+    func handleManualTestResult(_ testResult: LinkVirologyTestResultResponse)
 }
 
 class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
@@ -32,22 +32,22 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         )
     }
     
-    func handleTestResult(
+    func handlePollingTestResult(
         _ testResult: VirologyTestResponse,
         virologyTestTokens: VirologyTestTokens
     ) {
         switch testResult {
         case .receivedResult(let result):
             virologyTestingStateStore.removeTestTokens(virologyTestTokens)
-            Metrics.signpostReceived(result.testResult)
+            Metrics.signpostReceivedViaPolling(testResult: result.testResult)
             handleWithNotification(result, diagnosisKeySubmissionToken: virologyTestTokens.diagnosisKeySubmissionToken)
         case .noResultYet:
             return
         }
     }
     
-    func handleLinkTestResult(_ response: LinkVirologyTestResultResponse) {
-        Metrics.signpostReceived(response.virologyTestResult.testResult)
+    func handleManualTestResult(_ response: LinkVirologyTestResultResponse) {
+        Metrics.signpostReceivedFromManual(testResult: response.virologyTestResult.testResult)
         handle(response.virologyTestResult, diagnosisKeySubmissionToken: response.diagnosisKeySubmissionToken)
     }
     

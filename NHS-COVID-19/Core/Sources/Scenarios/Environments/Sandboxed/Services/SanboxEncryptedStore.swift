@@ -19,7 +19,15 @@ class SandboxEncryptedStore: EncryptedStoring {
             """.data(using: .utf8)
         }
         
-        if let postcode = host.initialState.postcode {
+        if let postcode = host.initialState.postcode,
+            let localAuthorityId = host.initialState.localAuthorityId {
+            stored["postcode"] = """
+            {
+                "postcode": "\(postcode)",
+                "localAuthorityId": "\(localAuthorityId)"
+            }
+            """.data(using: .utf8)!
+        } else if let postcode = host.initialState.postcode {
             stored["postcode"] = """
             { "postcode": "\(postcode)" }
             """.data(using: .utf8)!

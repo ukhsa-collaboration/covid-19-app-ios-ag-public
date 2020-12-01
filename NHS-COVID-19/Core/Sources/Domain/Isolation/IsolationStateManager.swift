@@ -30,7 +30,26 @@ class IsolationStateManager {
     
     func recordMetrics() -> AnyPublisher<Void, Never> {
         switch state {
-        case .isolating:
+        case .isolating(let isolation, _, _):
+            switch isolation.reason {
+            case .indexCase(let hasPositiveTestResult, let isSelfDiagnosed):
+                if hasPositiveTestResult {
+                    Metrics.signpost(.isolatedForTestedPositiveBackgroundTick)
+                }
+                if isSelfDiagnosed {
+                    Metrics.signpost(.isolatedForSelfDiagnosedBackgroundTick)
+                }
+            case .contactCase:
+                Metrics.signpost(.isolatedForHadRiskyContactBackgroundTick)
+            case .bothCases(let hasPositiveTestResult, let isSelfDiagnosed):
+                Metrics.signpost(.isolatedForHadRiskyContactBackgroundTick)
+                if hasPositiveTestResult {
+                    Metrics.signpost(.isolatedForTestedPositiveBackgroundTick)
+                }
+                if isSelfDiagnosed {
+                    Metrics.signpost(.isolatedForSelfDiagnosedBackgroundTick)
+                }
+            }
             Metrics.signpost(.isolationBackgroundTick)
         default:
             break

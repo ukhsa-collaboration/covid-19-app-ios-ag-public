@@ -38,7 +38,7 @@ public struct ExposureRiskCalculator: ExposureRiskCalculating {
                     riskScore: riskScore,
                     riskScoreVersion: Self.riskScoreVersion,
                     day: GregorianDay(date: $0.date, timeZone: .utc),
-                    isConsideredRisky: riskScore > configuration.riskThreshold
+                    riskThreshold: configuration.riskThreshold
                 )
             }
             .max { $1.isHigherPriority(than: $0) }

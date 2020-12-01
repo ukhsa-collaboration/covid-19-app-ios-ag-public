@@ -20,7 +20,7 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
         )
     }
     
-    func testHandleTestResult() throws {
+    func testHandlePollingTestResult() throws {
         let result = VirologyTestResult(
             testResult: .positive,
             endDate: Date()
@@ -31,14 +31,14 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random())
         )
         
-        coordinator.handleTestResult(response, virologyTestTokens: tokens)
+        coordinator.handlePollingTestResult(response, virologyTestTokens: tokens)
         
         XCTAssertEqual(userNotificationManager.notificationType, UserNotificationType.testResultReceived)
         let savedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
         XCTAssertEqual(savedResult.testResult, TestResult(result.testResult))
     }
     
-    func testHandleLinkTestResult() throws {
+    func testHandleManualTestResult() throws {
         let response = LinkVirologyTestResultResponse(
             virologyTestResult: VirologyTestResult(
                 testResult: .positive,
@@ -46,7 +46,7 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
             ),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random())
         )
-        coordinator.handleLinkTestResult(response)
+        coordinator.handleManualTestResult(response)
         
         XCTAssertNil(userNotificationManager.notificationType)
         let savedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)

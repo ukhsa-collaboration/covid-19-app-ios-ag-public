@@ -39,7 +39,7 @@ class VirologyTestingManager: VirologyTestingManaging {
             sequence: virologyTestingStateCoordinator.virologyTestTokens.map { tokens in
                 httpClient.fetch(VirologyTestResultEndpoint(), with: tokens.pollingToken)
                     .handleEvents(receiveOutput: { response in
-                        self.virologyTestingStateCoordinator.handleTestResult(
+                        self.virologyTestingStateCoordinator.handlePollingTestResult(
                             response,
                             virologyTestTokens: tokens
                         )
@@ -57,7 +57,7 @@ class VirologyTestingManager: VirologyTestingManaging {
     func linkExternalTestResult(with token: String) -> AnyPublisher<Void, LinkTestResultError> {
         if ctaTokenValidator.validate(token) {
             return httpClient.fetch(LinkVirologyTestResultEndpoint(), with: CTAToken(value: token))
-                .handleEvents(receiveOutput: virologyTestingStateCoordinator.handleLinkTestResult)
+                .handleEvents(receiveOutput: virologyTestingStateCoordinator.handleManualTestResult)
                 .mapError(LinkTestResultError.init)
                 .map { _ in
                     ()

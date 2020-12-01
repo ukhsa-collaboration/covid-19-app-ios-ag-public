@@ -40,4 +40,13 @@ extension XCUIElement {
             counter += 1
         }
     }
+    
+    func scrollToHittable(element: XCUIElement) {
+        var counter = 0
+        while !element.isHittable, counter < 10 {
+            swipeUp()
+            usleep(200_000) // wait for 200ms to finish scrolling animation
+            counter += 1
+        }
+    }
 }

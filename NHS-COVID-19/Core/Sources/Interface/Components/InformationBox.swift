@@ -25,6 +25,7 @@ public class InformationBox: UIView {
             case lightBlue
             case turquoise
             case darkBlue
+            case pink
         }
     }
     
@@ -92,6 +93,8 @@ public class InformationBox: UIView {
             stripe.backgroundColor = UIColor(.styleBlue)
         case .information(.darkBlue):
             stripe.backgroundColor = UIColor(.nhsBlue)
+        case .information(.pink):
+            stripe.backgroundColor = UIColor(.stylePink)
         case .goodNews:
             stripe.backgroundColor = UIColor(.nhsButtonGreen)
         case .warning:

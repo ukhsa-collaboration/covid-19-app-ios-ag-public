@@ -13,7 +13,7 @@ class MyDataScreenTests: XCTestCase {
     func testBasics() throws {
         try runner.run { app in
             let screen = MyDataScreen(app: app)
-            XCTAssertTrue(screen.postcodeSectionHeader.exists)
+            XCTAssertTrue(runner.scenario.localAuthority == nil ? screen.postcodeSectionHeader.exists : screen.localAuthoritySectionHeader.exists)
             XCTAssertTrue(screen.postcodeCell(postcode: runner.scenario.postcode).exists)
             XCTAssertTrue(screen.editPostcodeButton.exists)
             XCTAssertTrue(screen.testResultSectionHeader.exists)
@@ -55,7 +55,7 @@ class MyDataScreenTests: XCTestCase {
             let screen = MyDataScreen(app: app)
             
             let elementToDelete = app.staticTexts[runner.scenario.venueNameToDelete]
-            app.scrollTo(element: elementToDelete)
+            app.scrollToHittable(element: elementToDelete)
             
             XCTAssertTrue(elementToDelete.displayed)
             

@@ -165,19 +165,19 @@ extension AboutThisAppViewController {
                 .view(instructionForUseView),
                 .linkButton(.about_this_app_how_this_app_works_button, interactor.didTapHowThisAppWorks),
             ]),
-            InformationBox.information.turquoise([
+            InformationBox.information.orange([
                 .heading(.about_this_app_my_data_heading),
                 .body(.about_this_app_my_data_description),
                 .linkButton(.about_this_app_my_data_button, image: nil, interactor.didTapSeeData),
             ]),
-            InformationBox.information.lightBlue([
+            InformationBox.information.pink([
                 .heading(.about_this_app_our_policies_heading),
                 .body(.about_this_app_our_policies_description),
                 .linkButton(.about_this_app_our_policies_terms_of_use_button, interactor.didTapTermsOfUse),
                 .linkButton(.about_this_app_our_policies_privacy_notice_button, interactor.didTapPrivacyNotice),
                 .linkButton(.about_this_app_our_policies_accessibility_statement_button, interactor.didTapAccessibilityStatement),
             ]),
-            InformationBox.information.orange([
+            InformationBox.information.turquoise([
                 .heading(.about_this_app_common_questions_heading),
                 .body(.about_this_app_common_questions_description),
                 .linkButton(.about_this_app_common_questions_button, interactor.didTapCommonQuestions),
@@ -190,7 +190,7 @@ extension AboutThisAppViewController {
                 .view(manufacturerView),
                 .view(ceImage),
             ]),
-            InformationBox.information.darkBlue([
+            InformationBox.information.purple([
                 .heading(.about_this_app_feedback_information_title),
                 .body(.about_this_app_feedback_information_description),
                 .linkButton(.about_this_app_feedback_information_link_title, interactor.didTapProvideFeedback),

@@ -11,7 +11,6 @@ public class ApplicationServices {
     let exposureNotificationManager: ExposureNotificationManaging
     let userNotificationsManager: UserNotificationManaging
     let processingTaskRequestManager: ProcessingTaskRequestManaging
-    let metricManager: MetricManaging
     let notificationCenter: NotificationCenter
     let distributeClient: HTTPClient
     let apiClient: HTTPClient
@@ -21,7 +20,6 @@ public class ApplicationServices {
     let cacheStorage: FileStorage
     let venueDecoder: QRCode
     let appInfo: AppInfo
-    let pasteboardCopier: PasteboardCopying
     let postcodeValidator: PostcodeValidating
     let currentDateProvider: () -> Date
     let storeReviewController: StoreReviewControlling
@@ -31,7 +29,6 @@ public class ApplicationServices {
         exposureNotificationManager: ExposureNotificationManaging,
         userNotificationsManager: UserNotificationManaging,
         processingTaskRequestManager: ProcessingTaskRequestManaging,
-        metricManager: MetricManaging,
         notificationCenter: NotificationCenter,
         distributeClient: HTTPClient,
         apiClient: HTTPClient,
@@ -41,7 +38,6 @@ public class ApplicationServices {
         cacheStorage: FileStorage,
         venueDecoder: QRCode,
         appInfo: AppInfo,
-        pasteboardCopier: PasteboardCopying,
         postcodeValidator: PostcodeValidating,
         currentDateProvider: @escaping () -> Date,
         storeReviewController: StoreReviewControlling
@@ -50,7 +46,6 @@ public class ApplicationServices {
         self.exposureNotificationManager = exposureNotificationManager
         self.userNotificationsManager = userNotificationsManager
         self.processingTaskRequestManager = processingTaskRequestManager
-        self.metricManager = metricManager
         self.notificationCenter = notificationCenter
         self.distributeClient = distributeClient
         self.apiClient = apiClient
@@ -60,7 +55,6 @@ public class ApplicationServices {
         self.cacheStorage = cacheStorage
         self.venueDecoder = venueDecoder
         self.appInfo = appInfo
-        self.pasteboardCopier = pasteboardCopier
         self.postcodeValidator = postcodeValidator
         self.currentDateProvider = currentDateProvider
         self.storeReviewController = storeReviewController

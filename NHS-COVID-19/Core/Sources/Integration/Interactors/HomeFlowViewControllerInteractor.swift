@@ -5,7 +5,6 @@
 import Combine
 import Common
 import Domain
-import Foundation
 import Interface
 import Localization
 import UIKit
@@ -16,12 +15,18 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     }
     
     var context: RunningAppContext
-    var pasteboardCopier: PasteboardCopying
     var currentDateProvider: () -> Date
+    
+    func makeLocalAuthorityOnboardingIteractor() -> LocalAuthorityFlowViewController.Interacting? {
+        guard let getLocalAuthorities = context.getLocalAuthorities, let storeLocalAuthorities = context.storeLocalAuthorities else {
+            return nil
+        }
+        return LocalAuthorityOnboardingIteractor(openURL: context.openURL, getLocalAuthorities: getLocalAuthorities, storeLocalAuthority: storeLocalAuthorities)
+    }
     
     func makeDiagnosisViewController() -> UIViewController? {
         WrappingViewController {
-            SelfDiagnosisOrderFlowState.makeState(context: context, pasteboardCopier: pasteboardCopier)
+            SelfDiagnosisOrderFlowState.makeState(context: context)
                 .map { state in
                     switch state {
                     case .selfDiagnosis(let interactor, let isolationState):
@@ -93,7 +98,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     
     func makeTestingInformationViewController() -> UIViewController? {
         WrappingViewController {
-            BookATestFlowState.makeState(context: context, pasteboardCopier: pasteboardCopier)
+            BookATestFlowState.makeState(context: context)
                 .map { state in
                     switch state {
                     case .bookATest(let interactor):
@@ -150,6 +155,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         
         return .init(
             postcode: context.postcodeInfo.map { $0?.postcode.value }.interfaceProperty,
+            localAuthority: context.postcodeInfo.map { $0?.localAuthority?.name }.interfaceProperty,
             testData: testResult,
             venueHistories: venueHistories,
             symptomsOnsetDate: symptomsOnsetDate,

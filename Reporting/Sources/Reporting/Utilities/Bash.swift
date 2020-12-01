@@ -26,8 +26,10 @@ struct Bash {
         let pipe = Pipe()
         process.standardOutput = pipe
         process.launch()
+        
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
         process.waitUntilExit()
-        return pipe.fileHandleForReading.readDataToEndOfFile()
+        return data
     }
     
     static func runAndCapture(_ commandParts: String...) throws -> Data {

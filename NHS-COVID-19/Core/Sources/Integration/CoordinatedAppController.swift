@@ -12,7 +12,6 @@ import UIKit
 public class CoordinatedAppController: AppController {
     
     private let coordinator: ApplicationCoordinator
-    let pasteboardCopier: PasteboardCopying
     
     private var cancellable: [AnyCancellable] = []
     
@@ -33,7 +32,6 @@ public class CoordinatedAppController: AppController {
     
     fileprivate init(coordinator: ApplicationCoordinator) {
         self.coordinator = coordinator
-        pasteboardCopier = coordinator.pasteboardCopier
         coordinator.$state
             .regulate(as: .modelChange)
             .sink { [weak self] state in

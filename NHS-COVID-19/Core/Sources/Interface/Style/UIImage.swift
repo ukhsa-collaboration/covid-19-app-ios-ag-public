@@ -56,6 +56,16 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case riskLevelAmber = "RiskLevel/Amber"
     case riskLevelRed = "RiskLevel/Red"
     
+    case riskLevelDefaultIcon = "RiskLevel/Icons/DefaultIcon"
+    case riskLevelBarsAndPubsIcon = "RiskLevel/Icons/BarsAndPubs"
+    case riskLevelEducationIcon = "RiskLevel/Icons/Education"
+    case riskLevelExerciseIcon = "RiskLevel/Icons/Exercise"
+    case riskLevelMeetingPeopleIcon = "RiskLevel/Icons/MeetingPeople"
+    case riskLevelOvernightStaysIcon = "RiskLevel/Icons/OvernightStays"
+    case riskLevelTravellingIcon = "RiskLevel/Icons/Travelling"
+    case riskLevelWorshipIcon = "RiskLevel/Icons/Worship"
+    case riskLevelWeddingsAndFuneralsIcon = "RiskLevel/Icons/WeddingsAndFunerals"
+    
     case symbolRef = "Symbols/Ref"
     case symbolinfo = "Symbols/Info"
     case symbolRelease = "Symbols/Release"

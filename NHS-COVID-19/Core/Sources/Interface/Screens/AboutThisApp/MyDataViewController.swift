@@ -45,6 +45,8 @@ public class MyDataViewController: UITableViewController {
     public class ViewModel {
         @InterfaceProperty
         var postcode: String?
+        @InterfaceProperty
+        var localAuthority: String?
         var testData: (result: TestResult, date: Date)?
         var venueHistories: [VenueHistory]
         var symptomsOnsetDate: Date?
@@ -52,12 +54,14 @@ public class MyDataViewController: UITableViewController {
         
         public init(
             postcode: InterfaceProperty<String?>,
+            localAuthority: InterfaceProperty<String?>,
             testData: (TestResult, Date)?,
             venueHistories: [VenueHistory],
             symptomsOnsetDate: Date?,
             encounterDate: Date?
         ) {
             _postcode = postcode
+            _localAuthority = localAuthority
             self.testData = testData
             self.venueHistories = venueHistories
             self.symptomsOnsetDate = symptomsOnsetDate
@@ -75,7 +79,7 @@ public class MyDataViewController: UITableViewController {
     }
     
     enum RowType {
-        case postcode(InterfaceProperty<String?>)
+        case postcode(InterfaceProperty<String?>, InterfaceProperty<String?>)
         case testResult(TestResult, date: Date)
         case venueHistory(VenueHistory)
         case symptomsOnsetDate(Date)
@@ -89,8 +93,8 @@ public class MyDataViewController: UITableViewController {
     
     private var content: [Section] {
         let postCodeSection = Section(
-            header: .postcode(title: localize(.mydata_section_postcode_description), action: interactor.didTapEditPostcode),
-            rows: [.postcode(viewModel.$postcode)]
+            header: .postcode(title: viewModel.localAuthority != nil && viewModel.localAuthority?.isEmpty == false ? localize(.mydata_section_LocalAuthority_description) : localize(.mydata_section_postcode_description), action: interactor.didTapEditPostcode),
+            rows: [.postcode(viewModel.$postcode, viewModel.$localAuthority)]
         )
         
         let testResultSection: Section? = viewModel.testData.map {
@@ -147,6 +151,11 @@ public class MyDataViewController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override public func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
+    
     override public func numberOfSections(in tableView: UITableView) -> Int {
         content.count
     }
@@ -158,8 +167,8 @@ public class MyDataViewController: UITableViewController {
     override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: UITableViewCell
         switch content[indexPath.section].rows[indexPath.row] {
-        case .postcode(let postcode):
-            cell = PostcodeCell.create(tableView: tableView, postcode: postcode)
+        case .postcode(let postcode, let localAuthority):
+            cell = PostcodeCell.create(tableView: tableView, postcode: postcode, localAuthority: localAuthority)
         case .testResult(let result, let date):
             cell = DateCell.create(tableView: tableView, title: result.description, date: date)
         case .symptomsOnsetDate(let date), .encounterDate(let date):

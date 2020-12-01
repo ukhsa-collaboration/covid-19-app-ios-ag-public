@@ -27,18 +27,21 @@ public struct AppHTTPClient: HTTPClient {
         case .distribution:
             httpRemote = HTTPRemote(for: remote)
             responseVerifier = HTTPResponseTimestampedSignatureVerifier(for: remote)
+            client = URLSessionHTTPClient(
+                remote: httpRemote,
+                session: URLSession(for: remote)
+            )
         case .submission(let userAgentHeaderValue):
             httpRemote = HTTPRemote(
                 for: remote,
                 additionalHeaders: ["User-Agent": userAgentHeaderValue]
             )
             responseVerifier = HTTPResponseRequestBoundSignatureVerifier(for: remote)
+            client = HTTPObfuscationClient(
+                remote: httpRemote,
+                session: URLSession(for: remote)
+            )
         }
-        
-        client = URLSessionHTTPClient(
-            remote: httpRemote,
-            session: URLSession(for: remote)
-        )
     }
     
     public func perform(_ request: HTTPRequest) -> AnyPublisher<HTTPResponse, HTTPRequestError> {

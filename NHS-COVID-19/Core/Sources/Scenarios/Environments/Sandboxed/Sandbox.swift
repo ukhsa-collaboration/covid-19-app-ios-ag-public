@@ -89,6 +89,12 @@ public enum Sandbox {
         @TestInjected("sandbox.testResultEndDate")
         private(set) var testResultEndDateString: String?
         
+        @TestInjected("scenario.toggle.localAuthority", defaultValue: FeatureToggleStorage.getEnabledFeatures().contains(.localAuthority))
+        public var localAuthorityEnabled: Bool
+        
+        @TestInjected("sandbox.localAuthorityId")
+        public var localAuthorityId: String?
+        
         public func set(testResultEndDate: Date) throws {
             let data = try JSONEncoder().encode(testResultEndDate)
             testResultEndDateString = String(data: data, encoding: .utf8)!

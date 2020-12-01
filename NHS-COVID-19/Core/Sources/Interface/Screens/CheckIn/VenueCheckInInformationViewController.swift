@@ -30,7 +30,7 @@ public class VenueCheckInInformationViewController: UIViewController {
         
         let stackView = UIStackView(arrangedSubviews: content)
         stackView.axis = .vertical
-        stackView.alignment = .center
+        stackView.alignment = .leading
         stackView.spacing = .standardSpacing
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.layoutMargins = .inner
@@ -216,10 +216,7 @@ public class VenueCheckInInformationViewController: UIViewController {
         view.addFillingSubview(scrollView)
         
         NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
         ])
     }
     

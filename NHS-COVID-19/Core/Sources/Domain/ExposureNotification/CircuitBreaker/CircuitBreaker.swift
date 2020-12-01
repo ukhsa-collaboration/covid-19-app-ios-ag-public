@@ -26,6 +26,7 @@ class CircuitBreaker {
     private let riskyCheckinsProvider: RiskyCheckinsProvider
     private let handleContactCase: (RiskInfo) -> Void
     private let handleDontWorryNotification: () -> Void
+    private let interestedInExposureNotifications: () -> Bool
     
     private enum Resolution: Equatable {
         case proceed
@@ -38,13 +39,15 @@ class CircuitBreaker {
         exposureInfoProvider: ExposureInfoProvider,
         riskyCheckinsProvider: RiskyCheckinsProvider,
         handleContactCase: @escaping (RiskInfo) -> Void,
-        handleDontWorryNotification: @escaping () -> Void
+        handleDontWorryNotification: @escaping () -> Void,
+        interestedInExposureNotifications: @escaping () -> Bool
     ) {
         self.client = client
         self.exposureInfoProvider = exposureInfoProvider
         self.riskyCheckinsProvider = riskyCheckinsProvider
         self.handleContactCase = handleContactCase
         self.handleDontWorryNotification = handleDontWorryNotification
+        self.interestedInExposureNotifications = interestedInExposureNotifications
     }
     
     func processPendingApprovals() -> AnyPublisher<Void, Never> {
@@ -57,6 +60,15 @@ class CircuitBreaker {
     
     func processExposureNotificationApproval() -> AnyPublisher<Void, Never> {
         guard let riskInfo = exposureInfoProvider.exposureInfo?.riskInfo else {
+            return Empty().eraseToAnyPublisher()
+        }
+        
+        guard interestedInExposureNotifications() else {
+            if showDontWorryNotificationIfNeeded {
+                handleDontWorryNotification()
+                showDontWorryNotificationIfNeeded = false
+            }
+            exposureInfoProvider.exposureInfo = nil
             return Empty().eraseToAnyPublisher()
         }
         

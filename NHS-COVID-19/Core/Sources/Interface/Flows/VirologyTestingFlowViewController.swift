@@ -11,7 +11,6 @@ import UIKit
 public protocol VirologyTestingFlowViewControllerInteracting {
     func fetchVirologyTestingInfo() -> AnyPublisher<InterfaceVirologyTestingInfo, NetworkRequestError>
     
-    func didTapCopyReferenceCode()
     func didTapOrderTestLink()
     
     var acknowledge: (() -> Void)? { get }

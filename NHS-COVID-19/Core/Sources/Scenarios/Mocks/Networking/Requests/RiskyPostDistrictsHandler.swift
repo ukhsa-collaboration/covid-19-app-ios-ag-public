@@ -52,6 +52,143 @@ struct RiskyPostDistrictsHandler: RequestHandler {
             .map { "\"\($0)\": \"\(neutralRiskIndicator)\"," }
             .joined(separator: "")
         
+        let redLocalAuthorities = dataProvider.redPostcodes.components(separatedBy: ",")
+            .lazy
+            .filter { !$0.isEmpty }
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .map { "\"\($0)\": \"\(redRiskIndicator)\"," }
+            .joined(separator: "")
+        
+        let amberLocalAuthorities = dataProvider.amberLocalAuthorities.components(separatedBy: ",")
+            .lazy
+            .filter { !$0.isEmpty }
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .map { "\"\($0)\": \"\(amberRiskIndicator)\"," }
+            .joined(separator: "")
+        
+        let yellowLocalAuthorities = dataProvider.yellowLocalAuthorities.components(separatedBy: ",")
+            .lazy
+            .filter { !$0.isEmpty }
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .map { "\"\($0)\": \"\(yellowRiskIndicator)\"," }
+            .joined(separator: "")
+        
+        let greenLocalAuthorities = dataProvider.greenLocalAuthorities.components(separatedBy: ",")
+            .lazy
+            .filter { !$0.isEmpty }
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .map { "\"\($0)\": \"\(greenRiskIndicator)\"," }
+            .joined(separator: "")
+        
+        let neutralLocalAuthorities = dataProvider.neutralLocalAuthorities.components(separatedBy: ",")
+            .lazy
+            .filter { !$0.isEmpty }
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .map { "\"\($0)\": \"\(neutralRiskIndicator)\"," }
+            .joined(separator: "")
+        
+        func policyData(alertLevel: Int) -> String {
+            """
+            {
+                "localAuthorityRiskTitle": {
+                    "en": "[local authority] ([postcode]) is in Local Alert Level 1"
+                },
+                "heading": {
+                    "en": "Coronavirus cases are very high in your area"
+                },
+                "content": {
+                    "en": "The restrictions placed on areas with a very high level of infections can vary and are based on discussions between central and local government. You should check the specific rules in your area."
+                },
+                "footer": {
+                    "en": "Find out what rules apply in your area to help reduce the spread of coronavirus."
+                },
+                "policies": [
+                    {
+                        "policyIcon": "default-icon",
+                        "policyHeading": {
+                            "en": "Default"
+                        },
+                        "policyContent": {
+                            "en": "Venues must close…"
+                        }
+                    },
+                    {
+                        "policyIcon": "meeting-people",
+                        "policyHeading": {
+                            "en": "Meeting people"
+                        },
+                        "policyContent": {
+                            "en": "No household mixing indoors or outdoors in venues or private gardens. Rule of six applies in outdoor public spaces like parks."
+                        }
+                    },
+                    {
+                        "policyIcon": "bars-and-pubs",
+                        "policyHeading": {
+                            "en": "Bars and pubs"
+                        },
+                        "policyContent": {
+                            "en": "Venues not serving meals will be closed."
+                        }
+                    },
+                    {
+                        "policyIcon": "worship",
+                        "policyHeading": {
+                            "en": "Worship"
+                        },
+                        "policyContent": {
+                            "en": "These remain open, subject to indoor or outdoor venue restrictions."
+                        }
+                    },
+                    {
+                        "policyIcon": "overnight-stays",
+                        "policyHeading": {
+                            "en": "Overnight Stays"
+                        },
+                        "policyContent": {
+                            "en": "If you have to travel, avoid staying overnight."
+                        }
+                    },
+                    {
+                        "policyIcon": "education",
+                        "policyHeading": {
+                            "en": "Education"
+                        },
+                        "policyContent": {
+                            "en": "Schools, colleges and universities remain open, with restrictions."
+                        }
+                    },
+                    {
+                        "policyIcon": "travelling",
+                        "policyHeading": {
+                            "en": "Travelling"
+                        },
+                        "policyContent": {
+                            "en": "Avoid travelling around or leaving the area, other than for work, education, youth services or because of caring responsibilities."
+                        }
+                    },
+                    {
+                        "policyIcon": "exercise",
+                        "policyHeading": {
+                            "en": "Exercise"
+                        },
+                        "policyContent": {
+                            "en": "Classes and organised adult sport are allowed outdoors and only allowed indoors if no household mixing. Sports for the youth and disabled is allowed indoors and outdoors."
+                        }
+                    },
+                    {
+                        "policyIcon": "weddings-and-funerals",
+                        "policyHeading": {
+                            "en": "Weddings and Funerals"
+                        },
+                        "policyContent": {
+                            "en": "Up to 15 guests for weddings, 30 for funerals and 15 for wakes. Wedding receptions not permitted."
+                        }
+                    }
+                ]
+            }
+            """
+        }
+        
         let json = """
         {
             "postDistricts" : {
@@ -60,6 +197,13 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                 \(yellowPostcodes)
                 \(amberPostcodes)
                 \(redPostcodes)
+            },
+            "localAuthorities": {
+                \(neutralLocalAuthorities)
+                \(greenLocalAuthorities)
+                \(yellowLocalAuthorities)
+                \(amberLocalAuthorities)
+                \(redLocalAuthorities)
             },
             "riskLevels" : {
                 "\(neutralRiskIndicator)": {
@@ -78,7 +222,8 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     },
                     "linkUrl": {
                         "en": "https://example.com"
-                    }
+                    },
+                    "policyData": \(policyData(alertLevel: 1))
                 },
                 "\(greenRiskIndicator)": {
                     "colorScheme": "green",
@@ -96,7 +241,8 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     },
                     "linkUrl": {
                         "en": "https://example.com"
-                    }
+                    },
+                    "policyData": \(policyData(alertLevel: 1))
                 },
                 "\(yellowRiskIndicator)": {
                     "colorScheme": "yellow",
@@ -114,7 +260,8 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     },
                     "linkUrl": {
                         "en": "https://example.com"
-                    }
+                    },
+                    "policyData": \(policyData(alertLevel: 2))
                 },
                 "\(amberRiskIndicator)": {
                     "colorScheme": "amber",
@@ -132,7 +279,8 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     },
                     "linkUrl": {
                         "en": "https://example.com"
-                    }
+                    },
+                    "policyData": \(policyData(alertLevel: 3))
                 },
                 "\(redRiskIndicator)": {
                     "colorScheme": "red",
@@ -150,7 +298,8 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     },
                     "linkUrl": {
                         "en": "https://example.com"
-                    }
+                    },
+                    "policyData": \(policyData(alertLevel: 3))
                 },
             }
         }

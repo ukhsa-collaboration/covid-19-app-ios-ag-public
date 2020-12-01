@@ -27,50 +27,65 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     postcode: .init("SW12"),
                     colorScheme: .neutral,
                     title: "SW12 area risk level is Neutral",
+                    infoTitle: "SW12 area risk level is Neutral",
                     heading: [],
                     body: [],
                     linkTitle: "",
-                    linkURL: nil
+                    linkURL: nil,
+                    footer: [],
+                    policies: []
                 )
             case .green:
                 return RiskLevelBanner.ViewModel(
                     postcode: .init("SW12"),
                     colorScheme: .green,
                     title: "SW12 area risk level is Green",
+                    infoTitle: "SW12 area risk level is Green",
                     heading: [],
                     body: [],
                     linkTitle: "",
-                    linkURL: nil
+                    linkURL: nil,
+                    footer: [],
+                    policies: []
                 )
             case .yellow:
                 return RiskLevelBanner.ViewModel(
                     postcode: .init("SW12"),
                     colorScheme: .yellow,
                     title: "SW12 area risk level is Yellow",
+                    infoTitle: "SW12 area risk level is Yellow",
                     heading: [],
                     body: [],
                     linkTitle: "",
-                    linkURL: nil
+                    linkURL: nil,
+                    footer: [],
+                    policies: []
                 )
             case .amber:
                 return RiskLevelBanner.ViewModel(
                     postcode: .init("SW12"),
                     colorScheme: .amber,
                     title: "SW12 area risk level is Amber",
+                    infoTitle: "SW12 area risk level is Amber",
                     heading: [],
                     body: [],
                     linkTitle: "",
-                    linkURL: nil
+                    linkURL: nil,
+                    footer: [],
+                    policies: []
                 )
             case .red:
                 return RiskLevelBanner.ViewModel(
                     postcode: .init("SW12"),
                     colorScheme: .red,
                     title: "SW12 area risk level is Red",
+                    infoTitle: "SW12 area risk level is Red",
                     heading: [],
                     body: [],
                     linkTitle: "",
-                    linkURL: nil
+                    linkURL: nil,
+                    footer: [],
+                    policies: []
                 )
             }
         }

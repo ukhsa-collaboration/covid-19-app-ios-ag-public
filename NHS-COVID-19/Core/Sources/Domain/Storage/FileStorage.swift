@@ -49,7 +49,7 @@ public class FileStorage: FileStoring {
     }
     
     public func allFileNames() -> [String]? {
-        try! fileManager.contentsOfDirectory(atPath: directory.path)
+        try? fileManager.contentsOfDirectory(atPath: directory.path)
     }
     
     private func url(for file: String) -> URL {

@@ -13,15 +13,18 @@ class ExposureWindowRiskCalculator {
     private let infectiousnessFactorCalculator: ExposureWindowInfectiousnessFactorCalculator
     private let dateProvider: () -> Date
     private let isolationLength: DayDuration
+    private let submitExposureWindows: ([(ExposureNotificationExposureWindow, ExposureRiskInfo)]) -> Void
     
     init(
         infectiousnessFactorCalculator: ExposureWindowInfectiousnessFactorCalculator = ExposureWindowInfectiousnessFactorCalculator(),
         dateProvider: @escaping () -> Date,
-        isolationLength: DayDuration
+        isolationLength: DayDuration,
+        submitExposureWindows: @escaping ([(ExposureNotificationExposureWindow, ExposureRiskInfo)]) -> Void
     ) {
         self.infectiousnessFactorCalculator = infectiousnessFactorCalculator
         self.dateProvider = dateProvider
         self.isolationLength = isolationLength
+        self.submitExposureWindows = submitExposureWindows
     }
     
     func riskInfo(
@@ -29,19 +32,28 @@ class ExposureWindowRiskCalculator {
         configuration: ExposureDetectionConfiguration,
         riskScoreCalculator: ExposureWindowRiskScoreCalculator
     ) -> ExposureRiskInfo? {
-        return exposureWindows.map { exposureWindow in
+        var riskyWindows = [(ExposureNotificationExposureWindow, ExposureRiskInfo)]()
+        
+        let maxRiskInfo = exposureWindows.map { exposureWindow in
             let scanInstances = exposureWindow.enScanInstances.map { $0.toScanInstance() }
             let riskScore = riskScoreCalculator.calculate(instances: scanInstances) * 60
             let infectiousnessFactor = infectiousnessFactorCalculator.infectiousnessFactor(for: exposureWindow.infectiousness, config: configuration)
-            return ExposureRiskInfo(
+            let riskInfo = ExposureRiskInfo(
                 riskScore: riskScore * infectiousnessFactor,
                 riskScoreVersion: Self.riskScoreVersion,
                 day: GregorianDay(date: exposureWindow.date, timeZone: .utc),
-                isConsideredRisky: riskScore >= configuration.v2RiskThreshold
+                riskThreshold: configuration.v2RiskThreshold
             )
+            if riskInfo.isConsideredRisky, isRecentDate(exposureRiskInfo: riskInfo) {
+                riskyWindows.append((exposureWindow, riskInfo))
+            }
+            return riskInfo
         }
-        .filter { isRecentDate(exposureRiskInfo: $0) && $0.isConsideredRisky }
+        .filter { isRecentDate(exposureRiskInfo: $0) }
         .max { $1.isHigherPriority(than: $0) }
+        
+        submitExposureWindows(riskyWindows)
+        return maxRiskInfo
     }
     
     private func isRecentDate(exposureRiskInfo: ExposureRiskInfo) -> Bool {

@@ -122,7 +122,7 @@ public class Runner {
         if let activeScenarioId = activeScenarioId {
             appController.content = activeScenarioId.scenarioType.appController
         } else {
-            appController.content = ScenarioSelectorAppController(openDebug: showDebugUI) { [weak self] id in
+            appController.content = ScenarioSelectorAppController(openDebug: { [weak self] in self?.showDebugUI(showFeatureGuard: true) }) { [weak self] id in
                 self?.activeScenarioId = id
             }
         }
@@ -156,17 +156,22 @@ public class Runner {
         appController.performBackgroundTask(task: task)
     }
     
-    private func showDebugUI() {
+    private func showDebugUI(showFeatureGuard: Bool = false) {
         let tabBar = UITabBarController()
         let mocks = UIHostingController(rootView: ConfigureMocksView(dataProvider: MockScenario.mockDataProvider))
         mocks.title = "Mocks"
         mocks.tabBarItem.image = UIImage(systemName: "doc.text")
         
-        tabBar.setViewControllers([
+        var viewControllers = [
             UINavigationController(rootViewController: LogsViewController(loggingManager: loggingManager)),
             mocks,
-//            UINavigationController(rootViewController: ConfigurationViewController()), Hide until we formally support this.
-        ], animated: false)
+        ]
+        
+        if showFeatureGuard {
+            viewControllers.append(UINavigationController(rootViewController: ConfigurationViewController()))
+        }
+        
+        tabBar.setViewControllers(viewControllers, animated: false)
         appController.rootViewController.present(tabBar, animated: true, completion: nil)
     }
 }

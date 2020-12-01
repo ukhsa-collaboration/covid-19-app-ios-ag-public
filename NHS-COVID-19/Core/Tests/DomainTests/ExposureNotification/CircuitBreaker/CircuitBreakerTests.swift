@@ -26,6 +26,7 @@ class CircuitBreakerTests: XCTestCase {
             
             var handleContactCase: (RiskInfo) -> Void = { _ in }
             var handleDontWorryNotification: () -> Void = {}
+            var interestedInExposureNotifications: () -> Bool = { true }
         }
         
         let circuitBreaker: CircuitBreaker
@@ -36,7 +37,8 @@ class CircuitBreakerTests: XCTestCase {
                 exposureInfoProvider: configuration.store,
                 riskyCheckinsProvider: configuration.checkInsStore,
                 handleContactCase: configuration.handleContactCase,
-                handleDontWorryNotification: configuration.handleDontWorryNotification
+                handleDontWorryNotification: configuration.handleDontWorryNotification,
+                interestedInExposureNotifications: configuration.interestedInExposureNotifications
             )
         }
     }
@@ -63,6 +65,26 @@ class CircuitBreakerTests: XCTestCase {
     func testApprovalEndpointNotCalledIfRiskScoreDoesNotExist() throws {
         try processPendingApprovals()
         XCTAssertNil(client.approvalType)
+    }
+    
+    func testApprovalEndpointNotCalledAndRiskClearedIfNotInterestedInEN() throws {
+        $instance.interestedInExposureNotifications = { false }
+        store.save(riskInfo: RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5)))
+        try processPendingApprovals()
+        XCTAssertNil(client.approvalType)
+        XCTAssertNil(store.exposureInfo)
+    }
+    
+    func testApprovalEndpointShowsDontWorryAlertIfAskedToWhenDroppingRisks() throws {
+        $instance.interestedInExposureNotifications = { false }
+        store.save(riskInfo: RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5)))
+        
+        var handledDontWorryNotification = false
+        handleDontWorryNotification = { handledDontWorryNotification = true }
+        circuitBreaker.showDontWorryNotificationIfNeeded = true
+        
+        try processPendingApprovals()
+        XCTAssertTrue(handledDontWorryNotification)
     }
     
     func testApprovalTokenIsStoredIfRiskScoreExistsAndRespondIsPending() throws {
