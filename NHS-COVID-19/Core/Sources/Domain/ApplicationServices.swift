@@ -21,7 +21,7 @@ public class ApplicationServices {
     let venueDecoder: QRCode
     let appInfo: AppInfo
     let postcodeValidator: PostcodeValidating
-    let currentDateProvider: () -> Date
+    let currentDateProvider: DateProviding
     let storeReviewController: StoreReviewControlling
     
     public init(
@@ -39,7 +39,7 @@ public class ApplicationServices {
         venueDecoder: QRCode,
         appInfo: AppInfo,
         postcodeValidator: PostcodeValidating,
-        currentDateProvider: @escaping () -> Date,
+        currentDateProvider: DateProviding,
         storeReviewController: StoreReviewControlling
     ) {
         self.application = application

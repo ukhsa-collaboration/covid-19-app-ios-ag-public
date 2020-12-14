@@ -4,6 +4,7 @@
 
 import Combine
 import Foundation
+import Common
 import UIKit
 
 struct IsolationContext {
@@ -12,29 +13,29 @@ struct IsolationContext {
     let isolationConfiguration: CachedResponse<IsolationConfiguration>
     
     private let notificationCenter: NotificationCenter
-    private let currentDateProvider: () -> Date
+    private let currentDateProvider: DateProviding
     
     init(
         isolationConfiguration: CachedResponse<IsolationConfiguration>,
         encryptedStore: EncryptedStoring,
         notificationCenter: NotificationCenter,
-        currentDateProvider: @escaping () -> Date
+        currentDateProvider: DateProviding
     ) {
         self.isolationConfiguration = isolationConfiguration
         self.notificationCenter = notificationCenter
         self.currentDateProvider = currentDateProvider
         
-        isolationStateStore = IsolationStateStore(store: encryptedStore) { isolationConfiguration.value }
-        isolationStateManager = IsolationStateManager(stateStore: isolationStateStore, notificationCenter: notificationCenter)
+        isolationStateStore = IsolationStateStore(store: encryptedStore, latestConfiguration: { isolationConfiguration.value }, currentDateProvider: currentDateProvider)
+        isolationStateManager = IsolationStateManager(stateStore: isolationStateStore, currentDateProvider: currentDateProvider)
     }
     
     func makeIsolationAcknowledgementState() -> AnyPublisher<IsolationAcknowledgementState, Never> {
         isolationStateManager.$state
-            .combineLatest(notificationCenter.onApplicationBecameActive, notificationCenter.today) { state, _, _ in state }
+            .combineLatest(notificationCenter.onApplicationBecameActive, currentDateProvider.today) { state, _, _ in state }
             .map {
                 IsolationAcknowledgementState(
                     logicalState: $0,
-                    now: self.currentDateProvider(),
+                    now: self.currentDateProvider.currentDate,
                     acknowledgeStart: isolationStateStore.acknowldegeStartOfIsolation,
                     acknowledgeEnd: isolationStateStore.acknowldegeEndOfIsolation
                 )

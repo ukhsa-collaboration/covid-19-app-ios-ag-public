@@ -29,9 +29,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Setting reminder to turn contact tracing back on in %ld hour.</string>
+				<string>Setting reminder to turn contact tracing back on in %ld hour</string>
 				<key>other</key>
-				<string>Setting reminder to turn contact tracing back on in %ld hours.</string>
+				<string>Setting reminder to turn contact tracing back on in %ld hours</string>
 			</dict>
 		</dict>
 		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>
@@ -109,9 +109,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Day to go</string>
+				<string>day to go</string>
 				<key>other</key>
-				<string>Days to go</string>
+				<string>days to go</string>
 			</dict>
 		</dict>
 		<key>exposure_acknowledgement_days %ld</key>

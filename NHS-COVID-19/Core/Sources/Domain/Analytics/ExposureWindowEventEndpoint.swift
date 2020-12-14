@@ -13,9 +13,10 @@ struct ExposureWindowEventEndpoint: HTTPEndpoint {
     var riskInfo: ExposureRiskInfo
     var latestAppVersion: Version
     var postcode: String
+    var hasPositiveTest: Bool
     
     func request(for input: ExposureNotificationExposureWindow) throws -> HTTPRequest {
-        let payload = ExposureWindowEventPayload(window: input, riskInfo: riskInfo, latestAppliationVersion: latestAppVersion, postcode: postcode)
+        let payload = ExposureWindowEventPayload(window: input, hasPositiveTest: hasPositiveTest, riskInfo: riskInfo, latestAppliationVersion: latestAppVersion, postcode: postcode)
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         let body = try encoder.encode(payload)
@@ -28,6 +29,7 @@ struct ExposureWindowEventEndpoint: HTTPEndpoint {
 struct ExposureWindowEventPayload: Codable {
     struct Event: Codable {
         struct Payload: Codable {
+            var testType: TestType?
             var date: Date
             var infectiousness: Infectiousness
             var scanInstances: [ScanInstance]
@@ -65,8 +67,9 @@ struct ExposureWindowEventPayload: Codable {
 
 @available(iOS 13.7, *)
 extension ExposureWindowEventPayload {
-    init(window: ExposureNotificationExposureWindow, riskInfo: ExposureRiskInfo, latestAppliationVersion: Version, postcode: String) {
-        let event = Event(type: .exposureWindow, version: 1, payload: Event.Payload(window: window, riskInfo: riskInfo))
+    init(window: ExposureNotificationExposureWindow, hasPositiveTest: Bool, riskInfo: ExposureRiskInfo, latestAppliationVersion: Version, postcode: String) {
+        let eventType = hasPositiveTest ? EpidemiologicalEventType.exposureWindowPostiveTest : EpidemiologicalEventType.exposureWindow
+        let event = Event(type: eventType, version: 1, payload: Event.Payload(window: window, riskInfo: riskInfo, eventType: eventType))
         events = [event]
         metadata = Metadata(
             operatingSystemVersion: UIDevice.current.systemVersion,
@@ -79,7 +82,10 @@ extension ExposureWindowEventPayload {
 
 @available(iOS 13.7, *)
 extension ExposureWindowEventPayload.Event.Payload {
-    init(window: ExposureNotificationExposureWindow, riskInfo: ExposureRiskInfo) {
+    init(window: ExposureNotificationExposureWindow, riskInfo: ExposureRiskInfo, eventType: EpidemiologicalEventType) {
+        if eventType == .exposureWindowPostiveTest {
+            testType = TestType.unknown
+        }
         date = window.date
         infectiousness = ExposureWindowEventPayload.Event.Infectiousness(window.infectiousness)
         scanInstances = window.enScanInstances.map(ExposureWindowEventPayload.Event.ScanInstance.init)

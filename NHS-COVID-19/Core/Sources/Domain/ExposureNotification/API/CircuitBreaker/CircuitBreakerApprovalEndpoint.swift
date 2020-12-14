@@ -12,14 +12,14 @@ struct CircuitBreakerApprovalEndpoint: HTTPEndpoint {
         let data: Data
         switch type {
         case .exposureNotification(let riskInfo):
-            data = try encoder.encode(ExposureNotificationRequstPayload(
+            data = try encoder.encode(ExposureNotificationRequestPayload(
                 maximumRiskScore: riskInfo.riskScore,
                 daysSinceLastExposure: riskInfo.day.distance(to: .today),
                 matchedKeyCount: 1,
                 riskCalculationVersion: riskInfo.riskScoreVersion
             ))
-        case .riskyVenue(let venueId):
-            data = try encoder.encode(VenueRequstPayload(venueId: venueId))
+        case .riskyVenue:
+            data = try encoder.encode(VenueRequestPayload())
         }
         return .post("/circuit-breaker/\(type.endpointName)/request", body: .json(data))
     }
@@ -42,11 +42,9 @@ extension CircuitBreakerApprovalEndpoint {
     }
 }
 
-private struct VenueRequstPayload: Codable {
-    var venueId: String
-}
+private struct VenueRequestPayload: Codable {}
 
-private struct ExposureNotificationRequstPayload: Codable {
+private struct ExposureNotificationRequestPayload: Codable {
     var maximumRiskScore: Double
     var daysSinceLastExposure: Int
     var matchedKeyCount: Int

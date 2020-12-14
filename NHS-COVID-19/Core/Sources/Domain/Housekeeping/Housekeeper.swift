@@ -24,10 +24,11 @@ class Housekeeper {
     
     convenience init(isolationStateStore: IsolationStateStore,
                      isolationStateManager: IsolationStateManager,
-                     virologyTestingStateStore: VirologyTestingStateStore) {
+                     virologyTestingStateStore: VirologyTestingStateStore,
+                     getToday: @escaping () -> GregorianDay) {
         self.init(
             getHousekeepingDeletionPeriod: { isolationStateStore.configuration.housekeepingDeletionPeriod },
-            getToday: { .today },
+            getToday: getToday,
             getIsolationLogicalState: { isolationStateManager.state },
             clearData: {
                 virologyTestingStateStore.delete()

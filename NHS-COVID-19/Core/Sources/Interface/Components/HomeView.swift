@@ -57,6 +57,7 @@ private class ActionSheetState: ObservableObject {
 
 struct HomeView: View {
     @ObservedObject private var showOrderTestButton: InterfaceProperty<Bool>
+    @ObservedObject private var showFinancialSupportButton: InterfaceProperty<Bool>
     private let interactor: HomeViewController.Interacting
     @ObservedObject
     private var riskLevelBannerViewModel: InterfaceProperty<RiskLevelBanner.ViewModel?>
@@ -77,6 +78,7 @@ struct HomeView: View {
         exposureNotificationsEnabled: InterfaceProperty<Bool>,
         exposureNotificationsToggleAction: @escaping (Bool) -> Void,
         userNotificationsEnabled: InterfaceProperty<Bool>,
+        showFinancialSupportButton: InterfaceProperty<Bool>,
         country: InterfaceProperty<Country>
     ) {
         self.interactor = interactor
@@ -85,6 +87,7 @@ struct HomeView: View {
         self.showOrderTestButton = showOrderTestButton
         self.shouldShowSelfDiagnosis = shouldShowSelfDiagnosis
         self.country = country
+        self.showFinancialSupportButton = showFinancialSupportButton
         
         exposureNotifications = ExposureNotificationState(
             enabled: exposureNotificationsEnabled,
@@ -131,6 +134,10 @@ struct HomeView: View {
                         NavigationButton(imageName: .read, iconName: .externalLink, foregroundColor: Color(.background), backgroundColor: Color(.stylePink), text: localize(.home_default_advice_button_title), action: interactor.didTapAdviceButton).linkify(.home_default_advice_button_title)
                     } else {
                         NavigationButton(imageName: .read, iconName: .externalLink, foregroundColor: Color(.background), backgroundColor: Color(.stylePink), text: localize(.home_isolation_advice_button_title), action: interactor.didTapIsolationAdviceButton).linkify(.home_isolation_advice_button_title)
+                    }
+                    
+                    if showFinancialSupportButton.wrappedValue {
+                        NavigationButton(imageName: .finance, foregroundColor: Color(.background), backgroundColor: Color(.styleGreen), text: localize(.home_financial_support_button_title), action: interactor.didTapFinancialSupportButton)
                     }
                     
                     NavigationButton(imageName: .info, foregroundColor: Color(.background), backgroundColor: Color(.styleTurquoise), text: localize(.home_about_the_app_button_title), action: interactor.didTapAboutButton)

@@ -28,7 +28,7 @@ class IsolationStateStoreTests: XCTestCase {
         let store: IsolationStateStore
         
         init(configuration: Configuration) {
-            store = IsolationStateStore(store: configuration.encryptedStore) { .default }
+            store = IsolationStateStore(store: configuration.encryptedStore, latestConfiguration: { .default }, currentDateProvider: MockDateProvider())
         }
     }
     
@@ -569,7 +569,7 @@ class IsolationStateStoreTests: XCTestCase {
         )
         
         store.set(isolationInfo.contactCaseInfo!)
-        let providedExposureDate = try XCTUnwrap(store.provideEncounterDate())
+        let providedExposureDate = try XCTUnwrap(store.provideExposureDetails()?.encounterDate)
         let expectedExposureDate = LocalDay(gregorianDay: exposureDay, timeZone: .current).startOfDay
         
         XCTAssertEqual(expectedExposureDate, providedExposureDate)

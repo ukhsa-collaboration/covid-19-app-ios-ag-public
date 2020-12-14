@@ -37,17 +37,17 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>zero</key>
-				<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة.</string>
+				<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة</string>
 				<key>one</key>
-				<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة.</string>
+				<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة</string>
 				<key>two</key>
-				<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة.</string>
+				<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة</string>
 				<key>few</key>
-				<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة.</string>
+				<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة</string>
 				<key>many</key>
-				<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة.</string>
+				<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة</string>
 				<key>other</key>
-				<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة.</string>
+				<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة</string>
 			</dict>
 		</dict>
 		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>
@@ -157,17 +157,17 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>zero</key>
-				<string>يوم واحد للخروج</string>
+				<string>يمكنك الخروج الآن</string>
 				<key>one</key>
-				<string>يوم واحد للخروج</string>
+				<string>تبقى يوم واحد للخروج</string>
 				<key>two</key>
-				<string>يوم واحد للخروج</string>
+				<string>تبقى يومين للخروج</string>
 				<key>few</key>
-				<string>يوم واحد للخروج</string>
+				<string>أيام للخروج</string>
 				<key>many</key>
-				<string>يوم واحد للخروج</string>
+				<string>أيام للخروج</string>
 				<key>other</key>
-				<string>يوم واحد للخروج</string>
+				<string>أيام للخروج</string>
 			</dict>
 		</dict>
 		<key>exposure_acknowledgement_days %ld</key>
@@ -229,17 +229,17 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>zero</key>
-				<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld يوم واحد للخروج.</string>
+				<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld يمكنك الخروج الآن.</string>
 				<key>one</key>
-				<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld يوم واحد للخروج.</string>
+				<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld تبقى يوم واحد للخروج.</string>
 				<key>two</key>
-				<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld يوم واحد للخروج.</string>
+				<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld تبقى يومين للخروج.</string>
 				<key>few</key>
-				<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld يوم واحد للخروج.</string>
+				<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld أيام للخروج.</string>
 				<key>many</key>
-				<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld يوم واحد للخروج.</string>
+				<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld أيام للخروج.</string>
 				<key>other</key>
-				<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld يوم واحد للخروج.</string>
+				<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld أيام للخروج.</string>
 			</dict>
 		</dict>
 		<key>positive_test_start_to_isolate_accessibility_label %ld</key>

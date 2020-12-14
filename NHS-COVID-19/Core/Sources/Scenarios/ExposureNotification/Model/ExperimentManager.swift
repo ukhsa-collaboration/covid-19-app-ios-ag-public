@@ -42,6 +42,14 @@ class ExperimentManager: ObservableObject {
         }
     }
     
+    var usingEnApiVersion: Int {
+        if let enApiVersionString = Bundle.main.object(forInfoDictionaryKey: "ENAPIVersion") as? String,
+            let enApiVersionInt = Int(enApiVersionString) {
+            return enApiVersionInt
+        }
+        return 1
+    }
+    
     var processingError: Error? {
         didSet {
             _objectWillChange.send()
@@ -113,6 +121,20 @@ extension ExperimentManager {
         )
     }
     
+    @available(iOS 13.7, *)
+    func startAutomaticDetectionV2() {
+        precondition(automaticDetectionFrequency > 0)
+        isProcessingResults = true
+        processingError = nil
+        cancellables.append(
+            Timer.publish(every: automaticDetectionFrequency, on: RunLoop.main, in: .common)
+                .autoconnect()
+                .prepend(Date())
+                .flatMap { _ in self.postResultsV2().replaceError(with: ()) }
+                .sink { _ in }
+        )
+    }
+    
     func endAutomaticDetection() {
         isProcessingResults = false
         cancellables.removeAll()
@@ -144,12 +166,53 @@ extension ExperimentManager {
         )
     }
     
+    @available(iOS 13.7, *)
+    func processResultsV2() {
+        isProcessingResults = true
+        processingError = nil
+        _processResultsV2()
+    }
+    
+    @available(iOS 13.7, *)
+    private func _processResultsV2() {
+        cancellables.append(
+            postResultsV2()
+                .receive(on: RunLoop.main)
+                .sink(
+                    receiveCompletion: { completion in
+                        switch completion {
+                        case .finished:
+                            self.processingError = nil
+                        case .failure(let error):
+                            self.processingError = error
+                        }
+                        self.isProcessingResults = false
+                    },
+                    receiveValue: {}
+                )
+        )
+    }
+    
     private func postResults() -> AnyPublisher<Void, Error> {
         exposureManager.enabledManager()
             .flatMap { manager in
                 self.getExperiment()
                     .flatMap { experiment in
                         manager.results(for: experiment)
+                    }
+                    .flatMap(Publishers.Sequence.init)
+                    .flatMap { self.post($0) }
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    @available(iOS 13.7, *)
+    private func postResultsV2() -> AnyPublisher<Void, Error> {
+        exposureManager.enabledManager()
+            .flatMap { manager in
+                self.getExperimentV2()
+                    .flatMap { experiment in
+                        manager.resultsV2(for: experiment)
                     }
                     .flatMap(Publishers.Sequence.init)
                     .flatMap { self.post($0) }
@@ -169,6 +232,19 @@ extension ExperimentManager {
             .eraseToAnyPublisher()
     }
     
+    @available(iOS 13.7, *)
+    private func getExperimentV2() -> AnyPublisher<Experiment.ExperimentV2, Error> {
+        precondition(!experimentId.isEmpty)
+        precondition(!teamName.isEmpty)
+        let endpoint = GetExperimentEndpointV2(
+            team: teamName,
+            experimentId: experimentId
+        )
+        return client.fetch(endpoint, with: ())
+            .mapError { $0 as Error }
+            .eraseToAnyPublisher()
+    }
+    
     private static let sema = DispatchSemaphore(value: 1)
     
     private func post(_ results: Experiment.DetectionResults) -> AnyPublisher<Void, Error> {
@@ -177,6 +253,26 @@ extension ExperimentManager {
         // synchronise posts to work around issue in the backend
         Self.sema.wait()
         let endpoint = SendResultsEndpoint(
+            team: teamName,
+            experimentId: experimentId,
+            deviceName: deviceName
+        )
+        return client.fetch(endpoint, with: results)
+            .mapError { $0 as Error }
+            .handleEvents(
+                receiveCompletion: { _ in Self.sema.signal() },
+                receiveCancel: { Self.sema.signal() }
+            )
+            .eraseToAnyPublisher()
+    }
+    
+    @available(iOS 13.7, *)
+    private func post(_ results: Experiment.DetectionResultsV2) -> AnyPublisher<Void, Error> {
+        precondition(!experimentId.isEmpty)
+        precondition(!teamName.isEmpty)
+        // synchronise posts to work around issue in the backend
+        Self.sema.wait()
+        let endpoint = SendResultsV2Endpoint(
             team: teamName,
             experimentId: experimentId,
             deviceName: deviceName
@@ -219,6 +315,7 @@ extension ExperimentManager {
         return localParticipant(manager: manager)
             .map {
                 Experiment.Create(
+                    usedExposureNotificationApiVersion: String(self.usingEnApiVersion),
                     experimentName: name,
                     automaticDetectionFrequency: automaticDetectionFrequency,
                     requestedConfigurations: requestedConfigurations,
@@ -249,7 +346,7 @@ private extension EnabledExposureManager {
             .eraseToAnyPublisher()
     }
     
-    func result(for experiment: Experiment, configuration: ENExposureConfiguration) -> AnyPublisher<Experiment.DetectionResults, Error> {
+    private func result(for experiment: Experiment, configuration: ENExposureConfiguration) -> AnyPublisher<Experiment.DetectionResults, Error> {
         Publishers.Sequence(sequence: experiment.participants)
             .flatMap { self.exposure(to: $0, configuration: configuration) }
             .collect()
@@ -257,6 +354,28 @@ private extension EnabledExposureManager {
                 Experiment.DetectionResults(
                     timestamp: Date(),
                     configuration: .init(configuration),
+                    counterparts: $0
+                )
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    @available(iOS 13.7, *)
+    func resultsV2(for experiment: Experiment.ExperimentV2) -> AnyPublisher<[Experiment.DetectionResultsV2], Error> {
+        Publishers.Sequence(sequence: experiment.requestedConfigurations)
+            .flatMap { self.resultV2(for: experiment, configuration: ENExposureConfiguration(from: $0)) }
+            .collect()
+            .eraseToAnyPublisher()
+    }
+    
+    @available(iOS 13.7, *)
+    private func resultV2(for experiment: Experiment.ExperimentV2, configuration: ENExposureConfiguration) -> AnyPublisher<Experiment.DetectionResultsV2, Error> {
+        Publishers.Sequence(sequence: experiment.participants)
+            .flatMap { self.exposureV2(to: $0, configuration: configuration) }
+            .collect()
+            .map {
+                Experiment.DetectionResultsV2(
+                    timestamp: Date(),
                     counterparts: $0
                 )
             }
@@ -284,6 +403,19 @@ private extension ENExposureConfiguration {
     convenience init(from configuration: Experiment.RequestedConfiguration) {
         self.init()
         attenuationDurationThresholds = configuration.attenuationDurationThresholds.map { NSNumber(value: $0) }
+
+        if #available(iOS 13.7, *) {
+            var map: [NSNumber:NSNumber] = [:]
+            
+            for x in -14 ... 14 {
+                map[NSNumber(value: x)] = NSNumber(value: ENInfectiousness.high.rawValue)
+            }
+            
+//            map[NSNumber(value:ENDaysSinceOnsetOfSymptomsUnknown)] = NSNumber(value: ENInfectiousness.standard.rawValue)
+            
+            infectiousnessForDaysSinceOnsetOfSymptoms = map
+            reportTypeNoneMap = .confirmedTest
+        }
     }
     
 }

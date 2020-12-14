@@ -29,9 +29,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Temas takibini %ld saat içinde yeniden açmak için hatırlatma ayarlama.</string>
+				<string>Temas takibini %ld saat içinde yeniden açmak için hatırlatma ayarlama</string>
 				<key>other</key>
-				<string>Temas takibini %ld saat içinde yeniden açmak için hatırlatma ayarlama.</string>
+				<string>Temas takibini %ld saat içinde yeniden açmak için hatırlatma ayarlama</string>
 			</dict>
 		</dict>
 		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>
@@ -109,9 +109,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Kalan gün</string>
+				<string>kalan gün</string>
 				<key>other</key>
-				<string>Kalan günler</string>
+				<string>kalan günler</string>
 			</dict>
 		</dict>
 		<key>exposure_acknowledgement_days %ld</key>

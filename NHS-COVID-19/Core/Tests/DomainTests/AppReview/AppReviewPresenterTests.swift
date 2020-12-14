@@ -20,7 +20,7 @@ class AppReviewPresenterTests: XCTestCase {
         appReviewPresenter = AppReviewPresenter(
             checkInsStore: checkInsStore,
             reviewController: storeReviewController,
-            currentDateProvider: { self.currentDate.date }
+            currentDateProvider: MockDateProvider { self.currentDate.date }
         )
     }
     

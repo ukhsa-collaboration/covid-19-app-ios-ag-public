@@ -84,7 +84,7 @@ extension CoordinatedAppController {
     ///   - environment: Defaults to standard production environment.
     ///   - enabledFeatures: Defaults to all features.
     public convenience init(environment: Environment = .standard(), enabledFeatures: [Feature] = Feature.productionEnabledFeatures) {
-        let services = ApplicationServices(standardServicesFor: environment, currentDateProvider: { Date() })
+        let services = ApplicationServices(standardServicesFor: environment)
         self.init(services: services, enabledFeatures: enabledFeatures)
     }
     

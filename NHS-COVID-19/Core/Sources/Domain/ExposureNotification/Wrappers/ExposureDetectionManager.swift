@@ -43,16 +43,15 @@ struct ExposureDetectionManager {
         self.exposureRiskManager = exposureRiskManager
     }
     
-    func detectExposures(currentDate: Date) -> AnyPublisher<ExposureRiskInfo?, Never> {
-        guard interestedInExposureNotifications() else {
-            Self.logger.debug("Not interested in exposures. Skipping detection.")
-            exposureDetectionStore.save(lastKeyDownloadDate: currentDate)
-            return Empty().eraseToAnyPublisher()
-        }
-        
+    func detectExposures(currentDate: Date, sendFakeExposureWindows: @escaping () -> Void) -> AnyPublisher<ExposureRiskInfo?, Never> {
         guard detectionMatchesCheckFrequency(currentDate: currentDate) else {
             Self.logger.debug("Skipping detection to avoid reaching the rate limit early.")
             return Empty().eraseToAnyPublisher()
+        }
+        
+        guard interestedInExposureNotifications() else {
+            Self.logger.debug("Not interested in exposures. Skipping detection.")
+            return downloadIncrementsWithoutProcessing(currentDate: currentDate, sendFakeExposureWindows: sendFakeExposureWindows)
         }
         
         return client.getConfiguration()
@@ -60,6 +59,30 @@ struct ExposureDetectionManager {
             .flatMap { configuration in
                 self.detectExposures(currentDate: currentDate, configuration: configuration)
             }
+            .eraseToAnyPublisher()
+    }
+    
+    func downloadIncrementsWithoutProcessing(currentDate: Date, sendFakeExposureWindows: @escaping () -> Void) -> AnyPublisher<ExposureRiskInfo?, Never> {
+        let allIncrements = calculateIncrements(currentDate: currentDate)
+        let lastCheckDate = allIncrements.checkDate
+        let increments = allIncrements.increments
+        
+        return Publishers.Sequence<[AnyPublisher<Void, Never>], Never>(
+            sequence: increments.map { increment in
+                self.client.getExposureKeys(for: increment)
+                    .map { _ in }
+                    .replaceError(with: ())
+                    .eraseToAnyPublisher()
+            })
+            .flatMap { $0 }
+            .handleEvents(receiveCompletion: { completion in
+                if case .finished = completion {
+                    self.exposureDetectionStore.save(lastKeyDownloadDate: lastCheckDate)
+                    sendFakeExposureWindows()
+                }
+            })
+            .map { _ in nil }
+            .ensureFinishes(placeholder: nil)
             .eraseToAnyPublisher()
     }
     
@@ -80,7 +103,9 @@ struct ExposureDetectionManager {
     
     // MARK: Bulk
     
-    private func detectExposuresInBulk(currentDate: Date, configuration: ExposureDetectionConfiguration) -> AnyPublisher<ExposureRiskInfo?, Never> {
+    private typealias Increments = (increments: [Increment], checkDate: Date)
+    
+    private func calculateIncrements(currentDate: Date) -> Increments {
         let oldestDownloadDate = Calendar.utc.date(byAdding: Self.oldestDownloadDate, to: currentDate)!
         var lastCheckDate = exposureDetectionStore.load()?.lastKeyDownloadDate ?? oldestDownloadDate
         var increments = [Increment]()
@@ -89,6 +114,14 @@ struct ExposureDetectionManager {
             lastCheckDate = incrementInfo.checkDate
             increments.append(incrementInfo.increment)
         }
+        
+        return (increments: increments, checkDate: lastCheckDate)
+    }
+    
+    private func detectExposuresInBulk(currentDate: Date, configuration: ExposureDetectionConfiguration) -> AnyPublisher<ExposureRiskInfo?, Never> {
+        let allIncrements = calculateIncrements(currentDate: currentDate)
+        let lastCheckDate = allIncrements.checkDate
+        let increments = allIncrements.increments
         
         if increments.isEmpty {
             return Empty().eraseToAnyPublisher()

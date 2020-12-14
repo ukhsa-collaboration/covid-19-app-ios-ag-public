@@ -60,24 +60,38 @@ class ExposureDetectionManagerTests: XCTestCase {
             exposureRiskManager: MockExposureRiskManager()
         )
         
-        XCTAssertNoThrow(try manager.detectExposures(currentDate: Date()).await().get())
+        XCTAssertNoThrow(try manager.detectExposures(currentDate: Date(), sendFakeExposureWindows: {}).await().get())
     }
     
-    func testExposureDetectionStoreSavesTheLastCheckedDateWithNoNetworkCallsIfNotInterested() throws {
+    func testExposureDetectionStoreSavesTheLastCheckedDateWithNetworkCallsButNoRiskInfoIfNotInterested() throws {
+        let minimumNumberOfDailyDownloads = 13
+        let maximumRiskScore: ENRiskScore = 84
+        let controller = MockController()
+        controller.exposureInfos = [MockExposureInfo(riskScore: maximumRiskScore)]
+        
+        let mockExposureRiskManager = MockExposureRiskManager()
+        mockExposureRiskManager.riskInfoToReturn = ExposureRiskInfo(riskScore: Double(maximumRiskScore), riskScoreVersion: 1, day: GregorianDay.today, isConsideredRisky: false)
         let manager = ExposureDetectionManager(
             controller: controller,
             distributionClient: client,
             fileStorage: FileStorage(forCachesOf: .random()),
             encryptedStore: store,
             interestedInExposureNotifications: { false },
-            exposureRiskManager: MockExposureRiskManager()
+            exposureRiskManager: mockExposureRiskManager
         )
         
-        let currentDate = Date()
+        let currentDate = GregorianDay(year: 2020, month: 8, day: 15).startDate(in: .utc)
+        var didSendFakeWindows = false
+        let result = try manager.detectExposures(
+            currentDate: currentDate,
+            sendFakeExposureWindows: { didSendFakeWindows = true }
+        ).await().get()
         
-        XCTAssertNoThrow(try manager.detectExposures(currentDate: currentDate).prepend(nil).await().get())
+        XCTAssertNil(result)
         let exposureDetectionStore = ExposureDetectionStore(store: store)
         TS.assert(exposureDetectionStore.load()?.lastKeyDownloadDate, equals: currentDate)
+        XCTAssertTrue(client.batchEndpointCallCount >= minimumNumberOfDailyDownloads)
+        XCTAssertTrue(didSendFakeWindows)
     }
     
     func testExposureDetectionDownloadCount() throws {
@@ -92,7 +106,7 @@ class ExposureDetectionManagerTests: XCTestCase {
             exposureRiskManager: MockExposureRiskManager()
         )
         
-        XCTAssertNoThrow(try manager.detectExposures(currentDate: Date()).await().get())
+        XCTAssertNoThrow(try manager.detectExposures(currentDate: Date(), sendFakeExposureWindows: {}).await().get())
         XCTAssertTrue(client.batchEndpointCallCount >= minimumNumberOfDailyDownloads)
     }
     
@@ -110,7 +124,7 @@ class ExposureDetectionManagerTests: XCTestCase {
             exposureRiskManager: riskManager
         )
         
-        XCTAssertNoThrow(try manager.detectExposures(currentDate: Date()).await().get())
+        XCTAssertNoThrow(try manager.detectExposures(currentDate: Date(), sendFakeExposureWindows: {}).await().get())
         XCTAssertEqual(controller.countOfDiagnosisKeyURLsRequested, client.batchEndpointCallCount * MockHTTPClient.numberOfFilesInZip)
         XCTAssertEqual(riskManager.riskInfoCalledWith.count, client.batchEndpointCallCount)
     }
@@ -129,7 +143,7 @@ class ExposureDetectionManagerTests: XCTestCase {
             exposureRiskManager: riskManager
         )
         
-        XCTAssertNoThrow(try manager.detectExposures(currentDate: Date()).await().get())
+        XCTAssertNoThrow(try manager.detectExposures(currentDate: Date(), sendFakeExposureWindows: {}).await().get())
         XCTAssertEqual(controller.countOfDiagnosisKeyURLsRequested, client.batchEndpointCallCount * MockHTTPClient.numberOfFilesInZip)
         XCTAssertEqual(riskManager.riskInfoCalledWith.count, 1)
     }
@@ -144,7 +158,7 @@ class ExposureDetectionManagerTests: XCTestCase {
             exposureRiskManager: MockExposureRiskManager()
         )
         
-        XCTAssertNoThrow(try manager.detectExposures(currentDate: Date()).await().get())
+        XCTAssertNoThrow(try manager.detectExposures(currentDate: Date(), sendFakeExposureWindows: {}).await().get())
         XCTAssertNotNil(store.stored["background_task_state"])
     }
     
@@ -164,7 +178,7 @@ class ExposureDetectionManagerTests: XCTestCase {
             exposureRiskManager: mockExposureRiskManager
         )
         
-        let result = try manager.detectExposures(currentDate: Date()).await().get()
+        let result = try manager.detectExposures(currentDate: Date(), sendFakeExposureWindows: {}).await().get()
         
         XCTAssertNotNil(store.stored["background_task_state"])
         XCTAssertEqual(result?.riskScore, Double(maximumRiskScore))
@@ -186,7 +200,7 @@ class ExposureDetectionManagerTests: XCTestCase {
             exposureRiskManager: exposureRiskManager
         )
         
-        let riskInfo = try manager.detectExposures(currentDate: Date()).await().get()
+        let riskInfo = try manager.detectExposures(currentDate: Date(), sendFakeExposureWindows: {}).await().get()
         
         XCTAssertEqual(exposureRiskManager.riskInfoCalledWith.last, expectedSummary)
         XCTAssertEqual(riskInfo?.riskScore, expectedRiskInfo.riskScore)
@@ -211,7 +225,7 @@ class ExposureDetectionManagerTests: XCTestCase {
         let exposureDetectionStore = ExposureDetectionStore(store: store)
         exposureDetectionStore.save(lastKeyDownloadDate: lastDownloadDate)
         
-        XCTAssertNoThrow(try manager.detectExposures(currentDate: currentDate).prepend(nil).await().get())
+        XCTAssertNoThrow(try manager.detectExposures(currentDate: currentDate, sendFakeExposureWindows: {}).prepend(nil).await().get())
         
         TS.assert(exposureDetectionStore.load()?.lastKeyDownloadDate, equals: lastDownloadDate)
         XCTAssertEqual(client.batchEndpointCallCount, 0)

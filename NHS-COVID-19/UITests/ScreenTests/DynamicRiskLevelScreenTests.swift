@@ -38,7 +38,7 @@ class DynamicRiskLevelScreenTests: XCTestCase {
 
 private extension RiskLevelHighInfoScreen {
     var linktoWebsiteAlertTitle: XCUIElement {
-        app.staticTexts[DynamicRiskLevelScreenScenario.linkButtonTaped]
+        app.staticTexts[DynamicRiskLevelScreenScenario.linkButtonTapped]
     }
     
     var linkToWebsiteLinkButton: XCUIElement {

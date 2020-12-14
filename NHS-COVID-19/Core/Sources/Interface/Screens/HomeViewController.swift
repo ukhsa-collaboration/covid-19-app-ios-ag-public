@@ -14,6 +14,7 @@ public protocol HomeViewControllerInteracting {
     func didTapIsolationAdviceButton()
     func didTapCheckInButton()
     func didTapTestingInformationButton()
+    func didTapFinancialSupportButton()
     func didTapAboutButton()
     func didTapLinkTestResultButton()
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never>
@@ -37,6 +38,7 @@ public class HomeViewController: UIViewController {
     
     private let showOrderTestButton: InterfaceProperty<Bool>
     private let shouldShowSelfDiagnosis: InterfaceProperty<Bool>
+    private let showFinancialSupportButton: InterfaceProperty<Bool>
     
     private let country: InterfaceProperty<Country>
     
@@ -48,6 +50,7 @@ public class HomeViewController: UIViewController {
         showOrderTestButton: InterfaceProperty<Bool>,
         shouldShowSelfDiagnosis: InterfaceProperty<Bool>,
         userNotificationsEnabled: InterfaceProperty<Bool>,
+        showFinancialSupportButton: InterfaceProperty<Bool>,
         country: InterfaceProperty<Country>
     ) {
         self.interactor = interactor
@@ -63,6 +66,7 @@ public class HomeViewController: UIViewController {
         
         self.showOrderTestButton = showOrderTestButton
         self.shouldShowSelfDiagnosis = shouldShowSelfDiagnosis
+        self.showFinancialSupportButton = showFinancialSupportButton
         
         self.country = country
         
@@ -86,6 +90,7 @@ public class HomeViewController: UIViewController {
             exposureNotificationsEnabled: exposureNotificationsEnabled,
             exposureNotificationsToggleAction: exposureNotificationSwitchValueChanged,
             userNotificationsEnabled: userNotificationsEnabled,
+            showFinancialSupportButton: showFinancialSupportButton,
             country: country
         )
         .navigationBarHidden(true)

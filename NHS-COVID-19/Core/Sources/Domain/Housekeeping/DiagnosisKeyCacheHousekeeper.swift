@@ -10,19 +10,19 @@ class DiagnosisKeyCacheHousekeeper {
     private static let twentyFourHours: Double = 24 * 60 * 60
     private let fileStorage: FileStoring
     private let nextIncrementIdentifiers: () -> [String]
-    private let currentDateProvider: () -> Date
+    private let currentDateProvider: DateProviding
     
     init(
         fileStorage: FileStoring,
         exposureDetectionStore: ExposureDetectionStore,
-        currentDateProvider: @escaping () -> Date
+        currentDateProvider: DateProviding
     ) {
         self.fileStorage = fileStorage
         nextIncrementIdentifiers = {
             if let lastKeyDownloadDate = exposureDetectionStore.load()?.lastKeyDownloadDate {
                 var nextIncrements = [String]()
                 var lastCheckDate = lastKeyDownloadDate
-                let now = currentDateProvider()
+                let now = currentDateProvider.currentDate
                 while let incrementInfo = Increment.nextIncrement(lastCheckDate: lastCheckDate, now: now) {
                     nextIncrements.append(incrementInfo.increment.identifier)
                     lastCheckDate = incrementInfo.checkDate
@@ -41,7 +41,7 @@ class DiagnosisKeyCacheHousekeeper {
             }
             
             let allFiles = self.fileStorage.allFileNames()
-            let validUntil = self.currentDateProvider().advanced(by: -Self.twentyFourHours)
+            let validUntil = self.currentDateProvider.currentDate.advanced(by: -Self.twentyFourHours)
             allFiles?.forEach { fileName in
                 if fileName.starts(with: Increment.IdentifierPrefix) {
                     if let modificationDate = self.fileStorage.modificationDate(fileName) {

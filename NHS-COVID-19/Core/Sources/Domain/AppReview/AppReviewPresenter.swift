@@ -14,7 +14,7 @@ public class AppReviewPresenter {
     private static let checkInCountThreshold = 2
     private let checkInsStore: CheckInsStore?
     private let reviewController: StoreReviewControlling
-    private let currentDateProvider: () -> Date
+    private let currentDateProvider: DateProviding
     
     public var presentReview: () -> Void {
         return {
@@ -34,11 +34,11 @@ public class AppReviewPresenter {
     }
     
     private var firstCheckInToday: Bool {
-        let today = LocalDay(date: currentDateProvider(), timeZone: .current)
+        let today = currentDateProvider.currentLocalDay
         return checkInLocalDays.filter { today == $0 }.count == 1
     }
     
-    public init(checkInsStore: CheckInsStore?, reviewController: StoreReviewControlling, currentDateProvider: @escaping () -> Date) {
+    public init(checkInsStore: CheckInsStore?, reviewController: StoreReviewControlling, currentDateProvider: DateProviding) {
         self.checkInsStore = checkInsStore
         self.reviewController = reviewController
         self.currentDateProvider = currentDateProvider

@@ -29,9 +29,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>%ld કલાકમાં કૉન્ટૅક્ટ ટ્રેસિંગને ફરી પાછું ચાલુ કરવા માટે રીમાઇન્ડર સેટ કરવું.</string>
+				<string>%ld કલાકમાં કૉન્ટૅક્ટ ટ્રેસિંગને ફરી પાછું ચાલુ કરવા માટે રીમાઇન્ડર સેટ કરવું</string>
 				<key>other</key>
-				<string>%ld કલાકોમાં કૉન્ટૅક્ટ ટ્રેસિંગને ફરી પાછું ચાલુ કરવા માટે રીમાઇન્ડર સેટ કરવું.</string>
+				<string>%ld કલાકોમાં કૉન્ટૅક્ટ ટ્રેસિંગને ફરી પાછું ચાલુ કરવા માટે રીમાઇન્ડર સેટ કરવું</string>
 			</dict>
 		</dict>
 		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>

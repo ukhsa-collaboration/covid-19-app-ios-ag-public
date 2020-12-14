@@ -37,6 +37,7 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case info = "Info"
     case read = "Read"
     case swab = "Swab"
+    case finance = "Finance"
     case pin = "Pin"
     case checkTick = "CheckTick"
     case chain = "Chain"

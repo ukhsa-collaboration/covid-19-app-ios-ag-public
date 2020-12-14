@@ -46,15 +46,16 @@ public struct RunningAppContext {
     public var exposureNotificationStateController: ExposureNotificationStateControlling
     public var virologyTestingManager: VirologyTestingManaging
     public var testResultAcknowledgementState: AnyPublisher<TestResultAcknowledgementState, Never>
-    public var symptomsDateAndEncounterDateProvider: SymptomsOnsetDateAndEncounterDateProviding
+    public var symptomsOnsetAndExposureDetailsProvider: SymptomsOnsetDateAndExposureDetailsProviding
     public var deleteAllData: () -> Void
     public var deleteCheckIn: (String) -> Void
     public var riskyCheckInsAcknowledgementState: AnyPublisher<RiskyCheckInsAcknowledgementState, Never>
-    public var currentDateProvider: () -> Date
+    public var currentDateProvider: DateProviding
     public var exposureNotificationReminder: ExposureNotificationReminder
     public var appReviewPresenter: AppReviewPresenter
     public var getLocalAuthorities: GetLocalAuthorities?
     public var storeLocalAuthorities: StoreLocalAuthorities?
+    public var isolationPaymentState: DomainProperty<IsolationPaymentState>
 }
 
 public typealias GetLocalAuthorities = (_ postcode: Postcode) -> Result<Set<LocalAuthority>, PostcodeValidationError>

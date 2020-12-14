@@ -4,4 +4,9 @@
 
 enum EpidemiologicalEventType: String, Codable {
     case exposureWindow
+    case exposureWindowPostiveTest
+}
+
+enum TestType: String, Codable {
+    case unknown
 }

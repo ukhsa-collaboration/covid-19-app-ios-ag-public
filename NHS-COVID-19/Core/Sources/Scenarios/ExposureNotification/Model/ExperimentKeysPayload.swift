@@ -61,6 +61,18 @@ struct ExperimentResultsPayload: Codable {
         var metadata: [String: String]?
     }
     
+    struct ExposureWindow: Codable {
+        var date: Date
+        var reportType: Int
+        var scanInstances: [ScanInstance]
+    }
+    
+    struct ScanInstance: Codable {
+        var typicalAttenuationDb: Int
+        var minAttenuationDb: Int
+        var secondsSinceLastScan: Int
+    }
+    
     typealias Info = ExperimentKeysPayload.Info
     
     var info: Info
@@ -90,6 +102,23 @@ extension ExperimentResultsPayload.ExposureInfo {
             transmissionRiskLevel: Int(info.transmissionRiskLevel),
             metadata: info.metadata.map {
                 Dictionary(uniqueKeysWithValues: $0.map { ("\($0)", "\($1)") })
+            }
+        )
+    }
+}
+
+@available(iOS 13.7, *)
+extension ExperimentResultsPayload.ExposureWindow {
+    init(window: ENExposureWindow) {
+        self.init(
+            date: window.date,
+            reportType: Int(window.diagnosisReportType.rawValue),
+            scanInstances: window.scanInstances.map { scan in
+                ExperimentResultsPayload.ScanInstance(
+                    typicalAttenuationDb: Int(scan.typicalAttenuation),
+                    minAttenuationDb: Int(scan.minimumAttenuation),
+                    secondsSinceLastScan: scan.secondsSinceLastScan
+                )
             }
         )
     }

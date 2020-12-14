@@ -33,7 +33,7 @@ class IsolationContextTests: XCTestCase {
             ),
             encryptedStore: MockEncryptedStore(),
             notificationCenter: NotificationCenter(),
-            currentDateProvider: { self.currentDate }
+            currentDateProvider: MockDateProvider { self.currentDate }
         )
     }
     

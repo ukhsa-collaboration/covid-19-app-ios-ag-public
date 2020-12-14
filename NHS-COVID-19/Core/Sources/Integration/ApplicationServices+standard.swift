@@ -14,9 +14,8 @@ extension ApplicationServices {
     
     private static let logger = Logger(label: "ApplicationServices")
     
-    public convenience init(standardServicesFor environment: Environment, exposureNotificationManager: ExposureNotificationManaging = ENManager(), currentDateProvider: @escaping () -> Date) {
+    public convenience init(standardServicesFor environment: Environment, exposureNotificationManager: ExposureNotificationManaging = ENManager()) {
         Self.logger.debug("initialising", metadata: .describing(environment.identifier))
-        
         self.init(
             application: UIApplication.shared,
             exposureNotificationManager: exposureNotificationManager,
@@ -35,7 +34,7 @@ extension ApplicationServices {
             venueDecoder: environment.venueDecoder,
             appInfo: environment.appInfo,
             postcodeValidator: PostcodeValidator(),
-            currentDateProvider: currentDateProvider,
+            currentDateProvider: DateProvider(),
             storeReviewController: StoreReviewController()
         )
     }

@@ -6,6 +6,7 @@ import Common
 import ExposureNotification
 import RiskScore
 import XCTest
+import Scenarios
 @testable import Domain
 
 @available(iOS 13.7, *)
@@ -13,7 +14,7 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
     private var riskScoreCalculator: MockRiskScoreCalculator!
     private var riskCalculator: ExposureWindowRiskCalculator!
     private var infectiousnessFactorCalculator: MockExposureWindowInfectiousnessFactorCalculator!
-    private var dateProvider: () -> Date = { Date() }
+    private var dateProvider: DateProviding = MockDateProvider()
     
     override func setUp() {
         riskScoreCalculator = MockRiskScoreCalculator()
@@ -100,7 +101,7 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
         riskScoreCalculator.riskScore = 100.0
         let calendar = Calendar.utc
         let oldDate = calendar.date(from: DateComponents(year: 2020, month: 7, day: 9))
-        dateProvider = { Date.dateFrom(year: 2020, month: 7, day: 20) }
+        dateProvider = MockDateProvider { Date.dateFrom(year: 2020, month: 7, day: 20) }
         
         var submittedWindows = [(ExposureNotificationExposureWindow, ExposureRiskInfo)]()
         let riskCalculator = ExposureWindowRiskCalculator(
@@ -131,7 +132,7 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
         
         let riskyScore = 540.0
         let (olderDate, newerDate, newestDate) = getThreeConsecutiveDates()
-        let dateProvider = { Date.dateFrom(year: 2020, month: 7, day: 4) }
+        let dateProvider = MockDateProvider { Date.dateFrom(year: 2020, month: 7, day: 4) }
         
         let expectedRiskInfo = ExposureRiskInfo(
             riskScore: riskyScore,

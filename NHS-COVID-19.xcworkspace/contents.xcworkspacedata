@@ -5,9 +5,6 @@
       location = "group:README.md">
    </FileRef>
    <FileRef
-      location = "group:postcodesLA.playground">
-   </FileRef>
-   <FileRef
       location = "group:NHS-COVID-19/NHS-COVID-19.xcodeproj">
    </FileRef>
    <FileRef
@@ -18,5 +15,8 @@
    </FileRef>
    <FileRef
       location = "group:Scripts">
+   </FileRef>
+   <FileRef
+      location = "group:postcodesLA.playground">
    </FileRef>
 </Workspace>

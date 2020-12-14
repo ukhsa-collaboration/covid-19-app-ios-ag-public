@@ -25,9 +25,9 @@ class MetricCollector {
     @Encrypted
     private var cache: MetricsCache?
     
-    private let currentDateProvider: () -> Date
+    private let currentDateProvider: DateProviding
     
-    init(encryptedStore: EncryptedStoring, currentDateProvider: @escaping () -> Date) {
+    init(encryptedStore: EncryptedStoring, currentDateProvider: DateProviding) {
         _cache = encryptedStore.encrypted("metrics")
         self.currentDateProvider = currentDateProvider
         Self.current = self
@@ -37,7 +37,7 @@ class MetricCollector {
         Self.logger.debug("record metric", metadata: .describing(metric.rawValue))
         cache = mutating(cache ?? MetricsCache(entries: [], latestWindowEnd: nil)) {
             $0.entries.append(
-                MetricsCache.Entry(name: metric.rawValue, date: currentDateProvider())
+                MetricsCache.Entry(name: metric.rawValue, date: currentDateProvider.currentDate)
             )
         }
     }

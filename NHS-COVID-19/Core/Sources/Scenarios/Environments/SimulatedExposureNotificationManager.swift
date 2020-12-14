@@ -11,7 +11,7 @@ import Localization
 
 class SimulatedExposureNotificationManager: ExposureNotificationManaging {
     
-    private let queue = DispatchQueue(label: "SimulatedExposureNotificationManager")
+    private let queue = DispatchQueue.main
     private let dataProvider = MockScenario.mockDataProvider
     
     var instanceAuthorizationStatus: AuthorizationStatus

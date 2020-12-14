@@ -38,6 +38,17 @@ class SandboxSubmissionClient: HTTPClient {
             return Result.success(.ok(with: .empty))
         }
         
+        if request.path == "/isolation-payment/ipc-token/update" {
+            let websiteURL = URL(string: "https://example.com")!
+            let response = HTTPResponse.ok(with: .json(#"""
+            {
+                "websiteUrlWithQuery": "\#(websiteURL)",
+            }
+            """#))
+            
+            return Result.success(response)
+        }
+        
         return Result.failure(.rejectedRequest(underlyingError: SimpleError("")))
     }
 }

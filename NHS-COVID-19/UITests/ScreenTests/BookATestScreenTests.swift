@@ -38,7 +38,7 @@ class BookATestScreenTests: XCTestCase {
         try runner.run { app in
             let screen = BookATestScreen(app: app)
             screen.bookATestForSomeoneElse.tap()
-            XCTAssertTrue(app.staticTexts[runner.scenario.bookTestForSomeoneElseTaped].exists)
+            XCTAssertTrue(app.staticTexts[runner.scenario.bookTestForSomeoneElseTapped].exists)
         }
     }
     
@@ -46,7 +46,7 @@ class BookATestScreenTests: XCTestCase {
         try runner.run { app in
             let screen = BookATestScreen(app: app)
             screen.appPrivacyNotice.tap()
-            XCTAssertTrue(app.staticTexts[runner.scenario.appPrivacyNoticeTaped].exists)
+            XCTAssertTrue(app.staticTexts[runner.scenario.appPrivacyNoticeTapped].exists)
         }
     }
     
@@ -54,7 +54,7 @@ class BookATestScreenTests: XCTestCase {
         try runner.run { app in
             let screen = BookATestScreen(app: app)
             screen.testingPrivacyNotice.tap()
-            XCTAssertTrue(app.staticTexts[runner.scenario.testingPrivacyNoticeTaped].exists)
+            XCTAssertTrue(app.staticTexts[runner.scenario.testingPrivacyNoticeTapped].exists)
         }
     }
     

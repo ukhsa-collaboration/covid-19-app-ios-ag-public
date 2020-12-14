@@ -29,9 +29,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Dejinta xusuusin si loo shido raad-raacista shakhsiga markay tahay %ld saacadii.</string>
+				<string>Dejinta xusuusin si loo shido raad-raacista shakhsiga markay tahay %ld saacadii</string>
 				<key>other</key>
-				<string>Dejinta xusuusin si loo shido raad-raacista shakhsiga markay tahay %ld saacadood.</string>
+				<string>Dejinta xusuusin si loo shido raad-raacista shakhsiga markay tahay %ld saacadood</string>
 			</dict>
 		</dict>
 		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>

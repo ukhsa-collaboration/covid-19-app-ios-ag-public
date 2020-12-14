@@ -47,6 +47,7 @@ struct LeadHomeView: View {
         NavigationView {
             VStack(spacing: 16) {
                 Text(experimentNameTitle)
+                Text("Using EN API version: \(experimentManager.usingEnApiVersion)")
                 PrimaryButton(title: "View current experiment") {
                     self.sheet = .inspectExperiment(ExperimentInspector(manager: self.experimentManager))
                 }
@@ -71,7 +72,8 @@ struct LeadHomeView: View {
             } else {
                 return AnyView(
                     InspectExperimentView(
-                        experimentInspector: sheet.experimentInspector!
+                        experimentInspector: sheet.experimentInspector!,
+                        experimentManager: self.experimentManager
                     )
                 )
             }

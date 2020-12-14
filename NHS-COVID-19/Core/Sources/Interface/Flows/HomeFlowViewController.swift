@@ -14,6 +14,7 @@ public protocol HomeFlowViewControllerInteracting {
     func openIsolationAdvice()
     func makeCheckInViewController() -> UIViewController?
     func makeTestingInformationViewController() -> UIViewController?
+    func makeFinancialSupportViewController() -> UIViewController?
     func makeLinkTestResultViewController() -> UIViewController?
     func getMyDataViewModel() -> MyDataViewController.ViewModel
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never>
@@ -52,6 +53,7 @@ public class HomeFlowViewController: UINavigationController {
         showOrderTestButton: InterfaceProperty<Bool>,
         shouldShowSelfDiagnosis: InterfaceProperty<Bool>,
         userNotificationsEnabled: InterfaceProperty<Bool>,
+        showFinancialSupportButton: InterfaceProperty<Bool>,
         country: InterfaceProperty<Country>
     ) {
         self.interactor = interactor
@@ -74,6 +76,7 @@ public class HomeFlowViewController: UINavigationController {
             showOrderTestButton: showOrderTestButton,
             shouldShowSelfDiagnosis: shouldShowSelfDiagnosis,
             userNotificationsEnabled: userNotificationsEnabled,
+            showFinancialSupportButton: showFinancialSupportButton,
             country: country
         )
         viewControllers = [rootViewController]
@@ -137,6 +140,14 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     
     public func didTapTestingInformationButton() {
         guard let viewController = flowInteractor.makeTestingInformationViewController() else {
+            return
+        }
+        viewController.modalPresentationStyle = .overFullScreen
+        flowController?.present(viewController, animated: true)
+    }
+    
+    public func didTapFinancialSupportButton() {
+        guard let viewController = flowInteractor.makeFinancialSupportViewController() else {
             return
         }
         viewController.modalPresentationStyle = .overFullScreen

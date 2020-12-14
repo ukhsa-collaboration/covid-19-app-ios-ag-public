@@ -10,8 +10,8 @@ import Interface
 
 extension Publisher where Output == Domain.IsolationState, Failure == Never {
     
-    func mapToInterface(with notificationCenter: NotificationCenter) -> AnyPublisher<Interface.IsolationState, Never> {
-        combineLatest(notificationCenter.today)
+    func mapToInterface(with currentDateProvider: DateProviding) -> AnyPublisher<Interface.IsolationState, Never> {
+        combineLatest(currentDateProvider.today)
             .map(Interface.IsolationState.init)
             .eraseToAnyPublisher()
     }

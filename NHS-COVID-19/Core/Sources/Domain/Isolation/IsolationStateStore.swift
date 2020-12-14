@@ -6,9 +6,10 @@ import Combine
 import Common
 import Foundation
 
-public protocol SymptomsOnsetDateAndEncounterDateProviding {
+public protocol SymptomsOnsetDateAndExposureDetailsProviding {
     func provideSymptomsOnsetDate() -> Date?
-    func provideEncounterDate() -> Date?
+    func provideExposureDetails() -> (encounterDate: Date,
+                                      notificationDate: Date)?
 }
 
 struct IsolationStateInfo: Codable, Equatable, DataConvertible {
@@ -16,11 +17,12 @@ struct IsolationStateInfo: Codable, Equatable, DataConvertible {
     var configuration: IsolationConfiguration
 }
 
-class IsolationStateStore: SymptomsOnsetDateAndEncounterDateProviding {
+class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
     
     @Encrypted private var isolationStateInfoStorage: IsolationStateInfo?
     
     private let latestConfiguration: () -> IsolationConfiguration
+    private let currentDateProvider: DateProviding
     
     @Published var isolationStateInfo: IsolationStateInfo? {
         didSet {
@@ -36,8 +38,9 @@ class IsolationStateStore: SymptomsOnsetDateAndEncounterDateProviding {
         isolationStateInfo?.configuration ?? latestConfiguration()
     }
     
-    init(store: EncryptedStoring, latestConfiguration: @escaping () -> IsolationConfiguration) {
+    init(store: EncryptedStoring, latestConfiguration: @escaping () -> IsolationConfiguration, currentDateProvider: DateProviding) {
         self.latestConfiguration = latestConfiguration
+        self.currentDateProvider = currentDateProvider
         _isolationStateInfoStorage = store.encrypted("isolation_state_info")
         isolationStateInfo = _isolationStateInfoStorage.wrappedValue
     }
@@ -50,7 +53,7 @@ class IsolationStateStore: SymptomsOnsetDateAndEncounterDateProviding {
             $0.hasAcknowledgedStartOfIsolation = true
         }
         
-        let logicalState = IsolationLogicalState(today: .today, info: isolationInfo, configuration: configuration)
+        let logicalState = IsolationLogicalState(today: currentDateProvider.currentLocalDay, info: isolationInfo, configuration: configuration)
         if logicalState.isolation?.isIndexCase == true {
             return save(isolationInfo)
         } else {
@@ -115,14 +118,19 @@ class IsolationStateStore: SymptomsOnsetDateAndEncounterDateProviding {
             configuration: configuration
         )
         
-        return IsolationLogicalState(today: .today, info: isolationInfo, configuration: configuration)
+        return IsolationLogicalState(today: currentDateProvider.currentLocalDay, info: isolationInfo, configuration: configuration)
     }
     
-    func provideEncounterDate() -> Date? {
-        guard let encounterDay = isolationInfo.contactCaseInfo?.exposureDay else {
+    func provideExposureDetails() -> (encounterDate: Date,
+                                      notificationDate: Date)? {
+        guard let encounterDay = isolationInfo.contactCaseInfo?.exposureDay,
+            let notificationDay = isolationInfo.contactCaseInfo?.isolationFromStartOfDay else {
             return nil
         }
-        return LocalDay(gregorianDay: encounterDay, timeZone: .current).startOfDay
+        return (
+            encounterDate: LocalDay(gregorianDay: encounterDay, timeZone: .current).startOfDay,
+            notificationDate: LocalDay(gregorianDay: notificationDay, timeZone: .current).startOfDay
+        )
     }
     
     func provideSymptomsOnsetDate() -> Date? {

@@ -29,7 +29,12 @@ public enum TestResultAcknowledgementState {
         .neededForPositiveResultNotIsolating(PositiveResultAcknowledgement(acknowledge: acknowledge, acknowledgeWithoutSending: {}))
     }
     
-    typealias PositiveAcknowledgement = (DiagnosisKeySubmissionToken, Date?, IndexCaseInfo?, @escaping () -> Void) -> TestResultAcknowledgementState.PositiveResultAcknowledgement
+    public enum SendKeysState {
+        case sent
+        case notSent
+    }
+    
+    typealias PositiveAcknowledgement = (DiagnosisKeySubmissionToken, Date?, IndexCaseInfo?, @escaping (SendKeysState) -> Void) -> TestResultAcknowledgementState.PositiveResultAcknowledgement
     
     init(
         result: VirologyStateTestResult,
@@ -37,7 +42,7 @@ public enum TestResultAcknowledgementState {
         currentIsolationState: IsolationLogicalState,
         indexCaseInfo: IndexCaseInfo?,
         positiveAcknowledgement: PositiveAcknowledgement,
-        completionHandler: @escaping () -> Void
+        completionHandler: @escaping (SendKeysState) -> Void
     ) {
         switch (result.testResult, newIsolationState) {
         case (.positive, .isolating(let isolation, _, _)) where currentIsolationState.isIsolating == true:
@@ -87,30 +92,30 @@ public enum TestResultAcknowledgementState {
             fallthrough
         case (.negative, .isolating(let isolation, _, _)) where isolation.reason == .indexCase(hasPositiveTestResult: true, isSelfDiagnosed: true):
             self = TestResultAcknowledgementState.neededForNegativeAfterPositiveResultContinueToIsolate(
-                acknowledge: completionHandler,
+                acknowledge: { completionHandler(.notSent) },
                 isolationEndDate: isolation.endDate
             )
         case (.negative, .isolating(let isolation, _, _)):
             self = TestResultAcknowledgementState.neededForNegativeResultContinueToIsolate(
-                acknowledge: completionHandler,
+                acknowledge: { completionHandler(.notSent) },
                 isolationEndDate: isolation.endDate
             )
         case (.negative, .notIsolating):
             self = TestResultAcknowledgementState.neededForNegativeResultNotIsolating(
-                acknowledge: completionHandler
+                acknowledge: { completionHandler(.notSent) }
             )
         case (.negative, .isolationFinishedButNotAcknowledged):
             self = TestResultAcknowledgementState.neededForNegativeResultNotIsolating(
-                acknowledge: completionHandler
+                acknowledge: { completionHandler(.notSent) }
             )
         case (.void, .isolating(let isolation, _, _)):
             self = TestResultAcknowledgementState.neededForVoidResultContinueToIsolate(
-                acknowledge: completionHandler,
+                acknowledge: { completionHandler(.notSent) },
                 isolationEndDate: isolation.endDate
             )
         case (.void, _):
             self = TestResultAcknowledgementState.neededForVoidResultNotIsolating(
-                acknowledge: completionHandler
+                acknowledge: { completionHandler(.notSent) }
             )
         }
     }

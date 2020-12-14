@@ -14,15 +14,13 @@ class CircuitBreakerApprovalEndpointTests: XCTestCase {
     typealias Response = CircuitBreakerApprovalEndpoint.Response
     
     func testEncodingRiskyVenue() throws {
-        let venueId = String.random()
         let expected = HTTPRequest.post("/circuit-breaker/venue/request", body: .json(#"""
         {
-          "venueId" : "\#(venueId)"
         }
         """#))
             .withCanonicalJSONBody()
         
-        let actual = try endpoint.request(for: .riskyVenue(venueId)).withCanonicalJSONBody()
+        let actual = try endpoint.request(for: .riskyVenue).withCanonicalJSONBody()
         TS.assert(actual, equals: expected)
     }
     

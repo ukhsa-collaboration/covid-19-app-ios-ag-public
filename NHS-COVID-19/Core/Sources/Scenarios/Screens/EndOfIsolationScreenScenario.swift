@@ -3,6 +3,7 @@
 //
 
 import Domain
+import Common
 import Integration
 import Interface
 import UIKit
@@ -25,7 +26,7 @@ extension EndOfIsolationScreenScenario {
                 interactor: interactor,
                 isolationEndDate: Date(timeIntervalSinceNow: 7 * 86400),
                 isIndexCase: isIndexCase,
-                currentDateProvider: { Date() }
+                currentDateProvider: DateProvider()
             )
         }
     }

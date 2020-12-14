@@ -39,12 +39,13 @@ private extension CoordinatedAppController {
 private extension ApplicationServices {
     
     convenience init(sandboxedIn host: SandboxHost) {
+        let notificationCenter = NotificationCenter()
         self.init(
             application: MockApplication(),
             exposureNotificationManager: SandboxExposureNotificationManager(host: host),
             userNotificationsManager: SandboxUserNotificationsManager(host: host),
             processingTaskRequestManager: MockProcessingTaskRequestManager(),
-            notificationCenter: NotificationCenter(),
+            notificationCenter: notificationCenter,
             distributeClient: SandboxDistributeClient(),
             apiClient: SandboxSubmissionClient(),
             iTunesClient: MockHTTPClient(),
@@ -54,7 +55,7 @@ private extension ApplicationServices {
             venueDecoder: QRCode.fake,
             appInfo: AppInfo(bundleId: UUID().uuidString, version: "3.10", buildNumber: "1"),
             postcodeValidator: SandboxPostcodeValidator(),
-            currentDateProvider: { Date() },
+            currentDateProvider: DateProvider(notificationCenter: notificationCenter),
             storeReviewController: StoreReviewController()
         )
     }

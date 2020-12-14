@@ -14,8 +14,10 @@ struct ExposureNotificationContext {
     var exposureKeysManager: ExposureKeysManager
     var diagnosisKeyCacheHouskeeper: DiagnosisKeyCacheHousekeeper
     var handleDontWorryNotification: () -> Void
-    var currentDateProvider: () -> Date
     var exposureWindowAnalyticsHandler: ExposureWindowAnalyticsHandler?
+    var currentDateProvider: DateProviding
+    var exposureWindowStore: ExposureWindowStore?
+    var trafficObfuscationClient: TrafficObfuscationClient
     
     init(
         services: ApplicationServices,
@@ -28,6 +30,9 @@ struct ExposureNotificationContext {
         
         exposureDetectionStore = ExposureDetectionStore(store: services.encryptedStore)
         let controller = ExposureNotificationDetectionController(manager: services.exposureNotificationManager)
+        
+        let trafficObfuscationClient = TrafficObfuscationClient(client: services.apiClient)
+        self.trafficObfuscationClient = trafficObfuscationClient
         
         let exposureRiskManager: ExposureRiskManaging
         if #available(iOS 13.7, *) {
@@ -42,12 +47,15 @@ struct ExposureNotificationContext {
                     submitExposureWindows: { windowInfo in
                         let postcode = getPostcode()?.value ?? ""
                         exposureWindowAnalyticsHandler.post(windowInfo: windowInfo, latestAppVersion: services.appInfo.version, postcode: postcode, client: services.apiClient)
+                        trafficObfuscationClient.sendTraffic(for: TrafficObfuscator.exposureWindow, randomRange: 2 ... 15, numberOfActualCalls: windowInfo.count)
                     }
                 )
             )
+            exposureWindowStore = ExposureWindowStore(store: services.encryptedStore)
         } else {
             exposureWindowAnalyticsHandler = nil
             exposureRiskManager = ExposureRiskManager(controller: controller)
+            exposureWindowStore = nil
         }
         
         exposureKeysManager = ExposureKeysManager(
@@ -100,16 +108,21 @@ struct ExposureNotificationContext {
     
     @available(iOS 13.7, *)
     private func detectExposuresV2() -> AnyPublisher<Void, Never> {
-        exposureDetectionManager.detectExposures(currentDate: currentDateProvider())
-            .filterNil()
-            .map { riskInfo in
-                _ = exposureDetectionStore.saveIfNeeded(exposureRiskInfo: riskInfo)
+        exposureDetectionManager.detectExposures(
+            currentDate: currentDateProvider.currentDate,
+            sendFakeExposureWindows: {
+                trafficObfuscationClient.sendTraffic(for: .exposureWindow, randomRange: 2 ... 15, numberOfActualCalls: 0)
             }
-            .eraseToAnyPublisher()
+        )
+        .filterNil()
+        .map { riskInfo in
+            _ = exposureDetectionStore.saveIfNeeded(exposureRiskInfo: riskInfo)
+        }
+        .eraseToAnyPublisher()
     }
     
     private func detectExposuresV1(deferShouldShowDontWorryNotification: @escaping () -> Void) -> AnyPublisher<Void, Never> {
-        exposureDetectionManager.detectExposures(currentDate: currentDateProvider())
+        exposureDetectionManager.detectExposures(currentDate: currentDateProvider.currentDate, sendFakeExposureWindows: {})
             .filterNil()
             .map { riskInfo in
                 let riskHandled = exposureDetectionStore.saveIfNeeded(exposureRiskInfo: riskInfo)
@@ -131,7 +144,7 @@ class ExposureWindowAnalyticsHandler {
     @available(iOS 13.7, *)
     func post(windowInfo: [(ExposureNotificationExposureWindow, ExposureRiskInfo)], latestAppVersion: Version, postcode: String, client: HTTPClient) {
         windowInfo.forEach { window, riskInfo in
-            let endpoint = ExposureWindowEventEndpoint(riskInfo: riskInfo, latestAppVersion: latestAppVersion, postcode: postcode)
+            let endpoint = ExposureWindowEventEndpoint(riskInfo: riskInfo, latestAppVersion: latestAppVersion, postcode: postcode, hasPositiveTest: false)
             client.fetch(endpoint, with: window)
                 .ensureFinishes(placeholder: ())
                 .sink { _ in }

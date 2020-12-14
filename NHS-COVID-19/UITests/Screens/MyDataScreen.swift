@@ -26,11 +26,13 @@ struct MyDataScreen {
     }
     
     var editVenueHistoryButton: XCUIElement {
-        app.buttons.matching(identifier: localize(.mydata_venue_history_edit_button_title)).element(boundBy: 3)
+        #warning("This is currently referencing an `accessibilityIdentifier`. In future this should go away once they have different `accessibilityLabels`")
+        return app.buttons.matching(identifier: "venue_history_edit_button").firstMatch
     }
     
     var doneVenueHistoryButton: XCUIElement {
-        app.buttons[localized: .mydata_venue_history_done_button_title].firstMatch
+        #warning("This is currently referencing an `accessibilityIdentifier`. In future this should go away once they have different `accessibilityLabels`")
+        return app.buttons.matching(identifier: "venue_history_edit_button").firstMatch
     }
     
     var deleteDataButton: XCUIElement {
@@ -46,7 +48,8 @@ struct MyDataScreen {
     }
     
     var editPostcodeButton: XCUIElement {
-        app.buttons.matching(identifier: localize(.mydata_venue_history_edit_button_title)).element(boundBy: 2)
+        #warning("This is currently referencing an `accessibilityIdentifier`. In future this should go away once they have different `accessibilityLabels`")
+        return app.buttons.matching(identifier: "postcode_or_local_authority_edit_button").firstMatch
     }
     
     func testResult(testResult: String) -> XCUIElement {

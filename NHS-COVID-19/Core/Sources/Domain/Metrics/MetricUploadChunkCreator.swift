@@ -15,9 +15,9 @@ struct MetricUploadChunkCreator {
     private let collector: MetricCollector
     private let appInfo: AppInfo
     private let getPostcode: () -> String
-    private let currentDateProvider: () -> Date
+    private let currentDateProvider: DateProviding
     
-    init(collector: MetricCollector, appInfo: AppInfo, getPostcode: @escaping () -> String, currentDateProvider: @escaping () -> Date) {
+    init(collector: MetricCollector, appInfo: AppInfo, getPostcode: @escaping () -> String, currentDateProvider: DateProviding) {
         self.collector = collector
         self.appInfo = appInfo
         self.getPostcode = getPostcode
@@ -32,7 +32,7 @@ struct MetricUploadChunkCreator {
         
         let uploadInterval = uploadWindow.interval(on: earliestBeginDateUTC.day)
         
-        if uploadInterval.end > currentDateProvider() { return nil }
+        if uploadInterval.end > currentDateProvider.currentDate { return nil }
         
         let recordedMetrics = collector.consumeMetrics(for: uploadInterval)
         

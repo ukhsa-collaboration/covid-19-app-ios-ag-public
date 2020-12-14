@@ -11,13 +11,13 @@ import RiskScore
 class ExposureWindowRiskCalculator {
     private static let riskScoreVersion = 2
     private let infectiousnessFactorCalculator: ExposureWindowInfectiousnessFactorCalculator
-    private let dateProvider: () -> Date
+    private let dateProvider: DateProviding
     private let isolationLength: DayDuration
     private let submitExposureWindows: ([(ExposureNotificationExposureWindow, ExposureRiskInfo)]) -> Void
     
     init(
         infectiousnessFactorCalculator: ExposureWindowInfectiousnessFactorCalculator = ExposureWindowInfectiousnessFactorCalculator(),
-        dateProvider: @escaping () -> Date,
+        dateProvider: DateProviding,
         isolationLength: DayDuration,
         submitExposureWindows: @escaping ([(ExposureNotificationExposureWindow, ExposureRiskInfo)]) -> Void
     ) {
@@ -57,7 +57,7 @@ class ExposureWindowRiskCalculator {
     }
     
     private func isRecentDate(exposureRiskInfo: ExposureRiskInfo) -> Bool {
-        let today = GregorianDay(date: dateProvider(), timeZone: .utc)
+        let today = dateProvider.currentGregorianDay(timeZone: .utc)
         return today - isolationLength < exposureRiskInfo.day
     }
 }

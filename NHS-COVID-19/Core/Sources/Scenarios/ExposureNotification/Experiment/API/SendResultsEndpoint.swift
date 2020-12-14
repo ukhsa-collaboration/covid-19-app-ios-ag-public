@@ -21,3 +21,20 @@ struct SendResultsEndpoint: HTTPEndpoint {
     func parse(_ response: HTTPResponse) throws {}
     
 }
+
+struct SendResultsV2Endpoint: HTTPEndpoint {
+    
+    var team: String
+    var experimentId: String
+    var deviceName: String
+    
+    func request(for input: Experiment.DetectionResultsV2) throws -> HTTPRequest {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        let body = try encoder.encode(input)
+        return .post("/team/\(team)/experiment/\(experimentId)/result/\(deviceName)", body: .json(body))
+    }
+    
+    func parse(_ response: HTTPResponse) throws {}
+    
+}

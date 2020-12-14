@@ -10,8 +10,15 @@ struct InspectExperimentView: View {
     @ObservedObject
     var experimentInspector: ExperimentInspector
     
+    @ObservedObject
+    var experimentManager: ExperimentManager
+    
     var participants: [Experiment.Participant] {
         experimentInspector.experiment?.participants ?? []
+    }
+    
+    var participantsV2: [Experiment.ParticipantV2] {
+        experimentInspector.experimentV2?.participants ?? []
     }
     
     var body: some View {
@@ -36,13 +43,23 @@ struct InspectExperimentView: View {
                 AttributeRow(title: "Detection configurations", value: detectionConfigurationsValue)
             }
             Section(header: Text("Lead")) {
-                Text(experimentInspector.experiment?.lead.deviceName ?? "")
+                Text(self.getLeadName() ?? "")
             }
-            Section(header: Text("Participants (\(participants.count))")) {
-                ForEach(participants) { participant in
-                    AttributeRow(title: participant.deviceName, value: participant.resultsText)
+            
+            if experimentManager.usingEnApiVersion == 2 {
+                Section(header: Text("Participants (\(participantsV2.count))")) {
+                    ForEach(participantsV2) { participant in
+                        AttributeRow(title: participant.deviceName, value: self.getResultsText(results: participant.results))
+                    }
+                }
+            } else {
+                Section(header: Text("Participants (\(participants.count))")) {
+                    ForEach(participants) { participant in
+                        AttributeRow(title: participant.deviceName, value: self.getResultsText(results: participant.results))
+                    }
                 }
             }
+
             if experimentInspector.error != nil {
                 Section(header: Text("Error")) {
                     Text(verbatim: "\(self.experimentInspector.error!)")
@@ -69,11 +86,14 @@ struct InspectExperimentView: View {
         "\(experimentInspector.experiment?.requestedConfigurations.count ?? 0)"
     }
     
-}
+    private func getLeadName() -> String? {
+        if experimentManager.usingEnApiVersion == 2 {
+            return experimentInspector.experimentV2?.lead.deviceName
+        }
+        return experimentInspector.experiment?.lead.deviceName
+    }
 
-private extension Experiment.Participant {
-    
-    var resultsText: String {
+    private func getResultsText(results: [Any]?) -> String {
         let count = results?.count ?? 0
         switch count {
         case 0:
@@ -86,3 +106,5 @@ private extension Experiment.Participant {
     }
     
 }
+
+

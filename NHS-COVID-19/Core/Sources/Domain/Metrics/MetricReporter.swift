@@ -20,7 +20,7 @@ class MetricReporter: NSObject {
     init(
         client: HTTPClient,
         encryptedStore: EncryptedStoring,
-        currentDateProvider: @escaping () -> Date,
+        currentDateProvider: DateProviding,
         appInfo: AppInfo,
         getPostcode: @escaping () -> String
     ) {

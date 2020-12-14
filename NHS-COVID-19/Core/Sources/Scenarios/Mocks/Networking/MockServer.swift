@@ -30,6 +30,8 @@ class MockServer: HTTPClient {
             VirologyTestOrderHandler(dataProvider: dataProvider),
             VirologyTestResultsHandler(dataProvider: dataProvider),
             LinkVirologyTestResultHandler(dataProvider: dataProvider),
+            IsolationPaymentCreateHandler(),
+            IsolationPaymentUpdateHandler(),
         ]
     }
     

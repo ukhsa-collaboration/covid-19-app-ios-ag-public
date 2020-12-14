@@ -19,7 +19,7 @@ class DiagnosisKeyCacheHousekeeperTests: XCTestCase {
         cache = DiagnosisKeyCacheHousekeeper(
             fileStorage: fileStorage,
             exposureDetectionStore: exposureDetectionStore,
-            currentDateProvider: { self.currentDate }
+            currentDateProvider: MockDateProvider { self.currentDate }
         )
     }
     

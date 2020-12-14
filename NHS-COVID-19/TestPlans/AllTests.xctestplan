@@ -20,6 +20,7 @@
       }
     },
     {
+      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:NHS-COVID-19\/NHS-COVID-19.xcodeproj",
         "identifier" : "89AD485A2461A0B50013EC66",

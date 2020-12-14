@@ -69,6 +69,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     
     case home_diagnosis_button_title
     case home_testing_information_button_title
+    case home_financial_support_button_title
     case home_checkin_button_title
     case home_about_button_title
     case home_about_button_title_accessibility_label
@@ -309,6 +310,10 @@ public enum StringLocalizationKey: String, CaseIterable {
     case mydata_section_symptoms_description
     case mydata_section_encounter_description
     case mydata_section_date_description
+    case mydata_section_exposure_notification_description
+    case mydata_section_self_isolation_end_date_description
+    case mydata_exposure_notification_details_exposure_date_description
+    case mydata_exposure_notification_details_notification_date_description
     case mydata_test_result_positive
     case mydata_test_result_negative
     case mydata_test_result_void
@@ -395,11 +400,6 @@ public enum StringLocalizationKey: String, CaseIterable {
     case positive_test_result_start_to_isolate_info
     case positive_test_result_start_to_isolate_explaination
     
-    case isolation_payment_info_title
-    case isolation_payment_info_header
-    case isolation_payment_info_description
-    case isolation_payment_info_button
-    
     case dont_worry_notification_title
     case dont_worry_notification_body
     
@@ -426,6 +426,19 @@ public enum StringLocalizationKey: String, CaseIterable {
     case local_authority_unsupported_country_error_description
     
     case done
+    
+    case financial_support_title
+    case financial_support_description
+    case financial_support_help_england_link_description
+    case financial_support_help_england_link_title
+    case financial_support_help_wales_link_description
+    case financial_support_help_wales_link_title
+    case financial_support_check_eligibility
+    case financial_support_help_england_link
+    case financial_support_help_wales_link
+    case financial_support_privacy_notice_link
+    case financial_support_privacy_notice_description
+    case financial_support_privacy_notice_link_description
 }
 
 public enum ParameterisedStringLocalizable: Equatable {

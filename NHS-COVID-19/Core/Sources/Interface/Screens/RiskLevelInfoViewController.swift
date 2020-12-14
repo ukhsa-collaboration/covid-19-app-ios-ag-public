@@ -57,48 +57,61 @@ extension RiskLevelInfoViewController.Policy {
 }
 
 extension RiskLevelInfoViewController {
-    private class Content: PrimaryLinkButtonStickyFooterScrollingContent {
+    struct RiskLevelInfoContent {
         typealias Interacting = RiskLevelInfoInteracting
+        var views: [StackViewContentProvider]
         
         init(viewModel: ViewModel, interactor: Interacting) {
-            super.init(
-                scrollingViews: [
-                    UIImageView(image: viewModel.image).styleAsDecoration(),
-                    UILabel().set(text: viewModel.infoTitle).styleAsPageHeader(),
-                    viewModel.heading.map {
-                        UILabel().set(text: $0).styleAsTertiaryTitle()
-                    },
-                    viewModel.body.map {
-                        UILabel().set(text: $0).styleAsBody()
-                    },
-                    viewModel.policies.map { policy in
-                        WelcomePoint(
-                            image: policy.icon,
-                            header: policy.heading,
-                            body: policy.body
-                        )
-                    },
-                    viewModel.footer.map {
-                        UILabel().set(text: $0).styleAsBody()
-                    },
-                ],
-                primaryLinkButton: (
-                    title: viewModel.linkTitle,
-                    action: {
-                        guard let url = viewModel.linkURL else { return }
-                        interactor.didTapWebsiteLink(url: url)
-                    }
-                )
+            
+            let stackedViews: [StackViewContentProvider] = [
+                UIImageView(image: viewModel.image).styleAsDecoration(),
+                UILabel().set(text: viewModel.infoTitle).styleAsPageHeader(),
+                viewModel.heading.map {
+                    UILabel().set(text: $0).styleAsTertiaryTitle()
+                },
+                viewModel.body.map {
+                    UILabel().set(text: $0).styleAsBody()
+                },
+                viewModel.policies.map { policy in
+                    WelcomePoint(
+                        image: policy.icon,
+                        header: policy.heading,
+                        body: policy.body
+                    )
+                },
+                viewModel.footer.map {
+                    UILabel().set(text: $0).styleAsBody()
+                },
+            ]
+            
+            let contentStack = UIStackView(arrangedSubviews: stackedViews.flatMap { $0.content })
+            contentStack.axis = .vertical
+            contentStack.spacing = .standardSpacing
+            
+            let button = PrimaryLinkButton(
+                title: viewModel.linkTitle,
+                action: {
+                    guard let url = viewModel.linkURL else { return }
+                    interactor.didTapWebsiteLink(url: url)
+                }
             )
+            
+            let stackView = UIStackView(arrangedSubviews: [contentStack, button])
+            stackView.axis = .vertical
+            stackView.distribution = .equalSpacing
+            stackView.spacing = .standardSpacing
+            
+            views = [stackView]
         }
     }
 }
 
-public class RiskLevelInfoViewController: StickyFooterScrollingContentViewController {
+public class RiskLevelInfoViewController: ScrollingContentViewController {
     public typealias Interacting = RiskLevelInfoInteracting
     
     public init(viewModel: ViewModel, interactor: Interacting) {
-        super.init(content: Content(viewModel: viewModel, interactor: interactor))
+        let content = RiskLevelInfoContent(viewModel: viewModel, interactor: interactor)
+        super.init(views: content.views)
         
         navigationItem.title = localize(.risk_level_screen_title)
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: localize(.risk_level_screen_close_button), style: .done, target: self, action: #selector(didTapCancel))

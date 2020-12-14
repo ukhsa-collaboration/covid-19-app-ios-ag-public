@@ -33,15 +33,6 @@ extension Isolation {
         !isIndexCase
     }
     
-    var interestedInExposureNotifications: Bool {
-        switch reason {
-        case .bothCases, .contactCase:
-            return false
-        case .indexCase(let hasPositiveTestResult, _):
-            return !hasPositiveTestResult
-        }
-    }
-    
     public var isIndexCase: Bool {
         switch reason {
         case .indexCase, .bothCases:

@@ -4,6 +4,7 @@
 
 import Combine
 import Common
+import ExposureNotification
 import TestSupport
 import XCTest
 @testable import Domain
@@ -29,6 +30,8 @@ class AcceptanceTestCase: XCTestCase {
             var postcodeValidator = mutating(MockPostcodeValidator()) {
                 $0.validPostcodes = [Postcode("B44")]
             }
+            
+            var currentDateProvider = AcceptanceTestMockDateProvider()
         }
         
         var coordinator: ApplicationCoordinator
@@ -52,7 +55,7 @@ class AcceptanceTestCase: XCTestCase {
                 venueDecoder: QRCode.forTests,
                 appInfo: AppInfo(bundleId: .random(), version: "3.10", buildNumber: "1"),
                 postcodeValidator: configuration.postcodeValidator,
-                currentDateProvider: { Date() },
+                currentDateProvider: configuration.currentDateProvider,
                 storeReviewController: MockStoreReviewController()
             )
             
@@ -85,6 +88,14 @@ class AcceptanceTestCase: XCTestCase {
     
     var apiClient: MockHTTPClient {
         $instance.apiClient
+    }
+    
+    var distributeClient: MockHTTPClient {
+        $instance.distributeClient
+    }
+    
+    var currentDateProvider: AcceptanceTestMockDateProvider {
+        $instance.currentDateProvider
     }
     
     var coordinator: ApplicationCoordinator {
@@ -180,5 +191,12 @@ extension AcceptanceTestCase {
         exposureNotificationManager.exposureNotificationStatus = finalState
         exposureNotificationManager.exposureNotificationEnabled = true
         exposureNotificationManager.setExposureNotificationEnabledCompletionHandler?(nil)
+    }
+    
+    func context() throws -> RunningAppContext {
+        guard case .runningExposureNotification(let context) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        return context
     }
 }

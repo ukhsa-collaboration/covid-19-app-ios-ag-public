@@ -27,7 +27,7 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>other</key>
-				<string>设置提醒在 %ld 小时内重新打开接触追踪。</string>
+				<string>设置提醒在 %ld 小时内重新打开接触追踪</string>
 			</dict>
 		</dict>
 		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>

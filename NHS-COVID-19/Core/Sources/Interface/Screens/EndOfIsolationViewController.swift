@@ -22,7 +22,7 @@ private class EndOfIsolationContent: PrimaryButtonStickyFooterScrollingContent {
         }
     }
     
-    public init(interactor: Interacting, isolationEndDate: Date, isIndexCase: Bool, currentDateProvider: @escaping () -> Date) {
+    public init(interactor: Interacting, isolationEndDate: Date, isIndexCase: Bool, currentDateProvider: DateProviding) {
         super.init(
             scrollingViews: [
                 UIImageView(.isolationEnded).styleAsDecoration().isHidden(!isIndexCase),
@@ -32,7 +32,7 @@ private class EndOfIsolationContent: PrimaryButtonStickyFooterScrollingContent {
                     .styleAsPageHeader()
                     .centralized(),
                 UILabel()
-                    .set(text: Self.endOfIsolationLabelText(endDate: isolationEndDate, currentDate: currentDateProvider()))
+                    .set(text: Self.endOfIsolationLabelText(endDate: isolationEndDate, currentDate: currentDateProvider.currentDate))
                     .styleAsHeading()
                     .centralized(),
                 
@@ -55,7 +55,7 @@ private class EndOfIsolationContent: PrimaryButtonStickyFooterScrollingContent {
 public class EndOfIsolationViewController: StickyFooterScrollingContentViewController {
     public typealias Interacting = EndOfIsolationViewControllerInteracting
     
-    public init(interactor: Interacting, isolationEndDate: Date, isIndexCase: Bool, currentDateProvider: @escaping () -> Date) {
+    public init(interactor: Interacting, isolationEndDate: Date, isIndexCase: Bool, currentDateProvider: DateProviding) {
         super.init(content: EndOfIsolationContent(
             interactor: interactor,
             isolationEndDate: isolationEndDate,

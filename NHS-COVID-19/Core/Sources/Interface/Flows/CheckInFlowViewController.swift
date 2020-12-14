@@ -49,13 +49,13 @@ public class CheckInFlowViewController: UINavigationController {
     private var cancellables = [AnyCancellable]()
     
     private var checkInDetail: CheckInDetail!
-    private var currentDateProvider: () -> Date
+    private var currentDateProvider: DateProviding
     private let goHomeCompletion: () -> Void
     
     public init(cameraPermissionState: AnyPublisher<CameraPermissionState, Never>,
                 scanner: QRScanner,
                 interactor: Interacting,
-                currentDateProvider: @escaping () -> Date,
+                currentDateProvider: DateProviding,
                 goHomeCompletion: @escaping () -> Void) {
         self.cameraPermissionState = cameraPermissionState
         self.scanner = scanner
@@ -141,7 +141,7 @@ public class CheckInFlowViewController: UINavigationController {
             return CheckInConfirmationViewController(
                 interactor: self,
                 checkInDetail: checkInDetail,
-                date: currentDateProvider()
+                date: currentDateProvider.currentDate
             )
         }
     }

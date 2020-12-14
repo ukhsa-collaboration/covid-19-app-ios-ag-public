@@ -54,6 +54,7 @@ class SandboxEncryptedStore: EncryptedStoring {
         """.data(using: .utf8)!
         
         saveIsolationState()
+        saveIsolationPaymentState()
     }
     
     func saveIsolationState() {
@@ -113,6 +114,20 @@ class SandboxEncryptedStore: EncryptedStoring {
                         }
                     }
                 }
+            }
+            """# .data(using: .utf8)!
+        }
+    }
+    
+    func saveIsolationPaymentState() {
+        guard let isolationPaymentState = Sandbox.Text.IsolationPaymentState(rawValue: host.initialState.isolationPaymentState) else { return }
+        switch isolationPaymentState {
+        case .disabled: break
+        case .enabled:
+            stored["isolation_payment_store"] = #"""
+            {
+                "isEnabled" : true,
+                "ipcToken": "\#(UUID().uuidString)"
             }
             """# .data(using: .utf8)!
         }

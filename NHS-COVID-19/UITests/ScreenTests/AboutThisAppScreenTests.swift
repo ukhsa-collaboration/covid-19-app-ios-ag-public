@@ -91,7 +91,7 @@ class AboutThisAppScreenTests: XCTestCase {
         try runner.run { app in
             let screen = AboutThisAppScreen(app: app)
             screen.feedbackInformationButton.tap()
-            XCTAssertTrue(app.staticTexts[runner.scenario.provideFeedbackTaped].exists)
+            XCTAssertTrue(app.staticTexts[runner.scenario.provideFeedbackTapped].exists)
         }
     }
     

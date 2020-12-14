@@ -189,7 +189,8 @@ class AcknowledgementNeededStateTests: XCTestCase {
         testResultAckState: TestResultAcknowledgementState,
         riskyCheckInsAckState: RiskyCheckInsAcknowledgementState
     ) -> RunningAppContext {
-        RunningAppContext(
+        let currentDateProvider = MockDateProvider()
+        return RunningAppContext(
             checkInContext: nil,
             postcodeInfo: .constant(nil),
             country: Just(.england).eraseToAnyPublisher().domainProperty(),
@@ -203,13 +204,14 @@ class AcknowledgementNeededStateTests: XCTestCase {
             ),
             virologyTestingManager: MockVirologyTestingManager(),
             testResultAcknowledgementState: Result.success(testResultAckState).publisher.eraseToAnyPublisher(),
-            symptomsDateAndEncounterDateProvider: MockSymptomsOnsetDateAndEncounterDateProvider(),
+            symptomsOnsetAndExposureDetailsProvider: MockSymptomsOnsetDateAndExposureDetailsProvider(),
             deleteAllData: {},
             deleteCheckIn: { _ in },
             riskyCheckInsAcknowledgementState: Result.success(riskyCheckInsAckState).publisher.eraseToAnyPublisher(),
-            currentDateProvider: { Date() },
+            currentDateProvider: currentDateProvider,
             exposureNotificationReminder: ExposureNotificationReminder(),
-            appReviewPresenter: AppReviewPresenter(checkInsStore: nil, reviewController: MockStoreReviewController(), currentDateProvider: Date.init)
+            appReviewPresenter: AppReviewPresenter(checkInsStore: nil, reviewController: MockStoreReviewController(), currentDateProvider: currentDateProvider),
+            isolationPaymentState: .constant(.disabled)
         )
     }
     
@@ -223,14 +225,15 @@ class AcknowledgementNeededStateTests: XCTestCase {
         }
     }
     
-    private class MockSymptomsOnsetDateAndEncounterDateProvider: SymptomsOnsetDateAndEncounterDateProviding {
+    private class MockSymptomsOnsetDateAndExposureDetailsProvider: SymptomsOnsetDateAndExposureDetailsProviding {
         func provideSymptomsOnsetDate() -> Date? {
             nil
         }
         
-        func provideEncounterDate() -> Date? {
+        func provideExposureDetails() -> (encounterDate: Date, notificationDate: Date)? {
             nil
         }
+        
     }
 }
 
@@ -241,7 +244,7 @@ private extension ExposureNotificationReminder {
         self.init(
             userNotificationManager: manager,
             userNotificationStateController: controller,
-            currentDateProvider: { Date() },
+            currentDateProvider: MockDateProvider(),
             exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
         )
     }

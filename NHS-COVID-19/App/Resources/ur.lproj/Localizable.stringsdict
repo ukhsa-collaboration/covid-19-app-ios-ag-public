@@ -29,9 +29,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>رابطے کا پتہ لگانے کو Id% گھنٹے میں دوبارہ فعال کرنے کے لئے یاددہانی سیٹ کریں۔</string>
+				<string>رابطے کا پتہ لگانے کو Id% گھنٹے میں دوبارہ فعال کرنے کے لئے یاددہانی سیٹ کریں</string>
 				<key>other</key>
-				<string>رابطے کا سراغ لگانے کو Id% گھنٹوں میں دوبارہ فعال کرنے کے لئے یاددہانی سیٹ کریں۔</string>
+				<string>رابطے کا سراغ لگانے کو Id% گھنٹوں میں دوبارہ فعال کرنے کے لئے یاددہانی سیٹ کریں</string>
 			</dict>
 		</dict>
 		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>

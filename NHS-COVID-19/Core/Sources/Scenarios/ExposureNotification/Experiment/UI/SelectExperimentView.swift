@@ -63,7 +63,8 @@ struct SelectExperimentView: View {
             } else {
                 return AnyView(
                     InspectExperimentView(
-                        experimentInspector: sheet.experimentInspector
+                        experimentInspector: sheet.experimentInspector,
+                        experimentManager: self.experimentManager
                     )
                 )
             }

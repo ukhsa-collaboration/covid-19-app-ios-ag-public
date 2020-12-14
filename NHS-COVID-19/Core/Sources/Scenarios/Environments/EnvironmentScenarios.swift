@@ -36,20 +36,26 @@ class AssuranceFunctionalEnvironmentScenario: EnvironmentScenario {
     static var nameForSorting: String { "4" }
 }
 
+class PenTestEnvironmentScenario: EnvironmentScenario {
+    static let name = "Pen Test"
+    static let configuration = EnvironmentConfiguration.pentest
+    static var nameForSorting: String { "5" }
+}
+
 class DemoEnvironmentScenario: EnvironmentScenario {
     static let name = "Demo"
     static let configuration = EnvironmentConfiguration.demo
-    static var nameForSorting: String { "5" }
+    static var nameForSorting: String { "6" }
 }
 
 class StagingEnvironmentScenario: EnvironmentScenario {
     static let name = "Staging"
     static let configuration = EnvironmentConfiguration.staging
-    static var nameForSorting: String { "6" }
+    static var nameForSorting: String { "7" }
 }
 
 class ProductionEnvironmentScenario: EnvironmentScenario {
     static let name = "Production"
     static let configuration = EnvironmentConfiguration.production
-    static var nameForSorting: String { "7" }
+    static var nameForSorting: String { "8" }
 }

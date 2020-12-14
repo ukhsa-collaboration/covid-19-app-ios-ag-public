@@ -13,6 +13,6 @@ class ProductionAppDelegate: BaseAppDelegate {
     }
     
     override func makeLogHandler(label: String) -> LogHandler {
-        NoOpLogHandler()
+        SwiftLogNoOpLogHandler()
     }
 }

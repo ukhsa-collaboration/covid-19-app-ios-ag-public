@@ -256,7 +256,7 @@ extension CoordinatedAppController {
         
         let isolationViewModel = RiskLevelIndicator.ViewModel(
             isolationState: context.isolationState
-                .mapToInterface(with: .default)
+                .mapToInterface(with: context.currentDateProvider)
                 .property(initialValue: .notIsolating),
             paused: context.exposureNotificationStateController.isEnabledPublisher.map { !$0 }.property(initialValue: false)
         )
@@ -279,6 +279,13 @@ extension CoordinatedAppController {
         
         let userNotificationEnabled = context.exposureNotificationReminder.isNotificationAuthorized.property(initialValue: false)
         
+        let showFinancialSupportButton = context.isolationPaymentState.map { isolationPaymentState -> Bool in
+            switch isolationPaymentState {
+            case .disabled: return false
+            case .enabled: return true
+            }
+        }.interfaceProperty
+        
         let country = context.country.property(initialValue: context.country.currentValue)
         
         return HomeFlowViewController(
@@ -289,6 +296,7 @@ extension CoordinatedAppController {
             showOrderTestButton: showOrderTestButton,
             shouldShowSelfDiagnosis: shouldShowSelfDiagnosis,
             userNotificationsEnabled: userNotificationEnabled,
+            showFinancialSupportButton: showFinancialSupportButton,
             country: country
         )
     }

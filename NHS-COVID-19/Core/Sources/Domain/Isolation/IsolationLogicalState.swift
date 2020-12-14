@@ -214,11 +214,19 @@ enum IsolationLogicalState: Equatable {
                 positiveTestResult = hasPositiveTestResult
                 selfDiagnosed = hasSelfDiagnosed
             }
-            _isolation = _Isolation(
-                fromDay: min(c.fromDay, i.fromDay),
-                untilStartOfDay: max(c.untilStartOfDay, i.untilStartOfDay),
-                reason: .bothCases(hasPositiveTestResult: positiveTestResult, isSelfDiagnosed: selfDiagnosed)
-            )
+            
+            if i.untilStartOfDay <= today.gregorianDay && c.untilStartOfDay > today.gregorianDay {
+                _isolation = c
+            } else if c.untilStartOfDay <= today.gregorianDay && i.untilStartOfDay > today.gregorianDay {
+                _isolation = i
+            } else {
+                _isolation = _Isolation(
+                    fromDay: min(c.fromDay, i.fromDay),
+                    untilStartOfDay: max(c.untilStartOfDay, i.untilStartOfDay),
+                    reason: .bothCases(hasPositiveTestResult: positiveTestResult, isSelfDiagnosed: selfDiagnosed)
+                )
+            }
+            
         case (.some(let s), nil), (nil, .some(let s)):
             _isolation = s
         case (nil, nil):
@@ -261,6 +269,37 @@ enum IsolationLogicalState: Equatable {
         )
     }
     
+    var activeIsolation: Isolation? {
+        switch self {
+        case .notIsolating:
+            return nil
+        case .isolating(let isolation, _, _):
+            return isolation
+        case .isolationFinishedButNotAcknowledged:
+            return nil
+        }
+    }
+    
+    var isInCorrectIsolationStateToApplyForFinancialSupport: Bool {
+        guard let activeIsolation = activeIsolation else { return false }
+        switch activeIsolation.reason {
+        case .indexCase: return false
+        case .contactCase: return true
+        case .bothCases(let hasPositiveTestResult, _):
+            return !hasPositiveTestResult
+        }
+    }
+    
+    var interestedInExposureNotifications: Bool {
+        guard let activeIsolation = activeIsolation else { return true }
+        switch activeIsolation.reason {
+        case .bothCases, .contactCase:
+            return false
+        case .indexCase(let hasPositiveTestResult, _):
+            return !hasPositiveTestResult
+        }
+    }
+    
     var isolation: Isolation? {
         switch self {
         case .notIsolating(let finishedIsolationThatWeHaveNotDeletedYet):
@@ -294,7 +333,8 @@ enum IsolationLogicalState: Equatable {
     }
 }
 
-private struct _Isolation {
+#warning("Consider a longer term solution that avoids making this type public")
+struct _Isolation {
     var fromDay: GregorianDay
     var untilStartOfDay: GregorianDay
     var reason: Isolation.Reason
@@ -342,7 +382,7 @@ extension _Isolation {
     }
     
     /// Assuming `IndexCaseInfo` is `nil`
-    fileprivate init?(contactCaseInfo: ContactCaseInfo, configuration: IsolationConfiguration) {
+    init(contactCaseInfo: ContactCaseInfo, configuration: IsolationConfiguration) {
         self.init(
             fromDay: contactCaseInfo.isolationFromStartOfDay,
             untilStartOfDay: contactCaseInfo.exposureDay + configuration.contactCase,

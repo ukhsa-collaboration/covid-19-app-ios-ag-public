@@ -55,6 +55,7 @@ extension HomeScreenScenario {
                 showOrderTestButton: .constant(showOrderTestButton),
                 shouldShowSelfDiagnosis: .constant(shouldShowSelfDiagnosis),
                 userNotificationsEnabled: .constant(false),
+                showFinancialSupportButton: .constant(true),
                 country: .constant(.england)
             )
         }
@@ -91,6 +92,7 @@ public class HomeScreenAlerts {
     public static let isolationAdviceAlertTitle = "Read isolation advice button tapped."
     public static let checkInAlertTitle = "Check-in into a venue."
     public static let testingInformationAlertTitle = "Testing information button tapped"
+    public static let financeAlertTitle = "Financial Support button tapped"
     public static let exposureNotificationAlertTitle = "Exposure notifications toggled"
     public static let aboutAlertTitle = "About tapped"
     public static let linkTestResultTitle = "Link test result tapped"
@@ -137,6 +139,10 @@ private class Interactor: HomeViewController.Interacting {
     
     func didTapTestingInformationButton() {
         viewController?.showAlert(title: HomeScreenAlerts.testingInformationAlertTitle)
+    }
+    
+    func didTapFinancialSupportButton() {
+        viewController?.showAlert(title: HomeScreenAlerts.financeAlertTitle)
     }
     
     func didTapAboutButton() {

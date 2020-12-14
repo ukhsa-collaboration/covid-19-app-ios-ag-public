@@ -29,9 +29,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>%ld ঘন্টা পরে কন্ট্যাক্ট ট্রেসিং আবার অন করে দেওয়ার উদ্দেশ্যে মনে করার ব্যবস্থা চালু করে দেবেন।</string>
+				<string>%ld ঘন্টা পরে কন্ট্যাক্ট ট্রেসিং আবার অন করে দেওয়ার উদ্দেশ্যে মনে করার ব্যবস্থা চালু করে দেবেন</string>
 				<key>other</key>
-				<string>%ld ঘন্টা পরে কন্ট্যাক্ট ট্রেসিং আবার অন করে দেওয়ার উদ্দেশ্যে মনে করার ব্যবস্থা চালু করে দেবেন।</string>
+				<string>%ld ঘন্টা পরে কন্ট্যাক্ট ট্রেসিং আবার অন করে দেওয়ার উদ্দেশ্যে মনে করার ব্যবস্থা চালু করে দেবেন</string>
 			</dict>
 		</dict>
 		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>

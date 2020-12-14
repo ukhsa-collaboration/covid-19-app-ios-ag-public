@@ -15,10 +15,10 @@ class MetricCollectorTests: XCTestCase {
     
     override func setUp() {
         store = MockEncryptedStore()
-        
-        collector = MetricCollector(encryptedStore: store) { [weak self] in
+        let currentDateProvider = MockDateProvider { [weak self] in
             self!.date
         }
+        collector = MetricCollector(encryptedStore: store, currentDateProvider: currentDateProvider)
     }
     
     func testStoringMetrics() {

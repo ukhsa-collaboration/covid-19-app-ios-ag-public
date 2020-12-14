@@ -30,4 +30,8 @@ class MockCircuitBreakerClient: CircuitBreakingClient {
             return Optional.Publisher(resolutionResponse).setFailureType(to: Error.self).eraseToAnyPublisher()
         }
     }
+    
+    func sendObfuscatedTraffic(for type: TrafficObfuscator) -> AnyPublisher<Void, Never> {
+        return Optional.Publisher(()).eraseToAnyPublisher()
+    }
 }

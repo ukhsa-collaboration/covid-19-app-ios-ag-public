@@ -3,18 +3,19 @@
 //
 
 import Combine
+import Common
 import Foundation
 
 public class ExposureNotificationReminder {
     private var userNotificationManager: UserNotificationManaging
     private var userNotificationStateController: UserNotificationsStateController
-    private var currentDateProvider: () -> Date
+    private var currentDateProvider: DateProviding
     private var cancellable: AnyCancellable
     
     init(
         userNotificationManager: UserNotificationManaging,
         userNotificationStateController: UserNotificationsStateController,
-        currentDateProvider: @escaping () -> Date,
+        currentDateProvider: DateProviding,
         exposureNotificationEnabled: AnyPublisher<Bool, Never>
     ) {
         self.userNotificationManager = userNotificationManager
@@ -35,7 +36,7 @@ public class ExposureNotificationReminder {
     }
     
     public func scheduleUserNotification(in hours: Int) {
-        let date = currentDateProvider()
+        let date = currentDateProvider.currentDate
         let calendar = Calendar.current
         if let newDate = calendar.date(byAdding: DateComponents(hour: hours), to: date) {
             let dateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)

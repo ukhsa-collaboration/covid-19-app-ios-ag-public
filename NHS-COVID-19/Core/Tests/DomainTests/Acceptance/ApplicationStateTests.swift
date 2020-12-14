@@ -12,8 +12,6 @@ import XCTest
 
 class ApplicationStateTests: AcceptanceTestCase {
     
-    private var cancellabes = [AnyCancellable]()
-    
     // MARK: - Exposure Notification Activation state
     
     func testEnteringErrorStateIfActivationFails() throws {

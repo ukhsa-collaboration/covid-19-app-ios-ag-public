@@ -14,9 +14,9 @@ public class BookATestInfoScreenScenario: Scenario {
     public static let bookATestTapped: String = "Book a test now tapped"
     public static let cancelTapped: String = "Cancel tapped"
     
-    public static let appPrivacyNoticeTaped: String = "App Privacy Notice link taped"
-    public static let testingPrivacyNoticeTaped: String = "Testing Privacy Notice link taped"
-    public static let bookTestForSomeoneElseTaped: String = "Book test for someone else link taped"
+    public static let appPrivacyNoticeTapped: String = "App Privacy Notice link tapped"
+    public static let testingPrivacyNoticeTapped: String = "Testing Privacy Notice link tapped"
+    public static let bookTestForSomeoneElseTapped: String = "Book test for someone else link tapped"
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
@@ -28,15 +28,15 @@ public class BookATestInfoScreenScenario: Scenario {
 
 private class Interactor: BookATestInfoViewController.Interacting {
     func didTapTestingPrivacyNotice() {
-        viewController?.showAlert(title: BookATestInfoScreenScenario.testingPrivacyNoticeTaped)
+        viewController?.showAlert(title: BookATestInfoScreenScenario.testingPrivacyNoticeTapped)
     }
     
     func didTapAppPrivacyNotice() {
-        viewController?.showAlert(title: BookATestInfoScreenScenario.appPrivacyNoticeTaped)
+        viewController?.showAlert(title: BookATestInfoScreenScenario.appPrivacyNoticeTapped)
     }
     
     func didTapBookATestForSomeoneElse() {
-        viewController?.showAlert(title: BookATestInfoScreenScenario.bookTestForSomeoneElseTaped)
+        viewController?.showAlert(title: BookATestInfoScreenScenario.bookTestForSomeoneElseTapped)
     }
     
     private weak var viewController: UIViewController?

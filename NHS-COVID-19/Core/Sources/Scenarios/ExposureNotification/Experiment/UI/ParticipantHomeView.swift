@@ -47,6 +47,7 @@ struct ParticipantHomeView: View {
         NavigationView {
             VStack(spacing: 16) {
                 Text(experimentNameTitle)
+                Text("Using EN API version: \(experimentManager.usingEnApiVersion)")
                 PrimaryButton(title: "View current experiment") {
                     self.sheet = .inspectExperiment(ExperimentInspector(manager: self.experimentManager))
                 }
@@ -76,7 +77,8 @@ struct ParticipantHomeView: View {
             } else {
                 return AnyView(
                     InspectExperimentView(
-                        experimentInspector: sheet.experimentInspector!
+                        experimentInspector: sheet.experimentInspector!,
+                        experimentManager: self.experimentManager
                     )
                 )
             }
@@ -122,10 +124,18 @@ struct ParticipantHomeView: View {
             if experimentManager.isProcessingResults {
                 return experimentManager.endAutomaticDetection()
             } else {
+                if #available(iOS 13.7, *), experimentManager.usingEnApiVersion == 2 {
+                    return experimentManager.startAutomaticDetectionV2()
+                }
                 return experimentManager.startAutomaticDetection()
             }
         } else {
-            experimentManager.processResults()
+            if #available(iOS 13.7, *), experimentManager.usingEnApiVersion == 2 {
+                experimentManager.processResultsV2()
+            } else {
+                // Fallback on earlier versions
+                experimentManager.processResults()
+            }
         }
     }
     

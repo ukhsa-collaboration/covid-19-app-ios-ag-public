@@ -24,7 +24,18 @@ struct Experiment: Codable {
         }
     }
     
+    struct ParticipantV2: Codable, Identifiable {
+        var deviceName: String
+        var temporaryTracingKeys: [Key]
+        var results: [DetectionResultsV2]?
+        
+        var id: String {
+            deviceName
+        }
+    }
+    
     struct Create: Codable {
+        var usedExposureNotificationApiVersion: String
         var experimentCreatedAt = Date()
         var experimentName: String
         var automaticDetectionFrequency: TimeInterval?
@@ -34,6 +45,7 @@ struct Experiment: Codable {
     
     typealias Summary = ExperimentResultsPayload.Summary
     typealias ExposureInfo = ExperimentResultsPayload.ExposureInfo
+    typealias ExposureWindow = ExperimentResultsPayload.ExposureWindow
     
     struct DetectionResult: Codable {
         var deviceName: String
@@ -45,6 +57,16 @@ struct Experiment: Codable {
         var timestamp: Date
         var configuration: DetectionConfiguration
         var counterparts: [DetectionResult]
+    }
+    
+    struct DetectionResultsV2: Codable {
+        var timestamp: Date
+        var counterparts: [DetectionResultV2]
+    }
+    
+    struct DetectionResultV2: Codable {
+        var deviceName: String
+        var exposureWindows: [ExposureWindow]
     }
     
     struct DetectionConfiguration: Codable {
@@ -71,7 +93,15 @@ struct Experiment: Codable {
     var automaticDetectionFrequency: TimeInterval?
     var requestedConfigurations: [RequestedConfiguration]
     var participants: [Participant]
-    
+
+    struct ExperimentV2: Codable {
+        var experimentName: String
+        var experimentId: String
+        var lead: Participant
+        var automaticDetectionFrequency: TimeInterval?
+        var requestedConfigurations: [RequestedConfiguration]
+        var participants: [ParticipantV2]
+    }
 }
 
 extension Experiment.DetectionConfiguration {

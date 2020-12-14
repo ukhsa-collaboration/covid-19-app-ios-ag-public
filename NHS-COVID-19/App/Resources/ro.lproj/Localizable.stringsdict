@@ -31,11 +31,11 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Setarea memento-ului pentru a reactiva urmărirea contactului în %ld oră.</string>
+				<string>Setarea memento-ului pentru a reactiva urmărirea contactului în %ld oră</string>
 				<key>few</key>
-				<string>Setarea memento-ului pentru a reactiva urmărirea contactului în %ld ore.</string>
+				<string>Setarea memento-ului pentru a reactiva urmărirea contactului în %ld ore</string>
 				<key>other</key>
-				<string>Setarea memento-ului pentru a reactiva urmărirea contactului în %ld ore.</string>
+				<string>Setarea memento-ului pentru a reactiva urmărirea contactului în %ld ore</string>
 			</dict>
 		</dict>
 		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>
@@ -121,11 +121,11 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Zi rămasă</string>
+				<string>zi rămasă</string>
 				<key>few</key>
-				<string>Zile rămase</string>
+				<string>zile rămase</string>
 				<key>other</key>
-				<string>Zile rămase</string>
+				<string>zile rămase</string>
 			</dict>
 		</dict>
 		<key>exposure_acknowledgement_days %ld</key>

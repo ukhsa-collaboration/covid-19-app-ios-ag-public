@@ -60,7 +60,7 @@ class CircuitBreaker {
     
     func processExposureNotificationApproval() -> AnyPublisher<Void, Never> {
         guard let riskInfo = exposureInfoProvider.exposureInfo?.riskInfo else {
-            return Empty().eraseToAnyPublisher()
+            return client.sendObfuscatedTraffic(for: .circuitBreaker).eraseToAnyPublisher()
         }
         
         guard interestedInExposureNotifications() else {
@@ -69,14 +69,14 @@ class CircuitBreaker {
                 showDontWorryNotificationIfNeeded = false
             }
             exposureInfoProvider.exposureInfo = nil
-            return Empty().eraseToAnyPublisher()
+            return client.sendObfuscatedTraffic(for: .circuitBreaker).eraseToAnyPublisher()
         }
         
         let existingToken = exposureInfoProvider.exposureInfo?.approvalToken
         return getCircuitBreakerResolution(for: .exposureNotification(riskInfo), existingToken: existingToken)
-            .handleEvents(receiveOutput: { [weak self] resoltion in
+            .handleEvents(receiveOutput: { [weak self] resolution in
                 guard let self = self else { return }
-                if resoltion == .proceed {
+                if resolution == .proceed {
                     self.handleContactCase(riskInfo)
                 } else if self.showDontWorryNotificationIfNeeded {
                     self.handleDontWorryNotification()
@@ -84,7 +84,7 @@ class CircuitBreaker {
                 
                 self.showDontWorryNotificationIfNeeded = false
                 
-                switch resoltion {
+                switch resolution {
                 case .proceed, .ignore:
                     self.exposureInfoProvider.exposureInfo = nil
                 case .askAgain(let token):
@@ -116,10 +116,10 @@ class CircuitBreaker {
     
     private func processRiskyVenueApproval(with venueId: String) -> AnyPublisher<Void, Never> {
         let token = riskyCheckinsProvider.riskApprovalTokens[venueId]
-        return getCircuitBreakerResolution(for: .riskyVenue(venueId), existingToken: token)
-            .handleEvents(receiveOutput: { [weak self] resoltion in
+        return getCircuitBreakerResolution(for: .riskyVenue, existingToken: token)
+            .handleEvents(receiveOutput: { [weak self] resolution in
                 guard let self = self else { return }
-                switch resoltion {
+                switch resolution {
                 case .proceed:
                     self.riskyCheckinsProvider.riskApprovalTokens[venueId] = nil
                     self.riskyCheckinsProvider.set(.yes, for: venueId)

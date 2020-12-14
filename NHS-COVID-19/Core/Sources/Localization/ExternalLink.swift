@@ -20,6 +20,9 @@ public enum ExternalLink {
     case howThisAppWorks
     case provideFeedback
     case visitUKgov
+    case financialSupportEngland
+    case financialSupportWales
+    case financialSupportPrivacyNotice
     
     public var url: URL {
         switch self {
@@ -53,6 +56,12 @@ public enum ExternalLink {
             return localizeURL(.link_exposure_faq)
         case .visitUKgov:
             return localizeURL(.link_visit_uk_gov)
+        case .financialSupportEngland:
+            return localizeURL(.financial_support_help_england_link)
+        case .financialSupportWales:
+            return localizeURL(.financial_support_help_wales_link)
+        case .financialSupportPrivacyNotice:
+            return localizeURL(.financial_support_privacy_notice_link)
         }
     }
 }

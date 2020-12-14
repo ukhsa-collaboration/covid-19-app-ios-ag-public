@@ -26,7 +26,9 @@ struct CreateExperimentView: View {
                         TextInputRow(title: "Team", text: $experimentManager.teamName)
                         TextInputRow(title: "Experiment", text: $experimentName)
                         Toggle("Run detection periodically", isOn: $experimentCreator.isPeriodicDetectionEnabled)
-                        Toggle("Detect with multiple configs", isOn: $experimentCreator.isMultiConfigurationEnabled)
+                        if experimentManager.usingEnApiVersion == 1 {
+                            Toggle("Detect with multiple configs", isOn: $experimentCreator.isMultiConfigurationEnabled)
+                        }
                     }
                 }
                 .listStyle(GroupedListStyle())

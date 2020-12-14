@@ -50,7 +50,19 @@ public class MyDataViewController: UITableViewController {
         var testData: (result: TestResult, date: Date)?
         var venueHistories: [VenueHistory]
         var symptomsOnsetDate: Date?
-        var encounterDate: Date?
+        var exposureNotificationDetails: ExposureNotificationDetails?
+        var selfIsolationEndDate: Date?
+        
+        public struct ExposureNotificationDetails {
+            let encounterDate: Date
+            let notificationDate: Date
+            
+            public init(encounterDate: Date,
+                        notificationDate: Date) {
+                self.encounterDate = encounterDate
+                self.notificationDate = notificationDate
+            }
+        }
         
         public init(
             postcode: InterfaceProperty<String?>,
@@ -58,14 +70,16 @@ public class MyDataViewController: UITableViewController {
             testData: (TestResult, Date)?,
             venueHistories: [VenueHistory],
             symptomsOnsetDate: Date?,
-            encounterDate: Date?
+            exposureNotificationDetails: ExposureNotificationDetails?,
+            selfIsolationEndDate: Date?
         ) {
             _postcode = postcode
             _localAuthority = localAuthority
             self.testData = testData
             self.venueHistories = venueHistories
             self.symptomsOnsetDate = symptomsOnsetDate
-            self.encounterDate = encounterDate
+            self.exposureNotificationDetails = exposureNotificationDetails
+            self.selfIsolationEndDate = selfIsolationEndDate
         }
     }
     
@@ -84,6 +98,8 @@ public class MyDataViewController: UITableViewController {
         case venueHistory(VenueHistory)
         case symptomsOnsetDate(Date)
         case encounterDate(Date)
+        case notificationDate(Date)
+        case lastDayOfSelfIsolation(Date)
     }
     
     private struct Section {
@@ -111,10 +127,22 @@ public class MyDataViewController: UITableViewController {
             )
         }
         
-        let encounterDate: Section? = viewModel.encounterDate.map {
+        let exposureNotificationSection: Section? = viewModel.exposureNotificationDetails.map {
             Section(
-                header: .basic(title: localize(.mydata_section_encounter_description)),
-                rows: [.encounterDate($0)]
+                header: .basic(title: localize(.mydata_section_exposure_notification_description)),
+                rows: [
+                    .encounterDate($0.encounterDate),
+                    .notificationDate($0.notificationDate),
+                ]
+            )
+        }
+        
+        let lastDayOfSelfIsolationSection: Section? = viewModel.selfIsolationEndDate.map {
+            Section(
+                header: .basic(title: localize(.mydata_section_self_isolation_end_date_description)),
+                rows: [
+                    .lastDayOfSelfIsolation($0),
+                ]
             )
         }
         
@@ -130,7 +158,7 @@ public class MyDataViewController: UITableViewController {
             rows: viewModel.venueHistories.map { .venueHistory($0) }
         )
         
-        return [postCodeSection, testResultSection, symptomsOnsetSection, encounterDate, venueHistories].compactMap { $0 }
+        return [postCodeSection, testResultSection, symptomsOnsetSection, exposureNotificationSection, lastDayOfSelfIsolationSection, venueHistories].compactMap { $0 }
     }
     
     private var cancellable: AnyCancellable?
@@ -171,10 +199,24 @@ public class MyDataViewController: UITableViewController {
             cell = PostcodeCell.create(tableView: tableView, postcode: postcode, localAuthority: localAuthority)
         case .testResult(let result, let date):
             cell = DateCell.create(tableView: tableView, title: result.description, date: date)
-        case .symptomsOnsetDate(let date), .encounterDate(let date):
+        case .symptomsOnsetDate(let date):
             cell = DateCell.create(tableView: tableView, title: localize(.mydata_section_date_description), date: date)
         case .venueHistory(let venueHistory):
             cell = VenueHistoryCell.create(tableView: tableView, venueHistory: venueHistory)
+        case .lastDayOfSelfIsolation(let date):
+            #warning("Find a safer day of doing this")
+            // We should show the last day of isolation, not the first day after isolation, hence the going backward.
+            // From a date calculation point of view this is correct, however this is somewhat error prone, so would be
+            // better to resolve this in a different way.
+            //
+            // One possible solution is to send a `GregorianDay` to this field instead of a `Date` so we can specify
+            // the actual "day isolation ends" instead of "moment isolation ends".
+            let justBeforeEndOfIsolation = date.advanced(by: -1)
+            cell = DateCell.create(tableView: tableView, title: localize(.mydata_section_date_description), date: justBeforeEndOfIsolation)
+        case .encounterDate(let date):
+            cell = DateCell.create(tableView: tableView, title: localize(.mydata_exposure_notification_details_exposure_date_description), date: date)
+        case .notificationDate(let date):
+            cell = DateCell.create(tableView: tableView, title: localize(.mydata_exposure_notification_details_notification_date_description), date: date)
         }
         
         // Trigger a layout pass to prevent incorrect cell content layout
@@ -276,7 +318,7 @@ public class MyDataViewController: UITableViewController {
             switch content[indexPath.section].rows[indexPath.row] {
             case .venueHistory(let venueHistory):
                 deleteRow(for: venueHistory, at: indexPath)
-            case .postcode, .testResult, .symptomsOnsetDate, .encounterDate:
+            case .postcode, .testResult, .symptomsOnsetDate, .encounterDate, .notificationDate, .lastDayOfSelfIsolation:
                 break
             }
         }

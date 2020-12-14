@@ -15,12 +15,13 @@ class MetricUploadChunkCreatorTests: XCTestCase {
     
     override func setUp() {
         currentDate = Date()
-        collector = MetricCollector(encryptedStore: MockEncryptedStore(), currentDateProvider: { self.currentDate })
+        let currentDateProvider = MockDateProvider { self.currentDate }
+        collector = MetricCollector(encryptedStore: MockEncryptedStore(), currentDateProvider: currentDateProvider)
         creator = MetricUploadChunkCreator(
             collector: collector,
             appInfo: AppInfo(bundleId: .random(), version: Self.appVersion, buildNumber: "1"),
             getPostcode: { String.random() },
-            currentDateProvider: { self.currentDate }
+            currentDateProvider: currentDateProvider
         )
     }
     

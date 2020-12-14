@@ -52,15 +52,3 @@ extension LocalDay {
     }
     
 }
-
-extension NotificationCenter {
-    
-    public var today: AnyPublisher<LocalDay, Never> {
-        publisher(for: UIApplication.significantTimeChangeNotification)
-            .map { _ in LocalDay.today }
-            .prepend(.today)
-            .removeDuplicates()
-            .eraseToAnyPublisher()
-    }
-    
-}

@@ -15,7 +15,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     }
     
     var context: RunningAppContext
-    var currentDateProvider: () -> Date
+    var currentDateProvider: DateProviding
     
     func makeLocalAuthorityOnboardingIteractor() -> LocalAuthorityFlowViewController.Interacting? {
         guard let getLocalAuthorities = context.getLocalAuthorities, let storeLocalAuthorities = context.storeLocalAuthorities else {
@@ -44,7 +44,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         let interactor = CheckInInteractor(
             _openSettings: context.openSettings,
             _process: {
-                let (venueName, removeCurrentCheckIn) = try checkInContext.checkInsStore.checkIn(with: $0, currentDate: self.context.currentDateProvider())
+                let (venueName, removeCurrentCheckIn) = try checkInContext.checkInsStore.checkIn(with: $0, currentDate: self.context.currentDateProvider.currentDate)
                 return CheckInDetail(venueName: venueName, removeCurrentCheckIn: removeCurrentCheckIn)
             }
         )
@@ -110,6 +110,14 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         }
     }
     
+    func makeFinancialSupportViewController() -> UIViewController? {
+        switch context.isolationPaymentState.currentValue {
+        case .disabled: return nil
+        case .enabled(let apply):
+            return IsolationPaymentFlowViewController(openURL: context.openURL, didTapCheckEligibility: apply)
+        }
+    }
+    
     func makeLinkTestResultViewController() -> UIViewController? {
         let interactor = LinkTestResultInteractor(
             _submit: { testCode in
@@ -150,8 +158,18 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             (Interface.TestResult(domainTestResult: $0.result), $0.receivedOnDay.startDate(in: .current))
         }
         
-        let symptomsOnsetDate = context.symptomsDateAndEncounterDateProvider.provideSymptomsOnsetDate()
-        let encounterDate = context.symptomsDateAndEncounterDateProvider.provideEncounterDate()
+        let symptomsOnsetDate = context.symptomsOnsetAndExposureDetailsProvider.provideSymptomsOnsetDate()
+        let exposureDetails = context.symptomsOnsetAndExposureDetailsProvider.provideExposureDetails()
+        
+        // TODO: We may want to pass this through as an interface property or similar rather than computing its instantaneous value here.
+        let selfIsolationEndDate = { () -> Date? in
+            switch context.isolationState.currentValue {
+            case .isolate(let isolation):
+                return isolation.endDate
+            case .noNeedToIsolate:
+                return nil
+            }
+        }()
         
         return .init(
             postcode: context.postcodeInfo.map { $0?.postcode.value }.interfaceProperty,
@@ -159,7 +177,13 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             testData: testResult,
             venueHistories: venueHistories,
             symptomsOnsetDate: symptomsOnsetDate,
-            encounterDate: encounterDate
+            exposureNotificationDetails: exposureDetails.map { details in
+                MyDataViewController.ViewModel.ExposureNotificationDetails(
+                    encounterDate: details.encounterDate,
+                    notificationDate: details.notificationDate
+                )
+            },
+            selfIsolationEndDate: selfIsolationEndDate
         )
     }
     

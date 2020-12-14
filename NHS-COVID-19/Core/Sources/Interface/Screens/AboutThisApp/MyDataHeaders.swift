@@ -58,7 +58,11 @@ extension MyDataViewController {
         
         static func create(tableView: UITableView, title: String, action: @escaping () -> Void, isEditing: InterfaceProperty<Bool>) -> MyDataViewController.VenueHistorySectionHeader {
             let dequeued = tableView.dequeueReusableHeaderFooterView(withIdentifier: EditableSectionHeader.reuseIdentifier) as? VenueHistorySectionHeader
-            return (dequeued ?? VenueHistorySectionHeader()).setting(title: title, action: action, isEditing: isEditing)
+            let header = (dequeued ?? VenueHistorySectionHeader()).setting(title: title, action: action, isEditing: isEditing)
+            
+            header.button.accessibilityIdentifier = "venue_history_edit_button"
+            #warning("This is a hack to account for two 'Edit' buttons with the same label. For accessibility it would be better for both buttons to have a different (accessibility) label")
+            return header
         }
         
         required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -113,7 +117,11 @@ extension MyDataViewController {
         
         static func create(tableView: UITableView, title: String, action: @escaping () -> Void) -> MyDataViewController.EditableSectionHeader {
             let dequeued = tableView.dequeueReusableHeaderFooterView(withIdentifier: EditableSectionHeader.reuseIdentifier) as? EditableSectionHeader
-            return (dequeued ?? EditableSectionHeader()).setting(title: title, action: action)
+            let header = (dequeued ?? EditableSectionHeader()).setting(title: title, action: action)
+            
+            header.button.accessibilityIdentifier = "postcode_or_local_authority_edit_button"
+            #warning("This is a hack to account for two 'Edit' buttons with the same label. For accessibility it would be better for both buttons to have a different (accessibility) label")
+            return header
         }
         
         required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }

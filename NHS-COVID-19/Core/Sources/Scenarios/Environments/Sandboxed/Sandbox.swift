@@ -43,6 +43,11 @@ public enum Sandbox {
             case contact
         }
         
+        public enum IsolationPaymentState: String {
+            case enabled
+            case disabled
+        }
+        
         public static let validQRCode = "UKC19TRACING:1:eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjMifQ.eyJpZCI6IjRXVDU5TTVZIiwib3BuIjoiR292ZXJubWVudCBPZmZpY2UgT2YgSHVtYW4gUmVzb3VyY2VzIn0.ZIvwm9rxiRTm4o-koafL6Bzre9pakcyae8m6_MSyvAl-CFkUgfm6gcXYn4gg5OScKZ1-XayHBGwEdps0RKXs4g"
     }
     
@@ -94,6 +99,9 @@ public enum Sandbox {
         
         @TestInjected("sandbox.localAuthorityId")
         public var localAuthorityId: String?
+        
+        @TestInjected("sandbox.isolationPaymentState", defaultValue: Text.IsolationPaymentState.disabled.rawValue)
+        public var isolationPaymentState: String
         
         public func set(testResultEndDate: Date) throws {
             let data = try JSONEncoder().encode(testResultEndDate)

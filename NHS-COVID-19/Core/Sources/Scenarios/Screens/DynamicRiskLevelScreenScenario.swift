@@ -52,8 +52,8 @@ public class DynamicRiskLevelScreenScenario: Scenario {
         "[Placeholder] Policy Content 9",
     ]
     
-    public static let linkButtonTaped = "Link to website taped"
-    public static let cancelTaped = "Cancel taped"
+    public static let linkButtonTapped = "Link to website tapped"
+    public static let cancelTapped = "Cancel tapped"
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
@@ -90,11 +90,11 @@ private class Interactor: RiskLevelInfoViewController.Interacting {
     }
     
     func didTapWebsiteLink(url: URL) {
-        viewController?.showAlert(title: DynamicRiskLevelScreenScenario.linkButtonTaped)
+        viewController?.showAlert(title: DynamicRiskLevelScreenScenario.linkButtonTapped)
     }
     
     func didTapCancel() {
-        viewController?.showAlert(title: DynamicRiskLevelScreenScenario.cancelTaped)
+        viewController?.showAlert(title: DynamicRiskLevelScreenScenario.cancelTapped)
     }
     
 }

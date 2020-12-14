@@ -62,10 +62,10 @@ class IsolationStateManager {
 
 extension IsolationStateManager {
     
-    convenience init(stateStore: IsolationStateStore, notificationCenter: NotificationCenter) {
+    convenience init(stateStore: IsolationStateStore, currentDateProvider: DateProviding) {
         self.init(
             isolationStateInfo: stateStore.$isolationStateInfo,
-            day: notificationCenter.today,
+            day: currentDateProvider.today,
             calculateState: IsolationLogicalState.init
         )
     }

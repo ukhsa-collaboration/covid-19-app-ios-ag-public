@@ -26,7 +26,7 @@ class ExposureNotificationReminderTests: XCTestCase {
         let reminder = ExposureNotificationReminder(
             userNotificationManager: notificationManager,
             userNotificationStateController: notificationStateController,
-            currentDateProvider: { Date() },
+            currentDateProvider: MockDateProvider(),
             exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
         )
         
@@ -42,7 +42,7 @@ class ExposureNotificationReminderTests: XCTestCase {
         let reminder = ExposureNotificationReminder(
             userNotificationManager: notificationManager,
             userNotificationStateController: notificationStateController,
-            currentDateProvider: { Date() },
+            currentDateProvider: MockDateProvider(),
             exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
         )
         
@@ -58,7 +58,7 @@ class ExposureNotificationReminderTests: XCTestCase {
         let reminder = ExposureNotificationReminder(
             userNotificationManager: notificationManager,
             userNotificationStateController: notificationStateController,
-            currentDateProvider: { Date() },
+            currentDateProvider: MockDateProvider(),
             exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
         )
         
@@ -73,7 +73,7 @@ class ExposureNotificationReminderTests: XCTestCase {
         let reminder = ExposureNotificationReminder(
             userNotificationManager: notificationManager,
             userNotificationStateController: notificationStateController,
-            currentDateProvider: { currentDate },
+            currentDateProvider: MockDateProvider { currentDate },
             exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
         )
         
@@ -94,7 +94,7 @@ class ExposureNotificationReminderTests: XCTestCase {
         let reminder = ExposureNotificationReminder(
             userNotificationManager: notificationManager,
             userNotificationStateController: notificationStateController,
-            currentDateProvider: { currentDate },
+            currentDateProvider: MockDateProvider { currentDate },
             exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
         )
         
@@ -115,7 +115,7 @@ class ExposureNotificationReminderTests: XCTestCase {
         let reminder = ExposureNotificationReminder(
             userNotificationManager: notificationManager,
             userNotificationStateController: notificationStateController,
-            currentDateProvider: { currentDate },
+            currentDateProvider: MockDateProvider { currentDate },
             exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
         )
         
@@ -136,7 +136,7 @@ class ExposureNotificationReminderTests: XCTestCase {
         let reminder = ExposureNotificationReminder(
             userNotificationManager: notificationManager,
             userNotificationStateController: notificationStateController,
-            currentDateProvider: { currentDate },
+            currentDateProvider: MockDateProvider { currentDate },
             exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
         )
         
@@ -159,7 +159,7 @@ class ExposureNotificationReminderTests: XCTestCase {
         let reminder = ExposureNotificationReminder(
             userNotificationManager: notificationManager,
             userNotificationStateController: notificationStateController,
-            currentDateProvider: { currentDate },
+            currentDateProvider: MockDateProvider { currentDate },
             exposureNotificationEnabled: exposureNotificationEnabled.eraseToAnyPublisher()
         )
         
