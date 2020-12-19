@@ -30,6 +30,8 @@ enum Metric: String, CaseIterable {
     case receivedVoidTestResultViaPolling
     case receivedPositiveTestResultViaPolling
     case receivedNegativeTestResultViaPolling
+    case receivedRiskyContactNotification
+    case startedIsolation
     
     var name: StaticString {
         switch self {
@@ -58,6 +60,8 @@ enum Metric: String, CaseIterable {
         case .isolatedForSelfDiagnosedBackgroundTick: return "isolatedForSelfDiagnosedBackgroundTick"
         case .isolatedForTestedPositiveBackgroundTick: return "isolatedForTestedPositiveBackgroundTick"
         case .isolatedForHadRiskyContactBackgroundTick: return "isolatedForHadRiskyContactBackgroundTick"
+        case .receivedRiskyContactNotification: return "receivedRiskyContactNotification"
+        case .startedIsolation: return "startedIsolation"
         }
     }
     

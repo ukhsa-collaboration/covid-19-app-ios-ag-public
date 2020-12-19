@@ -17,7 +17,7 @@ struct PositiveSymptomsScreen {
         app.staticTexts[localized: .positive_symptoms_you_might_have_corona]
     }
     
-    var explanationLabel: XCUIElement {
+    var explanationLabel: [XCUIElement] {
         app.staticTexts[localized: .positive_symptoms_explanation]
     }
     

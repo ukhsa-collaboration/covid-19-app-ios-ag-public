@@ -21,7 +21,7 @@ struct IsolationConfiguration: Codable, Equatable {
     var indexCaseSinceSelfDiagnosisOnset: DayDuration
     var indexCaseSinceSelfDiagnosisUnknownOnset: DayDuration
     var housekeepingDeletionPeriod: DayDuration
-    var indexCaseSinceNPEXDayNoSelfDiagnosis: DayDuration = 10
+    var indexCaseSinceNPEXDayNoSelfDiagnosis: DayDuration
     
     private enum CodingKeys: String, CodingKey {
         case maxIsolation
@@ -29,6 +29,24 @@ struct IsolationConfiguration: Codable, Equatable {
         case indexCaseSinceSelfDiagnosisOnset
         case indexCaseSinceSelfDiagnosisUnknownOnset
         case housekeepingDeletionPeriod
+        case indexCaseSinceNPEXDayNoSelfDiagnosis
+    }
+}
+
+extension IsolationConfiguration {
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        maxIsolation = try container.decode(DayDuration.self, forKey: .maxIsolation)
+        contactCase = try container.decode(DayDuration.self, forKey: .contactCase)
+        indexCaseSinceSelfDiagnosisOnset = try container.decode(DayDuration.self, forKey: .indexCaseSinceSelfDiagnosisOnset)
+        indexCaseSinceSelfDiagnosisUnknownOnset = try container.decode(DayDuration.self, forKey: .indexCaseSinceSelfDiagnosisUnknownOnset)
+        housekeepingDeletionPeriod = try container.decode(DayDuration.self, forKey: .housekeepingDeletionPeriod)
+        
+        // value of the "10" is the historical default value before we were persisting this field.
+        indexCaseSinceNPEXDayNoSelfDiagnosis = try container.decodeIfPresent(DayDuration.self, forKey: .indexCaseSinceNPEXDayNoSelfDiagnosis) ?? 10
+        
     }
     
     static let `default` = IsolationConfiguration(
@@ -36,7 +54,8 @@ struct IsolationConfiguration: Codable, Equatable {
         contactCase: 14,
         indexCaseSinceSelfDiagnosisOnset: 10,
         indexCaseSinceSelfDiagnosisUnknownOnset: 8,
-        housekeepingDeletionPeriod: 14
+        housekeepingDeletionPeriod: 14,
+        indexCaseSinceNPEXDayNoSelfDiagnosis: 11
     )
 }
 

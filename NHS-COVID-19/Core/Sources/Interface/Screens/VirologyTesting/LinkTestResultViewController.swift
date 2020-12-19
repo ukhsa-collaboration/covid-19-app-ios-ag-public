@@ -80,6 +80,7 @@ public class LinkTestResultViewController: UIViewController {
         textField.enablesReturnKeyAutomatically = true
         textField.addTarget(self, action: #selector(valueChanged), for: .editingChanged)
         textField.rightView = spinner
+        textField.autocapitalizationType = .none
         NSLayoutConstraint.activate([textField.heightAnchor.constraint(greaterThanOrEqualToConstant: .hitAreaMinHeight)])
         return textField
     }()
@@ -146,7 +147,7 @@ public class LinkTestResultViewController: UIViewController {
         let keyboardIndicatingView = UIView()
         keyboardIndicatingView.isHidden = true
         view.addAutolayoutSubview(keyboardIndicatingView)
-
+        
         let footerStack = UIStackView(arrangedSubviews: [submitButton])
         footerStack.axis = .vertical
         footerStack.spacing = .standardSpacing

@@ -12,7 +12,15 @@ class IsolationStateManager {
     private var cancellable: AnyCancellable?
     
     @Published
-    var state: IsolationLogicalState = .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil)
+    var state: IsolationLogicalState {
+        didSet {
+            if state.isIsolating, !oldValue.isIsolating {
+                Metrics.signpost(.startedIsolation)
+            }
+        }
+    }
+    
+    var isolationLogicalState: DomainProperty<IsolationLogicalState>
     
     init<InfoPublisher: Publisher, TodayPublisher: Publisher>(
         isolationStateInfo: InfoPublisher,
@@ -21,8 +29,10 @@ class IsolationStateManager {
     ) where
         InfoPublisher.Output == IsolationStateInfo?, InfoPublisher.Failure == Never,
         TodayPublisher.Output == LocalDay, TodayPublisher.Failure == Never {
-        cancellable = isolationStateInfo.combineLatest(day)
-            .map(calculateState)
+        isolationLogicalState = isolationStateInfo.combineLatest(day)
+            .map(calculateState).domainProperty()
+        state = isolationLogicalState.currentValue
+        cancellable = isolationLogicalState
             .sink { [weak self] state in
                 self?.state = state
             }

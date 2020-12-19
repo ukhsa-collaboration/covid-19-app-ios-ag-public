@@ -40,9 +40,9 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
         assert(\.hasTestedPositiveBackgroundTick).isPresent()
         assert(\.isIsolatingForTestedPositiveBackgroundTick).isPresent()
         
-        // Dates: 4th-12th Jan -> Analytics packets for: 3rd-11th Jan
+        // Dates: 4th-13th Jan -> Analytics packets for: 3rd-12th Jan
         // Still in isolation
-        for _ in 4 ... 12 {
+        for _ in 4 ... 13 {
             advanceToEndOfAnalyticsWindow()
             
             assert(\.receivedPositiveTestResult).isNotPresent()
@@ -52,9 +52,9 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             assert(\.hasTestedPositiveBackgroundTick).isPresent()
         }
         
-        // Dates: 13th-26th Jan -> Analytics packets for: 12th-25th Jan
+        // Dates: 13th-27th Jan -> Analytics packets for: 12th-26th Jan
         // Isolation is over, but isolation reason still stored for 14 days
-        for _ in 13 ... 26 {
+        for _ in 14 ... 27 {
             advanceToEndOfAnalyticsWindow()
             
             assert(\.isIsolatingBackgroundTick).isNotPresent()

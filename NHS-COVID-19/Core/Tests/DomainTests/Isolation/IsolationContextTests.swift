@@ -28,7 +28,8 @@ class IsolationContextTests: XCTestCase {
                     contactCase: 14,
                     indexCaseSinceSelfDiagnosisOnset: 8,
                     indexCaseSinceSelfDiagnosisUnknownOnset: 9,
-                    housekeepingDeletionPeriod: 14
+                    housekeepingDeletionPeriod: 14,
+                    indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis
                 )
             ),
             encryptedStore: MockEncryptedStore(),

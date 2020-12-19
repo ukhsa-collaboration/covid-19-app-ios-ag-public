@@ -40,7 +40,7 @@ class VoidTestResultFlowTests: XCTestCase {
             }
             let voidTestResultScreen = VoidTestResultNoIsolationScreen(app: app)
             
-            XCTAssertTrue(voidTestResultScreen.explanationLabel.exists)
+            XCTAssertTrue(voidTestResultScreen.explanationLabel.allExist)
             
             voidTestResultScreen.continueButton.tap()
             
@@ -85,7 +85,7 @@ class VoidTestResultFlowTests: XCTestCase {
             }
             let voidTestResultScreen = VoidTestResultWithIsolationScreen(app: app)
             
-            XCTAssertTrue(voidTestResultScreen.explanationLabel.exists)
+            XCTAssertTrue(voidTestResultScreen.explanationLabel.allExist)
             
             voidTestResultScreen.continueButton.tap()
             

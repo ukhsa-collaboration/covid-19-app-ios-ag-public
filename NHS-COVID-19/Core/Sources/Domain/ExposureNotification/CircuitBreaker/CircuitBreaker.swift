@@ -78,6 +78,7 @@ class CircuitBreaker {
                 guard let self = self else { return }
                 if resolution == .proceed {
                     self.handleContactCase(riskInfo)
+                    Metrics.signpost(.receivedRiskyContactNotification)
                 } else if self.showDontWorryNotificationIfNeeded {
                     self.handleDontWorryNotification()
                 }

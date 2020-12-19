@@ -35,7 +35,7 @@ class IsolationPaymentFlowTests: XCTestCase {
         try runner.run { app in
             
             let homeScreen = HomeScreen(app: app)
-            XCTAssert(homeScreen.financeButton.exists)
+            app.checkOnHomeScreen(with: homeScreen.financeButton)
             
             runner.step("Home screen") {
                 """

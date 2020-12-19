@@ -63,7 +63,7 @@ class ExposureWindowStoreTests: XCTestCase {
     
     func testAppendFirstTimeToNilCollection() throws {
         XCTAssertNil(exposureWindowStore.load())
-        exposureWindowStore.append(
+        exposureWindowStore.append([
             ExposureWindowInfo(
                 date: GregorianDay(year: 2020, month: 7, day: 11),
                 infectiousness: .high,
@@ -76,8 +76,8 @@ class ExposureWindowStoreTests: XCTestCase {
                 ],
                 riskScore: 131.44555790888523,
                 riskCalculationVersion: 2
-            )
-        )
+            ),
+        ])
         let exposureWindowInfo = try XCTUnwrap(exposureWindowStore.load())
         let exposureWindowsInfoCollection = ExposureWindowInfoCollection(
             exposureWindowsInfo: [
@@ -119,7 +119,7 @@ class ExposureWindowStoreTests: XCTestCase {
             }]
         }
         """.data(using: .utf8)
-        exposureWindowStore.append(
+        exposureWindowStore.append([
             ExposureWindowInfo(
                 date: GregorianDay(year: 2020, month: 7, day: 11),
                 infectiousness: .high,
@@ -132,8 +132,8 @@ class ExposureWindowStoreTests: XCTestCase {
                 ],
                 riskScore: 131.44555790888523,
                 riskCalculationVersion: 2
-            )
-        )
+            ),
+        ])
         let exposureWindowInfo = try XCTUnwrap(exposureWindowStore.load())
         let exposureWindowsInfoCollection = ExposureWindowInfoCollection(
             exposureWindowsInfo: [

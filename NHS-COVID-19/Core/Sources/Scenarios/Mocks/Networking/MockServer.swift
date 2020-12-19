@@ -5,8 +5,11 @@
 import Combine
 import Common
 import Foundation
+import Logging
 
 class MockServer: HTTPClient {
+    
+    private static let logger = Logger(label: "MockServer")
     
     private let queue = DispatchQueue(label: "MockServer")
     
@@ -45,12 +48,23 @@ class MockServer: HTTPClient {
     func _perform(_ request: HTTPRequest) -> AnyPublisher<HTTPResponse, HTTPRequestError> {
         requestCount += 1
         
+        Self.logger.debug("starting request", metadata: .describing(request))
+        
         if let handler = handlers.first(where: { $0.hasResponse(for: request.path) }) {
-            return handler.response.publisher.eraseToAnyPublisher()
+            return handler.response.publisher
+                .handleEvents()
+                .log(into: Self.logger, level: .debug, "ending request- \(request.path)")
+                .eraseToAnyPublisher()
         }
         
         let error = HTTPRequestError.rejectedRequest(underlyingError: TestError())
-        return Result.failure(error).publisher.eraseToAnyPublisher()
+        return Result.failure(error).publisher
+            .handleEvents(
+                receiveCompletion: { _ in
+                    Self.logger.debug("ending request with error, no response implemented - \(request.path)")
+                }
+            )
+            .eraseToAnyPublisher()
     }
 }
 

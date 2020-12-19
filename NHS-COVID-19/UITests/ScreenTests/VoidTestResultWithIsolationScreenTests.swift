@@ -15,7 +15,7 @@ class VoidTestResultWithIsolationScreenTests: XCTestCase {
             let screen = VoidTestResultWithIsolationScreen(app: app)
             XCTAssert(screen.daysIsolateLabel(daysRemaining: runner.scenario.daysToIsolate).exists)
             XCTAssert(screen.indicationLabel.exists)
-            XCTAssert(screen.explanationLabel.exists)
+            XCTAssert(screen.explanationLabel.allExist)
             XCTAssert(screen.onlineServicesLink.exists)
             XCTAssert(screen.continueButton.exists)
         }

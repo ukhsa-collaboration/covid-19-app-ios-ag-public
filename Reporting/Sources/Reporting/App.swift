@@ -15,6 +15,10 @@ struct App {
     
     static let knownAssets: [Asset] = [
         .strings("Localizable"),
+        .stringsdict("Localizable"),
+        .strings("InfoPlist"),
         .bundle("Settings"),
+        .bundle("Core_Domain"),
+        .content(name: "PostalDistricts", suffix: "json"),
     ]
 }

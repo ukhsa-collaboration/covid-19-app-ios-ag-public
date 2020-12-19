@@ -37,7 +37,8 @@ class IsolationConfigurationEndpointTests: XCTestCase {
             contactCase: 3,
             indexCaseSinceSelfDiagnosisOnset: 1,
             indexCaseSinceSelfDiagnosisUnknownOnset: 2,
-            housekeepingDeletionPeriod: 14
+            housekeepingDeletionPeriod: 14,
+            indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis
         )
         
         TS.assert(try endpoint.parse(response), equals: expected)
@@ -62,7 +63,8 @@ class IsolationConfigurationEndpointTests: XCTestCase {
             contactCase: 3,
             indexCaseSinceSelfDiagnosisOnset: 1,
             indexCaseSinceSelfDiagnosisUnknownOnset: 2,
-            housekeepingDeletionPeriod: 9
+            housekeepingDeletionPeriod: 9,
+            indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis
         )
         
         TS.assert(try endpoint.parse(response), equals: expected)

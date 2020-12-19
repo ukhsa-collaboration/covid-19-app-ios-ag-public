@@ -79,6 +79,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case home_toggle_exposure_notification_off
     case home_default_advice_button_title
     case home_isolation_advice_button_title
+    case home_settings_button_title
     
     case risk_level_indicator_contact_tracing_active
     case risk_level_indicator_contact_tracing_not_active

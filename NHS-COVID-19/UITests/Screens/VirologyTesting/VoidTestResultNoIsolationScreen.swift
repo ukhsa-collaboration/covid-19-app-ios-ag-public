@@ -17,7 +17,7 @@ struct VoidTestResultNoIsolationScreen {
         app.staticTexts[localized: .end_of_isolation_isolate_if_have_symptom_warning]
     }
     
-    var explanationLabel: XCUIElement {
+    var explanationLabel: [XCUIElement] {
         app.staticTexts[localized: .end_of_isolation_further_advice_visit]
     }
     

@@ -19,6 +19,10 @@ struct ExposureNotificationContext {
     var exposureWindowStore: ExposureWindowStore?
     var trafficObfuscationClient: TrafficObfuscationClient
     
+    var isWaitingForApproval: Bool {
+        exposureDetectionStore.exposureInfo?.approvalToken != nil
+    }
+    
     init(
         services: ApplicationServices,
         isolationLength: DayDuration,
@@ -31,27 +35,31 @@ struct ExposureNotificationContext {
         exposureDetectionStore = ExposureDetectionStore(store: services.encryptedStore)
         let controller = ExposureNotificationDetectionController(manager: services.exposureNotificationManager)
         
-        let trafficObfuscationClient = TrafficObfuscationClient(client: services.apiClient)
-        self.trafficObfuscationClient = trafficObfuscationClient
+        self.trafficObfuscationClient = TrafficObfuscationClient(client: services.apiClient)
+        let trafficObfuscationClient = self.trafficObfuscationClient
         
         let exposureRiskManager: ExposureRiskManaging
         if #available(iOS 13.7, *) {
-            let exposureWindowAnalyticsHandler = ExposureWindowAnalyticsHandler()
+            let exposureWindowAnalyticsHandler = ExposureWindowAnalyticsHandler(latestAppVersion: services.appInfo.version, getPostcode: getPostcode, client: services.apiClient)
             self.exposureWindowAnalyticsHandler = exposureWindowAnalyticsHandler
             
+            let exposureWindowStore = ExposureWindowStore(store: services.encryptedStore)
+            self.exposureWindowStore = exposureWindowStore
             exposureRiskManager = ExposureWindowRiskManager(
                 controller: controller,
                 riskCalculator: ExposureWindowRiskCalculator(
                     dateProvider: services.currentDateProvider,
                     isolationLength: isolationLength,
                     submitExposureWindows: { windowInfo in
-                        let postcode = getPostcode()?.value ?? ""
-                        exposureWindowAnalyticsHandler.post(windowInfo: windowInfo, latestAppVersion: services.appInfo.version, postcode: postcode, client: services.apiClient)
-                        trafficObfuscationClient.sendTraffic(for: TrafficObfuscator.exposureWindow, randomRange: 2 ... 15, numberOfActualCalls: windowInfo.count)
+                        let infos = windowInfo.map {
+                            ExposureWindowInfo(exposureWindow: $0.0, riskInfo: $0.1)
+                        }
+                        exposureWindowAnalyticsHandler.post(windowInfo: infos, hasPositiveTest: false)
+                        trafficObfuscationClient.sendTraffic(for: TrafficObfuscator.exposureWindow, randomRange: 2 ... 15, numberOfActualCalls: infos.count)
+                        exposureWindowStore.append(infos)
                     }
                 )
             )
-            exposureWindowStore = ExposureWindowStore(store: services.encryptedStore)
         } else {
             exposureWindowAnalyticsHandler = nil
             exposureRiskManager = ExposureRiskManager(controller: controller)
@@ -90,12 +98,35 @@ struct ExposureNotificationContext {
     }
     
     func detectExposures(deferShouldShowDontWorryNotification: @escaping () -> Void) -> AnyPublisher<Void, Never> {
-        diagnosisKeyCacheHouskeeper.deleteFilesOlderThanADay()
+        return diagnosisKeyCacheHouskeeper.deleteFilesOlderThanADay()
             .append(
                 _detectExposures(deferShouldShowDontWorryNotification: deferShouldShowDontWorryNotification)
             )
             .append(Deferred(createPublisher: diagnosisKeyCacheHouskeeper.deleteNotNeededFiles))
             .eraseToAnyPublisher()
+    }
+    
+    func deleteExposureWindows() {
+        guard let exposureWindowStore = exposureWindowStore else {
+            return
+        }
+        
+        exposureWindowStore.delete()
+    }
+    
+    func postExposureWindows(result: TestResult) {
+        guard #available(iOS 13.7, *),
+            let exposureWindowStore = exposureWindowStore,
+            let exposureWindowAnalyticsHandler = exposureWindowAnalyticsHandler else { return }
+        
+        let exposureWindowInfoCollection = exposureWindowStore.load()
+        
+        if let exposureWindowInfoCollection = exposureWindowInfoCollection, result == .positive {
+            exposureWindowAnalyticsHandler.post(windowInfo: exposureWindowInfoCollection.exposureWindowsInfo, hasPositiveTest: true)
+            trafficObfuscationClient.sendTraffic(for: .exposureWindowAfterPositive, randomRange: 2 ... 15, numberOfActualCalls: exposureWindowInfoCollection.exposureWindowsInfo.count)
+        } else {
+            trafficObfuscationClient.sendTraffic(for: .exposureWindowAfterPositive, randomRange: 2 ... 15, numberOfActualCalls: 0)
+        }
     }
     
     private func _detectExposures(deferShouldShowDontWorryNotification: @escaping () -> Void) -> AnyPublisher<Void, Never> {
@@ -138,17 +169,29 @@ struct ExposureNotificationContext {
 }
 
 class ExposureWindowAnalyticsHandler {
+    private var latestAppVersion: Version
+    private var getPostcode: () -> Postcode?
+    private var client: HTTPClient
     
     var cancellables = [AnyCancellable]()
     
+    init(latestAppVersion: Version, getPostcode: @escaping () -> Postcode?, client: HTTPClient) {
+        self.latestAppVersion = latestAppVersion
+        self.getPostcode = getPostcode
+        self.client = client
+    }
+    
     @available(iOS 13.7, *)
-    func post(windowInfo: [(ExposureNotificationExposureWindow, ExposureRiskInfo)], latestAppVersion: Version, postcode: String, client: HTTPClient) {
-        windowInfo.forEach { window, riskInfo in
-            let endpoint = ExposureWindowEventEndpoint(riskInfo: riskInfo, latestAppVersion: latestAppVersion, postcode: postcode, hasPositiveTest: false)
-            client.fetch(endpoint, with: window)
+    func post(windowInfo: [ExposureWindowInfo], hasPositiveTest: Bool) {
+        let postcode = getPostcode()?.value ?? ""
+        
+        windowInfo.forEach { exposureWindowInfo in
+            let endpoint = ExposureWindowEventEndpoint(latestAppVersion: latestAppVersion, postcode: postcode, hasPositiveTest: hasPositiveTest)
+            client.fetch(endpoint, with: exposureWindowInfo)
                 .ensureFinishes(placeholder: ())
                 .sink { _ in }
                 .store(in: &cancellables)
         }
     }
+    
 }

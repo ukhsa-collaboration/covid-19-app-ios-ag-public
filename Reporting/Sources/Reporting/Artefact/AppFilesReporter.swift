@@ -50,7 +50,6 @@ struct AppFilesReporter {
             IntegrityCheck(name: "Has launch storyboard", result: context.checkHasLaunchStoryboard()),
             IntegrityCheck(name: "Has the required common files", result: context.checkHasRequiredFiles()),
             IntegrityCheck(name: "Has bundle executable", result: context.checkHasBundleExecutable()),
-            IntegrityCheck(name: "Embeds Swift frameworks", result: context.checkEmbedsSwiftFrameworks()),
             IntegrityCheck(name: "All files are known", result: context.checkHasNoUnexptectedFilesLeft()),
         ])
     }
@@ -218,12 +217,6 @@ extension FileReporterContext {
         return .passed
     }
     
-    mutating func checkEmbedsSwiftFrameworks() -> IntegrityCheck.Result {
-        checkHasFiles(for: "Expected to find swift `dylib`s.") {
-            $0.hasPrefix("Frameworks/libswift") && $0.hasSuffix(".dylib")
-        }
-    }
-    
     mutating func findEmbeddedFrameworks() -> [String] {
         let frameworkNames = unaccountedFilePaths
             .filter {
@@ -271,16 +264,14 @@ extension FileReporterContext {
     
     private mutating func check(for asset: Asset) -> Bool {
         switch asset {
-        case .storyboard(let name):
-            return checkForStoryboard(named: name)
-        case .nib(let name):
-            return checkForLocalizableFile(named: name, suffix: "nib", isFolder: true)
         case .bundle(let name):
             return checkForLocalizableFile(named: name, suffix: "bundle", isFolder: true)
         case .strings(let name):
             return checkForLocalizableFile(named: name, suffix: "strings")
-        case .plist(let name):
-            return checkForFile(named: name, suffix: "plist")
+        case .stringsdict(let name):
+            return checkForLocalizableFile(named: name, suffix: "stringsdict")
+        case .content(let name, let suffix):
+            return checkForFile(named: name, suffix: suffix)
         }
     }
     
@@ -297,24 +288,28 @@ extension FileReporterContext {
     
     private mutating func checkForLocalizableFile(named name: String, suffix: String, isFolder: Bool = false) -> Bool {
         let fileName = "\(name).\(suffix)"
-        guard let localizedFileName = localizedFile(named: fileName) else {
+        let localizedFileNames = localizedFiles(named: fileName)
+        guard !localizedFileNames.isEmpty else {
             return false
         }
         
-        unaccountedFilePaths.remove(localizedFileName)
-        if isFolder {
-            let localizedFolderName = "\(localizedFileName)/"
-            unaccountedFilePaths = unaccountedFilePaths.filter {
-                !$0.hasPrefix(localizedFolderName)
+        localizedFileNames.forEach { localizedFileName in
+            unaccountedFilePaths.remove(localizedFileName)
+            
+            if isFolder {
+                let localizedFolderName = "\(localizedFileName)/"
+                unaccountedFilePaths = unaccountedFilePaths.filter {
+                    !$0.hasPrefix(localizedFolderName)
+                }
             }
         }
         
         return true
     }
     
-    private func localizedFile(named name: String) -> String? {
+    private func localizedFiles(named name: String) -> [String] {
         let pattern = "\\w+.lproj/\(name)"
-        return filesByPathInBundle.keys.first { file in
+        return filesByPathInBundle.keys.filter { file in
             if file == name { return true }
             return file.matches(pattern)
         }

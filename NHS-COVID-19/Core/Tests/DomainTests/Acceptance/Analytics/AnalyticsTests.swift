@@ -155,6 +155,8 @@ struct SubmissionPayload: Codable {
         var receivedVoidTestResultViaPolling = 0
         var receivedPositiveTestResultViaPolling = 0
         var receivedNegativeTestResultViaPolling = 0
+        var receivedRiskyContactNotification = 0
+        var startedIsolation = 0
         
         // How many times background tasks ran
         var totalBackgroundTasks = 0

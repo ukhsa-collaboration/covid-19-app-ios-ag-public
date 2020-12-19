@@ -16,7 +16,7 @@ class PositiveSymptomsScreenTests: XCTestCase {
             
             XCTAssert(screen.pleaseIsolateLabel.exists)
             XCTAssert(screen.indicationLabel.exists)
-            XCTAssert(screen.explanationLabel.exists)
+            XCTAssert(screen.explanationLabel.allExist)
             XCTAssert(screen.bookTestButton.exists)
             XCTAssert(screen.furtherAdviceButton.exists)
             XCTAssert(screen.exposureFAQLink.exists)

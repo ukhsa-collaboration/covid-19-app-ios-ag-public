@@ -18,12 +18,14 @@ class IsolationStateManagerTests: XCTestCase {
         var isolationState = IsolationLogicalState.isolating(Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)), endAcknowledged: false, startAcknowledged: false)
     }
     
-    private let stateInfoSubject = PassthroughSubject<IsolationStateInfo?, Never>()
-    private let daySubject = PassthroughSubject<LocalDay, Never>()
+    
     private let day = LocalDay(
         gregorianDay: GregorianDay(year: 2020, month: 3, day: 17),
         timeZone: TimeZone(secondsFromGMT: .random(in: 100 ... 1000))!
     )
+    
+    var stateInfoSubject: CurrentValueSubject<IsolationStateInfo?, Never>!
+    var daySubject: CurrentValueSubject<LocalDay, Never>!
     
     private var manager: IsolationStateManager!
     private var testState: TestState!
@@ -31,6 +33,8 @@ class IsolationStateManagerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         
+        stateInfoSubject = CurrentValueSubject<IsolationStateInfo?, Never>(nil)
+        daySubject = CurrentValueSubject<LocalDay, Never>(LocalDay(date: Date(), timeZone: .utc))
         testState = TestState()
         manager = IsolationStateManager(
             isolationStateInfo: stateInfoSubject,
@@ -42,12 +46,6 @@ class IsolationStateManagerTests: XCTestCase {
         }
     }
     
-    func testStateInitiallyIsNoNeedToIsolate() {
-        // Shouldn’t really happen in practice, because `logicalState` publisher should emit immediately.
-        
-        TS.assert(manager.state, equals: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil))
-    }
-    
     func testRespondingToInitialBatchOfInfosReceived() {
         var info = IsolationStateInfo(isolationInfo: .empty, configuration: .default)
         info.configuration.indexCaseSinceSelfDiagnosisOnset = 18
@@ -57,28 +55,25 @@ class IsolationStateManagerTests: XCTestCase {
         TS.assert(manager.state, equals: testState.isolationState)
         TS.assert(testState.requestedStateInfo, equals: info)
         TS.assert(testState.requestedCalendarInfo, equals: day)
-        TS.assert(testState.callbackCount, equals: 1)
     }
     
     func testRespondingToChangesInInfosReceived() {
         var info = IsolationStateInfo(isolationInfo: .empty, configuration: .default)
+        let day2 = day.advanced(by: 1)
         info.configuration.indexCaseSinceSelfDiagnosisOnset = 18
         stateInfoSubject.send(info)
         daySubject.send(day)
         
-        TS.assert(testState.callbackCount, equals: 1)
         
         info.configuration.indexCaseSinceSelfDiagnosisOnset = 20
         
         stateInfoSubject.send(info)
-        TS.assert(testState.callbackCount, equals: 2)
         
-        daySubject.send(day)
-        TS.assert(testState.callbackCount, equals: 3)
+        daySubject.send(day2)
         
         TS.assert(manager.state, equals: testState.isolationState)
         TS.assert(testState.requestedStateInfo, equals: info)
-        TS.assert(testState.requestedCalendarInfo, equals: day)
+        TS.assert(testState.requestedCalendarInfo, equals: day2)
     }
     
     private func calculateState(_ stateInfo: IsolationStateInfo?, day: LocalDay) -> IsolationLogicalState {

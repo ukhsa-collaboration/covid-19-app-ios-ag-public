@@ -18,7 +18,8 @@ extension IsolationLogicalState: TestProp {
             contactCase: 14,
             indexCaseSinceSelfDiagnosisOnset: 8,
             indexCaseSinceSelfDiagnosisUnknownOnset: 9,
-            housekeepingDeletionPeriod: 14
+            housekeepingDeletionPeriod: 14,
+            indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis
         )
         
         public init() {}
@@ -288,6 +289,7 @@ class _IsolationLogicalStateTests: XCTestCase {
     }
     
     // MARK: Interested in exposure notifications
+    
     func testInterestedInExposureNotificationsTrueWhenNotIsolating() {
         let state: IsolationLogicalState = .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil)
         
@@ -296,7 +298,7 @@ class _IsolationLogicalStateTests: XCTestCase {
     
     func testInterestedInExposureNotificationsFalseWhenIsolatingFromContactCase() {
         let state: IsolationLogicalState = isolating(for: .contactCase(.exposureDetection))
-            
+        
         XCTAssertFalse(state.interestedInExposureNotifications)
     }
     

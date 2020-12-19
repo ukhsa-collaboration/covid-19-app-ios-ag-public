@@ -11,6 +11,7 @@ enum TrafficObfuscator: String, Encodable {
     case circuitBreaker
     case exposureWindow
     case keySubmission
+    case exposureWindowAfterPositive
 }
 
 class TrafficObfuscationClient {

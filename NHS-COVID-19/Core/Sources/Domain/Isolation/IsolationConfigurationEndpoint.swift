@@ -19,7 +19,8 @@ struct IsolationConfigurationEndpoint: HTTPEndpoint {
             contactCase: DayDuration(durations.contactCase),
             indexCaseSinceSelfDiagnosisOnset: DayDuration(durations.indexCaseSinceSelfDiagnosisOnset),
             indexCaseSinceSelfDiagnosisUnknownOnset: DayDuration(durations.indexCaseSinceSelfDiagnosisUnknownOnset),
-            housekeepingDeletionPeriod: DayDuration(durations.pendingTasksRetentionPeriod ?? 14)
+            housekeepingDeletionPeriod: DayDuration(durations.pendingTasksRetentionPeriod ?? 14),
+            indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis
         )
     }
 }

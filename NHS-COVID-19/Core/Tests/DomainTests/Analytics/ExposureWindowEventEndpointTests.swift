@@ -11,24 +11,12 @@ import XCTest
 @available(iOS 13.7, *)
 class ExposureWindowEventEndpointTests: XCTestCase {
     private let endpointExposureWindow = ExposureWindowEventEndpoint(
-        riskInfo: ExposureRiskInfo(
-            riskScore: 131.44555790888523,
-            riskScoreVersion: 2,
-            day: GregorianDay(year: 2020, month: 11, day: 12),
-            isConsideredRisky: true
-        ),
         latestAppVersion: Version(major: 3, minor: 12),
         postcode: "LL44",
         hasPositiveTest: false
     )
     
     private let endpointExposureWindowPositiveTest = ExposureWindowEventEndpoint(
-        riskInfo: ExposureRiskInfo(
-            riskScore: 131.44555790888523,
-            riskScoreVersion: 2,
-            day: GregorianDay(year: 2020, month: 11, day: 12),
-            isConsideredRisky: true
-        ),
         latestAppVersion: Version(major: 3, minor: 12),
         postcode: "LL44",
         hasPositiveTest: true
@@ -65,17 +53,20 @@ class ExposureWindowEventEndpointTests: XCTestCase {
         }
         """)).withCanonicalJSONBody()
         
-        let exposureWindow: ExposureNotificationExposureWindow = MockExposureWindow(
-            enScanInstances: [
-                MockScanInstance(
+        let exposureWindow = ExposureWindowInfo(
+            date: GregorianDay(year: 2020, month: 11, day: 12),
+            infectiousness: .high,
+            scanInstances: [
+                ExposureWindowInfo.ScanInstance(
                     minimumAttenuation: 97,
-                    secondsSinceLastScan: 201,
-                    typicalAttenuation: 0
+                    typicalAttenuation: 0,
+                    secondsSinceLastScan: 201
                 ),
             ],
-            date: Calendar.utc.date(from: DateComponents(year: 2020, month: 11, day: 12))!,
-            infectiousness: .high
+            riskScore: 131.44555790888523,
+            riskCalculationVersion: 2
         )
+        
         let actual = try endpointExposureWindow.request(for: exposureWindow).withCanonicalJSONBody()
         TS.assert(actual, equals: expected)
     }
@@ -112,16 +103,18 @@ class ExposureWindowEventEndpointTests: XCTestCase {
         }
         """)).withCanonicalJSONBody()
         
-        let exposureWindow: ExposureNotificationExposureWindow = MockExposureWindow(
-            enScanInstances: [
-                MockScanInstance(
+        let exposureWindow = ExposureWindowInfo(
+            date: GregorianDay(year: 2020, month: 11, day: 12),
+            infectiousness: .high,
+            scanInstances: [
+                ExposureWindowInfo.ScanInstance(
                     minimumAttenuation: 97,
-                    secondsSinceLastScan: 201,
-                    typicalAttenuation: 0
+                    typicalAttenuation: 0,
+                    secondsSinceLastScan: 201
                 ),
             ],
-            date: Calendar.utc.date(from: DateComponents(year: 2020, month: 11, day: 12))!,
-            infectiousness: .high
+            riskScore: 131.44555790888523,
+            riskCalculationVersion: 2
         )
         let actual = try endpointExposureWindowPositiveTest.request(for: exposureWindow).withCanonicalJSONBody()
         TS.assert(actual, equals: expected)

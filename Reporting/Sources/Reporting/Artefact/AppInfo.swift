@@ -53,6 +53,7 @@ struct AppInfo: Decodable {
         case location
         case voip
         case fetch
+        case processing
         case remoteNotification = "remote-notification"
         case newsstandContent = "newsstand-content"
         case externalAccessory = "external-accessory"
@@ -129,12 +130,14 @@ struct AppInfo: Decodable {
         case bundleIdentifier = "CFBundleIdentifier"
         case buildMachineOS = "BuildMachineOSBuild"
         case bundleDevelopmentRegion = "CFBundleDevelopmentRegion"
+        case bundleDisplayName = "CFBundleDisplayName"
         case bundleExecutable = "CFBundleExecutable"
         case bundleInfoDictionaryVersion = "CFBundleInfoDictionaryVersion"
         case bundlePackageType = "CFBundlePackageType"
         case bundleSupportedPlatforms = "CFBundleSupportedPlatforms"
         case bundleIcons = "CFBundleIcons"
         case bundleIconsForIpad = "CFBundleIcons~ipad"
+        case backgroundTaskIdentifiers = "BGTaskSchedulerPermittedIdentifiers"
         case deviceFamily = "UIDeviceFamily"
         case compiler = "DTCompiler"
         case platformBuild = "DTPlatformBuild"
@@ -154,6 +157,10 @@ struct AppInfo: Decodable {
         case supportedInterfaceStyles = "UIUserInterfaceStyle"
         case bluetoothAlwaysUsageDescription = "NSBluetoothAlwaysUsageDescription"
         case bluetoothPeripheralUsageDescription = "NSBluetoothPeripheralUsageDescription"
+        case cameraUsageDescription = "NSCameraUsageDescription"
+        case exposureNotificationAPIVersion = "ENAPIVersion"
+        case exposureNotificationDeveloperRegion = "ENDeveloperRegion"
+        case appUsesNonExemptEncryption = "ITSAppUsesNonExemptEncryption"
     }
     
     struct Attributes {
@@ -164,12 +171,14 @@ struct AppInfo: Decodable {
         static let bundleIdentifier = AttributeKey(.bundleIdentifier, keyPath: \.bundleIdentifier)
         static let buildMachineOS = AttributeKey(.buildMachineOS, keyPath: \.buildMachineOS)
         static let bundleDevelopmentRegion = AttributeKey(.bundleDevelopmentRegion, keyPath: \.bundleDevelopmentRegion)
+        static let bundleDisplayName = AttributeKey(.bundleDisplayName, keyPath: \.bundleDisplayName)
         static let bundleExecutable = AttributeKey(.bundleExecutable, keyPath: \.bundleExecutable)
         static let bundleInfoDictionaryVersion = AttributeKey(.bundleInfoDictionaryVersion, keyPath: \.bundleInfoDictionaryVersion)
         static let bundlePackageType = AttributeKey(.bundlePackageType, keyPath: \.bundlePackageType)
         static let bundleSupportedPlatforms = AttributeKey(.bundleSupportedPlatforms, keyPath: \.bundleSupportedPlatforms)
         static let bundleIcons = AttributeKey(.bundleIcons, keyPath: \.bundleIcons)
         static let bundleIconsForIpad = AttributeKey(.bundleIconsForIpad, keyPath: \.bundleIconsForIpad)
+        static let backgroundTaskIdentifiers = AttributeKey(.backgroundTaskIdentifiers, keyPath: \.backgroundTaskIdentifiers)
         static let deviceFamily = AttributeKey(.deviceFamily, keyPath: \.deviceFamily)
         static let compiler = AttributeKey(.compiler, keyPath: \.compiler)
         static let platformBuild = AttributeKey(.platformBuild, keyPath: \.platformBuild)
@@ -189,6 +198,10 @@ struct AppInfo: Decodable {
         static let supportedInterfaceStyles = AttributeKey(.supportedInterfaceStyles, keyPath: \.supportedInterfaceStyles)
         static let bluetoothAlwaysUsageDescription = AttributeKey(.bluetoothAlwaysUsageDescription, keyPath: \.bluetoothAlwaysUsageDescription)
         static let bluetoothPeripheralUsageDescription = AttributeKey(.bluetoothPeripheralUsageDescription, keyPath: \.bluetoothPeripheralUsageDescription)
+        static let cameraUsageDescription = AttributeKey(.cameraUsageDescription, keyPath: \.cameraUsageDescription)
+        static let exposureNotificationAPIVersion = AttributeKey(.exposureNotificationAPIVersion, keyPath: \.exposureNotificationAPIVersion)
+        static let exposureNotificationDeveloperRegion = AttributeKey(.exposureNotificationDeveloperRegion, keyPath: \.exposureNotificationDeveloperRegion)
+        static let appUsesNonExemptEncryption = AttributeKey(.appUsesNonExemptEncryption, keyPath: \.appUsesNonExemptEncryption)
         
         static let allCases: [Key] = [
             bundleName,
@@ -198,12 +211,14 @@ struct AppInfo: Decodable {
             bundleIdentifier,
             buildMachineOS,
             bundleDevelopmentRegion,
+            bundleDisplayName,
             bundleExecutable,
             bundleInfoDictionaryVersion,
             bundlePackageType,
             bundleSupportedPlatforms,
             bundleIcons,
             bundleIconsForIpad,
+            backgroundTaskIdentifiers,
             deviceFamily,
             compiler,
             platformBuild,
@@ -223,6 +238,10 @@ struct AppInfo: Decodable {
             supportedInterfaceStyles,
             bluetoothAlwaysUsageDescription,
             bluetoothPeripheralUsageDescription,
+            cameraUsageDescription,
+            exposureNotificationAPIVersion,
+            exposureNotificationDeveloperRegion,
+            appUsesNonExemptEncryption,
         ]
         
         fileprivate static let knownKeyRawValues = Set(allCases.map { $0.rawValue })
@@ -257,6 +276,7 @@ struct AppInfo: Decodable {
     var bundleName: Decoded<String>?
     var version: Decoded<String>?
     var bundleVersion: Decoded<String>?
+    var bundleDisplayName: Decoded<String>?
     var minimumOSVersion: Decoded<String>?
     var bundleIdentifier: Decoded<String>?
     var buildMachineOS: Decoded<String>?
@@ -267,6 +287,7 @@ struct AppInfo: Decodable {
     var bundleSupportedPlatforms: Decoded<Set<String>>?
     var bundleIcons: Decoded<Icons>?
     var bundleIconsForIpad: Decoded<Icons>?
+    var backgroundTaskIdentifiers: Decoded<[String]>?
     var deviceFamily: Decoded<[DeviceFamily]>?
     var compiler: Decoded<String>?
     var platformBuild: Decoded<String>?
@@ -286,6 +307,10 @@ struct AppInfo: Decodable {
     var supportedInterfaceStyles: Decoded<InterfaceStyle>?
     var bluetoothAlwaysUsageDescription: Decoded<String>?
     var bluetoothPeripheralUsageDescription: Decoded<String>?
+    var cameraUsageDescription: Decoded<String>?
+    var exposureNotificationAPIVersion: Decoded<String>?
+    var exposureNotificationDeveloperRegion: Decoded<String>?
+    var appUsesNonExemptEncryption: Decoded<Bool>?
     
     var unknownKeys: Set<String>
     

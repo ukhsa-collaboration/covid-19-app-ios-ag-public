@@ -19,7 +19,8 @@ class IsolationStateStoreTests: XCTestCase {
                 contactCase: 14,
                 indexCaseSinceSelfDiagnosisOnset: 8,
                 indexCaseSinceSelfDiagnosisUnknownOnset: 9,
-                housekeepingDeletionPeriod: 14
+                housekeepingDeletionPeriod: 14,
+                indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis
             )
             
             public init() {}
@@ -45,7 +46,7 @@ class IsolationStateStoreTests: XCTestCase {
         TS.assert(store.configuration, equals: IsolationConfiguration.default)
     }
     
-    func testLoadingEmptyIsolationStateInfo() {
+    func testLoadingConfigurationDefaultsTo10DaysNPEXIfValueMissing() {
         $instance.encryptedStore.stored["isolation_state_info"] = #"""
         {
             "configuration" : {
@@ -55,11 +56,53 @@ class IsolationStateStoreTests: XCTestCase {
                 "indexCaseSinceSelfDiagnosisUnknownOnset" : 5,
                 "housekeepingDeletionPeriod" : 14
             },
-            "isolationInfo" : {}
+            "isolationInfo" : {
+                "hasAcknowledgedEndOfIsolation": false,
+                "hasAcknowledgedStartOfIsolation": false,
+            }
         }
         """# .data(using: .utf8)!
         
-        TS.assert(store.isolationInfo, equals: IsolationInfo(indexCaseInfo: nil, contactCaseInfo: nil))
+        let expected = IsolationConfiguration(
+            maxIsolation: 21,
+            contactCase: 14,
+            indexCaseSinceSelfDiagnosisOnset: 7,
+            indexCaseSinceSelfDiagnosisUnknownOnset: 5,
+            housekeepingDeletionPeriod: 14,
+            indexCaseSinceNPEXDayNoSelfDiagnosis: 10
+        )
+        
+        TS.assert(store.configuration, equals: expected)
+    }
+    
+    func testLoadingConfigurationUsesStoredNPEXValueIfProvided() {
+        $instance.encryptedStore.stored["isolation_state_info"] = #"""
+        {
+            "configuration" : {
+                "indexCaseSinceSelfDiagnosisOnset" : 7,
+                "maxIsolation" : 21,
+                "contactCase" : 14,
+                "indexCaseSinceSelfDiagnosisUnknownOnset" : 5,
+                "housekeepingDeletionPeriod" : 14,
+                "indexCaseSinceNPEXDayNoSelfDiagnosis": 35
+            },
+            "isolationInfo" : {
+                "hasAcknowledgedEndOfIsolation": false,
+                "hasAcknowledgedStartOfIsolation": false,
+            }
+        }
+        """# .data(using: .utf8)!
+        
+        let expected = IsolationConfiguration(
+            maxIsolation: 21,
+            contactCase: 14,
+            indexCaseSinceSelfDiagnosisOnset: 7,
+            indexCaseSinceSelfDiagnosisUnknownOnset: 5,
+            housekeepingDeletionPeriod: 14,
+            indexCaseSinceNPEXDayNoSelfDiagnosis: 35
+        )
+        
+        TS.assert(store.configuration, equals: expected)
     }
     
     func testLoadingOldData() throws {

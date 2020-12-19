@@ -15,7 +15,7 @@ class VoidTestResultNoIsolationScreenTests: XCTestCase {
             let screen = VoidTestResultNoIsolationScreen(app: app)
             XCTAssert(screen.title.exists)
             XCTAssert(screen.indicationLabel.exists)
-            XCTAssert(screen.explanationLabel.exists)
+            XCTAssert(screen.explanationLabel.allExist)
             XCTAssert(screen.onlineServicesLink.exists)
             XCTAssert(screen.continueButton.exists)
             XCTAssert(screen.cancelButton.exists)

@@ -5,9 +5,8 @@
 import Foundation
 
 enum Asset {
-    case storyboard(String)
-    case nib(String)
     case strings(String)
-    case plist(String)
+    case stringsdict(String)
+    case content(name: String, suffix: String)
     case bundle(String)
 }

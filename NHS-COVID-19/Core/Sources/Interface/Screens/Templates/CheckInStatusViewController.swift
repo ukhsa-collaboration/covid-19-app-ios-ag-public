@@ -181,6 +181,7 @@ open class CheckInStatusViewController: UIViewController {
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = (status.closeButtonTitle == nil)
+        navigationItem.hidesBackButton = true
     }
     
     override public func accessibilityPerformEscape() -> Bool {

@@ -69,13 +69,10 @@ private extension AppInfo {
     
     var detailedAttributesSection: ReportSection {
         let interestingCases: [DisplayAttributeProtocol] = [
-            DisplayAttribute(displayName: "Name", key: \.bundleName),
+            DisplayAttribute(displayName: "Display Name", key: \.bundleDisplayName),
             DisplayAttribute(displayName: "Minimum supported OS version", key: \.minimumOSVersion),
             DisplayAttribute(displayName: "Supported interface styles", key: \.supportedInterfaceStyles, defaultValue: "All"),
             DisplayAttribute(displayName: "Supported interface orientations", key: \.supportedInterfaceOrientations) {
-                $0.displayValue
-            },
-            DisplayAttribute(displayName: "Supported interface orientations (iPad)", key: \.supportedInterfaceOrientationsForIpad) {
                 $0.displayValue
             },
             DisplayAttribute(displayName: "Required device capabilities", key: \.requiredDeviceCapabilities) {
@@ -84,7 +81,11 @@ private extension AppInfo {
             DisplayAttribute(displayName: "Required background modes", key: \.requiredBackgroundModes) {
                 $0.lazy.map { $0.rawValue }.sorted().joined(separator: ", ")
             },
-            DisplayAttribute(displayName: "Bluetooth Usage Description", key: \.bluetoothAlwaysUsageDescription),
+            DisplayAttribute(displayName: "Uses non-exempt encryption", key: \.appUsesNonExemptEncryption) {
+                $0 ? "true" : "false"
+            },
+            DisplayAttribute(displayName: "Exposure Notification API Version", key: \.exposureNotificationAPIVersion),
+            DisplayAttribute(displayName: "Exposure Notification Region", key: \.exposureNotificationDeveloperRegion),
         ]
         
         let attributes = interestingCases.map {

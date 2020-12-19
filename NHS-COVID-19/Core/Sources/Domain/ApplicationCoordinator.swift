@@ -71,7 +71,6 @@ public class ApplicationCoordinator {
         distributeClient = services.distributeClient
         currentDateProvider = services.currentDateProvider
         let dateProvider = services.currentDateProvider
-        
         Self.logger.debug("Initialising")
         
         appAvailabilityManager = AppAvailabilityManager(
@@ -471,6 +470,8 @@ public class ApplicationCoordinator {
                     if case .notSent = shareKeyState {
                         self.trafficObfuscationClient.sendSingleTraffic(for: TrafficObfuscator.keySubmission)
                     }
+                    
+                    self.exposureNotificationContext.postExposureWindows(result: result.testResult)
                 }
             }
             .eraseToAnyPublisher()
@@ -567,15 +568,25 @@ public class ApplicationCoordinator {
         let circuitBreaker = self.circuitBreaker
         let isolationPaymentContext = self.isolationPaymentContext
         let exposureNotificationContext = self.exposureNotificationContext
+        let isolationStateManager = isolationContext.isolationStateManager
+        let exposureWindowHouskeeper = ExposureWindowHousekeeper(
+            getIsolationLogicalState: { isolationStateManager.state },
+            isWaitingForExposureApproval: { exposureNotificationContext.isWaitingForApproval },
+            clearExposureWindowData: exposureNotificationContext.deleteExposureWindows
+        )
         let expsoureNotificationJob = BackgroundTaskAggregator.Job(
             preferredFrequency: Self.exposureDetectionBackgroundTaskFrequency
         ) {
-            exposureNotificationContext.detectExposures(deferShouldShowDontWorryNotification: {
-                circuitBreaker.showDontWorryNotificationIfNeeded = true
-            })
-                .append(Deferred(createPublisher: circuitBreaker.processExposureNotificationApproval))
-                .append(Deferred(createPublisher: isolationPaymentContext.processCanApplyForFinancialSupport))
-                .eraseToAnyPublisher()
+            exposureNotificationContext.detectExposures(
+                deferShouldShowDontWorryNotification: {
+                    circuitBreaker.showDontWorryNotificationIfNeeded = true
+                }
+            )
+            .append(Deferred(createPublisher: circuitBreaker.processExposureNotificationApproval))
+            .append(Deferred(createPublisher: isolationPaymentContext.processCanApplyForFinancialSupport))
+            .append(Deferred(createPublisher: exposureWindowHouskeeper.executeHousekeeping))
+            
+            .eraseToAnyPublisher()
         }
         enabledJobs.append(expsoureNotificationJob)
         

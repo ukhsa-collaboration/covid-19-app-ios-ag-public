@@ -17,7 +17,7 @@ struct VoidTestResultWithIsolationScreen {
         app.staticTexts[localized: .void_test_result_info]
     }
     
-    var explanationLabel: XCUIElement {
+    var explanationLabel: [XCUIElement] {
         app.staticTexts[localized: .void_test_result_explanation]
     }
     
