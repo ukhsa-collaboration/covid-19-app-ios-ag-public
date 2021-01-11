@@ -4,8 +4,8 @@
 
 import Foundation
 import XCTest
-@testable import Scenarios
 @testable import Domain
+@testable import Scenarios
 
 @available(iOS 13.7, *)
 class IsolationReasonAnalyticsTests: AnalyticsTests {
@@ -40,9 +40,9 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
         assert(\.isIsolatingBackgroundTick).isPresent()
         assert(\.hasSelfDiagnosedBackgroundTick).isPresent()
         
-        // Dates: 4th-12th Jan -> Analytics packets for: 3rd-11th Jan
+        // Dates: 4th-13th Jan -> Analytics packets for: 3rd-12th Jan
         // Still in isolation
-        for _ in 4 ... 12 {
+        for _ in 4 ... 13 {
             advanceToEndOfAnalyticsWindow()
             assert(\.completedQuestionnaireAndStartedIsolation).isNotPresent()
             assert(\.isIsolatingBackgroundTick).isPresent()
@@ -50,9 +50,9 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
             assert(\.hasSelfDiagnosedBackgroundTick).isPresent()
         }
         
-        // Dates: 13th-26th Jan -> Analytics packets for: 12th-25th Jan
+        // Dates: 14th-27th Jan -> Analytics packets for: 13th-26th Jan
         // Isolation is over, but isolation reason still stored for 14 days
-        for _ in 13 ... 26 {
+        for _ in 14 ... 27 {
             advanceToEndOfAnalyticsWindow()
             assert(\.isIsolatingBackgroundTick).isNotPresent()
             assert(\.isIsolatingForSelfDiagnosedBackgroundTick).isNotPresent()
@@ -80,7 +80,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
         assert(\.isIsolatingForHadRiskyContactBackgroundTick).isNotPresent()
         
         // Has risky contact on 2nd Jan
-        // Isolation end date: 16th Jan
+        // Isolation end date: 13th Jan
         riskyContact.trigger(exposureDate: currentDateProvider.currentDate) {
             self.advanceToEndOfAnalyticsWindow()
         }
@@ -91,21 +91,19 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
         assert(\.isIsolatingForHadRiskyContactBackgroundTick).isPresent()
         assert(\.hasHadRiskyContactBackgroundTick).isPresent()
         
-        // Dates: 4th-16th Jan -> Analytics packets for: 3rd-15th Jan
+        // Dates: 5th-13th Jan -> Analytics packets for: 4rd-12th Jan
         // Still in isolation
-        for _ in 4 ... 16 {
+        for _ in 5 ... 14 {
             advanceToEndOfAnalyticsWindow()
             assert(\.isIsolatingBackgroundTick).isPresent()
             assert(\.isIsolatingForHadRiskyContactBackgroundTick).isPresent()
             assert(\.hasHadRiskyContactBackgroundTick).isPresent()
         }
         
-        // Dates: 17th-30th Jan -> Analytics packets for: 16th-29th Jan
+        // Dates: 14th-27th Jan -> Analytics packets for: 13th-26th Jan
         // Isolation is over, but isolation reason still stored for 14 days
-        for _ in 17 ... 30 {
+        for _ in 15 ... 28 {
             advanceToEndOfAnalyticsWindow()
-            assert(\.isIsolatingBackgroundTick).isNotPresent()
-            assert(\.isIsolatingForHadRiskyContactBackgroundTick).isNotPresent()
             assert(\.hasHadRiskyContactBackgroundTick).isPresent()
         }
         

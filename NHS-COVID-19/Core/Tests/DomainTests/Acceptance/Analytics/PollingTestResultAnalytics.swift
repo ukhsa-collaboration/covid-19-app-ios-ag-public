@@ -64,9 +64,9 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
         assert(\.isIsolatingForSelfDiagnosedBackgroundTick).isPresent()
         assert(\.isIsolatingForTestedPositiveBackgroundTick).isPresent()
         
-        // Dates: 5th-12th Jan -> Analytics packets for: 4th-11th Jan
+        // Dates: 5th-13th Jan -> Analytics packets for: 4th-13th Jan
         // Still in isolation
-        for _ in 5 ... 12 {
+        for _ in 5 ... 13 {
             advanceToEndOfAnalyticsWindow()
             
             assert(\.isIsolatingBackgroundTick).isPresent()
@@ -76,9 +76,9 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
             assert(\.hasTestedPositiveBackgroundTick).isPresent()
         }
         
-        // Dates: 13th-26th Jan -> Analytics packets for: 12th-25th Jan
+        // Dates: 14th-27th Jan -> Analytics packets for: 13th-26th Jan
         // Isolation is over, but isolation reason still stored for 14 days
-        for _ in 13 ... 26 {
+        for _ in 14 ... 27 {
             advanceToEndOfAnalyticsWindow()
             
             assert(\.isIsolatingBackgroundTick).isNotPresent()

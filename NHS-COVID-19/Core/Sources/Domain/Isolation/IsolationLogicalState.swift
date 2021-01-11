@@ -51,9 +51,9 @@ extension IsolationConfiguration {
     
     static let `default` = IsolationConfiguration(
         maxIsolation: 21,
-        contactCase: 14,
-        indexCaseSinceSelfDiagnosisOnset: 10,
-        indexCaseSinceSelfDiagnosisUnknownOnset: 8,
+        contactCase: 11,
+        indexCaseSinceSelfDiagnosisOnset: 11,
+        indexCaseSinceSelfDiagnosisUnknownOnset: 9,
         housekeepingDeletionPeriod: 14,
         indexCaseSinceNPEXDayNoSelfDiagnosis: 11
     )

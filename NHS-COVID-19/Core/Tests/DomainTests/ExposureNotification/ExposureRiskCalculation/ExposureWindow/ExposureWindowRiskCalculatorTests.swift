@@ -5,8 +5,8 @@
 import Common
 import ExposureNotification
 import RiskScore
-import XCTest
 import Scenarios
+import XCTest
 @testable import Domain
 
 @available(iOS 13.7, *)
@@ -59,8 +59,8 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
     }
     
     func testRiskCalculatorReturnsMostRecentHighRiskExposure() {
-        let newerDate = Date.dateFrom(year: 2020, month: 12, day: 25)
-        let olderDate = Date.dateFrom(year: 2020, month: 12, day: 20)
+        let newerDate = dateProvider.currentDate.advanced(by: 5 * 24 * 60 * 60)
+        let olderDate = dateProvider.currentDate
         let expectedRiskScore = 22.0
         let expectedExposureRiskInfo = ExposureRiskInfo(
             riskScore: expectedRiskScore * 60,
