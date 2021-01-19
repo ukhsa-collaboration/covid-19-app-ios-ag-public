@@ -35,14 +35,7 @@ class ConfigurationViewController: UIViewController {
         the feature toggle is changed after onboarding.
         """
         
-        let localAuthority = createToggle(
-            feature: .localAuthority,
-            isOn: featureToggleStorage.localAuthorityToggle,
-            action: #selector(toggleLocalAuthority)
-        )
-        
         let stackView = UIStackView(arrangedSubviews: [
-            localAuthority,
             disclaimer,
         ])
         
@@ -62,7 +55,6 @@ class ConfigurationViewController: UIViewController {
     func createToggle(feature: Feature, isOn: Bool, action: Selector) -> UIView {
         let toggle = UISwitch()
         toggle.isOn = isOn
-        toggle.tag = feature.index!
         toggle.addTarget(self, action: action, for: .valueChanged)
         
         let label = UILabel()
@@ -74,16 +66,8 @@ class ConfigurationViewController: UIViewController {
     }
     
     func getFeatureString(feature: Feature) -> String {
-        switch feature {
-        case .localAuthority:
-            return "Local Authority"
-        }
+        return ""
     }
-    
-    @objc private func toggleLocalAuthority() {
-        featureToggleStorage.localAuthorityToggle.toggle()
-    }
-    
 }
 
 extension CaseIterable where Self: Equatable {

@@ -4,7 +4,7 @@
 
 import Foundation
 
-enum Metric: String, CaseIterable {
+public enum Metric: String, CaseIterable {
     case backgroundTasks
     case completedOnboarding
     case checkedIn
@@ -32,6 +32,10 @@ enum Metric: String, CaseIterable {
     case receivedNegativeTestResultViaPolling
     case receivedRiskyContactNotification
     case startedIsolation
+    case receivedActiveIpcToken
+    case haveActiveIpcTokenBackgroundTick
+    case selectedIsolationPaymentsButton
+    case launchedIsolationPaymentsApplication
     
     var name: StaticString {
         switch self {
@@ -62,12 +66,16 @@ enum Metric: String, CaseIterable {
         case .isolatedForHadRiskyContactBackgroundTick: return "isolatedForHadRiskyContactBackgroundTick"
         case .receivedRiskyContactNotification: return "receivedRiskyContactNotification"
         case .startedIsolation: return "startedIsolation"
+        case .receivedActiveIpcToken: return "receivedActiveIpcToken"
+        case .haveActiveIpcTokenBackgroundTick: return "haveActiveIpcTokenBackgroundTick"
+        case .selectedIsolationPaymentsButton: return "selectedIsolationPaymentsButton"
+        case .launchedIsolationPaymentsApplication: return "launchedIsolationPaymentsApplication"
         }
     }
     
 }
 
-enum Metrics {
+public enum Metrics {
     static let category = "AppMetrics"
     
     static func begin(_ metric: Metric) {
@@ -76,7 +84,7 @@ enum Metrics {
     
     static func end(_ metric: Metric) {}
     
-    static func signpost(_ metric: Metric) {
+    public static func signpost(_ metric: Metric) {
         MetricCollector.record(metric)
     }
     

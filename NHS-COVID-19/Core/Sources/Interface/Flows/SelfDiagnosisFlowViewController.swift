@@ -23,7 +23,7 @@ public protocol SelfDiagnosisFlowViewControllerInteracting: BookATestInfoViewCon
     func exposureFAQsLinkTapped()
 }
 
-public class SelfDiagnosisFlowViewController: UINavigationController {
+public class SelfDiagnosisFlowViewController: BaseNavigationController {
     
     public typealias Interacting = SelfDiagnosisFlowViewControllerInteracting
     
@@ -52,7 +52,7 @@ public class SelfDiagnosisFlowViewController: UINavigationController {
         self.interactor = interactor
         self.initialIsolationState = initialIsolationState
         
-        super.init(nibName: nil, bundle: nil)
+        super.init()
         
         monitorState()
         executeFetchQuestionnaire()

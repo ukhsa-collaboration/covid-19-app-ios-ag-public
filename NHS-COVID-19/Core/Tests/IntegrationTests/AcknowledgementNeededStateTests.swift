@@ -211,7 +211,9 @@ class AcknowledgementNeededStateTests: XCTestCase {
             currentDateProvider: currentDateProvider,
             exposureNotificationReminder: ExposureNotificationReminder(),
             appReviewPresenter: AppReviewPresenter(checkInsStore: nil, reviewController: MockStoreReviewController(), currentDateProvider: currentDateProvider),
-            isolationPaymentState: .constant(.disabled)
+            isolationPaymentState: .constant(.disabled),
+            currentLocaleConfiguration: Just(.systemPreferred).eraseToAnyPublisher().domainProperty(),
+            storeNewLanguage: { _ in }
         )
     }
     

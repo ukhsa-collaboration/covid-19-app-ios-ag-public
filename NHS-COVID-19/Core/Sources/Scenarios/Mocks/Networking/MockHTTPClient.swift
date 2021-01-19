@@ -8,6 +8,7 @@ import Common
 public class MockHTTPClient: HTTPClient {
     @Published
     public var lastRequest: HTTPRequest?
+    public var requests = [HTTPRequest]()
     public var response: Result<HTTPResponse, HTTPRequestError>?
     private var responses: [String:Result<HTTPResponse, HTTPRequestError>] = [:]
     
@@ -15,6 +16,7 @@ public class MockHTTPClient: HTTPClient {
     
     public func perform(_ request: HTTPRequest) -> AnyPublisher<HTTPResponse, HTTPRequestError> {
         lastRequest = request
+        requests.append(request)
         return Optional.Publisher(response ?? responses[request.path])
             .setFailureType(to: HTTPRequestError.self)
             .flatMap { $0.publisher }
@@ -27,6 +29,7 @@ public class MockHTTPClient: HTTPClient {
     
     public func reset() {
         responses = [:]
+        requests = []
         response = nil
     }
 }

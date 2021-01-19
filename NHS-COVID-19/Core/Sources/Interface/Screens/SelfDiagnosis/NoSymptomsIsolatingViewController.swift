@@ -20,12 +20,12 @@ extension NoSymptomsIsolatingViewController {
             let headingStack = UIStackView(
                 content: BasicContent(
                     views: [
-                        UILabel()
+                        BaseLabel()
                             .set(text: localize(.no_symptoms_isolating_info_isolate_for))
                             .styleAsHeading()
                             .centralized()
                             .isAccessibilityElement(false),
-                        UILabel()
+                        BaseLabel()
                             .set(text: localize(.positive_symptoms_days(days: daysToIsolate)))
                             .styleAsPageHeader()
                             .centralized()
@@ -44,8 +44,8 @@ extension NoSymptomsIsolatingViewController {
                     UIImageView(.isolationStartContact).styleAsDecoration(),
                     headingStack,
                     InformationBox.indication.goodNews(localize(.no_symptoms_isolating_info)),
-                    UILabel().set(text: localize(.no_symptoms_isolating_body)).styleAsSecondaryBody(),
-                    UILabel().set(text: localize(.no_symptoms_isolating_advice)).styleAsSecondaryBody(),
+                    BaseLabel().set(text: localize(.no_symptoms_isolating_body)).styleAsSecondaryBody(),
+                    BaseLabel().set(text: localize(.no_symptoms_isolating_advice)).styleAsSecondaryBody(),
                     LinkButton(
                         title: localize(.no_symptoms_isolating_services_link),
                         action: interactor.didTapOnlineServicesLink

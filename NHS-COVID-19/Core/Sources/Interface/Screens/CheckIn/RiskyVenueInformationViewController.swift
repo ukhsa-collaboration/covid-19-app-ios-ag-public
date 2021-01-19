@@ -28,11 +28,11 @@ extension RiskyVenueInformationViewController {
             
             var scrollingViews: [UIView] = [
                 UIImageView(.coronaVirus).styleAsDecoration(),
-                UILabel().set(text: title).styleAsPageHeader(),
+                BaseLabel().set(text: title).styleAsPageHeader(),
             ]
             
             scrollingViews += localizeAndSplit(.checkin_risky_venue_information_description).map {
-                UILabel().set(text: $0).styleAsBody()
+                BaseLabel().set(text: $0).styleAsBody()
             }
             
             super.init(

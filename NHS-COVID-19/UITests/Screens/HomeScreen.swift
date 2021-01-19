@@ -9,7 +9,7 @@ struct HomeScreen {
     var app: XCUIApplication
     
     func riskLevelBanner(for postcode: String, title: String) -> XCUIElement {
-        app.buttons[verbatim: title.replacingOccurrences(of: "[postcode]", with: postcode)]
+        return app.buttons[verbatim: title.replacingOccurrences(of: "[postcode]", with: postcode).apply(direction: currentLanguageDirection())]
     }
     
     var diagnoisButton: XCUIElement {
@@ -26,6 +26,10 @@ struct HomeScreen {
     
     var financeButton: XCUIElement {
         app.buttons[localized: .home_financial_support_button_title]
+    }
+    
+    var settingsButton: XCUIElement {
+        app.buttons[localized: .home_settings_button_title]
     }
     
     var checkInButton: XCUIElement {

@@ -21,6 +21,7 @@ class MetricUploadChunkCreatorTests: XCTestCase {
             collector: collector,
             appInfo: AppInfo(bundleId: .random(), version: Self.appVersion, buildNumber: "1"),
             getPostcode: { String.random() },
+            getLocalAuthority: { String.random() },
             currentDateProvider: currentDateProvider
         )
     }

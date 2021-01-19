@@ -18,95 +18,10 @@ class EditPostcodeFlowTest: XCTestCase {
         $runner.initialState.localAuthorityId = "Sheffield"
     }
     
-    func testEditPostcodeOnly() throws {
-        
-        let newPostcode = "LL20"
-        
-        $runner.initialState.localAuthorityEnabled = false
-        
-        $runner.report(scenario: "Edit postcode", "Happy path - postcode only") {
-            """
-            Enter a valid new postcode and reach My data screen again.
-            """
-        }
-        
-        try runner.run { app in
-            
-            let homeScreen = HomeScreen(app: app)
-            app.checkOnHomeScreenNotIsolating()
-            XCTAssert(homeScreen.aboutButton.exists)
-            
-            runner.step("Home screen") {
-                """
-                The user is presented the Home screen.
-                The user presses the About This App button to proceed.
-                """
-            }
-            
-            homeScreen.aboutButton.tap()
-            
-            let aboutThisAppScreen = AboutThisAppScreen(app: app)
-            XCTAssert(aboutThisAppScreen.seeDataButton.exists)
-            
-            runner.step("About This App screen") {
-                """
-                The user is presented the About This App screen.
-                The user presses the Manage My Data link to proceed.
-                """
-            }
-            
-            aboutThisAppScreen.seeDataButton.tap()
-            
-            let myDataScreen = MyDataScreen(app: app)
-            XCTAssert(myDataScreen.app.buttons.element(boundBy: 2).exists)
-            
-            runner.step("My Data screen") {
-                """
-                The user is presented the My Data screen.
-                The user presses the Edit button of the postcode section in the list.
-                """
-            }
-            
-            myDataScreen.app.buttons.element(boundBy: 2).tap()
-            
-            let editPostcodeScreen = EditPostcodeScreen(app: app)
-            XCTAssert(editPostcodeScreen.saveButton.exists)
-            
-            runner.step("Edit Postcode screen") {
-                """
-                The user is presented to Edit Postcode screen.
-                """
-            }
-            
-            editPostcodeScreen.postcodeTextField.tap()
-            editPostcodeScreen.postcodeTextField.typeText(newPostcode)
-            
-            runner.step("Edit Postcode screen - entered postcode") {
-                """
-                The user enters a new valid postcode in the field.
-                The user presses the Save button.
-                """
-            }
-            
-            editPostcodeScreen.saveButton.tap()
-            
-            let myDataScreenNewPostcode = MyDataScreen(app: app)
-            XCTAssert(myDataScreenNewPostcode.postcodeCell(postcode: newPostcode).exists)
-            
-            runner.step("My Data screen - new postcode") {
-                """
-                The user is presented the My Data screen again with the newly entered postcode.
-                """
-            }
-        }
-    }
-    
     func testEditPostCodeAndLocalAuthorityWithoutLocalAuthoritySelection() throws {
         
         let newPostcode = "S1"
         let localAuhtority = "Sheffield"
-        
-        $runner.initialState.localAuthorityEnabled = true
         
         $runner.report(scenario: "Edit postcode", "Happy path - confirm local authority") {
             """
@@ -142,7 +57,7 @@ class EditPostcodeFlowTest: XCTestCase {
             aboutThisAppScreen.seeDataButton.tap()
             
             let myDataScreen = MyDataScreen(app: app)
-            XCTAssert(myDataScreen.app.buttons.element(boundBy: 2).exists)
+            XCTAssert(myDataScreen.editPostcodeButton.exists)
             
             runner.step("My Data screen") {
                 """
@@ -151,7 +66,7 @@ class EditPostcodeFlowTest: XCTestCase {
                 """
             }
             
-            myDataScreen.app.buttons.element(boundBy: 2).tap()
+            myDataScreen.editPostcodeButton.tap()
             
             let editPostcodeScreen = EditPostcodeScreen(app: app)
             XCTAssert(editPostcodeScreen.continueButton.exists)
@@ -201,9 +116,7 @@ class EditPostcodeFlowTest: XCTestCase {
     
     func testEditPostCodeAndLocalAuthorityWithLocalAuthoritySelection() throws {
         let newPostcode = "LL20"
-        let localAuhtority = "Wrexham"
-        
-        $runner.initialState.localAuthorityEnabled = true
+        let localAuhtority = "Wrexham / Wrecsam"
         
         $runner.report(scenario: "Edit postcode", "Happy path - select local authority") {
             """
@@ -239,7 +152,7 @@ class EditPostcodeFlowTest: XCTestCase {
             aboutThisAppScreen.seeDataButton.tap()
             
             let myDataScreen = MyDataScreen(app: app)
-            XCTAssert(myDataScreen.app.buttons.element(boundBy: 2).exists)
+            XCTAssert(myDataScreen.editPostcodeButton.exists)
             
             runner.step("My Data screen") {
                 """
@@ -248,7 +161,7 @@ class EditPostcodeFlowTest: XCTestCase {
                 """
             }
             
-            myDataScreen.app.buttons.element(boundBy: 2).tap()
+            myDataScreen.editPostcodeButton.tap()
             
             let editPostcodeScreen = EditPostcodeScreen(app: app)
             XCTAssert(editPostcodeScreen.continueButton.exists)

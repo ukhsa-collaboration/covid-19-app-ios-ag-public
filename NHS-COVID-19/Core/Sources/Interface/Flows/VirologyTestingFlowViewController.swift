@@ -16,7 +16,7 @@ public protocol VirologyTestingFlowViewControllerInteracting {
     var acknowledge: (() -> Void)? { get }
 }
 
-public class VirologyTestingFlowViewController: UINavigationController {
+public class VirologyTestingFlowViewController: BaseNavigationController {
     
     public typealias Interacting = VirologyTestingFlowViewControllerInteracting
     
@@ -36,7 +36,7 @@ public class VirologyTestingFlowViewController: UINavigationController {
     
     public init(_ interactor: Interacting) {
         self.interactor = interactor
-        super.init(nibName: nil, bundle: nil)
+        super.init()
         
         monitorState()
     }

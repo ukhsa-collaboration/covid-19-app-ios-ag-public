@@ -14,13 +14,19 @@ struct MetricUploadChunkCreator {
     
     private let collector: MetricCollector
     private let appInfo: AppInfo
-    private let getPostcode: () -> String
+    private let getPostcode: () -> String?
+    private let getLocalAuthority: () -> String?
     private let currentDateProvider: DateProviding
     
-    init(collector: MetricCollector, appInfo: AppInfo, getPostcode: @escaping () -> String, currentDateProvider: DateProviding) {
+    init(collector: MetricCollector,
+         appInfo: AppInfo,
+         getPostcode: @escaping () -> String?,
+         getLocalAuthority: @escaping () -> String?,
+         currentDateProvider: DateProviding) {
         self.collector = collector
         self.appInfo = appInfo
         self.getPostcode = getPostcode
+        self.getLocalAuthority = getLocalAuthority
         self.currentDateProvider = currentDateProvider
     }
     
@@ -38,7 +44,8 @@ struct MetricUploadChunkCreator {
         
         let info = MetricsInfo(
             payload: .triggeredPayload(createTriggeredPayload(dateInterval: uploadInterval)),
-            postalDistrict: getPostcode(),
+            postalDistrict: getPostcode() ?? "",
+            localAuthority: getLocalAuthority() ?? "",
             recordedMetrics: recordedMetrics
         )
         

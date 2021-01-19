@@ -38,14 +38,14 @@ public class LoadingErrorViewController: UIViewController {
     }()
     
     private lazy var descriptionHeading: UIView = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.styleAsHeading()
         label.text = localize(.loading_failed_heading)
         return label
     }()
     
     private lazy var descriptionLabel: UIView = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.styleAsBody()
         label.text = localize(.loading_failed_body)
         return label

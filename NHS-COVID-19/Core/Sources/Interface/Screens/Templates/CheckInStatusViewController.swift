@@ -43,7 +43,7 @@ open class CheckInStatusViewController: UIViewController {
     }()
     
     private lazy var titleLabel: UIView = {
-        let titleLabel = UILabel()
+        let titleLabel = BaseLabel()
         titleLabel.styleAsPageHeader()
         titleLabel.text = status.title
         titleLabel.textAlignment = .center
@@ -54,7 +54,7 @@ open class CheckInStatusViewController: UIViewController {
         guard let explanation = status.explanation else {
             return nil
         }
-        let explanationLabel = UILabel()
+        let explanationLabel = BaseLabel()
         explanationLabel.styleAsBody()
         explanationLabel.text = explanation
         explanationLabel.textAlignment = status.explanationAligment
@@ -77,7 +77,7 @@ open class CheckInStatusViewController: UIViewController {
         guard let explanation = status.moreExplanation else {
             return nil
         }
-        let explanationLabel = UILabel()
+        let explanationLabel = BaseLabel()
         explanationLabel.styleAsBody()
         explanationLabel.text = explanation
         explanationLabel.textAlignment = status.explanationAligment

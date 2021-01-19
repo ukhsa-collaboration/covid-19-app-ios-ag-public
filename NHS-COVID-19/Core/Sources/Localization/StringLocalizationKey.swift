@@ -273,6 +273,15 @@ public enum StringLocalizationKey: String, CaseIterable {
     case virology_book_a_test_book_a_test_for_someone_else
     case virology_book_a_test_button
     
+    case settings_title
+    case settings_row_language
+    
+    case settings_language_title
+    case settings_language_system_language
+    case settings_language_override_languages
+    case settings_language_confirm_selection_alert_no
+    case settings_language_confirm_selection_alert_yes
+    
     case about_this_app_title
     case about_this_app_how_this_app_works_heading
     case about_this_app_how_this_app_works_paragraph1
@@ -306,6 +315,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case mydata_title
     case mydata_section_postcode_description
     case mydata_section_LocalAuthority_description
+    case mydata_section_LocalAuthority_edit_button_accessibility_description
     case mydata_section_test_result_description
     case mydata_section_venue_history_description
     case mydata_section_symptoms_description
@@ -323,7 +333,9 @@ public enum StringLocalizationKey: String, CaseIterable {
     case mydata_delete_data_alert_description
     case mydata_delete_data_alert_button_title
     case mydata_venue_history_edit_button_title
+    case mydata_venue_history_edit_button_accessibility_description
     case mydata_venue_history_done_button_title
+    case mydata_venue_history_done_button_accessibility_description
     
     case accessability_error_os_out_of_date
     case accessability_error_update_the_app
@@ -440,6 +452,20 @@ public enum StringLocalizationKey: String, CaseIterable {
     case financial_support_privacy_notice_link
     case financial_support_privacy_notice_description
     case financial_support_privacy_notice_link_description
+    
+    case settings_language_en
+    case settings_language_ar
+    case settings_language_bn
+    case settings_language_zh
+    case settings_language_gu
+    case settings_language_pl
+    case settings_language_pa
+    case settings_language_ro
+    case settings_language_so
+    case settings_language_tr
+    case settings_language_ur
+    case settings_language_cy
+
 }
 
 public enum ParameterisedStringLocalizable: Equatable {
@@ -487,6 +513,7 @@ public enum ParameterisedStringLocalizable: Equatable {
         
         case local_authority_card_checkbox_accessibility_label = "local_authority_card_checkbox_accessibility_label %@ %@"
         case local_authority_screen_description = "local_authority_screen_description %@"
+        case settings_language_confirm_selection_alert_description = "settings_language_confirm_selection_alert_description %@"
     }
     
     case numbered_list_item(index: Int, text: String)
@@ -537,6 +564,7 @@ public enum ParameterisedStringLocalizable: Equatable {
     
     case local_authority_card_checkbox_accessibility_label(value: String, content: String)
     case local_authority_screen_description(postcode: String)
+    case settings_language_confirm_selection_alert_description(selectedLanguage: String)
     
     var key: Key {
         switch self {
@@ -576,7 +604,7 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .local_authority_confirmation_heading: return .local_authority_confirmation_heading
         case .local_authority_card_checkbox_accessibility_label: return .local_authority_card_checkbox_accessibility_label
         case .local_authority_screen_description: return .local_authority_screen_description
-            
+        case .settings_language_confirm_selection_alert_description: return .settings_language_confirm_selection_alert_description
         }
     }
     
@@ -664,6 +692,8 @@ public enum ParameterisedStringLocalizable: Equatable {
             return [value, content]
         case .local_authority_screen_description(let postcode):
             return [postcode]
+        case .settings_language_confirm_selection_alert_description(let selectedLanguage):
+            return [selectedLanguage]
         }
     }
     

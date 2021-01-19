@@ -49,7 +49,7 @@ public class LinkButton: UIControl {
         stackView.isUserInteractionEnabled = false
         addFillingSubview(stackView)
         
-        let titleLabel = UILabel()
+        let titleLabel = BaseLabel()
         titleLabel.attributedText = NSAttributedString(
             string: title,
             attributes: [

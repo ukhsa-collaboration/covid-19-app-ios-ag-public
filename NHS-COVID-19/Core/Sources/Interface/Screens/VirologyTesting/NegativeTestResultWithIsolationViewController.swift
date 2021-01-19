@@ -23,12 +23,12 @@ extension NegativeTestResultWithIsolationViewController {
                     UIStackView(
                         content: BasicContent(
                             views: [
-                                UILabel()
+                                BaseLabel()
                                     .set(text: localize(.positive_test_result_title))
                                     .styleAsHeading()
                                     .centralized()
                                     .isAccessibilityElement(false),
-                                UILabel()
+                                BaseLabel()
                                     .set(text: localize(.positive_symptoms_days(days: daysToIsolate)))
                                     .styleAsPageHeader()
                                     .centralized()
@@ -42,8 +42,8 @@ extension NegativeTestResultWithIsolationViewController {
                     .accessibilityTraits([.header, .staticText])
                     .accessibilityLabel(localize(.positive_test_please_isolate_accessibility_label(days: daysToIsolate))),
                     viewModel.infobox,
-                    UILabel().set(text: viewModel.explanationLabel).styleAsSecondaryBody(),
-                    UILabel().set(text: localize(.negative_test_result_with_isolation_advice)).styleAsSecondaryBody(),
+                    BaseLabel().set(text: viewModel.explanationLabel).styleAsSecondaryBody(),
+                    BaseLabel().set(text: localize(.negative_test_result_with_isolation_advice)).styleAsSecondaryBody(),
                     LinkButton(
                         title: localize(.negative_test_result_with_isolation_service_link),
                         action: interactor.didTapOnlineServicesLink

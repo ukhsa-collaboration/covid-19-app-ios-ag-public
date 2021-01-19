@@ -32,7 +32,7 @@ private class PolicyUpdateStep: NSObject, OnboardingStep {
     private let interactor: Interacting
     
     private lazy var title: UILabel = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.text = localize(.policy_update_title)
         label.styleAsPageHeader()
         return label
@@ -46,7 +46,7 @@ private class PolicyUpdateStep: NSObject, OnboardingStep {
     }
     
     func label(for localizationKey: StringLocalizationKey) -> UILabel {
-        let label = UILabel()
+        let label = BaseLabel()
         label.text = localize(localizationKey)
         return label
     }
@@ -63,7 +63,7 @@ private class PolicyUpdateStep: NSObject, OnboardingStep {
     var content: [UIView] {
         [
             stack(for: [title]),
-            stack(for: localizeAndSplit(.policy_update_description).map { UILabel().styleAsBody().set(text: String($0)) }),
+            stack(for: localizeAndSplit(.policy_update_description).map { BaseLabel().styleAsBody().set(text: String($0)) }),
             stack(for: [LinkButton(
                 title: localize(.terms_of_use_label),
                 action: interactor.didTapTermsOfUse

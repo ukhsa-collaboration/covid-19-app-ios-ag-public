@@ -13,7 +13,6 @@ class LocalAuthorityFlowTests: XCTestCase {
     override func setUp() {
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = false
-        $runner.initialState.localAuthorityEnabled = true
     }
     
     func testSelectLocalAuthority() throws {

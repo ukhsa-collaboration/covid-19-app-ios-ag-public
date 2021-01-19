@@ -15,10 +15,10 @@ class SelfDiagnosisManagerTests: XCTestCase {
     private let timeZone = TimeZone.utc
     
     fileprivate let symptoms = [
-        (Symptom(title: ["": ""], description: ["": ""], riskWeight: 1), false),
-        (Symptom(title: ["": ""], description: ["": ""], riskWeight: 1), true),
-        (Symptom(title: ["": ""], description: ["": ""], riskWeight: 1), true),
-        (Symptom(title: ["": ""], description: ["": ""], riskWeight: 0), true),
+        (Symptom(title: [Locale(identifier: ""): ""], description: [Locale(identifier: ""): ""], riskWeight: 1), false),
+        (Symptom(title: [Locale(identifier: ""): ""], description: [Locale(identifier: ""): ""], riskWeight: 1), true),
+        (Symptom(title: [Locale(identifier: ""): ""], description: [Locale(identifier: ""): ""], riskWeight: 1), true),
+        (Symptom(title: [Locale(identifier: ""): ""], description: [Locale(identifier: ""): ""], riskWeight: 0), true),
     ]
     
     override func setUp() {

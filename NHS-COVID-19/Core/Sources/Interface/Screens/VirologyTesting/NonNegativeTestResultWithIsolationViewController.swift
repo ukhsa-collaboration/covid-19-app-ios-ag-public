@@ -28,12 +28,12 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
                 UIImageView(testResultType.image).styleAsDecoration(),
                 UIStackView(content: BasicContent(
                     views: [
-                        UILabel()
+                        BaseLabel()
                             .styleAsHeading()
                             .set(text: testResultType.title)
                             .isAccessibilityElement(false)
                             .centralized(),
-                        UILabel()
+                        BaseLabel()
                             .styleAsPageHeader()
                             .set(text: localize(.positive_symptoms_days(days: Self.daysRemaining(isolationEndDate))))
                             .isAccessibilityElement(false)
@@ -47,17 +47,17 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
                     .accessibilityLabel(testResultType.titleAccessibilityLabel(daysRemaining: Self.daysRemaining(isolationEndDate))),
                 InformationBox.indication.badNews(testResultType.infoText),
                 testResultType.explanationText.map {
-                    UILabel().styleAsSecondaryBody().set(text: $0)
+                    BaseLabel().styleAsSecondaryBody().set(text: $0)
                 },
                 testResultType.showExposureFAQ ?
                     [
-                        UILabel().set(text: localize(.exposure_faqs_link_label)).styleAsSecondaryBody(),
+                        BaseLabel().set(text: localize(.exposure_faqs_link_label)).styleAsSecondaryBody(),
                         LinkButton(
                             title: localize(.exposure_faqs_link_button_title),
                             action: interactor.didTapExposureFAQLink
                         ),
                     ] : [],
-                UILabel().styleAsSecondaryBody().set(text: localize(.end_of_isolation_link_label)),
+                BaseLabel().styleAsSecondaryBody().set(text: localize(.end_of_isolation_link_label)),
                 LinkButton(
                     title: localize(.end_of_isolation_online_services_link),
                     action: interactor.didTapOnlineServicesLink

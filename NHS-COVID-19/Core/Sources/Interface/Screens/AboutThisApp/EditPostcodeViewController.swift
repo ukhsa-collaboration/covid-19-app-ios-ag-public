@@ -34,13 +34,13 @@ private class EditPostcodeContent: StickyFooterScrollingContent {
     let spacing: CGFloat = .doubleSpacing
     
     public init(interactor: Interacting, primaryBtnTitle: String) {
-        let errorTitle = UILabel()
-        let errorDescription = UILabel()
+        let errorTitle = BaseLabel()
+        let errorDescription = BaseLabel()
         let textField = TextField(process: PostcodeProcessor.process)
         
         let informationBox = InformationBox.error(
-            UILabel().set(text: localize(.postcode_entry_step_title)).styleAsPageHeader(),
-            UILabel().set(text: localize(.postcode_entry_example_label)).styleAsSecondaryBody(),
+            BaseLabel().set(text: localize(.postcode_entry_step_title)).styleAsPageHeader(),
+            BaseLabel().set(text: localize(.postcode_entry_example_label)).styleAsSecondaryBody(),
             errorTitle.set(text: localize(.postcode_entry_error_title)).styleAsErrorHeading().isHidden(true),
             errorDescription.styleAsError().isHidden(true),
             textField.styleForPostcodeEntry().accessibilityLabel(localize(.postcode_entry_textfield_label))
@@ -68,7 +68,7 @@ private class EditPostcodeContent: StickyFooterScrollingContent {
                 informationBox,
                 UIStackView(content: BasicContent(
                     views: localizeAndSplit(.postcode_entry_information_description_2)
-                        .map { UILabel().styleAsBody().set(text: String($0)) },
+                        .map { BaseLabel().styleAsBody().set(text: String($0)) },
                     spacing: .standardSpacing,
                     margins: mutating(.zero) {
                         $0.left = Self.infoboxInset

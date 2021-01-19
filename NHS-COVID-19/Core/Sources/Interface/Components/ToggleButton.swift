@@ -38,6 +38,7 @@ public struct ToggleButton: View {
         .background(Color(.surface))
         .clipShape(RoundedRectangle(cornerRadius: .menuButtonCornerRadius))
         .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.04), radius: .stripeWidth, x: 0, y: 0)
+        .environment(\.locale, Locale(identifier: currentLanguageCode()))
     }
 }
 

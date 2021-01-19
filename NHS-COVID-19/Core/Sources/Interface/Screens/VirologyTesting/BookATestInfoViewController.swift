@@ -15,14 +15,14 @@ public protocol BookATestInfoViewControllerInteracting {
 extension BookATestInfoViewController {
     static func content(interactor: Interacting) -> [StackViewContentProvider] {
         [
-            UILabel().styleAsPageHeader().set(text: localize(.virology_book_a_test_heading)),
-            localizeAndSplit(.virology_book_a_test_description).map { UILabel().styleAsBody().set(text: String($0)) },
-            UILabel().styleAsBody().set(text: localize(.virology_book_a_test_paragraph4)),
+            BaseLabel().styleAsPageHeader().set(text: localize(.virology_book_a_test_heading)),
+            localizeAndSplit(.virology_book_a_test_description).map { BaseLabel().styleAsBody().set(text: String($0)) },
+            BaseLabel().styleAsBody().set(text: localize(.virology_book_a_test_paragraph4)),
             LinkButton(
                 title: localize(.virology_book_a_test_testing_privacy_notice),
                 action: interactor.didTapTestingPrivacyNotice
             ),
-            UILabel().styleAsBody().set(text: localize(.virology_book_a_test_paragraph5)),
+            BaseLabel().styleAsBody().set(text: localize(.virology_book_a_test_paragraph5)),
             LinkButton(
                 title: localize(.virology_book_a_test_app_privacy_notice),
                 action: interactor.didTapAppPrivacyNotice

@@ -23,7 +23,7 @@ private class ShareKeysConfirmationContent: StickyFooterScrollingContent {
         scrollingContent = BasicContent(
             views: [
                 UIStackView(content: BasicContent(
-                    views: [UILabel().styleAsPageHeader().set(text: localize(.share_keys_confirmation_heading))],
+                    views: [BaseLabel().styleAsPageHeader().set(text: localize(.share_keys_confirmation_heading))],
                     spacing: 0,
                     margins: mutating(.zero) {
                         $0.left = Self.infoboxInset

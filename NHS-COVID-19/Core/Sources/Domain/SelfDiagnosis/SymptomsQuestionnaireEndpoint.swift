@@ -22,7 +22,7 @@ struct SymptomsQuestionnaireEndpoint: HTTPEndpoint {
     }
 }
 
-private struct Payload: Codable {
+private struct Payload: Decodable {
     public var symptoms: [Symptom]
     public var riskThreshold: Double
     public var symptomsOnsetWindowDays: Int

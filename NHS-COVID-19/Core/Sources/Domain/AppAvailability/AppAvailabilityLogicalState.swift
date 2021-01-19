@@ -2,11 +2,12 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Common
 import Foundation
 
 struct AppAvailabilityMetadata: Equatable {
-    let titles: [Locale: String]
-    let descriptions: [Locale: String]
+    let titles: LocaleString
+    let descriptions: LocaleString
     let state: AppAvailabilityLogicalState
 }
 

@@ -53,7 +53,7 @@ public class ApplicationCoordinator {
     public let country: DomainProperty<Country>
     private let shouldRecommendUpdate = CurrentValueSubject<Bool, Never>(true)
     private let policyManager: PolicyVersionManager
-    private let localAuthorityManager: LocalAuthorityManager?
+    private let localAuthorityManager: LocalAuthorityManager
     private let isolationPaymentContext: IsolationPaymentContext
     private let trafficObfuscationClient: TrafficObfuscationClient
     
@@ -63,6 +63,9 @@ public class ApplicationCoordinator {
     public var state = ApplicationState.starting
     
     private var currentDateProvider: DateProviding
+    private var languageStore: LanguageStore
+    
+    public let localeConfiguration: DomainProperty<LocaleConfiguration>
     
     public init(services: ApplicationServices, enabledFeatures: [Feature]) {
         application = services.application
@@ -72,6 +75,9 @@ public class ApplicationCoordinator {
         currentDateProvider = services.currentDateProvider
         let dateProvider = services.currentDateProvider
         Self.logger.debug("Initialising")
+        
+        languageStore = LanguageStore(store: services.encryptedStore)
+        localeConfiguration = languageStore.$configuration.domainProperty()
         
         appAvailabilityManager = AppAvailabilityManager(
             distributeClient: distributeClient,
@@ -108,25 +114,13 @@ public class ApplicationCoordinator {
         self.riskyPostcodeEndpointManager = riskyPostcodeEndpointManager
         self.postcodeStore = postcodeStore
         
-        if enabledFeatures.contains(.localAuthority) {
-            let localAuthorityManager = LocalAuthorityManager(
-                localAuthoritiesValidator: localAuthorityValidator,
-                postcodeStore: postcodeStore
-            )
-            
-            country = localAuthorityManager.$country.domainProperty()
-            self.localAuthorityManager = localAuthorityManager
-        } else {
-            localAuthorityManager = nil
-            country = postcodeStore.$postcode.map { postcode in
-                if let postcode = postcode {
-                    return services.postcodeValidator.country(for: postcode) ?? Country.england
-                }
-                return Country.england
-            }
-            .eraseToAnyPublisher()
-            .domainProperty()
-        }
+        let localAuthorityManager = LocalAuthorityManager(
+            localAuthoritiesValidator: localAuthorityValidator,
+            postcodeStore: postcodeStore
+        )
+        
+        country = localAuthorityManager.$country.domainProperty()
+        self.localAuthorityManager = localAuthorityManager
         
         isolationContext = IsolationContext(
             isolationConfiguration: CachedResponse(
@@ -185,7 +179,8 @@ public class ApplicationCoordinator {
             services: services,
             isolationLength: isolationContext.isolationConfiguration.value.contactCase,
             interestedInExposureNotifications: interestedInExposureNotifications,
-            getPostcode: { postcodeStore.postcode }
+            getPostcode: { postcodeStore.postcode },
+            getLocalAuthority: { postcodeStore.localAuthorityId }
         )
         
         userNotificationsStateController = UserNotificationsStateController(
@@ -197,10 +192,10 @@ public class ApplicationCoordinator {
             client: services.apiClient,
             encryptedStore: services.encryptedStore,
             currentDateProvider: currentDateProvider,
-            appInfo: services.appInfo
-        ) {
-            postcodeStore.postcode?.value ?? ""
-        }
+            appInfo: services.appInfo,
+            getPostcode: { postcodeStore.postcode?.value },
+            getLocalAuthority: { postcodeStore.localAuthorityId?.value }
+        )
         
         circuitBreaker = CircuitBreaker(
             client: CircuitBreakerClient(httpClient: services.apiClient),
@@ -292,17 +287,10 @@ public class ApplicationCoordinator {
             return .authorizationRequired(requestPermissions: requestPermissions, country: country)
         case .canNotRunExposureNotification(let reason):
             return .canNotRunExposureNotification(reason: disabledReason(from: reason), country: country.currentValue)
-        case .postcodeRequired:
-            return .postcodeRequired(savePostcode: savePostcode)
         case .postcodeAndLocalAuthorityRequired:
-            if let localAuthorityManager = self.localAuthorityManager {
-                return .postcodeAndLocalAuthorityRequired(openURL: application.open, getLocalAuthorities: localAuthorityManager.localAuthorities, storeLocalAuthority: localAuthorityManager.store)
-            } else {
-                return .postcodeRequired(savePostcode: savePostcode)
-            }
+            return .postcodeAndLocalAuthorityRequired(openURL: application.open, getLocalAuthorities: localAuthorityManager.localAuthorities, storeLocalAuthority: localAuthorityManager.store)
         case .localAuthorityRequired:
-            if let postcode = postcodeStore.postcode,
-                let localAuthorityManager = localAuthorityManager {
+            if let postcode = postcodeStore.postcode {
                 let result = localAuthorityManager.localAuthorities(for: postcode)
                 if case .success(let localAuthorities) = result {
                     return .localAuthorityRequired(postcode: postcode, localAuthorities: localAuthorities, openURL: application.open, storeLocalAuthority: localAuthorityManager.store)
@@ -343,9 +331,11 @@ public class ApplicationCoordinator {
                     currentDateProvider: currentDateProvider,
                     exposureNotificationReminder: exposureNotificationReminder,
                     appReviewPresenter: appReviewPresenter,
-                    getLocalAuthorities: localAuthorityManager?.localAuthorities,
-                    storeLocalAuthorities: localAuthorityManager?.store,
-                    isolationPaymentState: isolationPaymentContext.isolationPaymentState
+                    getLocalAuthorities: localAuthorityManager.localAuthorities,
+                    storeLocalAuthorities: localAuthorityManager.store,
+                    isolationPaymentState: isolationPaymentContext.isolationPaymentState,
+                    currentLocaleConfiguration: languageStore.$configuration.domainProperty(),
+                    storeNewLanguage: languageStore.save
                 )
             )
         case .recommendingUpdate(let reason, let titles, let descriptions):
@@ -487,7 +477,6 @@ public class ApplicationCoordinator {
     }
     
     private var rawState: AnyPublisher<RawState, Never> {
-        let localAuthorityManager = self.localAuthorityManager
         return appAvailabilityManager.$metadata
             .combineLatest(completedOnboardingForCurrentSession, shouldRecommendUpdate, policyManager.$needsAcceptNewVersion)
             .combineLatest(exposureNotificationContext.exposureNotificationStateController.combinedState, userNotificationsStateController.$authorizationStatus, postcodeStore.$state)
@@ -499,8 +488,7 @@ public class ApplicationCoordinator {
                     userNotificationsStatus: f.2,
                     postcodeState: f.3,
                     shouldRecommendUpdate: f.0.2,
-                    shouldShowPolicyUpdate: f.0.3,
-                    localAuthorityEnabled: localAuthorityManager != nil
+                    shouldShowPolicyUpdate: f.0.3
                 )
             }
             .removeDuplicates()
@@ -552,7 +540,6 @@ public class ApplicationCoordinator {
              .failedToStart,
              .onboarding,
              .postcodeAndLocalAuthorityRequired,
-             .postcodeRequired,
              .starting:
             // We're not in a state where we can do background jobs,
             // including exposure detections.
@@ -636,6 +623,13 @@ public class ApplicationCoordinator {
             BackgroundTaskAggregator.Job(
                 preferredFrequency: Self.housekeepingJobBackgroundTaskFrequency,
                 work: exposureNotificationContext.exposureNotificationStateController.recordMetrics
+            )
+        )
+        
+        enabledJobs.append(
+            BackgroundTaskAggregator.Job(
+                preferredFrequency: Self.metricsJobBackgroundTaskFrequency,
+                work: isolationPaymentContext.recordMetrics
             )
         )
         

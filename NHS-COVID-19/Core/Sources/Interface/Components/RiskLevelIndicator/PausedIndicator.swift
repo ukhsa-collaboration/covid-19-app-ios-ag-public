@@ -42,6 +42,7 @@ public struct PausedIndicator: View {
         .accessibility(label: Text(localize(.risk_level_indicator_contact_tracing_not_active)))
         .accessibility(addTraits: .isImage)
         .frame(height: 280)
+        .environment(\.locale, Locale(identifier: currentLanguageCode()))
     }
 }
 

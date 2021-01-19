@@ -17,9 +17,9 @@ private class NoSymptomsContent: PrimaryButtonStickyFooterScrollingContent {
         super.init(
             scrollingViews: [
                 UIImageView(.isolationEnded).styleAsDecoration(),
-                UILabel().set(text: localize(.no_symptoms_heading)).styleAsPageHeader(),
-                UILabel().set(text: localize(.no_symptoms_body_1)).styleAsBody(),
-                UILabel().set(text: localize(.no_symptoms_body_2)).styleAsBody(),
+                BaseLabel().set(text: localize(.no_symptoms_heading)).styleAsPageHeader(),
+                BaseLabel().set(text: localize(.no_symptoms_body_1)).styleAsBody(),
+                BaseLabel().set(text: localize(.no_symptoms_body_2)).styleAsBody(),
                 LinkButton(title: localize(.no_symptoms_link), action: interactor.didTapNHS111Link),
             ],
             primaryButton: (

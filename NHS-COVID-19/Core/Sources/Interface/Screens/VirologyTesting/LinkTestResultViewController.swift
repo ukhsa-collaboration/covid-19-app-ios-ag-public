@@ -18,35 +18,35 @@ public class LinkTestResultViewController: UIViewController {
     private var cancellable: AnyCancellable?
     
     private lazy var titleLabel: UILabel = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.styleAsPageHeader()
         label.text = localize(.link_test_result_header)
         return label
     }()
     
     private lazy var descriptionLabel: UILabel = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.styleAsBody()
         label.text = localize(.link_test_result_description)
         return label
     }()
     
     private lazy var headingLabel: UILabel = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.styleAsHeading()
         label.text = localize(.link_test_result_enter_code_heading)
         return label
     }()
     
     private lazy var exampleLabel: UILabel = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.styleAsSecondaryBody()
         label.text = localize(.link_test_result_enter_code_example)
         return label
     }()
     
     private lazy var errorTitle: UILabel = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.styleAsErrorHeading()
         label.isHidden = true
         return label
@@ -67,7 +67,7 @@ public class LinkTestResultViewController: UIViewController {
     }()
     
     private lazy var testCodeTextField: UITextField = {
-        let textField = UITextField()
+        let textField = BaseTextField()
         textField.keyboardType = .asciiCapable
         textField.borderStyle = .roundedRect
         textField.delegate = self

@@ -4,12 +4,12 @@
 
 import UIKit
 
-class TextField: UITextField {
+class TextField: BaseTextField {
     private let process: (String) -> String
     
     init(process: @escaping (String) -> String) {
         self.process = process
-        super.init(frame: .zero)
+        super.init()
         setup()
     }
     

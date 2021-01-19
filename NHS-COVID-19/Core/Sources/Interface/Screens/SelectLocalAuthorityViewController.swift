@@ -102,8 +102,8 @@ struct SelectLocalAuthorityContent {
         
         views = [
             UIImageView(.onboardingPostcode).styleAsDecoration(),
-            UILabel().set(text: localize(.local_authority_information_title)).styleAsPageHeader(),
-            UILabel()
+            BaseLabel().set(text: localize(.local_authority_information_title)).styleAsPageHeader(),
+            BaseLabel()
                 .set(text: localize(.local_authority_screen_description(postcode: localAuthorityViewModel.postcode)))
                 .styleAsSecondaryBody(),
             LinkButton(

@@ -94,9 +94,6 @@ public enum Sandbox {
         @TestInjected("sandbox.testResultEndDate")
         private(set) var testResultEndDateString: String?
         
-        @TestInjected("scenario.toggle.localAuthority", defaultValue: FeatureToggleStorage.getEnabledFeatures().contains(.localAuthority))
-        public var localAuthorityEnabled: Bool
-        
         @TestInjected("sandbox.localAuthorityId")
         public var localAuthorityId: String?
         

@@ -14,11 +14,10 @@ enum LogicalState: Equatable {
     }
     
     case starting
-    case appUnavailable(AppAvailabilityLogicalState.UnavailabilityReason, descriptions: [Locale: String])
-    case recommendingUpdate(AppAvailabilityLogicalState.RecommendationReason, titles: [Locale: String], descriptions: [Locale: String])
+    case appUnavailable(AppAvailabilityLogicalState.UnavailabilityReason, descriptions: LocaleString)
+    case recommendingUpdate(AppAvailabilityLogicalState.RecommendationReason, titles: LocaleString, descriptions: LocaleString)
     case failedToStart
     case onboarding
-    case postcodeRequired
     case postcodeAndLocalAuthorityRequired
     case localAuthorityRequired
     case policyAcceptanceRequired
@@ -56,6 +55,8 @@ public struct RunningAppContext {
     public var getLocalAuthorities: GetLocalAuthorities?
     public var storeLocalAuthorities: StoreLocalAuthorities?
     public var isolationPaymentState: DomainProperty<IsolationPaymentState>
+    public var currentLocaleConfiguration: DomainProperty<LocaleConfiguration>
+    public var storeNewLanguage: (_ localeConfiguration: LocaleConfiguration) -> Void
 }
 
 public typealias GetLocalAuthorities = (_ postcode: Postcode) -> Result<Set<LocalAuthority>, PostcodeValidationError>
@@ -65,18 +66,18 @@ public enum ApplicationState {
     
     public enum AppUnavailabilityReason {
         /// OS version is too old for this app
-        case iOSTooOld(descriptions: [Locale: String])
+        case iOSTooOld(descriptions: LocaleString)
         
         /// App version is too old
-        case appTooOld(updateAvailable: Bool, descriptions: [Locale: String])
+        case appTooOld(updateAvailable: Bool, descriptions: LocaleString)
     }
     
     public enum RecommendedUpdateReason {
         /// Recommended App update is availbale
-        case newRecommendedAppUpdate(title: [Locale: String], descriptions: [Locale: String], dismissAction: () -> Void)
+        case newRecommendedAppUpdate(title: LocaleString, descriptions: LocaleString, dismissAction: () -> Void)
         
         /// Recommended iOS update is available
-        case newRecommendedOSupdate(title: [Locale: String], descriptions: [Locale: String], dismissAction: () -> Void)
+        case newRecommendedOSupdate(title: LocaleString, descriptions: LocaleString, dismissAction: () -> Void)
     }
     
     public enum ExposureDetectionDisabledReason {
@@ -111,9 +112,6 @@ public enum ApplicationState {
     ///
     /// The user can help the app recover from this.
     case canNotRunExposureNotification(reason: ExposureDetectionDisabledReason, country: Country)
-    
-    /// Application requires postcode
-    case postcodeRequired(savePostcode: (_ postcode: String) -> Result<Void, PostcodeValidationError>)
     
     /// Application requires postcode and local authority
     case postcodeAndLocalAuthorityRequired(

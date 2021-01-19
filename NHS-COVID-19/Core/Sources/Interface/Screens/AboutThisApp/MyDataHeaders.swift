@@ -18,19 +18,23 @@ extension MyDataViewController {
                 isEditing?.sink { [weak self] isEditing in
                     let text = isEditing ? localize(.mydata_venue_history_done_button_title) : localize(.mydata_venue_history_edit_button_title)
                     self?.button.setTitle(text, for: .normal)
+                    self?.button.accessibilityLabel = isEditing ? localize(.mydata_venue_history_done_button_accessibility_description) : localize(.mydata_venue_history_edit_button_accessibility_description)
                 }
             }
         }
         
         override init(reuseIdentifier: String?) {
-            label = UILabel().styleAsSectionHeader()
+            label = BaseLabel().styleAsSectionHeader()
             button = UIButton()
+            button.accessibilityTraits = .button
             
             super.init(reuseIdentifier: reuseIdentifier)
             
             button.styleAsPlain(with: UIColor(.nhsBlue))
             button.setTitle(localize(.mydata_venue_history_edit_button_title), for: .normal)
             button.addTarget(self, action: #selector(act))
+            
+            accessibilityElements = [label, button]
             
             addAutolayoutSubview(label)
             addAutolayoutSubview(button)
@@ -59,9 +63,6 @@ extension MyDataViewController {
         static func create(tableView: UITableView, title: String, action: @escaping () -> Void, isEditing: InterfaceProperty<Bool>) -> MyDataViewController.VenueHistorySectionHeader {
             let dequeued = tableView.dequeueReusableHeaderFooterView(withIdentifier: EditableSectionHeader.reuseIdentifier) as? VenueHistorySectionHeader
             let header = (dequeued ?? VenueHistorySectionHeader()).setting(title: title, action: action, isEditing: isEditing)
-            
-            header.button.accessibilityIdentifier = "venue_history_edit_button"
-            #warning("This is a hack to account for two 'Edit' buttons with the same label. For accessibility it would be better for both buttons to have a different (accessibility) label")
             return header
         }
         
@@ -83,14 +84,19 @@ extension MyDataViewController {
         private var action: (() -> Void)?
         
         override init(reuseIdentifier: String?) {
-            label = UILabel().styleAsSectionHeader()
+            label = BaseLabel().styleAsSectionHeader()
+            
             button = UIButton()
+            button.accessibilityLabel = localize(.mydata_section_LocalAuthority_edit_button_accessibility_description)
+            button.accessibilityTraits = .button
             
             super.init(reuseIdentifier: reuseIdentifier)
             
             button.styleAsPlain(with: UIColor(.nhsBlue))
             button.setTitle(localize(.mydata_venue_history_edit_button_title), for: .normal)
             button.addTarget(self, action: #selector(act))
+            
+            accessibilityElements = [label, button]
             
             addAutolayoutSubview(label)
             addAutolayoutSubview(button)
@@ -118,9 +124,6 @@ extension MyDataViewController {
         static func create(tableView: UITableView, title: String, action: @escaping () -> Void) -> MyDataViewController.EditableSectionHeader {
             let dequeued = tableView.dequeueReusableHeaderFooterView(withIdentifier: EditableSectionHeader.reuseIdentifier) as? EditableSectionHeader
             let header = (dequeued ?? EditableSectionHeader()).setting(title: title, action: action)
-            
-            header.button.accessibilityIdentifier = "postcode_or_local_authority_edit_button"
-            #warning("This is a hack to account for two 'Edit' buttons with the same label. For accessibility it would be better for both buttons to have a different (accessibility) label")
             return header
         }
         
@@ -138,7 +141,7 @@ extension MyDataViewController {
         let label: UILabel
         
         override init(reuseIdentifier: String?) {
-            label = UILabel().styleAsSectionHeader()
+            label = BaseLabel().styleAsSectionHeader()
             
             super.init(reuseIdentifier: reuseIdentifier)
             

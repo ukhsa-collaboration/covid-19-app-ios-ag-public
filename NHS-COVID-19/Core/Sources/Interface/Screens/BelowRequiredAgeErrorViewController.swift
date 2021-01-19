@@ -26,6 +26,6 @@ private struct AppAvailabilityError: ErrorDetail {
     var logoStrapLineStyle: LogoStrapline.Style = .onboarding
     
     var content: [UIView] {
-        [UILabel().styleAsBody().set(text: description)]
+        [BaseLabel().styleAsBody().set(text: description)]
     }
 }

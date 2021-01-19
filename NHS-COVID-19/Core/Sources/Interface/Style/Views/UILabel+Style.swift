@@ -84,6 +84,7 @@ extension UILabel {
     @discardableResult
     public func styleAsSectionHeader() -> Self {
         textColor = UIColor(.sectionHeaderText)
+        accessibilityTraits = .header
         setDynamicTextStyle(.body)
         return self
     }

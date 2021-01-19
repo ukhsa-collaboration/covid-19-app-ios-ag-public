@@ -14,7 +14,7 @@ public enum TS {
     public static func assert<T>(
         _ actual: @autoclosure () throws -> T,
         equals expected: @autoclosure () throws -> T,
-        _ message: @autoclosure () -> String = "",
+        _ additionalMessage: @autoclosure () -> String = "",
         file: StaticString = #file,
         line: UInt = #line
     ) where T: Equatable {
@@ -23,12 +23,13 @@ public enum TS {
             let expectedValue = try expected()
             guard actualValue != expectedValue else { return }
             
-            let message: String
-            if #available(iOS 13, *) {
-                message = differenceMessage(expected: expectedValue, actual: actualValue)
-            } else {
-                message = differenceMessageCompatibility(expected: expectedValue, actual: actualValue)
-            }
+            let message = [
+                additionalMessage(),
+                differenceMessage(expected: expectedValue, actual: actualValue),
+            ]
+            .filter { $0 != "" }
+            .joined(separator: "\n")
+            
             XCTFail(message, file: file, line: line)
         } catch {
             XCTFail("Threw error “\(error)”", file: file, line: line)
@@ -64,7 +65,7 @@ public enum TS {
         """
     }
     
-    private static func description(for subject: Any) -> String {
+    public static func description(for subject: Any) -> String {
         let object = descriptionObject(for: subject)
         switch descriptionObject(for: subject) {
         case .dictionary, .array, .jsonObject:

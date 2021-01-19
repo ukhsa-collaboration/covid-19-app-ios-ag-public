@@ -33,7 +33,7 @@ public struct LocalAuthorityFlowViewModel: Equatable {
     }
 }
 
-public class LocalAuthorityFlowViewController: UINavigationController {
+public class LocalAuthorityFlowViewController: BaseNavigationController {
     
     public typealias Interacting = LocalAuthorityFlowViewControllerInteracting
     
@@ -62,7 +62,7 @@ public class LocalAuthorityFlowViewController: UINavigationController {
         } else {
             state = isEditMode ? .postcodeEdit : .postcode
         }
-        super.init(nibName: nil, bundle: nil)
+        super.init()
         _ = self.isEditMode == true ? setupDismissAction() : nil
         monitorState()
     }

@@ -19,6 +19,7 @@ class AnalyticsTests: AcceptanceTestCase {
     private let startDate = GregorianDay(year: 2020, month: 1, day: 1).startDate(in: .utc)
     
     override final func setUp() {
+        continueAfterFailure = false
         $instance.exposureNotificationManager = MockWindowsExposureNotificationManager()
         metricsPayloads = []
         currentDateProvider.setDate(startDate)
@@ -27,8 +28,7 @@ class AnalyticsTests: AcceptanceTestCase {
         setUpFunctionalities()
     }
     
-    func setUpFunctionalities() {
-    }
+    func setUpFunctionalities() {}
     
     override func tearDown() {
         apiClient.reset()
@@ -40,9 +40,9 @@ class AnalyticsTests: AcceptanceTestCase {
 
 @available(iOS 13.7, *)
 extension AnalyticsTests {
-    func advanceToEndOfAnalyticsWindow(steps: Int = 12) {
+    private func advanceToEndOfAnalyticsWindow() {
         currentDateProvider.advanceToEndOfAnalyticsWindow(
-            steps: steps,
+            steps: 12,
             performBackgroundTask: performBackgroundTask
         )
     }
@@ -75,50 +75,66 @@ extension AnalyticsTests {
         }
         .store(in: &cancellables)
     }
-}
-
-// MARK: Assertion
-
-@available(iOS 13.7, *)
-extension AnalyticsTests {
-    struct Assertion {
-        private let value: Int
-        private let totalBackgroundTasks: Int
-        
-        init(value: Int, totalBackgroundTasks: Int) {
-            self.value = value
-            self.totalBackgroundTasks = totalBackgroundTasks
-        }
-        
-        func equals(_ expectedValue: Int) {
-            XCTAssertEqual(value, expectedValue)
-        }
-        
-        func isPresent() {
-            XCTAssert(value > 0)
-        }
-        
-        func isLessThanTotalBackgroundTasks() {
-            XCTAssert(value < totalBackgroundTasks)
-        }
-        
-        func isNotPresent() {
-            equals(0)
+    
+    func assertOnFields(assertions: (inout FieldAsserter) -> Void) {
+        advanceToEndOfAnalyticsWindow()
+        assertOnLastPacket(assertions: assertions)
+    }
+    
+    func assertOnFieldsForDateRange(dateRange: ClosedRange<Int>, assertions: (inout FieldAsserter) -> Void) {
+        for day in dateRange {
+            advanceToEndOfAnalyticsWindow()
+            assertOnLastPacket(assertions: assertions, day: day)
         }
     }
     
-    func assert(_ keyPath: KeyPath<SubmissionPayload.Metrics, Int>) -> Assertion {
-        Assertion(
-            value: lastMetricsPayload!.metrics[keyPath: keyPath],
-            totalBackgroundTasks: lastMetricsPayload!.metrics.totalBackgroundTasks
-        )
+    func assertOnLastFields(assertions: (inout FieldAsserter) -> Void) {
+        assertOnLastPacket(assertions: assertions)
+    }
+    
+    private func assertOnLastPacket(assertions: (inout FieldAsserter) -> Void, day: Int? = nil) {
+        var fieldAsserter = FieldAsserter()
+        assertions(&fieldAsserter)
+        fieldAsserter.runAllAssertions(metrics: lastMetricsPayload!.metrics, day: day)
+    }
+    
+    func assertAnalyticsPacketIsNormal() {
+        advanceToEndOfAnalyticsWindow()
+        FieldAsserter().runAllAssertions(metrics: lastMetricsPayload!.metrics)
     }
 }
 
 // MARK: Model
 
 // Copy of SubmissionPayload from MetricSubmissionEndpoint.swift
-struct SubmissionPayload: Codable {
+struct SubmissionPayload: Decodable {
+    enum MetricField: Decodable, Equatable, ExpressibleByIntegerLiteral {
+        case exact(value: Int)
+        case notZero
+        case lessThanTotalBackgroundTasks
+        
+        init(from decoder: Decoder) throws {
+            self = .exact(value: try decoder.singleValueContainer().decode(Int.self))
+        }
+        
+        var value: Int {
+            switch self {
+            case .exact(let value):
+                return value
+            case .notZero, .lessThanTotalBackgroundTasks:
+                // Ideally, we'd structure our types so that values decoded would not be representable with these cases
+                // (see our implementation of `init(from: Decoder)`).
+                //
+                // For now, we know that to be the case, so assert that a value exists if we ask for it.
+                preconditionFailure("We should never be in a scenario where this is used.")
+            }
+        }
+        
+        init(integerLiteral value: Int) {
+            self = .exact(value: value)
+        }
+    }
+    
     struct Period: Codable {
         var startDate: String
         var endDate: String
@@ -131,53 +147,74 @@ struct SubmissionPayload: Codable {
         var latestApplicationVersion: String
     }
     
-    struct Metrics: Codable {
+    struct Metrics: Decodable, Equatable {
         // Networking
-        var cumulativeWifiUploadBytes = 0
-        var cumulativeWifiDownloadBytes = 0
-        var cumulativeCellularUploadBytes = 0
-        var cumulativeCellularDownloadBytes = 0
-        var cumulativeDownloadBytes = 0
-        var cumulativeUploadBytes = 0
+        var cumulativeWifiUploadBytes: MetricField = 0
+        var cumulativeWifiDownloadBytes: MetricField = 0
+        var cumulativeCellularUploadBytes: MetricField = 0
+        var cumulativeCellularDownloadBytes: MetricField = 0
+        var cumulativeDownloadBytes: MetricField = 0
+        var cumulativeUploadBytes: MetricField = 0
         
         // Events triggered
-        var completedOnboarding = 0
-        var checkedIn = 0
-        var canceledCheckIn = 0
-        var completedQuestionnaireAndStartedIsolation = 0
-        var completedQuestionnaireButDidNotStartIsolation = 0
-        var receivedPositiveTestResult = 0
-        var receivedNegativeTestResult = 0
-        var receivedVoidTestResult = 0
-        var receivedVoidTestResultEnteredManually = 0
-        var receivedPositiveTestResultEnteredManually = 0
-        var receivedNegativeTestResultEnteredManually = 0
-        var receivedVoidTestResultViaPolling = 0
-        var receivedPositiveTestResultViaPolling = 0
-        var receivedNegativeTestResultViaPolling = 0
-        var receivedRiskyContactNotification = 0
-        var startedIsolation = 0
+        var completedOnboarding: MetricField = 0
+        var checkedIn: MetricField = 0
+        var canceledCheckIn: MetricField = 0
+        var completedQuestionnaireAndStartedIsolation: MetricField = 0
+        var completedQuestionnaireButDidNotStartIsolation: MetricField = 0
+        var receivedPositiveTestResult: MetricField = 0
+        var receivedNegativeTestResult: MetricField = 0
+        var receivedVoidTestResult: MetricField = 0
+        var receivedVoidTestResultEnteredManually: MetricField = 0
+        var receivedPositiveTestResultEnteredManually: MetricField = 0
+        var receivedNegativeTestResultEnteredManually: MetricField = 0
+        var receivedVoidTestResultViaPolling: MetricField = 0
+        var receivedPositiveTestResultViaPolling: MetricField = 0
+        var receivedNegativeTestResultViaPolling: MetricField = 0
+        var receivedRiskyContactNotification: MetricField = 0
+        var startedIsolation: MetricField = 0
         
         // How many times background tasks ran
-        var totalBackgroundTasks = 0
+        var totalBackgroundTasks: MetricField = 0
         
         // How many times background tasks ran when app was running normally (max: totalBackgroundTasks)
-        var runningNormallyBackgroundTick = 0
+        var runningNormallyBackgroundTick: MetricField = 0
         
         // Background ticks (max: runningNormallyBackgroundTick)
-        var isIsolatingBackgroundTick = 0
-        var hasHadRiskyContactBackgroundTick = 0
-        var hasSelfDiagnosedBackgroundTick = 0
-        var hasTestedPositiveBackgroundTick = 0
-        var isIsolatingForSelfDiagnosedBackgroundTick = 0
-        var isIsolatingForTestedPositiveBackgroundTick = 0
-        var isIsolatingForHadRiskyContactBackgroundTick = 0
-        var hasSelfDiagnosedPositiveBackgroundTick = 0
-        var encounterDetectionPausedBackgroundTick = 0
+        var isIsolatingBackgroundTick: MetricField = 0
+        var hasHadRiskyContactBackgroundTick: MetricField = 0
+        var hasSelfDiagnosedBackgroundTick: MetricField = 0
+        var hasTestedPositiveBackgroundTick: MetricField = 0
+        var isIsolatingForSelfDiagnosedBackgroundTick: MetricField = 0
+        var isIsolatingForTestedPositiveBackgroundTick: MetricField = 0
+        var isIsolatingForHadRiskyContactBackgroundTick: MetricField = 0
+        var hasSelfDiagnosedPositiveBackgroundTick: MetricField = 0
+        var encounterDetectionPausedBackgroundTick: MetricField = 0
+        
+        var receivedActiveIpcToken: MetricField = 0
+        var selectedIsolationPaymentsButton: MetricField = 0
+        var launchedIsolationPaymentsApplication: MetricField = 0
+        var haveActiveIpcTokenBackgroundTick: MetricField = 0
+
     }
     
     var includesMultipleApplicationVersions: Bool
     var analyticsWindow: Period
     var metadata: Metadata
     var metrics: Metrics
+}
+
+extension SubmissionPayload.MetricField: CustomDescriptionConvertible {
+    
+    var descriptionObject: Description {
+        switch self {
+        case .exact(let value):
+            return .string("\(value)")
+        case .notZero:
+            return .string("not-zero")
+        case .lessThanTotalBackgroundTasks:
+            return .string("less-than-totalBackgroundTasks")
+        }
+    }
+    
 }

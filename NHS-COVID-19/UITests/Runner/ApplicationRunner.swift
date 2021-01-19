@@ -2,6 +2,7 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Common
 import Foundation
 @_exported import Localization
 @_exported import Scenarios
@@ -114,6 +115,8 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
         app.launchEnvironment[Runner.disableHardwareKeyboard] = "1"
         app.launchArguments = ["-\(Runner.activeScenarioDefaultKey)", Scenario.id] + configuration.initialState.launchArguments
         
+        testBundle.becomeCurrentForTesting()
+        
         if let deviceConfiguration = deviceConfiguration {
             app.launchArguments += [
                 "-UIPreferredContentSizeCategoryName", deviceConfiguration.contentSize.rawValue,
@@ -121,19 +124,17 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
                 "-AppleLanguages", "(\(deviceConfiguration.language))",
             ]
             
-            let localizedTestBundle = testBundle.localizedBundle(for: deviceConfiguration.language) ?? testBundle
-            localizedTestBundle.becomeCurrentForTesting()
-        } else {
-            testBundle.becomeCurrentForTesting()
+            let localeConfiguration = LocaleConfiguration.custom(localeIdentifier: deviceConfiguration.language)
+            localeConfiguration.becomeCurrent()
         }
         
         app.launch()
         useCaseBuilder?.app = app
         useCaseBuilder?.deviceConfiguration = deviceConfiguration
         defer {
+            LocaleConfiguration.systemPreferred.becomeCurrent()
             useCaseBuilder?.app = nil
             useCaseBuilder?.deviceConfiguration = nil
-            testBundle.becomeCurrentForTesting()
         }
         
         try work(app)
@@ -183,7 +184,6 @@ private class MainWindowNotReadyError: Error {}
 private extension Bundle {
     
     func becomeCurrentForTesting() {
-        Localization.bundle = self
         UIColor.bundle = self
         Color.bundle = self
         UIImage.bundle = self

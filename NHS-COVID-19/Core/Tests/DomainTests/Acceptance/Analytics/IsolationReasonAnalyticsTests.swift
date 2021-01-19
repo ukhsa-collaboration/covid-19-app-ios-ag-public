@@ -21,97 +21,217 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
     // >0 if the app is aware that the user has completed the questionnaire with symptoms
     // this currently happens during an isolation and for the 14 days after isolation.
     func testHasSelfDiagnosedBackgroundTickIsPresentWhenCompletedQuestionnaireAndFor14DaysAfterIsolation() throws {
-        // Current date: 1st Jan
         // Starting state: App running normally, not in isolation
-        advanceToEndOfAnalyticsWindow()
         // Current date: 2nd Jan -> Analytics packet for: 1st Jan
-        assert(\.hasSelfDiagnosedBackgroundTick).isNotPresent()
-        assert(\.isIsolatingBackgroundTick).isNotPresent()
+        assertAnalyticsPacketIsNormal()
         
         // Complete questionnaire with risky symptoms on 2nd Jan
         // Symptom onset date: 2nd Jan
         // Isolation end date: 12th Jan
         try questionnaire.selfDiagnosePositive(onsetDay: currentDateProvider.currentGregorianDay(timeZone: .utc))
         
-        advanceToEndOfAnalyticsWindow()
         // Current date: 3rd Jan -> Analytics packet for: 2nd Jan
         // Now in isolation due to self-diagnosis
-        assert(\.completedQuestionnaireAndStartedIsolation).equals(1)
-        assert(\.isIsolatingBackgroundTick).isPresent()
-        assert(\.hasSelfDiagnosedBackgroundTick).isPresent()
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.completedQuestionnaireAndStartedIsolation)
+            assertField.equals(expected: 1, \.startedIsolation)
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+        }
         
         // Dates: 4th-13th Jan -> Analytics packets for: 3rd-12th Jan
         // Still in isolation
-        for _ in 4 ... 13 {
-            advanceToEndOfAnalyticsWindow()
-            assert(\.completedQuestionnaireAndStartedIsolation).isNotPresent()
-            assert(\.isIsolatingBackgroundTick).isPresent()
-            assert(\.isIsolatingForSelfDiagnosedBackgroundTick).isPresent()
-            assert(\.hasSelfDiagnosedBackgroundTick).isPresent()
+        assertOnFieldsForDateRange(dateRange: 4 ... 13) { assertField in
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
         }
         
         // Dates: 14th-27th Jan -> Analytics packets for: 13th-26th Jan
         // Isolation is over, but isolation reason still stored for 14 days
-        for _ in 14 ... 27 {
-            advanceToEndOfAnalyticsWindow()
-            assert(\.isIsolatingBackgroundTick).isNotPresent()
-            assert(\.isIsolatingForSelfDiagnosedBackgroundTick).isNotPresent()
-            assert(\.hasSelfDiagnosedBackgroundTick).isPresent()
+        assertOnFieldsForDateRange(dateRange: 14 ... 27) { assertField in
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
         }
         
-        advanceToEndOfAnalyticsWindow()
         // Current date: 27th Jan -> Analytics packet for: 26th Jan
         // Previous isolation reason no longer stored
-        assert(\.isIsolatingBackgroundTick).isNotPresent()
-        assert(\.isIsolatingForSelfDiagnosedBackgroundTick).isNotPresent()
-        assert(\.hasSelfDiagnosedBackgroundTick).isNotPresent()
+        assertAnalyticsPacketIsNormal()
     }
     
     // hasHadRiskyContactBackgroundTick
     // >0 if the app is aware that the user has had a risky contact
     // this currently happens during an isolation and for the 14 days after isolation
     func testHasHadRiskyContactBackgroundTickIsPresentWhenIsolatingAndFor14DaysAfter() throws {
-        // Current date: 1st Jan
         // Starting state: App running normally, not in isolation
-        advanceToEndOfAnalyticsWindow()
         // Current date: 2nd Jan -> Analytics packet for: 1st Jan
-        assert(\.hasSelfDiagnosedBackgroundTick).isNotPresent()
-        assert(\.isIsolatingBackgroundTick).isNotPresent()
-        assert(\.isIsolatingForHadRiskyContactBackgroundTick).isNotPresent()
+        assertAnalyticsPacketIsNormal()
         
         // Has risky contact on 2nd Jan
         // Isolation end date: 13th Jan
         riskyContact.trigger(exposureDate: currentDateProvider.currentDate) {
-            self.advanceToEndOfAnalyticsWindow()
+            self.assertOnFields { assertField in
+                // Current date: 3rd Jan -> Analytics packet for: 2nd Jan
+                // Now in isolation due to risky contact
+                assertField.equals(expected: 1, \.startedIsolation)
+                assertField.equals(expected: 1, \.receivedRiskyContactNotification)
+                assertField.isPresent(\.isIsolatingBackgroundTick)
+                assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
+                assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            }
         }
         
-        // Current date: 3rd Jan -> Analytics packet for: 2nd Jan
-        // Now in isolation due to risky contact
-        assert(\.isIsolatingBackgroundTick).isPresent()
-        assert(\.isIsolatingForHadRiskyContactBackgroundTick).isPresent()
-        assert(\.hasHadRiskyContactBackgroundTick).isPresent()
+        // Has another risky contact on 3rd Jan as already isolating
+        // This should not increment the "new isolation" fields agains
+        riskyContact.trigger(exposureDate: currentDateProvider.currentDate) {
+            self.assertOnFields { assertField in
+                assertField.isPresent(\.isIsolatingBackgroundTick)
+                assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
+                assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            }
+        }
         
         // Dates: 5th-13th Jan -> Analytics packets for: 4rd-12th Jan
         // Still in isolation
-        for _ in 5 ... 14 {
-            advanceToEndOfAnalyticsWindow()
-            assert(\.isIsolatingBackgroundTick).isPresent()
-            assert(\.isIsolatingForHadRiskyContactBackgroundTick).isPresent()
-            assert(\.hasHadRiskyContactBackgroundTick).isPresent()
+        assertOnFieldsForDateRange(dateRange: 5 ... 13) { assertField in
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
+            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
         }
         
         // Dates: 14th-27th Jan -> Analytics packets for: 13th-26th Jan
         // Isolation is over, but isolation reason still stored for 14 days
-        for _ in 15 ... 28 {
-            advanceToEndOfAnalyticsWindow()
-            assert(\.hasHadRiskyContactBackgroundTick).isPresent()
+        assertOnFieldsForDateRange(dateRange: 14 ... 27) { assertField in
+            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
         }
         
-        advanceToEndOfAnalyticsWindow()
-        // Current date: 31st Jan -> Analytics packet for: 30th Jan
+        // Current date: 29th Jan -> Analytics packet for: 28th Jan
         // Previous isolation reason no longer stored
-        assert(\.isIsolatingBackgroundTick).isNotPresent()
-        assert(\.isIsolatingForHadRiskyContactBackgroundTick).isNotPresent()
-        assert(\.hasHadRiskyContactBackgroundTick).isNotPresent()
+        assertAnalyticsPacketIsNormal()
+    }
+    
+    func testIsolationReasonInteractionWithSelfDiagnosisAfterRiskyContact() throws {
+        // Starting state: App running normally, not in isolation
+        // Current date: 2nd Jan -> Analytics packet for: 1st Jan
+        assertAnalyticsPacketIsNormal()
+        
+        // Has risky contact on 2nd Jan
+        // Isolation end date: 16th Jan
+        riskyContact.trigger(exposureDate: currentDateProvider.currentDate) {
+            self.assertOnFields { assertField in
+                // Current date: 3rd Jan -> Analytics packet for: 2nd Jan
+                // Now in isolation due to risky contact
+                assertField.equals(expected: 1, \.startedIsolation)
+                assertField.equals(expected: 1, \.receivedRiskyContactNotification)
+                assertField.isPresent(\.isIsolatingBackgroundTick)
+                assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
+                assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            }
+        }
+        
+        try questionnaire.selfDiagnosePositive(onsetDay: currentDateProvider.currentGregorianDay(timeZone: .utc))
+        
+        // This should not increment the "new isolation" fields agains
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.completedQuestionnaireAndStartedIsolation)
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
+            assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedPositiveBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+        }
+        
+        // Still in isolation for both reasons
+        assertOnFieldsForDateRange(dateRange: 5 ... 13) { assertField in
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
+            assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedPositiveBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+        }
+        
+        // Still in isolation because self-diagnosed with symptoms
+        assertOnFieldsForDateRange(dateRange: 14 ... 14) { assertField in
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedPositiveBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+        }
+        
+        // Isolation is over, but isolation reason still stored for 14 days
+        assertOnFieldsForDateRange(dateRange: 15 ... 28) { assertField in
+            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedPositiveBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+        }
+        
+        // Previous isolation reason no longer stored
+        assertAnalyticsPacketIsNormal()
+    }
+    
+    func testIsolationReasonInteractionWithRiskyContactAfterSelfDiagnosis() throws {
+        // Starting state: App running normally, not in isolation
+        // Current date: 2nd Jan -> Analytics packet for: 1st Jan
+        assertAnalyticsPacketIsNormal()
+        
+        try questionnaire.selfDiagnosePositive(onsetDay: currentDateProvider.currentGregorianDay(timeZone: .utc))
+        
+        // This should not increment the "new isolation" fields agains
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.startedIsolation)
+            assertField.equals(expected: 1, \.completedQuestionnaireAndStartedIsolation)
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedPositiveBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+        }
+        
+        // Has risky contact on 2nd Jan
+        // Isolation end date: 13th Jan
+        riskyContact.trigger(exposureDate: currentDateProvider.currentDate) {
+            self.assertOnFields { assertField in
+                // Current date: 3rd Jan -> Analytics packet for: 2nd Jan
+                // Now in isolation due to risky contact
+                assertField.equals(expected: 1, \.receivedRiskyContactNotification)
+                assertField.isPresent(\.isIsolatingBackgroundTick)
+                assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
+                assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+                assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+                assertField.isPresent(\.hasSelfDiagnosedPositiveBackgroundTick)
+                assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            }
+        }
+        
+        // Still in isolation for both reasons
+        assertOnFieldsForDateRange(dateRange: 5 ... 13) { assertField in
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
+            assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedPositiveBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+        }
+        
+        // Still in isolation for because of the risky contact
+        assertOnFieldsForDateRange(dateRange: 14 ... 14) { assertField in
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
+            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedPositiveBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+        }
+        
+        // Isolation is over, but isolation reason still stored for 14 days
+        assertOnFieldsForDateRange(dateRange: 15 ... 28) { assertField in
+            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedPositiveBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+        }
+        
+        // Previous isolation reason no longer stored
+        assertAnalyticsPacketIsNormal()
     }
 }

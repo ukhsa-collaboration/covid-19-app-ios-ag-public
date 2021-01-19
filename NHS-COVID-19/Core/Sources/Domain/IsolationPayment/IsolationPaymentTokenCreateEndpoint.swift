@@ -49,6 +49,7 @@ extension IsolationPaymentRawState {
         if response.isEnabled {
             if let tokenString = response.ipcToken {
                 self = .ipcToken(tokenString)
+                Metrics.signpost(.receivedActiveIpcToken)
             } else {
                 throw ResponseError.noToken
             }

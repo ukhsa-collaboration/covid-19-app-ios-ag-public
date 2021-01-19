@@ -22,13 +22,13 @@ struct AppAvailabilityEndpoint: HTTPEndpoint {
 private struct Payload: Decodable {
     struct Requirement: Decodable {
         var value: String
-        var description: [String: String]
+        var description: LocaleString
     }
     
     struct RecommendationRequirement: Decodable {
         var value: String
-        var title: [String: String]
-        var description: [String: String]
+        var title: LocaleString
+        var description: LocaleString
     }
     
     var minimumOSVersion: Requirement
@@ -55,13 +55,9 @@ private extension AppAvailability {
 private extension AppAvailability.VersionRequirement {
     
     init(from requirement: Payload.Requirement) throws {
-        let descriptions = Dictionary(uniqueKeysWithValues: requirement.description.compactMap { key, value in
-            (Locale(identifier: key), value)
-        })
-        
         self.init(
             minimumSupported: try Version(requirement.value),
-            descriptions: descriptions
+            descriptions: requirement.description
         )
     }
     
@@ -70,32 +66,18 @@ private extension AppAvailability.VersionRequirement {
 private extension AppAvailability.RecommendationRequirement {
     #warning("This can be removed when the backend is deployed")
     init(from requirement: Payload.Requirement) throws {
-        let descriptions = Dictionary(uniqueKeysWithValues: requirement.description.compactMap { key, value in
-            (Locale(identifier: key), value)
-        })
-        
         self.init(
             minimumRecommended: try Version(requirement.value),
             titles: [:],
-            descriptions: descriptions
+            descriptions: requirement.description
         )
     }
     
     init(from requirement: Payload.RecommendationRequirement) throws {
-        let descriptions = Dictionary(uniqueKeysWithValues: requirement.description.compactMap { key, value in
-            (Locale(identifier: key), value)
-        })
-        
-        let titles = Dictionary(
-            uniqueKeysWithValues: requirement.title.compactMap { key, value in
-                (Locale(identifier: key), value)
-            }
-        )
-        
         self.init(
             minimumRecommended: try Version(requirement.value),
-            titles: titles,
-            descriptions: descriptions
+            titles: requirement.title,
+            descriptions: requirement.description
         )
     }
     

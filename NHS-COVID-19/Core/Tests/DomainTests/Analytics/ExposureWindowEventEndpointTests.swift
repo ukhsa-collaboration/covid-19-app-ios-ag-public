@@ -13,12 +13,14 @@ class ExposureWindowEventEndpointTests: XCTestCase {
     private let endpointExposureWindow = ExposureWindowEventEndpoint(
         latestAppVersion: Version(major: 3, minor: 12),
         postcode: "LL44",
+        localAuthority: "W06000002",
         hasPositiveTest: false
     )
     
     private let endpointExposureWindowPositiveTest = ExposureWindowEventEndpoint(
         latestAppVersion: Version(major: 3, minor: 12),
         postcode: "LL44",
+        localAuthority: "W06000002",
         hasPositiveTest: true
     )
     
@@ -40,7 +42,7 @@ class ExposureWindowEventEndpointTests: XCTestCase {
                 ],
                 "date": "2020-11-12T00:00:00Z"
               },
-              "type": "\(endpointExposureWindow.hasPositiveTest ? EpidemiologicalEventType.exposureWindowPostiveTest : EpidemiologicalEventType.exposureWindow)",
+              "type": "\(endpointExposureWindow.hasPositiveTest ? EpidemiologicalEventType.exposureWindowPositiveTest : EpidemiologicalEventType.exposureWindow)",
               "version": 1
             }
           ],
@@ -48,7 +50,8 @@ class ExposureWindowEventEndpointTests: XCTestCase {
             "deviceModel": "\(UIDevice.current.modelName)",
             "latestApplicationVersion": "3.12",
             "operatingSystemVersion": "\(UIDevice.current.systemVersion)",
-            "postalDistrict": "LL44"
+            "postalDistrict": "LL44",
+            "localAuthority": "W06000002"
           }
         }
         """)).withCanonicalJSONBody()
@@ -90,7 +93,7 @@ class ExposureWindowEventEndpointTests: XCTestCase {
                 ],
                 "date": "2020-11-12T00:00:00Z"
               },
-              "type": "\(endpointExposureWindowPositiveTest.hasPositiveTest ? EpidemiologicalEventType.exposureWindowPostiveTest : EpidemiologicalEventType.exposureWindow)",
+              "type": "\(endpointExposureWindowPositiveTest.hasPositiveTest ? EpidemiologicalEventType.exposureWindowPositiveTest : EpidemiologicalEventType.exposureWindow)",
               "version": 1
             }
           ],
@@ -98,7 +101,8 @@ class ExposureWindowEventEndpointTests: XCTestCase {
             "deviceModel": "\(UIDevice.current.modelName)",
             "latestApplicationVersion": "3.12",
             "operatingSystemVersion": "\(UIDevice.current.systemVersion)",
-            "postalDistrict": "LL44"
+            "postalDistrict": "LL44",
+            "localAuthority": "W06000002"
           }
         }
         """)).withCanonicalJSONBody()

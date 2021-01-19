@@ -8,11 +8,11 @@ public class WelcomePoint: UIView {
     public init(image: ImageName, header: String, body: String) {
         super.init(frame: .zero)
         
-        let headerLabel = UILabel()
+        let headerLabel = BaseLabel()
         headerLabel.text = header
         headerLabel.styleAsTertiaryTitle()
         
-        let bodyLabel = UILabel()
+        let bodyLabel = BaseLabel()
         bodyLabel.text = body
         bodyLabel.styleAsBody()
         

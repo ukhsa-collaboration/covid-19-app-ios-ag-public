@@ -7,17 +7,9 @@ import Domain
 
 struct FeatureToggleStorage {
     
-    @UserDefault("scenario.toggle.localAuthority", defaultValue: Feature.productionEnabledFeatures.contains(.localAuthority))
-    var localAuthorityToggle: Bool
-    
     static func getEnabledFeatures() -> [Feature] {
-        let store = FeatureToggleStorage()
-        var enabledFeatures = [Feature]()
-        
-        if store.localAuthorityToggle {
-            enabledFeatures.append(.localAuthority)
-        }
+        _ = FeatureToggleStorage()
+        let enabledFeatures = [Feature]()
         return enabledFeatures
     }
-    
 }

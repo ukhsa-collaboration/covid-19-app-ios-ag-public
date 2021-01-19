@@ -25,7 +25,7 @@ private class LocalAuthorityInformationStep: NSObject, OnboardingStep {
     private let action: () -> Void
     
     private lazy var title: UILabel = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.text = localize(.local_authority_information_title)
         label.styleAsPageHeader()
         return label
@@ -39,7 +39,7 @@ private class LocalAuthorityInformationStep: NSObject, OnboardingStep {
     }
     
     private var descriptionLabel: [UILabel] {
-        localizeAndSplit(.local_authority_information_description).map { UILabel().styleAsBody().set(text: String($0)) }
+        localizeAndSplit(.local_authority_information_description).map { BaseLabel().styleAsBody().set(text: String($0)) }
     }
     
     var content: [UIView] {

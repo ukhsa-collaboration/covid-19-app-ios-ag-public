@@ -41,4 +41,47 @@ class ExposureWindowStoreAcceptanceTests: AcceptanceTestCase {
         
         XCTAssertEqual(storedExposureInfos.exposureWindowsInfo.count, 1)
     }
+    
+    func testSubmitExposureWindowsAfterPositveTestResults() throws {
+        let exposureWindowStore = ExposureWindowStore(store: $instance.encryptedStore)
+        XCTAssertNil(exposureWindowStore.load())
+        
+        let exposureWindow = ExposureWindowInfo(
+            date: GregorianDay(year: 2020, month: 11, day: 12),
+            infectiousness: .high,
+            scanInstances: [
+                ExposureWindowInfo.ScanInstance(
+                    minimumAttenuation: 97,
+                    typicalAttenuation: 0,
+                    secondsSinceLastScan: 201
+                ),
+            ],
+            riskScore: 131.44555790888523,
+            riskCalculationVersion: 2
+        )
+        
+        exposureWindowStore.append([exposureWindow])
+        
+        let result = VirologyTestResult(
+            testResult: .positive,
+            endDate: Date()
+        )
+        
+        let testResults = TestResult(result.testResult)
+        
+        exposureNotificationContext.postExposureWindows(result: testResults)
+        
+        let endpoint = ExposureWindowEventEndpoint(latestAppVersion: $instance.appInfo.version, postcode: postcode.value, localAuthority: localAuthority.id.value, hasPositiveTest: true)
+        let expectedRequest = try endpoint.request(for: exposureWindow)
+        
+        var isRequestSent = false
+        
+        let requests = $instance.apiClient.requests
+        for request in requests {
+            if request.body == expectedRequest.body {
+                isRequestSent = true
+            }
+        }
+        XCTAssertEqual(isRequestSent, true)
+    }
 }

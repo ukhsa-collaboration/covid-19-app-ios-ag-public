@@ -134,7 +134,11 @@ public class Runner {
         let alert = UIAlertController(title: "Run background tasks", message: "When should the tasks start?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Immediately", style: .default) { _ in self.startTasks() })
         alert.addAction(UIAlertAction(title: "When app enters background", style: .default) { _ in self.startTasksWhenEnteringBackground() })
-        viewController.present(alert, animated: true, completion: nil)
+        // Wait a bit before showing the alert so that the rootViewController is already loaded
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            viewController.present(alert, animated: true, completion: nil)
+        }
+        
     }
     
     private func startTasksWhenEnteringBackground() {

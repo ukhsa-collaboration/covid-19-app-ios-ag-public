@@ -88,10 +88,10 @@ public class CheckInConfirmationViewController: UIViewController {
             checkImageContainer.heightAnchor.constraint(equalTo: checkImageContainer.widthAnchor),
         ])
         
-        let checkInSuccessLabel = UILabel().styleAsSecondaryTitle().set(text: localize(.checkin_confirmation_title)).centralized()
-        let venueNameLabel = UILabel().styleAsPageHeader().set(text: checkInDetail.venueName).centralized()
-        let dateTimeLabel = UILabel().styleAsTertiaryTitle().set(text: localize(.checkin_confirmation_date(date: date))).centralized()
-        let descriptionLabel = UILabel().styleAsBody().set(text: localize(.checkin_confirmation_explanation)).centralized()
+        let checkInSuccessLabel = BaseLabel().styleAsSecondaryTitle().set(text: localize(.checkin_confirmation_title)).centralized()
+        let venueNameLabel = BaseLabel().styleAsPageHeader().set(text: checkInDetail.venueName).centralized()
+        let dateTimeLabel = BaseLabel().styleAsTertiaryTitle().set(text: localize(.checkin_confirmation_date(date: date))).centralized()
+        let descriptionLabel = BaseLabel().styleAsBody().set(text: localize(.checkin_confirmation_explanation)).centralized()
         
         let stackViewContainerView = UIView()
         

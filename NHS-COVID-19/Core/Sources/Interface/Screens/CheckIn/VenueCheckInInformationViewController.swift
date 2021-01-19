@@ -22,7 +22,7 @@ public class VenueCheckInInformationViewController: UIViewController {
         
         localizeAndSplit(.checkin_information_description)
             .forEach {
-                let descriptionLabel = UILabel()
+                let descriptionLabel = BaseLabel()
                 descriptionLabel.styleAsBody()
                 descriptionLabel.text = String($0)
                 content.append(descriptionLabel)
@@ -48,17 +48,17 @@ public class VenueCheckInInformationViewController: UIViewController {
     private lazy var whatsAQRCodeSection: UIView = {
         var content = [UIView]()
         
-        let title = UILabel()
+        let title = BaseLabel()
         title.styleAsTertiaryTitle()
         title.text = localize(.checkin_information_whats_a_qr_code_section_title)
         content.append(title)
         
-        let descriptionLabel = UILabel()
+        let descriptionLabel = BaseLabel()
         descriptionLabel.styleAsBody()
         descriptionLabel.text = localize(.checkin_information_whats_a_qr_code_section_description_new)
         content.append(descriptionLabel)
         
-        let imageDescriptionLabel = UILabel()
+        let imageDescriptionLabel = BaseLabel()
         imageDescriptionLabel.styleAsBody()
         imageDescriptionLabel.text = localize(.qr_code_poster_description)
         
@@ -73,7 +73,7 @@ public class VenueCheckInInformationViewController: UIViewController {
         imageStackView.spacing = .halfSpacing
         content.append(imageStackView)
         
-        let imageDescriptionLabelWLS = UILabel()
+        let imageDescriptionLabelWLS = BaseLabel()
         imageDescriptionLabelWLS.styleAsBody()
         imageDescriptionLabelWLS.text = localize(.qr_code_poster_description_wls)
         
@@ -115,12 +115,12 @@ public class VenueCheckInInformationViewController: UIViewController {
     private func createSection(header: String, description: String) -> UIView {
         var content = [UIView]()
         
-        let title = UILabel()
+        let title = BaseLabel()
         title.styleAsTertiaryTitle()
         title.text = header
         content.append(title)
         
-        let descriptionLabel = UILabel()
+        let descriptionLabel = BaseLabel()
         descriptionLabel.styleAsBody()
         descriptionLabel.text = description
         content.append(descriptionLabel)
@@ -144,17 +144,17 @@ public class VenueCheckInInformationViewController: UIViewController {
     ) -> UIView {
         var content = [UIView]()
         
-        let title = UILabel()
+        let title = BaseLabel()
         title.styleAsTertiaryTitle()
         title.text = header
         content.append(title)
         
-        let descriptionLabel = UILabel()
+        let descriptionLabel = BaseLabel()
         descriptionLabel.styleAsBody()
         descriptionLabel.text = description
         content.append(descriptionLabel)
         
-        let imageDescriptionLabel = UILabel()
+        let imageDescriptionLabel = BaseLabel()
         imageDescriptionLabel.styleAsBody()
         imageDescriptionLabel.text = description
         content.append(imageDescriptionLabel)

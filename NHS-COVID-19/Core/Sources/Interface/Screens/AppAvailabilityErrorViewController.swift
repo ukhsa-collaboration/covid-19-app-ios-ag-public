@@ -2,6 +2,7 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Common
 import Localization
 import UIKit
 
@@ -12,8 +13,8 @@ public class AppAvailabilityErrorViewController: RecoverableErrorViewController 
         public enum ErrorType {
             case iOSTooOld
             case appTooOld(updateAvailable: Bool)
-            case recommendingAppUpdate(title: [Locale: String])
-            case recommendingOSUpdate(title: [Locale: String])
+            case recommendingAppUpdate(title: LocaleString)
+            case recommendingOSUpdate(title: LocaleString)
             
             fileprivate var title: String {
                 switch self {
@@ -24,19 +25,18 @@ public class AppAvailabilityErrorViewController: RecoverableErrorViewController 
                 case .appTooOld(updateAvailable: false):
                     return localize(.accessability_error_cannot_run_app)
                 case .recommendingAppUpdate(title: let title), .recommendingOSUpdate(title: let title):
-                    let language = Bundle.preferredLocalizations(from: title.keys.map { $0.identifier }).first ?? "en-GB"
-                    return title[Locale(identifier: language)] ?? ""
+                    return title.localizedString()
                 }
             }
         }
         
         var title: String
-        var descriptions: [Locale: String]
+        var descriptions: LocaleString
         var appUpdateAction: (() -> Void)?
         var appUpdateImage: UIImage?
         var secondaryBtnAction: (() -> Void)?
         
-        public init(errorType: ErrorType, descriptions: [Locale: String], secondaryBtnAction: (() -> Void)? = nil) {
+        public init(errorType: ErrorType, descriptions: LocaleString, secondaryBtnAction: (() -> Void)? = nil) {
             title = errorType.title
             self.descriptions = descriptions
             self.secondaryBtnAction = secondaryBtnAction
@@ -67,8 +67,7 @@ public class AppAvailabilityErrorViewController: RecoverableErrorViewController 
     }
     
     public init(viewModel: ViewModel) {
-        let language = Bundle.preferredLocalizations(from: viewModel.descriptions.keys.map { $0.identifier }).first ?? "en-GB"
-        let description = viewModel.descriptions[Locale(identifier: language)]
+        let description = viewModel.descriptions.localizedString()
         
         var action: (title: String, act: () -> Void)?
         if let act = viewModel.appUpdateAction {
@@ -104,7 +103,7 @@ private struct AppAvailabilityError: ErrorDetail {
     var logoStrapLineStyle: LogoStrapline.Style = .onboarding
     
     var content: [UIView] {
-        let label = UILabel()
+        let label = BaseLabel()
         label.styleAsBody()
         label.text = description
         return [label]

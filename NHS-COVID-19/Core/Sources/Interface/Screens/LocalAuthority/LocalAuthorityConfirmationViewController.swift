@@ -23,9 +23,9 @@ private class LocalAuthorityConfirmationContent: PrimaryButtonStickyFooterScroll
             scrollingViews: [
                 UIImageView(.onboardingPostcode)
                     .styleAsDecoration(),
-                UILabel().set(text: localize(.local_authority_confirmation_heading(postcode: postcode, localAuthority: localAuthority.name))).styleAsPageHeader(),
+                BaseLabel().set(text: localize(.local_authority_confirmation_heading(postcode: postcode, localAuthority: localAuthority.name))).styleAsPageHeader(),
                 localizeAndSplit(.local_authority_confirmation_description)
-                    .map { UILabel().styleAsBody().set(text: String($0)) },
+                    .map { BaseLabel().styleAsBody().set(text: String($0)) },
             ],
             primaryButton: (
                 title: localize(.local_authority_confirmation_button),

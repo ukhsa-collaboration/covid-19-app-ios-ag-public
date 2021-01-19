@@ -28,6 +28,7 @@ public struct Strapline: View {
         .accessibilityElement()
         .accessibility(label: Text(country.wrappedValue.accessiblityText))
         .accessibility(addTraits: .isHeader)
+        .environment(\.locale, Locale(identifier: currentLanguageCode()))
     }
     
     func title() -> AnyView {

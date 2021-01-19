@@ -34,6 +34,7 @@ struct ConfigureMocksView: View {
                 Section(header: Text(verbatim: "Test Order Website")) {
                     TextFieldRow(label: "Website", text: $dataProvider.orderTestWebsite)
                     TextFieldRow(label: "Reference Code", text: $dataProvider.testReferenceCode)
+                    TextFieldRow(label: "Days since test result end date", text: $dataProvider.testResultEndDateDaysAgoString)
                     Picker(selection: $dataProvider.receivedTestResult, label: Text("Result")) {
                         ForEach(0 ..< MockDataProvider.testResults.count) {
                             Text(verbatim: MockDataProvider.testResults[$0])

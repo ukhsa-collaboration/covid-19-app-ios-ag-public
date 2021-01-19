@@ -18,11 +18,11 @@ struct DeployLatestCommand: ParsableCommand {
     @Option(help: "Name of scheme to export.")
     var scheme: String
     
-    @Option(help: "App Store Connect username.")
-    var username: String
+    @Option(help: "App Store Connect API key.")
+    var apiKey: String
     
-    @Option(help: "App Store Connect password.")
-    var password: String
+    @Option(help: "App Store Connect Issuer ID.")
+    var apiIssuer: String
     
     @Option(help: "Path to a folder used for the output. This is where the ipa and validation results will be saved.")
     var exportPath: String
@@ -50,8 +50,8 @@ struct DeployLatestCommand: ParsableCommand {
         
         var uploadCommand = UploadCommand()
         uploadCommand.ipa = ipaURL.path
-        uploadCommand.username = username
-        uploadCommand.password = password
+        uploadCommand.apiKey = apiKey
+        uploadCommand.apiIssuer = apiIssuer
         try uploadCommand.run()
         
         try Git.createTag(named: tag)

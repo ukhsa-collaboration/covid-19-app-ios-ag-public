@@ -97,7 +97,7 @@ public class LogoStrapline: UIView {
         logoStack.append(logoView)
         
         if let label = style.label {
-            let titleLabel = UILabel()
+            let titleLabel = BaseLabel()
             titleLabel.adjustsFontForContentSizeCategory = false
             titleLabel.font = UIFont.boldSystemFont(ofSize: 11.0)
             titleLabel.text = label

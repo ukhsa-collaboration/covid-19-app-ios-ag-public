@@ -12,7 +12,7 @@ public protocol SendKeysLoadingFlowViewControllerInteracting {
     func didTapCancel()
 }
 
-public class SendKeysLoadingFlowViewController: UINavigationController {
+public class SendKeysLoadingFlowViewController: BaseNavigationController {
     public typealias Interacting = SendKeysLoadingFlowViewControllerInteracting
     
     private var shareKeysCancellable: AnyCancellable?
@@ -25,7 +25,7 @@ public class SendKeysLoadingFlowViewController: UINavigationController {
                 if let presentedNavigationController = presentedNavigationController {
                     presentedNavigationController.viewControllers = [presentedValue]
                 } else {
-                    presentedNavigationController = UINavigationController(rootViewController: presentedValue)
+                    presentedNavigationController = BaseNavigationController(rootViewController: presentedValue)
                     presentedNavigationController?.isModalInPresentation = true
                     present(presentedNavigationController!, animated: true)
                 }
@@ -54,7 +54,7 @@ public class SendKeysLoadingFlowViewController: UINavigationController {
     public init(interactor: Interacting, initialViewControllerFactory: @escaping InitialViewControllerFactory) {
         self.interactor = interactor
         self.initialViewControllerFactory = initialViewControllerFactory
-        super.init(nibName: nil, bundle: nil)
+        super.init()
         update()
     }
     

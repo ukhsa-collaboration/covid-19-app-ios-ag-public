@@ -12,10 +12,17 @@ struct ExposureWindowEventEndpoint: HTTPEndpoint {
     
     var latestAppVersion: Version
     var postcode: String
+    var localAuthority: String
     var hasPositiveTest: Bool
     
     func request(for input: ExposureWindowInfo) throws -> HTTPRequest {
-        let payload = ExposureWindowEventPayload(window: input, hasPositiveTest: hasPositiveTest, latestAppliationVersion: latestAppVersion, postcode: postcode)
+        let payload = ExposureWindowEventPayload(
+            window: input,
+            hasPositiveTest: hasPositiveTest,
+            latestAppliationVersion: latestAppVersion,
+            postcode: postcode,
+            localAuthority: localAuthority
+        )
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         let body = try encoder.encode(payload)
@@ -58,6 +65,7 @@ struct ExposureWindowEventPayload: Codable {
         var latestApplicationVersion: String
         var deviceModel: String
         var postalDistrict: String
+        var localAuthority: String
     }
     
     var metadata: Metadata
@@ -66,15 +74,16 @@ struct ExposureWindowEventPayload: Codable {
 
 @available(iOS 13.7, *)
 extension ExposureWindowEventPayload {
-    init(window: ExposureWindowInfo, hasPositiveTest: Bool, latestAppliationVersion: Version, postcode: String) {
-        let eventType = hasPositiveTest ? EpidemiologicalEventType.exposureWindowPostiveTest : EpidemiologicalEventType.exposureWindow
+    init(window: ExposureWindowInfo, hasPositiveTest: Bool, latestAppliationVersion: Version, postcode: String, localAuthority: String) {
+        let eventType = hasPositiveTest ? EpidemiologicalEventType.exposureWindowPositiveTest : EpidemiologicalEventType.exposureWindow
         let event = Event(type: eventType, version: 1, payload: Event.Payload(window: window, eventType: eventType))
         events = [event]
         metadata = Metadata(
             operatingSystemVersion: UIDevice.current.systemVersion,
             latestApplicationVersion: latestAppliationVersion.readableRepresentation,
             deviceModel: UIDevice.current.modelName,
-            postalDistrict: postcode
+            postalDistrict: postcode,
+            localAuthority: localAuthority
         )
     }
 }
@@ -82,7 +91,7 @@ extension ExposureWindowEventPayload {
 @available(iOS 13.7, *)
 extension ExposureWindowEventPayload.Event.Payload {
     init(window: ExposureWindowInfo, eventType: EpidemiologicalEventType) {
-        if eventType == .exposureWindowPostiveTest {
+        if eventType == .exposureWindowPositiveTest {
             testType = TestType.unknown
         }
         

@@ -79,7 +79,7 @@ public class SymptomListViewController: UIViewController {
         let view = self.view!
         view.styleAsScreenBackground(with: traitCollection)
         
-        let stepLabel = UILabel()
+        let stepLabel = BaseLabel()
         stepLabel.text = localize(.step_label(index: 1, count: 2))
         stepLabel.accessibilityLabel = localize(.step_accessibility_label(index: 1, count: 2))
         stepLabel.textColor = UIColor(.secondaryText)
@@ -87,11 +87,11 @@ public class SymptomListViewController: UIViewController {
         stepLabel.numberOfLines = 0
         stepLabel.adjustsFontForContentSizeCategory = true
         
-        let heading = UILabel()
+        let heading = BaseLabel()
         heading.text = localize(.symptom_list_heading)
         heading.styleAsPageHeader()
         
-        let description = UILabel()
+        let description = BaseLabel()
         description.text = localize(.symptom_list_description)
         description.styleAsBody()
         

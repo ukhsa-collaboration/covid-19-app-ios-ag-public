@@ -36,7 +36,7 @@ public class PrimaryLinkButton: UIControl {
         
         heightAnchor.constraint(greaterThanOrEqualToConstant: .hitAreaMinHeight).isActive = true
         
-        let titleLabel = UILabel().set(text: title).styleAsHeading()
+        let titleLabel = BaseLabel().set(text: title).styleAsHeading()
         titleLabel.textColor = UIColor(.primaryButtonLabel)
         titleLabel.adjustsFontForContentSizeCategory = true
         titleLabel.numberOfLines = 0

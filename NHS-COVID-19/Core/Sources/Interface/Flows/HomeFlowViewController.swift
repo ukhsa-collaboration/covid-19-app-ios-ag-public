@@ -31,6 +31,8 @@ public protocol HomeFlowViewControllerInteracting {
     func updateVenueHistories(deleting venueHistory: VenueHistory) -> [VenueHistory]
     func save(postcode: String) -> Result<Void, DisplayableError>
     func makeLocalAuthorityOnboardingIteractor() -> LocalAuthorityFlowViewController.Interacting?
+    func getCurrentLocaleConfiguration() -> InterfaceProperty<LocaleConfiguration>
+    func storeNewLanguage(_ localeConfiguration: LocaleConfiguration) -> Void
 }
 
 public enum ExposureNotificationReminderIn: Int, CaseIterable {
@@ -39,7 +41,7 @@ public enum ExposureNotificationReminderIn: Int, CaseIterable {
     case twelveHours = 12
 }
 
-public class HomeFlowViewController: UINavigationController {
+public class HomeFlowViewController: BaseNavigationController {
     
     public typealias Interacting = HomeFlowViewControllerInteracting
     
@@ -54,19 +56,34 @@ public class HomeFlowViewController: UINavigationController {
         shouldShowSelfDiagnosis: InterfaceProperty<Bool>,
         userNotificationsEnabled: InterfaceProperty<Bool>,
         showFinancialSupportButton: InterfaceProperty<Bool>,
-        country: InterfaceProperty<Country>
+        recordSelectedIsolationPaymentsButton: @escaping () -> Void,
+        country: InterfaceProperty<Country>,
+        shouldShowLanguageSelectionScreen: Bool
     ) {
         self.interactor = interactor
-        super.init(nibName: nil, bundle: nil)
+        super.init()
         
         let aboutThisAppInteractor = AboutThisAppInteractor(flowController: self, interactor: interactor)
+        let settingsInteractor = SettingsInteractor(flowController: self, interactor: interactor)
         let riskLevelInteractor = RiskLevelInfoInteractor(interactor: interactor)
         let homeViewControllerInteractor = HomeViewControllerInteractor(
             flowController: self,
             flowInteractor: interactor,
             riskLevelInteractor: riskLevelInteractor,
-            aboutThisAppInteractor: aboutThisAppInteractor
+            aboutThisAppInteractor: aboutThisAppInteractor,
+            settingsInteractor: settingsInteractor,
+            recordSelectedIsolationPaymentsButton: recordSelectedIsolationPaymentsButton
         )
+        
+        let showLanguageSelectionScreen: () -> Void = {
+            let viewController = SettingsViewController(viewModel: SettingsViewController.ViewModel(), interacting: settingsInteractor)
+            self.viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
+            self.pushViewController(viewController, animated: false)
+            self.viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
+            if let languageViewController = settingsInteractor.makeLanguageSelectionViewController() {
+                self.pushViewController(languageViewController, animated: false)
+            }
+        }
         
         let rootViewController = HomeViewController(
             interactor: homeViewControllerInteractor,
@@ -77,8 +94,10 @@ public class HomeFlowViewController: UINavigationController {
             shouldShowSelfDiagnosis: shouldShowSelfDiagnosis,
             userNotificationsEnabled: userNotificationsEnabled,
             showFinancialSupportButton: showFinancialSupportButton,
-            country: country
+            country: country,
+            showLanguageSelectionScreen: shouldShowLanguageSelectionScreen ? showLanguageSelectionScreen : nil
         )
+        
         viewControllers = [rootViewController]
     }
     
@@ -93,22 +112,28 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     private let flowInteractor: HomeFlowViewController.Interacting
     private let riskLevelInteractor: RiskLevelInfoViewController.Interacting
     private let aboutThisAppInteractor: AboutThisAppViewController.Interacting
+    private let settingsInteractor: SettingsViewController.Interacting
+    private let recordSelectedIsolationPaymentsButton: () -> Void
     
     init(
         flowController: UINavigationController,
         flowInteractor: HomeFlowViewController.Interacting,
         riskLevelInteractor: RiskLevelInfoViewController.Interacting,
-        aboutThisAppInteractor: AboutThisAppViewController.Interacting
+        aboutThisAppInteractor: AboutThisAppViewController.Interacting,
+        settingsInteractor: SettingsViewController.Interacting,
+        recordSelectedIsolationPaymentsButton: @escaping () -> Void
     ) {
         self.flowController = flowController
         self.flowInteractor = flowInteractor
         self.riskLevelInteractor = riskLevelInteractor
         self.aboutThisAppInteractor = aboutThisAppInteractor
+        self.settingsInteractor = settingsInteractor
+        self.recordSelectedIsolationPaymentsButton = recordSelectedIsolationPaymentsButton
     }
     
     public func didTapRiskLevelBanner(viewModel: RiskLevelInfoViewController.ViewModel) {
         let viewController = RiskLevelInfoViewController(viewModel: viewModel, interactor: riskLevelInteractor)
-        let navigationController = UINavigationController(rootViewController: viewController)
+        let navigationController = BaseNavigationController(rootViewController: viewController)
         navigationController.modalPresentationStyle = .overFullScreen
         
         flowController?.present(navigationController, animated: true)
@@ -150,6 +175,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         guard let viewController = flowInteractor.makeFinancialSupportViewController() else {
             return
         }
+        recordSelectedIsolationPaymentsButton()
         viewController.modalPresentationStyle = .overFullScreen
         flowController?.present(viewController, animated: true)
     }
@@ -161,6 +187,12 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         let version = "\(appVersion) (\(buildNumber))"
         
         let viewController = AboutThisAppViewController(interactor: aboutThisAppInteractor, appName: appName, version: version)
+        flowController?.viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
+        flowController?.pushViewController(viewController, animated: true)
+    }
+    
+    func didTapSettingsButton() {
+        let viewController = SettingsViewController(viewModel: SettingsViewController.ViewModel(), interacting: settingsInteractor)
         flowController?.viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
         flowController?.pushViewController(viewController, animated: true)
     }
@@ -278,5 +310,53 @@ private struct EditPostcodeInteractor: EditPostcodeViewController.Interacting {
         didTapCancel = {
             flowController?.popViewController(animated: true)
         }
+    }
+}
+
+private struct SettingsInteractor: SettingsViewController.Interacting {
+    private weak var flowController: HomeFlowViewController?
+    private var interactor: HomeFlowViewControllerInteracting
+    
+    init(flowController: HomeFlowViewController, interactor: HomeFlowViewControllerInteracting) {
+        self.flowController = flowController
+        self.interactor = interactor
+    }
+    
+    func didTapLanguage() {
+        guard let viewController = makeLanguageSelectionViewController() else { return }
+        flowController?.viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
+        flowController?.pushViewController(viewController, animated: true)
+    }
+    
+    func makeLanguageSelectionViewController() -> UIViewController? {
+        let interactor = LanguageSelectionViewControllerInteractor(_didSelectLanguage: { localeConfiguration in
+            self.interactor.storeNewLanguage(localeConfiguration)
+        })
+        let systemLanguage = systemPreferredLanguageCode()
+        let selectedLanguage = self.interactor.getCurrentLocaleConfiguration().wrappedValue
+        guard let defaultLanguageTerms = SupportedLanguage.getLanguageTermsFrom(localeIdentifier: systemLanguage) else {
+            return nil
+        }
+        let viewController = LanguageSelectionViewController(
+            viewModel: .init(
+                currentSelection: selectedLanguage,
+                selectableDefault: SelectableLanguage(isoCode: systemLanguage, exonym: defaultLanguageTerms.exonym, endonym: defaultLanguageTerms.endonym),
+                selectableOverrides: SupportedLanguage.allLanguages(
+                    currentLocaleIdentifier: currentLocaleIdentifier(
+                        localeConfiguration: selectedLanguage
+                    )
+                ).compactMap { $0 }
+            ),
+            interacting: interactor
+        )
+        return viewController
+    }
+}
+
+struct LanguageSelectionViewControllerInteractor: LanguageSelectionViewController.Interacting {
+    public var _didSelectLanguage: (LocaleConfiguration) -> Void
+    
+    public func didSelect(configuration: LocaleConfiguration) {
+        _didSelectLanguage(configuration)
     }
 }

@@ -15,11 +15,11 @@ struct UploadCommand: ParsableCommand {
     @Argument(help: "Path to the ipa to make a report for.")
     var ipa: String
     
-    @Option(help: "App Store Connect username.")
-    var username: String
+    @Option(help: "App Store Connect API key.")
+    var apiKey: String
     
-    @Option(help: "App Store Connect password.")
-    var password: String
+    @Option(help: "App Store Connect Issuer ID.")
+    var apiIssuer: String
     
     func run() throws {
         let fileManager = FileManager()
@@ -34,8 +34,8 @@ struct UploadCommand: ParsableCommand {
             "xcrun altool", "--upload-app",
             "--file", "\"\(ipa)\"",
             "--type", "ios",
-            "--username", username,
-            "--password", password,
+            "--apiKey", apiKey,
+            "--apiIssuer", apiIssuer,
             "--output-format", "json"
         )
         

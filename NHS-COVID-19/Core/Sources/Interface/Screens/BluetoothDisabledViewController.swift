@@ -30,7 +30,7 @@ private class BluetoothErrorDetail: ErrorDetail {
     var content: [UIView] {
         localizeAndSplit(.bluetooth_disabled_description)
             .map { text in
-                UILabel().set(text: String(text)).styleAsBody()
+                BaseLabel().set(text: String(text)).styleAsBody()
             }
     }
     

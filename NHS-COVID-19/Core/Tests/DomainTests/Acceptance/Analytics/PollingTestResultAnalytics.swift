@@ -25,13 +25,8 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
     func testHasTestedPositiveBackgroundTickPresentAfterTestResultReceived() throws {
         // Current date: 1st Jan
         // Starting state: App running normally, not in isolation
-        advanceToEndOfAnalyticsWindow()
         // Current date: 2nd Jan -> Analytics packet for: 1st Jan
-        assert(\.isIsolatingBackgroundTick).isNotPresent()
-        assert(\.isIsolatingForTestedPositiveBackgroundTick).isNotPresent()
-        assert(\.isIsolatingForSelfDiagnosedBackgroundTick).isNotPresent()
-        assert(\.hasSelfDiagnosedPositiveBackgroundTick).isNotPresent()
-        assert(\.hasTestedPositiveBackgroundTick).isNotPresent()
+        assertAnalyticsPacketIsNormal()
         
         // Complete questionnaire with risky symptoms and order test on 2nd Jan
         // Symptom onset date: 2nd Jan
@@ -39,68 +34,60 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
         try questionnaire.selfDiagnosePositive(onsetDay: currentDateProvider.currentGregorianDay(timeZone: .utc))
         try testOrdering.order()
         
-        advanceToEndOfAnalyticsWindow()
-        
         // Current date: 3rd Jan -> Analytics packet for: 2nd Jan
         // Now in isolation due to self-diagnosis
-        assert(\.completedQuestionnaireAndStartedIsolation).equals(1)
-        assert(\.hasSelfDiagnosedPositiveBackgroundTick).isPresent()
-        assert(\.isIsolatingBackgroundTick).isPresent()
-        assert(\.isIsolatingForSelfDiagnosedBackgroundTick).isPresent()
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.startedIsolation)
+            assertField.equals(expected: 1, \.completedQuestionnaireAndStartedIsolation)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+        }
         
         // Receive positive test result via polling
         try pollingTestResult.receivePositiveAndAcknowledge {
             self.advanceToNextBackgroundTaskExecution()
         }
         
-        advanceToEndOfAnalyticsWindow(steps: 11)
         // Current date: 4th Jan -> Analytics packet for: 3rd Jan
         // Still in isolation, for both self-diagnosis and positive test result
-        assert(\.receivedPositiveTestResult).equals(1)
-        assert(\.receivedPositiveTestResultViaPolling).equals(1)
-        assert(\.hasSelfDiagnosedPositiveBackgroundTick).isPresent()
-        assert(\.hasTestedPositiveBackgroundTick).isPresent()
-        assert(\.isIsolatingBackgroundTick).isPresent()
-        assert(\.isIsolatingForSelfDiagnosedBackgroundTick).isPresent()
-        assert(\.isIsolatingForTestedPositiveBackgroundTick).isPresent()
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.receivedPositiveTestResult)
+            assertField.equals(expected: 1, \.receivedPositiveTestResultViaPolling)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
+        }
         
         // Dates: 5th-13th Jan -> Analytics packets for: 4th-13th Jan
         // Still in isolation
-        for _ in 5 ... 13 {
-            advanceToEndOfAnalyticsWindow()
-            
-            assert(\.isIsolatingBackgroundTick).isPresent()
-            assert(\.isIsolatingForTestedPositiveBackgroundTick).isPresent()
-            assert(\.isIsolatingForSelfDiagnosedBackgroundTick).isPresent()
-            assert(\.hasSelfDiagnosedPositiveBackgroundTick).isPresent()
-            assert(\.hasTestedPositiveBackgroundTick).isPresent()
+        assertOnFieldsForDateRange(dateRange: 5 ... 13) { assertField in
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
+            assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
         }
         
         // Dates: 14th-27th Jan -> Analytics packets for: 13th-26th Jan
         // Isolation is over, but isolation reason still stored for 14 days
-        for _ in 14 ... 27 {
-            advanceToEndOfAnalyticsWindow()
-            
-            assert(\.isIsolatingBackgroundTick).isNotPresent()
-            assert(\.isIsolatingForTestedPositiveBackgroundTick).isNotPresent()
-            assert(\.isIsolatingForSelfDiagnosedBackgroundTick).isNotPresent()
-            assert(\.hasSelfDiagnosedPositiveBackgroundTick).isPresent()
-            assert(\.hasTestedPositiveBackgroundTick).isPresent()
+        assertOnFieldsForDateRange(dateRange: 14 ... 27) { assertField in
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
         }
         
-        advanceToEndOfAnalyticsWindow()
-        // Current date: 27th Jan -> Analytics packet for: 26th Jan
+        // Current date: 28th Jan -> Analytics packet for: 27th Jan
         // Previous isolation reason no longer stored
-        assert(\.hasSelfDiagnosedPositiveBackgroundTick).isNotPresent()
-        assert(\.hasTestedPositiveBackgroundTick).isNotPresent()
+        assertAnalyticsPacketIsNormal()
     }
     
     func testReceivingNegativeTestResultAfterPositiveSelfDiagnosisEndsIsolation() throws {
         // Current date: 1st Jan
         // Starting state: App running normally, not in isolation
-        advanceToEndOfAnalyticsWindow()
         // Current date: 2nd Jan -> Analytics packet for: 1st Jan
-        assert(\.isIsolatingBackgroundTick).isNotPresent()
+        assertAnalyticsPacketIsNormal()
         
         // Complete questionnaire with risky symptoms and order test on 2nd Jan
         // Symptom onset date: 2nd Jan
@@ -108,45 +95,39 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
         try questionnaire.selfDiagnosePositive(onsetDay: currentDateProvider.currentGregorianDay(timeZone: .utc))
         try testOrdering.order()
         
-        advanceToEndOfAnalyticsWindow()
-        
         // Current date: 3rd Jan -> Analytics packet for: 2nd Jan
         // Now in isolation due to self-diagnosis
-        assert(\.completedQuestionnaireAndStartedIsolation).equals(1)
-        assert(\.hasSelfDiagnosedPositiveBackgroundTick).isPresent()
-        assert(\.isIsolatingBackgroundTick).isPresent()
-        assert(\.isIsolatingForSelfDiagnosedBackgroundTick).isPresent()
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.startedIsolation)
+            assertField.equals(expected: 1, \.completedQuestionnaireAndStartedIsolation)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+        }
         
         // Receive negative test result via polling
         try pollingTestResult.receiveNegativeAndAcknowledge {
             self.advanceToNextBackgroundTaskExecution()
         }
         
-        advanceToEndOfAnalyticsWindow(steps: 11)
-        
         // Current date: 4th Jan -> Analytics packet for: 3rd Jan
         // Isolation ends part way through analytics window due to negative test result
-        assert(\.receivedNegativeTestResult).equals(1)
-        assert(\.receivedNegativeTestResultViaPolling).equals(1)
-        assert(\.hasSelfDiagnosedPositiveBackgroundTick).isPresent()
-        assert(\.hasTestedPositiveBackgroundTick).isNotPresent()
-        assert(\.isIsolatingBackgroundTick).isLessThanTotalBackgroundTasks()
-        assert(\.isIsolatingForSelfDiagnosedBackgroundTick).isLessThanTotalBackgroundTasks()
-        assert(\.isIsolatingForTestedPositiveBackgroundTick).isNotPresent()
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.receivedNegativeTestResult)
+            assertField.equals(expected: 1, \.receivedNegativeTestResultViaPolling)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isLessThanTotalBackgroundTasks(\.isIsolatingBackgroundTick)
+            assertField.isLessThanTotalBackgroundTasks(\.isIsolatingForSelfDiagnosedBackgroundTick)
+        }
         
         // Reason stored until 17th
         // Dates: 5th-17th Jan -> Analytics packets for: 4th-16th Jan
         // Isolation is over, but isolation reason still stored for 14 days
-        for _ in 5 ... 17 {
-            advanceToEndOfAnalyticsWindow()
-            
-            assert(\.hasSelfDiagnosedPositiveBackgroundTick).isPresent()
-            assert(\.isIsolatingBackgroundTick).isNotPresent()
-            assert(\.isIsolatingForSelfDiagnosedBackgroundTick).isNotPresent()
+        assertOnFieldsForDateRange(dateRange: 5 ... 17) { assertField in
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
         }
         
-        advanceToEndOfAnalyticsWindow()
-        assert(\.hasSelfDiagnosedPositiveBackgroundTick).isNotPresent()
+        assertAnalyticsPacketIsNormal()
     }
     
     func testReceivingVoidTestResultAfterPositiveSelfDiagnosis() throws {
@@ -156,29 +137,30 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
         try questionnaire.selfDiagnosePositive(onsetDay: currentDateProvider.currentGregorianDay(timeZone: .utc))
         try testOrdering.order()
         
-        advanceToEndOfAnalyticsWindow()
-        
         // Current date: 2nd Jan -> Analytics packet for: 1st Jan
         // Now in isolation due to self-diagnosis
-        assert(\.completedQuestionnaireAndStartedIsolation).equals(1)
-        assert(\.hasSelfDiagnosedPositiveBackgroundTick).isPresent()
-        assert(\.isIsolatingBackgroundTick).isPresent()
-        assert(\.isIsolatingForSelfDiagnosedBackgroundTick).isPresent()
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.startedIsolation)
+            assertField.equals(expected: 1, \.completedQuestionnaireAndStartedIsolation)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+        }
         
         // Receive negative test result via polling
         try pollingTestResult.receiveVoidAndAcknowledge {
             self.advanceToNextBackgroundTaskExecution()
         }
         
-        advanceToEndOfAnalyticsWindow()
-        
-        // Current date: 3rd Jan -> Analytics packet for: 2nd Jan
-        assert(\.receivedVoidTestResult).isPresent()
-        assert(\.receivedVoidTestResultViaPolling).isPresent()
-        
-        // Still isolating
-        assert(\.hasSelfDiagnosedPositiveBackgroundTick).isPresent()
-        assert(\.isIsolatingBackgroundTick).isPresent()
-        assert(\.isIsolatingForSelfDiagnosedBackgroundTick).isPresent()
+        assertOnFields { assertFields in
+            // Current date: 3rd Jan -> Analytics packet for: 2nd Jan
+            assertFields.isPresent(\.receivedVoidTestResult)
+            assertFields.isPresent(\.receivedVoidTestResultViaPolling)
+            
+            // Still isolating
+            assertFields.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertFields.isPresent(\.isIsolatingBackgroundTick)
+            assertFields.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+        }
     }
 }

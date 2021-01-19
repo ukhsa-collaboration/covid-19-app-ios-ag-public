@@ -55,4 +55,10 @@ struct IsolationPaymentContext {
         manager.processCanApplyForFinancialSupport()
     }
     
+    func recordMetrics() -> AnyPublisher<Void, Never> {
+        if case .enabled = isolationPaymentState.currentValue {
+            Metrics.signpost(.haveActiveIpcTokenBackgroundTick)
+        }
+        return Empty().eraseToAnyPublisher()
+    }
 }

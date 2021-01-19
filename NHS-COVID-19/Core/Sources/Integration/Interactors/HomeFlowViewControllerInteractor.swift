@@ -14,6 +14,14 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         context.savePostcode?(postcode).mapError(DisplayableError.init) ?? .success(())
     }
     
+    func getCurrentLocaleConfiguration() -> InterfaceProperty<LocaleConfiguration> {
+        context.currentLocaleConfiguration.interfaceProperty
+    }
+    
+    func storeNewLanguage(_ localeConfiguration: LocaleConfiguration) {
+        context.storeNewLanguage(localeConfiguration)
+    }
+    
     var context: RunningAppContext
     var currentDateProvider: DateProviding
     
@@ -102,7 +110,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                 .map { state in
                     switch state {
                     case .bookATest(let interactor):
-                        return UINavigationController(rootViewController: BookATestInfoViewController(interactor: interactor, shouldHaveCancelButton: true))
+                        return BaseNavigationController(rootViewController: BookATestInfoViewController(interactor: interactor, shouldHaveCancelButton: true))
                     case .testOrdering(let interactor):
                         return VirologyTestingFlowViewController(interactor)
                     }
@@ -114,7 +122,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         switch context.isolationPaymentState.currentValue {
         case .disabled: return nil
         case .enabled(let apply):
-            return IsolationPaymentFlowViewController(openURL: context.openURL, didTapCheckEligibility: apply)
+            return IsolationPaymentFlowViewController(openURL: context.openURL, didTapCheckEligibility: apply, recordLaunchedIsolationPaymentsApplication: { Metrics.signpost(.launchedIsolationPaymentsApplication) })
         }
     }
     
@@ -126,7 +134,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                     .eraseToAnyPublisher()
             }
         )
-        return UINavigationController(rootViewController: LinkTestResultViewController(interactor: interactor))
+        return BaseNavigationController(rootViewController: LinkTestResultViewController(interactor: interactor))
     }
     
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never> {

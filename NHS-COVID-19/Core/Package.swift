@@ -4,6 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "Core",
+    defaultLocalization: "en",
     platforms: [
         .iOS("13.5"),
     ],
@@ -142,6 +143,13 @@ let package = Package(
             dependencies: [
                 "Scenarios",
                 "TestSupport",
+            ]
+        ),
+        .testTarget(
+            name: "LocalizationTests",
+            dependencies: [
+                "TestSupport",
+                "Localization",
             ]
         ),
     ]

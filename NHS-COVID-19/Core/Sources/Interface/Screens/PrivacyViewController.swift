@@ -23,15 +23,15 @@ public class PrivacyViewController: ScrollingContentViewController {
             views: [
                 LogoStrapline(.nhsBlue, style: .onboarding),
                 UIImageView(.onboardingPrivacy).styleAsDecoration(),
-                UILabel().styleAsPageHeader().set(text: localize(.privacy_title)),
-                UILabel().styleAsTertiaryTitle().set(text: localize(.privacy_header)),
+                BaseLabel().styleAsPageHeader().set(text: localize(.privacy_title)),
+                BaseLabel().styleAsTertiaryTitle().set(text: localize(.privacy_header)),
                 localizeAndSplit(.privacy_description_paragraph1).map {
-                    UILabel().styleAsBody().set(text: $0)
+                    BaseLabel().styleAsBody().set(text: $0)
                 },
-                UILabel().styleAsTertiaryTitle().set(text: localize(.data_header)),
-                UILabel().styleAsBody().set(text: localize(.privacy_description_paragraph2)),
-                UILabel().styleAsBody().set(text: localize(.privacy_description_paragraph4)),
-                UILabel().styleAsHeading().set(text: localize(.privacy_links_label))
+                BaseLabel().styleAsTertiaryTitle().set(text: localize(.data_header)),
+                BaseLabel().styleAsBody().set(text: localize(.privacy_description_paragraph2)),
+                BaseLabel().styleAsBody().set(text: localize(.privacy_description_paragraph4)),
+                BaseLabel().styleAsHeading().set(text: localize(.privacy_links_label))
                     .accessibilityLabel(localize(.privacy_links_accessibility_label)),
                 LinkButton(
                     title: localize(.privacy_notice_label),

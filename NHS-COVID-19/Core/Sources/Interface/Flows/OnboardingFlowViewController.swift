@@ -10,7 +10,7 @@ public protocol OnboardingFlowViewControllerInteracting {
     func didTapAgree()
 }
 
-public class OnboardingFlowViewController: UINavigationController {
+public class OnboardingFlowViewController: BaseNavigationController {
     
     public typealias Interacting = OnboardingFlowViewControllerInteracting
     
@@ -30,7 +30,7 @@ public class OnboardingFlowViewController: UINavigationController {
     
     public init(interactor: Interacting) {
         self.interactor = interactor
-        super.init(nibName: nil, bundle: nil)
+        super.init()
         
         update(for: state)
     }

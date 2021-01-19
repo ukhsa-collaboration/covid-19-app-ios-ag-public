@@ -19,10 +19,10 @@ extension NonNegativeTestResultNoIsolationViewController {
             super.init(
                 scrollingViews: [
                     UIImageView(.isolationEndedWarning).styleAsDecoration(),
-                    UILabel().set(text: testResultType.headerText).styleAsPageHeader().centralized(),
-                    UILabel().set(text: testResultType.titleText).styleAsHeading().centralized(),
+                    BaseLabel().set(text: testResultType.headerText).styleAsPageHeader().centralized(),
+                    BaseLabel().set(text: testResultType.titleText).styleAsHeading().centralized(),
                     InformationBox.indication.warning(localize(.end_of_isolation_isolate_if_have_symptom_warning)),
-                    UILabel().set(text: localize(.end_of_isolation_further_advice_visit)).styleAsBody(),
+                    BaseLabel().set(text: localize(.end_of_isolation_further_advice_visit)).styleAsBody(),
                     LinkButton(
                         title: localize(.end_of_isolation_online_services_link),
                         action: interactor.didTapOnlineServicesLink

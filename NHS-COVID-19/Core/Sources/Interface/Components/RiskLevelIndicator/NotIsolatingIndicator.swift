@@ -47,6 +47,7 @@ public struct NotIsolatingIndicator: View {
         .accessibility(label: Text(localize(.risk_level_indicator_contact_tracing_active)))
         .accessibility(addTraits: .isStaticText)
         .padding(EdgeInsets(top: .bigSpacing, leading: 0, bottom: .bigSpacing, trailing: 0))
+        .environment(\.locale, Locale(identifier: currentLanguageCode()))
     }
 }
 

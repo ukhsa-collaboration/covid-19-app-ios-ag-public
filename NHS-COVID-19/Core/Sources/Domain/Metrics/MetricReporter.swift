@@ -13,7 +13,8 @@ class MetricReporter: NSObject {
     
     private let client: HTTPClient
     private let collector: MetricCollector
-    private let getPostcode: () -> String
+    private let getPostcode: () -> String?
+    private let getLocalAuthority: () -> String?
     private let chunkCreator: MetricUploadChunkCreator
     private var cancellables = [AnyCancellable]()
     
@@ -22,12 +23,14 @@ class MetricReporter: NSObject {
         encryptedStore: EncryptedStoring,
         currentDateProvider: DateProviding,
         appInfo: AppInfo,
-        getPostcode: @escaping () -> String
+        getPostcode: @escaping () -> String?,
+        getLocalAuthority: @escaping () -> String?
     ) {
         self.client = client
         self.getPostcode = getPostcode
+        self.getLocalAuthority = getLocalAuthority
         collector = MetricCollector(encryptedStore: encryptedStore, currentDateProvider: currentDateProvider)
-        chunkCreator = MetricUploadChunkCreator(collector: collector, appInfo: appInfo, getPostcode: getPostcode, currentDateProvider: currentDateProvider)
+        chunkCreator = MetricUploadChunkCreator(collector: collector, appInfo: appInfo, getPostcode: getPostcode, getLocalAuthority: getLocalAuthority, currentDateProvider: currentDateProvider)
         super.init()
     }
     
@@ -49,7 +52,12 @@ class MetricReporter: NSObject {
     func didFinishOnboarding() {
         let today = GregorianDay.today.startDate(in: .utc)
         let payload = chunkCreator.createTriggeredPayload(dateInterval: DateInterval(start: today, end: today))
-        let info = MetricsInfo(payload: MetricsInfoPayload.triggeredPayload(payload), postalDistrict: getPostcode(), recordedMetrics: [.completedOnboarding: 1])
+        let info = MetricsInfo(
+            payload: MetricsInfoPayload.triggeredPayload(payload),
+            postalDistrict: getPostcode() ?? "",
+            localAuthority: getLocalAuthority() ?? "",
+            recordedMetrics: [.completedOnboarding: 1]
+        )
         client.fetch(MetricSubmissionEndpoint(), with: info).replaceError(with: ()).sink { _ in }.store(in: &cancellables)
     }
 }

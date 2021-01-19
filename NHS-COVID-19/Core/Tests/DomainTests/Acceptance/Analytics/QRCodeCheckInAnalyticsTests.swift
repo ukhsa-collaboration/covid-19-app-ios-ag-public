@@ -17,14 +17,17 @@ class QRCodeCheckInAnalyticsTests: AnalyticsTests {
     func testCountsNumberOfCheckIns() throws {
         try checkInFunctionality.checkIn(date: currentDateProvider.currentDate)
         
-        advanceToEndOfAnalyticsWindow()
-        assert(\.checkedIn).equals(1)
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.checkedIn)
+        }
     }
     
     func testCountsNumberOfCancelledCheckIns() throws {
         try checkInFunctionality.checkInAndCancel(date: currentDateProvider.currentDate)
         
-        advanceToEndOfAnalyticsWindow()
-        assert(\.canceledCheckIn).equals(1)
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.checkedIn)
+            assertField.equals(expected: 1, \.canceledCheckIn)
+        }
     }
 }

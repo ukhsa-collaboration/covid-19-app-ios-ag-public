@@ -15,7 +15,7 @@ public class CoordinatedAppController: AppController {
     
     private var cancellable: [AnyCancellable] = []
     
-    public var rootViewController = UIViewController()
+    public var rootViewController: UIViewController = RootViewController()
     
     private var content: UIViewController? {
         didSet {
@@ -41,6 +41,18 @@ public class CoordinatedAppController: AppController {
         coordinator.country.sink {
             Localization.country = $0
         }.store(in: &cancellable)
+        
+        coordinator.localeConfiguration.sink { config in
+            UIView.appearance().applySemanticContentAttribute(configuration: config)
+            
+            UIApplication.shared.accessibilityLanguage = currentLocaleIdentifier(
+                localeConfiguration: config
+            )
+            
+            // The root view controller will be refreshed by this so do UIVIew stuff before this line.
+            config.becomeCurrent()
+        }.store(in: &cancellable)
+        
         setupUI()
     }
     

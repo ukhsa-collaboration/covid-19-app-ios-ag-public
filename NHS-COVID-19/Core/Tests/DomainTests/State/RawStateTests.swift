@@ -18,10 +18,9 @@ class RawStateTests: XCTestCase {
                 isEnabled: true
             ),
             userNotificationsStatus: .unknown,
-            postcodeState: .onlyPostcode,
+            postcodeState: .postcodeAndLocalAuthority,
             shouldRecommendUpdate: true,
-            shouldShowPolicyUpdate: false,
-            localAuthorityEnabled: false
+            shouldShowPolicyUpdate: false
         )
         
         XCTAssertEqual(rawState.logicalState, .starting)
@@ -45,10 +44,9 @@ class RawStateTests: XCTestCase {
                     isEnabled: true
                 ),
                 userNotificationsStatus: .authorized,
-                postcodeState: .onlyPostcode,
+                postcodeState: .postcodeAndLocalAuthority,
                 shouldRecommendUpdate: true,
-                shouldShowPolicyUpdate: true,
-                localAuthorityEnabled: false
+                shouldShowPolicyUpdate: true
             )
             
             XCTAssertEqual(rawState.logicalState, .appUnavailable(reason, descriptions: [:]))
@@ -66,10 +64,9 @@ class RawStateTests: XCTestCase {
                 isEnabled: true
             ),
             userNotificationsStatus: .authorized,
-            postcodeState: .onlyPostcode,
+            postcodeState: .postcodeAndLocalAuthority,
             shouldRecommendUpdate: true,
-            shouldShowPolicyUpdate: true,
-            localAuthorityEnabled: false
+            shouldShowPolicyUpdate: true
         )
         
         XCTAssertEqual(rawState.logicalState, .policyAcceptanceRequired)
@@ -86,10 +83,9 @@ class RawStateTests: XCTestCase {
                 isEnabled: true
             ),
             userNotificationsStatus: .authorized,
-            postcodeState: .onlyPostcode,
+            postcodeState: .postcodeAndLocalAuthority,
             shouldRecommendUpdate: true,
-            shouldShowPolicyUpdate: false,
-            localAuthorityEnabled: false
+            shouldShowPolicyUpdate: false
         )
         
         XCTAssertEqual(rawState.logicalState, .fullyOnboarded)
@@ -109,8 +105,7 @@ class RawStateTests: XCTestCase {
             userNotificationsStatus: .authorized,
             postcodeState: .onlyPostcode,
             shouldRecommendUpdate: true,
-            shouldShowPolicyUpdate: true,
-            localAuthorityEnabled: false
+            shouldShowPolicyUpdate: true
         )
         
         XCTAssertEqual(rawState.logicalState, .recommendingUpdate(.appOlderThanRecommended(version: Version(major: 1)), titles: [:], descriptions: [:]))
@@ -130,11 +125,28 @@ class RawStateTests: XCTestCase {
             userNotificationsStatus: .authorized,
             postcodeState: .onlyPostcode,
             shouldRecommendUpdate: true,
-            shouldShowPolicyUpdate: false,
-            localAuthorityEnabled: false
+            shouldShowPolicyUpdate: false
         )
         
         XCTAssertEqual(rawState.logicalState, .recommendingUpdate(.iOSOlderThanRecommended(version: Version(major: 14)), titles: [:], descriptions: [:]))
     }
     
+    func testAuthorizationRequiredState() {
+        let rawState = RawState(
+            appAvailability: AppAvailabilityMetadata(titles: [:], descriptions: [:], state: .available),
+            completedOnboardingForCurrentSession: false,
+            exposureState: ExposureNotificationStateController.CombinedState(
+                activationState: .activated,
+                authorizationState: .unknown,
+                exposureNotificationState: .active,
+                isEnabled: true
+            ),
+            userNotificationsStatus: .unknown,
+            postcodeState: .postcodeAndLocalAuthority,
+            shouldRecommendUpdate: true,
+            shouldShowPolicyUpdate: false
+        )
+        
+        XCTAssertEqual(rawState.logicalState, .authorizationRequired)
+    }
 }

@@ -42,7 +42,7 @@ extension InformationBox {
     }
     
     public static func information(_ text: String) -> InformationBox {
-        .information([UILabel().styleAsBody().set(text: text)])
+        .information([BaseLabel().styleAsBody().set(text: text)])
     }
     
     public static func information(title: String, body: [String]) -> InformationBox {
@@ -57,13 +57,13 @@ extension InformationBox {
         .information(color: color, content.map { content -> UIView in
             switch content {
             case .title(let text):
-                return UILabel().styleAsTertiaryTitle().set(text: text)
+                return BaseLabel().styleAsTertiaryTitle().set(text: text)
             case .heading(let text):
-                return UILabel().styleAsHeading().set(text: text)
+                return BaseLabel().styleAsHeading().set(text: text)
             case .boldBody(let text):
-                return UILabel().styleAsBoldBody().set(text: text)
+                return BaseLabel().styleAsBoldBody().set(text: text)
             case .body(let text):
-                return UILabel().styleAsBody().set(text: text)
+                return BaseLabel().styleAsBody().set(text: text)
             case .view(let view):
                 return view
             case .linkButton(let text, let image, let action):

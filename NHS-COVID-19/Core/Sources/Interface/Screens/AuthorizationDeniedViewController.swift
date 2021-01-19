@@ -46,6 +46,6 @@ private class AuthorizationErrorDetail: ErrorDetail {
     }
     
     var content: [UIView] {
-        localizeAndSplit(.authorization_denied_description).map { UILabel().set(text: $0).styleAsBody() }
+        localizeAndSplit(.authorization_denied_description).map { BaseLabel().set(text: $0).styleAsBody() }
     }
 }

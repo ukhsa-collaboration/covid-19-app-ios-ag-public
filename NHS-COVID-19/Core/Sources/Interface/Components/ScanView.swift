@@ -28,7 +28,7 @@ class ScanView: UIView {
     var cameraState: AnyPublisher<QRScanner.State, Never>
     
     private lazy var titleLabel: UIView = {
-        let titleLabel = UILabel()
+        let titleLabel = BaseLabel()
         titleLabel.text = localize(.checkin_camera_qrcode_scanner_title)
         titleLabel.styleAsPageHeader()
         titleLabel.numberOfLines = 0
@@ -38,7 +38,7 @@ class ScanView: UIView {
     }()
     
     private lazy var statusLabel: UILabel = {
-        let statusLabel = UILabel()
+        let statusLabel = BaseLabel()
         statusLabel.text = localize(.checkin_camera_qrcode_scanner_status_label)
         statusLabel.styleAsTertiaryTitle()
         statusLabel.textAlignment = .center
@@ -47,7 +47,7 @@ class ScanView: UIView {
     }()
     
     private lazy var descriptionLabel: UILabel = {
-        let descriptionLabel = UILabel()
+        let descriptionLabel = BaseLabel()
         descriptionLabel.text = localize(.checkin_camera_qrcode_scanner_description_label)
         descriptionLabel.styleAsBody()
         descriptionLabel.textAlignment = .center

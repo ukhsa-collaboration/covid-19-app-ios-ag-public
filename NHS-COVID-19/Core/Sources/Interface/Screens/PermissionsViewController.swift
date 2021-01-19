@@ -26,7 +26,7 @@ private class PermissionsStep: NSObject, OnboardingStep {
     private let submit: () -> Void
     
     private lazy var title: UILabel = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.text = localize(.permissions_onboarding_step_title)
         label.styleAsPageHeader()
         return label
@@ -41,7 +41,7 @@ private class PermissionsStep: NSObject, OnboardingStep {
     }
     
     func label(for localizationKey: StringLocalizationKey) -> UILabel {
-        let label = UILabel()
+        let label = BaseLabel()
         label.text = localize(localizationKey)
         return label
     }

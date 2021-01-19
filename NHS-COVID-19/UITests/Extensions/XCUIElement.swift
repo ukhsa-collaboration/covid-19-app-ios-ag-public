@@ -15,6 +15,10 @@ extension XCUIElement {
         return XCTNSPredicateExpectation(predicate: lostFocus, object: self)
     }
     
+    var stringValue: String {
+        (value as? String) ?? ""
+    }
+    
     func waitForDisappearance(timeout: TimeInterval = 0.5, file: StaticString = #file, line: UInt = #line) {
         let deadline = CACurrentMediaTime() + timeout
         while CACurrentMediaTime() < deadline, exists {

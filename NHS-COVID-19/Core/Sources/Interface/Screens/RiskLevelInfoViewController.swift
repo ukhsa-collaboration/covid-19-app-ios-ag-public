@@ -65,12 +65,12 @@ extension RiskLevelInfoViewController {
             
             let stackedViews: [StackViewContentProvider] = [
                 UIImageView(image: viewModel.image).styleAsDecoration(),
-                UILabel().set(text: viewModel.infoTitle).styleAsPageHeader(),
+                BaseLabel().set(text: viewModel.infoTitle).styleAsPageHeader(),
                 viewModel.heading.map {
-                    UILabel().set(text: $0).styleAsTertiaryTitle()
+                    BaseLabel().set(text: $0).styleAsTertiaryTitle()
                 },
                 viewModel.body.map {
-                    UILabel().set(text: $0).styleAsBody()
+                    BaseLabel().set(text: $0).styleAsBody()
                 },
                 viewModel.policies.map { policy in
                     WelcomePoint(
@@ -80,7 +80,7 @@ extension RiskLevelInfoViewController {
                     )
                 },
                 viewModel.footer.map {
-                    UILabel().set(text: $0).styleAsBody()
+                    BaseLabel().set(text: $0).styleAsBody()
                 },
             ]
             

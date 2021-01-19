@@ -22,15 +22,15 @@ extension CoordinatedAppController {
             switch reason {
             case .iOSTooOld(let descriptions):
                 let vc = AppAvailabilityErrorViewController(viewModel: .init(errorType: .iOSTooOld, descriptions: descriptions))
-                return UINavigationController(rootViewController: vc)
+                return BaseNavigationController(rootViewController: vc)
             case .appTooOld(let updateAvailable, let descriptions):
                 let vc = AppAvailabilityErrorViewController(viewModel: .init(errorType: .appTooOld(updateAvailable: updateAvailable), descriptions: descriptions))
-                return UINavigationController(rootViewController: vc)
+                return BaseNavigationController(rootViewController: vc)
             }
             
         case .failedToStart:
             let vc = UnrecoverableErrorViewController()
-            return UINavigationController(rootViewController: vc)
+            return BaseNavigationController(rootViewController: vc)
             
         case .onboarding(let complete, let openURL):
             let interactor = OnboardingInteractor(
@@ -41,11 +41,6 @@ extension CoordinatedAppController {
             
         case .authorizationRequired(let requestPermissions, let country):
             return PermissionsViewController(country: country.interfaceProperty, submit: requestPermissions)
-            
-        case .postcodeRequired(let savePostcode):
-            return EnterPostcodeViewController { postcode in
-                savePostcode(postcode).mapError(DisplayableError.init)
-            }
         case .postcodeAndLocalAuthorityRequired(let openURL, let getLocalAuthorities, let storeLocalAuthority):
             let interactor = LocalAuthorityOnboardingIteractor(
                 openURL: openURL,
@@ -76,7 +71,7 @@ extension CoordinatedAppController {
             case .bluetoothDisabled:
                 vc = BluetoothDisabledViewController(country: country)
             }
-            return UINavigationController(rootViewController: vc)
+            return BaseNavigationController(rootViewController: vc)
         case .policyAcceptanceRequired(let saveCurrentVersion, let openURL):
             let interactor = PolicyUpdateInteractor(
                 saveCurrentVersion: saveCurrentVersion,
@@ -105,7 +100,7 @@ extension CoordinatedAppController {
                 .map { [weak self] state in
                     switch state {
                     case .notNeeded:
-                        return self?.viewControllerForRunningAppIgnoringAcknowledgement(with: context)
+                        return self?.wrappingViewControllerForRunningAppIgnoringAcknowledgement(with: context)
                             ?? UIViewController()
                     case .neededForPositiveResultStartToIsolate(let interactor, let isolationEndDate):
                         return SendKeysLoadingFlowViewController(interactor: interactor) { completion in
@@ -162,7 +157,7 @@ extension CoordinatedAppController {
                         )
                     case .neededForVoidResultContinueToIsolate(let interactor, let isolationEndDate):
                         
-                        let navigationVC = UINavigationController()
+                        let navigationVC = BaseNavigationController()
                         
                         let virologyInteractor = VirologyTestingFlowInteractor(
                             virologyTestOrderInfoProvider: context.virologyTestingManager,
@@ -194,7 +189,7 @@ extension CoordinatedAppController {
                         navigationVC.viewControllers = [nonNegativeVC]
                         return navigationVC
                     case .neededForVoidResultNotIsolating(let interactor):
-                        let navigationVC = UINavigationController()
+                        let navigationVC = BaseNavigationController()
                         
                         let virologyInteractor = VirologyTestingFlowInteractor(
                             virologyTestOrderInfoProvider: context.virologyTestingManager,
@@ -230,7 +225,26 @@ extension CoordinatedAppController {
         }
     }
     
-    private func viewControllerForRunningAppIgnoringAcknowledgement(with context: RunningAppContext) -> UIViewController {
+    private func wrappingViewControllerForRunningAppIgnoringAcknowledgement(
+        with context: RunningAppContext
+    ) -> UIViewController {
+        WrappingViewController {
+            Localization.configurationChangePublisher
+                .map { _ in true }
+                .prepend(false)
+                .map { [weak self] value in
+                    self?.viewControllerForRunningAppIgnoringAcknowledgement(
+                        with: context,
+                        shouldShowLanguageSelectionScreen: value
+                    ) ?? UIViewController()
+                }
+        }
+    }
+    
+    private func viewControllerForRunningAppIgnoringAcknowledgement(
+        with context: RunningAppContext,
+        shouldShowLanguageSelectionScreen: Bool
+    ) -> UIViewController {
         
         let interactor = HomeFlowViewControllerInteractor(
             context: context,
@@ -297,10 +311,11 @@ extension CoordinatedAppController {
             shouldShowSelfDiagnosis: shouldShowSelfDiagnosis,
             userNotificationsEnabled: userNotificationEnabled,
             showFinancialSupportButton: showFinancialSupportButton,
-            country: country
+            recordSelectedIsolationPaymentsButton: { Metrics.signpost(.selectedIsolationPaymentsButton) },
+            country: country,
+            shouldShowLanguageSelectionScreen: shouldShowLanguageSelectionScreen
         )
     }
-    
 }
 
 private struct OnboardingInteractor: OnboardingFlowViewController.Interacting {

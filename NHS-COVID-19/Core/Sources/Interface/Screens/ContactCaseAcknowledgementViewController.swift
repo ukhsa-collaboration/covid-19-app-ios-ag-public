@@ -35,12 +35,12 @@ private class ContactCaseAcknowledgementContent: PrimaryButtonStickyFooterScroll
             pleaseIsolateStack,
             InformationBox.indication.warning(type.warning),
             type.content,
-            UILabel().set(text: localize(.exposure_faqs_link_label)).styleAsBody(),
+            BaseLabel().set(text: localize(.exposure_faqs_link_label)).styleAsBody(),
             LinkButton(
                 title: localize(.exposure_faqs_link_button_title),
                 action: interactor.exposureFAQsLinkTapped
             ),
-            UILabel()
+            BaseLabel()
                 .styleAsBody()
                 .set(text: localize(.exposure_acknowledgement_link_label)),
             LinkButton(
@@ -82,26 +82,26 @@ extension ContactCaseAcknowledgementViewController.ContactCaseType {
         switch self {
         case .exposureDetection:
             return UIStackView(arrangedSubviews: [
-                UILabel()
+                BaseLabel()
                     .styleAsHeading()
                     .set(text: localize(.exposure_acknowledgement_self_isolate_for))
                     .centralized(),
-                UILabel()
+                BaseLabel()
                     .styleAsPageHeader()
                     .set(text: localize(.exposure_acknowledgement_days(days: duration)))
                     .centralized(),
             ])
         case .riskyVenue:
             return UIStackView(arrangedSubviews: [
-                UILabel()
+                BaseLabel()
                     .styleAsHeading()
                     .set(text: localize(.exposure_acknowledgement_self_isolate_for))
                     .centralized(),
-                UILabel()
+                BaseLabel()
                     .styleAsPageHeader()
                     .set(text: localize(.exposure_acknowledgement_days(days: duration)))
                     .centralized(),
-                UILabel()
+                BaseLabel()
                     .styleAsHeading()
                     .set(text: localize(.risky_venue_isolation_report_symptoms))
                     .centralized(),
@@ -131,16 +131,16 @@ extension ContactCaseAcknowledgementViewController.ContactCaseType {
         switch self {
         case .exposureDetection:
             return [
-                UILabel()
+                BaseLabel()
                     .styleAsBody()
                     .set(text: localize(.exposure_acknowledgement_explaination_1)),
-                UILabel()
+                BaseLabel()
                     .styleAsBody()
                     .set(text: localize(.exposure_acknowledgement_explaination_2)),
             ]
         case .riskyVenue:
             return localizeAndSplit(.risky_venue_isolation_description)
-                .map { UILabel().styleAsBody().set(text: String($0)) }
+                .map { BaseLabel().styleAsBody().set(text: String($0)) }
         }
     }
 }

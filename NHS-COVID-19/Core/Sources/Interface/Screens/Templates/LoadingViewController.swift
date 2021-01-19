@@ -43,7 +43,7 @@ public class LoadingViewController: UIViewController {
         let spinner = UIActivityIndicatorView()
         spinner.startAnimating()
         
-        let waitingLabel = UILabel()
+        let waitingLabel = BaseLabel()
         waitingLabel.styleAsBody()
         waitingLabel.text = localize(.loading)
         

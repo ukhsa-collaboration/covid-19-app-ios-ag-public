@@ -25,11 +25,11 @@ private struct NonRecoverableErrorDetail: ErrorDetail {
     let title = localize(.unrecoverable_error_page_title)
     
     var content: [UIView] {
-        let titleLabel = UILabel()
+        let titleLabel = BaseLabel()
         titleLabel.styleAsHeading()
         titleLabel.text = localize(.unrecoverable_error_title)
         
-        let descriptionLabel = UILabel()
+        let descriptionLabel = BaseLabel()
         descriptionLabel.styleAsBody()
         descriptionLabel.text = localize(.unrecoverable_error_description)
         

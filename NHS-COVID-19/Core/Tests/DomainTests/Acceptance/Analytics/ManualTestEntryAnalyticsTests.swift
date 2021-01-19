@@ -20,79 +20,62 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
     func testHasTestedPositiveBackgroundTickPresentAfterTestResultEntered() throws {
         // Current date: 1st Jan
         // Starting state: App running normally, not in isolation
-        advanceToEndOfAnalyticsWindow()
+        assertAnalyticsPacketIsNormal()
         // Current date: 2nd Jan -> Analytics packet for: 1st Jan
-        assert(\.isIsolatingBackgroundTick).isNotPresent()
-        assert(\.isIsolatingForTestedPositiveBackgroundTick).isNotPresent()
-        assert(\.hasTestedPositiveBackgroundTick).isNotPresent()
         
         // Enters positive test result on 2nd Jan
         // Isolation end date: 12th Jan
         try manualTestResultEntry.enterPositive()
         
-        advanceToEndOfAnalyticsWindow()
-        
         // Current date: 3rd Jan -> Analytics packet for: 2nd Jan
         // Now in isolation due to positive test result
-        assert(\.receivedPositiveTestResult).equals(1)
-        assert(\.receivedPositiveTestResultEnteredManually).equals(1)
-        assert(\.isIsolatingBackgroundTick).isPresent()
-        assert(\.hasTestedPositiveBackgroundTick).isPresent()
-        assert(\.isIsolatingForTestedPositiveBackgroundTick).isPresent()
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.startedIsolation)
+            assertField.equals(expected: 1, \.receivedPositiveTestResult)
+            assertField.equals(expected: 1, \.receivedPositiveTestResultEnteredManually)
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
+            assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
+        }
         
         // Dates: 4th-13th Jan -> Analytics packets for: 3rd-12th Jan
         // Still in isolation
-        for _ in 4 ... 13 {
-            advanceToEndOfAnalyticsWindow()
-            
-            assert(\.receivedPositiveTestResult).isNotPresent()
-            assert(\.receivedPositiveTestResultEnteredManually).isNotPresent()
-            assert(\.isIsolatingBackgroundTick).isPresent()
-            assert(\.isIsolatingForTestedPositiveBackgroundTick).isPresent()
-            assert(\.hasTestedPositiveBackgroundTick).isPresent()
+        assertOnFieldsForDateRange(dateRange: 4 ... 13) { assertField in
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
+            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
         }
         
-        // Dates: 13th-27th Jan -> Analytics packets for: 12th-26th Jan
+        // Dates: 14th-27th Jan -> Analytics packets for: 13th-26th Jan
         // Isolation is over, but isolation reason still stored for 14 days
-        for _ in 14 ... 27 {
-            advanceToEndOfAnalyticsWindow()
-            
-            assert(\.isIsolatingBackgroundTick).isNotPresent()
-            assert(\.isIsolatingForTestedPositiveBackgroundTick).isNotPresent()
-            assert(\.hasTestedPositiveBackgroundTick).isPresent()
+        assertOnFieldsForDateRange(dateRange: 14 ... 27) { assertField in
+            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
         }
         
-        advanceToEndOfAnalyticsWindow()
         // Current date: 27th Jan -> Analytics packet for: 26th Jan
         // Previous isolation reason no longer stored
-        assert(\.hasTestedPositiveBackgroundTick).isNotPresent()
+        assertAnalyticsPacketIsNormal()
     }
     
     func testManuallyEnteredNegativeTestResult() throws {
         try manualTestResultEntry.enterNegative()
         
-        advanceToEndOfAnalyticsWindow()
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.receivedNegativeTestResult)
+            assertField.equals(expected: 1, \.receivedNegativeTestResultEnteredManually)
+        }
         
-        assert(\.receivedNegativeTestResult).equals(1)
-        assert(\.receivedNegativeTestResultEnteredManually).equals(1)
-        
-        advanceToEndOfAnalyticsWindow()
-        
-        assert(\.receivedNegativeTestResult).isNotPresent()
-        assert(\.receivedNegativeTestResultEnteredManually).isNotPresent()
+        assertAnalyticsPacketIsNormal()
     }
     
     func testManuallyEnteredVoidTestResult() throws {
         try manualTestResultEntry.enterVoid()
         
-        advanceToEndOfAnalyticsWindow()
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.receivedVoidTestResult)
+            assertField.equals(expected: 1, \.receivedVoidTestResultEnteredManually)
+        }
         
-        assert(\.receivedVoidTestResult).equals(1)
-        assert(\.receivedVoidTestResultEnteredManually).equals(1)
-        
-        advanceToEndOfAnalyticsWindow()
-        
-        assert(\.receivedVoidTestResult).isNotPresent()
-        assert(\.receivedVoidTestResultEnteredManually).isNotPresent()
+        assertAnalyticsPacketIsNormal()
     }
 }

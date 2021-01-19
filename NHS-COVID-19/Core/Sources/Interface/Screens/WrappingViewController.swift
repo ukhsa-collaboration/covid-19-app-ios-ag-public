@@ -3,9 +3,25 @@
 //
 
 import Combine
+import Localization
 import UIKit
 
-public class WrappingViewController: UIViewController {
+public class RootViewController: UIViewController {
+    override public func overrideTraitCollection(
+        forChild childViewController: UIViewController
+    ) -> UITraitCollection? {
+        switch currentLanguageDirection() {
+        case .leftToRight:
+            return UITraitCollection(layoutDirection: .leftToRight)
+        case .rightToLeft:
+            return UITraitCollection(layoutDirection: .rightToLeft)
+        case .unknown:
+            return super.overrideTraitCollection(forChild: childViewController)
+        }
+    }
+}
+
+public class WrappingViewController: RootViewController {
     
     private var cancellable: AnyCancellable?
     

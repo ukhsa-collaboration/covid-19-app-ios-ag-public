@@ -38,22 +38,22 @@ struct FinancialSupportContent {
     
     init(interactor: Interacting) {
         let stackedViews = [
-            UILabel().set(text: localize(.financial_support_title)).styleAsPageHeader(),
-            UILabel().set(text: localize(.financial_support_description)).styleAsBody(),
+            BaseLabel().set(text: localize(.financial_support_title)).styleAsPageHeader(),
+            BaseLabel().set(text: localize(.financial_support_description)).styleAsBody(),
             
-            UILabel().set(text: localize(.financial_support_privacy_notice_description)).styleAsBody(),
+            BaseLabel().set(text: localize(.financial_support_privacy_notice_description)).styleAsBody(),
             LinkButton(
                 title: localize(.financial_support_privacy_notice_link_description),
                 action: interactor.didTapViewPrivacyNotice
             ),
             
-            UILabel().set(text: localize(.financial_support_help_england_link_description)).styleAsBody(),
+            BaseLabel().set(text: localize(.financial_support_help_england_link_description)).styleAsBody(),
             LinkButton(
                 title: localize(.financial_support_help_england_link_title),
                 action: interactor.didTapHelpForEngland
             ),
             
-            UILabel().set(text: localize(.financial_support_help_wales_link_description)).styleAsBody(),
+            BaseLabel().set(text: localize(.financial_support_help_wales_link_description)).styleAsBody(),
             LinkButton(
                 title: localize(.financial_support_help_wales_link_title),
                 action: interactor.didTapHelpForWales

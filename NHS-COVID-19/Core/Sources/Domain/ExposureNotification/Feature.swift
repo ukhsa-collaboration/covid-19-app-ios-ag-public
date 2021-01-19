@@ -5,7 +5,6 @@
 import Foundation
 
 public enum Feature: CaseIterable {
-    case localAuthority
     
-    public static let productionEnabledFeatures: [Feature] = [.localAuthority]
+    public static let productionEnabledFeatures: [Feature] = []
 }

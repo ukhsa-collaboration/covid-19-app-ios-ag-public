@@ -27,7 +27,7 @@ private class StartOnboardingStep: OnboardingStep {
     fileprivate let alert: Alert?
     
     private lazy var title: UILabel = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.text = localize(.start_onboarding_step_title)
         label.styleAsPageHeader()
         return label
@@ -64,7 +64,7 @@ private class StartOnboardingStep: OnboardingStep {
     }()
     
     private lazy var subtitle: UILabel = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.text = localize(.start_onboarding_step_subtitle)
         label.styleAsBody()
         return label

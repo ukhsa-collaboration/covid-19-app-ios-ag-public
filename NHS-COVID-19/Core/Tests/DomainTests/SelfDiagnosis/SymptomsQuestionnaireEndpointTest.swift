@@ -75,13 +75,13 @@ class SymptomsQuestionnaireEndpointTests: XCTestCase {
         let expected = SymptomsQuestionnaire(
             symptoms: [
                 Symptom(
-                    title: ["en-GB": title1en, "de-DE": title1de],
-                    description: ["en-GB": description1en, "de-DE": description1de],
+                    title: [Locale(identifier: "en-GB"): title1en, Locale(identifier: "de-DE"): title1de],
+                    description: [Locale(identifier: "en-GB"): description1en, Locale(identifier: "de-DE"): description1de],
                     riskWeight: 1
                 ),
                 Symptom(
-                    title: ["en-GB": title2],
-                    description: ["en-GB": description2],
+                    title: [Locale(identifier: "en-GB"): title2],
+                    description: [Locale(identifier: "en-GB"): description2],
                     riskWeight: 0
                 ),
             ],

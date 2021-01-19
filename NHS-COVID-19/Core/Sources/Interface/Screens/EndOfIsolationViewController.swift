@@ -27,18 +27,18 @@ private class EndOfIsolationContent: PrimaryButtonStickyFooterScrollingContent {
             scrollingViews: [
                 UIImageView(.isolationEnded).styleAsDecoration().isHidden(!isIndexCase),
                 UIImageView(.isolationEndedWarning).styleAsDecoration().isHidden(isIndexCase),
-                UILabel()
+                BaseLabel()
                     .set(text: localize(.end_of_isolation_isolate_title))
                     .styleAsPageHeader()
                     .centralized(),
-                UILabel()
+                BaseLabel()
                     .set(text: Self.endOfIsolationLabelText(endDate: isolationEndDate, currentDate: currentDateProvider.currentDate))
                     .styleAsHeading()
                     .centralized(),
                 
                 InformationBox.indication.warning(localize(.end_of_isolation_isolate_if_have_symptom_warning))
                     .isHidden(!isIndexCase),
-                UILabel().set(text: localize(.end_of_isolation_link_label)).styleAsBody(),
+                BaseLabel().set(text: localize(.end_of_isolation_link_label)).styleAsBody(),
                 LinkButton(
                     title: localize(.end_of_isolation_online_services_link),
                     action: interactor.didTapOnlineServicesLink

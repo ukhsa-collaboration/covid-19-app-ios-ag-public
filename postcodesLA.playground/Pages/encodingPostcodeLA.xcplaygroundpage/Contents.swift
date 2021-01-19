@@ -42,7 +42,7 @@ struct LA: Hashable, Codable {
 
 struct PostcodeLA: Codable {
     /// Postcode ID with a Set of Local Authorities IDs
-    var postcodes: [String: Set<String>]
+    var postcodes: [String: [String]]
     let localAuthorities: [String: LA]
 }
 
@@ -76,12 +76,19 @@ let newpcs = postcodes.reduce([(String, Set<String>)]()) { ini, next -> [(String
 
 let postcodesDict = Dictionary(newpcs) { $0.union($1) }
 
+let sortedPostcodeDict = postcodesDict.mapValues { value in
+    value.sorted(by: { $0.lowercased() < $1.lowercased() })
+}
+
 let authoritiesDict = Dictionary(localAuthorities) { _, value in
     value
 }
 
-let postcodeLA = PostcodeLA(postcodes: postcodesDict, localAuthorities: authoritiesDict)
+let postcodeLA = PostcodeLA(postcodes: sortedPostcodeDict, localAuthorities: authoritiesDict)
 
-let encodedPostcodeLA = try! JSONEncoder().encode(postcodeLA)
+let encoder = JSONEncoder()
+encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+
+let encodedPostcodeLA = try! encoder.encode(postcodeLA)
 
 print(String(data: encodedPostcodeLA, encoding: .utf8)!)

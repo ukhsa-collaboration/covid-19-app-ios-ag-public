@@ -9,6 +9,7 @@ import Logging
 struct MetricsInfo {
     var payload: MetricsInfoPayload
     var postalDistrict: String
+    var localAuthority: String?
     var recordedMetrics: [Metric: Int]
 }
 
@@ -52,6 +53,7 @@ private struct SubmissionPayload: Codable {
     
     struct Metadata: Codable {
         var postalDistrict: String
+        var localAuthority: String?
         var deviceModel: String
         var operatingSystemVersion: String
         var latestApplicationVersion: String
@@ -101,6 +103,12 @@ private struct SubmissionPayload: Codable {
         var hasSelfDiagnosedPositiveBackgroundTick = 0
         var encounterDetectionPausedBackgroundTick = 0
 //        var collectedMetric = 0
+        
+        // Isolation payment
+        var receivedActiveIpcToken = 0
+        var selectedIsolationPaymentsButton = 0
+        var launchedIsolationPaymentsApplication = 0
+        var haveActiveIpcTokenBackgroundTick = 0
     }
     
     var includesMultipleApplicationVersions: Bool
@@ -108,8 +116,8 @@ private struct SubmissionPayload: Codable {
     var metadata: Metadata
     var metrics: Metrics
     
-    init(_ metrics: MetricsInfo) {
-        switch metrics.payload {
+    init(_ metricsInfo: MetricsInfo) {
+        switch metricsInfo.payload {
         case .triggeredPayload(let payload):
             analyticsWindow = Period(
                 startDate: payload.startDate,
@@ -117,7 +125,8 @@ private struct SubmissionPayload: Codable {
             )
             
             metadata = Metadata(
-                postalDistrict: metrics.postalDistrict,
+                postalDistrict: metricsInfo.postalDistrict,
+                localAuthority: metricsInfo.localAuthority,
                 deviceModel: payload.deviceModel,
                 operatingSystemVersion: payload.operatingSystemVersion,
                 latestApplicationVersion: payload.latestApplicationVersion
@@ -125,7 +134,7 @@ private struct SubmissionPayload: Codable {
             
             includesMultipleApplicationVersions = payload.includesMultipleApplicationVersions
             
-            self.metrics = mutating(Metrics()) {
+            metrics = mutating(Metrics()) {
                 $0.cumulativeWifiUploadBytes = 0
                 $0.cumulativeWifiDownloadBytes = 0
                 $0.cumulativeCellularUploadBytes = 0
@@ -134,7 +143,7 @@ private struct SubmissionPayload: Codable {
                 $0.cumulativeUploadBytes = 0
                 
                 for metric in Metric.allCases {
-                    $0[keyPath: metric.property] = metrics.recordedMetrics[metric] ?? 0
+                    $0[keyPath: metric.property] = metricsInfo.recordedMetrics[metric] ?? 0
                 }
             }
         }
@@ -180,6 +189,10 @@ private extension Metric {
         case .receivedNegativeTestResultViaPolling: return \.receivedNegativeTestResultViaPolling
         case .receivedRiskyContactNotification: return \.receivedRiskyContactNotification
         case .startedIsolation: return \.startedIsolation
+        case .receivedActiveIpcToken: return \.receivedActiveIpcToken
+        case .haveActiveIpcTokenBackgroundTick: return \.haveActiveIpcTokenBackgroundTick
+        case .selectedIsolationPaymentsButton: return \.selectedIsolationPaymentsButton
+        case .launchedIsolationPaymentsApplication: return \.launchedIsolationPaymentsApplication
         }
     }
     

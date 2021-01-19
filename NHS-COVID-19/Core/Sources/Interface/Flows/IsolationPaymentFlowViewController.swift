@@ -7,7 +7,7 @@ import Common
 import Localization
 import UIKit
 
-public class IsolationPaymentFlowViewController: UINavigationController {
+public class IsolationPaymentFlowViewController: BaseNavigationController {
     
     fileprivate enum State: Equatable {
         case idle
@@ -20,13 +20,15 @@ public class IsolationPaymentFlowViewController: UINavigationController {
     
     fileprivate let _openURL: (URL) -> Void
     fileprivate let _didTapCheckEligibility: () -> AnyPublisher<URL, NetworkRequestError>
+    fileprivate let _recordLaunchedIsolationPaymentsApplication: () -> Void
     private var cancellables = [AnyCancellable]()
     
-    public init(openURL: @escaping (URL) -> Void, didTapCheckEligibility: @escaping () -> AnyPublisher<URL, NetworkRequestError>) {
+    public init(openURL: @escaping (URL) -> Void, didTapCheckEligibility: @escaping () -> AnyPublisher<URL, NetworkRequestError>, recordLaunchedIsolationPaymentsApplication: @escaping () -> Void) {
         _openURL = openURL
+        _recordLaunchedIsolationPaymentsApplication = recordLaunchedIsolationPaymentsApplication
         _didTapCheckEligibility = didTapCheckEligibility
         state = .idle
-        super.init(nibName: nil, bundle: nil)
+        super.init()
         monitorState()
     }
     
@@ -78,6 +80,7 @@ public class IsolationPaymentFlowViewController: UINavigationController {
                 },
                 receiveValue: { [weak self] url in
                     DispatchQueue.main.async {
+                        self?._recordLaunchedIsolationPaymentsApplication()
                         self?._openURL(url)
                     }
                 }

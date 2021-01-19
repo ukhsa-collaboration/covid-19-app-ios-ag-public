@@ -33,9 +33,10 @@ class UserNotificationsStateController {
     }
     
     func authorize() {
-        assert(authorizationStatus == .notDetermined, "\(#function) must be called at most once.")
-        manager.requestAuthorization(options: [.alert, .sound, .badge]) { _, error in
-            self.updateStatus()
+        if authorizationStatus == .notDetermined {
+            manager.requestAuthorization(options: [.alert, .sound, .badge]) { [weak self] _, error in
+                self?.updateStatus()
+            }
         }
     }
     

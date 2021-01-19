@@ -27,7 +27,7 @@ public enum CameraPermissionState {
     case denied
 }
 
-public class CheckInFlowViewController: UINavigationController {
+public class CheckInFlowViewController: BaseNavigationController {
     
     public typealias Interacting = CheckInFlowViewControllerInteracting
     
@@ -62,7 +62,7 @@ public class CheckInFlowViewController: UINavigationController {
         self.interactor = interactor
         self.currentDateProvider = currentDateProvider
         self.goHomeCompletion = goHomeCompletion
-        super.init(nibName: nil, bundle: nil)
+        super.init()
         
         cameraPermissionState
             .sink { [weak self] cameraAuthorizationState in
@@ -171,7 +171,7 @@ extension CheckInFlowViewController: CameraFailureViewController.Interacting, Sc
     }
     
     public func showHelp() {
-        let viewController = UINavigationController(rootViewController: VenueCheckInInformationViewController(interactor: self))
+        let viewController = BaseNavigationController(rootViewController: VenueCheckInInformationViewController(interactor: self))
         viewController.modalPresentationStyle = .overFullScreen
         present(viewController, animated: true, completion: nil)
     }

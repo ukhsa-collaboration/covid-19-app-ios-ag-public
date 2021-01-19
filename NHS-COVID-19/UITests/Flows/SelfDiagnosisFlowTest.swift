@@ -3,6 +3,7 @@
 //
 
 import Common
+import Localization
 import Scenarios
 import XCTest
 
@@ -49,8 +50,8 @@ class SelfDiagnosisFlowTest: XCTestCase {
             
             symptomsListScreen.symptomCard(
                 value: localize(.symptom_card_unchecked),
-                heading: Sandbox.Text.SymptomsList.cardHeading.rawValue,
-                content: Sandbox.Text.SymptomsList.cardContent.rawValue
+                heading: Sandbox.Text.SymptomsList.cardHeading.rawValue.apply(direction: currentLanguageDirection()),
+                content: Sandbox.Text.SymptomsList.cardContent.rawValue.apply(direction: currentLanguageDirection())
             ).tap()
             
             runner.step("Symptom selected") {

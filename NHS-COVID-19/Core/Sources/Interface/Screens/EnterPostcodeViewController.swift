@@ -26,7 +26,7 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
     private var showError = false
     
     private lazy var title: UILabel = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.text = localize(.postcode_entry_step_title)
         label.styleAsPageHeader()
         return label
@@ -40,14 +40,14 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
     }
     
     private lazy var exampleLabel: UILabel = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.text = localize(.postcode_entry_example_label)
         label.styleAsSecondaryBody()
         return label
     }()
     
     private lazy var errorTitle: UILabel = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.text = localize(.postcode_entry_error_title)
         label.styleAsErrorHeading()
         label.isHidden = true
@@ -55,14 +55,14 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
     }()
     
     private lazy var errorDescription: UILabel = {
-        let label = UILabel()
+        let label = BaseLabel()
         label.styleAsError()
         label.isHidden = true
         return label
     }()
     
     private lazy var postcodeTextField: UITextField = {
-        let textField = UITextField()
+        let textField = BaseTextField()
         textField.keyboardType = .asciiCapable
         textField.borderStyle = .roundedRect
         textField.delegate = self
@@ -94,9 +94,9 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
         }
     }
     
-    private let descriptionTitle = UILabel().styleAsTertiaryTitle().set(text: localize(.postcode_entry_information_title))
-    private let description1 = UILabel().styleAsBody().set(text: localize(.postcode_entry_information_description_1))
-    private let description2 = UILabel().styleAsBody().set(text: localize(.postcode_entry_information_description_2))
+    private let descriptionTitle = BaseLabel().styleAsTertiaryTitle().set(text: localize(.postcode_entry_information_title))
+    private let description1 = BaseLabel().styleAsBody().set(text: localize(.postcode_entry_information_description_1))
+    private let description2 = BaseLabel().styleAsBody().set(text: localize(.postcode_entry_information_description_2))
     
     func stack(for labels: [UILabel]) -> UIStackView {
         let stackView = UIStackView(arrangedSubviews: labels)

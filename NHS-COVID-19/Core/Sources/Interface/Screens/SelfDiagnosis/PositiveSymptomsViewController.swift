@@ -22,17 +22,17 @@ extension PositiveSymptomsViewController {
             let headingStack = UIStackView(
                 content: BasicContent(
                     views: [
-                        UILabel()
+                        BaseLabel()
                             .set(text: localize(.positive_symptoms_please_isolate_for))
                             .styleAsHeading()
                             .centralized()
                             .isAccessibilityElement(false),
-                        UILabel()
+                        BaseLabel()
                             .set(text: localize(.positive_symptoms_days(days: daysToIsolate)))
                             .styleAsPageHeader()
                             .centralized()
                             .isAccessibilityElement(false),
-                        UILabel()
+                        BaseLabel()
                             .set(text: localize(.positive_symptoms_and_book_a_test))
                             .styleAsHeading()
                             .centralized()
@@ -52,14 +52,14 @@ extension PositiveSymptomsViewController {
                     headingStack,
                     InformationBox.indication.warning(localize(.positive_symptoms_you_might_have_corona)),
                     localizeAndSplit(.positive_symptoms_explanation).map {
-                        UILabel().set(text: $0).styleAsBody()
+                        BaseLabel().set(text: $0).styleAsBody()
                     },
-                    UILabel().set(text: localize(.exposure_faqs_link_label)).styleAsBody(),
+                    BaseLabel().set(text: localize(.exposure_faqs_link_label)).styleAsBody(),
                     LinkButton(
                         title: localize(.exposure_faqs_link_button_title),
                         action: interactor.exposureFAQsLinkTapped
                     ),
-                    UILabel().set(text: localize(.positive_symptoms_link_label)).styleAsBody(),
+                    BaseLabel().set(text: localize(.positive_symptoms_link_label)).styleAsBody(),
                     LinkButton(
                         title: localize(.end_of_isolation_online_services_link),
                         action: interactor.furtherAdviceLinkTapped

@@ -60,6 +60,13 @@
         "identifier" : "TestSupportTests",
         "name" : "TestSupportTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:NHS-COVID-19\/Core",
+        "identifier" : "LocalizationTests",
+        "name" : "LocalizationTests"
+      }
     }
   ],
   "version" : 1

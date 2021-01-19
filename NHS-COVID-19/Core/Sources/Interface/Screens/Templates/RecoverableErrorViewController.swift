@@ -51,7 +51,7 @@ open class RecoverableErrorViewController: UIViewController {
         let view = self.view!
         view.styleAsScreenBackground(with: traitCollection)
         
-        let label = UILabel()
+        let label = BaseLabel()
         label.styleAsPageHeader()
         
         label.text = error.title

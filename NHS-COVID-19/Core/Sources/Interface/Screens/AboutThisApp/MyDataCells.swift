@@ -21,8 +21,8 @@ extension MyDataViewController {
         }()
         
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-            postcodeLabel = UILabel().styleAsBody()
-            localAuthorityLabel = UILabel().styleAsBody()
+            postcodeLabel = BaseLabel().styleAsBody()
+            localAuthorityLabel = BaseLabel().styleAsBody()
             super.init(style: style, reuseIdentifier: reuseIdentifier)
             backgroundColor = UIColor(.surface)
             stack.addArrangedSubview(localAuthorityLabel)
@@ -72,9 +72,9 @@ extension MyDataViewController {
         let dateLabel: UILabel
         
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-            titleLabel = UILabel().styleAsBody()
-            idLabel = UILabel().styleAsSecondaryBody()
-            dateLabel = UILabel().styleAsSecondaryBody()
+            titleLabel = BaseLabel().styleAsBody()
+            idLabel = BaseLabel().styleAsSecondaryBody()
+            dateLabel = BaseLabel().styleAsSecondaryBody()
             
             super.init(style: style, reuseIdentifier: reuseIdentifier)
             backgroundColor = UIColor(.surface)
@@ -130,8 +130,8 @@ extension MyDataViewController {
         let dateLabel: UILabel
         
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-            titleLabel = UILabel().styleAsBody()
-            dateLabel = UILabel().styleAsSecondaryBody()
+            titleLabel = BaseLabel().styleAsBody()
+            dateLabel = BaseLabel().styleAsSecondaryBody()
             
             super.init(style: style, reuseIdentifier: reuseIdentifier)
             backgroundColor = UIColor(.surface)

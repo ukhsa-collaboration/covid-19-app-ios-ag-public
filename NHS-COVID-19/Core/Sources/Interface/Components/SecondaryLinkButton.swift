@@ -34,7 +34,7 @@ public class SecondaryLinkButton: UIControl {
         
         heightAnchor.constraint(greaterThanOrEqualToConstant: .hitAreaMinHeight).isActive = true
         
-        let titleLabel = UILabel().styleAsHeading()
+        let titleLabel = BaseLabel().styleAsHeading()
         titleLabel.textColor = UIColor(.nhsBlue)
         titleLabel.adjustsFontForContentSizeCategory = true
         titleLabel.numberOfLines = 0

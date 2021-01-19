@@ -31,15 +31,24 @@ class AcceptanceTestCase: XCTestCase {
                 $0.validPostcodes = [Postcode("B44")]
             }
             
+            var appInfo = AppInfo(bundleId: .random(), version: "3.10", buildNumber: "1")
+            
             var currentDateProvider = AcceptanceTestMockDateProvider()
         }
         
         var coordinator: ApplicationCoordinator
+        var exposureNotificationContext: ExposureNotificationContext
+        let postcode = Postcode("S1")
+        let localAuthority = LocalAuthority(name: "Sheffield", id: .init("E08000019"))
         
         init(configuration: Configuration) {
             configuration.encryptedStore.stored["activation"] = """
             { "isActivated": true }
             """.data(using: .utf8)!
+            
+            let postcode = self.postcode
+            let localAuthority = self.localAuthority
+            
             let services = ApplicationServices(
                 application: configuration.application,
                 exposureNotificationManager: configuration.exposureNotificationManager,
@@ -53,13 +62,15 @@ class AcceptanceTestCase: XCTestCase {
                 encryptedStore: configuration.encryptedStore,
                 cacheStorage: configuration.cacheStorage,
                 venueDecoder: QRCode.forTests,
-                appInfo: AppInfo(bundleId: .random(), version: "3.10", buildNumber: "1"),
+                appInfo: configuration.appInfo,
                 postcodeValidator: configuration.postcodeValidator,
                 currentDateProvider: configuration.currentDateProvider,
                 storeReviewController: MockStoreReviewController()
             )
             
+            exposureNotificationContext = ExposureNotificationContext(services: services, isolationLength: DayDuration(9), interestedInExposureNotifications: { false }, getPostcode: { postcode }, getLocalAuthority: { localAuthority.id })
             coordinator = ApplicationCoordinator(services: services, enabledFeatures: configuration.enabledFeatures)
+            
         }
     }
     
@@ -100,6 +111,22 @@ class AcceptanceTestCase: XCTestCase {
     
     var coordinator: ApplicationCoordinator {
         instance.coordinator
+    }
+    
+    var exposureNotificationContext: ExposureNotificationContext {
+        instance.exposureNotificationContext
+    }
+    
+    var postcode: Postcode {
+        instance.postcode
+    }
+    
+    var localAuthority: LocalAuthority {
+        instance.localAuthority
+    }
+    
+    var appInfo: AppInfo {
+        $instance.appInfo
     }
 }
 

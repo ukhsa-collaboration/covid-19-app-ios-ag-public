@@ -2,18 +2,19 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Common
 import Foundation
 
 struct AppAvailability: Equatable {
     struct VersionRequirement: Equatable {
         var minimumSupported: Version
-        var descriptions: [Locale: String]
+        var descriptions: LocaleString
     }
     
     struct RecommendationRequirement: Equatable {
         var minimumRecommended: Version
-        var titles: [Locale: String]
-        var descriptions: [Locale: String]
+        var titles: LocaleString
+        var descriptions: LocaleString
     }
     
     var iOSVersion: VersionRequirement

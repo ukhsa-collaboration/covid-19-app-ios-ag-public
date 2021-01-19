@@ -27,7 +27,8 @@ struct ExposureNotificationContext {
         services: ApplicationServices,
         isolationLength: DayDuration,
         interestedInExposureNotifications: @escaping () -> Bool,
-        getPostcode: @escaping () -> Postcode?
+        getPostcode: @escaping () -> Postcode?,
+        getLocalAuthority: @escaping () -> LocalAuthorityId?
     ) {
         exposureNotificationManager = services.exposureNotificationManager
         currentDateProvider = services.currentDateProvider
@@ -40,7 +41,12 @@ struct ExposureNotificationContext {
         
         let exposureRiskManager: ExposureRiskManaging
         if #available(iOS 13.7, *) {
-            let exposureWindowAnalyticsHandler = ExposureWindowAnalyticsHandler(latestAppVersion: services.appInfo.version, getPostcode: getPostcode, client: services.apiClient)
+            let exposureWindowAnalyticsHandler = ExposureWindowAnalyticsHandler(
+                latestAppVersion: services.appInfo.version,
+                getPostcode: getPostcode,
+                getLocalAuthority: getLocalAuthority,
+                client: services.apiClient
+            )
             self.exposureWindowAnalyticsHandler = exposureWindowAnalyticsHandler
             
             let exposureWindowStore = ExposureWindowStore(store: services.encryptedStore)
@@ -171,22 +177,28 @@ struct ExposureNotificationContext {
 class ExposureWindowAnalyticsHandler {
     private var latestAppVersion: Version
     private var getPostcode: () -> Postcode?
+    private var getLocalAuthority: () -> LocalAuthorityId?
     private var client: HTTPClient
     
     var cancellables = [AnyCancellable]()
     
-    init(latestAppVersion: Version, getPostcode: @escaping () -> Postcode?, client: HTTPClient) {
+    init(latestAppVersion: Version,
+         getPostcode: @escaping () -> Postcode?,
+         getLocalAuthority: @escaping () -> LocalAuthorityId?,
+         client: HTTPClient) {
         self.latestAppVersion = latestAppVersion
         self.getPostcode = getPostcode
+        self.getLocalAuthority = getLocalAuthority
         self.client = client
     }
     
     @available(iOS 13.7, *)
     func post(windowInfo: [ExposureWindowInfo], hasPositiveTest: Bool) {
         let postcode = getPostcode()?.value ?? ""
+        let localAuthority = getLocalAuthority()?.value ?? ""
         
         windowInfo.forEach { exposureWindowInfo in
-            let endpoint = ExposureWindowEventEndpoint(latestAppVersion: latestAppVersion, postcode: postcode, hasPositiveTest: hasPositiveTest)
+            let endpoint = ExposureWindowEventEndpoint(latestAppVersion: latestAppVersion, postcode: postcode, localAuthority: localAuthority, hasPositiveTest: hasPositiveTest)
             client.fetch(endpoint, with: exposureWindowInfo)
                 .ensureFinishes(placeholder: ())
                 .sink { _ in }

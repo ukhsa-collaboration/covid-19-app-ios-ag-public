@@ -25,7 +25,7 @@ extension AboutThisAppViewController {
             let imageSize = icon.image!.size
             let aspectRatio = imageSize.height / imageSize.width
             
-            let titleLabel = UILabel()
+            let titleLabel = BaseLabel()
             titleLabel.text = title
             titleLabel.styleAsBody()
             titleLabel.isAccessibilityElement = false
@@ -45,7 +45,7 @@ extension AboutThisAppViewController {
         
         func makeIdentedStackView(text: [String]) -> UIStackView {
             let labels: [UILabel] = text.map {
-                let label = UILabel()
+                let label = BaseLabel()
                 label.text = $0
                 label.styleAsBody()
                 label.isAccessibilityElement = false
@@ -195,7 +195,7 @@ extension AboutThisAppViewController {
                 .body(.about_this_app_feedback_information_description),
                 .linkButton(.about_this_app_feedback_information_link_title, interactor.didTapProvideFeedback),
             ]),
-            UILabel().set(text: localize(.about_this_app_footer_text)).styleAsHeading().centralized(),
+            BaseLabel().set(text: localize(.about_this_app_footer_text)).styleAsHeading().centralized(),
             UIImageView(.onboardingStart).styleAsDecoration(),
         ]
         

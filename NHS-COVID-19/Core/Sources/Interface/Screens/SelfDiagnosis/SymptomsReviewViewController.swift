@@ -40,7 +40,7 @@ public class SymptomsReviewViewController: UIViewController {
     func symptomStack(imageView: UIImageView, text: String, children: [UIView]) -> UIStackView {
         imageView.setContentHuggingPriority(.almostRequest, for: .horizontal)
         
-        let label = UILabel()
+        let label = BaseLabel()
         label.text = text
         label.textColor = UIColor(.secondaryText)
         label.font = UIFont.preferredFont(forTextStyle: .body)
@@ -57,7 +57,7 @@ public class SymptomsReviewViewController: UIViewController {
         return stack
     }
     
-    private let noDateLabel = UILabel().styleAsBody().set(text: localize(.symptom_review_no_date))
+    private let noDateLabel = BaseLabel().styleAsBody().set(text: localize(.symptom_review_no_date))
     
     private lazy var noDateStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [noDateUnchecked, noDateChecked, noDateLabel])
@@ -114,12 +114,12 @@ public class SymptomsReviewViewController: UIViewController {
         return button
     }()
     
-    private let dateLabel = UILabel().styleAsTertiaryTitle().set(text: localize(.symptom_review_date_heading))
+    private let dateLabel = BaseLabel().styleAsTertiaryTitle().set(text: localize(.symptom_review_date_heading))
     
     private lazy var dateInfoBox = InformationBox.error(dateLabel, dateContainer, noDateContainer)
     
     private lazy var textField: UITextField = {
-        let textField = UITextField()
+        let textField = BaseTextField()
         textField.accessibilityElementsHidden = true
         return textField
     }()
@@ -170,10 +170,10 @@ public class SymptomsReviewViewController: UIViewController {
         let view = self.view!
         view.styleAsScreenBackground(with: traitCollection)
         
-        let stepLabel = UILabel().styleAsCaption().set(text: localize(.step_label(index: 2, count: 2)))
+        let stepLabel = BaseLabel().styleAsCaption().set(text: localize(.step_label(index: 2, count: 2)))
         stepLabel.accessibilityLabel = localize(.step_accessibility_label(index: 2, count: 2))
         
-        let heading = UILabel().styleAsPageHeader().set(text: localize(.symptom_review_heading))
+        let heading = BaseLabel().styleAsPageHeader().set(text: localize(.symptom_review_heading))
         
         let confirmHeaderImage = UIImageView(image: UIImage(systemName: "checkmark"))
         confirmHeaderImage.tintColor = UIColor(.nhsButtonGreen)
@@ -185,7 +185,7 @@ public class SymptomsReviewViewController: UIViewController {
         var deniedSymptoms = [UIView]()
         
         for (index, symptom) in symptoms.enumerated() {
-            let symptomLabel = UILabel().styleAsBoldBody().set(text: symptom.heading)
+            let symptomLabel = BaseLabel().styleAsBoldBody().set(text: symptom.heading)
             
             let symptomButton = UIButton()
             symptomButton.setTitle(localize(.symptom_review_button), for: .normal)

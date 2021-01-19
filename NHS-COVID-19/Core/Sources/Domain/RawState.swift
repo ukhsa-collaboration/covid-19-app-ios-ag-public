@@ -12,15 +12,12 @@ struct RawState: Equatable {
     var postcodeState: PostcodeStoreState
     var shouldRecommendUpdate: Bool
     var shouldShowPolicyUpdate: Bool
-    var localAuthorityEnabled: Bool
     
     var logicalState: LogicalState {
         let logicalStateIgnoringOnboarding = self.logicalStateIgnoringOnboarding
         switch logicalStateIgnoringOnboarding {
-        case .postcodeRequired where !completedOnboardingForCurrentSession,
-             .postcodeAndLocalAuthorityRequired where !completedOnboardingForCurrentSession,
-             .authorizationRequired where !completedOnboardingForCurrentSession:
-            // Show onboarding just before postcode or authorization
+        case .postcodeAndLocalAuthorityRequired where !completedOnboardingForCurrentSession:
+            // Show onboarding just before postcode
             return .onboarding
         default:
             return logicalStateIgnoringOnboarding
@@ -68,13 +65,11 @@ struct RawState: Equatable {
         }
         
         if case .empty = postcodeState {
-            return localAuthorityEnabled ? .postcodeAndLocalAuthorityRequired : .postcodeRequired
+            return .postcodeAndLocalAuthorityRequired
         }
         
-        if localAuthorityEnabled {
-            if case .onlyPostcode = postcodeState {
-                return .localAuthorityRequired
-            }
+        if case .onlyPostcode = postcodeState {
+            return .localAuthorityRequired
         }
         
         guard !shouldShowPolicyUpdate else {

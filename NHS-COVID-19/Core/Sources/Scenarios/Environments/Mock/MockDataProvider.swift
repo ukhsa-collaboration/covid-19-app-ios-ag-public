@@ -148,6 +148,24 @@ class MockDataProvider: ObservableObject {
         }
     }
     
+    @UserDefault("mocks.testResultEndDateDaysAgo", defaultValue: 0)
+    var testResultEndDateDaysAgo: Int {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    var testResultEndDateDaysAgoString: String {
+        get {
+            String(testResultEndDateDaysAgo)
+        }
+        set {
+            if let value = Int(newValue) {
+                testResultEndDateDaysAgo = value
+            }
+        }
+    }
+    
     @UserDefault("mocks.useFakeENContacts", defaultValue: false)
     var useFakeENContacts: Bool {
         didSet {

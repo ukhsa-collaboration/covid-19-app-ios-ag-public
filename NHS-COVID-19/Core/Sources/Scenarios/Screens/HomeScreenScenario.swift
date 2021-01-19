@@ -6,6 +6,7 @@ import Combine
 import Domain
 import Integration
 import Interface
+import Localization
 import UIKit
 
 internal protocol HomeScreenScenario: Scenario {
@@ -22,7 +23,7 @@ extension HomeScreenScenario {
             return RiskLevelBanner.ViewModel(
                 postcode: "SW12",
                 colorScheme: .green,
-                title: "SW12 is in Local Alert Level 1",
+                title: "SW12 is in Local Alert Level 1".apply(direction: currentLanguageDirection()),
                 infoTitle: "SW12 is in Local Alert Level 1",
                 heading: [],
                 body: [],
@@ -56,7 +57,8 @@ extension HomeScreenScenario {
                 shouldShowSelfDiagnosis: .constant(shouldShowSelfDiagnosis),
                 userNotificationsEnabled: .constant(false),
                 showFinancialSupportButton: .constant(true),
-                country: .constant(.england)
+                country: .constant(.england),
+                showLanguageSelectionScreen: nil
             )
         }
     }
@@ -93,6 +95,7 @@ public class HomeScreenAlerts {
     public static let checkInAlertTitle = "Check-in into a venue."
     public static let testingInformationAlertTitle = "Testing information button tapped"
     public static let financeAlertTitle = "Financial Support button tapped"
+    public static let settingsAlertTitle = "Settings button tapped"
     public static let exposureNotificationAlertTitle = "Exposure notifications toggled"
     public static let aboutAlertTitle = "About tapped"
     public static let linkTestResultTitle = "Link test result tapped"
@@ -147,6 +150,10 @@ private class Interactor: HomeViewController.Interacting {
     
     func didTapAboutButton() {
         viewController?.showAlert(title: HomeScreenAlerts.aboutAlertTitle)
+    }
+    
+    func didTapSettingsButton() {
+        viewController?.showAlert(title: HomeScreenAlerts.settingsAlertTitle)
     }
     
     func didTapLinkTestResultButton() {
