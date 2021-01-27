@@ -63,13 +63,13 @@ extension BackendIntegrationTests {
 
 extension BackendIntegrationTests {
     func _testOrderTestKit() throws {
-        try runSubmissionTest(with: OrderTestkitEndpoint(), expectedType: OrderTestkitResponse.self)
+        try runSubmissionTest(with: OrderTestKitEndpoint(), expectedType: OrderTestkitResponse.self)
     }
 }
 
 extension BackendIntegrationTests {
     func _testDiagnosisKeySubmission() throws {
-        let result = try submissionclient.fetch(OrderTestkitEndpoint()).await(timeout: 5).get()
+        let result = try submissionclient.fetch(OrderTestKitEndpoint()).await(timeout: 5).get()
         let diagnosisKeySubmissionToken = result.diagnosisKeySubmissionToken
         let keys = [
             TemporaryExposureKey(exposureKey: ENTemporaryExposureKey(), onsetDay: .today),
@@ -83,7 +83,7 @@ extension BackendIntegrationTests {
     func _testDailyKeysDownload() throws {
         let detectionClient = ExposureDetectionEndpointManager(
             distributionClient: distributionClient,
-            fileStorage: FileStorage(forCachesOf: .random())
+            fileStorage: FileStorage(forNewCachesOf: .random())
         )
         
         let zipManager = try detectionClient.getExposureKeys(for: .daily(.today)).await(timeout: 5).get()
@@ -100,7 +100,7 @@ extension BackendIntegrationTests {
     func _testHourlyKeysDownload() throws {
         let detectionClient = ExposureDetectionEndpointManager(
             distributionClient: distributionClient,
-            fileStorage: FileStorage(forCachesOf: .random())
+            fileStorage: FileStorage(forNewCachesOf: .random())
         )
         let zipManager = try detectionClient.getExposureKeys(for: .twoHourly(.today, .init(value: 0))).await(timeout: 5).get()
         let fileManager = FileManager()

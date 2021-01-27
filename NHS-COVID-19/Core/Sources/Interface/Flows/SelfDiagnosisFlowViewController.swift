@@ -73,7 +73,6 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
     }
     
     private func update(for state: State) {
-        viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
         pushViewController(rootViewController(for: state), animated: state != .start)
     }
     

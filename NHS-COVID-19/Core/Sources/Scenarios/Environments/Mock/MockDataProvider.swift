@@ -8,6 +8,7 @@ import Foundation
 
 class MockDataProvider: ObservableObject {
     static let testResults = ["POSITIVE", "NEGATIVE", "VOID"]
+    static let testKitType = ["LAB_RESULT", "RAPID_RESULT"]
     
     private let _objectWillChange = PassthroughSubject<Void, Never>()
     
@@ -143,6 +144,20 @@ class MockDataProvider: ObservableObject {
     
     @UserDefault("mocks.receivedTestResult", defaultValue: 0)
     var receivedTestResult: Int {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.testKitType", defaultValue: 0)
+    var testKitType: Int {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.keySubmissionSupported", defaultValue: true)
+    var keySubmissionSupported: Bool {
         didSet {
             _objectWillChange.send()
         }

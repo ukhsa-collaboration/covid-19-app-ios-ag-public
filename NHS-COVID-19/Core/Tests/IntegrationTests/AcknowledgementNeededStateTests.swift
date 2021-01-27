@@ -27,12 +27,12 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let date = Date()
         let context = makeRunningAppContext(
             isolationAckState: .notNeeded,
-            testResultAckState: .neededForPositiveResult(acknowledge: { Empty().eraseToAnyPublisher() }, isolationEndDate: date),
+            testResultAckState: .neededForPositiveResult(acknowledge: { Empty().eraseToAnyPublisher() }, isolationEndDate: date, keySubmissionSupported: true),
             riskyCheckInsAckState: .notNeeded
         )
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
-        if case .neededForPositiveResultContinueToIsolate(_, let isolationEndDate) = state {
+        if case .neededForPositiveResultContinueToIsolate(_, let isolationEndDate, _) = state {
             XCTAssert(true)
             XCTAssertEqual(date, isolationEndDate)
         }
@@ -70,7 +70,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let isolation = Isolation(
             fromDay: .today,
             untilStartOfDay: .today,
-            reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)
+            reason: .indexCase(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)
         )
         let context = makeRunningAppContext(
             isolationAckState: .neededForEnd(isolation, acknowledge: {}),
@@ -90,12 +90,12 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let isolation = Isolation(
             fromDay: .today,
             untilStartOfDay: .today,
-            reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)
+            reason: .indexCase(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)
         )
         
         let context = makeRunningAppContext(
             isolationAckState: .neededForEnd(isolation, acknowledge: {}),
-            testResultAckState: .neededForPositiveResult(acknowledge: { Empty().eraseToAnyPublisher() }, isolationEndDate: Date()),
+            testResultAckState: .neededForPositiveResult(acknowledge: { Empty().eraseToAnyPublisher() }, isolationEndDate: Date(), keySubmissionSupported: true),
             riskyCheckInsAckState: .needed(acknowledge: {}, venueName: "Venue", checkInDate: Date())
         )
         
@@ -110,7 +110,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let isolation = Isolation(
             fromDay: .today,
             untilStartOfDay: .today,
-            reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)
+            reason: .indexCase(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)
         )
         
         let context = makeRunningAppContext(

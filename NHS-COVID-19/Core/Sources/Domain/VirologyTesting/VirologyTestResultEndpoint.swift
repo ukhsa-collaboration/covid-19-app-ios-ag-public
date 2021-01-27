@@ -6,11 +6,18 @@ import Common
 import Foundation
 
 struct VirologyTestResultEndpoint: HTTPEndpoint {
-    func request(for input: PollingToken) throws -> HTTPRequest {
-        let encoder = JSONEncoder()
-        let json = try encoder.encode(RequestBody(testResultPollingToken: input.value))
+    func request(for input: VirologyTestResultRequest) throws -> HTTPRequest {
+        let countryString: String = {
+            switch input.country {
+            case .england: return "England"
+            case .wales: return "Wales"
+            }
+        }()
         
-        return .post("/virology-test/results", body: .json(json))
+        let encoder = JSONEncoder()
+        let json = try encoder.encode(RequestBody(testResultPollingToken: input.pollingToken.value, country: countryString))
+        
+        return .post("/virology-test/v2/results", body: .json(json))
     }
     
     func parse(_ response: HTTPResponse) throws -> VirologyTestResponse {
@@ -22,8 +29,10 @@ struct VirologyTestResultEndpoint: HTTPEndpoint {
             return .receivedResult(
                 VirologyTestResult(
                     testResult: VirologyTestResult.TestResult(payload.testResult),
+                    testKitType: VirologyTestResult.TestKitType(payload.testKit),
                     endDate: payload.testEndDate
-                )
+                ),
+                payload.diagnosisKeySubmissionSupported
             )
         default:
             return .noResultYet
@@ -31,8 +40,14 @@ struct VirologyTestResultEndpoint: HTTPEndpoint {
     }
 }
 
+struct VirologyTestResultRequest {
+    let pollingToken: PollingToken
+    let country: Country
+}
+
 private struct RequestBody: Codable {
     var testResultPollingToken: String
+    var country: String
 }
 
 private struct ResponseBody: Codable {
@@ -42,8 +57,16 @@ private struct ResponseBody: Codable {
         case void = "VOID"
     }
     
+    enum TestKitType: String, Codable {
+        case labResult = "LAB_RESULT"
+        case rapidResult = "RAPID_RESULT"
+        case rapidSelfReported = "RAPID_SELF_REPORTED"
+    }
+    
     var testEndDate: Date
     var testResult: TestResult
+    var testKit: TestKitType
+    var diagnosisKeySubmissionSupported: Bool
 }
 
 private extension VirologyTestResult.TestResult {
@@ -55,6 +78,19 @@ private extension VirologyTestResult.TestResult {
             self = .positive
         case .void:
             self = .void
+        }
+    }
+}
+
+private extension VirologyTestResult.TestKitType {
+    init(_ testKitType: ResponseBody.TestKitType) {
+        switch testKitType {
+        case .labResult:
+            self = .labResult
+        case .rapidResult:
+            self = .rapidResult
+        case .rapidSelfReported:
+            self = .rapidSelfReported
         }
     }
 }

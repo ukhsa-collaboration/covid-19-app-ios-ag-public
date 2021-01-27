@@ -30,7 +30,10 @@ extension ApplicationServices {
             iTunesClient: environment.iTunesClient,
             cameraManager: CameraManager(),
             encryptedStore: EncryptedStore(service: environment.identifier),
-            cacheStorage: FileStorage(forCachesOf: environment.identifier),
+            cacheStorage: MigratoryFileStorage(
+                newStorage: FileStorage(forNewCachesOf: environment.identifier),
+                oldStorage: FileStorage(forOldCachesOf: environment.identifier)
+            ),
             venueDecoder: environment.venueDecoder,
             appInfo: environment.appInfo,
             postcodeValidator: PostcodeValidator(),

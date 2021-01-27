@@ -108,6 +108,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         let date = Date()
         let virologyTestResult = VirologyTestResult(
             testResult: .positive,
+            testKitType: .labResult,
             endDate: date
         )
         let submissionToken = DiagnosisKeySubmissionToken(value: .random())
@@ -121,6 +122,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         let savedSubmissionToken = try XCTUnwrap(savedResult.diagnosisKeySubmissionToken)
         XCTAssertEqual(savedResult.testResult, .positive)
         XCTAssertEqual(savedResult.endDate, date)
+        XCTAssertEqual(savedResult.testKitType, .labResult)
         XCTAssertEqual(savedSubmissionToken, submissionToken)
     }
     
@@ -128,6 +130,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         let date = Date()
         let virologyTestResult = VirologyTestResult(
             testResult: .negative,
+            testKitType: .labResult,
             endDate: date
         )
         let submissionToken = DiagnosisKeySubmissionToken(value: .random())
@@ -141,6 +144,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         let savedSubmissionToken = try XCTUnwrap(savedResult.diagnosisKeySubmissionToken)
         XCTAssertEqual(savedResult.testResult, .negative)
         XCTAssertEqual(savedResult.endDate, date)
+        XCTAssertEqual(savedResult.testKitType, .labResult)
         XCTAssertEqual(savedSubmissionToken, submissionToken)
     }
     
@@ -148,6 +152,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         let date = Date()
         let virologyTestResult = VirologyTestResult(
             testResult: .void,
+            testKitType: .labResult,
             endDate: date
         )
         let submissionToken = DiagnosisKeySubmissionToken(value: .random())
@@ -161,12 +166,14 @@ class VirologyTestingStateStoreTests: XCTestCase {
         let savedSubmissionToken = try XCTUnwrap(savedResult.diagnosisKeySubmissionToken)
         XCTAssertEqual(savedResult.testResult, .void)
         XCTAssertEqual(savedResult.endDate, date)
+        XCTAssertEqual(savedResult.testKitType, .labResult)
         XCTAssertEqual(savedSubmissionToken, submissionToken)
     }
     
     func testSaveMultipleResultsGetCorrectOrder() throws {
         let voidTestResult = VirologyTestResult(
             testResult: .void,
+            testKitType: .labResult,
             endDate: Date()
         )
         let voidSubmissionToken = DiagnosisKeySubmissionToken(value: .random())
@@ -177,6 +184,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         
         let positiveTestResult = VirologyTestResult(
             testResult: .positive,
+            testKitType: .labResult,
             endDate: Date()
         )
         let positiveSubmissionToken = DiagnosisKeySubmissionToken(value: .random())
@@ -187,6 +195,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         
         let negativeTestResult = VirologyTestResult(
             testResult: .negative,
+            testKitType: .labResult,
             endDate: Date()
         )
         let negativeSubmissionToken = DiagnosisKeySubmissionToken(value: .random())
@@ -198,6 +207,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         let firstResult = try XCTUnwrap(virologyTestingStateStore.relevantUnacknowledgedTestResult)
         XCTAssertEqual(firstResult.testResult, TestResult(positiveTestResult.testResult))
         XCTAssertEqual(firstResult.endDate, positiveTestResult.endDate)
+        XCTAssertEqual(firstResult.testKitType, .labResult)
         XCTAssertEqual(firstResult.diagnosisKeySubmissionToken, positiveSubmissionToken)
         
         virologyTestingStateStore.remove(testResult: firstResult)
@@ -205,6 +215,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         let secondResult = try XCTUnwrap(virologyTestingStateStore.relevantUnacknowledgedTestResult)
         XCTAssertEqual(secondResult.testResult, TestResult(negativeTestResult.testResult))
         XCTAssertEqual(secondResult.endDate, negativeTestResult.endDate)
+        XCTAssertEqual(secondResult.testKitType, .labResult)
         XCTAssertEqual(secondResult.diagnosisKeySubmissionToken, negativeSubmissionToken)
         
         virologyTestingStateStore.remove(testResult: secondResult)
@@ -212,6 +223,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         let thirdResult = try XCTUnwrap(virologyTestingStateStore.relevantUnacknowledgedTestResult)
         XCTAssertEqual(thirdResult.testResult, TestResult(voidTestResult.testResult))
         XCTAssertEqual(thirdResult.endDate, voidTestResult.endDate)
+        XCTAssertEqual(thirdResult.testKitType, .labResult)
         XCTAssertEqual(thirdResult.diagnosisKeySubmissionToken, voidSubmissionToken)
     }
     
@@ -219,6 +231,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         let date = Date()
         let virologyTestResult = VirologyTestResult(
             testResult: .positive,
+            testKitType: .labResult,
             endDate: date
         )
         let submissionToken = DiagnosisKeySubmissionToken(value: .random())
@@ -231,6 +244,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         let publishedResult = try virologyTestingStateStore.$virologyTestResult.await().get()
         
         XCTAssertEqual(publishedResult?.testResult, .positive)
+        XCTAssertEqual(publishedResult?.testKitType, .labResult)
         XCTAssertEqual(publishedResult?.endDate, date)
         XCTAssertEqual(publishedResult?.diagnosisKeySubmissionToken, submissionToken)
     }
@@ -238,6 +252,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
     func testNextRelevantResultIsPublishedOnDeleteOfTheFormer() throws {
         let virologyTestResult = VirologyTestResult(
             testResult: .positive,
+            testKitType: .labResult,
             endDate: Date()
         )
         let submissionToken = DiagnosisKeySubmissionToken(value: .random())
@@ -249,6 +264,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         
         let nextTestResult = VirologyTestResult(
             testResult: .negative,
+            testKitType: .labResult,
             endDate: Date()
         )
         virologyTestingStateStore.saveResult(
@@ -259,6 +275,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         let publishedResult = try virologyTestingStateStore.$virologyTestResult.await().get()
         
         XCTAssertEqual(publishedResult?.testResult, .positive)
+        XCTAssertEqual(publishedResult?.testKitType, .labResult)
         XCTAssertEqual(publishedResult?.endDate, virologyTestResult.endDate)
         XCTAssertEqual(publishedResult?.diagnosisKeySubmissionToken, submissionToken)
         
@@ -267,6 +284,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         let nextPublishedResult = try virologyTestingStateStore.$virologyTestResult.await().get()
         
         XCTAssertEqual(nextPublishedResult?.testResult, .negative)
+        XCTAssertEqual(nextPublishedResult?.testKitType, .labResult)
         XCTAssertEqual(nextPublishedResult?.endDate, nextTestResult.endDate)
         XCTAssertNil(nextPublishedResult?.diagnosisKeySubmissionToken)
         
@@ -319,6 +337,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         
         let virologyTestResult = VirologyTestResult(
             testResult: .positive,
+            testKitType: .labResult,
             endDate: Date()
         )
         
@@ -329,6 +348,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         
         let result = VirologyStateTestResult(
             testResult: TestResult(virologyTestResult.testResult),
+            testKitType: TestKitType(virologyTestResult.testKitType),
             endDate: virologyTestResult.endDate,
             diagnosisKeySubmissionToken: submissionToken
         )

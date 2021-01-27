@@ -31,7 +31,7 @@ struct ExposureDetectionManager {
     init(
         controller: ExposureNotificationDetectionController,
         distributionClient: HTTPClient,
-        fileStorage: FileStorage,
+        fileStorage: FileStoring,
         encryptedStore: EncryptedStoring,
         interestedInExposureNotifications: @escaping () -> Bool,
         exposureRiskManager: ExposureRiskManaging

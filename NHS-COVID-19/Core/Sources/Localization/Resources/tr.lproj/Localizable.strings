@@ -133,7 +133,7 @@
 "alert_venue_risk_change_body" = "Ayrıntıları görüntülemek için dokunun";
 "alert_isolation_state_change_title" = "Size yönelik olarak sunulan rehberlikte bir değişiklik oldu";
 "alert_isolation_state_change_body" = "Ayrıntıları görüntülemek için dokunun";
-"alert_exposure_detection_body" = "Daha fazla ayrıntı için buraya dokunun.";
+"alert_exposure_detection_body" = "Koronavirüsle (COVID-19) enfekte birisiyle yakın temas içerisinde bulundunuz. Daha fazla ayrıntı için buraya dokunun.";
 "alert_test_result_received_title" = "Test sonuçlarınız hazır";
 "alert_test_result_received_body" = "Ayrıntıları görüntülemek için dokunun";
 "alert_app_availability_changed_title" = "Uygulama kullanılabilirliği değişti";
@@ -176,7 +176,6 @@
 "positive_symptoms_link_label" = "Daha fazla bilgi için iletişim bilgileri:";
 "positive_symptoms_corona_test_button" = "Ücretsiz test rezervasyonu yaptırın";
 "exposure_acknowledgement_self_isolate_for" = "Kişisel karantina süresi";
-"exposure_acknowledgement_warning" = "Koronavirüs ile enfekte olmuş bir kişinin yanında bulunmuş olabilirsiniz. Kendinizi ve diğer kişileri güvende tutmak için lütfen evde kalın.";
 "exposure_acknowledgement_explaination_1" = "Uygulamanın kişisel karantina günlerini nasıl hesapladığını anlamak için aşağıdaki SSS (sıkça sorulan sorular) bağlantısını ziyaret edin\n\nHerhangi bir belirti göstermeseniz dahi virüsle enfekte olmuş ve virüsü yayabilecek durumda olma riskiniz yüksektir. Eğer 18 yaşın altındaysanız bu mesajı  güvendiğiniz bir yetişkine göstermeniz tavsiye edilir.";
 "exposure_acknowledgement_explaination_2" = "Karantina geri sayımınız başlatıldı; belirtilen tüm süre boyunca kendinizi karantinaya almalısınız. Sadece koronavirüs belirtileriniz varsa bir test yaptırın.";
 "exposure_acknowledgement_link_label" = "Daha fazla bilgi için iletişim bilgileri:";
@@ -261,7 +260,7 @@
 "about_this_app_software_information_manufacturer_description" = "NHS Test & Trace\nDepartment of Health and Social Care\n39 Victoria Street\nWestminster\nLondon\nSW1H 0EU\nUK";
 "mydata_title" = "Verilerim";
 "mydata_section_postcode_description" = "POSTA KODU BÖLGESİ";
-"mydata_section_test_result_description" = "YAPILAN SON TESTİN SONUCU";
+"mydata_section_test_result_description" = "SON GEÇERLİ TESTİN SONUCU";
 "mydata_section_venue_history_description" = "YER GEÇMİŞİ";
 "mydata_section_symptoms_description" = "BELİRTİLERİN BAŞLAMA TARİHİ";
 "mydata_section_encounter_description" = "TEMAS TARİHİ";
@@ -310,7 +309,7 @@
 "authorization_denied_description" = "Bu uygulama, pozitif bir koronavirüs test sonucu bildirmiş olan diğer uygulama kullanıcıları ile yakın temasınız olmuş olup olmadığını size bildirmek için ‘Maruz Kalma Bildirimleri’ olanağını kullanmaktadır.\n\nTelefonunuzda bunlar ‘Maruz Kalma Bildirimleri’ ya da ‘Maruz Kalma Günlüğü’ olarak görülebilir.";
 "checkin_camera_qrcode_scanner_title" = "Bir resmi NHS QR kodunu tarayarak bir mekana giriş yapın";
 "checkin_confirmation_title" = "Başarıyla giriş yapıldı";
-"alert_exposure_detection_title" = "Uygulama, koronavirüsle enfekte olmuş bir kişi ile temasta bulunduğunuzu tespit etti. Kendinizi ve diğer kişileri güvende tutmak için lütfen evde kalın ve kendinizi karantina altına alın";
+"alert_exposure_detection_title" = "Hemen kendinizi karantinaya almanız gerekmektedir.";
 "checkin_camera_permission_denial_title" = "Bir resmi NHS QR kodunu tarayarak bir mekana giriş yapın";
 "virology_book_a_test_title" = "Ücretsiz test rezervasyonu yaptırın";
 "end_of_isolation_isolate_if_have_symptom_warning" = "Ancak ateşiniz yüksekse, normale dönene kadar kişisel karantinanıza devam edin";
@@ -495,3 +494,10 @@
 "settings_language_confirm_selection_alert_description %@" = "Uygulamanın dilini %@ olarak değiştir?";
 "settings_language_confirm_selection_alert_no" = "İptal";
 "settings_language_confirm_selection_alert_yes" = "Onayla";
+"mydata_test_result_test_date" = "Tarih";
+"mydata_test_result_test_result" = "Sonuç";
+"mydata_test_result_test_kit_type" = "Test kiti tipi";
+"mydata_test_result_lab_result" = "LAB_RESULT";
+"mydata_test_result_rapid_result" = "RAPID_RESULT";
+"exposure_acknowledgement_warning" = "Koronavirüs ile enfekte olmuş bir kişinin yanında bulunmuş olabilirsiniz. Kendinizi ve diğer kişileri güvende tutmak için lütfen evde kalın.";
+"mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";

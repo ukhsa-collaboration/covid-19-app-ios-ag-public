@@ -15,7 +15,7 @@ class SandboxSubmissionClient: HTTPClient {
     }
     
     private func _perform(_ request: HTTPRequest) -> Result<HTTPResponse, HTTPRequestError> {
-        if request.path == "/virology-test/home-kit/order" {
+        if request.path == "/virology-test/v2/order" {
             let websiteURL = URL(string: "https://example.com")!
             
             let response = HTTPResponse.ok(with: .json(#"""

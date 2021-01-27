@@ -133,7 +133,7 @@
 "alert_venue_risk_change_body" = "ਵੇਰਵੇ ਦੇਖਣ ਲਈ ਟੈਪ ਕਰੋ";
 "alert_isolation_state_change_title" = "ਤੁਹਾਡੇ ਲਈ ਸਾਡੀ ਸਲਾਹ ਵਿੱਚ ਬਦਲਾਅ ਹੋਇਆ ਹੈ";
 "alert_isolation_state_change_body" = "ਵੇਰਵੇ ਦੇਖਣ ਲਈ ਟੈਪ ਕਰੋ";
-"alert_exposure_detection_body" = "ਹੋਰ ਵੇਰਵਿਆਂ ਲਈ ਇਥੇ ਟੈਪ ਕਰੋ।";
+"alert_exposure_detection_body" = "ਹੋਰ ਵੇਰਵਿਆਂ ਲਈ ਇਥੇ ਟੈਪ ਕਰੋ।ਤੁਸੀਂ ਕਿਸੇ ਅਜਿਹੇ ਵਿਅਕਤੀ ਨਾਲ ਨਜ਼ਦੀਕੀ ਸੰਪਰਕ ਵਿੱਚ ਰਹੇ ਹੋ ਜਿਸ ਨੂੰ ਕੋਰੋਨਾਵਾਇਰਸ (COVID-19) ਦੀ ਲਾਗ ਲੱਗੀ ਹੈ।";
 "alert_test_result_received_title" = "ਤਹਾਡੇ ਟੈਸਟ ਦੇ ਨਤੀਜੇ ਆ ਚੁੱਕੇ ਹਨ";
 "alert_test_result_received_body" = "ਵੇਰਵੇ ਦੇਖਣ ਲਈ ਟੈਪ ਕਰੋ";
 "alert_app_availability_changed_title" = "ਇਸ ਐਪ ਦੀ ਉਪਲਬਧਤਾ ਬਦਲ ਗਈ ਹੈ";
@@ -176,7 +176,6 @@
 "positive_symptoms_link_label" = "ਵਧੇਰੇ ਸਲਾਹ ਲਈ, ਕਿਰਪਾ ਕਰਕੇ ਇੱਥੇ ਜਾਓ:";
 "positive_symptoms_corona_test_button" = "ਮੁਫਤ ਟੈਸਟ ਬੁੱਕ ਕਰੋ";
 "exposure_acknowledgement_self_isolate_for" = "ਇਸ ਸਮੇਂ ਲਈ ਸੈਲਫ-ਆਈਸੋਲੇਟ ਕਰੋ";
-"exposure_acknowledgement_warning" = "ਐਪ ਨੇ ਪਤਾ ਲਗਾਇਆ ਹੈ ਕਿ ਤੁਸੀਂ ਕਿਸੇ ਅਜਿਹੇ ਐਪ ਉਪਭੋਗਤਾ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਆਏ ਹੋ ਜਿਸਨੂੰ ਕੋਰੋਨਾਵਾਇਰਸ ਹੈ। ਆਪਣੇ ਆਪ ਨੂੰ ਅਤੇ ਹੋਰਾਂ ਨੂੰ ਸੁਰੱਖਿਅਤ ਰੱਖਣ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਘਰ ਦੇ ਅੰਦਰ ਹੀ ਰਹੋ।";
 "exposure_acknowledgement_explaination_1" = "ਇਹ ਸਮਝਣ ਲਈ ਕਿ ਐਪ ਸਵੈ-ਇਕਾਂਤਵਾਸ ਦੇ ਦਿਨਾਂ ਦੀ ਗਣਨਾ ਕਿਵੇਂ ਕਰਦੀ ਹੈ, ਹੇਠ ਦਿੱਤੇ ਅਕਸਰ ਪੁੱਛੇ ਜਾਂਦੇ ਪ੍ਰਸ਼ਨਾਂ ਦੇ ਲਿੰਕ 'ਤੇ ਜਾਓ।\n\nਤੁਹਾਨੂੰ ਵਾਇਰਸ ਹੋਣ ਅਤੇ ਫੈਲਾਉਣ ਦਾ ਵਧੇਰੇ ਜੋਖਮ ਹੁੰਦਾ ਹੈ ਭਾਵੇਂ ਤੁਹਾਡੇ ਅੰਦਰ ਕੋਈ ਲੱਛਣ ਨਾ ਹੋਣ। ਜੇ ਤੁਹਾਡੀ ਉਮਰ 18 ਸਾਲ ਤੋਂ ਘੱਟ ਹੈ ਤਾਂ ਤੁਹਾਨੂੰ ਇੱਕ ਭਰੋਸੇਮੰਦ ਬਾਲਗ ਨੂੰ ਇਹ ਸੰਦੇਸ਼ ਦਿਖਾਉਣ ਦੀ ਸਲਾਹ ਦਿੱਤੀ ਜਾਂਦੀ ਹੈ।";
 "exposure_acknowledgement_explaination_2" = "ਤੁਹਾਡੀ ਆਈਸੋਲੇਸ਼ਨ ਕਾਊਂਟਡਾਊਨ ਸ਼ੁਰੂ ਹੋ ਗਈ ਹੈ ਅਤੇ ਤੁਹਾਨੂੰ ਦੱਸੇ ਗਏ ਪੂਰੇ ਸਮੇਂ ਲਈ ਆਪਣੇ ਆਪ ਨੂੰ ਆਈਸੋਲੇਟ ਕਰਨਾ ਚਾਹੀਦਾ ਹੈ। ਸਿਰਫ ਤਾਂ ਹੀ ਟੈਸਟ ਕਰਵਾਓ ਜੇ ਤੁਹਾਨੂੰ ਕੋਰੋਨਾਵਾਇਰਸ ਦੇ ਲੱਛਣ ਹਨ।";
 "exposure_acknowledgement_link_label" = "ਅਗਲੇਰੀ ਸਲਾਹ ਲਈ, ਕਿਰਪਾ ਕਰਕੇ ਸੰਪਰਕ ਕਰੋ:";
@@ -261,7 +260,7 @@
 "about_this_app_software_information_manufacturer_description" = "NHS Test & Trace\nDepartment of Health and Social Care\n39 Victoria Street\nWestminster\nLondon\nSW1H 0EU\nUK";
 "mydata_title" = "ਮੇਰਾ ਡਾਟਾ";
 "mydata_section_postcode_description" = "ਜ਼ਿਲ੍ਹੇ ਦਾ ਪੋਸਟਕੋਡ";
-"mydata_section_test_result_description" = "ਪਿਛਲੇ ਟੈਸਟ ਦੇ ਨਤੀਜੇ";
+"mydata_section_test_result_description" = "ਆਖਰੀ ਲਾਗੂ ਟੈਸਟ ਦਾ ਨਤੀਜਾ";
 "mydata_section_venue_history_description" = "ਦੌਰਾ ਕੀਤੀ ਗਈ ਥਾਂ ਦਾ ਇਤਿਹਾਸ";
 "mydata_section_symptoms_description" = "ਲੱਛਣ ਆਉਣ ਦੀ ਮਿਤੀ";
 "mydata_section_encounter_description" = "ਪਤਾ ਲੱਗਣ ਦੀ ਮਿਤੀ";
@@ -310,7 +309,7 @@
 "authorization_denied_description" = "ਇਹ ਐਪ ਤੁਹਾਨੂੰ ਇਹ ਦੱਸਣ ਲਈ ‘ਐਕਸਪੋਜ਼ਰ ਸੂਚਨਾਵਾਂ’ ਦੀ ਵਰਤੋਂ ਕਰਦੀ ਹੈ ਕਿ ਕੀ ਤੁਸੀਂ ਅਜਿਹੇ ਐਪ ਵਰਤਣ ਵਾਲੇ ਹੋਰਨਾਂ ਵਿਅਕਤੀਆਂ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਆਏ ਹੋ ਜਿਨ੍ਹਾਂ ਦਾ ਕੋਰੋਨਾਵਾਇਰਸ ਲਈ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਉਣ ਦੀ ਰਿਪੋਰਟ ਮਿਲੀ ਹੈ।\n\nਤੁਹਾਡਾ ਫ਼ੋਨ ਇਨ੍ਹਾਂ ਦਾ ਜ਼ਿਕਰ ‘ਐਕਸਪੋਜ਼ਰ ਸੂਚਨਾਵਾਂ’ ਜਾਂ ‘ਐਕਸਪੋਜ਼ਰ ਲੌਗਿੰਗ’ ਵੱਜੋਂ ਕਰ ਸਕਦਾ ਹੈ।";
 "checkin_camera_qrcode_scanner_title" = "ਇੱਕ ਅਧਿਕਾਰਤ NHS QR ਕੋਡ ਨੂੰ ਸਕੈਨ ਕਰਕੇ ਇੱਕ ਸਥਾਨ ‘ਤੇ ਚੈੱਕ ਇਨ ਕਰੋ";
 "checkin_confirmation_title" = "ਸਫਲਤਾਪੂਰਵਕ ਚੈੱਕ-ਇਨ";
-"alert_exposure_detection_title" = "ਐਪ ਨੇ ਪਤਾ ਲਗਾਇਆ ਹੈ ਕਿ ਤੁਸੀਂ ਕਿਸੇ ਅਜਿਹੇ ਐਪ ਉਪਭੋਗਤਾ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਆਏ ਹੋ ਜਿਸਨੂੰ ਕੋਰੋਨਾਵਾਇਰਸ ਹੈ। ਆਪਣੇ ਆਪ ਨੂੰ ਅਤੇ ਹੋਰਾਂ ਨੂੰ ਸੁਰੱਖਿਅਤ ਰੱਖਣ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਘਰ ਦੇ ਅੰਦਰ ਹੀ ਰਹੋ";
+"alert_exposure_detection_title" = "ਤੁਹਾਨੂੰ ਤੁਰੰਤ ਇਕਾਂਤਵਾਸ ਵਿੱਚ ਚਲੇ ਜਾਣ ਦੀ ਲੋੜ ਹੈ।";
 "checkin_camera_permission_denial_title" = "ਇੱਕ ਅਧਿਕਾਰਤ NHS QR ਕੋਡ ਨੂੰ ਸਕੈਨ ਕਰਕੇ ਇੱਕ ਸਥਾਨ ‘ਤੇ ਚੈੱਕ ਇਨ ਕਰੋ";
 "virology_book_a_test_title" = "ਮੁਫਤ ਟੈਸਟ ਬੁੱਕ ਕਰੋ";
 "end_of_isolation_isolate_if_have_symptom_warning" = "ਹਾਲਾਂਕਿ, ਜੇਕਰ ਤੁਹਾਨੂੰ ਤੇਜ਼ ਬੁਖਾਰ ਹੈ, ਤਾਂ ਇਸਦੇ ਠੀਕ ਹੋਣ ਤੱਕ ਸੈਲਫ-ਆਈਸੋਲੇਸ਼ਨ ਨੂੰ ਜਾਰੀ ਰੱਖੋ";
@@ -495,3 +494,10 @@
 "settings_language_confirm_selection_alert_description %@" = "ਐਪ ਦੀ ਭਾਸ਼ਾ %@ ਵਿੱਚ ਬਦਲੋ?";
 "settings_language_confirm_selection_alert_no" = "ਰੱਦ ਕਰੋ";
 "settings_language_confirm_selection_alert_yes" = "ਪੁਸ਼ਟੀ ਕਰੋ";
+"mydata_test_result_test_date" = "ਮਿਤੀ";
+"mydata_test_result_test_result" = "ਨਤੀਜਾ";
+"mydata_test_result_test_kit_type" = "ਟੈਸਟ ਕਿੱਟ ਦੀ ਕਿਸਮ";
+"mydata_test_result_lab_result" = "LAB_RESULT";
+"mydata_test_result_rapid_result" = "RAPID_RESULT";
+"exposure_acknowledgement_warning" = "ਐਪ ਨੇ ਪਤਾ ਲਗਾਇਆ ਹੈ ਕਿ ਤੁਸੀਂ ਕਿਸੇ ਅਜਿਹੇ ਐਪ ਉਪਭੋਗਤਾ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਆਏ ਹੋ ਜਿਸਨੂੰ ਕੋਰੋਨਾਵਾਇਰਸ ਹੈ। ਆਪਣੇ ਆਪ ਨੂੰ ਅਤੇ ਹੋਰਾਂ ਨੂੰ ਸੁਰੱਖਿਅਤ ਰੱਖਣ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਘਰ ਦੇ ਅੰਦਰ ਹੀ ਰਹੋ।";
+"mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";

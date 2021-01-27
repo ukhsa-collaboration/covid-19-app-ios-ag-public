@@ -9,4 +9,18 @@ enum EpidemiologicalEventType: String, Codable {
 
 enum TestType: String, Codable {
     case unknown
+    case labResult = "LAB_RESULT"
+    case rapidResult = "RAPID_RESULT"
+    case rapidSelfReported = "RAPID_SELF_REPORTED"
+}
+
+extension TestType {
+    init(from testKitType: TestKitType?) {
+        switch testKitType {
+        case .labResult: self = .labResult
+        case .rapidResult: self = .rapidResult
+        case .rapidSelfReported: self = .rapidSelfReported
+        case .none: self = .unknown
+        }
+    }
 }

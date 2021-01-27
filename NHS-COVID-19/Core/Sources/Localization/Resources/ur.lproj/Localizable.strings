@@ -133,7 +133,7 @@
 "alert_venue_risk_change_body" = "تفصیلات دیکھنے کے لئے ٹیپ کریں";
 "alert_isolation_state_change_title" = "ہماری رہنمائی آپ کے لئے بدل گئی ہے";
 "alert_isolation_state_change_body" = "تفصیلات دیکھنے کے لئے ٹیپ کریں";
-"alert_exposure_detection_body" = "مزید تفصیلات کے لئے یہاں ٹیپ کریں۔";
+"alert_exposure_detection_body" = "آپ کسی ایسے شخص کے ساتھ قریبی رابطے میں رہے ہیں جس کو کرونا وائرس (COVID-19) ہے۔ مزید تفصیلات کے لئے یہاں ٹیپ کریں۔";
 "alert_test_result_received_title" = "آپ کے ٹیسٹ کے نتائج آ گئے ہیں";
 "alert_test_result_received_body" = "تفصیلات دیکھنے کے لئے ٹیپ کریں";
 "alert_app_availability_changed_title" = "ایپ کی دستیابی بدل گئی ہے۔";
@@ -176,7 +176,6 @@
 "positive_symptoms_link_label" = "مزید مشوروں کے لئے، برائے کرم درج ذیل سے رابطہ کریں:";
 "positive_symptoms_corona_test_button" = "مفت ٹیسٹ بک کروائیں";
 "exposure_acknowledgement_self_isolate_for" = "ذیل کے لئے خود کو علیحدہ کریں";
-"exposure_acknowledgement_warning" = "ایپ نے سراغ لگا لیا ہے کہ آپ کسی ایسے فرد کے رابطے میں آئے ہیں جسے کوروناوائرس ہوا ہے۔ براہ کرم خود کو اور دیگر افراد کو محفوظ رکھنے کے لئے گھر پر رہیں اور خود کو الگ تھلگ رکھیں۔";
 "exposure_acknowledgement_explaination_1" = "یہ سمجھنے کے لئے کہ ایپ خود کو تنہائی  میں رکھنے  کے دنوں کا حساب کیسے دیتی ہے ، نیچے دیئے گئے عمومی سوالنامہ کے لنک پر جائیں۔\n\nآپ کو وائرس ہونے اور پھیلانے کا شدید خطرہ لاحق ہے، خواہ آپ میں کوئی علامات نہیں۔ اگر آپ کی عمر 18 سال سے کم ہے تو آپ کو مشورہ دیا جاتا ہے کہ یہ پیغام کسی قابل اعتماد بالغ کو دکھائیں۔";
 "exposure_acknowledgement_explaination_2" = "آپ کی علیحدگی کی الٹی گنتی کا آغاز ہو گیا ہے اور آپ کو بیان کردہ مکمل مدت کے لئے خود کو علیحدہ کر لینا چاہیے۔ صرف تب ٹیسٹ کروائیں اگرآپ کورونا وائرس کی علامات رکھتےہیں۔";
 "exposure_acknowledgement_link_label" = "مزید مشوروں کے لئے، برائے کرم درج ذیل سے رابطہ کریں:";
@@ -261,7 +260,7 @@
 "about_this_app_software_information_manufacturer_description" = "NHS Test & Trace\nDepartment of Health and Social Care\n39 Victoria Street\nWestminster\nLondon\nSW1H 0EU\nUK";
 "mydata_title" = "میرا ڈیٹا";
 "mydata_section_postcode_description" = "پوسٹ کوڈ ڈسٹرکٹ";
-"mydata_section_test_result_description" = "آخری مرتبہ لیے گئے ٹیسٹ کا نتیجہ";
+"mydata_section_test_result_description" = "پچھلے قابل اطلاق ٹیسٹ کا نتیجہ";
 "mydata_section_venue_history_description" = "مقام کی تاریخ";
 "mydata_section_symptoms_description" = "علامات ظاہر ہونے کی تاریخ";
 "mydata_section_encounter_description" = "سامنا ہونے کی تاریخ";
@@ -310,7 +309,7 @@
 "authorization_denied_description" = "یہ ایپ 'سامنا ہونے کے نوٹیفیکیشنز' کا استعمال اس لئے کرتی ہے کہ اگر آپ ایپ کا استعمال کرنے والے ایسے دوسرے شخص کے ساتھ رابطے میں آتے ہیں جنہوں نے اپنا کوروناوائرس کا ٹیسٹ مثبت ہونے کی اطلاع دی ہو تو آپ کو باخبر کیا جائے۔\n\n آپ کا فون ان کو 'سامنا ہونے کے نوٹیفیکیشنز' یا ’سامنا ہونے کا اندراج‘ کے طور پر بیان کر سکتا ہے۔";
 "checkin_camera_qrcode_scanner_title" = "آفیشل NHS کیو آر کوڈ اسکین کر کے کسی مقام پر چیک ان کریں۔";
 "checkin_confirmation_title" = "کامیاب چیک ان";
-"alert_exposure_detection_title" = "ایپ نے سراغ لگا لیا ہے کہ آپ کسی ایسے فرد کے رابطے میں آئے ہیں جسے کوروناوائرس ہوا ہے۔ براہ کرم خود کو اور دیگر افراد کو محفوظ رکھنے کے لئے گھر پر رہیں اور خود کو الگ تھلگ رکھیں";
+"alert_exposure_detection_title" = "آپ کو فوری طور پر خود کو تنہا  کرنے کی ضرورت ہے۔";
 "checkin_camera_permission_denial_title" = "آفیشل NHS کیو آر کوڈ اسکین کر کے کسی مقام پر چیک ان کریں۔";
 "virology_book_a_test_title" = "مفت ٹیسٹ بک کروائیں";
 "end_of_isolation_isolate_if_have_symptom_warning" = "لیکن اگر آپ کا درجۂ حرارت زیادہ ہے تو اس کے معتدل ہونے تک ذاتی علیحدگی جاری رکھیں";
@@ -495,3 +494,10 @@
 "settings_language_confirm_selection_alert_description %@" = "ایپ کی زبان %@ میں تبدیل کریں؟";
 "settings_language_confirm_selection_alert_no" = "منسوخ کریں";
 "settings_language_confirm_selection_alert_yes" = "تصدیق کریں";
+"mydata_test_result_test_date" = "تاریخ";
+"mydata_test_result_test_result" = "نتیجہ";
+"mydata_test_result_test_kit_type" = "ٹیسٹ کٹ کی قسم";
+"mydata_test_result_lab_result" = "LAB_RESULT";
+"mydata_test_result_rapid_result" = "RAPID_RESULT";
+"exposure_acknowledgement_warning" = "ایپ نے سراغ لگا لیا ہے کہ آپ کسی ایسے فرد کے رابطے میں آئے ہیں جسے کوروناوائرس ہوا ہے۔ براہ کرم خود کو اور دیگر افراد کو محفوظ رکھنے کے لئے گھر پر رہیں اور خود کو الگ تھلگ رکھیں۔";
+"mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";

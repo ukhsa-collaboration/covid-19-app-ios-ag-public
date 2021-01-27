@@ -13,15 +13,17 @@ struct ExposureWindowEventEndpoint: HTTPEndpoint {
     var latestAppVersion: Version
     var postcode: String
     var localAuthority: String
-    var hasPositiveTest: Bool
+    var testKitType: TestType?
+    var eventType: EpidemiologicalEventType
     
     func request(for input: ExposureWindowInfo) throws -> HTTPRequest {
         let payload = ExposureWindowEventPayload(
             window: input,
-            hasPositiveTest: hasPositiveTest,
+            eventType: eventType,
             latestAppliationVersion: latestAppVersion,
             postcode: postcode,
-            localAuthority: localAuthority
+            localAuthority: localAuthority,
+            testKitType: testKitType
         )
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
@@ -74,9 +76,8 @@ struct ExposureWindowEventPayload: Codable {
 
 @available(iOS 13.7, *)
 extension ExposureWindowEventPayload {
-    init(window: ExposureWindowInfo, hasPositiveTest: Bool, latestAppliationVersion: Version, postcode: String, localAuthority: String) {
-        let eventType = hasPositiveTest ? EpidemiologicalEventType.exposureWindowPositiveTest : EpidemiologicalEventType.exposureWindow
-        let event = Event(type: eventType, version: 1, payload: Event.Payload(window: window, eventType: eventType))
+    init(window: ExposureWindowInfo, eventType: EpidemiologicalEventType, latestAppliationVersion: Version, postcode: String, localAuthority: String, testKitType: TestType?) {
+        let event = Event(type: eventType, version: 1, payload: Event.Payload(window: window, eventType: eventType, testKitType: testKitType))
         events = [event]
         metadata = Metadata(
             operatingSystemVersion: UIDevice.current.systemVersion,
@@ -90,11 +91,10 @@ extension ExposureWindowEventPayload {
 
 @available(iOS 13.7, *)
 extension ExposureWindowEventPayload.Event.Payload {
-    init(window: ExposureWindowInfo, eventType: EpidemiologicalEventType) {
+    init(window: ExposureWindowInfo, eventType: EpidemiologicalEventType, testKitType: TestType?) {
         if eventType == .exposureWindowPositiveTest {
-            testType = TestType.unknown
+            testType = testKitType
         }
-        
         date = window.date.startDate(in: .utc)
         infectiousness = ExposureWindowEventPayload.Event.Infectiousness(window.infectiousness)
         scanInstances = window.scanInstances.map(ExposureWindowEventPayload.Event.ScanInstance.init)

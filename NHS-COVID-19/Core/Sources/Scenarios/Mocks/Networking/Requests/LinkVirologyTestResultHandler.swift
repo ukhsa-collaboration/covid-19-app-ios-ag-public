@@ -6,7 +6,7 @@ import Common
 import Foundation
 
 struct LinkVirologyTestResultHandler: RequestHandler {
-    var paths = ["/virology-test/cta-exchange"]
+    var paths = ["/virology-test/v2/cta-exchange"]
     
     var dataProvider: MockDataProvider
     
@@ -15,12 +15,17 @@ struct LinkVirologyTestResultHandler: RequestHandler {
         let date = GregorianDay.today.advanced(by: -daysAgo).startDate(in: .utc)
         let dateString = ISO8601DateFormatter().string(from: date)
         let testResult = MockDataProvider.testResults[dataProvider.receivedTestResult]
+        let testType = MockDataProvider.testKitType[dataProvider.testKitType]
+        let diagnosisKeySubmissionSupported = dataProvider.keySubmissionSupported
+        let diagnosisKeySubmissionToken = dataProvider.keySubmissionSupported ? UUID().uuidString : nil
         
         let response = HTTPResponse.ok(with: .json(#"""
         {
         "testEndDate": "\#(dateString)",
         "testResult": "\#(testResult)",
-        "diagnosisKeySubmissionToken": "\#(UUID().uuidString)"
+        "testKit":"\#(testType)",
+        "diagnosisKeySubmissionToken": "\#(diagnosisKeySubmissionToken != nil ? diagnosisKeySubmissionToken! : "null")",
+        "diagnosisKeySubmissionSupported": \#(diagnosisKeySubmissionSupported)
         }
         """#))
         return Result.success(response)

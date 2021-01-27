@@ -26,7 +26,8 @@ class VirologyTestingManagerTests: XCTestCase {
                 virologyTestingStateStore: virologyStore,
                 userNotificationsManager: notificationManager
             ),
-            ctaTokenValidator: validator
+            ctaTokenValidator: validator,
+            country: { .england }
         )
     }
     
@@ -77,7 +78,9 @@ class VirologyTestingManagerTests: XCTestCase {
         mockServer.response = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
-            "testResult": "POSITIVE"
+            "testResult": "POSITIVE",
+            "testKit": "LAB_RESULT",
+            "diagnosisKeySubmissionSupported": true
         }
         """#))
         
@@ -113,7 +116,9 @@ class VirologyTestingManagerTests: XCTestCase {
         mockServer.response = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
-            "testResult": "POSITIVE"
+            "testResult": "POSITIVE",
+            "testKit": "LAB_RESULT",
+            "diagnosisKeySubmissionSupported": true
         }
         """#))
         
@@ -135,7 +140,9 @@ class VirologyTestingManagerTests: XCTestCase {
         mockServer.response = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
-            "testResult": "NEGATIVE"
+            "testResult": "NEGATIVE",
+            "testKit": "LAB_RESULT",
+            "diagnosisKeySubmissionSupported": true
         }
         """#))
         
@@ -157,7 +164,9 @@ class VirologyTestingManagerTests: XCTestCase {
         mockServer.response = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
-            "testResult": "VOID"
+            "testResult": "VOID",
+            "testKit": "LAB_RESULT",
+            "diagnosisKeySubmissionSupported": true
         }
         """#))
         
@@ -177,6 +186,8 @@ class VirologyTestingManagerTests: XCTestCase {
         mockServer.response = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
+            "diagnosisKeySubmissionSupported": true,
+            "testKit": "LAB_RESULT",
             "testResult": "POSITIVE",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
         }
@@ -197,6 +208,8 @@ class VirologyTestingManagerTests: XCTestCase {
         {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
             "testResult": "NEGATIVE",
+            "diagnosisKeySubmissionSupported": false,
+            "testKit": "LAB_RESULT",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
         }
         """#))
@@ -216,6 +229,8 @@ class VirologyTestingManagerTests: XCTestCase {
         {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
             "testResult": "VOID",
+            "diagnosisKeySubmissionSupported": false,
+            "testKit": "LAB_RESULT",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
         }
         """#))

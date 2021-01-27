@@ -119,8 +119,9 @@ public class ApplicationCoordinator {
             postcodeStore: postcodeStore
         )
         
-        country = localAuthorityManager.$country.domainProperty()
+        let country = localAuthorityManager.$country.domainProperty()
         self.localAuthorityManager = localAuthorityManager
+        self.country = country
         
         isolationContext = IsolationContext(
             isolationConfiguration: CachedResponse(
@@ -161,7 +162,8 @@ public class ApplicationCoordinator {
                 virologyTestingStateStore: virologyTestingStateStore,
                 userNotificationsManager: services.userNotificationsManager
             ),
-            ctaTokenValidator: CTATokenValidator()
+            ctaTokenValidator: CTATokenValidator(),
+            country: { country.currentValue }
         )
         
         let isolationStateManager = isolationContext.isolationStateManager
@@ -380,7 +382,7 @@ public class ApplicationCoordinator {
     }
     
     private func positiveAcknowledgement(
-        for token: DiagnosisKeySubmissionToken,
+        for token: DiagnosisKeySubmissionToken?,
         endDate: Date?,
         indexCaseInfo: IndexCaseInfo?,
         completionHandler: @escaping (TestResultAcknowledgementState.SendKeysState) -> Void
@@ -389,10 +391,10 @@ public class ApplicationCoordinator {
             acknowledge: { [weak self] in
                 guard let self = self else { return Empty().eraseToAnyPublisher() }
                 var sendKeyState: TestResultAcknowledgementState.SendKeysState = .sent
-                if let indexCaseInfo = indexCaseInfo {
+                if let indexCaseInfo = indexCaseInfo, let submissionToken = token {
                     return self.exposureNotificationContext.exposureKeysManager.sendKeys(
                         for: indexCaseInfo.assumedOnsetDay,
-                        token: token
+                        token: submissionToken
                     )
                     .catch { (error) -> AnyPublisher<Void, Error> in
                         if (error as NSError).domain == ENErrorDomain {
@@ -431,6 +433,7 @@ public class ApplicationCoordinator {
                 let isolationStateStore = self.isolationContext.isolationStateStore
                 let newIsolationStateInfo = isolationStateStore.newIsolationStateInfo(
                     for: result.testResult,
+                    testKitType: result.testKitType,
                     receivedOn: self.currentDateProvider.currentGregorianDay(timeZone: .current),
                     npexDay: GregorianDay(date: result.endDate, timeZone: .utc)
                 )
@@ -461,7 +464,7 @@ public class ApplicationCoordinator {
                         self.trafficObfuscationClient.sendSingleTraffic(for: TrafficObfuscator.keySubmission)
                     }
                     
-                    self.exposureNotificationContext.postExposureWindows(result: result.testResult)
+                    self.exposureNotificationContext.postExposureWindows(result: result.testResult, testKitType: result.testKitType)
                 }
             }
             .eraseToAnyPublisher()
@@ -615,7 +618,7 @@ public class ApplicationCoordinator {
         enabledJobs.append(
             contentsOf: isolationContext.makeBackgroundJobs(
                 metricsFrequency: Self.metricsJobBackgroundTaskFrequency,
-                housekeepingFrequenzy: Self.housekeepingJobBackgroundTaskFrequency
+                housekeepingFrequency: Self.housekeepingJobBackgroundTaskFrequency
             )
         )
         

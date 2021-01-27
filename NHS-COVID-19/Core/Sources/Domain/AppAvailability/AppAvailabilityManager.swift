@@ -20,7 +20,7 @@ class AppAvailabilityManager {
     @Published
     public private(set) var metadata: AppAvailabilityMetadata = .initial
     
-    init(distributeClient: HTTPClient, iTunesClient: HTTPClient, cacheStorage: FileStorage, appInfo: AppInfo) {
+    init(distributeClient: HTTPClient, iTunesClient: HTTPClient, cacheStorage: FileStoring, appInfo: AppInfo) {
         availability = CachedResponse(
             httpClient: distributeClient,
             endpoint: AppAvailabilityEndpoint(),

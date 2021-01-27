@@ -8,9 +8,9 @@ import Foundation
 
 enum AcknowledgementNeededState {
     case notNeeded
-    case neededForPositiveResultStartToIsolate(interactor: SendKeysLoadingFlowViewControllerInteractor, isolationEndDate: Date)
-    case neededForPositiveResultContinueToIsolate(interactor: SendKeysLoadingFlowViewControllerInteractor, isolationEndDate: Date)
-    case neededForPositiveResultNotIsolating(interactor: SendKeysLoadingFlowViewControllerInteractor)
+    case neededForPositiveResultStartToIsolate(interactor: SendKeysLoadingFlowViewControllerInteractor, isolationEndDate: Date, keySubmissionSupported: Bool)
+    case neededForPositiveResultContinueToIsolate(interactor: SendKeysLoadingFlowViewControllerInteractor, isolationEndDate: Date, keySubmissionSupported: Bool)
+    case neededForPositiveResultNotIsolating(interactor: SendKeysLoadingFlowViewControllerInteractor, keySubmissionSupported: Bool)
     case neededForNegativeResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
     case neededForNegativeAfterPositiveResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
     case neededForNegativeResultNotIsolating(interactor: NegativeTestResultNoIsolationViewControllerInteractor)
@@ -44,19 +44,31 @@ enum AcknowledgementNeededState {
                         ),
                         isolationEndDate: isolationEndDate
                     )
-                case .neededForPositiveResultStartToIsolate(let acknowledge, let isolationEndDate):
+                case .neededForPositiveResultStartToIsolate(let acknowledge, let isolationEndDate, let keySubmissionSupported):
                     return .neededForPositiveResultStartToIsolate(
-                        interactor: SendKeysLoadingFlowViewControllerInteractor(acknowledgement: acknowledge, openURL: context.openURL),
-                        isolationEndDate: isolationEndDate
+                        interactor: SendKeysLoadingFlowViewControllerInteractor(
+                            acknowledgement: acknowledge,
+                            openURL: context.openURL
+                        ),
+                        isolationEndDate: isolationEndDate,
+                        keySubmissionSupported: keySubmissionSupported
                     )
-                case .neededForPositiveResultContinueToIsolate(let acknowledge, let isolationEndDate):
+                case .neededForPositiveResultContinueToIsolate(let acknowledge, let isolationEndDate, let keySubmissionSupported):
                     return .neededForPositiveResultContinueToIsolate(
-                        interactor: SendKeysLoadingFlowViewControllerInteractor(acknowledgement: acknowledge, openURL: context.openURL),
-                        isolationEndDate: isolationEndDate
+                        interactor: SendKeysLoadingFlowViewControllerInteractor(
+                            acknowledgement: acknowledge,
+                            openURL: context.openURL
+                        ),
+                        isolationEndDate: isolationEndDate,
+                        keySubmissionSupported: keySubmissionSupported
                     )
-                case .neededForPositiveResultNotIsolating(let acknowledge):
+                case .neededForPositiveResultNotIsolating(let acknowledge, let keySubmissionSupported):
                     return .neededForPositiveResultNotIsolating(
-                        interactor: SendKeysLoadingFlowViewControllerInteractor(acknowledgement: acknowledge, openURL: context.openURL)
+                        interactor: SendKeysLoadingFlowViewControllerInteractor(
+                            acknowledgement: acknowledge,
+                            openURL: context.openURL
+                        ),
+                        keySubmissionSupported: keySubmissionSupported
                     )
                 case .notNeeded:
                     switch isolationResultAckState {

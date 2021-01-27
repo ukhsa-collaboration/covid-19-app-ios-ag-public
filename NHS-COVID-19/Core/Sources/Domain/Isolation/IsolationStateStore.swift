@@ -71,18 +71,18 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
         return save(isolationInfo)
     }
     
-    func newIsolationStateInfo(for testResult: TestResult, receivedOn: GregorianDay, npexDay: GregorianDay) -> IsolationStateInfo {
+    func newIsolationStateInfo(for testResult: TestResult, testKitType: TestKitType?, receivedOn: GregorianDay, npexDay: GregorianDay) -> IsolationStateInfo {
         let isolationInfo = mutating(self.isolationInfo) {
             guard testResult != .void else { return }
             
             if var indexCaseInfo = $0.indexCaseInfo, testResult == .negative || indexCaseInfo.testInfo?.result != .negative {
-                indexCaseInfo.set(testResult: testResult, receivedOn: receivedOn)
+                indexCaseInfo.set(testResult: testResult, testKitType: testKitType, receivedOn: receivedOn)
                 $0.indexCaseInfo = indexCaseInfo
             } else {
                 $0.indexCaseInfo = IndexCaseInfo(
                     isolationTrigger: .manualTestEntry(npexDay: npexDay),
                     onsetDay: nil,
-                    testInfo: IndexCaseInfo.TestInfo(result: testResult, receivedOnDay: receivedOn)
+                    testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, receivedOnDay: receivedOn)
                 )
             }
         }
@@ -154,7 +154,16 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
         if let indexCaseInfo = isolationStateInfo?.isolationInfo.indexCaseInfo {
             Metrics.signpost(.indexCaseBackgroundTick)
             if indexCaseInfo.testInfo?.result == .positive {
-                Metrics.signpost(.testedPositiveBackgroundTick)
+                if let testKit = indexCaseInfo.testInfo?.testKitType {
+                    switch testKit {
+                    case .labResult:
+                        Metrics.signpost(.testedPositiveBackgroundTick)
+                    case .rapidResult, .rapidSelfReported:
+                        Metrics.signpost(.hasTestedLFDPositiveBackgroundTick)
+                    }
+                } else {
+                    Metrics.signpost(.testedPositiveBackgroundTick)
+                }
             }
             if case .selfDiagnosis = indexCaseInfo.isolationTrigger {
                 Metrics.signpost(.selfDiagnosedBackgroundTick)

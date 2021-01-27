@@ -9,7 +9,6 @@ public class EnterPostcodeViewController: OnboardingStepViewController {
     
     public init(submit: @escaping (String) -> Result<Void, DisplayableError>) {
         super.init(step: EnterPostcodeStep(submit: submit))
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
     }
     
     required init?(coder: NSCoder) {

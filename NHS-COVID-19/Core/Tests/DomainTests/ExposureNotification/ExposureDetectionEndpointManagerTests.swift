@@ -14,7 +14,7 @@ class ExposureDetectionEndpointManagerTests: XCTestCase {
     
     override func setUp() {
         httpClient = MockHTTPClient()
-        fileStorage = FileStorage(forCachesOf: .random())
+        fileStorage = FileStorage(forNewCachesOf: .random())
         manager = ExposureDetectionEndpointManager(distributionClient: httpClient, fileStorage: fileStorage)
     }
     

@@ -104,7 +104,6 @@ public class CheckInFlowViewController: BaseNavigationController {
                 rootViewController(for: state),
             ]
         } else {
-            viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
             pushViewController(rootViewController(for: state), animated: true)
         }
     }

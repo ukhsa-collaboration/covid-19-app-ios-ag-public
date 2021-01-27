@@ -19,6 +19,7 @@ public class MyDataScreenScenario: Scenario {
     public static let confirmedDeleteAllData = "Confirmed delete all data"
     
     public static let testResult = TestResult.positive
+    public static let testKitType = TestKitType.labResult
     
     public static let venueID1 = "HF912159M5Y"
     public static let venueID2ToDelete = "FHF84HFY4"
@@ -78,7 +79,11 @@ public class MyDataScreenScenario: Scenario {
                 viewModel: .init(
                     postcode: .constant(postcode),
                     localAuthority: .constant(localAuthority),
-                    testData: (testResult, testResultDate),
+                    testResultDetails: .init(
+                        result: testResult,
+                        date: testResultDate,
+                        testKitType: testKitType
+                    ),
                     venueHistories: venueHistories,
                     symptomsOnsetDate: symptomsDate,
                     exposureNotificationDetails: .init(

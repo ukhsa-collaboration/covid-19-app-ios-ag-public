@@ -133,7 +133,7 @@
 "alert_venue_risk_change_body" = "Tapiwch i weld y manylion";
 "alert_isolation_state_change_title" = "Mae ein cyngor i chi wedi newid";
 "alert_isolation_state_change_body" = "Tapiwch i weld y manylion";
-"alert_exposure_detection_body" = "Tapiwch yma i gael rhagor o fanylion.";
+"alert_exposure_detection_body" = "Fe fuoch chi mewn cyswllt agos gyda rhywun sydd â coronafirws (COVID-19). Tapiwch yma i gael rhagor o fanylion.";
 "alert_test_result_received_title" = "Mae canlyniad eich prawf waedi cyrraedd";
 "alert_test_result_received_body" = "Tapiwch i weld y manylion";
 "alert_app_availability_changed_title" = "Mae argaeledd yr ap wedi newid.";
@@ -176,7 +176,6 @@
 "positive_symptoms_link_label" = "I gael rhagor o gyngor, cysylltwch â:";
 "positive_symptoms_corona_test_button" = "Archebu prawf am ddim";
 "exposure_acknowledgement_self_isolate_for" = "Hunanynyswch am";
-"exposure_acknowledgement_warning" = "Mae'r ap wedi canfod eich bod wedi bod yn agos at rywun sydd â’r coronafeirws. Arhoswch gartref a hunanynyswch i gadw'ch hun ac eraill yn ddiogel.";
 "exposure_acknowledgement_explaination_1" = "Er mwyn deall sut mae'r ap yn cyfrifo diwrnodau hunan-ynysu, defnyddiwch y ddolen i'r cwestiynau isod.\n\nMae risg uchel bod y feirws arnoch ac y gallech ei ledaenu hyd yn oed os nad oes gennych unrhyw symptomau. Os ydych chi o dan 18 oed, fe'ch cynghorir i ddangos y neges hon i oedolyn dibynadwy.";
 "exposure_acknowledgement_explaination_2" = "Mae eich dyddgyfrif ar gyfer ynysu wedi cychwyn a dylech hunanynysu am y cyfnod llawn a nodir.  Dim ond os oes gennych symptomau coronafeirws y dylech chi gael prawf.";
 "exposure_acknowledgement_link_label" = "I gael rhagor o gyngor, cysylltwch â:";
@@ -261,7 +260,7 @@
 "about_this_app_software_information_manufacturer_description" = "NHS Test & Trace\nDepartment of Health and Social Care\n39 Victoria Street\nWestminster\nLondon\nSW1H 0EU\nUK";
 "mydata_title" = "Fy Nata";
 "mydata_section_postcode_description" = "ARDAL COD POST";
-"mydata_section_test_result_description" = "CANLYNIAD Y PRAWF DIWETHAF A GAFWYD";
+"mydata_section_test_result_description" = "CANLYNIAD PRAWF PERTHNASOL DIWETHAF";
 "mydata_section_venue_history_description" = "HANES Y LLEOLIAD";
 "mydata_section_symptoms_description" = "DYDDIAD Y DECHREUODD Y SYMPTOMAU";
 "mydata_section_encounter_description" = "DYDDIAD CYFARFOD";
@@ -310,7 +309,7 @@
 "authorization_denied_description" = "Mae’r ap hwn yn defnyddio ‘Hysbysiadau Cysylltiad’ i roi gwybod i chi a ydych wedi dod i gysylltiad â defnyddwyr eraill yr ap sydd wedi nodi eu bod wedi cael prawf positif am y coronafeirws.\n\nEfallai y bydd eich ffôn yn cyfeirio at y rhain fel ‘Hysbysiadau Cysylltiad’ (Exposure Notifications) neu ‘Cofnodi Cysylltiad’ (Exposure Logging).";
 "checkin_camera_qrcode_scanner_title" = "Mewngofnodi i leoliad trwy sganio cod QR swyddogol y GIG";
 "checkin_confirmation_title" = "Wedi mewngofnodi yn llwyddiannus";
-"alert_exposure_detection_title" = "Mae'r ap wedi canfod eich bod wedi bod yn agos at rywun sydd â’r coronafeirws. Arhoswch gartref a hunanynyswch i gadw'ch hun ac eraill yn ddiogel";
+"alert_exposure_detection_title" = "Mae angen i chi hunan-ynysu ar unwaith.";
 "checkin_camera_permission_denial_title" = "Mewngofnodi i leoliad trwy sganio cod QR swyddogol y GIG";
 "virology_book_a_test_title" = "Archebu prawf am ddim";
 "end_of_isolation_isolate_if_have_symptom_warning" = "Fodd bynnag, os oes gennych dymheredd uchel, parhewch i hunanynysu nes iddo ddychwelyd i normal";
@@ -473,10 +472,10 @@
 "financial_support_privacy_notice_link_description" = "Hysbysiad Preifatrwydd Olrhain Cyswllt";
 "home_settings_button_title" = "Gosodiadau";
 "settings_title" = "Gosodiadau";
-"settings_row_language" = "Laith";
-"settings_language_title" = "Laith";
-"settings_language_system_language" = "Laith y System";
-"settings_language_override_languages" = "Leithoedd";
+"settings_row_language" = "Iaith";
+"settings_language_title" = "Iaith";
+"settings_language_system_language" = "Iaith y System";
+"settings_language_override_languages" = "Ieithoedd";
 "mydata_venue_history_edit_button_accessibility_description" = "Golygu";
 "mydata_venue_history_done_button_accessibility_description" = "Wedi'i wneud";
 "mydata_section_LocalAuthority_edit_button_accessibility_description" = "Golygu";
@@ -495,3 +494,10 @@
 "settings_language_confirm_selection_alert_description %@" = "Newid iaith yr ap i %@ ?";
 "settings_language_confirm_selection_alert_no" = "Canslo";
 "settings_language_confirm_selection_alert_yes" = "Cadarnhau";
+"mydata_test_result_test_date" = "Dyddiad";
+"mydata_test_result_test_result" = "Canlyniad";
+"mydata_test_result_test_kit_type" = "Math o becyn prawf";
+"mydata_test_result_lab_result" = "LAB_RESULT";
+"mydata_test_result_rapid_result" = "RAPID_RESULT";
+"exposure_acknowledgement_warning" = "Mae'r ap wedi canfod eich bod wedi bod yn agos at rywun sydd â’r coronafeirws. Arhoswch gartref a hunanynyswch i gadw'ch hun ac eraill yn ddiogel.";
+"mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";

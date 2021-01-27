@@ -133,7 +133,7 @@
 "alert_venue_risk_change_body" = "વિગતો જોવા માટે ટેપ કરો";
 "alert_isolation_state_change_title" = "તમારા માટેનું અમારું માર્ગદર્શન બદલાયું છે";
 "alert_isolation_state_change_body" = "વિગતો જોવા માટે ટેપ કરો";
-"alert_exposure_detection_body" = "વધુ વિગતો માટે અહીં ટેપ કરો.";
+"alert_exposure_detection_body" = "જેને કોરોના વાયરસ (કોવિડ-19)  છે તેમની નજીક આવ્યા છો વધુ વિગતો માટે અહીં ટેપ કરો.";
 "alert_test_result_received_title" = "તમારા ટેસ્ટના પરિણામો આવી ગયા છે";
 "alert_test_result_received_body" = "વિગતો જોવા માટે ટેપ કરો";
 "alert_app_availability_changed_title" = "એપની ઉપલબ્ધતા બદલાઈ ચૂકી છે";
@@ -176,7 +176,6 @@
 "positive_symptoms_link_label" = "વધારે સલાહ- સૂચન માટે, કૃપા કરી કોન્ટેક્ટ કરોઃ";
 "positive_symptoms_corona_test_button" = "ફ્રિ ટેસ્ટ બુક કરો";
 "exposure_acknowledgement_self_isolate_for" = "માટે સેલ્ફ-આઇસોલેટ થાવ";
-"exposure_acknowledgement_warning" = "એપ દ્વારા શોધી કઢાયું છે કે તમે કોરોનાવાયરસ ધરાવતા કોઈ વ્યક્તિના સંપર્કમાં આવ્યા છો. કૃપા કરી ઘરે રહો અને પોતાને અને અન્ય લોકોને સુરક્ષિત રાખવા માટે સેલ્ફ-આઇસોલેટ થાવ.";
 "exposure_acknowledgement_explaination_1" = "સેલ્ફ આયસોલેશનનાં દિવસોનો એપ કેવી રીતે સરવાળો કરે છે એ જાણવા માટે પૂછાતા પ્રશ્નોની નીચે લિંક જૂઓ.\n\nજો તમને કોઈ લક્ષણો ન હોય તો પણ તમે વાયરસ હોવાના અને ફેલાવાના ઉચ્ચ જોખમે છો. જો તમારી ઉંમર 18 વર્ષથી ઓછી છે, તો તમને કોઈ વિશ્વાસપાત્ર વયસ્ક વ્યક્તિને આ સંદેશ બતાવવાની સલાહ આપવામાં આવે છે.";
 "exposure_acknowledgement_explaination_2" = "તમારું આઇસોલેશન કાઉન્ટડાઉન શરુ થઇ ચૂક્યું છે અને તમારે જાણ કરેલા પૂર્ણ સમય માટે સેલ્ફ-આઇસોલેટ થવું જોઈએ. જો તમને કોરોનાવાઈરસ રોગના લક્ષણો હોય તોજ ફકત કસોટી કરાવો.";
 "exposure_acknowledgement_link_label" = "વધારે સલાહ- સૂચન માટે, કૃપા કરી કોન્ટેક્ટ કરોઃ";
@@ -261,7 +260,7 @@
 "about_this_app_software_information_manufacturer_description" = "NHS Test & Trace\nDepartment of Health and Social Care\n39 Victoria Street\nWestminster\nLondon\nSW1H 0EU\nUK";
 "mydata_title" = "મારો ડેટા";
 "mydata_section_postcode_description" = "પોસ્ટકોડ જિલ્લો";
-"mydata_section_test_result_description" = "અંતિમ ટેસ્ટના પરિણામો લેવાય ચૂક્યા છે";
+"mydata_section_test_result_description" = "અંતિમ લાગુ ટેસ્ટ પરિણામ";
 "mydata_section_venue_history_description" = "વેન્યુનો ઇતિહાસ";
 "mydata_section_symptoms_description" = "લક્ષણો શરૂ થયાની તારીખ";
 "mydata_section_encounter_description" = "એન્કાઉન્ટરની તારીખ";
@@ -310,7 +309,7 @@
 "authorization_denied_description" = "આ એપ ‘એક્સપોઝર નોટિફિકેશન’ નો ઉપયોગ તમને કોરોનાવાયરસ માટે સકારાત્મક પરીક્ષણ ધરાવનાર અન્ય એપ વપરાશકર્તાઓ સાથે તમે સંપર્કમાં આવેલ છો કે નહીં તે જણાવવા માટે કરે છે.\n\nતમારો ફોન આને એક્સપોઝર નોટિફિકેશન' અથવા 'એક્સપોઝર લોગિંગ' તરીકે વ્યાખ્યાયિત કરી શકે છે.";
 "checkin_camera_qrcode_scanner_title" = "ઓફિશ્યલ NHS QR કોડ સ્કેન કરીને વેન્યુ ખાતે ચેક ઇન કરો";
 "checkin_confirmation_title" = "સફળ ચેક-ઇન";
-"alert_exposure_detection_title" = "એપ દ્વારા શોધી કઢાયું છે કે તમે કોરોનાવાયરસ ધરાવતા કોઈ વ્યક્તિના સંપર્કમાં આવ્યા છો. કૃપા કરી ઘરે રહો અને પોતાને અને અન્ય લોકોને સુરક્ષિત રાખવા માટે સેલ્ફ-આઇસોલેટ થાવ";
+"alert_exposure_detection_title" = "તમારે તરત જ સેલ્ફ-આયસોલેટ થવું પડશે";
 "checkin_camera_permission_denial_title" = "ઓફિશ્યલ NHS QR કોડ સ્કેન કરીને વેન્યુ ખાતે ચેક ઇન કરો";
 "virology_book_a_test_title" = "ફ્રિ ટેસ્ટ બુક કરો";
 "end_of_isolation_isolate_if_have_symptom_warning" = "જો કે, તમને ઉચ્ચ તાપમાન હોય, તો તે જ્યાં સુધી સામાન્ય ન થાય, ત્યાં સુધી સતત સેલ્ફ-આઇસોલેશનમાં રહો";
@@ -495,3 +494,10 @@
 "settings_language_confirm_selection_alert_description %@" = "એપની ભાષા બદલીને %@ કરવી છે?";
 "settings_language_confirm_selection_alert_no" = "રદ્દ કરો";
 "settings_language_confirm_selection_alert_yes" = "પુષ્ટિ કરો";
+"mydata_test_result_test_date" = "તારીખ";
+"mydata_test_result_test_result" = "પરિણામ";
+"mydata_test_result_test_kit_type" = "ટેસ્ટ કીટ પ્રકાર";
+"mydata_test_result_lab_result" = "LAB_RESULT";
+"mydata_test_result_rapid_result" = "RAPID_RESULT";
+"exposure_acknowledgement_warning" = "એપ દ્વારા શોધી કઢાયું છે કે તમે કોરોનાવાયરસ ધરાવતા કોઈ વ્યક્તિના સંપર્કમાં આવ્યા છો. કૃપા કરી ઘરે રહો અને પોતાને અને અન્ય લોકોને સુરક્ષિત રાખવા માટે સેલ્ફ-આઇસોલેટ થાવ.";
+"mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";

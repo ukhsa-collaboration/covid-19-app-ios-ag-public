@@ -162,8 +162,12 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             )
         } ?? []
         
-        let testResult = context.testInfo.currentValue.map {
-            (Interface.TestResult(domainTestResult: $0.result), $0.receivedOnDay.startDate(in: .current))
+        let testResultDetails = context.testInfo.currentValue.map {
+            MyDataViewController.ViewModel.TestResultDetails(
+                result: Interface.TestResult(domainTestResult: $0.result),
+                date: $0.receivedOnDay.startDate(in: .current),
+                testKitType: $0.testKitType.map(Interface.TestKitType.init(domainTestKitType:))
+            )
         }
         
         let symptomsOnsetDate = context.symptomsOnsetAndExposureDetailsProvider.provideSymptomsOnsetDate()
@@ -182,7 +186,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         return .init(
             postcode: context.postcodeInfo.map { $0?.postcode.value }.interfaceProperty,
             localAuthority: context.postcodeInfo.map { $0?.localAuthority?.name }.interfaceProperty,
-            testData: testResult,
+            testResultDetails: testResultDetails,
             venueHistories: venueHistories,
             symptomsOnsetDate: symptomsOnsetDate,
             exposureNotificationDetails: exposureDetails.map { details in

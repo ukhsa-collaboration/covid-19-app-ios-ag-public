@@ -11,83 +11,126 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
     
     private let endpoint = LinkVirologyTestResultEndpoint()
     
-    func testEndpoint() throws {
-        let ctaToken = CTAToken(value: .random())
+    func testEncoding() throws {
+        let ctaToken = CTAToken(value: .random(), country: .england)
         
-        let expected = HTTPRequest.post("/virology-test/cta-exchange", body: .json("{\"ctaToken\":\"\(ctaToken.value)\"}"))
+        let countryString: String = {
+            switch ctaToken.country {
+            case .england: return "England"
+            case .wales: return "Wales"
+            }
+        }()
         
-        let actual = try endpoint.request(for: ctaToken)
+        let expectedRequest = HTTPRequest.post("/virology-test/v2/cta-exchange", body: .json("{\"country\":\"\(countryString)\",\"ctaToken\":\"\(ctaToken.value)\"}"))
         
-        TS.assert(actual, equals: expected)
+        let actualRequest = try endpoint.request(for: ctaToken)
+        
+        TS.assert(actualRequest, equals: expectedRequest)
     }
     
-    func testDecodingTestResultPositive() throws {
-        let date = "2020-04-23T00:00:00.0000000Z"
+    func testDecodingPositiveLfdDiagnosisKeySubmissionSupported() throws {
+        let date = "2021-01-10T00:00:00.0000000Z"
         let submissionToken = DiagnosisKeySubmissionToken(value: .random())
         
-        let response = HTTPResponse.ok(with: .json(#"""
+        let actualResponse = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
             "testResult": "POSITIVE",
+            "testKit" : "RAPID_RESULT",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
+            "diagnosisKeySubmissionSupported" : true
         }
         """#))
         
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions.insert(.withFractionalSeconds)
         let expectedResponse = LinkVirologyTestResultResponse(
-            virologyTestResult: VirologyTestResult(testResult: .positive, endDate: try XCTUnwrap(formatter.date(from: date))),
-            diagnosisKeySubmissionToken: submissionToken
+            virologyTestResult: VirologyTestResult(
+                testResult: .positive,
+                testKitType: .rapidResult,
+                endDate: try XCTUnwrap(formatter.date(from: date))
+            ),
+            diagnosisKeySubmissionSupport: .supported(diagnosisKeySubmissionToken: submissionToken)
         )
         
-        let parsedResponse = try endpoint.parse(response)
+        let parsedResponse = try endpoint.parse(actualResponse)
+        
         TS.assert(parsedResponse, equals: expectedResponse)
     }
     
-    func testDecodingTestResultNegative() throws {
-        let date = "2020-04-23T00:00:00.0000000Z"
-        let submissionToken = DiagnosisKeySubmissionToken(value: .random())
+    func testDecodingPositiveLfdDiagnosisKeySubmissionNotSupported() throws {
+        let date = "2021-01-10T00:00:00.0000000Z"
         
-        let response = HTTPResponse.ok(with: .json(#"""
+        let actualResponse = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
-            "testResult": "NEGATIVE",
-            "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
+            "testResult": "POSITIVE",
+            "testKit" : "RAPID_RESULT",
+            "diagnosisKeySubmissionToken": null,
+            "diagnosisKeySubmissionSupported" : false
         }
         """#))
         
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions.insert(.withFractionalSeconds)
         let expectedResponse = LinkVirologyTestResultResponse(
-            virologyTestResult: VirologyTestResult(testResult: .negative, endDate: try XCTUnwrap(formatter.date(from: date))),
-            diagnosisKeySubmissionToken: submissionToken
+            virologyTestResult: VirologyTestResult(
+                testResult: .positive,
+                testKitType: .rapidResult,
+                endDate: try XCTUnwrap(formatter.date(from: date))
+            ),
+            diagnosisKeySubmissionSupport: .notSupported
         )
         
-        let parsedResponse = try endpoint.parse(response)
+        let parsedResponse = try endpoint.parse(actualResponse)
+        
         TS.assert(parsedResponse, equals: expectedResponse)
     }
     
-    func testDecodingTestResultVoid() throws {
-        let date = "2020-04-23T00:00:00.0000000Z"
-        let submissionToken = DiagnosisKeySubmissionToken(value: .random())
+    func testDecodingInvalidTestKit() throws {
+        let date = "2021-01-10T00:00:00.0000000Z"
         
-        let response = HTTPResponse.ok(with: .json(#"""
+        let actualResponse = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "\#(date)",
+            "testResult": "POSITIVE",
+            "testKit" : "Invalid",
+            "diagnosisKeySubmissionToken": null,
+            "diagnosisKeySubmissionSupported" : false
+        }
+        """#))
+        XCTAssertThrowsError(try endpoint.parse(actualResponse))
+    }
+    
+    func testDecodingLFDInvalidResponseOnVoid() throws {
+        let date = "2021-01-10T00:00:00.0000000Z"
+        
+        let actualResponse = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
             "testResult": "VOID",
-            "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
+            "testKit" : "RAPID_RESULT",
+            "diagnosisKeySubmissionToken": null,
+            "diagnosisKeySubmissionSupported" : false
         }
         """#))
         
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions.insert(.withFractionalSeconds)
-        let expectedResponse = LinkVirologyTestResultResponse(
-            virologyTestResult: VirologyTestResult(testResult: .void, endDate: try XCTUnwrap(formatter.date(from: date))),
-            diagnosisKeySubmissionToken: submissionToken
-        )
-        
-        let parsedResponse = try endpoint.parse(response)
-        TS.assert(parsedResponse, equals: expectedResponse)
+        XCTAssertThrowsError(try endpoint.parse(actualResponse))
     }
     
+    func testDecodingLFDInvalidResponseOnNegative() throws {
+        let date = "2021-01-10T00:00:00.0000000Z"
+        
+        let actualResponse = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "\#(date)",
+            "testResult": "NEGATIVE",
+            "testKit" : "RAPID_RESULT",
+            "diagnosisKeySubmissionToken": null,
+            "diagnosisKeySubmissionSupported" : false
+        }
+        """#))
+        
+        XCTAssertThrowsError(try endpoint.parse(actualResponse))
+    }
 }

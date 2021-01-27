@@ -26,7 +26,7 @@ class AcceptanceTestCase: XCTestCase {
             var iTunesClient = MockHTTPClient()
             var cameraManager = MockCameraManager()
             var encryptedStore = MockEncryptedStore()
-            var cacheStorage = FileStorage(forCachesOf: .random())
+            var cacheStorage = FileStorage(forNewCachesOf: .random())
             var postcodeValidator = mutating(MockPostcodeValidator()) {
                 $0.validPostcodes = [Postcode("B44")]
             }

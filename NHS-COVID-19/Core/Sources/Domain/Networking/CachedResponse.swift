@@ -24,7 +24,7 @@ class CachedResponse<Output> {
     init<Endpoint>(
         httpClient: HTTPClient,
         endpoint: Endpoint,
-        storage: FileStorage,
+        storage: FileStoring,
         name: String,
         initialValue: Output
     ) where Endpoint: HTTPEndpoint, Endpoint.Input == Void, Endpoint.Output == Output {

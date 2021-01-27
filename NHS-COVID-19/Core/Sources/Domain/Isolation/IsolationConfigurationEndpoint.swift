@@ -20,7 +20,7 @@ struct IsolationConfigurationEndpoint: HTTPEndpoint {
             indexCaseSinceSelfDiagnosisOnset: DayDuration(durations.indexCaseSinceSelfDiagnosisOnset),
             indexCaseSinceSelfDiagnosisUnknownOnset: DayDuration(durations.indexCaseSinceSelfDiagnosisUnknownOnset),
             housekeepingDeletionPeriod: DayDuration(durations.pendingTasksRetentionPeriod ?? 14),
-            indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis
+            indexCaseSinceNPEXDayNoSelfDiagnosis: DayDuration(durations.indexCaseSinceTestResultEndDate)
         )
     }
 }
@@ -32,6 +32,7 @@ private struct Payload: Codable {
         var indexCaseSinceSelfDiagnosisOnset: Int
         var indexCaseSinceSelfDiagnosisUnknownOnset: Int
         var pendingTasksRetentionPeriod: Int?
+        var indexCaseSinceTestResultEndDate: Int
     }
     
     var durationDays: DayDurations

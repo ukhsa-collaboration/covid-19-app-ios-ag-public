@@ -15,19 +15,22 @@ class VirologyTestingManager: VirologyTestingManaging {
     private let httpClient: HTTPClient
     private let virologyTestingStateCoordinator: VirologyTestingStateCoordinating
     private let ctaTokenValidator: CTATokenValidating
+    private let country: () -> Country
     
     init(
         httpClient: HTTPClient,
         virologyTestingStateCoordinator: VirologyTestingStateCoordinator,
-        ctaTokenValidator: CTATokenValidating
+        ctaTokenValidator: CTATokenValidating,
+        country: @escaping () -> Country
     ) {
         self.httpClient = httpClient
         self.virologyTestingStateCoordinator = virologyTestingStateCoordinator
         self.ctaTokenValidator = ctaTokenValidator
+        self.country = country
     }
     
     func provideTestOrderInfo() -> AnyPublisher<TestOrderInfo, NetworkRequestError> {
-        httpClient.fetch(OrderTestkitEndpoint())
+        httpClient.fetch(OrderTestKitEndpoint())
             .handleEvents(receiveOutput: virologyTestingStateCoordinator.saveOrderTestKitResponse)
             .map { response in
                 TestOrderInfo(testOrderWebsiteURL: response.testOrderWebsite, referenceCode: response.referenceCode)
@@ -37,7 +40,7 @@ class VirologyTestingManager: VirologyTestingManaging {
     func evaulateTestResults() -> AnyPublisher<Void, Never> {
         return Publishers.Sequence<[AnyPublisher<VirologyTestResponse, NetworkRequestError>], NetworkRequestError>(
             sequence: virologyTestingStateCoordinator.virologyTestTokens.map { tokens in
-                httpClient.fetch(VirologyTestResultEndpoint(), with: tokens.pollingToken)
+                httpClient.fetch(VirologyTestResultEndpoint(), with: VirologyTestResultRequest(pollingToken: tokens.pollingToken, country: country()))
                     .handleEvents(receiveOutput: { response in
                         self.virologyTestingStateCoordinator.handlePollingTestResult(
                             response,
@@ -56,7 +59,7 @@ class VirologyTestingManager: VirologyTestingManaging {
     
     func linkExternalTestResult(with token: String) -> AnyPublisher<Void, LinkTestResultError> {
         if ctaTokenValidator.validate(token) {
-            return httpClient.fetch(LinkVirologyTestResultEndpoint(), with: CTAToken(value: token))
+            return httpClient.fetch(LinkVirologyTestResultEndpoint(), with: CTAToken(value: token, country: country()))
                 .handleEvents(receiveOutput: virologyTestingStateCoordinator.handleManualTestResult)
                 .mapError(LinkTestResultError.init)
                 .map { _ in

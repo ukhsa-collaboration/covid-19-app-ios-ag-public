@@ -32,7 +32,7 @@ public class RiskyPostcodeEndpointManager {
         cachedResponseV2.value.isEmpty
     }
     
-    init(distributeClient: HTTPClient, storage: FileStorage, postcode: AnyPublisher<Postcode?, Never>, localAuthority: AnyPublisher<LocalAuthority?, Never>) {
+    init(distributeClient: HTTPClient, storage: FileStoring, postcode: AnyPublisher<Postcode?, Never>, localAuthority: AnyPublisher<LocalAuthority?, Never>) {
         let cachedResponseV2 = CachedResponse(
             httpClient: distributeClient,
             endpoint: RiskyPostcodesEndpointV2(),

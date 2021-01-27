@@ -76,6 +76,7 @@ public struct IndexCaseInfo: Equatable {
     
     public struct TestInfo: Codable, Equatable {
         public var result: TestResult
+        public var testKitType: TestKitType?
         public var receivedOnDay: GregorianDay
     }
     
@@ -145,10 +146,10 @@ extension IndexCaseInfo {
         }
     }
     
-    mutating func set(testResult: TestResult, receivedOn: GregorianDay) {
+    mutating func set(testResult: TestResult, testKitType: TestKitType?, receivedOn: GregorianDay) {
         if testInfo?.result == .positive { return }
         
-        testInfo = TestInfo(result: testResult, receivedOnDay: receivedOn)
+        testInfo = TestInfo(result: testResult, testKitType: testKitType, receivedOnDay: receivedOn)
     }
 }
 
@@ -165,6 +166,23 @@ public enum TestResult: String, Codable, Equatable {
             self = .negative
         case .void:
             self = .void
+        }
+    }
+}
+
+public enum TestKitType: String, Codable, Equatable {
+    case labResult
+    case rapidResult
+    case rapidSelfReported
+    
+    init(_ virologyTestKit: VirologyTestResult.TestKitType) {
+        switch virologyTestKit {
+        case .labResult:
+            self = .labResult
+        case .rapidResult:
+            self = .rapidResult
+        case .rapidSelfReported:
+            self = .rapidSelfReported
         }
     }
 }
@@ -229,9 +247,11 @@ enum IsolationLogicalState: Equatable {
         case (.some(let c), .some(let i)):
             var positiveTestResult = false
             var selfDiagnosed = false
-            if case .indexCase(let hasPositiveTestResult, let hasSelfDiagnosed) = i.reason {
+            var testType: TestKitType?
+            if case .indexCase(let hasPositiveTestResult, let testKitType, let hasSelfDiagnosed) = i.reason {
                 positiveTestResult = hasPositiveTestResult
                 selfDiagnosed = hasSelfDiagnosed
+                testType = testKitType
             }
             
             if i.untilStartOfDay <= today.gregorianDay && c.untilStartOfDay > today.gregorianDay {
@@ -242,7 +262,7 @@ enum IsolationLogicalState: Equatable {
                 _isolation = _Isolation(
                     fromDay: min(c.fromDay, i.fromDay),
                     untilStartOfDay: max(c.untilStartOfDay, i.untilStartOfDay),
-                    reason: .bothCases(hasPositiveTestResult: positiveTestResult, isSelfDiagnosed: selfDiagnosed)
+                    reason: .bothCases(hasPositiveTestResult: positiveTestResult, testkitType: testType, isSelfDiagnosed: selfDiagnosed)
                 )
             }
             
@@ -304,7 +324,7 @@ enum IsolationLogicalState: Equatable {
         switch activeIsolation.reason {
         case .indexCase: return false
         case .contactCase: return true
-        case .bothCases(let hasPositiveTestResult, _):
+        case .bothCases(let hasPositiveTestResult, _, _):
             return !hasPositiveTestResult
         }
     }
@@ -314,7 +334,7 @@ enum IsolationLogicalState: Equatable {
         switch activeIsolation.reason {
         case .bothCases, .contactCase:
             return false
-        case .indexCase(let hasPositiveTestResult, _):
+        case .indexCase(let hasPositiveTestResult, _, _):
             return !hasPositiveTestResult
         }
     }
@@ -371,31 +391,31 @@ extension _Isolation {
             self.init(
                 fromDay: indexCaseInfo.isolationTrigger.startDay,
                 untilStartOfDay: indexCaseInfo.testInfo!.receivedOnDay,
-                reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)
+                reason: .indexCase(hasPositiveTestResult: false, testkitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true)
             )
         case (.none, _, .selfDiagnosis(let selfDiagnosisDay)):
             self.init(
                 fromDay: selfDiagnosisDay,
                 untilStartOfDay: selfDiagnosisDay + configuration.indexCaseSinceSelfDiagnosisUnknownOnset,
-                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, isSelfDiagnosed: true)
+                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testkitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true)
             )
         case (.none, _, .manualTestEntry(let npexDay)):
             self.init(
                 fromDay: npexDay,
                 untilStartOfDay: npexDay + configuration.indexCaseSinceNPEXDayNoSelfDiagnosis,
-                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, isSelfDiagnosed: false)
+                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testkitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: false)
             )
         case (.some(let day), _, .manualTestEntry(npexDay: _)):
             self.init(
                 fromDay: indexCaseInfo.isolationTrigger.startDay,
                 untilStartOfDay: day + configuration.indexCaseSinceSelfDiagnosisOnset,
-                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, isSelfDiagnosed: false)
+                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testkitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: false)
             )
         case (.some(let day), _, .selfDiagnosis(_)):
             self.init(
                 fromDay: indexCaseInfo.isolationTrigger.startDay,
                 untilStartOfDay: day + configuration.indexCaseSinceSelfDiagnosisOnset,
-                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, isSelfDiagnosed: true)
+                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testkitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true)
             )
         }
     }

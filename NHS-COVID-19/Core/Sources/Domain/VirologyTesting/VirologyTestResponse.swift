@@ -5,7 +5,7 @@
 import Foundation
 
 enum VirologyTestResponse: Equatable {
-    case receivedResult(VirologyTestResult)
+    case receivedResult(VirologyTestResult, Bool)
     case noResultYet
 }
 
@@ -16,11 +16,23 @@ struct VirologyTestResult: Equatable {
         case void
     }
     
+    enum TestKitType: Equatable {
+        case labResult
+        case rapidResult
+        case rapidSelfReported
+    }
+    
     var testResult: TestResult
+    var testKitType: TestKitType
     var endDate: Date
+}
+
+enum DiagnosisKeySubmissionSupport: Equatable {
+    case supported(diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken)
+    case notSupported
 }
 
 struct LinkVirologyTestResultResponse: Equatable {
     var virologyTestResult: VirologyTestResult
-    var diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken
+    var diagnosisKeySubmissionSupport: DiagnosisKeySubmissionSupport
 }

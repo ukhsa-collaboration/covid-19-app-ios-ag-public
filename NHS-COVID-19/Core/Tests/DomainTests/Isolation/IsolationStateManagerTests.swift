@@ -15,9 +15,8 @@ class IsolationStateManagerTests: XCTestCase {
         var requestedStateInfo: IsolationStateInfo?
         var requestedCalendarInfo: LocalDay?
         var callbackCount = 0
-        var isolationState = IsolationLogicalState.isolating(Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)), endAcknowledged: false, startAcknowledged: false)
+        var isolationState = IsolationLogicalState.isolating(Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)), endAcknowledged: false, startAcknowledged: false)
     }
-    
     
     private let day = LocalDay(
         gregorianDay: GregorianDay(year: 2020, month: 3, day: 17),
@@ -63,7 +62,6 @@ class IsolationStateManagerTests: XCTestCase {
         info.configuration.indexCaseSinceSelfDiagnosisOnset = 18
         stateInfoSubject.send(info)
         daySubject.send(day)
-        
         
         info.configuration.indexCaseSinceSelfDiagnosisOnset = 20
         

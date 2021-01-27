@@ -4,8 +4,8 @@
 
 import Foundation
 import TestSupport
-@testable import Scenarios
 @testable import Domain
+@testable import Scenarios
 
 struct PollingTestResult {
     private let context: RunningAppContext
@@ -16,14 +16,14 @@ struct PollingTestResult {
         configuration: AcceptanceTestCase.Instance.Configuration,
         context: RunningAppContext
     ) {
-        self.apiClient = configuration.apiClient
-        self.currentDateProvider = configuration.currentDateProvider
+        apiClient = configuration.apiClient
+        currentDateProvider = configuration.currentDateProvider
         self.context = context
     }
     
     func receivePositiveAndAcknowledge(runBackgroundTasks: @escaping () -> Void) throws {
-        let testResultAcknowledgementState = try receiveResultAndGetAcknowledgementState(resultType: .positive, runBackgroundTasks: runBackgroundTasks)
-        guard case .neededForPositiveResultContinueToIsolate(let positiveAcknowledgement, _) = testResultAcknowledgementState else {
+        let testResultAcknowledgementState = try receiveResultAndGetAcknowledgementState(resultType: .positive, testKitType: .labResult, diagnosisKeySubmissionSupported: true, runBackgroundTasks: runBackgroundTasks)
+        guard case .neededForPositiveResultContinueToIsolate(let positiveAcknowledgement, _, _) = testResultAcknowledgementState else {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
         _ = try positiveAcknowledgement.acknowledge().await()
@@ -31,7 +31,7 @@ struct PollingTestResult {
     }
     
     func receiveNegativeAndAcknowledge(runBackgroundTasks: @escaping () -> Void) throws {
-        let testResultAcknowledgementState = try receiveResultAndGetAcknowledgementState(resultType: .negative, runBackgroundTasks: runBackgroundTasks)
+        let testResultAcknowledgementState = try receiveResultAndGetAcknowledgementState(resultType: .negative, testKitType: .labResult, diagnosisKeySubmissionSupported: true, runBackgroundTasks: runBackgroundTasks)
         guard case .neededForNegativeResultNotIsolating(let acknowledge) = testResultAcknowledgementState else {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
@@ -40,7 +40,7 @@ struct PollingTestResult {
     }
     
     func receiveVoidAndAcknowledge(runBackgroundTasks: @escaping () -> Void) throws {
-        let testResultAcknowledgementState = try receiveResultAndGetAcknowledgementState(resultType: .void, runBackgroundTasks: runBackgroundTasks)
+        let testResultAcknowledgementState = try receiveResultAndGetAcknowledgementState(resultType: .void, testKitType: .labResult, diagnosisKeySubmissionSupported: true, runBackgroundTasks: runBackgroundTasks)
         guard case .neededForVoidResultContinueToIsolate(let acknowledge, _) = testResultAcknowledgementState else {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
@@ -48,15 +48,15 @@ struct PollingTestResult {
         apiClient.reset()
     }
     
-    private func receiveResultAndGetAcknowledgementState(resultType: VirologyTestResult.TestResult, runBackgroundTasks: @escaping () -> Void) throws -> TestResultAcknowledgementState {
-        stubResultsEndpoint(resultType: resultType)
+    private func receiveResultAndGetAcknowledgementState(resultType: VirologyTestResult.TestResult, testKitType: VirologyTestResult.TestKitType, diagnosisKeySubmissionSupported: Bool, runBackgroundTasks: @escaping () -> Void) throws -> TestResultAcknowledgementState {
+        stubResultsEndpoint(resultType: resultType, testKitType: testKitType, diagnosisKeySubmissionSupported: diagnosisKeySubmissionSupported)
         runBackgroundTasks()
         return try getTestResultAcknowledgementState()
     }
     
-    private func stubResultsEndpoint(resultType: VirologyTestResult.TestResult) {
-        let testResult = getTestResult(result: resultType, endDate: currentDateProvider.currentDate)
-        apiClient.response(for: "/virology-test/results", response: .success(.ok(with: .json(testResult))))
+    private func stubResultsEndpoint(resultType: VirologyTestResult.TestResult, testKitType: VirologyTestResult.TestKitType, diagnosisKeySubmissionSupported: Bool) {
+        let testResult = getTestResult(result: resultType, testKitType: testKitType, endDate: currentDateProvider.currentDate, diagnosisKeySubmissionSupported: diagnosisKeySubmissionSupported)
+        apiClient.response(for: "/virology-test/v2/results", response: .success(.ok(with: .json(testResult))))
     }
     
     private func getTestResultAcknowledgementState() throws -> TestResultAcknowledgementState {

@@ -133,7 +133,7 @@
 "alert_venue_risk_change_body" = "انقر للاطلاع على التفاصيل";
 "alert_isolation_state_change_title" = "لقد تغيرت التوجيهات المقدمة إليك";
 "alert_isolation_state_change_body" = "انقر للاطلاع على التفاصيل";
-"alert_exposure_detection_body" = "انقر هنا للاطلاع على المزيد التفاصيل.";
+"alert_exposure_detection_body" = "لقد تعرَّضت للتواصل عن كثب مع شخصٍ مُصابٍ بفيروس كورونا (كوفيد-19). انقر هنا للاطلاع على المزيد التفاصيل.";
 "alert_test_result_received_title" = "لقد وصلت نتائج اختبارك";
 "alert_test_result_received_body" = "انقر للاطلاع على التفاصيل";
 "alert_app_availability_changed_title" = "لقد تغيرت المعلومات المتعلقة بتوافر التطبيق";
@@ -176,7 +176,6 @@
 "positive_symptoms_link_label" = "للحصول على المزيد من النصائح، التواصل مع:";
 "positive_symptoms_corona_test_button" = "حجز اختبار مجاني";
 "exposure_acknowledgement_self_isolate_for" = "تطبيق العزل الذاتي لمدة";
-"exposure_acknowledgement_warning" = "لقد اكتشف التطبيق أنك كنت على اتصالٍ مع أحد الأشخاص المُصابين بفيروس كورونا. ينبغي لك البقاء في المنزل وعزل نفسك عزلاً ذاتيًا للمحافظة على سلامتك وسلامة الأشخاص الآخرين.";
 "exposure_acknowledgement_explaination_1" = "لفهم الطريقة التي يحسب بها التطبيق عدد أيام العزل الذاتي، يُرجى زيارة الرابط أدناه المؤدي إلى الأسئلة الشائعة.\n\nأنت مُعرَّضٌ بدرجة كبيرة للإصابة بالفيروس والمساعدة في انتشاره حتى إذا لم تظهر عليك أيٌّ من أعراض الإصابة. إذا كان عمرك يقل عن 18 عامًا، فإننا نوصيك بعرض هذه الرسالة على شخصٍ بالغٍ محل ثقة لديك.";
 "exposure_acknowledgement_explaination_2" = "لقد بدأ العدّ التنازلي لأيام عزلك وينبغي لك عزل نفسك ذاتيًا طوال المدة الزمنية المُحددة لك. قم بإجراء اختبار الكشف عن فيروس كورونا إذا كنت تعاني من أعراض الفيروس فقط.";
 "exposure_acknowledgement_link_label" = "للحصول على المزيد من النصائح، التواصل مع:";
@@ -261,7 +260,7 @@
 "about_this_app_software_information_manufacturer_description" = "NHS Test & Trace\nDepartment of Health and Social Care\n39 Victoria Street\nWestminster\nLondon\nSW1H 0EU\nUK";
 "mydata_title" = "بياناتي";
 "mydata_section_postcode_description" = "الرمز البريدي للمقاطعة";
-"mydata_section_test_result_description" = "نتيجة آخر اختبار خضعت له";
+"mydata_section_test_result_description" = "نتيجة آخر اختبار ساري المفعول";
 "mydata_section_venue_history_description" = "تاريخ الأماكن";
 "mydata_section_symptoms_description" = "تاريخ بداية الأعراض";
 "mydata_section_encounter_description" = "تاريخ المقابلة";
@@ -310,7 +309,7 @@
 "authorization_denied_description" = "يستخدم هذا التطبيق خاصية \"إشعارات التعرّض\" لإعلامك عمّا إذا كنت قد تواصلت مع أيٍّ من مُستخدمي التطبيق الذين أبلغوا عن تسجيل نتيجة إيجابية في اختبار الكشف عن الإصابة بفيروس كورونا لديهم.\n\nقد يُطلق على هذه الإشعارات في هاتفك \"إشعارات التعرّض\" أو \"تسجيل التعرّض\".";
 "checkin_camera_qrcode_scanner_title" = "تسجيل الدخول إلى مكان بإجراء مسح ضوئي لرمز رسمي من رموز NHS QR";
 "checkin_confirmation_title" = "تم تسجيل الدخول بنجاح";
-"alert_exposure_detection_title" = "لقد اكتشف التطبيق أنك كنت على اتصالٍ مع أحد الأشخاص المُصابين بفيروس كورونا. ينبغي لك البقاء في المنزل وعزل نفسك عزلاً ذاتيًا للمحافظة على سلامتك وسلامة الأشخاص الآخرين";
+"alert_exposure_detection_title" = "يجب عليك الخضوع للعزل الذاتي على الفور.";
 "checkin_camera_permission_denial_title" = "تسجيل الدخول إلى مكان بإجراء مسح ضوئي لرمز رسمي من رموز NHS QR";
 "virology_book_a_test_title" = "حجز اختبار مجاني";
 "end_of_isolation_isolate_if_have_symptom_warning" = "مع ذلك، إذا كنت تعاني من ارتفاع درجة الحرارة، فيجب عليك الاستمرار في العزل الذاتي لنفسك حتى تعود درجة حرارتك إلى الوضع الطبيعي";
@@ -495,3 +494,10 @@
 "settings_language_confirm_selection_alert_description %@" = "تغيير لغة التطبيق إلى %@؟";
 "settings_language_confirm_selection_alert_no" = "إلغاء";
 "settings_language_confirm_selection_alert_yes" = "تأكيد";
+"mydata_test_result_test_date" = "التاريخ";
+"mydata_test_result_test_result" = "نتيجة";
+"mydata_test_result_test_kit_type" = "نوع مجموعة الاختبار";
+"mydata_test_result_lab_result" = "LAB_RESULT";
+"mydata_test_result_rapid_result" = "RAPID_RESULT";
+"exposure_acknowledgement_warning" = "لقد اكتشف التطبيق أنك كنت على اتصالٍ مع أحد الأشخاص المُصابين بفيروس كورونا. ينبغي لك البقاء في المنزل وعزل نفسك عزلاً ذاتيًا للمحافظة على سلامتك وسلامة الأشخاص الآخرين.";
+"mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";

@@ -6,7 +6,7 @@ import Common
 import Foundation
 
 struct VirologyTestOrderHandler: RequestHandler {
-    var paths = ["/virology-test/home-kit/order"]
+    var paths = ["/virology-test/v2/order"]
     
     var dataProvider: MockDataProvider
     

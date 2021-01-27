@@ -117,7 +117,7 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         let endDay = LocalDay(year: 2020, month: 3, day: 17, timeZone: .current)
         
         let state = IsolationAcknowledgementState(
-            logicalState: .isolating(Isolation(fromDay: .today, untilStartOfDay: endDay, reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)), endAcknowledged: false, startAcknowledged: true),
+            logicalState: .isolating(Isolation(fromDay: .today, untilStartOfDay: endDay, reason: .indexCase(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)), endAcknowledged: false, startAcknowledged: true),
             now: today.startOfDay,
             acknowledgeStart: {},
             acknowledgeEnd: {}
@@ -133,7 +133,7 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         let now = endDay.startOfDay.advanced(by: -(3.1 * 3600)) // slightly more than 3 hrs.
         
         let state = IsolationAcknowledgementState(
-            logicalState: .isolating(Isolation(fromDay: .today, untilStartOfDay: endDay, reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)), endAcknowledged: false, startAcknowledged: true),
+            logicalState: .isolating(Isolation(fromDay: .today, untilStartOfDay: endDay, reason: .indexCase(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)), endAcknowledged: false, startAcknowledged: true),
             now: now,
             acknowledgeStart: {},
             acknowledgeEnd: {}
@@ -148,7 +148,7 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         let endDay = LocalDay(year: 2020, month: 3, day: 17, timeZone: .current)
         let now = endDay.startOfDay.advanced(by: -(2.8 * 3600)) // slightly less than 3 hrs.
         
-        let isolation = Isolation(fromDay: .today, untilStartOfDay: endDay, reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true))
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: endDay, reason: .indexCase(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true))
         var callbackCount = 0
         let state = IsolationAcknowledgementState(
             logicalState: .isolating(isolation, endAcknowledged: false, startAcknowledged: true),
@@ -174,7 +174,7 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         let now = endDay.startOfDay.advanced(by: -(2.8 * 3600)) // slightly less than 3 hrs.
         
         let state = IsolationAcknowledgementState(
-            logicalState: .isolating(Isolation(fromDay: .today, untilStartOfDay: endDay, reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)), endAcknowledged: true, startAcknowledged: true),
+            logicalState: .isolating(Isolation(fromDay: .today, untilStartOfDay: endDay, reason: .indexCase(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)), endAcknowledged: true, startAcknowledged: true),
             now: now,
             acknowledgeStart: {},
             acknowledgeEnd: {}

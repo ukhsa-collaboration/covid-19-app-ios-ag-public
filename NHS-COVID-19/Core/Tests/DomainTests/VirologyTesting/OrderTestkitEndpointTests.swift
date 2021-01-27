@@ -9,10 +9,10 @@ import XCTest
 
 class OrderTestkitEndpointTests: XCTestCase {
     
-    private let endpoint = OrderTestkitEndpoint()
+    private let endpoint = OrderTestKitEndpoint()
     
     func testEndpoint() throws {
-        let expected = HTTPRequest.post("/virology-test/home-kit/order", body: .plain(""))
+        let expected = HTTPRequest.post("/virology-test/v2/order", body: .plain(""))
         
         let actual = try endpoint.request(for: ())
         

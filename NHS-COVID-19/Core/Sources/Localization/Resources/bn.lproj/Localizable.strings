@@ -133,7 +133,7 @@
 "alert_venue_risk_change_body" = "বিস্তারিত দেখতে ট্যাপ করুন";
 "alert_isolation_state_change_title" = "আপনার জন্য আমাদের নির্দেশে পরিবর্তন হয়েছে";
 "alert_isolation_state_change_body" = "বিস্তারিত দেখতে ট্যাপ করুন";
-"alert_exposure_detection_body" = "আরও বিস্তারিত জানতে এখানে ট্যাপ করুন।";
+"alert_exposure_detection_body" = "করোনাভাইরাস (কোভিড-১৯) রয়েছে এমন কারো ঘনিষ্ঠ সংস্পর্শে আপনি এসেছিলেন। আরও বিস্তারিত জানতে এখানে ট্যাপ করুন।";
 "alert_test_result_received_title" = "আপনার পরীক্ষার ফলাফল এসে গেছে";
 "alert_test_result_received_body" = "বিস্তারিত দেখতে ট্যাপ করুন";
 "alert_app_availability_changed_title" = "অ্যাপটির লভ্যতার পরিবর্তন হয়েছে";
@@ -176,7 +176,6 @@
 "positive_symptoms_link_label" = "আরো পরামর্শের জন্য, অনুগ্রহ করে যোগাযোগ করুন:";
 "positive_symptoms_corona_test_button" = "বিনামূল্যে একটি পরীক্ষা করানো বুকিং করুন";
 "exposure_acknowledgement_self_isolate_for" = "স্ব-বিচ্ছিন্ন হন";
-"exposure_acknowledgement_warning" = "আপনি হয়তো এমন একজন অ্যাপ ব্যবহারকারীর সংস্পর্শে এসেছেন যিনি করোনাভাইরাসে আক্রান্ত। অনুগ্রহ করে বাসায় স্ব-বিচ্ছিন্ন থাকুন নিজেকে এবং অন্যদের নিরাপদ রাখার জন্য।";
 "exposure_acknowledgement_explaination_1" = "স্ব-বিচ্ছিন্ন থাকার দিন সংখ্যা এই অ্যাপ কীভাবে গণনা করে তা বুঝতে নিচে প্রদত্ত প্রায়শই জিজ্ঞাসিত প্রশ্নাবলীর লিংক দেখুন।\n\nআপনার কোনও উপসর্গ না থাকলেও আপনি নিজে আক্রান্ত হওয়ার ও ভাইরাসটি ছড়ানোর উচ্চ ঝুঁকির মধ্যে রয়েছেন। যদি আপনার বয়স 18 বছরের কম হয় তাহলে আপনাকে এই বার্তাটি কোন বিশ্বস্ত প্রাপ্ত বয়স্ককে দেখানোর পরামর্শ প্রদান করা হয়।";
 "exposure_acknowledgement_explaination_2" = "আপনার বিচ্ছিন্ন থাকার কাউন্টডাউন শুরু হয়ে গেছে এবং চিহ্নিত পুরো সময়কাল ধরে আপনার স্ব-বিচ্ছিন্ন থাকা উচিত।আপনার যদি করোনাভাইরাসের উপসর্গ থাকে, শুধুমাত্র শুধুমাত্র তাহলেই একটা পরীক্ষা করাবেন।";
 "exposure_acknowledgement_link_label" = "আরো পরামর্শের জন্য, অনুগ্রহ করে যোগাযোগ করুন:";
@@ -261,7 +260,7 @@
 "about_this_app_software_information_manufacturer_description" = "NHS Test & Trace\nDepartment of Health and Social Care\n39 Victoria Street\nWestminster\nLondon\nSW1H 0EU\nUK";
 "mydata_title" = "আমার ডেটা";
 "mydata_section_postcode_description" = "পোস্টকোড ডিস্ট্রিক্ট";
-"mydata_section_test_result_description" = "সর্বশেষ পরীক্ষার ফলাফল";
+"mydata_section_test_result_description" = "শেষ প্রযোজ্য পরীক্ষার ফলাফল";
 "mydata_section_venue_history_description" = "স্থানসমূহের ইতিহাস";
 "mydata_section_symptoms_description" = "উপসর্গ শুরু হওয়ার তারিখ";
 "mydata_section_encounter_description" = "সাক্ষাতের তারিখ";
@@ -310,7 +309,7 @@
 "authorization_denied_description" = "করোনাভাইরাসের টেস্টে পজিটিভ এসেছে এমন অন্যান্য অ্যাপ ব্যবহারকারীদের সংস্পর্শে আপনি এসেছেন কিনা তা আপনাকে জানাতে এই অ্যাপটি ‘এক্সপোজার নোটিফিকেশন্স’ ব্যবহার করে।\n\nআপনার ফোন এগুলোকে ‘এক্সপোজার নোটিফিকেশন্স’ বা ‘এক্সপোজার লগিং’ হিসাবে উল্লেখ করতে পারে।";
 "checkin_camera_qrcode_scanner_title" = "একটি অফিসিয়াল NHS QR কোড স্ক্যান করার মাধ্যমে কোনো স্থানে চেক ইন করুন";
 "checkin_confirmation_title" = "সফল চেক-ইন";
-"alert_exposure_detection_title" = "আপনি হয়তো এমন একজন অ্যাপ ব্যবহারকারীর সংস্পর্শে এসেছেন যিনি করোনাভাইরাসে আক্রান্ত। অনুগ্রহ করে বাসায় স্ব-বিচ্ছিন্ন থাকুন নিজেকে এবং অন্যদের নিরাপদ রাখার জন্য";
+"alert_exposure_detection_title" = "অবিলম্বে আপনার স্ববিচ্ছিন্ন হওয়া প্রয়োজন।";
 "checkin_camera_permission_denial_title" = "একটি অফিসিয়াল NHS QR কোড স্ক্যান করার মাধ্যমে কোনো স্থানে চেক ইন করুন";
 "virology_book_a_test_title" = "বিনামূল্যে একটি পরীক্ষা করানো বুকিং করুন";
 "end_of_isolation_isolate_if_have_symptom_warning" = "তবে, যদি আপনার শরীরের তাপমাত্রা খুব বেশি হয়, তাহলে তা স্বাভাবিক না হওয়া পর্যন্ত স্ব-বিচ্ছিন্ন থাকুন";
@@ -495,3 +494,10 @@
 "settings_language_confirm_selection_alert_description %@" = "অ্যাপের ভাষা %@ ভাষায় পরিবর্তন করুন?";
 "settings_language_confirm_selection_alert_no" = "বাতিল করুন";
 "settings_language_confirm_selection_alert_yes" = "সুনিশ্চিত করুন";
+"mydata_test_result_test_date" = "তারিখ";
+"mydata_test_result_test_result" = "ফলাফল";
+"mydata_test_result_test_kit_type" = "পরীক্ষা কিটের ধরন";
+"mydata_test_result_lab_result" = "LAB_RESULT";
+"mydata_test_result_rapid_result" = "RAPID_RESULT";
+"exposure_acknowledgement_warning" = "আপনি হয়তো এমন একজন অ্যাপ ব্যবহারকারীর সংস্পর্শে এসেছেন যিনি করোনাভাইরাসে আক্রান্ত। অনুগ্রহ করে বাসায় স্ব-বিচ্ছিন্ন থাকুন নিজেকে এবং অন্যদের নিরাপদ রাখার জন্য।";
+"mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";

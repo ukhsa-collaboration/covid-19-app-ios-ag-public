@@ -9,7 +9,7 @@ import Foundation
 struct ExposureDetectionEndpointManager {
     
     var distributionClient: HTTPClient
-    var fileStorage: FileStorage
+    var fileStorage: FileStoring
     
     func getExposureKeys(for increment: Increment) -> AnyPublisher<ZIPManager, NetworkRequestError> {
         loadResponse(for: increment)

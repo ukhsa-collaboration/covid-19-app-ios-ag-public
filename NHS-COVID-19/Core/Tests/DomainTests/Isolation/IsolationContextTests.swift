@@ -21,7 +21,7 @@ class IsolationContextTests: XCTestCase {
             isolationConfiguration: CachedResponse(
                 httpClient: client,
                 endpoint: IsolationConfigurationEndpoint(),
-                storage: FileStorage(forCachesOf: .random()),
+                storage: FileStorage(forNewCachesOf: .random()),
                 name: "isolation_configuration",
                 initialValue: IsolationConfiguration(
                     maxIsolation: 21,
@@ -39,7 +39,7 @@ class IsolationContextTests: XCTestCase {
     }
     
     func testMakeIsolationAcknowledgementStatePublishesState() throws {
-        let isolation = Isolation(fromDay: .today, untilStartOfDay: .today, reason: .bothCases(hasPositiveTestResult: false, isSelfDiagnosed: true))
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: .today, reason: .bothCases(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true))
         isolationContext.isolationStateManager.state = .isolationFinishedButNotAcknowledged(isolation)
         
         let ackState = try isolationContext.makeIsolationAcknowledgementState().await().get()
@@ -52,7 +52,7 @@ class IsolationContextTests: XCTestCase {
     func testMakeBackgroundJobs() throws {
         let backgroundJobs = isolationContext.makeBackgroundJobs(
             metricsFrequency: 1.0,
-            housekeepingFrequenzy: 1.0
+            housekeepingFrequency: 1.0
         )
         
         XCTAssertEqual(backgroundJobs.count, 3)

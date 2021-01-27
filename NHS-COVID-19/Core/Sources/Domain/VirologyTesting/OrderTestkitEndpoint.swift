@@ -5,10 +5,10 @@
 import Common
 import Foundation
 
-struct OrderTestkitEndpoint: HTTPEndpoint {
+struct OrderTestKitEndpoint: HTTPEndpoint {
     
     func request(for input: Void) throws -> HTTPRequest {
-        .post("/virology-test/home-kit/order", body: .plain(""))
+        .post("/virology-test/v2/order", body: .plain(""))
     }
     
     func parse(_ response: HTTPResponse) throws -> OrderTestkitResponse {

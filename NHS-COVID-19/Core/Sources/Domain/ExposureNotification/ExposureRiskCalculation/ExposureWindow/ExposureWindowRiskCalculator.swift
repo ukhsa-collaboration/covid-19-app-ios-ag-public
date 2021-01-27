@@ -44,9 +44,14 @@ class ExposureWindowRiskCalculator {
                 day: GregorianDay(date: exposureWindow.date, timeZone: .utc),
                 riskThreshold: configuration.v2RiskThreshold
             )
+            
             if riskInfo.isConsideredRisky, isRecentDate(exposureRiskInfo: riskInfo) {
                 riskyWindows.append((exposureWindow, riskInfo))
+                Metrics.signpost(.totalExposureWindowsConsideredRisky)
+            } else {
+                Metrics.signpost(.totalExposureWindowsNotConsideredRisky)
             }
+            
             return riskInfo
         }
         .filter { isRecentDate(exposureRiskInfo: $0) }

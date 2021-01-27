@@ -9,6 +9,7 @@ public protocol SendKeysLoadingFlowViewControllerInteracting {
     func didTapOnlineServicesLink()
     func didTapExposureFAQLink()
     func shareKeys() -> AnyPublisher<Void, Error>
+    func acknowledgeWithoutKeySharing()
     func didTapCancel()
 }
 

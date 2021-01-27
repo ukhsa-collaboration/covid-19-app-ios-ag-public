@@ -133,7 +133,7 @@
 "alert_venue_risk_change_body" = "点击以查看详细信息";
 "alert_isolation_state_change_title" = "我们对您的指导已更改";
 "alert_isolation_state_change_body" = "点击以查看详细信息";
-"alert_exposure_detection_body" = "点击此处获取更多详细信息。";
+"alert_exposure_detection_body" = "您已与新冠肺炎 (COVID-19) 患者密切接触。点击此处获取更多详细信息。";
 "alert_test_result_received_title" = "您的测试结果已经出来了";
 "alert_test_result_received_body" = "点击以查看详细信息";
 "alert_app_availability_changed_title" = "应用程序可用性已更改";
@@ -176,7 +176,6 @@
 "positive_symptoms_link_label" = "如需更多建议，请联系：";
 "positive_symptoms_corona_test_button" = "预订免费测试";
 "exposure_acknowledgement_self_isolate_for" = "自我隔离";
-"exposure_acknowledgement_warning" = "该应用程序检测到，您已经与冠状病毒感染者接触了。 请留在家中并自我隔离，以确保自己和他人的安全。";
 "exposure_acknowledgement_explaination_1" = "若要了解应用程序如何计算自我隔离天数，请点击以下'常见问题解答'链接。\n\n即使没有任何症状，您也极有可能感染和传播该病毒。如果您还未满 18 岁，建议您将此消息拿提供给您信任的成年人。";
 "exposure_acknowledgement_explaination_2" = "您的隔离倒计时已经开始，您应该在确定的整个期间内进行自我隔离。请仅在您确实出现了新冠病毒感染症状的情况下才要求测试。";
 "exposure_acknowledgement_link_label" = "如需更多建议，请联系：";
@@ -261,7 +260,7 @@
 "about_this_app_software_information_manufacturer_description" = "NHS Test & Trace\nDepartment of Health and Social Care\n39 Victoria Street\nWestminster\nLondon\nSW1H 0EU\nUK";
 "mydata_title" = "我的数据";
 "mydata_section_postcode_description" = "邮政编码区域";
-"mydata_section_test_result_description" = "最后测试结果";
+"mydata_section_test_result_description" = "最后适用的检测结果";
 "mydata_section_venue_history_description" = "场所历史";
 "mydata_section_symptoms_description" = "症状出现日期";
 "mydata_section_encounter_description" = "遭遇日期";
@@ -310,7 +309,7 @@
 "authorization_denied_description" = "本应用程序使用“暴露通知”功能来通知您是否与冠状病毒检测呈阳性的本应用程序的其他用户有过接触。 \n\n您的手机可能会将这一功能显示为“暴露通知”或“暴露记录”。";
 "checkin_camera_qrcode_scanner_title" = "通过扫描官方的NHS QR码场所签到";
 "checkin_confirmation_title" = "成功签到";
-"alert_exposure_detection_title" = "该应用程序检测到，您已经与冠状病毒感染者接触了。请留在家中并自我隔离，以确保自己和他人的安全";
+"alert_exposure_detection_title" = "您需要立即自我隔离。";
 "checkin_camera_permission_denial_title" = "通过扫描官方的NHS QR码场所签到";
 "virology_book_a_test_title" = "预订免费测试";
 "end_of_isolation_isolate_if_have_symptom_warning" = "但是，如果您体温较高，请继续自我隔离，直到温度恢复正常为止。";
@@ -495,3 +494,10 @@
 "settings_language_confirm_selection_alert_description %@" = "将 APP 语言更改为 %@？";
 "settings_language_confirm_selection_alert_no" = "取消";
 "settings_language_confirm_selection_alert_yes" = "确认";
+"mydata_test_result_test_date" = "日期";
+"mydata_test_result_test_result" = "结果";
+"mydata_test_result_test_kit_type" = "检测试剂盒类型";
+"mydata_test_result_lab_result" = "LAB_RESULT";
+"mydata_test_result_rapid_result" = "RAPID_RESULT";
+"exposure_acknowledgement_warning" = "该应用程序检测到，您已经与冠状病毒感染者接触了。 请留在家中并自我隔离，以确保自己和他人的安全。";
+"mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";

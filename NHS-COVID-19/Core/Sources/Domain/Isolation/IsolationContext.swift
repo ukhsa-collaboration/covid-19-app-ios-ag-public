@@ -3,8 +3,8 @@
 //
 
 import Combine
-import Foundation
 import Common
+import Foundation
 import UIKit
 
 struct IsolationContext {
@@ -51,7 +51,7 @@ struct IsolationContext {
             .eraseToAnyPublisher()
     }
     
-    func makeBackgroundJobs(metricsFrequency: Double, housekeepingFrequenzy: Double) -> [BackgroundTaskAggregator.Job] {
+    func makeBackgroundJobs(metricsFrequency: Double, housekeepingFrequency: Double) -> [BackgroundTaskAggregator.Job] {
         [
             BackgroundTaskAggregator.Job(
                 preferredFrequency: metricsFrequency,
@@ -62,7 +62,7 @@ struct IsolationContext {
                 work: isolationStateManager.recordMetrics
             ),
             BackgroundTaskAggregator.Job(
-                preferredFrequency: housekeepingFrequenzy,
+                preferredFrequency: housekeepingFrequency,
                 work: isolationConfiguration.update
             ),
         ]

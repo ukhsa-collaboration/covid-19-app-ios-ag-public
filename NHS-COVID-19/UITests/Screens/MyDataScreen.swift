@@ -57,6 +57,10 @@ struct MyDataScreen {
         app.staticTexts[localized: .mydata_date_description(date: date)]
     }
     
+    func cellTestKitType(testKitType: String) -> XCUIElement {
+        app.staticTexts[verbatim: testKitType]
+    }
+    
     var cellDeleteButton: XCUIElement {
         app.tables.buttons[localized: .delete]
     }

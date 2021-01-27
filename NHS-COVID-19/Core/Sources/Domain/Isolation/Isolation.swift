@@ -7,9 +7,9 @@ import Foundation
 
 public struct Isolation: Equatable {
     public enum Reason: Equatable {
-        case indexCase(hasPositiveTestResult: Bool, isSelfDiagnosed: Bool)
+        case indexCase(hasPositiveTestResult: Bool, testkitType: TestKitType?, isSelfDiagnosed: Bool)
         case contactCase(ContactCaseTrigger)
-        case bothCases(hasPositiveTestResult: Bool, isSelfDiagnosed: Bool)
+        case bothCases(hasPositiveTestResult: Bool, testkitType: TestKitType?, isSelfDiagnosed: Bool)
     }
     
     public var fromDay: LocalDay
@@ -58,5 +58,12 @@ extension Isolation {
         case .contactCase:
             return true
         }
+    }
+    
+    var isIndexCaseOnlyWithPositiveTest: Bool {
+        if case .indexCase(hasPositiveTestResult: true, testkitType: _, isSelfDiagnosed: _) = reason {
+            return true
+        }
+        return false
     }
 }

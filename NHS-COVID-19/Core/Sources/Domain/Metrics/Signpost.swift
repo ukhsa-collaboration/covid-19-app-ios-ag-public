@@ -36,6 +36,17 @@ public enum Metric: String, CaseIterable {
     case haveActiveIpcTokenBackgroundTick
     case selectedIsolationPaymentsButton
     case launchedIsolationPaymentsApplication
+    case totalExposureWindowsNotConsideredRisky
+    case totalExposureWindowsConsideredRisky
+    case hasTestedLFDPositiveBackgroundTick
+    case isIsolatingForTestedLFDPositiveBackgroundTick
+    
+    case receivedPositiveLFDTestResultViaPolling
+    case receivedNegativeLFDTestResultViaPolling
+    case receivedVoidLFDTestResultViaPolling
+    case receivedPositiveLFDTestResultEnteredManually
+    case receivedNegativeLFDTestResultEnteredManually
+    case receivedVoidLFDTestResultEnteredManually
     
     var name: StaticString {
         switch self {
@@ -70,6 +81,16 @@ public enum Metric: String, CaseIterable {
         case .haveActiveIpcTokenBackgroundTick: return "haveActiveIpcTokenBackgroundTick"
         case .selectedIsolationPaymentsButton: return "selectedIsolationPaymentsButton"
         case .launchedIsolationPaymentsApplication: return "launchedIsolationPaymentsApplication"
+        case .totalExposureWindowsNotConsideredRisky: return "totalExposureWindowsNotConsideredRisky"
+        case .totalExposureWindowsConsideredRisky: return "totalExposureWindowsConsideredRisky"
+        case .receivedPositiveLFDTestResultViaPolling: return "receivedPositiveLFDTestResultViaPolling"
+        case .receivedNegativeLFDTestResultViaPolling: return "receivedNegativeLFDTestResultViaPolling"
+        case .receivedVoidLFDTestResultViaPolling: return "receivedVoidLFDTestResultViaPolling"
+        case .receivedPositiveLFDTestResultEnteredManually: return "receivedPositiveLFDTestResultEnteredManually"
+        case .receivedNegativeLFDTestResultEnteredManually: return "receivedNegativeLFDTestResultEnteredManually"
+        case .receivedVoidLFDTestResultEnteredManually: return "receivedVoidLFDTestResultEnteredManually"
+        case .hasTestedLFDPositiveBackgroundTick: return "hasTestedLFDPositiveBackgroundTick"
+        case .isIsolatingForTestedLFDPositiveBackgroundTick: return "isIsolatingForTestedLFDPositiveBackgroundTick"
         }
     }
     
@@ -99,32 +120,65 @@ public enum Metrics {
         }
     }
     
-    static func signpostReceivedFromManual(testResult: VirologyTestResult.TestResult) {
+    static func signpostReceivedFromManual(
+        testResult: VirologyTestResult.TestResult,
+        testKitType: VirologyTestResult.TestKitType
+    ) {
         
         Self.signpostReceived(testResult)
         
-        switch testResult {
-        case .positive:
-            signpost(.receivedPositiveTestResultEnteredManually)
-        case .negative:
-            signpost(.receivedNegativeTestResultEnteredManually)
-        case .void:
-            signpost(.receivedVoidTestResultEnteredManually)
+        switch testKitType {
+        case .rapidResult, .rapidSelfReported:
+            switch testResult {
+            case .positive:
+                signpost(.receivedPositiveLFDTestResultEnteredManually)
+            case .negative:
+                signpost(.receivedNegativeLFDTestResultEnteredManually)
+            case .void:
+                signpost(.receivedVoidLFDTestResultEnteredManually)
+            }
+        case .labResult:
+            switch testResult {
+            case .positive:
+                signpost(.receivedPositiveTestResultEnteredManually)
+            case .negative:
+                signpost(.receivedNegativeTestResultEnteredManually)
+            case .void:
+                signpost(.receivedVoidTestResultEnteredManually)
+            }
         }
+        
     }
     
-    static func signpostReceivedViaPolling(testResult: VirologyTestResult.TestResult) {
+    static func signpostReceivedViaPolling(
+        testResult: VirologyTestResult.TestResult,
+        testKitType: VirologyTestResult.TestKitType
+    ) {
         
         Self.signpostReceived(testResult)
         
-        switch testResult {
-        case .positive:
-            signpost(.receivedPositiveTestResultViaPolling)
-        case .negative:
-            signpost(.receivedNegativeTestResultViaPolling)
-        case .void:
-            signpost(.receivedVoidTestResultViaPolling)
+        switch testKitType {
+        case .labResult:
+            switch testResult {
+            case .positive:
+                signpost(.receivedPositiveTestResultViaPolling)
+            case .negative:
+                signpost(.receivedNegativeTestResultViaPolling)
+            case .void:
+                signpost(.receivedVoidTestResultViaPolling)
+            }
+        case .rapidResult, .rapidSelfReported:
+            switch testResult {
+            case .positive:
+                signpost(.receivedPositiveLFDTestResultViaPolling)
+            case .negative:
+                signpost(.receivedNegativeLFDTestResultViaPolling)
+            case .void:
+                signpost(.receivedVoidLFDTestResultViaPolling)
+            }
+            
         }
+        
     }
     
 }

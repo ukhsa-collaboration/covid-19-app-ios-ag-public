@@ -133,7 +133,7 @@
 "alert_venue_risk_change_body" = "Tap to see the details";
 "alert_isolation_state_change_title" = "Our guidance to you has changed";
 "alert_isolation_state_change_body" = "Tap to see the details";
-"alert_exposure_detection_body" = "Tap here for more details.";
+"alert_exposure_detection_body" = "You have been in close contact with someone who has coronavirus (COVID-19). Tap here for more details.";
 "alert_test_result_received_title" = "Your test results have arrived";
 "alert_test_result_received_body" = "Tap to see the details";
 "alert_app_availability_changed_title" = "The app availability has changed";
@@ -176,7 +176,6 @@
 "positive_symptoms_link_label" = "For further advice, please contact:";
 "positive_symptoms_corona_test_button" = "Book a free test";
 "exposure_acknowledgement_self_isolate_for" = "Self-isolate for";
-"exposure_acknowledgement_warning" = "The app has detected that you have been in contact with someone who has coronavirus. Please stay at home and self-isolate to keep yourself and others safe.";
 "exposure_acknowledgement_explaination_1" = "To understand how the app calculates self-isolation days, visit the link to the FAQs below.\n\nYou are at high risk of having and spreading the virus even if you do not have any symptoms. If you are under 18, you are advised to show this message to a trusted adult.";
 "exposure_acknowledgement_explaination_2" = "Your isolation countdown has started and you should self-isolate for the full period identified. Only get a test if you have coronavirus symptoms.";
 "exposure_acknowledgement_link_label" = "For further advice, please contact:";
@@ -261,7 +260,7 @@
 "about_this_app_software_information_manufacturer_description" = "NHS Test & Trace\nDepartment of Health and Social Care\n39 Victoria Street\nWestminster\nLondon\nSW1H 0EU\nUK";
 "mydata_title" = "My Data";
 "mydata_section_postcode_description" = "POSTCODE DISTRICT";
-"mydata_section_test_result_description" = "LAST TEST RESULT TAKEN";
+"mydata_section_test_result_description" = "LAST APPLICABLE TEST RESULT";
 "mydata_section_venue_history_description" = "VENUE HISTORY";
 "mydata_section_symptoms_description" = "SYMPTOMS ONSET DATE";
 "mydata_section_encounter_description" = "ENCOUNTER DATE";
@@ -310,7 +309,7 @@
 "authorization_denied_description" = "This app uses ‘Exposure Notifications’ to let you know if you have come into contact with other app users who have reported a positive test for Coronavirus.\n\nYour phone might refer to these as ‘Exposure Notifications’ or ‘Exposure Logging’.";
 "checkin_camera_qrcode_scanner_title" = "Check in to a venue by scanning an official NHS QR code";
 "checkin_confirmation_title" = "Successful check-in";
-"alert_exposure_detection_title" = "The app has detected that you have been in contact with someone who has coronavirus. Please stay at home and self-isolate to keep yourself and others safe";
+"alert_exposure_detection_title" = "You need to self-isolate immediately.";
 "checkin_camera_permission_denial_title" = "Check in to a venue by scanning an official NHS QR code";
 "virology_book_a_test_title" = "Book a free test";
 "end_of_isolation_isolate_if_have_symptom_warning" = "However, if you have a high temperature, continue to self-isolate until it returns to normal";
@@ -495,3 +494,10 @@
 "settings_language_confirm_selection_alert_description %@" = "Change app language to %@?";
 "settings_language_confirm_selection_alert_no" = "Cancel";
 "settings_language_confirm_selection_alert_yes" = "Confirm";
+"mydata_test_result_test_date" = "Date";
+"mydata_test_result_test_result" = "Result";
+"mydata_test_result_test_kit_type" = "Test kit type";
+"mydata_test_result_lab_result" = "LAB_RESULT";
+"mydata_test_result_rapid_result" = "RAPID_RESULT";
+"exposure_acknowledgement_warning" = "The app has detected that you have been in contact with someone who has coronavirus. Please stay at home and self-isolate to keep yourself and others safe.";
+"mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";

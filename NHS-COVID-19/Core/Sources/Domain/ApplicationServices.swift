@@ -17,7 +17,7 @@ public class ApplicationServices {
     let iTunesClient: HTTPClient
     let cameraManager: CameraManaging
     let encryptedStore: EncryptedStoring
-    let cacheStorage: FileStorage
+    let cacheStorage: FileStoring
     let venueDecoder: QRCode
     let appInfo: AppInfo
     let postcodeValidator: PostcodeValidating
@@ -35,7 +35,7 @@ public class ApplicationServices {
         iTunesClient: HTTPClient,
         cameraManager: CameraManaging,
         encryptedStore: EncryptedStoring,
-        cacheStorage: FileStorage,
+        cacheStorage: FileStoring,
         venueDecoder: QRCode,
         appInfo: AppInfo,
         postcodeValidator: PostcodeValidating,

@@ -336,6 +336,12 @@ public enum StringLocalizationKey: String, CaseIterable {
     case mydata_venue_history_edit_button_accessibility_description
     case mydata_venue_history_done_button_title
     case mydata_venue_history_done_button_accessibility_description
+    case mydata_test_result_test_date
+    case mydata_test_result_test_result
+    case mydata_test_result_test_kit_type
+    case mydata_test_result_lab_result
+    case mydata_test_result_rapid_result
+    case mydata_test_result_rapid_self_reported
     
     case accessability_error_os_out_of_date
     case accessability_error_update_the_app
@@ -465,7 +471,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case settings_language_tr
     case settings_language_ur
     case settings_language_cy
-
+    
 }
 
 public enum ParameterisedStringLocalizable: Equatable {

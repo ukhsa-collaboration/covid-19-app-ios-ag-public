@@ -64,14 +64,15 @@ class ExposureWindowStoreAcceptanceTests: AcceptanceTestCase {
         
         let result = VirologyTestResult(
             testResult: .positive,
+            testKitType: .labResult,
             endDate: Date()
         )
         
         let testResults = TestResult(result.testResult)
         
-        exposureNotificationContext.postExposureWindows(result: testResults)
+        exposureNotificationContext.postExposureWindows(result: testResults, testKitType: nil)
         
-        let endpoint = ExposureWindowEventEndpoint(latestAppVersion: $instance.appInfo.version, postcode: postcode.value, localAuthority: localAuthority.id.value, hasPositiveTest: true)
+        let endpoint = ExposureWindowEventEndpoint(latestAppVersion: $instance.appInfo.version, postcode: postcode.value, localAuthority: localAuthority.id.value, testKitType: .unknown, eventType: .exposureWindowPositiveTest)
         let expectedRequest = try endpoint.request(for: exposureWindow)
         
         var isRequestSent = false

@@ -42,19 +42,37 @@ class IsolationStateManager {
         switch state {
         case .isolating(let isolation, _, _):
             switch isolation.reason {
-            case .indexCase(let hasPositiveTestResult, let isSelfDiagnosed):
+            case .indexCase(let hasPositiveTestResult, let testKitType, let isSelfDiagnosed):
                 if hasPositiveTestResult {
-                    Metrics.signpost(.isolatedForTestedPositiveBackgroundTick)
+                    if let testType = testKitType {
+                        switch testType {
+                        case .labResult:
+                            Metrics.signpost(.isolatedForTestedPositiveBackgroundTick)
+                        case .rapidResult, .rapidSelfReported:
+                            Metrics.signpost(.isIsolatingForTestedLFDPositiveBackgroundTick)
+                        }
+                    } else {
+                        Metrics.signpost(.isolatedForTestedPositiveBackgroundTick)
+                    }
                 }
                 if isSelfDiagnosed {
                     Metrics.signpost(.isolatedForSelfDiagnosedBackgroundTick)
                 }
             case .contactCase:
                 Metrics.signpost(.isolatedForHadRiskyContactBackgroundTick)
-            case .bothCases(let hasPositiveTestResult, let isSelfDiagnosed):
+            case .bothCases(let hasPositiveTestResult, let testKitType, let isSelfDiagnosed):
                 Metrics.signpost(.isolatedForHadRiskyContactBackgroundTick)
                 if hasPositiveTestResult {
-                    Metrics.signpost(.isolatedForTestedPositiveBackgroundTick)
+                    if let testType = testKitType {
+                        switch testType {
+                        case .labResult:
+                            Metrics.signpost(.isolatedForTestedPositiveBackgroundTick)
+                        case .rapidResult, .rapidSelfReported:
+                            Metrics.signpost(.isIsolatingForTestedLFDPositiveBackgroundTick)
+                        }
+                    } else {
+                        Metrics.signpost(.isolatedForTestedPositiveBackgroundTick)
+                    }
                 }
                 if isSelfDiagnosed {
                     Metrics.signpost(.isolatedForSelfDiagnosedBackgroundTick)

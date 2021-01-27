@@ -133,7 +133,7 @@
 "alert_venue_risk_change_body" = "Apăsați pentru detalii";
 "alert_isolation_state_change_title" = "Îndrumările pe care vi le oferim s-au schimbat";
 "alert_isolation_state_change_body" = "Apăsați pentru detalii";
-"alert_exposure_detection_body" = "Apăsați aici pentru mai multe detalii.";
+"alert_exposure_detection_body" = "Ați fost în contact cu cineva care are coronavirus (COVID-19). Apăsați aici pentru mai multe detalii.";
 "alert_test_result_received_title" = "Rezultatele testului dvs. au ajuns";
 "alert_test_result_received_body" = "Apăsați pentru detalii";
 "alert_app_availability_changed_title" = "Disponibilitatea aplicației s-a schimbat";
@@ -176,7 +176,6 @@
 "positive_symptoms_link_label" = "Pentru sfaturi suplimentare, vă rugăm să contactați:";
 "positive_symptoms_corona_test_button" = "Programați un test gratuit";
 "exposure_acknowledgement_self_isolate_for" = "Auto-izolare pentru";
-"exposure_acknowledgement_warning" = "Aplicația a detectat că ați fost în contact cu cineva care are coronavirus. Vă rugăm să stați acasă și să vă auto-izolați pentru a vă păstra pe dvs. și pe ceilalți în siguranță.";
 "exposure_acknowledgement_explaination_1" = "Pentru a înțelege modul în care aplicația calculează zilele de autoizolare, accesați linkul de mai jos la întrebările frecvente.\n\nAveți un risc ridicat de a avea și a răspândi virusul, chiar dacă nu aveți niciun simptom. Dacă aveți vârsta sub 18 ani, vi se recomandă să arătați acest mesaj unui adult de încredere.";
 "exposure_acknowledgement_explaination_2" = "Numărătoarea inversă de izolare a început și ar trebui să vă auto-izolați pentru toată perioada identificată. Faceți un test numai dacă aveți simptome coronavirus.";
 "exposure_acknowledgement_link_label" = "Pentru sfaturi suplimentare, vă rugăm să contactați:";
@@ -261,7 +260,7 @@
 "about_this_app_software_information_manufacturer_description" = "NHS Test & Trace\nDepartment of Health and Social Care\n39 Victoria Street\nWestminster\nLondon\nSW1H 0EU\nUK";
 "mydata_title" = "Datele mele";
 "mydata_section_postcode_description" = "CODUL POȘTAL AL DISTRICTULUI";
-"mydata_section_test_result_description" = "REZULTATUL ULTIMULUI TEST FĂCUT";
+"mydata_section_test_result_description" = "ULTIMUL REZULTAT APLICABIL AL TESTULUI";
 "mydata_section_venue_history_description" = "ISTORIC LOCAȚII";
 "mydata_section_symptoms_description" = "DATA DE ÎNCEPERE A SIMPTOMELOR";
 "mydata_section_encounter_description" = "DATA ÎNTÂLNIRII";
@@ -310,7 +309,7 @@
 "authorization_denied_description" = "Această aplicație folosește „Notificări de expunere” pentru a vă informa dacă ați intrat în contact cu alți utilizatori ai aplicației care au raportat un test pozitiv pentru Coronavirus.\n\nEste posibil ca telefonul dvs. să le numească „Notificări de expunere” sau „Înregistrare expunere”.";
 "checkin_camera_qrcode_scanner_title" = "Faceți check-in într-o locație prin scanarea unui cod oficial NHS QR";
 "checkin_confirmation_title" = "Check-in reușit";
-"alert_exposure_detection_title" = "Aplicația a detectat că ați fost în contact cu cineva care are coronavirus. Vă rugăm să stați acasă și să vă auto-izolați pentru a vă păstra pe dvs. și pe ceilalți în siguranță";
+"alert_exposure_detection_title" = "Trebuie să vă autoizolezați imediat.";
 "checkin_camera_permission_denial_title" = "Faceți check-in într-o locație prin scanarea unui cod oficial NHS QR";
 "virology_book_a_test_title" = "Programați un test gratuit";
 "end_of_isolation_isolate_if_have_symptom_warning" = "Cu toate acestea, dacă aveți temperatură ridicată, continuați să vă auto-izolați până când temperatura va reveni la normal";
@@ -473,8 +472,8 @@
 "financial_support_privacy_notice_link_description" = "Notificare de confidențialitate privind urmărirea contactelor";
 "home_settings_button_title" = "Setări";
 "settings_title" = "Setări";
-"settings_row_language" = "Limbă";
-"settings_language_title" = "Limbă";
+"settings_row_language" = "Limba";
+"settings_language_title" = "Limba";
 "settings_language_system_language" = "Limba sistemului de operare";
 "settings_language_override_languages" = "Limbi";
 "mydata_venue_history_edit_button_accessibility_description" = "Editare";
@@ -495,3 +494,10 @@
 "settings_language_confirm_selection_alert_description %@" = "Modificați limba în %@?";
 "settings_language_confirm_selection_alert_no" = "Anulare";
 "settings_language_confirm_selection_alert_yes" = "Confirmare";
+"mydata_test_result_test_date" = "Data";
+"mydata_test_result_test_result" = "Rezultat";
+"mydata_test_result_test_kit_type" = "Tip kit de testare";
+"mydata_test_result_lab_result" = "LAB_RESULT";
+"mydata_test_result_rapid_result" = "RAPID_RESULT";
+"exposure_acknowledgement_warning" = "Aplicația a detectat că ați fost în contact cu cineva care are coronavirus. Vă rugăm să stați acasă și să vă auto-izolați pentru a vă păstra pe dvs. și pe ceilalți în siguranță.";
+"mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";

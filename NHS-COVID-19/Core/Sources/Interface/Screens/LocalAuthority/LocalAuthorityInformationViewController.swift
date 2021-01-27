@@ -9,7 +9,6 @@ public class LocalAuthorityInformationViewController: OnboardingStepViewControll
     
     public init(action: @escaping () -> Void) {
         super.init(step: LocalAuthorityInformationStep(action: action))
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
     }
     
     required init?(coder: NSCoder) {

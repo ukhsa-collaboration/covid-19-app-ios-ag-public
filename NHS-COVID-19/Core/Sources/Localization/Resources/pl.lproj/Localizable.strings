@@ -133,7 +133,7 @@
 "alert_venue_risk_change_body" = "Dotknij tutaj, aby zapoznać się ze szczegółowymi informacjami";
 "alert_isolation_state_change_title" = "Wytyczne dla Ciebie uległy zmianie";
 "alert_isolation_state_change_body" = "Dotknij tutaj, aby zapoznać się ze szczegółowymi informacjami";
-"alert_exposure_detection_body" = "Dotknij tutaj, aby zapoznać się ze szczegółowymi informacjami.";
+"alert_exposure_detection_body" = "Nastąpił bliski kontakt z osobą zakażoną koronawirusem (COVID-19). Dotknij tutaj, aby zapoznać się ze szczegółowymi informacjami.";
 "alert_test_result_received_title" = "Wyniki Twojego testu są już dostępne";
 "alert_test_result_received_body" = "Dotknij tutaj, aby zapoznać się ze szczegółowymi informacjami";
 "alert_app_availability_changed_title" = "Dostępność aplikacji uległa zmianie";
@@ -176,7 +176,6 @@
 "positive_symptoms_link_label" = "Aby uzyskać dalsze informacje, prosimy o kontakt:";
 "positive_symptoms_corona_test_button" = "Zamów bezpłatny test";
 "exposure_acknowledgement_self_isolate_for" = "Proszę izolować się przez";
-"exposure_acknowledgement_warning" = "Mogłeś(-aś) przebywać w pobliżu osoby, która była zakażona koronawirusem. Proszę pozostać w domu i odizolować się, aby chronić siebie i innych.";
 "exposure_acknowledgement_explaination_1" = "Aby zrozumieć, w jaki sposób aplikacja liczy dni izolacji, kliknij w poniższy link do listy najczęściej zadawanych pytań (FAQ).\n\nRyzyko zakażenia i przenoszenia wirusa jest wysokie, nawet jeżeli nie wystąpiły u Ciebie żadne objawy. Jeżeli nie masz ukończonych 18 lat, radzimy aby pokazać tę wiadomość zaufanej osobie dorosłej";
 "exposure_acknowledgement_explaination_2" = "Okres izolacji właśnie się rozpoczął. Izolacja powinna trwać przez cały wskazany okres. Zamów test jedynie wtedy, gdy masz objawy koronawirusa.";
 "exposure_acknowledgement_link_label" = "Aby uzyskać dalsze informacje, prosimy o kontakt:";
@@ -261,7 +260,7 @@
 "about_this_app_software_information_manufacturer_description" = "NHS Test & Trace\nDepartment of Health and Social Care\n39 Victoria Street\nWestminster\nLondon\nSW1H 0EU\nUK";
 "mydata_title" = "Moje dane";
 "mydata_section_postcode_description" = "OKRĘG POCZTOWY";
-"mydata_section_test_result_description" = "WYNIK OSTATNIEGO WYKONANEGO TESTU";
+"mydata_section_test_result_description" = "OSTATNI STOSOWNY WYNIK TESTU";
 "mydata_section_venue_history_description" = "LISTA ODWIEDZANYCH MIEJSC";
 "mydata_section_symptoms_description" = "DATA WYSTĄPIENIA OBJAWÓW";
 "mydata_section_encounter_description" = "DATA KONTAKTU";
@@ -310,7 +309,7 @@
 "authorization_denied_description" = "Aplikacja używa powiadomień o narażeniu, aby poinformować Cię o kontakcie z innymi użytkownikami tej aplikacji, którzy zgłosili dodatni wynik testu na koronawirusa.\n\nW Twoim telefonie funkcje te mogą być określane jako „Powiadomienia o narażeniu” lub „Rejestracja narażenia”.";
 "checkin_camera_qrcode_scanner_title" = "Zamelduj się w lokalu poprzez zeskanowanie oficjalnego kodu QR NHS.";
 "checkin_confirmation_title" = "Zameldowałeś(-aś) się w";
-"alert_exposure_detection_title" = "Mogłeś(-aś) przebywać w pobliżu osoby, która była zakażona koronawirusem. Proszę pozostać w domu i odizolować się, aby chronić siebie i innych";
+"alert_exposure_detection_title" = "Musisz natychmiast rozpocząć izolację.";
 "checkin_camera_permission_denial_title" = "Zamelduj się w lokalu poprzez zeskanowanie oficjalnego kodu QR NHS.";
 "virology_book_a_test_title" = "Zamów bezpłatny test";
 "end_of_isolation_isolate_if_have_symptom_warning" = "Jeżeli jednak masz wysoką temperaturę, kontynuuj izolację do czasu powrotu do zdrowia.";
@@ -495,3 +494,10 @@
 "settings_language_confirm_selection_alert_description %@" = "Zmień język aplikacji na %@?";
 "settings_language_confirm_selection_alert_no" = "Anuluj";
 "settings_language_confirm_selection_alert_yes" = "Potwierdź";
+"mydata_test_result_test_date" = "Data";
+"mydata_test_result_test_result" = "Wynik";
+"mydata_test_result_test_kit_type" = "Typ zestawu testowego";
+"mydata_test_result_lab_result" = "LAB_RESULT";
+"mydata_test_result_rapid_result" = "RAPID_RESULT";
+"exposure_acknowledgement_warning" = "Mogłeś(-aś) przebywać w pobliżu osoby, która była zakażona koronawirusem. Proszę pozostać w domu i odizolować się, aby chronić siebie i innych.";
+"mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";

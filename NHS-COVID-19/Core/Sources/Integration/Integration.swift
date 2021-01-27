@@ -102,27 +102,36 @@ extension CoordinatedAppController {
                     case .notNeeded:
                         return self?.wrappingViewControllerForRunningAppIgnoringAcknowledgement(with: context)
                             ?? UIViewController()
-                    case .neededForPositiveResultStartToIsolate(let interactor, let isolationEndDate):
+                    case .neededForPositiveResultStartToIsolate(let interactor, let isolationEndDate, let keySubmissionSupported):
                         return SendKeysLoadingFlowViewController(interactor: interactor) { completion in
                             let interactor = PositiveTestResultWithIsolationInteractor(
                                 didTapOnlineServicesLink: interactor.didTapOnlineServicesLink,
                                 didTapExposureFAQLink: interactor.didTapExposureFAQLink,
-                                didTapPrimaryButton: completion
+                                didTapPrimaryButton: {
+                                    _ = keySubmissionSupported ? completion() : interactor.acknowledgeWithoutKeySharing()
+                                }
                             )
                             return NonNegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: isolationEndDate, testResultType: .positive(.start))
                         }
-                    case .neededForPositiveResultContinueToIsolate(let interactor, let isolationEndDate):
+                    case .neededForPositiveResultContinueToIsolate(let interactor, let isolationEndDate, let keySubmissionSupported):
                         return SendKeysLoadingFlowViewController(interactor: interactor) { completion in
                             let interactor = PositiveTestResultWithIsolationInteractor(
                                 didTapOnlineServicesLink: interactor.didTapOnlineServicesLink,
                                 didTapExposureFAQLink: interactor.didTapExposureFAQLink,
-                                didTapPrimaryButton: completion
+                                didTapPrimaryButton: {
+                                    _ = keySubmissionSupported ? completion() : interactor.acknowledgeWithoutKeySharing()
+                                }
                             )
                             return NonNegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: isolationEndDate, testResultType: .positive(.continue))
                         }
-                    case .neededForPositiveResultNotIsolating(let interactor):
+                    case .neededForPositiveResultNotIsolating(let interactor, let keySubmissionSupported):
                         return SendKeysLoadingFlowViewController(interactor: interactor) { completion in
-                            let interactor = PositiveTestResultNoIsolationInteractor(didTapOnlineServicesLink: interactor.didTapOnlineServicesLink, didTapPrimaryButton: completion)
+                            let interactor = PositiveTestResultNoIsolationInteractor(
+                                didTapOnlineServicesLink: interactor.didTapOnlineServicesLink,
+                                didTapPrimaryButton: {
+                                    _ = keySubmissionSupported ? completion() : interactor.acknowledgeWithoutKeySharing()
+                                }
+                            )
                             return NonNegativeTestResultNoIsolationViewController(interactor: interactor)
                         }
                     case .neededForNegativeResultContinueToIsolate(let interactor, let isolationEndDate):
@@ -177,7 +186,6 @@ extension CoordinatedAppController {
                         
                         let nonNegativeInteractor = VoidTestResultWithIsolationInteractor(
                             didTapPrimaryButton: {
-                                navigationVC.viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
                                 navigationVC.pushViewController(bookATestInfoVC, animated: true)
                             },
                             openURL: context.openURL,
@@ -210,7 +218,6 @@ extension CoordinatedAppController {
                         let nonNegativeInteractor = VoidTestResultNoIsolationInteractor(
                             didTapCancel: interactor.acknowledge,
                             bookATest: {
-                                navigationVC.viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
                                 navigationVC.pushViewController(bookATestInfoVC, animated: true)
                             },
                             openURL: context.openURL

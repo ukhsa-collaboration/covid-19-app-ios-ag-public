@@ -37,26 +37,31 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         virologyTestTokens: VirologyTestTokens
     ) {
         switch testResult {
-        case .receivedResult(let result):
+        case .receivedResult(let result, let diagnosisKeySubmissionSupported):
             virologyTestingStateStore.removeTestTokens(virologyTestTokens)
-            Metrics.signpostReceivedViaPolling(testResult: result.testResult)
-            handleWithNotification(result, diagnosisKeySubmissionToken: virologyTestTokens.diagnosisKeySubmissionToken)
+            Metrics.signpostReceivedViaPolling(testResult: result.testResult, testKitType: result.testKitType)
+            handleWithNotification(result, diagnosisKeySubmissionToken: diagnosisKeySubmissionSupported ? virologyTestTokens.diagnosisKeySubmissionToken : nil)
         case .noResultYet:
             return
         }
     }
     
     func handleManualTestResult(_ response: LinkVirologyTestResultResponse) {
-        Metrics.signpostReceivedFromManual(testResult: response.virologyTestResult.testResult)
-        handle(response.virologyTestResult, diagnosisKeySubmissionToken: response.diagnosisKeySubmissionToken)
+        Metrics.signpostReceivedFromManual(testResult: response.virologyTestResult.testResult, testKitType: response.virologyTestResult.testKitType)
+        switch response.diagnosisKeySubmissionSupport {
+        case .supported(let token):
+            handle(response.virologyTestResult, diagnosisKeySubmissionToken: token)
+        case .notSupported:
+            handle(response.virologyTestResult, diagnosisKeySubmissionToken: nil)
+        }
     }
     
-    private func handleWithNotification(_ result: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken) {
+    private func handleWithNotification(_ result: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?) {
         sendNotification()
         handle(result, diagnosisKeySubmissionToken: diagnosisKeySubmissionToken)
     }
     
-    private func handle(_ result: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken) {
+    private func handle(_ result: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?) {
         virologyTestingStateStore.saveResult(
             virologyTestResult: result,
             diagnosisKeySubmissionToken: result.testResult == .positive ? diagnosisKeySubmissionToken : nil

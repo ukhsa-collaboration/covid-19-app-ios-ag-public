@@ -60,7 +60,7 @@ struct ExposureNotificationContext {
                         let infos = windowInfo.map {
                             ExposureWindowInfo(exposureWindow: $0.0, riskInfo: $0.1)
                         }
-                        exposureWindowAnalyticsHandler.post(windowInfo: infos, hasPositiveTest: false)
+                        exposureWindowAnalyticsHandler.post(windowInfo: infos, eventType: .exposureWindow, testKitType: nil)
                         trafficObfuscationClient.sendTraffic(for: TrafficObfuscator.exposureWindow, randomRange: 2 ... 15, numberOfActualCalls: infos.count)
                         exposureWindowStore.append(infos)
                     }
@@ -120,7 +120,7 @@ struct ExposureNotificationContext {
         exposureWindowStore.delete()
     }
     
-    func postExposureWindows(result: TestResult) {
+    func postExposureWindows(result: TestResult, testKitType: TestKitType?) {
         guard #available(iOS 13.7, *),
             let exposureWindowStore = exposureWindowStore,
             let exposureWindowAnalyticsHandler = exposureWindowAnalyticsHandler else { return }
@@ -128,7 +128,8 @@ struct ExposureNotificationContext {
         let exposureWindowInfoCollection = exposureWindowStore.load()
         
         if let exposureWindowInfoCollection = exposureWindowInfoCollection, result == .positive {
-            exposureWindowAnalyticsHandler.post(windowInfo: exposureWindowInfoCollection.exposureWindowsInfo, hasPositiveTest: true)
+            
+            exposureWindowAnalyticsHandler.post(windowInfo: exposureWindowInfoCollection.exposureWindowsInfo, eventType: .exposureWindowPositiveTest, testKitType: TestType(from: testKitType))
             trafficObfuscationClient.sendTraffic(for: .exposureWindowAfterPositive, randomRange: 2 ... 15, numberOfActualCalls: exposureWindowInfoCollection.exposureWindowsInfo.count)
         } else {
             trafficObfuscationClient.sendTraffic(for: .exposureWindowAfterPositive, randomRange: 2 ... 15, numberOfActualCalls: 0)
@@ -193,12 +194,19 @@ class ExposureWindowAnalyticsHandler {
     }
     
     @available(iOS 13.7, *)
-    func post(windowInfo: [ExposureWindowInfo], hasPositiveTest: Bool) {
+    func post(windowInfo: [ExposureWindowInfo], eventType: EpidemiologicalEventType, testKitType: TestType?) {
         let postcode = getPostcode()?.value ?? ""
         let localAuthority = getLocalAuthority()?.value ?? ""
         
         windowInfo.forEach { exposureWindowInfo in
-            let endpoint = ExposureWindowEventEndpoint(latestAppVersion: latestAppVersion, postcode: postcode, localAuthority: localAuthority, hasPositiveTest: hasPositiveTest)
+            let endpoint = ExposureWindowEventEndpoint(
+                latestAppVersion: latestAppVersion,
+                postcode: postcode,
+                localAuthority: localAuthority,
+                testKitType: testKitType,
+                eventType: eventType
+            )
+            
             client.fetch(endpoint, with: exposureWindowInfo)
                 .ensureFinishes(placeholder: ())
                 .sink { _ in }

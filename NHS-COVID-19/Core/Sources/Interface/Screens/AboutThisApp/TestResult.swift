@@ -7,3 +7,9 @@ public enum TestResult {
     case negative
     case void
 }
+
+public enum TestKitType: String {
+    case labResult
+    case rapidResult
+    case rapidSelfReported
+}

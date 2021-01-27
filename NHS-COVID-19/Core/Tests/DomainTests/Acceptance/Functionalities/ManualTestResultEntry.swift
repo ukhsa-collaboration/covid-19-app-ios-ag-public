@@ -4,8 +4,8 @@
 
 import Foundation
 import TestSupport
-@testable import Scenarios
 @testable import Domain
+@testable import Scenarios
 
 struct ManualTestResultEntry {
     private let context: RunningAppContext
@@ -16,23 +16,23 @@ struct ManualTestResultEntry {
         configuration: AcceptanceTestCase.Instance.Configuration,
         context: RunningAppContext
     ) {
-        self.apiClient = configuration.apiClient
-        self.currentDateProvider = configuration.currentDateProvider
+        apiClient = configuration.apiClient
+        currentDateProvider = configuration.currentDateProvider
         self.context = context
     }
     
     private let validToken = "f3dzcfdt"
     
     func enterPositive() throws {
-        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .positive)
-        guard case .neededForPositiveResultStartToIsolate(let positiveAcknowledgement, _) = testResultAcknowledgementState else {
+        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .positive, testKitType: .labResult)
+        guard case .neededForPositiveResultStartToIsolate(let positiveAcknowledgement, _, _) = testResultAcknowledgementState else {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
         _ = try positiveAcknowledgement.acknowledge().await()
     }
     
     func enterNegative() throws {
-        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .negative)
+        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .negative, testKitType: .labResult)
         guard case .neededForNegativeResultNotIsolating(let negativeAcknowledgement) = testResultAcknowledgementState else {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
@@ -40,16 +40,16 @@ struct ManualTestResultEntry {
     }
     
     func enterVoid() throws {
-        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .void)
+        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .void, testKitType: .labResult)
         guard case .neededForVoidResultNotIsolating(let voidAcknowledgement) = testResultAcknowledgementState else {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
         voidAcknowledgement()
     }
     
-    private func getAcknowledgementState(resultType: VirologyTestResult.TestResult) throws -> TestResultAcknowledgementState {
-        let result = getTestResult(result: resultType, endDate: currentDateProvider.currentDate)
-        apiClient.response(for: "/virology-test/cta-exchange", response: .success(.ok(with: .json(result))))
+    private func getAcknowledgementState(resultType: VirologyTestResult.TestResult, testKitType: VirologyTestResult.TestKitType) throws -> TestResultAcknowledgementState {
+        let result = getTestResult(result: resultType, testKitType: testKitType, endDate: currentDateProvider.currentDate, diagnosisKeySubmissionSupported: true)
+        apiClient.response(for: "/virology-test/v2/cta-exchange", response: .success(.ok(with: .json(result))))
         let manager = context.virologyTestingManager
         _ = try manager.linkExternalTestResult(with: validToken).await()
         

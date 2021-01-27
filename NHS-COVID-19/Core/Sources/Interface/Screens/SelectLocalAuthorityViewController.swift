@@ -163,7 +163,6 @@ public class SelectLocalAuthorityViewController: ScrollingContentViewController 
         let content = SelectLocalAuthorityContent(interactor: interactor, localAuthorityViewModel: localAuthorityViewModel)
         super.init(views: content.views)
         title = localize(.local_authority_confirmation_title)
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
         navigationItem.hidesBackButton = hideBackButton
     }
     

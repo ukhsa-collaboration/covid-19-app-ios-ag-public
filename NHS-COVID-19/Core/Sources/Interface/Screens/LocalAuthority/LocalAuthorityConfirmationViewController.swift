@@ -44,7 +44,6 @@ public class LocalAuthorityConfirmationViewController: StickyFooterScrollingCont
     public init(interactor: Interacting, postcode: String, localAuthority: LocalAuthority, hideBackButton: Bool) {
         super.init(content: LocalAuthorityConfirmationContent(interactor: interactor, postcode: postcode, localAuthority: localAuthority))
         title = localize(.local_authority_confirmation_title)
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
         navigationItem.hidesBackButton = hideBackButton
     }
     

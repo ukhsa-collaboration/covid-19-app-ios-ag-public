@@ -77,9 +77,7 @@ public class HomeFlowViewController: BaseNavigationController {
         
         let showLanguageSelectionScreen: () -> Void = {
             let viewController = SettingsViewController(viewModel: SettingsViewController.ViewModel(), interacting: settingsInteractor)
-            self.viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
             self.pushViewController(viewController, animated: false)
-            self.viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
             if let languageViewController = settingsInteractor.makeLanguageSelectionViewController() {
                 self.pushViewController(languageViewController, animated: false)
             }
@@ -187,13 +185,11 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         let version = "\(appVersion) (\(buildNumber))"
         
         let viewController = AboutThisAppViewController(interactor: aboutThisAppInteractor, appName: appName, version: version)
-        flowController?.viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
         flowController?.pushViewController(viewController, animated: true)
     }
     
     func didTapSettingsButton() {
         let viewController = SettingsViewController(viewModel: SettingsViewController.ViewModel(), interacting: settingsInteractor)
-        flowController?.viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
         flowController?.pushViewController(viewController, animated: true)
     }
     
@@ -253,7 +249,6 @@ private struct AboutThisAppInteractor: AboutThisAppViewController.Interacting {
     public func didTapSeeData() {
         let interactor = MyDataViewInteractor(flowController: flowController, interactor: self.interactor)
         let viewController = MyDataViewController(viewModel: self.interactor.getMyDataViewModel(), interactor: interactor)
-        flowController?.viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
         flowController?.pushViewController(viewController, animated: true)
     }
     
@@ -324,7 +319,6 @@ private struct SettingsInteractor: SettingsViewController.Interacting {
     
     func didTapLanguage() {
         guard let viewController = makeLanguageSelectionViewController() else { return }
-        flowController?.viewControllers.last?.navigationItem.backBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: nil, action: nil)
         flowController?.pushViewController(viewController, animated: true)
     }
     

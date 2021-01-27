@@ -51,7 +51,7 @@ private extension ApplicationServices {
             iTunesClient: MockHTTPClient(),
             cameraManager: SandboxCameraManager(host: host),
             encryptedStore: SandboxEncryptedStore(host: host),
-            cacheStorage: FileStorage(forCachesOf: UUID().uuidString),
+            cacheStorage: FileStorage(forNewCachesOf: UUID().uuidString),
             venueDecoder: QRCode.fake,
             appInfo: AppInfo(bundleId: UUID().uuidString, version: "3.10", buildNumber: "1"),
             postcodeValidator: SandboxPostcodeValidator(),

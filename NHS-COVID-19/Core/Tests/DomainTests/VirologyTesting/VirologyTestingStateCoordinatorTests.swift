@@ -23,9 +23,10 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
     func testHandlePollingTestResult() throws {
         let result = VirologyTestResult(
             testResult: .positive,
+            testKitType: .labResult,
             endDate: Date()
         )
-        let response = VirologyTestResponse.receivedResult(result)
+        let response = VirologyTestResponse.receivedResult(result, true)
         let tokens = VirologyTestTokens(
             pollingToken: PollingToken(value: .random()),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random())
@@ -42,9 +43,10 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
         let response = LinkVirologyTestResultResponse(
             virologyTestResult: VirologyTestResult(
                 testResult: .positive,
+                testKitType: .labResult,
                 endDate: Date()
             ),
-            diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random())
+            diagnosisKeySubmissionSupport: .supported(diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random()))
         )
         coordinator.handleManualTestResult(response)
         

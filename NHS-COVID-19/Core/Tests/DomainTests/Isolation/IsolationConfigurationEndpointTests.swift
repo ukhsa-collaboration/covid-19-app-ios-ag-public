@@ -26,7 +26,8 @@ class IsolationConfigurationEndpointTests: XCTestCase {
             "indexCaseSinceSelfDiagnosisOnset": 1,
             "indexCaseSinceSelfDiagnosisUnknownOnset": 2,
             "contactCase": 3,
-            "maxIsolation": 4
+            "maxIsolation": 4,
+            "indexCaseSinceTestResultEndDate": 5
           }
         }
         
@@ -38,7 +39,7 @@ class IsolationConfigurationEndpointTests: XCTestCase {
             indexCaseSinceSelfDiagnosisOnset: 1,
             indexCaseSinceSelfDiagnosisUnknownOnset: 2,
             housekeepingDeletionPeriod: 14,
-            indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis
+            indexCaseSinceNPEXDayNoSelfDiagnosis: 5
         )
         
         TS.assert(try endpoint.parse(response), equals: expected)
@@ -52,7 +53,8 @@ class IsolationConfigurationEndpointTests: XCTestCase {
             "indexCaseSinceSelfDiagnosisUnknownOnset": 2,
             "contactCase": 3,
             "maxIsolation": 4,
-            "pendingTasksRetentionPeriod": 9
+            "pendingTasksRetentionPeriod": 9,
+            "indexCaseSinceTestResultEndDate": 5
           }
         }
         
@@ -64,7 +66,7 @@ class IsolationConfigurationEndpointTests: XCTestCase {
             indexCaseSinceSelfDiagnosisOnset: 1,
             indexCaseSinceSelfDiagnosisUnknownOnset: 2,
             housekeepingDeletionPeriod: 9,
-            indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis
+            indexCaseSinceNPEXDayNoSelfDiagnosis: 5
         )
         
         TS.assert(try endpoint.parse(response), equals: expected)

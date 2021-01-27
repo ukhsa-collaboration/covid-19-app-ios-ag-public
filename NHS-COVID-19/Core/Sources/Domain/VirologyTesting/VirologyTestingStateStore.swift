@@ -18,6 +18,7 @@ private struct VirologyTestingInfo: Codable, DataConvertible {
 
 private struct TestResultInfo: Codable, DataConvertible {
     var result: TestResult
+    var testKitType: TestKitType?
     var endDate: Date // Date test result arrives at NPEx
     var diagnosisKeySubmissionToken: String?
 }
@@ -75,6 +76,7 @@ public class VirologyTestingStateStore {
             }
             return VirologyStateTestResult(
                 testResult: unacknowledgedTestResult.result,
+                testKitType: unacknowledgedTestResult.testKitType,
                 endDate: unacknowledgedTestResult.endDate,
                 diagnosisKeySubmissionToken: diagnosisSubmissionToken
             )
@@ -103,6 +105,7 @@ public class VirologyTestingStateStore {
     func saveResult(virologyTestResult: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?) {
         let testResultInfo = TestResultInfo(
             result: TestResult(virologyTestResult.testResult),
+            testKitType: TestKitType(virologyTestResult.testKitType),
             endDate: virologyTestResult.endDate,
             diagnosisKeySubmissionToken: diagnosisKeySubmissionToken?.value
         )

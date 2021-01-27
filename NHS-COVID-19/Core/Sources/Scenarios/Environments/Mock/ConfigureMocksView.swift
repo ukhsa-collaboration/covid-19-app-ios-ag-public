@@ -31,7 +31,13 @@ struct ConfigureMocksView: View {
                 Section(header: Text(verbatim: "Check In")) {
                     TextFieldRow(label: "High Risk Venue IDs", text: $dataProvider.riskyVenueIDs)
                 }
-                Section(header: Text(verbatim: "Test Order Website")) {
+                Section(header: Text(verbatim: "Virology testing")) {
+                    Picker(selection: $dataProvider.testKitType, label: Text("Test kit type")) {
+                        ForEach(0 ..< MockDataProvider.testKitType.count) {
+                            Text(verbatim: MockDataProvider.testKitType[$0])
+                        }
+                    }
+                    Toggle("Key submission supported", isOn: $dataProvider.keySubmissionSupported)
                     TextFieldRow(label: "Website", text: $dataProvider.orderTestWebsite)
                     TextFieldRow(label: "Reference Code", text: $dataProvider.testReferenceCode)
                     TextFieldRow(label: "Days since test result end date", text: $dataProvider.testResultEndDateDaysAgoString)

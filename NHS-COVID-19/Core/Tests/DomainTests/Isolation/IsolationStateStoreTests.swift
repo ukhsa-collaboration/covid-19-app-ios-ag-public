@@ -262,7 +262,7 @@ class IsolationStateStoreTests: XCTestCase {
             indexCaseInfo: IndexCaseInfo(
                 isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
                 onsetDay: onsetDay,
-                testInfo: IndexCaseInfo.TestInfo(result: .positive, receivedOnDay: testReceivedDay)
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .labResult, receivedOnDay: testReceivedDay)
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -291,7 +291,7 @@ class IsolationStateStoreTests: XCTestCase {
             testInfo: nil
         ))
         
-        store.isolationStateInfo = store.newIsolationStateInfo(for: .positive, receivedOn: testDay, npexDay: npexDay)
+        store.isolationStateInfo = store.newIsolationStateInfo(for: .positive, testKitType: .labResult, receivedOn: testDay, npexDay: npexDay)
         
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.result, TestResult.positive)
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.receivedOnDay, testDay)
@@ -308,8 +308,8 @@ class IsolationStateStoreTests: XCTestCase {
             testInfo: nil
         ))
         
-        store.isolationStateInfo = store.newIsolationStateInfo(for: .positive, receivedOn: testDay, npexDay: GregorianDay(year: 2020, month: 7, day: 16))
-        store.isolationStateInfo = store.newIsolationStateInfo(for: .negative, receivedOn: testDay, npexDay: GregorianDay(year: 2020, month: 7, day: 17))
+        store.isolationStateInfo = store.newIsolationStateInfo(for: .positive, testKitType: .labResult, receivedOn: testDay, npexDay: GregorianDay(year: 2020, month: 7, day: 16))
+        store.isolationStateInfo = store.newIsolationStateInfo(for: .negative, testKitType: .labResult, receivedOn: testDay, npexDay: GregorianDay(year: 2020, month: 7, day: 17))
         
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.result, TestResult.positive)
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.receivedOnDay, testDay)
@@ -322,6 +322,7 @@ class IsolationStateStoreTests: XCTestCase {
         // When
         store.isolationStateInfo = store.newIsolationStateInfo(
             for: .void,
+            testKitType: .labResult,
             receivedOn: testDay,
             npexDay: testDay.advanced(by: -2)
         )
@@ -336,6 +337,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         store.isolationStateInfo = store.newIsolationStateInfo(
             for: .negative,
+            testKitType: .labResult,
             receivedOn: testDay,
             npexDay: GregorianDay(year: 2020, month: 7, day: 14)
         )
@@ -343,6 +345,7 @@ class IsolationStateStoreTests: XCTestCase {
         // When
         store.isolationStateInfo = store.newIsolationStateInfo(
             for: .void,
+            testKitType: .labResult,
             receivedOn: GregorianDay(year: 2020, month: 7, day: 20),
             npexDay: GregorianDay(year: 2020, month: 7, day: 18)
         )
@@ -359,12 +362,13 @@ class IsolationStateStoreTests: XCTestCase {
         store.set(IndexCaseInfo(
             isolationTrigger: .selfDiagnosis(testDay),
             onsetDay: nil,
-            testInfo: IndexCaseInfo.TestInfo(result: .void, receivedOnDay: testDay)
+            testInfo: IndexCaseInfo.TestInfo(result: .void, testKitType: .labResult, receivedOnDay: testDay)
         ))
         
         // When
         store.isolationStateInfo = store.newIsolationStateInfo(
             for: .void,
+            testKitType: .labResult,
             receivedOn: testDay.advanced(by: 2),
             npexDay: GregorianDay(year: 2020, month: 7, day: 14)
         )
@@ -381,12 +385,13 @@ class IsolationStateStoreTests: XCTestCase {
         store.set(IndexCaseInfo(
             isolationTrigger: .selfDiagnosis(testDay.advanced(by: -2)),
             onsetDay: nil,
-            testInfo: IndexCaseInfo.TestInfo(result: .positive, receivedOnDay: testDay)
+            testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .labResult, receivedOnDay: testDay)
         ))
         
         // When
         store.isolationStateInfo = store.newIsolationStateInfo(
             for: .void,
+            testKitType: .labResult,
             receivedOn: testDay.advanced(by: 2),
             npexDay: GregorianDay(year: 2020, month: 7, day: 14)
         )
@@ -404,12 +409,13 @@ class IsolationStateStoreTests: XCTestCase {
         store.set(IndexCaseInfo(
             isolationTrigger: .selfDiagnosis(testReceivedDay.advanced(by: -2)),
             onsetDay: nil,
-            testInfo: IndexCaseInfo.TestInfo(result: .negative, receivedOnDay: testReceivedDay.advanced(by: -1))
+            testInfo: IndexCaseInfo.TestInfo(result: .negative, testKitType: .labResult, receivedOnDay: testReceivedDay.advanced(by: -1))
         ))
         
         // When
         store.isolationStateInfo = store.newIsolationStateInfo(
             for: .positive,
+            testKitType: .labResult,
             receivedOn: testReceivedDay,
             npexDay: testReadyDay
         )
@@ -428,12 +434,13 @@ class IsolationStateStoreTests: XCTestCase {
         store.set(IndexCaseInfo(
             isolationTrigger: .manualTestEntry(npexDay: selfDiagnosisDay),
             onsetDay: nil,
-            testInfo: IndexCaseInfo.TestInfo(result: .positive, receivedOnDay: testDay.advanced(by: -4))
+            testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .labResult, receivedOnDay: testDay.advanced(by: -4))
         ))
         
         // When
         store.isolationStateInfo = store.newIsolationStateInfo(
             for: .positive,
+            testKitType: .labResult,
             receivedOn: testDay,
             npexDay: testDay.advanced(by: -2)
         )
@@ -452,11 +459,11 @@ class IsolationStateStoreTests: XCTestCase {
         store.set(IndexCaseInfo(
             isolationTrigger: .manualTestEntry(npexDay: selfDiagnosisDay),
             onsetDay: nil,
-            testInfo: IndexCaseInfo.TestInfo(result: .void, receivedOnDay: testDay.advanced(by: -4))
+            testInfo: IndexCaseInfo.TestInfo(result: .void, testKitType: .labResult, receivedOnDay: testDay.advanced(by: -4))
         ))
         
         // When
-        store.isolationStateInfo = store.newIsolationStateInfo(for: .positive, receivedOn: testDay, npexDay: testDay.advanced(by: -2))
+        store.isolationStateInfo = store.newIsolationStateInfo(for: .positive, testKitType: .labResult, receivedOn: testDay, npexDay: testDay.advanced(by: -2))
         
         // Then
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.result, TestResult.positive)
@@ -469,7 +476,7 @@ class IsolationStateStoreTests: XCTestCase {
         let npexDay = testDay.advanced(by: -6)
         
         // When
-        store.isolationStateInfo = store.newIsolationStateInfo(for: .positive, receivedOn: testDay, npexDay: npexDay)
+        store.isolationStateInfo = store.newIsolationStateInfo(for: .positive, testKitType: .labResult, receivedOn: testDay, npexDay: npexDay)
         
         // Then
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.result, TestResult.positive)
@@ -483,6 +490,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         store.isolationStateInfo = store.newIsolationStateInfo(
             for: .negative,
+            testKitType: .labResult,
             receivedOn: testDay.advanced(by: -2),
             npexDay: testDay.advanced(by: -5)
         )
@@ -490,6 +498,7 @@ class IsolationStateStoreTests: XCTestCase {
         // When
         store.isolationStateInfo = store.newIsolationStateInfo(
             for: .negative,
+            testKitType: .labResult,
             receivedOn: testDay,
             npexDay: testDay.advanced(by: -1)
         )
@@ -508,12 +517,13 @@ class IsolationStateStoreTests: XCTestCase {
         store.set(IndexCaseInfo(
             isolationTrigger: .manualTestEntry(npexDay: npexDay),
             onsetDay: nil,
-            testInfo: IndexCaseInfo.TestInfo(result: .void, receivedOnDay: testDay.advanced(by: -4))
+            testInfo: IndexCaseInfo.TestInfo(result: .void, testKitType: .labResult, receivedOnDay: testDay.advanced(by: -4))
         ))
         
         // When
         store.isolationStateInfo = store.newIsolationStateInfo(
             for: .negative,
+            testKitType: .labResult,
             receivedOn: testDay,
             npexDay: testDay.advanced(by: -1)
         )
@@ -532,12 +542,13 @@ class IsolationStateStoreTests: XCTestCase {
         store.set(IndexCaseInfo(
             isolationTrigger: .selfDiagnosis(npexDay),
             onsetDay: nil,
-            testInfo: IndexCaseInfo.TestInfo(result: .positive, receivedOnDay: testDay.advanced(by: -4))
+            testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .labResult, receivedOnDay: testDay.advanced(by: -4))
         ))
         
         // When
         store.isolationStateInfo = store.newIsolationStateInfo(
             for: .negative,
+            testKitType: .labResult,
             receivedOn: testDay,
             npexDay: testDay.advanced(by: -1)
         )
@@ -555,6 +566,7 @@ class IsolationStateStoreTests: XCTestCase {
         // When
         store.isolationStateInfo = store.newIsolationStateInfo(
             for: .negative,
+            testKitType: .labResult,
             receivedOn: testDay,
             npexDay: testDay.advanced(by: -1)
         )
@@ -573,7 +585,7 @@ class IsolationStateStoreTests: XCTestCase {
         store.set(IndexCaseInfo(
             isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
             onsetDay: onsetDay,
-            testInfo: IndexCaseInfo.TestInfo(result: .positive, receivedOnDay: testReceivedDay)
+            testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .labResult, receivedOnDay: testReceivedDay)
         ))
         
         let providedOnsetDate = try XCTUnwrap(store.provideSymptomsOnsetDate())
@@ -589,7 +601,7 @@ class IsolationStateStoreTests: XCTestCase {
         store.set(IndexCaseInfo(
             isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
             onsetDay: nil,
-            testInfo: IndexCaseInfo.TestInfo(result: .positive, receivedOnDay: testReceivedDay)
+            testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .labResult, receivedOnDay: testReceivedDay)
         ))
         
         let providedOnsetDate = try XCTUnwrap(store.provideSymptomsOnsetDate())

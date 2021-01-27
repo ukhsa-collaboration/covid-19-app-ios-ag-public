@@ -1,0 +1,18 @@
+whitelist_rules:
+  - custom_rules
+
+excluded:
+  - Core/Sources/Scenarios
+  - Core/Sources/TestSupport
+  - Core/Tests
+
+custom_rules:
+  base_class_required: # rule identifier
+    included: ".*\\.swift" # regex that defines paths to include during linting. optional.
+    name: "Base class required" # rule name. optional.
+    regex: "(UILabel|UITextField|UINavigationController)" # matching pattern
+    capture_group: 0 # number of regex capture group to highlight the rule violation at. optional.
+    match_kinds: # SyntaxKinds to match. optional.
+      - identifier
+    message: "Use prefix `Base` instead of `UI` for this type" # violation message. optional.
+    severity: error # violation severity. optional.

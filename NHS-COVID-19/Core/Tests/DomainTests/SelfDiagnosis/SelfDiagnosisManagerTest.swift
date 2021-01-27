@@ -34,12 +34,12 @@ class SelfDiagnosisManagerTests: XCTestCase {
     }
     
     func testIsolateIfExactlyReachedThreshold() {
-        isolationState = .isolate(Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)))
+        isolationState = .isolate(Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)))
         XCTAssertEqual(selfDiagnosisManager.evaluateSymptoms(symptoms: symptoms, onsetDay: nil, threshold: 2), isolationState)
     }
     
     func testIsolateIfExactlyAboveThreshold() {
-        isolationState = .isolate(Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)))
+        isolationState = .isolate(Isolation(fromDay: .today, untilStartOfDay: .today, reason: .indexCase(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)))
         XCTAssertEqual(selfDiagnosisManager.evaluateSymptoms(symptoms: symptoms, onsetDay: nil, threshold: 1), isolationState)
     }
     

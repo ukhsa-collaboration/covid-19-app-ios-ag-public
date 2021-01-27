@@ -7,32 +7,46 @@ import Foundation
 
 struct LinkVirologyTestResultEndpoint: HTTPEndpoint {
     func request(for input: CTAToken) throws -> HTTPRequest {
-        let encoder = JSONEncoder()
-        let json = try encoder.encode(RequestBody(ctaToken: input.value))
+        let countryString: String = {
+            switch input.country {
+            case .england: return "England"
+            case .wales: return "Wales"
+            }
+        }()
         
-        return .post("/virology-test/cta-exchange", body: .json(json))
+        let encoder = JSONEncoder()
+        let json = try encoder.encode(RequestBody(ctaToken: input.value, country: countryString))
+        return .post("/virology-test/v2/cta-exchange", body: .json(json))
     }
     
     func parse(_ response: HTTPResponse) throws -> LinkVirologyTestResultResponse {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .appNetworking
         let payload = try decoder.decode(ResponseBody.self, from: response.body.content)
+        
+        if payload.testKit == .rapidResult || payload.testKit == .rapidSelfReported, payload.testResult != .positive {
+            throw LinkVirologyTestResultResponseError.lfdVoidOrNegative
+        }
+        
         return LinkVirologyTestResultResponse(
             virologyTestResult: VirologyTestResult(
                 testResult: VirologyTestResult.TestResult(payload.testResult),
+                testKitType: VirologyTestResult.TestKitType(payload.testKit),
                 endDate: payload.testEndDate
             ),
-            diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: payload.diagnosisKeySubmissionToken)
+            diagnosisKeySubmissionSupport: try DiagnosisKeySubmissionSupport(payload)
         )
     }
 }
 
 struct CTAToken: Equatable {
     var value: String
+    var country: Country
 }
 
 private struct RequestBody: Codable {
     var ctaToken: String
+    var country: String
 }
 
 private struct ResponseBody: Codable {
@@ -42,9 +56,30 @@ private struct ResponseBody: Codable {
         case void = "VOID"
     }
     
+    enum TestKitType: String, Codable {
+        case labResult = "LAB_RESULT"
+        case rapidResult = "RAPID_RESULT"
+        case rapidSelfReported = "RAPID_SELF_REPORTED"
+    }
+    
     var testEndDate: Date
     var testResult: TestResult
-    var diagnosisKeySubmissionToken: String
+    var testKit: TestKitType
+    var diagnosisKeySubmissionToken: String?
+    var diagnosisKeySubmissionSupported: Bool
+}
+
+private extension VirologyTestResult.TestKitType {
+    init(_ testKitType: ResponseBody.TestKitType) {
+        switch testKitType {
+        case .labResult:
+            self = .labResult
+        case .rapidResult:
+            self = .rapidResult
+        case .rapidSelfReported:
+            self = .rapidSelfReported
+        }
+    }
 }
 
 private extension VirologyTestResult.TestResult {
@@ -56,6 +91,25 @@ private extension VirologyTestResult.TestResult {
             self = .positive
         case .void:
             self = .void
+        }
+    }
+}
+
+enum LinkVirologyTestResultResponseError: Error {
+    case noToken
+    case lfdVoidOrNegative
+}
+
+extension DiagnosisKeySubmissionSupport {
+    fileprivate init(_ response: ResponseBody) throws {
+        if response.diagnosisKeySubmissionSupported {
+            if let token = response.diagnosisKeySubmissionToken {
+                self = .supported(diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: token))
+            } else {
+                throw LinkVirologyTestResultResponseError.noToken
+            }
+        } else {
+            self = .notSupported
         }
     }
 }

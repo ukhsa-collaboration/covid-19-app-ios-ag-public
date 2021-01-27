@@ -12,12 +12,12 @@ struct TestOrdering {
     private let virologyManager: VirologyTestingManaging
     
     init(configuration: AcceptanceTestCase.Instance.Configuration, context: RunningAppContext) {
-        self.apiClient = configuration.apiClient
-        self.virologyManager = context.virologyTestingManager
+        apiClient = configuration.apiClient
+        virologyManager = context.virologyTestingManager
     }
     
     func order() throws {
-        apiClient.response(for: "/virology-test/home-kit/order", response: .success(.ok(with: .json(orderTestkitResponse))))
+        apiClient.response(for: "/virology-test/v2/order", response: .success(.ok(with: .json(orderTestkitResponse))))
         _ = try virologyManager.provideTestOrderInfo().await()
     }
 }

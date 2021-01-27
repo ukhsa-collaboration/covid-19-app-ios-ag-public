@@ -133,7 +133,7 @@
 "alert_venue_risk_change_body" = "Taabo si aad u aragto faahfaahinta";
 "alert_isolation_state_change_title" = "Hagitaanka aan ku  siin jirnay waa isbeddelay";
 "alert_isolation_state_change_body" = "Taabo si aad u aragto faahfaahinta";
-"alert_exposure_detection_body" = "Halkan riix si aad u hesho faahfaahin dheeraad ah.";
+"alert_exposure_detection_body" = "Waxaa xiriir dhow la yeelatay qof qaba coronavirus (COVID-19). Halkan riix si aad u hesho faahfaahin dheeraad ah.";
 "alert_test_result_received_title" = "Natiijooyinka baaritaankaaga ayaa yimid";
 "alert_test_result_received_body" = "Taabo si aad u aragto faahfaahinta";
 "alert_app_availability_changed_title" = "Helitaanka app-ka ayaa isbedelay";
@@ -176,7 +176,6 @@
 "positive_symptoms_link_label" = "Wixii talo dheeri ah, fadlan la xiriir:";
 "positive_symptoms_corona_test_button" = "Ballanso baaritaan lacag la'aan ah";
 "exposure_acknowledgement_self_isolate_for" = "Is-go'doomin ilaa";
-"exposure_acknowledgement_warning" = "App-ka wuxuu ogaadey inaad la kulantay qof qaba coronavirus. Fadlan guriga iska joog oo gooni isu go'doomi si aad u ilaaliso naftaada iyo dadka kaleba.";
 "exposure_acknowledgement_explaination_1" = "Si aad u ogaato qaabka uu app-ka u xisaabiyo maalmaha is-go'doominta, booqo marrinka hoose ee su'aalaha badana la isweydiiya.\n\nWaxaad halis ugu jirtaa inaad qabtid oo aad faafiso fayraska xitaa haddii aadan lahayn astaamo. Haddii aad ka yar tahay 18, waxaa lagugula talinayaa inaad tusto fariintan qof weyn oo aad ku kalsoon tahay.";
 "exposure_acknowledgement_explaination_2" = "Tirinta go'doomintaada ayaa bilaabatay oo waa inaad is-go'doomisaa muddada dhan ee la aqoonsaday. Kaliya baaritaanka ha lagaga qaado haddii aad leedahay astaamaha coronavirus.";
 "exposure_acknowledgement_link_label" = "Wixii talo dheeri ah, fadlan la xiriir:";
@@ -261,7 +260,7 @@
 "about_this_app_software_information_manufacturer_description" = "NHS Test & Trace\nDepartment of Health and Social Care\n39 Victoria Street\nWestminster\nLondon\nSW1H 0EU\nUK";
 "mydata_title" = "Xogtayda";
 "mydata_section_postcode_description" = "KOODHKA BOOSTADA DEGMADA";
-"mydata_section_test_result_description" = "NATIIJADII BAARITAANKI UGU DANBEEYAY EE LA QAADAY";
+"mydata_section_test_result_description" = "NATIIJADII UGU DAMBEEYAY EE BAARITAANKA OO LA ISTICMAALI KARO";
 "mydata_section_venue_history_description" = "TAARIIKHDA GOBTA";
 "mydata_section_symptoms_description" = "ASTAAMAHA TAARIIKHDA LAQAADAY";
 "mydata_section_encounter_description" = "TAARIIKHDA LA KULANKA";
@@ -310,7 +309,7 @@
 "authorization_denied_description" = "Barnaamijkan wuxuu adeegsadaa 'Exposure Notifications' si uu kuu ogeysiiyo haddii aad kulantay isticmaaleyaasha kale ee barnaamijka kuwaas oo laga helay cudurka Coronavirus.\n\nTelefoonkaagu wuxuu u qaadan karaa kuwan in ay yihiin 'Ogeysiisyada Exposure' ama 'Exposure Logging'.";
 "checkin_camera_qrcode_scanner_title" = "Isku soo xaadiri goob adigoo iskaan garanaysaa koodhka rasmiga ah ee NHS QR";
 "checkin_confirmation_title" = "Soo xaadirista waa lagu guuleystay";
-"alert_exposure_detection_title" = "App-ka wuxuu ogaadey inaad la kulantay qof qaba coronavirus. Fadlan guriga iska joog oo gooni isu go'doomi si aad u ilaaliso naftaada iyo dadka kaleba";
+"alert_exposure_detection_title" = "Waa in aad si deg deg ah isu-go'doomisaa.";
 "checkin_camera_permission_denial_title" = "Isku soo xaadiri goob adigoo iskaan garanaysaa koodhka rasmiga ah ee NHS QR";
 "virology_book_a_test_title" = "Ballanso baaritaan lacag la'aan ah";
 "end_of_isolation_isolate_if_have_symptom_warning" = "Si kastaba ha noqotee, haddii aad leedahay heerkul sarreeya, sii wad inaad gooni isu-go’doomisid ilaa uu caadi ku soo noqdo";
@@ -495,3 +494,10 @@
 "settings_language_confirm_selection_alert_description %@" = "Luuqada app-ka ugu bedel %@?";
 "settings_language_confirm_selection_alert_no" = "Ka noqo";
 "settings_language_confirm_selection_alert_yes" = "Hubi";
+"mydata_test_result_test_date" = "Taariikh";
+"mydata_test_result_test_result" = "Natiijo";
+"mydata_test_result_test_kit_type" = "Nooca qalabka baaritaanka";
+"mydata_test_result_lab_result" = "LAB_RESULT";
+"mydata_test_result_rapid_result" = "RAPID_RESULT";
+"exposure_acknowledgement_warning" = "App-ka wuxuu ogaadey inaad la kulantay qof qaba coronavirus. Fadlan guriga iska joog oo gooni isu go'doomi si aad u ilaaliso naftaada iyo dadka kaleba.";
+"mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";

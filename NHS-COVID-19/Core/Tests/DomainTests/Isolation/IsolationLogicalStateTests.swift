@@ -51,38 +51,38 @@ class _IsolationLogicalStateTests: XCTestCase {
     func testEmptyIndexCaseInfo() {
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(selfDiagnosisDay: $state.selfDiagnosisDay, onsetDay: nil, testResult: nil)
         let endDay = $state.selfDiagnosisDay.advanced(by: 9)
-        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)))
+        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)))
     }
     
     func testIndexCaseNegativeTestResultNoOnsetDay() {
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(selfDiagnosisDay: $state.selfDiagnosisDay, onsetDay: nil, testResult: .negative)
-        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: $state.today.gregorianDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)))
+        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: $state.today.gregorianDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: false, testkitType: .labResult, isSelfDiagnosed: true)))
     }
     
     func testIndexCasePositiveTestResultNoOnsetDay() {
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(selfDiagnosisDay: $state.selfDiagnosisDay, onsetDay: nil, testResult: .positive)
         let endDay = $state.selfDiagnosisDay.advanced(by: 9)
-        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: true, isSelfDiagnosed: true)))
+        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: true, testkitType: .labResult, isSelfDiagnosed: true)))
     }
     
     func testIndexCaseNegativeTestResultWithOnsetDay() {
         let onsetDay = $state.selfDiagnosisDay.advanced(by: -1)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(selfDiagnosisDay: $state.selfDiagnosisDay, onsetDay: onsetDay, testResult: .negative)
-        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: $state.today.gregorianDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)))
+        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: $state.today.gregorianDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: false, testkitType: .labResult, isSelfDiagnosed: true)))
     }
     
     func testIndexCasePositiveTestResultWithOnsetDay() {
         let onsetDay = $state.selfDiagnosisDay.advanced(by: -1)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(selfDiagnosisDay: $state.selfDiagnosisDay, onsetDay: onsetDay, testResult: .positive)
         let endDay = $state.selfDiagnosisDay.advanced(by: 7)
-        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: true, isSelfDiagnosed: true)))
+        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: true, testkitType: .labResult, isSelfDiagnosed: true)))
     }
     
     func testIndexCaseNoTestResultWithOnsetDay() {
         let onsetDay = $state.selfDiagnosisDay.advanced(by: -1)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(selfDiagnosisDay: $state.selfDiagnosisDay, onsetDay: onsetDay, testResult: nil)
         let endDay = $state.selfDiagnosisDay.advanced(by: 7)
-        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true)))
+        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)))
     }
     
     func testIsolationPeriodNotGreaterThanConfigurationMaxIsolationNoOnsetDay() {
@@ -90,7 +90,7 @@ class _IsolationLogicalStateTests: XCTestCase {
         $state.isolationConfiguration.maxIsolation = 5
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(selfDiagnosisDay: $state.selfDiagnosisDay, onsetDay: nil, testResult: .positive)
         let endDay = $state.selfDiagnosisDay.advanced(by: 5)
-        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: true, isSelfDiagnosed: true)))
+        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: true, testkitType: .labResult, isSelfDiagnosed: true)))
     }
     
     func testIsolationPeriodNotGreaterThanConfigurationMaxIsolationWithOnsetDay() {
@@ -99,7 +99,7 @@ class _IsolationLogicalStateTests: XCTestCase {
         $state.isolationConfiguration.maxIsolation = 5
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(selfDiagnosisDay: $state.selfDiagnosisDay, onsetDay: onsetDay, testResult: .positive)
         let endDay = $state.selfDiagnosisDay.advanced(by: 5)
-        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: true, isSelfDiagnosed: true)))
+        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: true, testkitType: .labResult, isSelfDiagnosed: true)))
     }
     
     func testContactCase() {
@@ -124,7 +124,7 @@ class _IsolationLogicalStateTests: XCTestCase {
         $state.isolationInfo.contactCaseInfo = ContactCaseInfo(exposureDay: exposureDay, isolationFromStartOfDay: $state.today.gregorianDay, trigger: .exposureDetection)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(selfDiagnosisDay: $state.selfDiagnosisDay, onsetDay: onsetDay, testResult: nil)
         let endDay = $state.selfDiagnosisDay.advanced(by: 12)
-        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .bothCases(hasPositiveTestResult: false, isSelfDiagnosed: true)))
+        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .bothCases(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)))
     }
     
     func testContactCaseWithIndexCaseNoOnsetDay() {
@@ -132,7 +132,7 @@ class _IsolationLogicalStateTests: XCTestCase {
         $state.isolationInfo.contactCaseInfo = ContactCaseInfo(exposureDay: exposureDay, isolationFromStartOfDay: $state.today.gregorianDay, trigger: .exposureDetection)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(selfDiagnosisDay: $state.selfDiagnosisDay, onsetDay: nil, testResult: nil)
         let endDay = $state.selfDiagnosisDay.advanced(by: 12)
-        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .bothCases(hasPositiveTestResult: false, isSelfDiagnosed: true)))
+        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .bothCases(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)))
     }
     
     func testContactCaseWithIndexCaseNoOnsetDayPositiveTestResult() {
@@ -140,7 +140,7 @@ class _IsolationLogicalStateTests: XCTestCase {
         $state.isolationInfo.contactCaseInfo = ContactCaseInfo(exposureDay: exposureDay, isolationFromStartOfDay: $state.today.gregorianDay, trigger: .exposureDetection)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(selfDiagnosisDay: $state.selfDiagnosisDay, onsetDay: nil, testResult: .positive)
         let endDay = $state.selfDiagnosisDay.advanced(by: 12)
-        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .bothCases(hasPositiveTestResult: true, isSelfDiagnosed: true)))
+        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .bothCases(hasPositiveTestResult: true, testkitType: .labResult, isSelfDiagnosed: true)))
     }
     
     func testContactCaseWithIndexCaseNoOnsetDayNegativeTestResult() {
@@ -157,7 +157,7 @@ class _IsolationLogicalStateTests: XCTestCase {
         $state.isolationInfo.contactCaseInfo = ContactCaseInfo(exposureDay: exposureDay, isolationFromStartOfDay: $state.today.gregorianDay, trigger: .exposureDetection)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(selfDiagnosisDay: $state.selfDiagnosisDay, onsetDay: onsetDay, testResult: .positive)
         let endDay = $state.selfDiagnosisDay.advanced(by: 12)
-        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .bothCases(hasPositiveTestResult: true, isSelfDiagnosed: true)))
+        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .bothCases(hasPositiveTestResult: true, testkitType: .labResult, isSelfDiagnosed: true)))
     }
     
     func testContactCaseWithIndexCaseWithOnsetDayNegativeTestResult() {
@@ -219,7 +219,7 @@ class _IsolationLogicalStateTests: XCTestCase {
         
         let endDay = $state.today.advanced(by: -2)
         
-        XCTAssertEqual(state, .isolationFinishedButNotAcknowledged(Isolation(fromDay: .today, untilStartOfDay: endDay, reason: .indexCase(hasPositiveTestResult: true, isSelfDiagnosed: true))))
+        XCTAssertEqual(state, .isolationFinishedButNotAcknowledged(Isolation(fromDay: .today, untilStartOfDay: endDay, reason: .indexCase(hasPositiveTestResult: true, testkitType: .labResult, isSelfDiagnosed: true))))
     }
     
     func testEndOfIsolationAtStartOfTodayDoesNotTriggerIsolation() {
@@ -228,7 +228,7 @@ class _IsolationLogicalStateTests: XCTestCase {
         
         $state.today.gregorianDay = $state.selfDiagnosisDay.advanced(by: 8)
         
-        XCTAssertEqual(state, .isolationFinishedButNotAcknowledged(Isolation(fromDay: .today, untilStartOfDay: $state.today, reason: .indexCase(hasPositiveTestResult: true, isSelfDiagnosed: true))))
+        XCTAssertEqual(state, .isolationFinishedButNotAcknowledged(Isolation(fromDay: .today, untilStartOfDay: $state.today, reason: .indexCase(hasPositiveTestResult: true, testkitType: .labResult, isSelfDiagnosed: true))))
     }
     
     func testEndOfIsolationBeforeTodayDoesNotTriggerIsolationWhenAcknowledged() {
@@ -239,7 +239,7 @@ class _IsolationLogicalStateTests: XCTestCase {
         $state.today.gregorianDay = $state.selfDiagnosisDay.advanced(by: 10)
         
         let endDay = $state.today.advanced(by: -2)
-        XCTAssertEqual(state, .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: Isolation(fromDay: .today, untilStartOfDay: endDay, reason: .indexCase(hasPositiveTestResult: true, isSelfDiagnosed: true))))
+        XCTAssertEqual(state, .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: Isolation(fromDay: .today, untilStartOfDay: endDay, reason: .indexCase(hasPositiveTestResult: true, testkitType: .labResult, isSelfDiagnosed: true))))
     }
     
     func testEndOfIsolationAtStartOfTodayDoesNotTriggerIsolationWhenAcknowledged() {
@@ -250,7 +250,7 @@ class _IsolationLogicalStateTests: XCTestCase {
         $state.today.gregorianDay = $state.selfDiagnosisDay.advanced(by: 8)
         
         let endDay = $state.today
-        XCTAssertEqual(state, .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: Isolation(fromDay: .today, untilStartOfDay: endDay, reason: .indexCase(hasPositiveTestResult: true, isSelfDiagnosed: true))))
+        XCTAssertEqual(state, .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: Isolation(fromDay: .today, untilStartOfDay: endDay, reason: .indexCase(hasPositiveTestResult: true, testkitType: .labResult, isSelfDiagnosed: true))))
     }
     
     func testManualTestEntryTriggersIsolation() {
@@ -258,11 +258,11 @@ class _IsolationLogicalStateTests: XCTestCase {
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
             isolationTrigger: .manualTestEntry(npexDay: npexDay.gregorianDay),
             onsetDay: nil,
-            testInfo: .init(result: .positive, receivedOnDay: .today)
+            testInfo: .init(result: .positive, testKitType: .labResult, receivedOnDay: .today)
         )
         
         let endDay = npexDay.advanced(by: $state.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days).gregorianDay
-        XCTAssertEqual(state.isolation, Isolation(fromDay: npexDay, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: true, isSelfDiagnosed: false)))
+        XCTAssertEqual(state.isolation, Isolation(fromDay: npexDay, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: true, testkitType: .labResult, isSelfDiagnosed: false)))
     }
     
     func testManualTestEntryWithVoidResultDoesNotTriggerIsolation() {
@@ -270,7 +270,7 @@ class _IsolationLogicalStateTests: XCTestCase {
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
             isolationTrigger: .manualTestEntry(npexDay: npexDay.gregorianDay),
             onsetDay: nil,
-            testInfo: .init(result: .void, receivedOnDay: .today)
+            testInfo: .init(result: .void, testKitType: .labResult, receivedOnDay: .today)
         )
         
         XCTAssertEqual(state, .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil))
@@ -281,11 +281,11 @@ class _IsolationLogicalStateTests: XCTestCase {
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
             isolationTrigger: .manualTestEntry(npexDay: npexDay.gregorianDay),
             onsetDay: nil,
-            testInfo: .init(result: .positive, receivedOnDay: .today)
+            testInfo: .init(result: .positive, testKitType: .labResult, receivedOnDay: .today)
         )
         
         let endDay = npexDay.advanced(by: $state.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days).gregorianDay
-        XCTAssertEqual(state, .isolationFinishedButNotAcknowledged(Isolation(fromDay: npexDay, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: true, isSelfDiagnosed: false))))
+        XCTAssertEqual(state, .isolationFinishedButNotAcknowledged(Isolation(fromDay: npexDay, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: .indexCase(hasPositiveTestResult: true, testkitType: .labResult, isSelfDiagnosed: false))))
     }
     
     // MARK: Interested in exposure notifications
@@ -303,19 +303,19 @@ class _IsolationLogicalStateTests: XCTestCase {
     }
     
     func testInterestedInExposureNotificationsFalseWhenIsolatingFromBothCases() {
-        let state: IsolationLogicalState = isolating(for: .bothCases(hasPositiveTestResult: true, isSelfDiagnosed: true))
+        let state: IsolationLogicalState = isolating(for: .bothCases(hasPositiveTestResult: true, testkitType: .labResult, isSelfDiagnosed: true))
         
         XCTAssertFalse(state.interestedInExposureNotifications)
     }
     
     func testInterestedInExposureNotificationsFalseWhenIsolatingFromIndexCaseWithPositiveTest() {
-        let state: IsolationLogicalState = isolating(for: .indexCase(hasPositiveTestResult: true, isSelfDiagnosed: true))
+        let state: IsolationLogicalState = isolating(for: .indexCase(hasPositiveTestResult: true, testkitType: .labResult, isSelfDiagnosed: true))
         
         XCTAssertFalse(state.interestedInExposureNotifications)
     }
     
     func testInterestedInExposureNotificationsTrueWhenIsolatingFromIndexCaseWithNoPositiveTest() {
-        let state: IsolationLogicalState = isolating(for: .indexCase(hasPositiveTestResult: false, isSelfDiagnosed: true))
+        let state: IsolationLogicalState = isolating(for: .indexCase(hasPositiveTestResult: false, testkitType: .labResult, isSelfDiagnosed: true))
         
         XCTAssertTrue(state.interestedInExposureNotifications)
     }
@@ -337,7 +337,7 @@ private extension IndexCaseInfo {
         self.init(
             isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
             onsetDay: onsetDay,
-            testInfo: testResult.map { TestInfo(result: $0, receivedOnDay: .today) }
+            testInfo: testResult.map { TestInfo(result: $0, testKitType: .labResult, receivedOnDay: .today) }
         )
     }
     

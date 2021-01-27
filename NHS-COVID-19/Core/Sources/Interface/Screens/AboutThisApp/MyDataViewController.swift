@@ -25,6 +25,19 @@ private extension TestResult {
     }
 }
 
+private extension TestKitType {
+    var description: String {
+        switch self {
+        case .labResult:
+            return localize(.mydata_test_result_lab_result)
+        case .rapidResult:
+            return localize(.mydata_test_result_rapid_result)
+        case .rapidSelfReported:
+            return localize(.mydata_test_result_rapid_self_reported)
+        }
+    }
+}
+
 public class MyDataViewController: UITableViewController {
     public typealias Interacting = MyDataViewControllerInteracting
     
@@ -47,7 +60,7 @@ public class MyDataViewController: UITableViewController {
         var postcode: String?
         @InterfaceProperty
         var localAuthority: String?
-        var testData: (result: TestResult, date: Date)?
+        var testResultDetails: TestResultDetails?
         var venueHistories: [VenueHistory]
         var symptomsOnsetDate: Date?
         var exposureNotificationDetails: ExposureNotificationDetails?
@@ -64,10 +77,22 @@ public class MyDataViewController: UITableViewController {
             }
         }
         
+        public struct TestResultDetails {
+            let result: TestResult
+            let date: Date
+            let testKitType: TestKitType?
+            
+            public init(result: TestResult, date: Date, testKitType: TestKitType?) {
+                self.result = result
+                self.date = date
+                self.testKitType = testKitType
+            }
+        }
+        
         public init(
             postcode: InterfaceProperty<String?>,
             localAuthority: InterfaceProperty<String?>,
-            testData: (TestResult, Date)?,
+            testResultDetails: TestResultDetails?,
             venueHistories: [VenueHistory],
             symptomsOnsetDate: Date?,
             exposureNotificationDetails: ExposureNotificationDetails?,
@@ -75,7 +100,7 @@ public class MyDataViewController: UITableViewController {
         ) {
             _postcode = postcode
             _localAuthority = localAuthority
-            self.testData = testData
+            self.testResultDetails = testResultDetails
             self.venueHistories = venueHistories
             self.symptomsOnsetDate = symptomsOnsetDate
             self.exposureNotificationDetails = exposureNotificationDetails
@@ -94,7 +119,9 @@ public class MyDataViewController: UITableViewController {
     
     enum RowType {
         case postcode(InterfaceProperty<String?>, InterfaceProperty<String?>)
-        case testResult(TestResult, date: Date)
+        case testDate(Date)
+        case testResult(TestResult)
+        case testKitType(TestKitType)
         case venueHistory(VenueHistory)
         case symptomsOnsetDate(Date)
         case encounterDate(Date)
@@ -113,10 +140,16 @@ public class MyDataViewController: UITableViewController {
             rows: [.postcode(viewModel.$postcode, viewModel.$localAuthority)]
         )
         
-        let testResultSection: Section? = viewModel.testData.map {
+        let testResultSection: Section? = viewModel.testResultDetails.map {
             Section(
                 header: .basic(title: localize(.mydata_section_test_result_description)),
-                rows: [.testResult($0.result, date: $0.date)]
+                rows: [
+                    .testDate($0.date),
+                    .testResult($0.result),
+                    $0.testKitType.map { kitType in
+                        .testKitType(kitType)
+                    },
+                ].compactMap { $0 }
             )
         }
         
@@ -197,8 +230,12 @@ public class MyDataViewController: UITableViewController {
         switch content[indexPath.section].rows[indexPath.row] {
         case .postcode(let postcode, let localAuthority):
             cell = PostcodeCell.create(tableView: tableView, postcode: postcode, localAuthority: localAuthority)
-        case .testResult(let result, let date):
-            cell = DateCell.create(tableView: tableView, title: result.description, date: date)
+        case .testDate(let date):
+            cell = DateCell.create(tableView: tableView, title: localize(.mydata_test_result_test_date), date: date)
+        case .testResult(let result):
+            cell = TextCell.create(tableView: tableView, title: localize(.mydata_test_result_test_result), value: result.description)
+        case .testKitType(let testKitType):
+            cell = TextCell.create(tableView: tableView, title: localize(.mydata_test_result_test_kit_type), value: testKitType.description)
         case .symptomsOnsetDate(let date):
             cell = DateCell.create(tableView: tableView, title: localize(.mydata_section_date_description), date: date)
         case .venueHistory(let venueHistory):
@@ -318,7 +355,7 @@ public class MyDataViewController: UITableViewController {
             switch content[indexPath.section].rows[indexPath.row] {
             case .venueHistory(let venueHistory):
                 deleteRow(for: venueHistory, at: indexPath)
-            case .postcode, .testResult, .symptomsOnsetDate, .encounterDate, .notificationDate, .lastDayOfSelfIsolation:
+            case .postcode, .testDate, .testResult, .testKitType, .symptomsOnsetDate, .encounterDate, .notificationDate, .lastDayOfSelfIsolation:
                 break
             }
         }

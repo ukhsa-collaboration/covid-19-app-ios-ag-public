@@ -7,10 +7,10 @@ import Foundation
 @propertyWrapper
 struct FileStored<Wrapped: DataConvertible> {
     
-    private var storage: FileStorage
+    private var storage: FileStoring
     private var name: String
     
-    init(storage: FileStorage, name: String) {
+    init(storage: FileStoring, name: String) {
         self.storage = storage
         self.name = name
     }

@@ -28,4 +28,8 @@ struct SendKeysLoadingFlowViewControllerInteractor: SendKeysLoadingFlowViewContr
     func didTapCancel() {
         acknowledgement.acknowledgeWithoutSending()
     }
+    
+    func acknowledgeWithoutKeySharing() {
+        acknowledgement.acknowledgeWithoutSending()
+    }
 }

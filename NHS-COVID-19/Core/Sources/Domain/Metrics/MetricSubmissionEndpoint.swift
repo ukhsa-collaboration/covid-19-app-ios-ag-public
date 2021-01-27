@@ -86,6 +86,9 @@ private struct SubmissionPayload: Codable {
         var receivedRiskyContactNotification = 0
         var startedIsolation = 0
         
+        var totalExposureWindowsNotConsideredRisky = 0
+        var totalExposureWindowsConsideredRisky = 0
+        
         // How many times background tasks ran
         var totalBackgroundTasks = 0
         
@@ -109,6 +112,16 @@ private struct SubmissionPayload: Codable {
         var selectedIsolationPaymentsButton = 0
         var launchedIsolationPaymentsApplication = 0
         var haveActiveIpcTokenBackgroundTick = 0
+        
+        var receivedPositiveLFDTestResultViaPolling = 0
+        var receivedNegativeLFDTestResultViaPolling = 0
+        var receivedVoidLFDTestResultViaPolling = 0
+        var receivedPositiveLFDTestResultEnteredManually = 0
+        var receivedNegativeLFDTestResultEnteredManually = 0
+        var receivedVoidLFDTestResultEnteredManually = 0
+        
+        var hasTestedLFDPositiveBackgroundTick = 0
+        var isIsolatingForTestedLFDPositiveBackgroundTick = 0
     }
     
     var includesMultipleApplicationVersions: Bool
@@ -193,6 +206,16 @@ private extension Metric {
         case .haveActiveIpcTokenBackgroundTick: return \.haveActiveIpcTokenBackgroundTick
         case .selectedIsolationPaymentsButton: return \.selectedIsolationPaymentsButton
         case .launchedIsolationPaymentsApplication: return \.launchedIsolationPaymentsApplication
+        case .totalExposureWindowsNotConsideredRisky: return \.totalExposureWindowsNotConsideredRisky
+        case .totalExposureWindowsConsideredRisky: return \.totalExposureWindowsConsideredRisky
+        case .receivedPositiveLFDTestResultViaPolling: return \.receivedPositiveLFDTestResultViaPolling
+        case .receivedNegativeLFDTestResultViaPolling: return \.receivedNegativeLFDTestResultViaPolling
+        case .receivedVoidLFDTestResultViaPolling: return \.receivedVoidLFDTestResultViaPolling
+        case .receivedPositiveLFDTestResultEnteredManually: return \.receivedPositiveLFDTestResultEnteredManually
+        case .receivedNegativeLFDTestResultEnteredManually: return \.receivedNegativeLFDTestResultEnteredManually
+        case .receivedVoidLFDTestResultEnteredManually: return \.receivedVoidLFDTestResultEnteredManually
+        case .hasTestedLFDPositiveBackgroundTick: return \.hasTestedLFDPositiveBackgroundTick
+        case .isIsolatingForTestedLFDPositiveBackgroundTick: return \.isIsolatingForTestedLFDPositiveBackgroundTick
         }
     }
     

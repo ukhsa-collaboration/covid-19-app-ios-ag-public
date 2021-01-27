@@ -169,3 +169,51 @@ extension MyDataViewController {
         }
     }
 }
+
+extension MyDataViewController {
+    class TextCell: UITableViewCell {
+        static let reuseIdentifier = String(describing: self)
+        
+        let titleLabel: UILabel
+        let valueLabel: UILabel
+        
+        override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+            titleLabel = BaseLabel().styleAsBody()
+            valueLabel = BaseLabel().styleAsSecondaryBody()
+            
+            super.init(style: style, reuseIdentifier: reuseIdentifier)
+            backgroundColor = UIColor(.surface)
+            
+            contentView.addAutolayoutSubview(titleLabel)
+            contentView.addAutolayoutSubview(valueLabel)
+            
+            valueLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+            valueLabel.setContentHuggingPriority(.required, for: .horizontal)
+            
+            let headerStack = UIStackView(arrangedSubviews: [titleLabel, valueLabel])
+            headerStack.axis = .horizontal
+            headerStack.alignment = .firstBaseline
+            headerStack.distribution = .fillProportionally
+            headerStack.spacing = .standardSpacing
+            headerStack.layoutMargins = .standard
+            headerStack.isLayoutMarginsRelativeArrangement = true
+            
+            contentView.addCellContentSubview(headerStack)
+        }
+        
+        private func setting(value: String, title: String) -> TextCell {
+            valueLabel.set(text: value)
+            titleLabel.set(text: title)
+            return self
+        }
+        
+        static func create(tableView: UITableView, title: String, value: String) -> TextCell {
+            let dequeued = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as? TextCell
+            return (dequeued ?? TextCell()).setting(value: value, title: title)
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+    }
+}
