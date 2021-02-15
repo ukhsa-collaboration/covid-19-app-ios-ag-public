@@ -41,10 +41,12 @@ class IsolationStateManager {
     func recordMetrics() -> AnyPublisher<Void, Never> {
         switch state {
         case .isolating(let isolation, _, _):
-            switch isolation.reason {
-            case .indexCase(let hasPositiveTestResult, let testKitType, let isSelfDiagnosed):
-                if hasPositiveTestResult {
-                    if let testType = testKitType {
+            if isolation.isContactCase {
+                Metrics.signpost(.isolatedForHadRiskyContactBackgroundTick)
+            }
+            if let indexCaseInfo = isolation.reason.indexCaseInfo {
+                if indexCaseInfo.hasPositiveTestResult {
+                    if let testType = indexCaseInfo.testKitType {
                         switch testType {
                         case .labResult:
                             Metrics.signpost(.isolatedForTestedPositiveBackgroundTick)
@@ -54,27 +56,11 @@ class IsolationStateManager {
                     } else {
                         Metrics.signpost(.isolatedForTestedPositiveBackgroundTick)
                     }
-                }
-                if isSelfDiagnosed {
-                    Metrics.signpost(.isolatedForSelfDiagnosedBackgroundTick)
-                }
-            case .contactCase:
-                Metrics.signpost(.isolatedForHadRiskyContactBackgroundTick)
-            case .bothCases(let hasPositiveTestResult, let testKitType, let isSelfDiagnosed):
-                Metrics.signpost(.isolatedForHadRiskyContactBackgroundTick)
-                if hasPositiveTestResult {
-                    if let testType = testKitType {
-                        switch testType {
-                        case .labResult:
-                            Metrics.signpost(.isolatedForTestedPositiveBackgroundTick)
-                        case .rapidResult, .rapidSelfReported:
-                            Metrics.signpost(.isIsolatingForTestedLFDPositiveBackgroundTick)
-                        }
-                    } else {
-                        Metrics.signpost(.isolatedForTestedPositiveBackgroundTick)
+                    if indexCaseInfo.isPendingConfirmation {
+                        Metrics.signpost(.isolatedForUnconfirmedTestBackgroundTick)
                     }
                 }
-                if isSelfDiagnosed {
+                if indexCaseInfo.isSelfDiagnosed {
                     Metrics.signpost(.isolatedForSelfDiagnosedBackgroundTick)
                 }
             }

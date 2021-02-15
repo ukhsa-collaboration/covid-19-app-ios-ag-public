@@ -40,6 +40,14 @@ class UserNotificationsStateController {
         }
     }
     
+    func recordMetrics() -> AnyPublisher<Void, Never> {
+        if case .authorized = authorizationStatus {
+            Metrics.signpost(.hasRiskyContactNotificationsEnabledBackgroundTick)
+        }
+        
+        return Empty().eraseToAnyPublisher()
+    }
+    
     // MARK: - Private helpers
     
     private func updateStatus() {

@@ -93,6 +93,52 @@ extension CoordinatedAppController {
         }
     }
     
+    private func createBookFollowUpTestFlow(interactor: SendKeysLoadingFlowViewControllerInteractor, context: RunningAppContext, isolation: NonNegativeTestResultWithIsolationViewController.TestResultType.Isolation, isolationEndDate: Date) -> UIViewController {
+        let navigationVC = BaseNavigationController()
+        
+        let virologyInteractor = VirologyTestingFlowInteractor(
+            virologyTestOrderInfoProvider: context.virologyTestingManager,
+            openURL: context.openURL,
+            acknowledge: interactor.acknowledgeWithoutKeySharing
+        )
+        
+        let bookATestInfoInteractor = BookATestInfoViewControllerInteractor(
+            didTapBookATest: {
+                let virologyFlowVC = VirologyTestingFlowViewController(virologyInteractor)
+                navigationVC.present(virologyFlowVC, animated: true)
+            },
+            openURL: context.openURL
+        )
+        
+        let bookATestInfoVC = BookATestInfoViewController(interactor: bookATestInfoInteractor, shouldHaveCancelButton: false)
+        
+        let positiveTestInteractor = PositiveTestResultWithIsolationInteractor(
+            didTapOnlineServicesLink: interactor.didTapOnlineServicesLink,
+            didTapExposureFAQLink: interactor.didTapExposureFAQLink,
+            didTapPrimaryButton: {
+                navigationVC.pushViewController(bookATestInfoVC, animated: true)
+            },
+            didTapCancel: interactor.didTapCancel
+        )
+        
+        let nonNegativeVC = NonNegativeTestResultWithIsolationViewController(interactor: positiveTestInteractor, isolationEndDate: isolationEndDate, testResultType: .positive(isolation: isolation, requiresConfirmatoryTest: true))
+        navigationVC.viewControllers = [nonNegativeVC]
+        return navigationVC
+    }
+    
+    private func createSendKeysFlow(interactor: SendKeysLoadingFlowViewControllerInteractor, isolation: NonNegativeTestResultWithIsolationViewController.TestResultType.Isolation, isolationEndDate: Date, keySubmissionSupported: Bool) -> UIViewController {
+        return SendKeysLoadingFlowViewController(interactor: interactor) { completion in
+            let positiveTestResultWithIsolationInteractor = PositiveTestResultWithIsolationInteractor(
+                didTapOnlineServicesLink: interactor.didTapOnlineServicesLink,
+                didTapExposureFAQLink: interactor.didTapExposureFAQLink,
+                didTapPrimaryButton: {
+                    _ = keySubmissionSupported ? completion() : interactor.acknowledgeWithoutKeySharing()
+                }
+            )
+            return NonNegativeTestResultWithIsolationViewController(interactor: positiveTestResultWithIsolationInteractor, isolationEndDate: isolationEndDate, testResultType: .positive(isolation: isolation, requiresConfirmatoryTest: false))
+        }
+    }
+    
     private func viewControllerForRunningApp(with context: RunningAppContext) -> UIViewController {
         WrappingViewController {
             AcknowledgementNeededState.makeAcknowledgementState(context: context)
@@ -102,27 +148,27 @@ extension CoordinatedAppController {
                     case .notNeeded:
                         return self?.wrappingViewControllerForRunningAppIgnoringAcknowledgement(with: context)
                             ?? UIViewController()
-                    case .neededForPositiveResultStartToIsolate(let interactor, let isolationEndDate, let keySubmissionSupported):
-                        return SendKeysLoadingFlowViewController(interactor: interactor) { completion in
-                            let interactor = PositiveTestResultWithIsolationInteractor(
-                                didTapOnlineServicesLink: interactor.didTapOnlineServicesLink,
-                                didTapExposureFAQLink: interactor.didTapExposureFAQLink,
-                                didTapPrimaryButton: {
-                                    _ = keySubmissionSupported ? completion() : interactor.acknowledgeWithoutKeySharing()
-                                }
-                            )
-                            return NonNegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: isolationEndDate, testResultType: .positive(.start))
+                    case .neededForPositiveResultStartToIsolate(let interactor, let isolationEndDate, let keySubmissionSupported, let requiresConfirmatoryTest):
+                        if requiresConfirmatoryTest {
+                            return self?.createBookFollowUpTestFlow(interactor: interactor, context: context, isolation: .start, isolationEndDate: isolationEndDate) ?? UIViewController()
+                        } else {
+                            return self?.createSendKeysFlow(interactor: interactor, isolation: .start, isolationEndDate: isolationEndDate, keySubmissionSupported: keySubmissionSupported) ?? UIViewController()
                         }
-                    case .neededForPositiveResultContinueToIsolate(let interactor, let isolationEndDate, let keySubmissionSupported):
-                        return SendKeysLoadingFlowViewController(interactor: interactor) { completion in
-                            let interactor = PositiveTestResultWithIsolationInteractor(
+                    case .neededForPositiveResultContinueToIsolate(let interactor, let isolationEndDate, let keySubmissionSupported, let requiresConfirmatoryTest):
+                        if case .isolate(let isolation) = context.isolationState.currentValue,
+                            isolation.hasConfirmedPositiveTestResult, requiresConfirmatoryTest {
+                            let positiveTestResultWithIsolationInteractor = PositiveTestResultWithIsolationInteractor(
                                 didTapOnlineServicesLink: interactor.didTapOnlineServicesLink,
                                 didTapExposureFAQLink: interactor.didTapExposureFAQLink,
-                                didTapPrimaryButton: {
-                                    _ = keySubmissionSupported ? completion() : interactor.acknowledgeWithoutKeySharing()
-                                }
+                                didTapPrimaryButton: interactor.acknowledgeWithoutKeySharing
                             )
-                            return NonNegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: isolationEndDate, testResultType: .positive(.continue))
+                            return NonNegativeTestResultWithIsolationViewController(interactor: positiveTestResultWithIsolationInteractor, isolationEndDate: isolationEndDate, testResultType: .positiveButAlreadyConfirmedPositive)
+                        }
+                        
+                        if requiresConfirmatoryTest {
+                            return self?.createBookFollowUpTestFlow(interactor: interactor, context: context, isolation: .continue, isolationEndDate: isolationEndDate) ?? UIViewController()
+                        } else {
+                            return self?.createSendKeysFlow(interactor: interactor, isolation: .continue, isolationEndDate: isolationEndDate, keySubmissionSupported: keySubmissionSupported) ?? UIViewController()
                         }
                     case .neededForPositiveResultNotIsolating(let interactor, let keySubmissionSupported):
                         return SendKeysLoadingFlowViewController(interactor: interactor) { completion in
@@ -152,12 +198,6 @@ extension CoordinatedAppController {
                             interactor: interactor,
                             isolationEndDate: isolationEndDate,
                             type: .exposureDetection
-                        )
-                    case .neededForStartOfIsolationRiskyVenue(let interactor, let isolationEndDate):
-                        return ContactCaseAcknowledgementViewController(
-                            interactor: interactor,
-                            isolationEndDate: isolationEndDate,
-                            type: .riskyVenue
                         )
                     case .neededForRiskyVenue(let interactor, let venueName, let checkInDate):
                         return RiskyVenueInformationViewController(

@@ -9,4 +9,5 @@ struct VirologyStateTestResult {
     var testKitType: TestKitType?
     var endDate: Date
     var diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?
+    var requiresConfirmatoryTest: Bool
 }

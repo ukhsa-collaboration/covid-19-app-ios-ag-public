@@ -18,6 +18,7 @@ struct LinkVirologyTestResultHandler: RequestHandler {
         let testType = MockDataProvider.testKitType[dataProvider.testKitType]
         let diagnosisKeySubmissionSupported = dataProvider.keySubmissionSupported
         let diagnosisKeySubmissionToken = dataProvider.keySubmissionSupported ? UUID().uuidString : nil
+        let requiresConfirmatoryTest = dataProvider.requiresConfirmatoryTest
         
         let response = HTTPResponse.ok(with: .json(#"""
         {
@@ -25,7 +26,8 @@ struct LinkVirologyTestResultHandler: RequestHandler {
         "testResult": "\#(testResult)",
         "testKit":"\#(testType)",
         "diagnosisKeySubmissionToken": "\#(diagnosisKeySubmissionToken != nil ? diagnosisKeySubmissionToken! : "null")",
-        "diagnosisKeySubmissionSupported": \#(diagnosisKeySubmissionSupported)
+        "diagnosisKeySubmissionSupported": \#(diagnosisKeySubmissionSupported),
+        "requiresConfirmatoryTest": \#(requiresConfirmatoryTest)
         }
         """#))
         return Result.success(response)

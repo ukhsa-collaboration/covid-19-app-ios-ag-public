@@ -155,7 +155,7 @@
 "symptom_list_secondary_action" = "مجھ میں ان میں سے کوئی علامات نہیں";
 "symptom_list_error_heading" = "ایک مسئلہ ہے";
 "symptom_list_error_description" = "درکار ہے کہ آپ علامات منتخب کریں یا \"مجھ میں ان میں سے کوئی علامات نہیں\" منتخب کریں";
-"symptom_list_discard_alert_title" = "تصدیق کریں کہ آپ کے اندر کوئی علامات نہیں ہیں";
+"symptom_list_discard_alert_title" = "تصدیق کریں کہ آپ کو ان میں سے کوئی علامت نہیں ہے";
 "symptom_list_discard_alert_body" = "کسی مُنتخب کی گئی علامات کوغیرمُنتخب کردیا جائے گا۔";
 "symptom_list_discard_alert_cancel" = "منسوخ کریں";
 "symptom_list_discard_alert_discard" = "تصدیق کریں";
@@ -338,7 +338,7 @@
 "checkin_information_help_scanning_section_description" = "اگر آپ کیو آر کوڈ اسکین کرنے کے اہل نہیں ہیں اور دوسرے طریقے سے چیک ان کرنا چاہتے ہیں، تو براہ کرم عملہ کے کسی رکن سے بات کریں۔";
 "checkin_information_whats_a_qr_code_section_title" = "میں ایک آفیشل NHS کیو آر کوڈ کی کیسے شناخت کروں؟";
 "checkin_information_whats_a_qr_code_section_description_new" = "ایک آفیشل انگلش/ویلش NHS کیو آر کوڈ پوسٹر اس طرح دکھائی دیتا ہے۔ کیو آر کوڈ کو اسکین کرنے کے لئے اپنے فون کے کیمرا کو استعمال کریں جو درمیان میں ایک اسکوائر ہوتا ہے۔";
-"about_this_app_software_information_date_of_release_description" = "1/2021";
+"about_this_app_software_information_date_of_release_description" = "2/2021";
 "link_test_result_enter_code_example" = "مثال: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "ٹیسٹ کوڈ";
 "link_test_result_button_title" = "جاری رکھیں";
@@ -348,7 +348,7 @@
 "home_link_test_result_button_title" = "اپنا ٹیسٹ کا نتیجہ داخل کریں";
 "about_this_app_software_information_app_name %@" = "ایپ کا نام: %@";
 "about_this_app_software_information_version %@" = "ورژن: %@";
-"about_this_app_software_information_date_of_release" = "اجراء کی تاریخ: 1/2021";
+"about_this_app_software_information_date_of_release" = "اجراء کی تاریخ: 2/2021";
 "link_test_result_title" = "اپنا ٹیسٹ کا نتیجہ داخل کریں";
 "link_provide_feedback" = "https://covid19.nhs.uk/contact-us.html";
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
@@ -501,3 +501,15 @@
 "mydata_test_result_rapid_result" = "RAPID_RESULT";
 "exposure_acknowledgement_warning" = "ایپ نے سراغ لگا لیا ہے کہ آپ کسی ایسے فرد کے رابطے میں آئے ہیں جسے کوروناوائرس ہوا ہے۔ براہ کرم خود کو اور دیگر افراد کو محفوظ رکھنے کے لئے گھر پر رہیں اور خود کو الگ تھلگ رکھیں۔";
 "mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";
+"positive_test_result_requires_follow_up_test_subtitle" = "اور ایک فالو اپ ٹیسٹ بُک کریں";
+"positive_test_result_requires_follow_up_test_start_to_isolate_info" = "آپ کے کوروناوائرس کے ٹیسٹ کا نتیجہ مثبت ہے۔";
+"positive_test_result_requires_follow_up_test_explanation" = "یہ سمجھنے کے لئے کہ ایپ خود کو تنہائی میں رکھنے  کے دنوں کا حساب کیسے دیتی ہے ، عمومی سوالنامہ دیکھیں۔\n\nچونکہ آپ نے ایک تیز رفتار سویب ٹیسٹ کروایا ہے، لہذا اب آپ کو دوسری قسم کا ٹیسٹ کروانے کی ضرورت ہے جو نتیجے کی تصدیق کرنے کے لیے لیب میں بھیجا گیا ہے۔\n\nاس بیچ، آپ کو اور جس کے ساتھ آپ رہتے ہیں اسے فوری طور پر خود کو  تنہا  کرنا ضروری ہے۔";
+"positive_test_result_requires_follow_up_test_book_test_button" = "ایک فالو اپ ٹیسٹ بک کروائیں ";
+"positive_test_result_already_confirmed_positive_title" = "ذیل کے لئے ذاتی علیحدگی جاری رکھیں";
+"positive_test_result_already_confirmed_positive_info" = "آپ کے کوروناوائرس کے ٹیسٹ کا نتیجہ مثبت ہے۔";
+"positive_test_result_already_confirmed_positive_explanation" = "یہ سمجھنے کے لئے کہ ایپ خود کو تنہائی  میں رکھنے  کے دنوں کا حساب کیسے دیتی ہے ، نیچے دیئے گئے عمومی سوالنامہ کے لنک پر جائیں۔";
+"positive_test_result_already_confirmed_positive_continue" = "جاری رکھیں";
+"mydata_test_result_follow_up_test" = "فالو اپ ٹیسٹ";
+"mydata_test_result_follow_up_not_required" = "مطلوب نہیں ہے";
+"mydata_test_result_follow_up_pending" = "زیر التوا";
+"mydata_test_result_follow_up_complete" = "مکمل کریں";

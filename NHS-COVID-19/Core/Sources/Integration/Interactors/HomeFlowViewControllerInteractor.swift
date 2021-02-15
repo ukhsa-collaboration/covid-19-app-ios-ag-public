@@ -162,11 +162,25 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             )
         } ?? []
         
-        let testResultDetails = context.testInfo.currentValue.map {
-            MyDataViewController.ViewModel.TestResultDetails(
+        let testResultDetails: MyDataViewController.ViewModel.TestResultDetails? = context.testInfo.currentValue.map {
+            
+            // map from the Domain level ConfirmationStatus to the Interface level ConfirmationStatus
+            let confirmationStatus: MyDataViewController.ViewModel.TestResultDetails.ConfirmationStatus = { testInfo in
+                switch testInfo.confirmationStatus {
+                case .pending:
+                    return MyDataViewController.ViewModel.TestResultDetails.ConfirmationStatus.pending
+                case .notRequired:
+                    return MyDataViewController.ViewModel.TestResultDetails.ConfirmationStatus.notRequired
+                case .confirmed(let confirmedOnDay):
+                    return MyDataViewController.ViewModel.TestResultDetails.ConfirmationStatus.confirmed(onDay: confirmedOnDay)
+                }
+            }($0)
+            
+            return MyDataViewController.ViewModel.TestResultDetails(
                 result: Interface.TestResult(domainTestResult: $0.result),
                 date: $0.receivedOnDay.startDate(in: .current),
-                testKitType: $0.testKitType.map(Interface.TestKitType.init(domainTestKitType:))
+                testKitType: $0.testKitType.map(Interface.TestKitType.init(domainTestKitType:)),
+                confirmationStatus: confirmationStatus
             )
         }
         

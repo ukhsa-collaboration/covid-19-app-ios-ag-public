@@ -70,9 +70,9 @@ class ExposureWindowStoreAcceptanceTests: AcceptanceTestCase {
         
         let testResults = TestResult(result.testResult)
         
-        exposureNotificationContext.postExposureWindows(result: testResults, testKitType: nil)
+        exposureNotificationContext.postExposureWindows(result: testResults, testKitType: .labResult, requiresConfirmatoryTest: false)
         
-        let endpoint = ExposureWindowEventEndpoint(latestAppVersion: $instance.appInfo.version, postcode: postcode.value, localAuthority: localAuthority.id.value, testKitType: .unknown, eventType: .exposureWindowPositiveTest)
+        let endpoint = ExposureWindowEventEndpoint(latestAppVersion: $instance.appInfo.version, postcode: postcode.value, localAuthority: localAuthority.id.value, eventType: .exposureWindowPositiveTest(testKitType: .labResult, requiresConfirmatoryTest: false))
         let expectedRequest = try endpoint.request(for: exposureWindow)
         
         var isRequestSent = false

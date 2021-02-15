@@ -8,7 +8,7 @@ import UIKit
 
 extension SettingsViewController {
     class LanguageCell: UITableViewCell {
-        static let reuseIdentifier = String(describing: self)
+        static let reuseIdentifier = String(describing: LanguageCell.self)
         let languageLabel: UILabel
         let selectedLanguageLabel: UILabel
         

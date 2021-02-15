@@ -3,6 +3,7 @@
 //
 
 import Combine
+import Common
 import Localization
 import UIKit
 
@@ -82,10 +83,36 @@ public class MyDataViewController: UITableViewController {
             let date: Date
             let testKitType: TestKitType?
             
-            public init(result: TestResult, date: Date, testKitType: TestKitType?) {
+            public enum ConfirmationStatus: CustomStringConvertible {
+                case pending
+                case confirmed(onDay: GregorianDay)
+                case notRequired
+                public var description: String {
+                    switch self {
+                    case .pending:
+                        return localize(.mydata_test_result_follow_up_pending)
+                    case .confirmed:
+                        return localize(.mydata_test_result_follow_up_complete)
+                    case .notRequired:
+                        return localize(.mydata_test_result_follow_up_not_required)
+                    }
+                }
+                
+                public var subtitle: String? {
+                    if case .confirmed(let confirmedOnDay) = self {
+                        return localize(.mydata_date_description(date: confirmedOnDay.startDate(in: .current)))
+                    }
+                    return nil
+                }
+            }
+            
+            let confirmationStatus: ConfirmationStatus?
+            
+            public init(result: TestResult, date: Date, testKitType: TestKitType?, confirmationStatus: ConfirmationStatus?) {
                 self.result = result
                 self.date = date
                 self.testKitType = testKitType
+                self.confirmationStatus = confirmationStatus
             }
         }
         
@@ -122,6 +149,7 @@ public class MyDataViewController: UITableViewController {
         case testDate(Date)
         case testResult(TestResult)
         case testKitType(TestKitType)
+        case confirmationStatus(ViewModel.TestResultDetails.ConfirmationStatus)
         case venueHistory(VenueHistory)
         case symptomsOnsetDate(Date)
         case encounterDate(Date)
@@ -149,6 +177,7 @@ public class MyDataViewController: UITableViewController {
                     $0.testKitType.map { kitType in
                         .testKitType(kitType)
                     },
+                    .confirmationStatus($0.confirmationStatus ?? .notRequired),
                 ].compactMap { $0 }
             )
         }
@@ -236,6 +265,8 @@ public class MyDataViewController: UITableViewController {
             cell = TextCell.create(tableView: tableView, title: localize(.mydata_test_result_test_result), value: result.description)
         case .testKitType(let testKitType):
             cell = TextCell.create(tableView: tableView, title: localize(.mydata_test_result_test_kit_type), value: testKitType.description)
+        case .confirmationStatus(let confirmationStatus):
+            cell = TextCell.create(tableView: tableView, title: localize(.mydata_test_result_follow_up_test), value: confirmationStatus.description, subtitle: confirmationStatus.subtitle)
         case .symptomsOnsetDate(let date):
             cell = DateCell.create(tableView: tableView, title: localize(.mydata_section_date_description), date: date)
         case .venueHistory(let venueHistory):
@@ -355,7 +386,7 @@ public class MyDataViewController: UITableViewController {
             switch content[indexPath.section].rows[indexPath.row] {
             case .venueHistory(let venueHistory):
                 deleteRow(for: venueHistory, at: indexPath)
-            case .postcode, .testDate, .testResult, .testKitType, .symptomsOnsetDate, .encounterDate, .notificationDate, .lastDayOfSelfIsolation:
+            case .postcode, .testDate, .testResult, .testKitType, .confirmationStatus, .symptomsOnsetDate, .encounterDate, .notificationDate, .lastDayOfSelfIsolation:
                 break
             }
         }

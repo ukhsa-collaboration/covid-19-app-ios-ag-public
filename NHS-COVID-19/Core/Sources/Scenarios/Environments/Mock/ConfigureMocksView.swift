@@ -38,6 +38,7 @@ struct ConfigureMocksView: View {
                         }
                     }
                     Toggle("Key submission supported", isOn: $dataProvider.keySubmissionSupported)
+                    Toggle("Requires confirmatory test", isOn: $dataProvider.requiresConfirmatoryTest)
                     TextFieldRow(label: "Website", text: $dataProvider.orderTestWebsite)
                     TextFieldRow(label: "Reference Code", text: $dataProvider.testReferenceCode)
                     TextFieldRow(label: "Days since test result end date", text: $dataProvider.testResultEndDateDaysAgoString)

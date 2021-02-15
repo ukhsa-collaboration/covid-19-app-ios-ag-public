@@ -91,6 +91,9 @@ public enum Sandbox {
         @TestInjected("sandbox.testResult")
         public var testResult: String?
         
+        @TestInjected("sandbox.requiresConfirmatoryTest", defaultValue: false)
+        public var requiresConfirmatoryTest: Bool
+        
         @TestInjected("sandbox.testResultEndDate")
         private(set) var testResultEndDateString: String?
         

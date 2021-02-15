@@ -155,7 +155,7 @@
 "symptom_list_secondary_action" = "ਮੇਰੇ ਅੰਦਰ ਇਨ੍ਹਾਂ ਵਿੱਚੋਂ ਕੋਈ ਵੀ ਲੱਛਣ ਨਹੀਂ ਹਨ";
 "symptom_list_error_heading" = "ਇੱਕ ਸਮੱਸਿਆ ਹੈ";
 "symptom_list_error_description" = "ਤੁਹਾਨੂੰ ਜਾਂ ਤਾਂ ਲੱਛਣਾਂ ਦੀ ਚੋਣ ਕਰਨ ਦੀ ਲੋੜ ਹੈ ਜਾਂ ਫਿਰ “ਮੇਰੇ ਵਿੱਚ ਇਨ੍ਹਾਂ ਵਿੱਚੋਂ ਕੋਈ ਵੀ ਲੱਛਣ ਨਹੀਂ ਹਨ” ਦੀ ਚੋਣ ਕਰਨ ਦੀ ਜ਼ਰੂਰਤ ਹੈ";
-"symptom_list_discard_alert_title" = "ਪੁਸ਼ਟੀ ਕਰੋ ਕਿ ਤੁਹਾਨੂੰ ਕੋਈ ਲੱਛਣ ਨਹੀਂ ਹਨ";
+"symptom_list_discard_alert_title" = "ਪੁਸ਼ਟੀ ਕਰੋ ਕਿ ਤੁਹਾਨੂੰ ਇਹਨਾਂ ਵਿੱਚੋਂ ਕੋਈ ਵੀ ਲੱਛਣ ਨਹੀਂ ਹਨ";
 "symptom_list_discard_alert_body" = "ਕੋਈ ਵੀ ਚੁਣੇ ਲੱਛਣਾਂ ਨੂੰ ਅਣਚੁਣਿਆ ਕਰ ਦਿੱਤਾ ਜਾਵੇਗਾ।";
 "symptom_list_discard_alert_cancel" = "ਰੱਦ ਕਰੋ";
 "symptom_list_discard_alert_discard" = "ਪੁਸ਼ਟੀ ਕਰੋ ";
@@ -338,7 +338,7 @@
 "checkin_information_help_scanning_section_description" = "ਜੇ ਤੁਸੀਂ QR ਕੋਡ ਨੂੰ ਸਕੈਨ ਕਰਨ ਦੇ ਯੋਗ ਨਹੀਂ ਹੋ ਅਤੇ ਕਿਸੇ ਹੋਰ ਤਰੀਕੇ ਨਾਲ ਚੈੱਕ ਇਨ ਕਰਨ ਦੀ ਜ਼ਰੂਰਤ ਹੈ, ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਸਟਾਫ ਦੇ ਇੱਕ ਮੈਂਬਰ ਨਾਲ ਗੱਲ ਕਰੋ।";
 "checkin_information_whats_a_qr_code_section_title" = "ਮੈਂ ਇੱਕ ਅਧਿਕਾਰਤ NHS QR ਕੋਡ ਨੂੰ ਕਿਵੇਂ ਪਛਾਣ ਸਕਦਾ ਹਾਂ?";
 "checkin_information_whats_a_qr_code_section_description_new" = "ਅਧਿਕਾਰਤ ਇੰਗਲਿਸ਼/ਵੈਲਸ਼ NHS QR ਕੋਡ ਪੋਸਟਰ ਅਜਿਹਾ ਦਿਸਦਾ ਹੈ। QR ਕੋਡ ਨੂੰ ਸਕੈਨ ਕਰਨ ਲਈ ਆਪਣੇ ਫੋਨ ਕੈਮਰਾ ਦੀ ਵਰਤੋਂ ਕਰੋ ਜੋ ਕਿ ਵਿਚਕਾਰ ਵਿੱਚ ਇੱਕ ਵਰਗ ਹੈ।";
-"about_this_app_software_information_date_of_release_description" = "1/2021";
+"about_this_app_software_information_date_of_release_description" = "2/2021";
 "link_test_result_enter_code_example" = "ਉਦਾਹਰਣ: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "ਟੈਸਟ ਕੋਡ";
 "link_test_result_button_title" = "ਜਾਰੀ ਰੱਖੋ";
@@ -348,7 +348,7 @@
 "home_link_test_result_button_title" = "ਆਪਣਾ ਟੈਸਟ ਨਤੀਜਾ ਦਰਜ ਕਰੋ";
 "about_this_app_software_information_app_name %@" = "ਐਪ ਦਾ ਨਾਮ: %@";
 "about_this_app_software_information_version %@" = "ਸੰਸਕਰਣ: %@";
-"about_this_app_software_information_date_of_release" = "ਜਾਰੀ ਕਰਨ ਦੀ ਮਿਤੀ: 1/2021";
+"about_this_app_software_information_date_of_release" = "ਜਾਰੀ ਕਰਨ ਦੀ ਮਿਤੀ: 2/2021";
 "link_test_result_title" = "ਆਪਣਾ ਟੈਸਟ ਨਤੀਜਾ ਦਰਜ ਕਰੋ";
 "link_provide_feedback" = "https://covid19.nhs.uk/contact-us.html";
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
@@ -501,3 +501,15 @@
 "mydata_test_result_rapid_result" = "RAPID_RESULT";
 "exposure_acknowledgement_warning" = "ਐਪ ਨੇ ਪਤਾ ਲਗਾਇਆ ਹੈ ਕਿ ਤੁਸੀਂ ਕਿਸੇ ਅਜਿਹੇ ਐਪ ਉਪਭੋਗਤਾ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਆਏ ਹੋ ਜਿਸਨੂੰ ਕੋਰੋਨਾਵਾਇਰਸ ਹੈ। ਆਪਣੇ ਆਪ ਨੂੰ ਅਤੇ ਹੋਰਾਂ ਨੂੰ ਸੁਰੱਖਿਅਤ ਰੱਖਣ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਘਰ ਦੇ ਅੰਦਰ ਹੀ ਰਹੋ।";
 "mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";
+"positive_test_result_requires_follow_up_test_subtitle" = "ਅਤੇ ਇੱਕ ਫਾਲੋ-ਅੱਪ ਟੈਸਟ ਬੁੱਕ ਕਰੋ";
+"positive_test_result_requires_follow_up_test_start_to_isolate_info" = "ਤੁਹਾਡਾ ਕੋਰੋਨਾਵਾਇਰਸ ਟੈਸਟ ਦਾ ਨਤੀਜਾ ਪਾਜ਼ਿਟਿਵ ਹੈ";
+"positive_test_result_requires_follow_up_test_explanation" = "ਇਹ ਸਮਝਣ ਲਈ ਕਿ ਐਪ ਸਵੈ-ਇਕਾਂਤਵਾਸ ਦੇ ਦਿਨਾਂ ਦੀ ਗਣਨਾ ਕਿਵੇਂ ਕਰਦੀ ਹੈ, ਅਕਸਰ ਪੁੱਛੇ ਜਾਂਦੇ ਪ੍ਰਸ਼ਨਾਂ 'ਤੇ ਜਾਓ।\n\nਕਿਉਂਕਿ ਤੁਸੀਂ ਇੱਕ ਰੈਪਿਡ ਸਵੈਬ ਟੈਸਟ ਕਰਵਾਇਆ ਹੈ, ਨਤੀਜਿਆਂ ਦੀ ਪੁਸ਼ਟੀ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਹੁਣ ਇੱਕ ਹੋਰ ਕਿਸਮ ਦਾ ਟੈਸਟ ਕਰਵਾਉਣ ਦੀ ਲੋੜ ਹੈ ਜੋ ਇੱਕ ਲੈਬ ਨੂੰ ਭੇਜਿਆ ਜਾਂਦਾ ਹੈ।\n\nਇਸ ਦੌਰਾਨ, ਤੁਹਾਨੂੰ ਅਤੇ ਤੁਹਾਡੇ ਨਾਲ ਰਹਿਣ ਵਾਲੇ ਕਿਸੇ ਵੀ ਵਿਅਕਤੀ ਨੂੰ ਤੁਰੰਤ ਲਾਜ਼ਮੀ ਸਵੈ-ਇਕੱਲਤਾ ਵਿੱਚ ਚਲੇ ਜਾਣਾ ਚਾਹੀਦਾ ਹੈ।";
+"positive_test_result_requires_follow_up_test_book_test_button" = "ਫਾਲੋਅੱਪ ਟੈਸਟ ਬੁੱਕ ਕਰੋ";
+"positive_test_result_already_confirmed_positive_title" = "ਇਸ ਸਮੇਂ ਲਈ ਸੈਲਫ-ਆਈਸੋਲੇਸ਼ਨ ਵਿੱਚ ਰਹਿਣਾ ਜਾਰੀ ਰੱਖੋ";
+"positive_test_result_already_confirmed_positive_info" = "ਤੁਹਾਡਾ ਕੋਰੋਨਾਵਾਇਰਸ ਟੈਸਟ ਦਾ ਨਤੀਜਾ ਪਾਜ਼ਿਟਿਵ ਹੈ";
+"positive_test_result_already_confirmed_positive_explanation" = "ਇਹ ਸਮਝਣ ਲਈ ਕਿ ਐਪ ਸਵੈ-ਇਕਾਂਤਵਾਸ ਦੇ ਦਿਨਾਂ ਦੀ ਗਣਨਾ ਕਿਵੇਂ ਕਰਦੀ ਹੈ, ਹੇਠ ਦਿੱਤੇ ਅਕਸਰ ਪੁੱਛੇ ਜਾਂਦੇ ਪ੍ਰਸ਼ਨਾਂ ਦੇ ਲਿੰਕ 'ਤੇ ਜਾਓ।";
+"positive_test_result_already_confirmed_positive_continue" = "ਜਾਰੀ ਰੱਖੋ";
+"mydata_test_result_follow_up_test" = "ਫਾਲੋ-ਅੱਪ ਟੈਸਟ";
+"mydata_test_result_follow_up_not_required" = "ਲੋੜ ਨਹੀਂ";
+"mydata_test_result_follow_up_pending" = "ਬਕਾਇਆ";
+"mydata_test_result_follow_up_complete" = "ਪੂਰਾ";

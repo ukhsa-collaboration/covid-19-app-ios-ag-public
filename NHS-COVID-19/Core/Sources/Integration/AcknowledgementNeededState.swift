@@ -8,15 +8,14 @@ import Foundation
 
 enum AcknowledgementNeededState {
     case notNeeded
-    case neededForPositiveResultStartToIsolate(interactor: SendKeysLoadingFlowViewControllerInteractor, isolationEndDate: Date, keySubmissionSupported: Bool)
-    case neededForPositiveResultContinueToIsolate(interactor: SendKeysLoadingFlowViewControllerInteractor, isolationEndDate: Date, keySubmissionSupported: Bool)
+    case neededForPositiveResultStartToIsolate(interactor: SendKeysLoadingFlowViewControllerInteractor, isolationEndDate: Date, keySubmissionSupported: Bool, requiresConfirmatoryTest: Bool)
+    case neededForPositiveResultContinueToIsolate(interactor: SendKeysLoadingFlowViewControllerInteractor, isolationEndDate: Date, keySubmissionSupported: Bool, requiresConfirmatoryTest: Bool)
     case neededForPositiveResultNotIsolating(interactor: SendKeysLoadingFlowViewControllerInteractor, keySubmissionSupported: Bool)
     case neededForNegativeResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
     case neededForNegativeAfterPositiveResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
     case neededForNegativeResultNotIsolating(interactor: NegativeTestResultNoIsolationViewControllerInteractor)
     case neededForEndOfIsolation(interactor: EndOfIsolationViewControllerInteractor, isolationEndDate: Date, isIndexCase: Bool)
     case neededForStartOfIsolationExposureDetection(interactor: ExposureAcknowledgementViewControllerInteractor, isolationEndDate: Date)
-    case neededForStartOfIsolationRiskyVenue(interactor: ExposureAcknowledgementViewControllerInteractor, isolationEndDate: Date)
     case neededForRiskyVenue(interactor: RiskyVenueInformationInteractor, venueName: String, checkInDate: Date)
     case neededForVoidResultContinueToIsolate(interactor: VoidTestResultFlowInteracting, isolationEndDate: Date)
     case neededForVoidResultNotIsolating(interactor: VoidTestResultFlowInteracting)
@@ -44,23 +43,25 @@ enum AcknowledgementNeededState {
                         ),
                         isolationEndDate: isolationEndDate
                     )
-                case .neededForPositiveResultStartToIsolate(let acknowledge, let isolationEndDate, let keySubmissionSupported):
+                case .neededForPositiveResultStartToIsolate(let acknowledge, let isolationEndDate, let keySubmissionSupported, let requiresConfirmatoryTest):
                     return .neededForPositiveResultStartToIsolate(
                         interactor: SendKeysLoadingFlowViewControllerInteractor(
                             acknowledgement: acknowledge,
                             openURL: context.openURL
                         ),
                         isolationEndDate: isolationEndDate,
-                        keySubmissionSupported: keySubmissionSupported
+                        keySubmissionSupported: keySubmissionSupported,
+                        requiresConfirmatoryTest: requiresConfirmatoryTest
                     )
-                case .neededForPositiveResultContinueToIsolate(let acknowledge, let isolationEndDate, let keySubmissionSupported):
+                case .neededForPositiveResultContinueToIsolate(let acknowledge, let isolationEndDate, let keySubmissionSupported, let requiresConfirmatoryTest):
                     return .neededForPositiveResultContinueToIsolate(
                         interactor: SendKeysLoadingFlowViewControllerInteractor(
                             acknowledgement: acknowledge,
                             openURL: context.openURL
                         ),
                         isolationEndDate: isolationEndDate,
-                        keySubmissionSupported: keySubmissionSupported
+                        keySubmissionSupported: keySubmissionSupported,
+                        requiresConfirmatoryTest: requiresConfirmatoryTest
                     )
                 case .neededForPositiveResultNotIsolating(let acknowledge, let keySubmissionSupported):
                     return .neededForPositiveResultNotIsolating(
@@ -77,12 +78,7 @@ enum AcknowledgementNeededState {
                         return .neededForEndOfIsolation(interactor: interactor, isolationEndDate: isolation.endDate, isIndexCase: isolation.isIndexCase)
                     case .neededForStart(let isolation, let acknowledge):
                         let interactor = ExposureAcknowledgementViewControllerInteractor(openURL: context.openURL, acknowledge: acknowledge)
-                        if isolation.reason == .contactCase(.exposureDetection) {
-                            return .neededForStartOfIsolationExposureDetection(interactor: interactor, isolationEndDate: isolation.endDate)
-                        } else {
-                            return .neededForStartOfIsolationRiskyVenue(interactor: interactor, isolationEndDate: isolation.endDate)
-                        }
-                        
+                        return .neededForStartOfIsolationExposureDetection(interactor: interactor, isolationEndDate: isolation.endDate)
                     case .notNeeded:
                         switch riskyVenueAckState {
                         case .needed(let acknowledge, let venueName, let checkInDate):

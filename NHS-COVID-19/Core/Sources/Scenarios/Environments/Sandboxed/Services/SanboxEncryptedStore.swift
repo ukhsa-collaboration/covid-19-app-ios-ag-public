@@ -42,7 +42,8 @@ class SandboxEncryptedStore: EncryptedStoring {
                     {
                         "result":"\#(testResult)",
                         "endDate":\#(endDate),
-                        "diagnosisKeySubmissionToken":"\#(UUID().uuidString)"
+                        "diagnosisKeySubmissionToken":"\#(UUID().uuidString)",
+                        "requiresConfirmatoryTest": \#(host.initialState.requiresConfirmatoryTest)
                     }
                 ]
             }

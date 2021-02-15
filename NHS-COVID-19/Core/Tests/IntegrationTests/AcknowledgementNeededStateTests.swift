@@ -27,12 +27,12 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let date = Date()
         let context = makeRunningAppContext(
             isolationAckState: .notNeeded,
-            testResultAckState: .neededForPositiveResult(acknowledge: { Empty().eraseToAnyPublisher() }, isolationEndDate: date, keySubmissionSupported: true),
+            testResultAckState: .neededForPositiveResult(acknowledge: { Empty().eraseToAnyPublisher() }, isolationEndDate: date, keySubmissionSupported: true, requiresConfirmatoryTest: false),
             riskyCheckInsAckState: .notNeeded
         )
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
-        if case .neededForPositiveResultContinueToIsolate(_, let isolationEndDate, _) = state {
+        if case .neededForPositiveResultContinueToIsolate(_, let isolationEndDate, _, _) = state {
             XCTAssert(true)
             XCTAssertEqual(date, isolationEndDate)
         }
@@ -70,7 +70,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let isolation = Isolation(
             fromDay: .today,
             untilStartOfDay: .today,
-            reason: .indexCase(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)
+            reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false)
         )
         let context = makeRunningAppContext(
             isolationAckState: .neededForEnd(isolation, acknowledge: {}),
@@ -90,12 +90,12 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let isolation = Isolation(
             fromDay: .today,
             untilStartOfDay: .today,
-            reason: .indexCase(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)
+            reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false)
         )
         
         let context = makeRunningAppContext(
             isolationAckState: .neededForEnd(isolation, acknowledge: {}),
-            testResultAckState: .neededForPositiveResult(acknowledge: { Empty().eraseToAnyPublisher() }, isolationEndDate: Date(), keySubmissionSupported: true),
+            testResultAckState: .neededForPositiveResult(acknowledge: { Empty().eraseToAnyPublisher() }, isolationEndDate: Date(), keySubmissionSupported: true, requiresConfirmatoryTest: false),
             riskyCheckInsAckState: .needed(acknowledge: {}, venueName: "Venue", checkInDate: Date())
         )
         
@@ -110,7 +110,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let isolation = Isolation(
             fromDay: .today,
             untilStartOfDay: .today,
-            reason: .indexCase(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true)
+            reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false)
         )
         
         let context = makeRunningAppContext(
@@ -126,31 +126,11 @@ class AcknowledgementNeededStateTests: XCTestCase {
         }
     }
     
-    func testIsolationStartAckRiskyVenueNeeded() throws {
-        let isolation = Isolation(
-            fromDay: .today,
-            untilStartOfDay: .today,
-            reason: .contactCase(.riskyVenue)
-        )
-        
-        let context = makeRunningAppContext(
-            isolationAckState: .neededForStart(isolation, acknowledge: {}),
-            testResultAckState: .notNeeded,
-            riskyCheckInsAckState: .notNeeded
-        )
-        
-        let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
-        
-        if case .neededForStartOfIsolationRiskyVenue = state {
-            XCTAssert(true)
-        }
-    }
-    
     func testIsolationStartAckExposureDetectionNeeded() throws {
         let isolation = Isolation(
             fromDay: .today,
             untilStartOfDay: .today,
-            reason: .contactCase(.exposureDetection)
+            reason: Isolation.Reason(indexCaseInfo: nil, isContactCase: true)
         )
         
         let context = makeRunningAppContext(

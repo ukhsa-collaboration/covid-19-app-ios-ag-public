@@ -26,7 +26,13 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date()
         )
-        let response = VirologyTestResponse.receivedResult(result, true)
+        let response = VirologyTestResponse.receivedResult(
+            PollVirologyTestResultResponse(
+                virologyTestResult: result,
+                diagnosisKeySubmissionSupport: true,
+                requiresConfirmatoryTest: false
+            )
+        )
         let tokens = VirologyTestTokens(
             pollingToken: PollingToken(value: .random()),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random())
@@ -46,7 +52,8 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: Date()
             ),
-            diagnosisKeySubmissionSupport: .supported(diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random()))
+            diagnosisKeySubmissionSupport: .supported(diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random())),
+            requiresConfirmatoryTest: false
         )
         coordinator.handleManualTestResult(response)
         

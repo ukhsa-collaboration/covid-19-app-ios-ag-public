@@ -23,6 +23,14 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
     }
     
     init(interactor: Interacting, isolationEndDate: Date, testResultType: TestResultType) {
+        let informationBox: InformationBox = {
+            if case .positive(_, true) = testResultType {
+                return InformationBox.indication.warning(testResultType.infoText)
+            } else {
+                return InformationBox.indication.badNews(testResultType.infoText)
+            }
+        }()
+        
         super.init(
             scrollingViews: [
                 UIImageView(testResultType.image).styleAsDecoration(),
@@ -38,6 +46,12 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
                             .set(text: localize(.positive_symptoms_days(days: Self.daysRemaining(isolationEndDate))))
                             .isAccessibilityElement(false)
                             .centralized(),
+                        BaseLabel()
+                            .styleAsHeading()
+                            .set(text: testResultType.subtitle)
+                            .isAccessibilityElement(false)
+                            .centralized(),
+                        
                     ],
                     spacing: .standardSpacing,
                     margins: .zero
@@ -45,7 +59,7 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
                     .accessibilityTraits([.staticText, .header])
                     .isAccessibilityElement(true)
                     .accessibilityLabel(testResultType.titleAccessibilityLabel(daysRemaining: Self.daysRemaining(isolationEndDate))),
-                InformationBox.indication.badNews(testResultType.infoText),
+                informationBox,
                 testResultType.explanationText.map {
                     BaseLabel().styleAsSecondaryBody().set(text: $0)
                 },
@@ -78,7 +92,8 @@ public class NonNegativeTestResultWithIsolationViewController: StickyFooterScrol
         }
         
         case void
-        case positive(Isolation)
+        case positive(isolation: Isolation, requiresConfirmatoryTest: Bool)
+        case positiveButAlreadyConfirmedPositive
     }
     
     private let interactor: Interacting
@@ -118,29 +133,40 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
     
     var image: ImageName {
         switch self {
-        case .void:
+        case .void, .positive(_, true):
             return .isolationStartIndex
-        case .positive(.start):
+        case .positive(.start, false):
             return .isolationStartContact
-        case .positive(.continue):
+        case .positive(.continue, false),
+             .positiveButAlreadyConfirmedPositive:
             return .isolationContinue
         }
     }
     
     var title: String {
         switch self {
-        case .void, .positive(.continue):
+        case .void, .positive(.continue, _):
             return localize(.positive_test_result_title)
-        case .positive(.start):
+        case .positive(.start, _):
             return localize(.positive_test_result_start_to_isolate_title)
+        case .positiveButAlreadyConfirmedPositive:
+            return localize(.positive_test_result_already_confirmed_positive_title)
+        }
+    }
+    
+    var subtitle: String? {
+        if case .positive(_, true) = self {
+            return localize(.positive_test_result_requires_follow_up_test_subtitle)
+        } else {
+            return nil
         }
     }
     
     func titleAccessibilityLabel(daysRemaining: Int) -> String {
         switch self {
-        case .void, .positive(.continue):
+        case .void, .positive(.continue, _), .positiveButAlreadyConfirmedPositive:
             return localize(.positive_test_please_isolate_accessibility_label(days: daysRemaining))
-        case .positive(.start):
+        case .positive(.start, _):
             return localize(.positive_test_start_to_isolate_accessibility_label(days: daysRemaining))
         }
     }
@@ -149,10 +175,14 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
         switch self {
         case .void:
             return localizeAndSplit(.void_test_result_explanation)
-        case .positive(.continue):
+        case .positive(_, true):
+            return localizeAndSplit(.positive_test_result_requires_follow_up_test_explanation)
+        case .positive(.continue, false):
             return localizeAndSplit(.positive_test_result_explanation)
-        case .positive(.start):
+        case .positive(.start, false):
             return localizeAndSplit(.positive_test_result_start_to_isolate_explaination)
+        case .positiveButAlreadyConfirmedPositive:
+            return localizeAndSplit(.positive_test_result_already_confirmed_positive_explanation)
         }
     }
     
@@ -160,10 +190,12 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
         switch self {
         case .void:
             return localize(.void_test_result_info)
-        case .positive(.continue):
-            return localize(.positive_test_result_info)
-        case .positive(.start):
+        case .positive(_, true):
+            return localize(.positive_test_result_requires_follow_up_test_start_to_isolate_info)
+        case .positive(_, false):
             return localize(.positive_test_result_start_to_isolate_info)
+        case .positiveButAlreadyConfirmedPositive:
+            return localize(.positive_test_result_already_confirmed_positive_info)
         }
     }
     
@@ -171,7 +203,7 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
         switch self {
         case .void:
             return false
-        case .positive:
+        case .positive, .positiveButAlreadyConfirmedPositive:
             return true
         }
     }
@@ -180,8 +212,12 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
         switch self {
         case .void:
             return localize(.void_test_results_continue)
-        case .positive:
+        case .positive(_, true):
+            return localize(.positive_test_result_requires_follow_up_test_book_test_button)
+        case .positive(_, false):
             return localize(.positive_test_results_continue)
+        case .positiveButAlreadyConfirmedPositive:
+            return localize(.positive_test_result_already_confirmed_positive_continue)
         }
     }
 }

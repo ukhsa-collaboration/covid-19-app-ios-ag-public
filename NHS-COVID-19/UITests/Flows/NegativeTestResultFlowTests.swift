@@ -21,6 +21,7 @@ class NegativeTestResultFlowTests: XCTestCase {
         $runner.initialState.postcode = postcode
         $runner.initialState.localAuthorityId = "E09000022"
         $runner.initialState.testResult = "negative"
+        $runner.initialState.requiresConfirmatoryTest = false
     }
     
     func testWithoutIsolation() throws {

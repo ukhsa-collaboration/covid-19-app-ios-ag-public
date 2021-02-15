@@ -217,7 +217,8 @@ class ApplicationStateTests: AcceptanceTestCase {
             "latestUnacknowledgedTestResult":{
                 "result":"\#(result.rawValue)",
                 "endDate":\#(endDay.startOfDay.timeIntervalSinceReferenceDate),
-                "diagnosisKeySubmissionToken":"\#(submissionToken)"
+                "diagnosisKeySubmissionToken":"\#(submissionToken)",
+                "requiresConfirmatoryTest":false
             }
         }
         """# .data(using: .utf8)
@@ -300,7 +301,8 @@ class ApplicationStateTests: AcceptanceTestCase {
             "latestUnacknowledgedTestResult":{
                 "result":"\#(result.rawValue)",
                 "endDate":\#(endDay.startOfDay.timeIntervalSinceReferenceDate),
-                "diagnosisKeySubmissionToken":"\#(submissionToken)"
+                "diagnosisKeySubmissionToken":"\#(submissionToken)",
+                "requiresConfirmatoryTest":false
             }
         }
         """# .data(using: .utf8)

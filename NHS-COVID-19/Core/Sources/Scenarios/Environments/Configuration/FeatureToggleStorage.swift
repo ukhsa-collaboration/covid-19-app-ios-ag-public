@@ -7,9 +7,17 @@ import Domain
 
 struct FeatureToggleStorage {
     
+    @UserDefault("scenario.toggle.dailyContactTesting", defaultValue: Feature.productionEnabledFeatures.contains(.dailyContactTesting))
+    var dailyContactTestingToggle: Bool
+    
     static func getEnabledFeatures() -> [Feature] {
-        _ = FeatureToggleStorage()
-        let enabledFeatures = [Feature]()
+        let store = FeatureToggleStorage()
+        var enabledFeatures = [Feature]()
+        
+        if store.dailyContactTestingToggle {
+            enabledFeatures.append(.dailyContactTesting)
+        }
+        
         return enabledFeatures
     }
 }

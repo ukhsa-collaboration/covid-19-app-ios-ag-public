@@ -37,34 +37,43 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         virologyTestTokens: VirologyTestTokens
     ) {
         switch testResult {
-        case .receivedResult(let result, let diagnosisKeySubmissionSupported):
+        case .receivedResult(let response):
             virologyTestingStateStore.removeTestTokens(virologyTestTokens)
-            Metrics.signpostReceivedViaPolling(testResult: result.testResult, testKitType: result.testKitType)
-            handleWithNotification(result, diagnosisKeySubmissionToken: diagnosisKeySubmissionSupported ? virologyTestTokens.diagnosisKeySubmissionToken : nil)
+            Metrics.signpostReceivedViaPolling(
+                testResult: response.virologyTestResult.testResult,
+                testKitType: response.virologyTestResult.testKitType,
+                requiresConfirmatoryTest: response.requiresConfirmatoryTest
+            )
+            handleWithNotification(response.virologyTestResult, diagnosisKeySubmissionToken: response.diagnosisKeySubmissionSupport ? virologyTestTokens.diagnosisKeySubmissionToken : nil, requiresConfirmatoryTest: response.requiresConfirmatoryTest)
         case .noResultYet:
             return
         }
     }
     
     func handleManualTestResult(_ response: LinkVirologyTestResultResponse) {
-        Metrics.signpostReceivedFromManual(testResult: response.virologyTestResult.testResult, testKitType: response.virologyTestResult.testKitType)
+        Metrics.signpostReceivedFromManual(
+            testResult: response.virologyTestResult.testResult,
+            testKitType: response.virologyTestResult.testKitType,
+            requiresConfirmatoryTest: response.requiresConfirmatoryTest
+        )
         switch response.diagnosisKeySubmissionSupport {
         case .supported(let token):
-            handle(response.virologyTestResult, diagnosisKeySubmissionToken: token)
+            handle(response.virologyTestResult, diagnosisKeySubmissionToken: token, requiresConfirmatoryTest: response.requiresConfirmatoryTest)
         case .notSupported:
-            handle(response.virologyTestResult, diagnosisKeySubmissionToken: nil)
+            handle(response.virologyTestResult, diagnosisKeySubmissionToken: nil, requiresConfirmatoryTest: response.requiresConfirmatoryTest)
         }
     }
     
-    private func handleWithNotification(_ result: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?) {
+    private func handleWithNotification(_ result: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?, requiresConfirmatoryTest: Bool) {
         sendNotification()
-        handle(result, diagnosisKeySubmissionToken: diagnosisKeySubmissionToken)
+        handle(result, diagnosisKeySubmissionToken: diagnosisKeySubmissionToken, requiresConfirmatoryTest: requiresConfirmatoryTest)
     }
     
-    private func handle(_ result: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?) {
+    private func handle(_ result: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?, requiresConfirmatoryTest: Bool) {
         virologyTestingStateStore.saveResult(
             virologyTestResult: result,
-            diagnosisKeySubmissionToken: result.testResult == .positive ? diagnosisKeySubmissionToken : nil
+            diagnosisKeySubmissionToken: result.testResult == .positive ? diagnosisKeySubmissionToken : nil,
+            requiresConfirmatoryTest: requiresConfirmatoryTest
         )
     }
     

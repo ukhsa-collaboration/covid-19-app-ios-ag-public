@@ -38,6 +38,7 @@ class VirologyTestingFlowInteractor: VirologyTestingFlowViewController.Interacti
     
     func didTapOrderTestLink() {
         if let orderWebsiteURL = orderWebsiteURL {
+            Metrics.signpost(.launchedTestOrdering)
             openURL(orderWebsiteURL)
         }
     }

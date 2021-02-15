@@ -86,6 +86,12 @@ public class LoadingErrorViewController: UIViewController {
         ])
     }
     
+    override public func viewDidAppear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        UIAccessibility.post(notification: .screenChanged, argument: descriptionHeading)
+    }
+    
     @objc func didTapRetry() {
         interacting.didTapRetry()
     }

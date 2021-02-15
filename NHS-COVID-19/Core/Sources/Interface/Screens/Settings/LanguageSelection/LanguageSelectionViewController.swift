@@ -164,7 +164,7 @@ public class LanguageSelectionViewController: UITableViewController {
 
 extension LanguageSelectionViewController {
     class SectionHeader: UITableViewHeaderFooterView {
-        static let reuseIdentifier = String(describing: self)
+        static let reuseIdentifier = String(describing: SectionHeader.self)
         let label: UILabel
         
         override init(reuseIdentifier: String?) {
@@ -198,7 +198,7 @@ extension LanguageSelectionViewController {
     }
     
     class LanguageSelectionCell: UITableViewCell {
-        static let reuseIdentifier = String(describing: self)
+        static let reuseIdentifier = String(describing: LanguageSelectionCell.self)
         
         let endonymLabel: UILabel
         let exonymLabel: UILabel

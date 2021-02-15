@@ -187,6 +187,7 @@ class VirologyTestingManagerTests: XCTestCase {
         {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
             "diagnosisKeySubmissionSupported": true,
+            "requiresConfirmatoryTest": false,
             "testKit": "LAB_RESULT",
             "testResult": "POSITIVE",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
@@ -209,6 +210,7 @@ class VirologyTestingManagerTests: XCTestCase {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
             "testResult": "NEGATIVE",
             "diagnosisKeySubmissionSupported": false,
+            "requiresConfirmatoryTest": false,
             "testKit": "LAB_RESULT",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
         }
@@ -230,6 +232,7 @@ class VirologyTestingManagerTests: XCTestCase {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
             "testResult": "VOID",
             "diagnosisKeySubmissionSupported": false,
+            "requiresConfirmatoryTest": false,
             "testKit": "LAB_RESULT",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
         }

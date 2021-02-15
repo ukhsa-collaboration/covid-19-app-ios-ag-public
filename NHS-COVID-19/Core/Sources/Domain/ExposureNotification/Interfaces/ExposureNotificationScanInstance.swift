@@ -17,8 +17,8 @@ protocol ExposureNotificationScanInstance {
 extension ENScanInstance: ExposureNotificationScanInstance {}
 
 @available(iOS 13.7, *)
-extension ExposureNotificationScanInstance {
-    func toScanInstance() -> ScanInstance {
-        ScanInstance(attenuationValue: minimumAttenuation, secondsSinceLastScan: secondsSinceLastScan)
+extension ScanInstance {
+    init(from enScanInstance: ExposureNotificationScanInstance) {
+        self.init(attenuationValue: enScanInstance.minimumAttenuation, secondsSinceLastScan: enScanInstance.secondsSinceLastScan)
     }
 }

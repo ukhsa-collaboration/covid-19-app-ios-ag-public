@@ -30,13 +30,18 @@ extension NonNegativeTestResultWithIsolationScreenScenario {
 }
 
 public class PositiveTestResultContinueIsolationScreenScenario: NonNegativeTestResultWithIsolationScreenScenario {
-    static var testResultType = TestResultType.positive(.continue)
+    static var testResultType = TestResultType.positive(isolation: .continue, requiresConfirmatoryTest: false)
     public static var name: String = "Virology Testing - Positive Result (Continue Isolation)"
 }
 
 public class PositiveTestResultStartIsolationScreenScenario: NonNegativeTestResultWithIsolationScreenScenario {
-    static var testResultType = TestResultType.positive(.start)
+    static var testResultType = TestResultType.positive(isolation: .start, requiresConfirmatoryTest: false)
     public static var name: String = "Virology Testing - Positive Result (Start Isolation)"
+}
+
+public class PositiveTestResultContinueIsolationAfterIndicativeScreenScenario: NonNegativeTestResultWithIsolationScreenScenario {
+    static var testResultType = TestResultType.positiveButAlreadyConfirmedPositive
+    public static var name: String = "Virology Testing - Positive Result After Already Confirmed Positive (Continue Isolation)"
 }
 
 public class VoidTestResultWithIsolationScreenScenario: NonNegativeTestResultWithIsolationScreenScenario {

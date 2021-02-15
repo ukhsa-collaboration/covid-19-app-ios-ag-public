@@ -203,6 +203,8 @@ class ExposureNotificationReminderTests: XCTestCase {
             notificationType = nil
         }
         
+        func removeAllDelivered(for type: UserNotificationType) {}
+        
     }
     
 }

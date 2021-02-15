@@ -155,7 +155,7 @@
 "symptom_list_secondary_action" = "Nie wystąpiły u mnie żadne z podanych objawów";
 "symptom_list_error_heading" = "Wystąpił problem";
 "symptom_list_error_description" = "Musisz zaznaczyć odpowiednie objawy lub wybrać opcję „Nie wystąpiły u mnie żadne z podanych objawów”.";
-"symptom_list_discard_alert_title" = "Potwierdź, że nie wystąpiły u Ciebie żadne objawy.";
+"symptom_list_discard_alert_title" = "Proszę potwierdzić, że nie masz żadnego z tych objawów";
 "symptom_list_discard_alert_body" = "Wszystkie zaznaczone objawy zostaną odznaczone.";
 "symptom_list_discard_alert_cancel" = "Anuluj";
 "symptom_list_discard_alert_discard" = "Potwierdź";
@@ -338,7 +338,7 @@
 "checkin_information_help_scanning_section_description" = "Jeśli nie jesteś w stanie zeskanować kodu QR i potrzebujesz zameldować się w inny sposób, porozmawiaj z członkiem personelu.";
 "checkin_information_whats_a_qr_code_section_title" = "Jak rozpoznać oficjalny kod QR NHS?";
 "checkin_information_whats_a_qr_code_section_description_new" = "Tak wygląda oficjalny plakat z kodem QR NHS w języku angielskim / walijskim. Użyj aparatu w  swoim telefonie, aby zeskanować kod QR, którym jest kwadrat pośrodku.";
-"about_this_app_software_information_date_of_release_description" = "1/2021";
+"about_this_app_software_information_date_of_release_description" = "2/2021";
 "link_test_result_enter_code_example" = "Przykład: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Kod testowy";
 "link_test_result_button_title" = "Kontynuuj";
@@ -348,7 +348,7 @@
 "home_link_test_result_button_title" = "Wpisz wynik testu";
 "about_this_app_software_information_app_name %@" = "Nazwa aplikacji: %@";
 "about_this_app_software_information_version %@" = "Wersja: %@";
-"about_this_app_software_information_date_of_release" = "Data udostępnienia: 1/2021";
+"about_this_app_software_information_date_of_release" = "Data udostępnienia: 2/2021";
 "link_test_result_title" = "Wpisz wynik testu";
 "link_provide_feedback" = "https://covid19.nhs.uk/contact-us.html";
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
@@ -501,3 +501,15 @@
 "mydata_test_result_rapid_result" = "RAPID_RESULT";
 "exposure_acknowledgement_warning" = "Mogłeś(-aś) przebywać w pobliżu osoby, która była zakażona koronawirusem. Proszę pozostać w domu i odizolować się, aby chronić siebie i innych.";
 "mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";
+"positive_test_result_requires_follow_up_test_subtitle" = "oraz zamów test kontrolny";
+"positive_test_result_requires_follow_up_test_start_to_isolate_info" = "Wynik Twojego testu na koronawirusa jest pozytywny.";
+"positive_test_result_requires_follow_up_test_explanation" = "Aby zrozumieć, w jaki sposób aplikacja liczy dni izolacji, zapoznaj się z najczęściej zadawanymi pytaniami (FAQ).\n\nPonieważ miałeś(-aś) szybki test wymazowy, musisz teraz poddać się innemu rodzajowi testu, który zostanie wysłany do laboratorium w celu weryfikacji wyniku.\n\nW międzyczasie musisz natychmiast odizolować się wraz ze swoimi domownikami.";
+"positive_test_result_requires_follow_up_test_book_test_button" = "Zamów test kontrolny";
+"positive_test_result_already_confirmed_positive_title" = "Kontynuuj izolację przez";
+"positive_test_result_already_confirmed_positive_info" = "Wynik Twojego testu na koronawirusa jest pozytywny.";
+"positive_test_result_already_confirmed_positive_explanation" = "Aby zrozumieć, w jaki sposób aplikacja liczy dni izolacji, kliknij w poniższy link do listy najczęściej zadawanych pytań (FAQ).";
+"positive_test_result_already_confirmed_positive_continue" = "Kontynuuj";
+"mydata_test_result_follow_up_test" = "Test kontrolny";
+"mydata_test_result_follow_up_not_required" = "Nie wymagany";
+"mydata_test_result_follow_up_pending" = "Oczekujący";
+"mydata_test_result_follow_up_complete" = "Zakończony";

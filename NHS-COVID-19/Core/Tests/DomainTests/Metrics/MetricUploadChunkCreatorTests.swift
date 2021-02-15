@@ -4,19 +4,27 @@
 
 import Common
 import Scenarios
+import Combine
 import XCTest
 @testable import Domain
 
 class MetricUploadChunkCreatorTests: XCTestCase {
     private var currentDate: Date!
     private var collector: MetricCollector!
+    private var enabled: MetricsState!
     private var creator: MetricUploadChunkCreator!
     private static let appVersion = "3.0.0"
     
     override func setUp() {
         currentDate = Date()
+
+        let store = MockEncryptedStore()
+
+        enabled = MetricsState()
+        enabled.set(rawState: RawState.onboardedRawState.domainProperty())
+
         let currentDateProvider = MockDateProvider { self.currentDate }
-        collector = MetricCollector(encryptedStore: MockEncryptedStore(), currentDateProvider: currentDateProvider)
+        collector = MetricCollector(encryptedStore: store, currentDateProvider: currentDateProvider, enabled: enabled)
         creator = MetricUploadChunkCreator(
             collector: collector,
             appInfo: AppInfo(bundleId: .random(), version: Self.appVersion, buildNumber: "1"),

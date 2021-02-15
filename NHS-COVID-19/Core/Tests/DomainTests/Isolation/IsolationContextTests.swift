@@ -12,6 +12,7 @@ class IsolationContextTests: XCTestCase {
     private var isolationContext: IsolationContext!
     private var currentDate: Date!
     private var client: MockHTTPClient!
+    private var removedNotificaton = false
     
     override func setUp() {
         currentDate = Date()
@@ -34,12 +35,13 @@ class IsolationContextTests: XCTestCase {
             ),
             encryptedStore: MockEncryptedStore(),
             notificationCenter: NotificationCenter(),
-            currentDateProvider: MockDateProvider { self.currentDate }
+            currentDateProvider: MockDateProvider { self.currentDate },
+            removeExposureDetectionNotifications: { self.removedNotificaton = true }
         )
     }
     
     func testMakeIsolationAcknowledgementStatePublishesState() throws {
-        let isolation = Isolation(fromDay: .today, untilStartOfDay: .today, reason: .bothCases(hasPositiveTestResult: false, testkitType: nil, isSelfDiagnosed: true))
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: true))
         isolationContext.isolationStateManager.state = .isolationFinishedButNotAcknowledged(isolation)
         
         let ackState = try isolationContext.makeIsolationAcknowledgementState().await().get()
@@ -76,6 +78,63 @@ class IsolationContextTests: XCTestCase {
         let request = try XCTUnwrap(client.lastRequest)
         let expectedRequest = try IsolationConfigurationEndpoint().request(for: ())
         XCTAssertEqual(request, expectedRequest)
+    }
+    
+    func testRemoveExposureDetectionNotificationOnContactCaseAcknowledgement() throws {
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: .today, reason: .init(indexCaseInfo: nil, isContactCase: true))
+        isolationContext.isolationStateManager.state = .isolating(isolation, endAcknowledged: false, startAcknowledged: false)
+        
+        let ackState = try isolationContext.makeIsolationAcknowledgementState().await().get()
+        
+        if case .neededForStart(isolation, acknowledge: let ack) = ackState {
+            ack()
+            
+            XCTAssertTrue(removedNotificaton)
+        }
+    }
+    
+    // The notification should only be removed if a user acknowledges his isolation due to a risky contact
+    // This is currently only possible as contact case only.
+    // Revisit this test after changing the logic when to show the "isolate due to risky contact" screen
+    func testDoNotRemoveExposureDetectionNotificationOnBothCases() throws {
+        let isolation = Isolation(
+            fromDay: .today,
+            untilStartOfDay: .today,
+            reason: .init(
+                indexCaseInfo: .init(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false),
+                isContactCase: false
+            )
+        )
+        isolationContext.isolationStateManager.state = .isolating(isolation, endAcknowledged: false, startAcknowledged: false)
+        
+        let ackState = try isolationContext.makeIsolationAcknowledgementState().await().get()
+        
+        if case .neededForStart(isolation, acknowledge: let ack) = ackState {
+            ack()
+            XCTAssertFalse(removedNotificaton)
+        }
+    }
+    
+    // The notification should only be removed if a user acknowledges his isolation due to a risky contact
+    // This is currently only possible as contact case only.
+    // Revisit this test after changing the logic when to show the "isolate due to risky contact" screen
+    func testDoNotRemoveExposureDetectionNotificationOnIndexCase() throws {
+        let isolation = Isolation(
+            fromDay: .today,
+            untilStartOfDay: .today,
+            reason: .init(
+                indexCaseInfo: .init(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false),
+                isContactCase: false
+            )
+        )
+        isolationContext.isolationStateManager.state = .isolating(isolation, endAcknowledged: false, startAcknowledged: false)
+        
+        let ackState = try isolationContext.makeIsolationAcknowledgementState().await().get()
+        
+        if case .neededForStart(isolation, acknowledge: let ack) = ackState {
+            ack()
+            XCTAssertFalse(removedNotificaton)
+        }
     }
     
 }

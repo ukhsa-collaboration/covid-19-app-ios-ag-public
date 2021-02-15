@@ -18,6 +18,12 @@ struct IsolationStateInfo: Codable, Equatable, DataConvertible {
 }
 
 class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
+    enum Operation {
+        case nothing
+        case update
+        case overwrite
+        case confirm
+    }
     
     @Encrypted private var isolationStateInfoStorage: IsolationStateInfo?
     
@@ -71,18 +77,36 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
         return save(isolationInfo)
     }
     
-    func newIsolationStateInfo(for testResult: TestResult, testKitType: TestKitType?, receivedOn: GregorianDay, npexDay: GregorianDay) -> IsolationStateInfo {
+    func newIsolationStateInfo(for testResult: TestResult, testKitType: TestKitType?, requiresConfirmatoryTest: Bool, receivedOn: GregorianDay, npexDay: GregorianDay, operation: IsolationStateStore.Operation) -> IsolationStateInfo {
         let isolationInfo = mutating(self.isolationInfo) {
-            guard testResult != .void else { return }
+            if requiresConfirmatoryTest == false, testResult == .positive {
+                $0.contactCaseInfo = nil
+            }
             
-            if var indexCaseInfo = $0.indexCaseInfo, testResult == .negative || indexCaseInfo.testInfo?.result != .negative {
-                indexCaseInfo.set(testResult: testResult, testKitType: testKitType, receivedOn: receivedOn)
-                $0.indexCaseInfo = indexCaseInfo
-            } else {
+            switch operation {
+            case .nothing:
+                return
+            case .update:
+                if var indexCaseInfo = $0.indexCaseInfo {
+                    indexCaseInfo.set(testResult: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOn: receivedOn)
+                    $0.indexCaseInfo = indexCaseInfo
+                } else {
+                    $0.indexCaseInfo = IndexCaseInfo(
+                        isolationTrigger: .manualTestEntry(npexDay: npexDay),
+                        onsetDay: nil,
+                        testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOnDay: receivedOn)
+                    )
+                }
+            case .confirm:
+                if var indexCaseInfo = $0.indexCaseInfo {
+                    indexCaseInfo.confirmTest(confirmationDay: npexDay)
+                    $0.indexCaseInfo = indexCaseInfo
+                }
+            case .overwrite:
                 $0.indexCaseInfo = IndexCaseInfo(
                     isolationTrigger: .manualTestEntry(npexDay: npexDay),
                     onsetDay: nil,
-                    testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, receivedOnDay: receivedOn)
+                    testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOnDay: receivedOn)
                 )
             }
         }

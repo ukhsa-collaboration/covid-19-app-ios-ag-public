@@ -4,6 +4,7 @@
 
 import Combine
 import Common
+import ExposureNotification
 import Foundation
 
 struct ExposureNotificationContext {
@@ -19,6 +20,8 @@ struct ExposureNotificationContext {
     var exposureWindowStore: ExposureWindowStore?
     var trafficObfuscationClient: TrafficObfuscationClient
     
+    private var userNotificationManager: UserNotificationManaging
+    
     var isWaitingForApproval: Bool {
         exposureDetectionStore.exposureInfo?.approvalToken != nil
     }
@@ -32,6 +35,7 @@ struct ExposureNotificationContext {
     ) {
         exposureNotificationManager = services.exposureNotificationManager
         currentDateProvider = services.currentDateProvider
+        userNotificationManager = services.userNotificationsManager
         
         exposureDetectionStore = ExposureDetectionStore(store: services.encryptedStore)
         let controller = ExposureNotificationDetectionController(manager: services.exposureNotificationManager)
@@ -60,7 +64,7 @@ struct ExposureNotificationContext {
                         let infos = windowInfo.map {
                             ExposureWindowInfo(exposureWindow: $0.0, riskInfo: $0.1)
                         }
-                        exposureWindowAnalyticsHandler.post(windowInfo: infos, eventType: .exposureWindow, testKitType: nil)
+                        exposureWindowAnalyticsHandler.post(windowInfo: infos, eventType: .exposureWindow)
                         trafficObfuscationClient.sendTraffic(for: TrafficObfuscator.exposureWindow, randomRange: 2 ... 15, numberOfActualCalls: infos.count)
                         exposureWindowStore.append(infos)
                     }
@@ -120,7 +124,7 @@ struct ExposureNotificationContext {
         exposureWindowStore.delete()
     }
     
-    func postExposureWindows(result: TestResult, testKitType: TestKitType?) {
+    func postExposureWindows(result: TestResult, testKitType: TestKitType?, requiresConfirmatoryTest: Bool) {
         guard #available(iOS 13.7, *),
             let exposureWindowStore = exposureWindowStore,
             let exposureWindowAnalyticsHandler = exposureWindowAnalyticsHandler else { return }
@@ -129,11 +133,24 @@ struct ExposureNotificationContext {
         
         if let exposureWindowInfoCollection = exposureWindowInfoCollection, result == .positive {
             
-            exposureWindowAnalyticsHandler.post(windowInfo: exposureWindowInfoCollection.exposureWindowsInfo, eventType: .exposureWindowPositiveTest, testKitType: TestType(from: testKitType))
+            exposureWindowAnalyticsHandler.post(windowInfo: exposureWindowInfoCollection.exposureWindowsInfo, eventType: .exposureWindowPositiveTest(testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest))
             trafficObfuscationClient.sendTraffic(for: .exposureWindowAfterPositive, randomRange: 2 ... 15, numberOfActualCalls: exposureWindowInfoCollection.exposureWindowsInfo.count)
         } else {
             trafficObfuscationClient.sendTraffic(for: .exposureWindowAfterPositive, randomRange: 2 ... 15, numberOfActualCalls: 0)
         }
+    }
+    
+    func resendExposureDetectionNotificationIfNeeded(isolationContext: IsolationContext) -> AnyPublisher<Void, Never> {
+        Future<Void, Never> { promise in
+            let isolation = isolationContext.isolationStateManager.isolationLogicalState.currentValue
+            let startAcknowledged = isolationContext.isolationStateStore.isolationInfo.hasAcknowledgedStartOfIsolation
+            if isolation.isIsolating, isolation.activeIsolation?.isContactCaseOnly ?? false, !startAcknowledged {
+                userNotificationManager.add(type: .exposureDetection, at: nil, withCompletionHandler: nil)
+                Metrics.signpost(.totalRiskyContactReminderNotifications)
+            }
+            
+            promise(.success(()))
+        }.eraseToAnyPublisher()
     }
     
     private func _detectExposures(deferShouldShowDontWorryNotification: @escaping () -> Void) -> AnyPublisher<Void, Never> {
@@ -173,6 +190,46 @@ struct ExposureNotificationContext {
             .eraseToAnyPublisher()
     }
     
+    func positiveAcknowledgement(
+        for token: DiagnosisKeySubmissionToken?,
+        endDate: Date?,
+        indexCaseInfo: IndexCaseInfo?,
+        completionHandler: @escaping (TestResultAcknowledgementState.SendKeysState) -> Void
+    ) -> TestResultAcknowledgementState.PositiveResultAcknowledgement {
+        TestResultAcknowledgementState.PositiveResultAcknowledgement(
+            acknowledge: {
+                var sendKeyState: TestResultAcknowledgementState.SendKeysState = .sent
+                if let indexCaseInfo = indexCaseInfo, let submissionToken = token {
+                    return self.exposureKeysManager.sendKeys(
+                        for: indexCaseInfo.assumedOnsetDay,
+                        token: submissionToken
+                    )
+                    .catch { (error) -> AnyPublisher<Void, Error> in
+                        if (error as NSError).domain == ENErrorDomain {
+                            sendKeyState = .notSent
+                            return Empty().eraseToAnyPublisher()
+                        } else {
+                            return Fail(error: error).eraseToAnyPublisher()
+                        }
+                    }
+                    .handleEvents(receiveCompletion: { completion in
+                        switch completion {
+                        case .finished:
+                            completionHandler(sendKeyState)
+                        case .failure:
+                            break
+                        }
+                    })
+                    .eraseToAnyPublisher()
+                } else {
+                    completionHandler(.notSent)
+                    return Result.success(()).publisher.eraseToAnyPublisher()
+                }
+            },
+            acknowledgeWithoutSending: { completionHandler(.notSent) }
+        )
+    }
+    
 }
 
 class ExposureWindowAnalyticsHandler {
@@ -194,7 +251,7 @@ class ExposureWindowAnalyticsHandler {
     }
     
     @available(iOS 13.7, *)
-    func post(windowInfo: [ExposureWindowInfo], eventType: EpidemiologicalEventType, testKitType: TestType?) {
+    func post(windowInfo: [ExposureWindowInfo], eventType: EpidemiologicalEventType) {
         let postcode = getPostcode()?.value ?? ""
         let localAuthority = getLocalAuthority()?.value ?? ""
         
@@ -203,7 +260,6 @@ class ExposureWindowAnalyticsHandler {
                 latestAppVersion: latestAppVersion,
                 postcode: postcode,
                 localAuthority: localAuthority,
-                testKitType: testKitType,
                 eventType: eventType
             )
             
@@ -213,5 +269,4 @@ class ExposureWindowAnalyticsHandler {
                 .store(in: &cancellables)
         }
     }
-    
 }

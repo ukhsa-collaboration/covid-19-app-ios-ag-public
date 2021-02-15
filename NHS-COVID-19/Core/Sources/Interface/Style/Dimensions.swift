@@ -69,4 +69,11 @@ extension UIEdgeInsets {
         bottom: .stripeWidth,
         right: .standardSpacing
     )
+    
+    static let none = UIEdgeInsets(
+        top: .zero,
+        left: .zero,
+        bottom: .zero,
+        right: .zero
+    )
 }

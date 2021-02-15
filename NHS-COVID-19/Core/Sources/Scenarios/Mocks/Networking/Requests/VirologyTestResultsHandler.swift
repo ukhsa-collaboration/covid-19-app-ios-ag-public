@@ -17,13 +17,15 @@ struct VirologyTestResultsHandler: RequestHandler {
         let testResult = MockDataProvider.testResults[dataProvider.receivedTestResult]
         let testKit = MockDataProvider.testKitType[dataProvider.testKitType]
         let diagnosisKeySubmissionSupported = dataProvider.keySubmissionSupported
+        let requiresConfirmatoryTest = dataProvider.requiresConfirmatoryTest
         
         let response = HTTPResponse.ok(with: .json(#"""
         {
         "testEndDate": "\#(dateString)",
         "testResult": "\#(testResult)",
         "testKit": "\#(testKit)",
-        "diagnosisKeySubmissionSupported": \#(diagnosisKeySubmissionSupported)
+        "diagnosisKeySubmissionSupported": \#(diagnosisKeySubmissionSupported),
+        "requiresConfirmatoryTest": \#(requiresConfirmatoryTest)
         }
         """#))
         return Result.success(response)

@@ -36,6 +36,11 @@ extension XCUIElement {
         return exists && XCUIApplication().windows.element(boundBy: 0).frame.contains(frame)
     }
     
+    var existsAndNotEmpty: Bool {
+        guard exists, !frame.isEmpty else { return false }
+        return true
+    }
+    
     func scrollTo(element: XCUIElement) {
         var counter = 0
         while !element.displayed, counter < 10 {

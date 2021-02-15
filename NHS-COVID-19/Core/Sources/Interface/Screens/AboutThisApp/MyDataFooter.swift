@@ -8,7 +8,7 @@ import UIKit
 
 extension MyDataViewController {
     class TableViewFooter: UITableViewHeaderFooterView {
-        static let reuseIdentifier = String(describing: self)
+        static let reuseIdentifier = String(describing: TableViewFooter.self)
         var action: (() -> Void)?
         
         override init(reuseIdentifier: String?) {

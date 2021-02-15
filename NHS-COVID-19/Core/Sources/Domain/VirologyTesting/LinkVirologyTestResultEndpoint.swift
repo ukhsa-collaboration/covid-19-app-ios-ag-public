@@ -24,8 +24,21 @@ struct LinkVirologyTestResultEndpoint: HTTPEndpoint {
         decoder.dateDecodingStrategy = .appNetworking
         let payload = try decoder.decode(ResponseBody.self, from: response.body.content)
         
+        if (payload.requiresConfirmatoryTest ?? false) && payload.diagnosisKeySubmissionSupported {
+            throw VirologyTestResultResponseError.unconfirmedKeySharingNotSupported
+        }
+        
+        if (payload.requiresConfirmatoryTest ?? false) && payload.testResult != .positive {
+            throw VirologyTestResultResponseError.unconfirmedNonPostiveNotSupported
+        }
+        
         if payload.testKit == .rapidResult || payload.testKit == .rapidSelfReported, payload.testResult != .positive {
-            throw LinkVirologyTestResultResponseError.lfdVoidOrNegative
+            Metrics.signpostReceivedFromManual(
+                testResult: VirologyTestResult.TestResult(payload.testResult),
+                testKitType: VirologyTestResult.TestKitType(payload.testKit),
+                requiresConfirmatoryTest: payload.requiresConfirmatoryTest ?? false
+            )
+            throw VirologyTestResultResponseError.lfdVoidOrNegative
         }
         
         return LinkVirologyTestResultResponse(
@@ -34,7 +47,8 @@ struct LinkVirologyTestResultEndpoint: HTTPEndpoint {
                 testKitType: VirologyTestResult.TestKitType(payload.testKit),
                 endDate: payload.testEndDate
             ),
-            diagnosisKeySubmissionSupport: try DiagnosisKeySubmissionSupport(payload)
+            diagnosisKeySubmissionSupport: try DiagnosisKeySubmissionSupport(payload),
+            requiresConfirmatoryTest: payload.requiresConfirmatoryTest ?? false
         )
     }
 }
@@ -67,6 +81,8 @@ private struct ResponseBody: Codable {
     var testKit: TestKitType
     var diagnosisKeySubmissionToken: String?
     var diagnosisKeySubmissionSupported: Bool
+    #warning("Remove the optional here as soon as this field is implemented in other envs.")
+    var requiresConfirmatoryTest: Bool?
 }
 
 private extension VirologyTestResult.TestKitType {
@@ -95,9 +111,11 @@ private extension VirologyTestResult.TestResult {
     }
 }
 
-enum LinkVirologyTestResultResponseError: Error {
+enum VirologyTestResultResponseError: Error {
     case noToken
     case lfdVoidOrNegative
+    case unconfirmedKeySharingNotSupported
+    case unconfirmedNonPostiveNotSupported
 }
 
 extension DiagnosisKeySubmissionSupport {
@@ -106,7 +124,7 @@ extension DiagnosisKeySubmissionSupport {
             if let token = response.diagnosisKeySubmissionToken {
                 self = .supported(diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: token))
             } else {
-                throw LinkVirologyTestResultResponseError.noToken
+                throw VirologyTestResultResponseError.noToken
             }
         } else {
             self = .notSupported

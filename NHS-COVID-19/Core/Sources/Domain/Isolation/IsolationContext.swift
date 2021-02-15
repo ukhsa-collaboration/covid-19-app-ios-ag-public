@@ -14,16 +14,19 @@ struct IsolationContext {
     
     private let notificationCenter: NotificationCenter
     private let currentDateProvider: DateProviding
+    private let removeExposureDetectionNotifications: () -> Void
     
     init(
         isolationConfiguration: CachedResponse<IsolationConfiguration>,
         encryptedStore: EncryptedStoring,
         notificationCenter: NotificationCenter,
-        currentDateProvider: DateProviding
+        currentDateProvider: DateProviding,
+        removeExposureDetectionNotifications: @escaping () -> Void
     ) {
         self.isolationConfiguration = isolationConfiguration
         self.notificationCenter = notificationCenter
         self.currentDateProvider = currentDateProvider
+        self.removeExposureDetectionNotifications = removeExposureDetectionNotifications
         
         isolationStateStore = IsolationStateStore(store: encryptedStore, latestConfiguration: { isolationConfiguration.value }, currentDateProvider: currentDateProvider)
         isolationStateManager = IsolationStateManager(stateStore: isolationStateStore, currentDateProvider: currentDateProvider)
@@ -32,11 +35,17 @@ struct IsolationContext {
     func makeIsolationAcknowledgementState() -> AnyPublisher<IsolationAcknowledgementState, Never> {
         isolationStateManager.$state
             .combineLatest(notificationCenter.onApplicationBecameActive, currentDateProvider.today) { state, _, _ in state }
-            .map {
+            .map { state in
                 IsolationAcknowledgementState(
-                    logicalState: $0,
+                    logicalState: state,
                     now: self.currentDateProvider.currentDate,
-                    acknowledgeStart: isolationStateStore.acknowldegeStartOfIsolation,
+                    acknowledgeStart: {
+                        isolationStateStore.acknowldegeStartOfIsolation()
+                        if state.activeIsolation?.isContactCaseOnly ?? false {
+                            removeExposureDetectionNotifications()
+                            Metrics.signpost(.acknowledgedStartOfIsolationDueToRiskyContact)
+                        }
+                    },
                     acknowledgeEnd: isolationStateStore.acknowldegeEndOfIsolation
                 )
             }
@@ -48,6 +57,59 @@ struct IsolationContext {
                 default: return false
                 }
             })
+            .eraseToAnyPublisher()
+    }
+    
+    func makeResultAcknowledgementState(
+        result: VirologyStateTestResult?,
+        positiveAcknowledgement: @escaping TestResultAcknowledgementState.PositiveAcknowledgement,
+        completionHandler: @escaping (TestResultAcknowledgementState.SendKeysState) -> Void
+    ) -> AnyPublisher<TestResultAcknowledgementState, Never> {
+        isolationStateStore.$isolationStateInfo
+            .combineLatest(currentDateProvider.today)
+            .map { isolationStateInfo, _ in
+                guard let result = result else {
+                    return TestResultAcknowledgementState.notNeeded
+                }
+                let currentIsolationState = IsolationLogicalState(stateInfo: isolationStateInfo, day: self.currentDateProvider.currentLocalDay)
+                
+                let testResultIsolationOperation = TestResultIsolationOperation(
+                    currentIsolationState: currentIsolationState,
+                    storedIsolationInfo: self.isolationStateStore.isolationInfo,
+                    result: result
+                )
+                
+                let newIsolationStateInfo = isolationStateStore.newIsolationStateInfo(
+                    for: result.testResult,
+                    testKitType: result.testKitType,
+                    requiresConfirmatoryTest: result.requiresConfirmatoryTest,
+                    receivedOn: self.currentDateProvider.currentGregorianDay(timeZone: .current),
+                    npexDay: GregorianDay(date: result.endDate, timeZone: .utc),
+                    operation: testResultIsolationOperation.storeOperation()
+                )
+                
+                let newIsolationState = IsolationLogicalState(stateInfo: newIsolationStateInfo, day: self.currentDateProvider.currentLocalDay)
+                
+                return TestResultAcknowledgementState(
+                    result: result,
+                    newIsolationState: newIsolationState,
+                    currentIsolationState: currentIsolationState,
+                    indexCaseInfo: newIsolationStateInfo.isolationInfo.indexCaseInfo,
+                    positiveAcknowledgement: positiveAcknowledgement
+                ) { shareKeyState in
+                    isolationStateStore.isolationStateInfo = newIsolationStateInfo
+                    
+                    if !newIsolationState.isIsolating {
+                        isolationStateStore.acknowldegeEndOfIsolation()
+                    }
+                    
+                    if !currentIsolationState.isIsolating, newIsolationState.isIsolating {
+                        isolationStateStore.restartIsolationAcknowledgement()
+                    }
+                    
+                    completionHandler(shareKeyState)
+                }
+            }
             .eraseToAnyPublisher()
     }
     

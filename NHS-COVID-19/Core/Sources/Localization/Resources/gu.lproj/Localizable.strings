@@ -155,7 +155,7 @@
 "symptom_list_secondary_action" = "મને આમાંથી કોઈપણ લક્ષણો નથી";
 "symptom_list_error_heading" = "તેમાં એક સમસ્યા છે";
 "symptom_list_error_description" = "તમારે કોઈ લક્ષણ પસંદ કરવું પડશે અથવા તમે પસંદ કરી શકો છો કે \"મને આમાંથી કોઈ લક્ષણો નથી\".";
-"symptom_list_discard_alert_title" = "તમને કોઈ પણ લક્ષણો નથી તે પુષ્ટિ કરો";
+"symptom_list_discard_alert_title" = "ખાતરી કરો કે તમને આમાંથી કોઈ લક્ષણો નથી";
 "symptom_list_discard_alert_body" = "કોઈ પણ પસંદ કરવામાં આવેલ લક્ષણોની પસંદગી નીકળી જશે.";
 "symptom_list_discard_alert_cancel" = "રદ્દ કરો";
 "symptom_list_discard_alert_discard" = "પુષ્ટિ કરો";
@@ -338,7 +338,7 @@
 "checkin_information_help_scanning_section_description" = "જો તમે QR કોડ સ્કેન કરવામાં સમર્થ નથી અને તમારે અન્ય રીતે ચેક ઇન કરવાની જરૂર છે, તો કૃપા કરીને સ્ટાફના સભ્ય સાથે વાત કરો.";
 "checkin_information_whats_a_qr_code_section_title" = "હું એક ઓફિશ્યલ NHS QR કોડને કેવી રીતે ઓળખી શકું?";
 "checkin_information_whats_a_qr_code_section_description_new" = "અધિકૃત ઇંગ્લિશ/વેલ્શ NHS QR કોડ પોસ્ટર આવું દેખાય છે. QR કોડ જે મધ્યમાં એક ચોરસ છે તેને સ્કેન કરવા માટે તમારા ફોન કેમેરાનો ઉપયોગ કરો.";
-"about_this_app_software_information_date_of_release_description" = "1/2021";
+"about_this_app_software_information_date_of_release_description" = "2/2021";
 "link_test_result_enter_code_example" = "ઉદાહરણ: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "ટેસ્ટ કોડ";
 "link_test_result_button_title" = "ચાલુ રાખો";
@@ -348,7 +348,7 @@
 "home_link_test_result_button_title" = "તમારા ટેસ્ટ પરિણામને દાખલ કરો";
 "about_this_app_software_information_app_name %@" = "એપનું નામ: %@";
 "about_this_app_software_information_version %@" = "આવૃત્તિ: %@";
-"about_this_app_software_information_date_of_release" = "જાહેર કર્યાની તારીખ: 1/2021";
+"about_this_app_software_information_date_of_release" = "જાહેર કર્યાની તારીખ: 2/2021";
 "link_test_result_title" = "તમારા ટેસ્ટ પરિણામને દાખલ કરો";
 "link_provide_feedback" = "https://covid19.nhs.uk/contact-us.html";
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
@@ -501,3 +501,15 @@
 "mydata_test_result_rapid_result" = "RAPID_RESULT";
 "exposure_acknowledgement_warning" = "એપ દ્વારા શોધી કઢાયું છે કે તમે કોરોનાવાયરસ ધરાવતા કોઈ વ્યક્તિના સંપર્કમાં આવ્યા છો. કૃપા કરી ઘરે રહો અને પોતાને અને અન્ય લોકોને સુરક્ષિત રાખવા માટે સેલ્ફ-આઇસોલેટ થાવ.";
 "mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";
+"positive_test_result_requires_follow_up_test_subtitle" = "અને ફૉલો-અપ ટેસ્ટ બૂક કરાવો";
+"positive_test_result_requires_follow_up_test_start_to_isolate_info" = "તમારા કોરોનાવાયરસનું ટેસ્ટ પરિણામ સકારાત્મક છે";
+"positive_test_result_requires_follow_up_test_explanation" = "સેલ્ફ આયસોલેશનનાં દિવસોનો એપ કેવી રીતે સરવાળો કરે છે એ જાણવા માટે પૂછાતા પ્રશ્નો જૂઓ.\n\nતમે રૅપિડ સ્વૅબ ટેસ્ટ લીધો હોવાથી તમારે હવે રિઝલ્ટ માટે લૅબમાં મોકલવામાં આવેલ અન્ય પ્રકારનો ટેસ્ટ કરાવવાની જરૂર છે.\n\nદરમિયાન, તમે અને તમે જેમની સાથે રહેતા હો એવી કોઈ પણ વ્યક્તિએ તાત્કાલિક સૅલ્ફ-આઇસોલેટ થવાનું રહેશે.";
+"positive_test_result_requires_follow_up_test_book_test_button" = "ફોલો-અપ ટેસ્ટ બૂક કરો";
+"positive_test_result_already_confirmed_positive_title" = "સેલ્ફ-આઇસોલેશનમાં રહેવાનું ચાલુ રાખો";
+"positive_test_result_already_confirmed_positive_info" = "તમારા કોરોનાવાયરસનું ટેસ્ટ પરિણામ સકારાત્મક છે";
+"positive_test_result_already_confirmed_positive_explanation" = "સેલ્ફ આયસોલેશનનાં દિવસોનો એપ કેવી રીતે સરવાળો કરે છે એ જાણવા માટે પૂછાતા પ્રશ્નોની નીચે લિંક જૂઓ.";
+"positive_test_result_already_confirmed_positive_continue" = "ચાલુ રાખો";
+"mydata_test_result_follow_up_test" = "ફૉલો-અપ ટેસ્ટ";
+"mydata_test_result_follow_up_not_required" = "જરૂરી નથી";
+"mydata_test_result_follow_up_pending" = "બાકી";
+"mydata_test_result_follow_up_complete" = "પૂર્ણ";

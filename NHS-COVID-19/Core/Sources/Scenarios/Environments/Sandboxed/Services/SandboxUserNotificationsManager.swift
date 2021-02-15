@@ -47,4 +47,6 @@ class SandboxUserNotificationsManager: UserNotificationManaging {
     func add(type: UserNotificationType, at: DateComponents?, withCompletionHandler completionHandler: ((Error?) -> Void)?) {}
     
     func removePending(type: UserNotificationType) {}
+    
+    func removeAllDelivered(for type: UserNotificationType) {}
 }

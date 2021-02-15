@@ -37,4 +37,5 @@ public protocol UserNotificationManaging {
     func getAuthorizationStatus(completionHandler: @escaping AuthorizationStatusHandler)
     func add(type: UserNotificationType, at: DateComponents?, withCompletionHandler completionHandler: ((Error?) -> Void)?)
     func removePending(type: UserNotificationType)
+    func removeAllDelivered(for type: UserNotificationType)
 }

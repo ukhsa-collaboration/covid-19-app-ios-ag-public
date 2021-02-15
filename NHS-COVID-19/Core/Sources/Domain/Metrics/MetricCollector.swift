@@ -26,14 +26,19 @@ class MetricCollector {
     private var cache: MetricsCache?
     
     private let currentDateProvider: DateProviding
-    
-    init(encryptedStore: EncryptedStoring, currentDateProvider: DateProviding) {
+    private let enabled: MetricsState
+
+    init(encryptedStore: EncryptedStoring, currentDateProvider: DateProviding, enabled: MetricsState) {
         _cache = encryptedStore.encrypted("metrics")
         self.currentDateProvider = currentDateProvider
+        self.enabled = enabled
         Self.current = self
     }
     
     func record(_ metric: Metric) {
+        guard self.enabled.state == .enabled else {
+            return
+        }
         Self.logger.debug("record metric", metadata: .describing(metric.rawValue))
         cache = mutating(cache ?? MetricsCache(entries: [], latestWindowEnd: nil)) {
             $0.entries.append(
@@ -66,9 +71,12 @@ class MetricCollector {
     func earliestEntryDate() -> Date? {
         return cache?.latestWindowEnd ?? cache?.entries.map(\.date).min()
     }
+
+    func delete() {
+        cache = nil
+    }
     
     static func record(_ metric: Metric) {
         current?.record(metric)
     }
-    
 }

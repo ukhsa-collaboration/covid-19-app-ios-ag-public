@@ -155,7 +155,7 @@
 "symptom_list_secondary_action" = "আমার মধ্যে এই উপসর্গগুলোর কোনোটিই নেই";
 "symptom_list_error_heading" = "একটি সমস্যা হয়েছে";
 "symptom_list_error_description" = "আপনাকে উপসর্গ নির্বাচন করতে হবে অথবা “আমার এগুলোর মধ্যে কোনো উপসর্গ নেই” বেছে নিতে হবে";
-"symptom_list_discard_alert_title" = "সুনিশ্চিত করুন যে আপনার কোন উপসর্গ নেই";
+"symptom_list_discard_alert_title" = "নিশ্চিত করুন যে আপনার এসব উপসর্গের কোনোটাই নাই";
 "symptom_list_discard_alert_body" = "কোন উপসর্গ বেছে নেওয়া হয়ে থাকলে সেই বেছে নেওয়াটা বাতিল করে দেওয়া হবে।";
 "symptom_list_discard_alert_cancel" = "বাতিল করুন";
 "symptom_list_discard_alert_discard" = "সুনিশ্চিত করুন";
@@ -338,7 +338,7 @@
 "checkin_information_help_scanning_section_description" = "আপনি যদি কোন ভেন্যুতে প্রবেশ করেন (যেমন, কোন বার বা রেস্টুরেন্ট) যেখানে কোন অফিসিয়াল এনএইচএস কিউআর কোড পোস্টার আছে, সেক্ষেত্রে তা স্ক্যান করতে এই অ্যাপ ব্যবহার করুন। তখন অ্যাপটি সেই ভেন্যুতে আপনার চেক-ইনের সময় নিবন্ধন করবে।";
 "checkin_information_whats_a_qr_code_section_title" = "কি করে আমি একটি সরকারী NHS QR কোড চিনতে পারবো?";
 "checkin_information_whats_a_qr_code_section_description_new" = "সরকারি ইংরেজি/ওয়েলশ্ NHS QR কোড পোস্টার এরকম দেখতে। আপনার ফোনের ক্যামেরা ব্যবহার করুন QR কোড স্ক্যান করতে যা হল মাঝখানের বর্গক্ষেত্রটি।";
-"about_this_app_software_information_date_of_release_description" = "1/2021";
+"about_this_app_software_information_date_of_release_description" = "2/2021";
 "link_test_result_enter_code_example" = "উদাহরণ: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "পরীক্ষার কোড";
 "link_test_result_button_title" = "চালিয়ে যান";
@@ -348,7 +348,7 @@
 "home_link_test_result_button_title" = "পরীক্ষার ফলাফল প্রবেশ করান";
 "about_this_app_software_information_app_name %@" = "অ্যাপের নাম: %@";
 "about_this_app_software_information_version %@" = "সংস্করণ: %@";
-"about_this_app_software_information_date_of_release" = "প্রকাশের তারিখ: 1/2021";
+"about_this_app_software_information_date_of_release" = "প্রকাশের তারিখ: 2/2021";
 "link_test_result_title" = "পরীক্ষার ফলাফল প্রবেশ করান";
 "link_provide_feedback" = "https://covid19.nhs.uk/contact-us.html";
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
@@ -501,3 +501,15 @@
 "mydata_test_result_rapid_result" = "RAPID_RESULT";
 "exposure_acknowledgement_warning" = "আপনি হয়তো এমন একজন অ্যাপ ব্যবহারকারীর সংস্পর্শে এসেছেন যিনি করোনাভাইরাসে আক্রান্ত। অনুগ্রহ করে বাসায় স্ব-বিচ্ছিন্ন থাকুন নিজেকে এবং অন্যদের নিরাপদ রাখার জন্য।";
 "mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";
+"positive_test_result_requires_follow_up_test_subtitle" = "এবং একটি ফলো-আপ পরীক্ষা বুক করুন";
+"positive_test_result_requires_follow_up_test_start_to_isolate_info" = "আপনার করোনাভাইরাস পরীক্ষার ফলাফল পজিটিভ";
+"positive_test_result_requires_follow_up_test_explanation" = "স্ব-বিচ্ছিন্ন থাকার দিন সংখ্যা এই অ্যাপ কীভাবে গণনা করে তা বুঝতে নিচে প্রদত্ত প্রায়শই জিজ্ঞাসিত প্রশ্নাবলী দেখুন।\n\nআপনি যেহেতু একটি দ্রুত সোয়্যাব পরীক্ষা করিয়েছিলেন, তাই আপনাকে এখন আরেক ধরনের পরীক্ষা করাতে হবে যার ফলাফল যাচাই করার জন্য ল্যাবে পাঠানো হয়।\n\nমধ্যবর্তী সময়ে, আপনাকে এবং আপনার সঙ্গে বসবাসকারী যে কাউকে অবিলম্বে স্ব-বিচ্ছিন্ন হতে হবে।";
+"positive_test_result_requires_follow_up_test_book_test_button" = "একটি ফলো-আপ পরীক্ষা বুক করুন";
+"positive_test_result_already_confirmed_positive_title" = "স্ব-বিচ্ছিন্ন থাকা বহাল রাখুন";
+"positive_test_result_already_confirmed_positive_info" = "আপনার করোনাভাইরাস পরীক্ষার ফলাফল পজিটিভ";
+"positive_test_result_already_confirmed_positive_explanation" = "স্ব-বিচ্ছিন্ন থাকার দিন সংখ্যা এই অ্যাপ কীভাবে গণনা করে তা বুঝতে নিচে প্রদত্ত প্রায়শই জিজ্ঞাসিত প্রশ্নাবলীর লিংক দেখুন।";
+"positive_test_result_already_confirmed_positive_continue" = "চালিয়ে যান";
+"mydata_test_result_follow_up_test" = "ফলো-আপ পরীক্ষা";
+"mydata_test_result_follow_up_not_required" = "প্রয়োজন নাই";
+"mydata_test_result_follow_up_pending" = "অনিষ্পন্ন";
+"mydata_test_result_follow_up_complete" = "সম্পূর্ণ";

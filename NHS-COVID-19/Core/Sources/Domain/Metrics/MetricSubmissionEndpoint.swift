@@ -85,9 +85,11 @@ private struct SubmissionPayload: Codable {
         var receivedNegativeTestResultViaPolling = 0
         var receivedRiskyContactNotification = 0
         var startedIsolation = 0
+        var acknowledgedStartOfIsolationDueToRiskyContact = 0
         
         var totalExposureWindowsNotConsideredRisky = 0
         var totalExposureWindowsConsideredRisky = 0
+        var totalRiskyContactReminderNotifications = 0
         
         // How many times background tasks ran
         var totalBackgroundTasks = 0
@@ -103,9 +105,10 @@ private struct SubmissionPayload: Codable {
         var isIsolatingForSelfDiagnosedBackgroundTick = 0
         var isIsolatingForTestedPositiveBackgroundTick = 0
         var isIsolatingForHadRiskyContactBackgroundTick = 0
+        var isIsolatingForUnconfirmedTestBackgroundTick = 0
         var hasSelfDiagnosedPositiveBackgroundTick = 0
         var encounterDetectionPausedBackgroundTick = 0
-//        var collectedMetric = 0
+        var hasRiskyContactNotificationsEnabledBackgroundTick = 0
         
         // Isolation payment
         var receivedActiveIpcToken = 0
@@ -119,9 +122,12 @@ private struct SubmissionPayload: Codable {
         var receivedPositiveLFDTestResultEnteredManually = 0
         var receivedNegativeLFDTestResultEnteredManually = 0
         var receivedVoidLFDTestResultEnteredManually = 0
+        var receivedUnconfirmedPositiveTestResult = 0
         
         var hasTestedLFDPositiveBackgroundTick = 0
         var isIsolatingForTestedLFDPositiveBackgroundTick = 0
+        
+        var launchedTestOrdering = 0
     }
     
     var includesMultipleApplicationVersions: Bool
@@ -190,6 +196,7 @@ private extension Metric {
         case .isolatedForSelfDiagnosedBackgroundTick: return \.isIsolatingForSelfDiagnosedBackgroundTick
         case .isolatedForTestedPositiveBackgroundTick: return \.isIsolatingForTestedPositiveBackgroundTick
         case .isolatedForHadRiskyContactBackgroundTick: return \.isIsolatingForHadRiskyContactBackgroundTick
+        case .isolatedForUnconfirmedTestBackgroundTick: return \.isIsolatingForUnconfirmedTestBackgroundTick
         case .indexCaseBackgroundTick: return \.hasSelfDiagnosedPositiveBackgroundTick
         case .isolationBackgroundTick: return \.isIsolatingBackgroundTick
         case .pauseTick: return \.encounterDetectionPausedBackgroundTick
@@ -214,8 +221,13 @@ private extension Metric {
         case .receivedPositiveLFDTestResultEnteredManually: return \.receivedPositiveLFDTestResultEnteredManually
         case .receivedNegativeLFDTestResultEnteredManually: return \.receivedNegativeLFDTestResultEnteredManually
         case .receivedVoidLFDTestResultEnteredManually: return \.receivedVoidLFDTestResultEnteredManually
+        case .receivedUnconfirmedPositiveTestResult: return \.receivedUnconfirmedPositiveTestResult
         case .hasTestedLFDPositiveBackgroundTick: return \.hasTestedLFDPositiveBackgroundTick
         case .isIsolatingForTestedLFDPositiveBackgroundTick: return \.isIsolatingForTestedLFDPositiveBackgroundTick
+        case .acknowledgedStartOfIsolationDueToRiskyContact: return \.acknowledgedStartOfIsolationDueToRiskyContact
+        case .hasRiskyContactNotificationsEnabledBackgroundTick: return \.hasRiskyContactNotificationsEnabledBackgroundTick
+        case .totalRiskyContactReminderNotifications: return \.totalRiskyContactReminderNotifications
+        case .launchedTestOrdering: return \.launchedTestOrdering
         }
     }
     

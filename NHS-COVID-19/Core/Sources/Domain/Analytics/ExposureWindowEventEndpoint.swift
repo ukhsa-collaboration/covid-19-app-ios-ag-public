@@ -13,7 +13,6 @@ struct ExposureWindowEventEndpoint: HTTPEndpoint {
     var latestAppVersion: Version
     var postcode: String
     var localAuthority: String
-    var testKitType: TestType?
     var eventType: EpidemiologicalEventType
     
     func request(for input: ExposureWindowInfo) throws -> HTTPRequest {
@@ -22,8 +21,7 @@ struct ExposureWindowEventEndpoint: HTTPEndpoint {
             eventType: eventType,
             latestAppliationVersion: latestAppVersion,
             postcode: postcode,
-            localAuthority: localAuthority,
-            testKitType: testKitType
+            localAuthority: localAuthority
         )
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
@@ -34,10 +32,39 @@ struct ExposureWindowEventEndpoint: HTTPEndpoint {
     func parse(_ response: HTTPResponse) throws {}
 }
 
-struct ExposureWindowEventPayload: Codable {
+private struct ExposureWindowEventPayload: Codable {
     struct Event: Codable {
+        enum EventType: String, Codable {
+            case exposureWindow
+            case exposureWindowPositiveTest
+            
+            init(_ type: EpidemiologicalEventType) {
+                switch type {
+                case .exposureWindow: self = .exposureWindow
+                case .exposureWindowPositiveTest: self = .exposureWindowPositiveTest
+                }
+            }
+        }
+        
+        enum TestType: String, Codable {
+            case unknown
+            case labResult = "LAB_RESULT"
+            case rapidResult = "RAPID_RESULT"
+            case rapidSelfReported = "RAPID_SELF_REPORTED"
+            
+            init(_ testKitType: TestKitType?) {
+                switch testKitType {
+                case .labResult: self = .labResult
+                case .rapidResult: self = .rapidResult
+                case .rapidSelfReported: self = .rapidSelfReported
+                case .none: self = .unknown
+                }
+            }
+        }
+        
         struct Payload: Codable {
             var testType: TestType?
+            var requiresConfirmatoryTest: Bool?
             var date: Date
             var infectiousness: Infectiousness
             var scanInstances: [ScanInstance]
@@ -57,7 +84,7 @@ struct ExposureWindowEventPayload: Codable {
             case high
         }
         
-        var type: EpidemiologicalEventType
+        var type: EventType
         var version: Int
         var payload: Payload
     }
@@ -75,9 +102,13 @@ struct ExposureWindowEventPayload: Codable {
 }
 
 @available(iOS 13.7, *)
-extension ExposureWindowEventPayload {
-    init(window: ExposureWindowInfo, eventType: EpidemiologicalEventType, latestAppliationVersion: Version, postcode: String, localAuthority: String, testKitType: TestType?) {
-        let event = Event(type: eventType, version: 1, payload: Event.Payload(window: window, eventType: eventType, testKitType: testKitType))
+private extension ExposureWindowEventPayload {
+    init(window: ExposureWindowInfo, eventType: EpidemiologicalEventType, latestAppliationVersion: Version, postcode: String, localAuthority: String) {
+        let event = Event(
+            type: .init(eventType),
+            version: eventType.version,
+            payload: Event.Payload(window: window, eventType: eventType)
+        )
         events = [event]
         metadata = Metadata(
             operatingSystemVersion: UIDevice.current.systemVersion,
@@ -89,11 +120,29 @@ extension ExposureWindowEventPayload {
     }
 }
 
+private extension EpidemiologicalEventType {
+    
+    var version: Int {
+        switch self {
+        case .exposureWindow:
+            return 1
+        case .exposureWindowPositiveTest:
+            return 2
+        }
+    }
+    
+}
+
 @available(iOS 13.7, *)
-extension ExposureWindowEventPayload.Event.Payload {
-    init(window: ExposureWindowInfo, eventType: EpidemiologicalEventType, testKitType: TestType?) {
-        if eventType == .exposureWindowPositiveTest {
-            testType = testKitType
+private extension ExposureWindowEventPayload.Event.Payload {
+    init(window: ExposureWindowInfo, eventType: EpidemiologicalEventType) {
+        switch eventType {
+        case .exposureWindowPositiveTest(let testKitType, let requiresConfirmatoryTest):
+            testType = .init(testKitType)
+            self.requiresConfirmatoryTest = requiresConfirmatoryTest
+        case .exposureWindow:
+            testType = nil
+            requiresConfirmatoryTest = nil
         }
         date = window.date.startDate(in: .utc)
         infectiousness = ExposureWindowEventPayload.Event.Infectiousness(window.infectiousness)
@@ -104,7 +153,7 @@ extension ExposureWindowEventPayload.Event.Payload {
 }
 
 @available(iOS 13.7, *)
-extension ExposureWindowEventPayload.Event.Infectiousness {
+private extension ExposureWindowEventPayload.Event.Infectiousness {
     init(_ infectiousness: ExposureWindowInfo.Infectiousness) {
         switch infectiousness {
         case .none:
@@ -120,7 +169,7 @@ extension ExposureWindowEventPayload.Event.Infectiousness {
 }
 
 @available(iOS 13.7, *)
-extension ExposureWindowEventPayload.Event.ScanInstance {
+private extension ExposureWindowEventPayload.Event.ScanInstance {
     init(_ scanInstance: ExposureWindowInfo.ScanInstance) {
         minimumAttenuation = scanInstance.minimumAttenuation
         secondsSinceLastScan = scanInstance.secondsSinceLastScan

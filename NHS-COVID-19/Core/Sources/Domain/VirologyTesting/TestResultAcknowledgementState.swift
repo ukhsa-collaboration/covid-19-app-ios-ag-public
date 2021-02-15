@@ -10,8 +10,8 @@ public enum TestResultAcknowledgementState {
     case neededForNegativeResultContinueToIsolate(acknowledge: () -> Void, isolationEndDate: Date)
     case neededForNegativeResultNotIsolating(acknowledge: () -> Void)
     case neededForNegativeAfterPositiveResultContinueToIsolate(acknowledge: () -> Void, isolationEndDate: Date)
-    case neededForPositiveResultStartToIsolate(PositiveResultAcknowledgement, isolationEndDate: Date, keySubmissionSupported: Bool)
-    case neededForPositiveResultContinueToIsolate(PositiveResultAcknowledgement, isolationEndDate: Date, keySubmissionSupported: Bool)
+    case neededForPositiveResultStartToIsolate(PositiveResultAcknowledgement, isolationEndDate: Date, keySubmissionSupported: Bool, requiresConfirmatoryTest: Bool)
+    case neededForPositiveResultContinueToIsolate(PositiveResultAcknowledgement, isolationEndDate: Date, keySubmissionSupported: Bool, requiresConfirmatoryTest: Bool)
     case neededForPositiveResultNotIsolating(PositiveResultAcknowledgement, keySubmissionSupported: Bool)
     case neededForVoidResultContinueToIsolate(acknowledge: () -> Void, isolationEndDate: Date)
     case neededForVoidResultNotIsolating(acknowledge: () -> Void)
@@ -21,8 +21,8 @@ public enum TestResultAcknowledgementState {
         public var acknowledgeWithoutSending: () -> Void
     }
     
-    public static func neededForPositiveResult(acknowledge: @escaping () -> AnyPublisher<Void, Error>, isolationEndDate: Date, keySubmissionSupported: Bool) -> Self {
-        .neededForPositiveResultContinueToIsolate(PositiveResultAcknowledgement(acknowledge: acknowledge, acknowledgeWithoutSending: {}), isolationEndDate: isolationEndDate, keySubmissionSupported: keySubmissionSupported)
+    public static func neededForPositiveResult(acknowledge: @escaping () -> AnyPublisher<Void, Error>, isolationEndDate: Date, keySubmissionSupported: Bool, requiresConfirmatoryTest: Bool) -> Self {
+        .neededForPositiveResultContinueToIsolate(PositiveResultAcknowledgement(acknowledge: acknowledge, acknowledgeWithoutSending: {}), isolationEndDate: isolationEndDate, keySubmissionSupported: keySubmissionSupported, requiresConfirmatoryTest: requiresConfirmatoryTest)
     }
     
     public static func neededForPositiveResultNoIsolation(acknowledge: @escaping () -> AnyPublisher<Void, Error>, keySubmissionSupported: Bool) -> Self {
@@ -54,7 +54,8 @@ public enum TestResultAcknowledgementState {
                     completionHandler
                 ),
                 isolationEndDate: isolation.endDate,
-                keySubmissionSupported: result.diagnosisKeySubmissionToken != nil
+                keySubmissionSupported: result.diagnosisKeySubmissionToken != nil,
+                requiresConfirmatoryTest: result.requiresConfirmatoryTest
             )
         case (.positive, .isolating(let isolation, _, _)):
             self = TestResultAcknowledgementState.neededForPositiveResultStartToIsolate(
@@ -65,7 +66,8 @@ public enum TestResultAcknowledgementState {
                     completionHandler
                 ),
                 isolationEndDate: isolation.endDate,
-                keySubmissionSupported: result.diagnosisKeySubmissionToken != nil
+                keySubmissionSupported: result.diagnosisKeySubmissionToken != nil,
+                requiresConfirmatoryTest: result.requiresConfirmatoryTest
             )
         case (.positive, _):
             let endDate = newIsolationState.isolation?.endDate
@@ -78,7 +80,7 @@ public enum TestResultAcknowledgementState {
                 ),
                 keySubmissionSupported: result.diagnosisKeySubmissionToken != nil
             )
-        case (.negative, .isolating(let isolation, _, _)) where isolation.isIndexCaseOnlyWithPositiveTest:
+        case (.negative, .isolating(let isolation, _, _)) where isolation.hasPositiveTestResult:
             self = TestResultAcknowledgementState.neededForNegativeAfterPositiveResultContinueToIsolate(
                 acknowledge: { completionHandler(.notSent) },
                 isolationEndDate: isolation.endDate

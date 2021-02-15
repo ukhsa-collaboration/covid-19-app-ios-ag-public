@@ -18,8 +18,9 @@ public class MyDataScreenScenario: Scenario {
     public static let didTapEditPostcode = "Tapped edit postcode"
     public static let confirmedDeleteAllData = "Confirmed delete all data"
     
-    public static let testResult = TestResult.positive
-    public static let testKitType = TestKitType.labResult
+    public static let testResult = Interface.TestResult.positive
+    public static let testKitType = Interface.TestKitType.labResult
+    public static let confirmationStatus = MyDataViewController.ViewModel.TestResultDetails.ConfirmationStatus.confirmed(onDay: GregorianDay(year: 2021, month: 1, day: 26))
     
     public static let venueID1 = "HF912159M5Y"
     public static let venueID2ToDelete = "FHF84HFY4"
@@ -82,7 +83,8 @@ public class MyDataScreenScenario: Scenario {
                     testResultDetails: .init(
                         result: testResult,
                         date: testResultDate,
-                        testKitType: testKitType
+                        testKitType: testKitType,
+                        confirmationStatus: confirmationStatus
                     ),
                     venueHistories: venueHistories,
                     symptomsOnsetDate: symptomsDate,

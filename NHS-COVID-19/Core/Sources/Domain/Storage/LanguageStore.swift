@@ -38,4 +38,8 @@ class LanguageStore {
             languageInfo = LanguageInfo(languageCode: localeIdentifier)
         }
     }
+    
+    func delete() {
+        languageInfo = nil
+    }
 }

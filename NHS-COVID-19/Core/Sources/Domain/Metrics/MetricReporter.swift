@@ -13,6 +13,7 @@ class MetricReporter: NSObject {
     
     private let client: HTTPClient
     private let collector: MetricCollector
+    private let enabled: MetricsState
     private let getPostcode: () -> String?
     private let getLocalAuthority: () -> String?
     private let chunkCreator: MetricUploadChunkCreator
@@ -24,19 +25,40 @@ class MetricReporter: NSObject {
         currentDateProvider: DateProviding,
         appInfo: AppInfo,
         getPostcode: @escaping () -> String?,
-        getLocalAuthority: @escaping () -> String?
+        getLocalAuthority: @escaping () -> String?,
+        metricCollector: MetricCollector? = nil,
+        metricChunkCreator: MetricUploadChunkCreator? = nil
     ) {
         self.client = client
         self.getPostcode = getPostcode
         self.getLocalAuthority = getLocalAuthority
-        collector = MetricCollector(encryptedStore: encryptedStore, currentDateProvider: currentDateProvider)
-        chunkCreator = MetricUploadChunkCreator(collector: collector, appInfo: appInfo, getPostcode: getPostcode, getLocalAuthority: getLocalAuthority, currentDateProvider: currentDateProvider)
+        
+        let enabled = MetricsState()
+        
+        let collector = metricCollector ?? MetricCollector(encryptedStore: encryptedStore, currentDateProvider: currentDateProvider, enabled: enabled)
+        let chunkCreator = metricChunkCreator ?? MetricUploadChunkCreator(collector: collector, appInfo: appInfo, getPostcode: getPostcode, getLocalAuthority: getLocalAuthority, currentDateProvider: currentDateProvider)
+        
+        self.enabled = enabled
+        self.collector = collector
+        self.chunkCreator = chunkCreator
+        
         super.init()
     }
     
+    func set(rawState: DomainProperty<RawState>) {
+        enabled.set(rawState: rawState)
+    }
+    
     func uploadMetrics() -> AnyPublisher<Void, Never> {
+        
+        // check onboarding was completed; we don't upload metrics until this is done
+        guard enabled.state == .enabled else {
+            return Empty().eraseToAnyPublisher()
+        }
+        
         var publishers = [AnyPublisher<Void, NetworkRequestError>]()
         
+        // note; we're not checking that these are uploaded successfully - if it fails, they are lost
         while let info = chunkCreator.consumeMetricsInfoForNextWindow() {
             publishers.append(
                 client.fetch(MetricSubmissionEndpoint(), with: info)
@@ -50,6 +72,8 @@ class MetricReporter: NSObject {
     }
     
     func didFinishOnboarding() {
+        
+        // send the onboarding packet
         let today = GregorianDay.today.startDate(in: .utc)
         let payload = chunkCreator.createTriggeredPayload(dateInterval: DateInterval(start: today, end: today))
         let info = MetricsInfo(
@@ -59,5 +83,9 @@ class MetricReporter: NSObject {
             recordedMetrics: [.completedOnboarding: 1]
         )
         client.fetch(MetricSubmissionEndpoint(), with: info).replaceError(with: ()).sink { _ in }.store(in: &cancellables)
+    }
+    
+    func delete() {
+        collector.delete()
     }
 }

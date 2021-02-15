@@ -155,7 +155,7 @@
 "symptom_list_secondary_action" = "Nid oes gennyf unrhyw un o’r symptomau hyn";
 "symptom_list_error_heading" = "Mae problem";
 "symptom_list_error_description" = "Mae angen i chi ddewis symptomau neu ddewis “Nid oes gennyf unrhyw un o'r symptomau hyn”";
-"symptom_list_discard_alert_title" = "Cadarnhewch nad oes gennych symptomau";
+"symptom_list_discard_alert_title" = "Rhaid cadarnhau nad oes yr un o'r symptomau hyn gennych";
 "symptom_list_discard_alert_body" = "Bydd unrhyw symptomau a ddewiswyd yn cael eu dad-ddewis.";
 "symptom_list_discard_alert_cancel" = "Canslo";
 "symptom_list_discard_alert_discard" = "Cadarnhau";
@@ -338,7 +338,7 @@
 "checkin_information_help_scanning_section_description" = "Os na allwch sganio cod QR, ac eisiau mewngofnodi drwy ddull arall, siaradwch ag aelod o staff.";
 "checkin_information_whats_a_qr_code_section_title" = "Sut alla i adnabod cod QR swyddogol y GIG?";
 "checkin_information_whats_a_qr_code_section_description_new" = "Dyma enghraifft o boster cod QR swyddogol y GIG yn Saesneg/Cymraeg. Defnyddiwch gamera eich ffôn i sganio'r cod QR sef y sgwâr yn y canol.";
-"about_this_app_software_information_date_of_release_description" = "1/2021";
+"about_this_app_software_information_date_of_release_description" = "2/2021";
 "link_test_result_enter_code_example" = "Enghraifft: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Cod y prawf";
 "link_test_result_button_title" = "Parhau";
@@ -348,7 +348,7 @@
 "home_link_test_result_button_title" = "Nodwch ganlyniad y prawf";
 "about_this_app_software_information_app_name %@" = "Enw'r ap: %@";
 "about_this_app_software_information_version %@" = "Fersiwn: %@";
-"about_this_app_software_information_date_of_release" = "Dyddiad rhyddhau: 1/2021";
+"about_this_app_software_information_date_of_release" = "Dyddiad rhyddhau: 2/2021";
 "link_test_result_title" = "Nodwch ganlyniad y prawf";
 "link_provide_feedback" = "https://covid19.nhs.uk/contact-us.html";
 "link_general_advice_wls" = "https://llyw.cymru/coronafeirws";
@@ -501,3 +501,15 @@
 "mydata_test_result_rapid_result" = "RAPID_RESULT";
 "exposure_acknowledgement_warning" = "Mae'r ap wedi canfod eich bod wedi bod yn agos at rywun sydd â’r coronafeirws. Arhoswch gartref a hunanynyswch i gadw'ch hun ac eraill yn ddiogel.";
 "mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";
+"positive_test_result_requires_follow_up_test_subtitle" = "a bwcio prawf dilynol.";
+"positive_test_result_requires_follow_up_test_start_to_isolate_info" = "Mae canlyniad eich prawf coronafirws yn bositif";
+"positive_test_result_requires_follow_up_test_explanation" = "Er mwyn deall sut mae'r ap yn cyfrifo diwrnodau hunan-ynysu, ewch i'r rhestr o gwestiynau a ofynnir yn aml.\n\nOherwydd eich bod wedi cael prawf swab cyflym, mae angen i chi gael math arall o brawf nawr a fydd yn cael ei anfon i'r labordy i ddilysu'r canlyniad.\n\nYn y cyfamser rhaid i chi ac unrhyw un arall sy'n byw gyda chi hunan-ynysu ar unwaith.";
+"positive_test_result_requires_follow_up_test_book_test_button" = "Archebwch brawf dilynol";
+"positive_test_result_already_confirmed_positive_title" = "Parhewch i hunanynysu am";
+"positive_test_result_already_confirmed_positive_info" = "Mae canlyniad eich prawf coronafirws yn bositif";
+"positive_test_result_already_confirmed_positive_explanation" = "Er mwyn deall sut mae'r ap yn cyfrifo diwrnodau hunan-ynysu, ewch i'r rhestr o gwestiynau a ofynnir yn aml.";
+"positive_test_result_already_confirmed_positive_continue" = "Parhau";
+"mydata_test_result_follow_up_test" = "Prawf dilynol";
+"mydata_test_result_follow_up_not_required" = "Nid yw'n ofynnol";
+"mydata_test_result_follow_up_pending" = "I ddod";
+"mydata_test_result_follow_up_complete" = "Wedi'i gwblhau";

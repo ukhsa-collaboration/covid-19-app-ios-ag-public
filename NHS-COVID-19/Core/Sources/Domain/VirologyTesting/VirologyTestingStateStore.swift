@@ -21,6 +21,7 @@ private struct TestResultInfo: Codable, DataConvertible {
     var testKitType: TestKitType?
     var endDate: Date // Date test result arrives at NPEx
     var diagnosisKeySubmissionToken: String?
+    var requiresConfirmatoryTest: Bool
 }
 
 public class VirologyTestingStateStore {
@@ -78,7 +79,8 @@ public class VirologyTestingStateStore {
                 testResult: unacknowledgedTestResult.result,
                 testKitType: unacknowledgedTestResult.testKitType,
                 endDate: unacknowledgedTestResult.endDate,
-                diagnosisKeySubmissionToken: diagnosisSubmissionToken
+                diagnosisKeySubmissionToken: diagnosisSubmissionToken,
+                requiresConfirmatoryTest: unacknowledgedTestResult.requiresConfirmatoryTest
             )
         } else {
             return nil
@@ -102,12 +104,13 @@ public class VirologyTestingStateStore {
         )
     }
     
-    func saveResult(virologyTestResult: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?) {
+    func saveResult(virologyTestResult: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?, requiresConfirmatoryTest: Bool) {
         let testResultInfo = TestResultInfo(
             result: TestResult(virologyTestResult.testResult),
             testKitType: TestKitType(virologyTestResult.testKitType),
             endDate: virologyTestResult.endDate,
-            diagnosisKeySubmissionToken: diagnosisKeySubmissionToken?.value
+            diagnosisKeySubmissionToken: diagnosisKeySubmissionToken?.value,
+            requiresConfirmatoryTest: requiresConfirmatoryTest
         )
         
         let newList: [TestResultInfo] = (virologyTestingInfo?.unacknowledgedTestResults ?? []) + [testResultInfo]

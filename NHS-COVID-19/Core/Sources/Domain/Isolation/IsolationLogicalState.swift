@@ -12,6 +12,18 @@ struct IsolationInfo: Codable, Equatable, DataConvertible {
     var indexCaseInfo: IndexCaseInfo?
     var contactCaseInfo: ContactCaseInfo?
     
+    init(
+        hasAcknowledgedEndOfIsolation: Bool = false,
+        hasAcknowledgedStartOfIsolation: Bool = false,
+        indexCaseInfo: IndexCaseInfo? = nil,
+        contactCaseInfo: ContactCaseInfo? = nil
+    ) {
+        self.hasAcknowledgedEndOfIsolation = hasAcknowledgedEndOfIsolation
+        self.hasAcknowledgedStartOfIsolation = hasAcknowledgedStartOfIsolation
+        self.indexCaseInfo = indexCaseInfo
+        self.contactCaseInfo = contactCaseInfo
+    }
+    
     static let empty = IsolationInfo(indexCaseInfo: nil, contactCaseInfo: nil)
 }
 
@@ -75,9 +87,45 @@ public struct IndexCaseInfo: Equatable {
     }
     
     public struct TestInfo: Codable, Equatable {
+        public enum ConfirmationStatus: Equatable {
+            case pending
+            case confirmed(onDay: GregorianDay)
+            case notRequired
+        }
+        
         public var result: TestResult
         public var testKitType: TestKitType?
+        public var requiresConfirmatoryTest: Bool
         public var receivedOnDay: GregorianDay
+        public var confirmedOnDay: GregorianDay?
+        
+        public var confirmationStatus: ConfirmationStatus {
+            if requiresConfirmatoryTest {
+                if let confirmedOnDay = confirmedOnDay {
+                    return .confirmed(onDay: confirmedOnDay)
+                }
+                return .pending
+            } else {
+                return .notRequired
+            }
+        }
+        
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            result = try container.decode(TestResult.self, forKey: .result)
+            testKitType = try container.decodeIfPresent(TestKitType.self, forKey: .testKitType)
+            requiresConfirmatoryTest = try container.decodeIfPresent(Bool.self, forKey: .requiresConfirmatoryTest) ?? false
+            receivedOnDay = try container.decode(GregorianDay.self, forKey: .receivedOnDay)
+            confirmedOnDay = try container.decodeIfPresent(GregorianDay.self, forKey: .confirmedOnDay)
+        }
+        
+        public init(result: TestResult, testKitType: TestKitType? = nil, requiresConfirmatoryTest: Bool, receivedOnDay: GregorianDay, confirmedOnDay: GregorianDay? = nil) {
+            self.result = result
+            self.testKitType = testKitType
+            self.requiresConfirmatoryTest = requiresConfirmatoryTest
+            self.receivedOnDay = receivedOnDay
+            self.confirmedOnDay = confirmedOnDay
+        }
     }
     
     var isolationTrigger: IsolationTrigger
@@ -146,10 +194,12 @@ extension IndexCaseInfo {
         }
     }
     
-    mutating func set(testResult: TestResult, testKitType: TestKitType?, receivedOn: GregorianDay) {
-        if testInfo?.result == .positive { return }
-        
-        testInfo = TestInfo(result: testResult, testKitType: testKitType, receivedOnDay: receivedOn)
+    mutating func set(testResult: TestResult, testKitType: TestKitType?, requiresConfirmatoryTest: Bool, receivedOn: GregorianDay) {
+        testInfo = TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOnDay: receivedOn)
+    }
+    
+    mutating func confirmTest(confirmationDay: GregorianDay) {
+        testInfo?.confirmedOnDay = confirmationDay
     }
 }
 
@@ -190,33 +240,24 @@ public enum TestKitType: String, Codable, Equatable {
 struct ContactCaseInfo: Codable, Equatable {
     var exposureDay: GregorianDay
     var isolationFromStartOfDay: GregorianDay
-    var trigger: ContactCaseTrigger
     
     private enum CodingKeys: String, CodingKey {
         case exposureDay
         case isolationFromStartOfDay
-        case trigger
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         exposureDay = try container.decode(GregorianDay.self, forKey: .exposureDay)
         isolationFromStartOfDay = try container.decode(GregorianDay.self, forKey: .isolationFromStartOfDay)
-        trigger = try container.decodeIfPresent(ContactCaseTrigger.self, forKey: .trigger) ?? .exposureDetection
     }
 }
 
 extension ContactCaseInfo {
-    init(exposureDay: GregorianDay, isolationFromStartOfDay: GregorianDay, trigger: ContactCaseTrigger) {
+    init(exposureDay: GregorianDay, isolationFromStartOfDay: GregorianDay) {
         self.exposureDay = exposureDay
         self.isolationFromStartOfDay = isolationFromStartOfDay
-        self.trigger = trigger
     }
-}
-
-public enum ContactCaseTrigger: String, Codable, Equatable {
-    case exposureDetection
-    case riskyVenue
 }
 
 // After experimenting with how best to deal with calendar related types, it feels like the right balance for this
@@ -248,10 +289,12 @@ enum IsolationLogicalState: Equatable {
             var positiveTestResult = false
             var selfDiagnosed = false
             var testType: TestKitType?
-            if case .indexCase(let hasPositiveTestResult, let testKitType, let hasSelfDiagnosed) = i.reason {
-                positiveTestResult = hasPositiveTestResult
-                selfDiagnosed = hasSelfDiagnosed
-                testType = testKitType
+            var isPendingConfirmation = false
+            if let indexCaseInfo = i.reason.indexCaseInfo {
+                positiveTestResult = indexCaseInfo.hasPositiveTestResult
+                selfDiagnosed = indexCaseInfo.isSelfDiagnosed
+                testType = indexCaseInfo.testKitType
+                isPendingConfirmation = indexCaseInfo.isPendingConfirmation
             }
             
             if i.untilStartOfDay <= today.gregorianDay && c.untilStartOfDay > today.gregorianDay {
@@ -262,7 +305,15 @@ enum IsolationLogicalState: Equatable {
                 _isolation = _Isolation(
                     fromDay: min(c.fromDay, i.fromDay),
                     untilStartOfDay: max(c.untilStartOfDay, i.untilStartOfDay),
-                    reason: .bothCases(hasPositiveTestResult: positiveTestResult, testkitType: testType, isSelfDiagnosed: selfDiagnosed)
+                    reason: Isolation.Reason(
+                        indexCaseInfo: IsolationIndexCaseInfo(
+                            hasPositiveTestResult: positiveTestResult,
+                            testKitType: testType,
+                            isSelfDiagnosed: selfDiagnosed,
+                            isPendingConfirmation: isPendingConfirmation
+                        ),
+                        isContactCase: true
+                    )
                 )
             }
             
@@ -321,22 +372,12 @@ enum IsolationLogicalState: Equatable {
     
     var isInCorrectIsolationStateToApplyForFinancialSupport: Bool {
         guard let activeIsolation = activeIsolation else { return false }
-        switch activeIsolation.reason {
-        case .indexCase: return false
-        case .contactCase: return true
-        case .bothCases(let hasPositiveTestResult, _, _):
-            return !hasPositiveTestResult
-        }
+        return activeIsolation.isContactCase && !activeIsolation.hasPositiveTestResult
     }
     
     var interestedInExposureNotifications: Bool {
         guard let activeIsolation = activeIsolation else { return true }
-        switch activeIsolation.reason {
-        case .bothCases, .contactCase:
-            return false
-        case .indexCase(let hasPositiveTestResult, _, _):
-            return !hasPositiveTestResult
-        }
+        return !activeIsolation.isContactCase && !activeIsolation.hasConfirmedPositiveTestResult
     }
     
     var isolation: Isolation? {
@@ -382,6 +423,7 @@ struct _Isolation {
 extension _Isolation {
     
     fileprivate init?(indexCaseInfo: IndexCaseInfo, configuration: IsolationConfiguration) {
+        let isPendingConfirmation = indexCaseInfo.testInfo?.confirmationStatus == .pending
         switch (indexCaseInfo.onsetDay, indexCaseInfo.testInfo?.result, indexCaseInfo.isolationTrigger) {
         case (_, .negative, .manualTestEntry):
             return nil
@@ -391,31 +433,31 @@ extension _Isolation {
             self.init(
                 fromDay: indexCaseInfo.isolationTrigger.startDay,
                 untilStartOfDay: indexCaseInfo.testInfo!.receivedOnDay,
-                reason: .indexCase(hasPositiveTestResult: false, testkitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true)
+                reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true, isPendingConfirmation: isPendingConfirmation), isContactCase: false)
             )
         case (.none, _, .selfDiagnosis(let selfDiagnosisDay)):
             self.init(
                 fromDay: selfDiagnosisDay,
                 untilStartOfDay: selfDiagnosisDay + configuration.indexCaseSinceSelfDiagnosisUnknownOnset,
-                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testkitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true)
+                reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true, isPendingConfirmation: isPendingConfirmation), isContactCase: false)
             )
         case (.none, _, .manualTestEntry(let npexDay)):
             self.init(
                 fromDay: npexDay,
                 untilStartOfDay: npexDay + configuration.indexCaseSinceNPEXDayNoSelfDiagnosis,
-                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testkitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: false)
+                reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: false, isPendingConfirmation: isPendingConfirmation), isContactCase: false)
             )
         case (.some(let day), _, .manualTestEntry(npexDay: _)):
             self.init(
                 fromDay: indexCaseInfo.isolationTrigger.startDay,
                 untilStartOfDay: day + configuration.indexCaseSinceSelfDiagnosisOnset,
-                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testkitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: false)
+                reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: false, isPendingConfirmation: isPendingConfirmation), isContactCase: false)
             )
         case (.some(let day), _, .selfDiagnosis(_)):
             self.init(
                 fromDay: indexCaseInfo.isolationTrigger.startDay,
                 untilStartOfDay: day + configuration.indexCaseSinceSelfDiagnosisOnset,
-                reason: .indexCase(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testkitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true)
+                reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true, isPendingConfirmation: isPendingConfirmation), isContactCase: false)
             )
         }
     }
@@ -425,7 +467,7 @@ extension _Isolation {
         self.init(
             fromDay: contactCaseInfo.isolationFromStartOfDay,
             untilStartOfDay: contactCaseInfo.exposureDay + configuration.contactCase,
-            reason: .contactCase(contactCaseInfo.trigger)
+            reason: Isolation.Reason(isContactCase: true)
         )
     }
     

@@ -21,12 +21,12 @@ class UserNotificationManager {
         }
         
         let content = self.content(for: type)
+        
         let request = UNNotificationRequest(
             identifier: type.rawValue,
             content: content,
             trigger: trigger
         )
-        
         return request
     }
     
@@ -104,5 +104,9 @@ extension UserNotificationManager: UserNotificationManaging {
     
     func removePending(type: UserNotificationType) {
         manager.removePendingNotificationRequests(withIdentifiers: [type.rawValue])
+    }
+    
+    func removeAllDelivered(for type: UserNotificationType) {
+        manager.removeDeliveredNotifications(withIdentifiers: [type.rawValue])
     }
 }

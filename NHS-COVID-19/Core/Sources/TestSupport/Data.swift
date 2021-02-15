@@ -19,7 +19,7 @@ public extension Data {
 
 public extension String {
     
-    func narmalizedJSON() -> Data {
+    func normalizedJSON() -> Data {
         data(using: .utf8)!.normalizingJSON()
     }
     

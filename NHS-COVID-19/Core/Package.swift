@@ -22,6 +22,10 @@ let package = Package(
             targets: ["Interface"]
         ),
         .library(
+            name: "BehaviourModels",
+            targets: ["BehaviourModels"]
+        ),
+        .library(
             name: "Domain",
             targets: ["Domain"]
         ),
@@ -77,6 +81,12 @@ let package = Package(
             ]
         ),
         .target(
+            name: "BehaviourModels",
+            dependencies: [
+                "Common",
+            ]
+        ),
+        .target(
             name: "Integration",
             dependencies: [
                 "Common",
@@ -115,6 +125,13 @@ let package = Package(
             dependencies: [
                 "TestSupport",
                 "Common",
+            ]
+        ),
+        .testTarget(
+            name: "BehaviourModelsTests",
+            dependencies: [
+                "BehaviourModels",
+                "TestSupport",
             ]
         ),
         .testTarget(

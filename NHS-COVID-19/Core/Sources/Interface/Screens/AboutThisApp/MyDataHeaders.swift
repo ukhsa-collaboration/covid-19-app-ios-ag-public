@@ -7,7 +7,7 @@ import UIKit
 
 extension MyDataViewController {
     class VenueHistorySectionHeader: UITableViewHeaderFooterView {
-        static let reuseIdentifier = String(describing: self)
+        static let reuseIdentifier = String(describing: VenueHistorySectionHeader.self)
         
         private let label: UILabel
         private let button: UIButton
@@ -76,7 +76,7 @@ extension MyDataViewController {
 
 extension MyDataViewController {
     class EditableSectionHeader: UITableViewHeaderFooterView {
-        static let reuseIdentifier = String(describing: self)
+        static let reuseIdentifier = String(describing: EditableSectionHeader.self)
         
         private let label: UILabel
         private let button: UIButton
@@ -137,7 +137,7 @@ extension MyDataViewController {
 
 extension MyDataViewController {
     class SectionHeader: UITableViewHeaderFooterView {
-        static let reuseIdentifier = String(describing: self)
+        static let reuseIdentifier = String(describing: SectionHeader.self)
         let label: UILabel
         
         override init(reuseIdentifier: String?) {

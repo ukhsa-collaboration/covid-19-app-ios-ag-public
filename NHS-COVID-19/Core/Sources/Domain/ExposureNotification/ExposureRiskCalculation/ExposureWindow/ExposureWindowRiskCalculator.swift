@@ -34,8 +34,18 @@ class ExposureWindowRiskCalculator {
     ) -> ExposureRiskInfo? {
         var riskyWindows = [(ExposureNotificationExposureWindow, ExposureRiskInfo)]()
         
-        let maxRiskInfo = exposureWindows.map { exposureWindow in
-            let scanInstances = exposureWindow.enScanInstances.map { $0.toScanInstance() }
+        let maxRiskInfo = exposureWindows.compactMap { exposureWindow in
+            // We've seen in our field test data that on rare occasion we get a ScanInstance with a secondsSinceLastScan of 0
+            // This is invalid input for `RiskScoreCalculator` so we filter out these `ScanInstance`s
+            let scanInstances = exposureWindow.enScanInstances
+                .filter { $0.secondsSinceLastScan > 0 }
+                .map(ScanInstance.init(from:))
+            
+            // An empty list is also invalid input
+            guard !scanInstances.isEmpty else {
+                return nil
+            }
+            
             let riskScore = riskScoreCalculator.calculate(instances: scanInstances) * 60
             let infectiousnessFactor = infectiousnessFactorCalculator.infectiousnessFactor(for: exposureWindow.infectiousness, config: configuration)
             let riskInfo = ExposureRiskInfo(

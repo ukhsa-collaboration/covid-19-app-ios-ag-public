@@ -75,6 +75,13 @@
         "identifier" : "LocalizationTests",
         "name" : "LocalizationTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:NHS-COVID-19\/Core",
+        "identifier" : "BehaviourModelsTests",
+        "name" : "BehaviourModelsTests"
+      }
     }
   ],
   "version" : 1

@@ -28,7 +28,7 @@ public class ApplicationCoordinator {
     
     private let application: Application
     private let appAvailabilityManager: AppAvailabilityManager
-    private let metricRecoder: MetricReporter
+    private let metricReporter: MetricReporter
     private let userNotificationsStateController: UserNotificationsStateController
     private var cancellabes = [AnyCancellable]()
     private let processingTaskRequestManager: ProcessingTaskRequestManaging
@@ -56,6 +56,7 @@ public class ApplicationCoordinator {
     private let localAuthorityManager: LocalAuthorityManager
     private let isolationPaymentContext: IsolationPaymentContext
     private let trafficObfuscationClient: TrafficObfuscationClient
+    private let userNotificationManager: UserNotificationManaging
     
     private var recommendedUpdateManager: RecommendedUpdateManager?
     
@@ -73,6 +74,7 @@ public class ApplicationCoordinator {
         processingTaskRequestManager = services.processingTaskRequestManager
         distributeClient = services.distributeClient
         currentDateProvider = services.currentDateProvider
+        userNotificationManager = services.userNotificationsManager
         let dateProvider = services.currentDateProvider
         Self.logger.debug("Initialising")
         
@@ -133,7 +135,10 @@ public class ApplicationCoordinator {
             ),
             encryptedStore: services.encryptedStore,
             notificationCenter: notificationCenter,
-            currentDateProvider: currentDateProvider
+            currentDateProvider: currentDateProvider,
+            removeExposureDetectionNotifications: {
+                services.userNotificationsManager.removeAllDelivered(for: .exposureDetection)
+            }
         )
         let isolationContext = self.isolationContext
         
@@ -190,7 +195,7 @@ public class ApplicationCoordinator {
             notificationCenter: notificationCenter
         )
         
-        metricRecoder = MetricReporter(
+        metricReporter = MetricReporter(
             client: services.apiClient,
             encryptedStore: services.encryptedStore,
             currentDateProvider: currentDateProvider,
@@ -204,7 +209,7 @@ public class ApplicationCoordinator {
             exposureInfoProvider: exposureNotificationContext.exposureDetectionStore,
             riskyCheckinsProvider: checkInContext.checkInsStore,
             handleContactCase: { riskInfo in
-                let contactCaseInfo = ContactCaseInfo(exposureDay: riskInfo.day, isolationFromStartOfDay: dateProvider.currentGregorianDay(timeZone: .current), trigger: .exposureDetection)
+                let contactCaseInfo = ContactCaseInfo(exposureDay: riskInfo.day, isolationFromStartOfDay: dateProvider.currentGregorianDay(timeZone: .current))
                 isolationContext.isolationStateStore.set(contactCaseInfo)
                 services.userNotificationsManager.removePending(type: .exposureDontWorry)
                 services.userNotificationsManager.add(type: .exposureDetection, at: nil, withCompletionHandler: nil)
@@ -241,6 +246,8 @@ public class ApplicationCoordinator {
         
         trafficObfuscationClient = TrafficObfuscationClient(client: services.apiClient)
         
+        metricReporter.set(rawState: rawState.domainProperty())
+
         monitorRawState()
         
         setupBackgroundTask()
@@ -381,92 +388,32 @@ public class ApplicationCoordinator {
             .eraseToAnyPublisher()
     }
     
-    private func positiveAcknowledgement(
-        for token: DiagnosisKeySubmissionToken?,
-        endDate: Date?,
-        indexCaseInfo: IndexCaseInfo?,
-        completionHandler: @escaping (TestResultAcknowledgementState.SendKeysState) -> Void
-    ) -> TestResultAcknowledgementState.PositiveResultAcknowledgement {
-        TestResultAcknowledgementState.PositiveResultAcknowledgement(
-            acknowledge: { [weak self] in
-                guard let self = self else { return Empty().eraseToAnyPublisher() }
-                var sendKeyState: TestResultAcknowledgementState.SendKeysState = .sent
-                if let indexCaseInfo = indexCaseInfo, let submissionToken = token {
-                    return self.exposureNotificationContext.exposureKeysManager.sendKeys(
-                        for: indexCaseInfo.assumedOnsetDay,
-                        token: submissionToken
-                    )
-                    .catch { (error) -> AnyPublisher<Void, Error> in
-                        if (error as NSError).domain == ENErrorDomain {
-                            sendKeyState = .notSent
-                            return Empty().eraseToAnyPublisher()
-                        } else {
-                            return Fail(error: error).eraseToAnyPublisher()
-                        }
-                    }
-                    .handleEvents(receiveCompletion: { completion in
-                        switch completion {
-                        case .finished:
-                            completionHandler(sendKeyState)
-                        case .failure:
-                            break
-                        }
-                    })
-                    .eraseToAnyPublisher()
-                } else {
-                    completionHandler(.notSent)
-                    return Result.success(()).publisher.eraseToAnyPublisher()
-                }
-            },
-            acknowledgeWithoutSending: { completionHandler(.notSent) }
-        )
-    }
-    
     private func makeResultAcknowledgementState() -> AnyPublisher<TestResultAcknowledgementState, Never> {
         virologyTestingStateStore.$virologyTestResult
-            .combineLatest(isolationContext.isolationStateStore.$isolationStateInfo, currentDateProvider.today)
-            .map { [weak self] result, isolationStateInfo, _ in
+            .map { [weak self] result -> AnyPublisher<TestResultAcknowledgementState, Never> in
                 guard let self = self, let result = result else {
-                    return TestResultAcknowledgementState.notNeeded
+                    return Just(.notNeeded).eraseToAnyPublisher()
                 }
                 
-                let isolationStateStore = self.isolationContext.isolationStateStore
-                let newIsolationStateInfo = isolationStateStore.newIsolationStateInfo(
-                    for: result.testResult,
-                    testKitType: result.testKitType,
-                    receivedOn: self.currentDateProvider.currentGregorianDay(timeZone: .current),
-                    npexDay: GregorianDay(date: result.endDate, timeZone: .utc)
-                )
-                
-                let newIsolationState = IsolationLogicalState(stateInfo: newIsolationStateInfo, day: self.currentDateProvider.currentLocalDay)
-                let currentIsolationState = IsolationLogicalState(stateInfo: isolationStateInfo, day: self.currentDateProvider.currentLocalDay)
-                
-                return TestResultAcknowledgementState(
+                return self.isolationContext.makeResultAcknowledgementState(
                     result: result,
-                    newIsolationState: newIsolationState,
-                    currentIsolationState: currentIsolationState,
-                    indexCaseInfo: newIsolationStateInfo.isolationInfo.indexCaseInfo,
-                    positiveAcknowledgement: self.positiveAcknowledgement
-                ) { shareKeyState in
+                    positiveAcknowledgement: self.exposureNotificationContext.positiveAcknowledgement
+                ) { [weak self] shareKeyState in
+                    guard let self = self else { return }
                     self.virologyTestingStateStore.remove(testResult: result)
-                    
-                    isolationStateStore.isolationStateInfo = newIsolationStateInfo
-                    
-                    if !newIsolationState.isIsolating {
-                        isolationStateStore.acknowldegeEndOfIsolation()
-                    }
-                    
-                    if !currentIsolationState.isIsolating, newIsolationState.isIsolating {
-                        isolationStateStore.restartIsolationAcknowledgement()
-                    }
                     
                     if case .notSent = shareKeyState {
                         self.trafficObfuscationClient.sendSingleTraffic(for: TrafficObfuscator.keySubmission)
                     }
                     
-                    self.exposureNotificationContext.postExposureWindows(result: result.testResult, testKitType: result.testKitType)
+                    self.exposureNotificationContext.postExposureWindows(
+                        result: result.testResult,
+                        testKitType: result.testKitType,
+                        requiresConfirmatoryTest: result.requiresConfirmatoryTest
+                    )
                 }
             }
+            .switchToLatest()
             .eraseToAnyPublisher()
     }
     
@@ -558,9 +505,9 @@ public class ApplicationCoordinator {
         let circuitBreaker = self.circuitBreaker
         let isolationPaymentContext = self.isolationPaymentContext
         let exposureNotificationContext = self.exposureNotificationContext
-        let isolationStateManager = isolationContext.isolationStateManager
+        let isolationContext = self.isolationContext
         let exposureWindowHouskeeper = ExposureWindowHousekeeper(
-            getIsolationLogicalState: { isolationStateManager.state },
+            getIsolationLogicalState: { isolationContext.isolationStateManager.state },
             isWaitingForExposureApproval: { exposureNotificationContext.isWaitingForApproval },
             clearExposureWindowData: exposureNotificationContext.deleteExposureWindows
         )
@@ -572,6 +519,7 @@ public class ApplicationCoordinator {
                     circuitBreaker.showDontWorryNotificationIfNeeded = true
                 }
             )
+            .append(Deferred(createPublisher: { exposureNotificationContext.resendExposureDetectionNotificationIfNeeded(isolationContext: isolationContext) }))
             .append(Deferred(createPublisher: circuitBreaker.processExposureNotificationApproval))
             .append(Deferred(createPublisher: isolationPaymentContext.processCanApplyForFinancialSupport))
             .append(Deferred(createPublisher: exposureWindowHouskeeper.executeHousekeeping))
@@ -638,8 +586,15 @@ public class ApplicationCoordinator {
         
         enabledJobs.append(
             BackgroundTaskAggregator.Job(
+                preferredFrequency: Self.metricsJobBackgroundTaskFrequency,
+                work: userNotificationsStateController.recordMetrics
+            )
+        )
+        
+        enabledJobs.append(
+            BackgroundTaskAggregator.Job(
                 preferredFrequency: Self.metricsUploadJobBackgroundTaskFrequency,
-                work: metricRecoder.uploadMetrics
+                work: metricReporter.uploadMetrics
             )
         )
         
@@ -723,7 +678,7 @@ public class ApplicationCoordinator {
     private func requestPermissions() {
         exposureNotificationContext.exposureNotificationStateController.enable {
             self.userNotificationsStateController.authorize()
-            self.metricRecoder.didFinishOnboarding()
+            self.metricReporter.didFinishOnboarding()
         }
     }
     
@@ -762,6 +717,8 @@ public class ApplicationCoordinator {
         exposureNotificationContext.exposureDetectionStore.delete()
         exposureNotificationContext.exposureWindowStore?.delete()
         virologyTestingStateStore.delete()
+        metricReporter.delete()
+        languageStore.delete()
     }
     
     private func deleteCheckIn(with id: String) {

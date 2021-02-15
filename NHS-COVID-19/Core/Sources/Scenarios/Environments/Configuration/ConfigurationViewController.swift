@@ -35,7 +35,10 @@ class ConfigurationViewController: UIViewController {
         the feature toggle is changed after onboarding.
         """
         
+        let dailyContactTesting = createToggle(feature: .dailyContactTesting, isOn: featureToggleStorage.dailyContactTestingToggle, action: #selector(toggleDailyContactTesting))
+        
         let stackView = UIStackView(arrangedSubviews: [
+            dailyContactTesting,
             disclaimer,
         ])
         
@@ -55,6 +58,7 @@ class ConfigurationViewController: UIViewController {
     func createToggle(feature: Feature, isOn: Bool, action: Selector) -> UIView {
         let toggle = UISwitch()
         toggle.isOn = isOn
+        toggle.tag = feature.index!
         toggle.addTarget(self, action: action, for: .valueChanged)
         
         let label = UILabel()
@@ -66,8 +70,16 @@ class ConfigurationViewController: UIViewController {
     }
     
     func getFeatureString(feature: Feature) -> String {
-        return ""
+        switch feature {
+        case .dailyContactTesting:
+            return "Daily Contact Testing"
+        }
     }
+    
+    @objc private func toggleDailyContactTesting() {
+        featureToggleStorage.dailyContactTestingToggle.toggle()
+    }
+    
 }
 
 extension CaseIterable where Self: Equatable {

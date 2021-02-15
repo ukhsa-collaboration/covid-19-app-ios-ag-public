@@ -4,6 +4,7 @@
 
 import Scenarios
 import TestSupport
+import Combine
 import XCTest
 @testable import Domain
 
@@ -12,13 +13,19 @@ class MetricCollectorTests: XCTestCase {
     private var date = Date()
     private var store: MockEncryptedStore!
     private var collector: MetricCollector!
-    
+    private var enabled: MetricsState!
+
     override func setUp() {
         store = MockEncryptedStore()
+        
+        enabled = MetricsState()
+
+        enabled.set(rawState: RawState.onboardedRawState.domainProperty())
+        
         let currentDateProvider = MockDateProvider { [weak self] in
             self!.date
         }
-        collector = MetricCollector(encryptedStore: store, currentDateProvider: currentDateProvider)
+        collector = MetricCollector(encryptedStore: store, currentDateProvider: currentDateProvider, enabled: enabled)
     }
     
     func testStoringMetrics() {
@@ -34,10 +41,24 @@ class MetricCollectorTests: XCTestCase {
                 { "name": "checkedIn", "date": 1000 }
             ]
         }
-        """.narmalizedJSON()
+        """.normalizedJSON()
         
         TS.assert(actual, equals: expected)
         
+    }
+    
+    func testNotStoringMetricsWhenDisabled() {
+
+        enabled.set(rawState: RawState.notOnboardedRawState.domainProperty())
+
+        date = Date(timeIntervalSinceReferenceDate: 1000)
+        collector.record(.runningNormallyTick)
+        collector.record(.runningNormallyTick)
+        collector.record(.contactCaseBackgroundTick)
+        
+        let actual = store.stored["metrics"]?.normalizingJSON()
+
+        XCTAssertNil(actual)
     }
     
     func testStoringASecondMetric() {
@@ -48,7 +69,7 @@ class MetricCollectorTests: XCTestCase {
                 { "name": "checkedIn", "date": 1000 }
             ]
         }
-        """.narmalizedJSON()
+        """.normalizedJSON()
         
         date = Date(timeIntervalSinceReferenceDate: 2000)
         collector.record(.deletedLastCheckIn)
@@ -62,7 +83,7 @@ class MetricCollectorTests: XCTestCase {
                 { "name": "deletedLastCheckIn", "date": 2000 },
             ]
         }
-        """.narmalizedJSON()
+        """.normalizedJSON()
         
         TS.assert(actual, equals: expected)
         
@@ -80,7 +101,7 @@ class MetricCollectorTests: XCTestCase {
                 { "name": "deletedLastCheckIn", "date": 3000 },
             ]
         }
-        """.narmalizedJSON()
+        """.normalizedJSON()
         
         date = Date(timeIntervalSinceReferenceDate: 2000)
         collector.consumeMetrics(notAfter: date)
@@ -95,7 +116,7 @@ class MetricCollectorTests: XCTestCase {
             ],
             "latestWindowEnd": 2000
         }
-        """.narmalizedJSON()
+        """.normalizedJSON()
         
         TS.assert(actual, equals: expected)
         
@@ -123,7 +144,7 @@ class MetricCollectorTests: XCTestCase {
         
             ]
         }
-        """.narmalizedJSON()
+        """.normalizedJSON()
         
         let interval = DateInterval(
             start: Date(timeIntervalSinceReferenceDate: 2000),
@@ -144,7 +165,20 @@ class MetricCollectorTests: XCTestCase {
         
     }
     
-    func testGettingCountOfLFDRecordedMetric() {
+    func testDeletingRecordedMetrics() {
+        
+        testStoringASecondMetric()
+        
+        let actualBefore = store.stored["metrics"]
+        XCTAssertNotNil(actualBefore)
+
+        collector.delete()
+        
+        let actualAfter = store.stored["metrics"]?.normalizingJSON()
+        XCTAssertNil(actualAfter)
+    }
+
+  func testGettingCountOfLFDRecordedMetric() {
         store.stored["metrics"] = """
         {
             "entries": [
@@ -157,7 +191,7 @@ class MetricCollectorTests: XCTestCase {
                 { "name": "receivedVoidLFDTestResultEnteredManually", "date": 2800 },
             ]
         }
-        """.narmalizedJSON()
+        """.normalizedJSON()
         
         let interval = DateInterval(
             start: Date(timeIntervalSinceReferenceDate: 2000),

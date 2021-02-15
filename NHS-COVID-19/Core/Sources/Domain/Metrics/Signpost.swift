@@ -20,6 +20,7 @@ public enum Metric: String, CaseIterable {
     case isolatedForSelfDiagnosedBackgroundTick
     case isolatedForTestedPositiveBackgroundTick
     case isolatedForHadRiskyContactBackgroundTick
+    case isolatedForUnconfirmedTestBackgroundTick
     case indexCaseBackgroundTick
     case isolationBackgroundTick
     case pauseTick
@@ -47,53 +48,13 @@ public enum Metric: String, CaseIterable {
     case receivedPositiveLFDTestResultEnteredManually
     case receivedNegativeLFDTestResultEnteredManually
     case receivedVoidLFDTestResultEnteredManually
+    case receivedUnconfirmedPositiveTestResult
     
-    var name: StaticString {
-        switch self {
-        case .backgroundTasks: return "backgroundTasks"
-        case .completedOnboarding: return "completedOnboarding"
-        case .checkedIn: return "checkedIn"
-        case .deletedLastCheckIn: return "deletedLastCheckIn"
-        case .completedQuestionnaireAndStartedIsolation: return "completedQuestionnaireAndStartedIsolation"
-        case .completedQuestionnaireButDidNotStartIsolation: return "completedQuestionnaireButDidNotStartIsolation"
-        case .receivedPositiveTestResult: return "receivedPositiveTestResult"
-        case .receivedNegativeTestResult: return "receivedNegativeTestResult"
-        case .receivedVoidTestResult: return "receivedVoidTestResult"
-        case .contactCaseBackgroundTick: return "contactCaseBackgroundTick"
-        case .indexCaseBackgroundTick: return "indexCaseBackgroundTick"
-        case .isolationBackgroundTick: return "isolationBackgroundTick"
-        case .pauseTick: return "pauseTick"
-        case .runningNormallyTick: return "runningNormallyTick"
-        case .receivedVoidTestResultEnteredManually: return "receivedVoidTestResultEnteredManually"
-        case .receivedPositiveTestResultEnteredManually: return "receivedPositiveTestResultEnteredManually"
-        case .receivedNegativeTestResultEnteredManually: return "receivedNegativeTestResultEnteredManually"
-        case .receivedVoidTestResultViaPolling: return "receivedVoidTestResultViaPolling"
-        case .receivedPositiveTestResultViaPolling: return "receivedPositiveTestResultViaPolling"
-        case .receivedNegativeTestResultViaPolling: return "receivedNegativeTestResultViaPolling"
-        case .selfDiagnosedBackgroundTick: return "selfDiagnosedBackgroundTick"
-        case .testedPositiveBackgroundTick: return "testedPositiveBackgroundTick"
-        case .isolatedForSelfDiagnosedBackgroundTick: return "isolatedForSelfDiagnosedBackgroundTick"
-        case .isolatedForTestedPositiveBackgroundTick: return "isolatedForTestedPositiveBackgroundTick"
-        case .isolatedForHadRiskyContactBackgroundTick: return "isolatedForHadRiskyContactBackgroundTick"
-        case .receivedRiskyContactNotification: return "receivedRiskyContactNotification"
-        case .startedIsolation: return "startedIsolation"
-        case .receivedActiveIpcToken: return "receivedActiveIpcToken"
-        case .haveActiveIpcTokenBackgroundTick: return "haveActiveIpcTokenBackgroundTick"
-        case .selectedIsolationPaymentsButton: return "selectedIsolationPaymentsButton"
-        case .launchedIsolationPaymentsApplication: return "launchedIsolationPaymentsApplication"
-        case .totalExposureWindowsNotConsideredRisky: return "totalExposureWindowsNotConsideredRisky"
-        case .totalExposureWindowsConsideredRisky: return "totalExposureWindowsConsideredRisky"
-        case .receivedPositiveLFDTestResultViaPolling: return "receivedPositiveLFDTestResultViaPolling"
-        case .receivedNegativeLFDTestResultViaPolling: return "receivedNegativeLFDTestResultViaPolling"
-        case .receivedVoidLFDTestResultViaPolling: return "receivedVoidLFDTestResultViaPolling"
-        case .receivedPositiveLFDTestResultEnteredManually: return "receivedPositiveLFDTestResultEnteredManually"
-        case .receivedNegativeLFDTestResultEnteredManually: return "receivedNegativeLFDTestResultEnteredManually"
-        case .receivedVoidLFDTestResultEnteredManually: return "receivedVoidLFDTestResultEnteredManually"
-        case .hasTestedLFDPositiveBackgroundTick: return "hasTestedLFDPositiveBackgroundTick"
-        case .isIsolatingForTestedLFDPositiveBackgroundTick: return "isIsolatingForTestedLFDPositiveBackgroundTick"
-        }
-    }
+    case acknowledgedStartOfIsolationDueToRiskyContact
+    case hasRiskyContactNotificationsEnabledBackgroundTick
+    case totalRiskyContactReminderNotifications
     
+    case launchedTestOrdering
 }
 
 public enum Metrics {
@@ -109,10 +70,13 @@ public enum Metrics {
         MetricCollector.record(metric)
     }
     
-    private static func signpostReceived(_ testResult: VirologyTestResult.TestResult) {
+    private static func signpostReceived(_ testResult: VirologyTestResult.TestResult, requiresConfirmatoryTest: Bool) {
         switch testResult {
         case .positive:
             signpost(.receivedPositiveTestResult)
+            if requiresConfirmatoryTest {
+                signpost(.receivedUnconfirmedPositiveTestResult)
+            }
         case .negative:
             signpost(.receivedNegativeTestResult)
         case .void:
@@ -122,10 +86,11 @@ public enum Metrics {
     
     static func signpostReceivedFromManual(
         testResult: VirologyTestResult.TestResult,
-        testKitType: VirologyTestResult.TestKitType
+        testKitType: VirologyTestResult.TestKitType,
+        requiresConfirmatoryTest: Bool
     ) {
         
-        Self.signpostReceived(testResult)
+        Self.signpostReceived(testResult, requiresConfirmatoryTest: requiresConfirmatoryTest)
         
         switch testKitType {
         case .rapidResult, .rapidSelfReported:
@@ -152,10 +117,11 @@ public enum Metrics {
     
     static func signpostReceivedViaPolling(
         testResult: VirologyTestResult.TestResult,
-        testKitType: VirologyTestResult.TestKitType
+        testKitType: VirologyTestResult.TestKitType,
+        requiresConfirmatoryTest: Bool
     ) {
         
-        Self.signpostReceived(testResult)
+        Self.signpostReceived(testResult, requiresConfirmatoryTest: requiresConfirmatoryTest)
         
         switch testKitType {
         case .labResult:

@@ -22,7 +22,7 @@ final class IsolationStateAdapterTests: XCTestCase {
         let today = LocalDay(gregorianDay: GregorianDay(year: 2020, month: 3, day: 13), timeZone: timeZone)
         let tomorrow = LocalDay(gregorianDay: GregorianDay(year: 2020, month: 3, day: 14), timeZone: timeZone)
         
-        let isolation = Isolation(fromDay: today, untilStartOfDay: tomorrow, reason: .contactCase(.exposureDetection))
+        let isolation = Isolation(fromDay: today, untilStartOfDay: tomorrow, reason: Isolation.Reason(indexCaseInfo: nil, isContactCase: true))
         let state = Interface.IsolationState(
             domainState: .isolate(isolation),
             today: today

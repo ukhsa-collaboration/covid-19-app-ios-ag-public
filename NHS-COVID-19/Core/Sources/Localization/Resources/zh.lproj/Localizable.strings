@@ -155,7 +155,7 @@
 "symptom_list_secondary_action" = "我没有任何这些症状";
 "symptom_list_error_heading" = "有一个问题";
 "symptom_list_error_description" = "您需要选择症状或选择“我没有任何这些症状”";
-"symptom_list_discard_alert_title" = "确认您没有任何症状";
+"symptom_list_discard_alert_title" = "确认您没有出现这些症状";
 "symptom_list_discard_alert_body" = "任何选定的症状都会被取消。";
 "symptom_list_discard_alert_cancel" = "取消";
 "symptom_list_discard_alert_discard" = "确认";
@@ -338,7 +338,7 @@
 "checkin_information_help_scanning_section_description" = "如果您不能扫描QR，需要通过其他方式进行检查，请与工作人员说明。";
 "checkin_information_whats_a_qr_code_section_title" = "如何识别官方NHS QR码？";
 "checkin_information_whats_a_qr_code_section_description_new" = "这是官方的英格兰/威尔士NHS QR码海报。 使用手机摄像头扫描QR码（中间的正方形）。";
-"about_this_app_software_information_date_of_release_description" = "1/2021";
+"about_this_app_software_information_date_of_release_description" = "2/2021";
 "link_test_result_enter_code_example" = "例如：7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "检测结果";
 "link_test_result_button_title" = "继续";
@@ -348,7 +348,7 @@
 "home_link_test_result_button_title" = "输入您的测试代码";
 "about_this_app_software_information_app_name %@" = "应用程序名称：%@";
 "about_this_app_software_information_version %@" = "版本: %@";
-"about_this_app_software_information_date_of_release" = "发布日期：1/2021";
+"about_this_app_software_information_date_of_release" = "发布日期：2/2021";
 "link_test_result_title" = "输入您的测试代码";
 "link_provide_feedback" = "https://covid19.nhs.uk/contact-us.html";
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
@@ -501,3 +501,15 @@
 "mydata_test_result_rapid_result" = "RAPID_RESULT";
 "exposure_acknowledgement_warning" = "该应用程序检测到，您已经与冠状病毒感染者接触了。 请留在家中并自我隔离，以确保自己和他人的安全。";
 "mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";
+"positive_test_result_requires_follow_up_test_subtitle" = "并预约后续检测";
+"positive_test_result_requires_follow_up_test_start_to_isolate_info" = "您的冠状病毒测试结果为阳性";
+"positive_test_result_requires_follow_up_test_explanation" = "若要了解应用程序如何计算自我隔离天数，请访问'常见问题解答'。\n\n您之前做的是快速拭子检测，因此，您现在需要进行另一种检测，并将检测样本送到实验室去进行化验。\n\n同时，您同与您一起生活的任何人员必须立即自行隔离。";
+"positive_test_result_requires_follow_up_test_book_test_button" = "预定后续检测";
+"positive_test_result_already_confirmed_positive_title" = "继续自我隔离";
+"positive_test_result_already_confirmed_positive_info" = "您的冠状病毒测试结果为阳性";
+"positive_test_result_already_confirmed_positive_explanation" = "若要了解应用程序如何计算自我隔离天数，请点击以下'常见问题解答'链接。";
+"positive_test_result_already_confirmed_positive_continue" = "继续";
+"mydata_test_result_follow_up_test" = "后续检测";
+"mydata_test_result_follow_up_not_required" = "不需要";
+"mydata_test_result_follow_up_pending" = "待定";
+"mydata_test_result_follow_up_complete" = "完成";

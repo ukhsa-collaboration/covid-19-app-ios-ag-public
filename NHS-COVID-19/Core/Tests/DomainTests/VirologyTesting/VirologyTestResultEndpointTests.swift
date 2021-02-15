@@ -29,15 +29,19 @@ class VirologyTestResultEndpointTests: XCTestCase {
             "testEndDate": "\#(date)",
             "testResult": "POSITIVE",
             "testKit": "LAB_RESULT",
-            "diagnosisKeySubmissionSupported": true
+            "diagnosisKeySubmissionSupported": true,
+            "requiresConfirmatoryTest": false
         }
         """#))
         
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions.insert(.withFractionalSeconds)
         let expectedResponse = VirologyTestResponse.receivedResult(
-            VirologyTestResult(testResult: .positive, testKitType: .labResult, endDate: try XCTUnwrap(formatter.date(from: date))),
-            true
+            PollVirologyTestResultResponse(
+                virologyTestResult: VirologyTestResult(testResult: .positive, testKitType: .labResult, endDate: try XCTUnwrap(formatter.date(from: date))),
+                diagnosisKeySubmissionSupport: true,
+                requiresConfirmatoryTest: false
+            )
         )
         
         let parsedResponse = try endpoint.parse(response)
@@ -51,15 +55,20 @@ class VirologyTestResultEndpointTests: XCTestCase {
         {
             "testEndDate": "\#(date)",
             "testResult": "NEGATIVE",
-            "testKit": "RAPID_RESULT",
-            "diagnosisKeySubmissionSupported": true
+            "testKit": "LAB_RESULT",
+            "diagnosisKeySubmissionSupported": true,
+            "requiresConfirmatoryTest": false
         }
         """#))
         
         let formatter = ISO8601DateFormatter()
+        
         let expectedResponse = VirologyTestResponse.receivedResult(
-            VirologyTestResult(testResult: .negative, testKitType: .rapidResult, endDate: try XCTUnwrap(formatter.date(from: date))),
-            true
+            PollVirologyTestResultResponse(
+                virologyTestResult: VirologyTestResult(testResult: .negative, testKitType: .labResult, endDate: try XCTUnwrap(formatter.date(from: date))),
+                diagnosisKeySubmissionSupport: true,
+                requiresConfirmatoryTest: false
+            )
         )
         
         let parsedResponse = try endpoint.parse(response)
@@ -74,14 +83,19 @@ class VirologyTestResultEndpointTests: XCTestCase {
             "testEndDate": "\#(date)",
             "testResult": "VOID",
             "testKit": "LAB_RESULT",
-            "diagnosisKeySubmissionSupported": true
+            "diagnosisKeySubmissionSupported": true,
+            "requiresConfirmatoryTest": false
         }
         """#))
         
         let formatter = ISO8601DateFormatter()
+        
         let expectedResponse = VirologyTestResponse.receivedResult(
-            VirologyTestResult(testResult: .void, testKitType: .labResult, endDate: try XCTUnwrap(formatter.date(from: date))),
-            true
+            PollVirologyTestResultResponse(
+                virologyTestResult: VirologyTestResult(testResult: .void, testKitType: .labResult, endDate: try XCTUnwrap(formatter.date(from: date))),
+                diagnosisKeySubmissionSupport: true,
+                requiresConfirmatoryTest: false
+            )
         )
         
         let parsedResponse = try endpoint.parse(response)
@@ -95,5 +109,50 @@ class VirologyTestResultEndpointTests: XCTestCase {
         
         let parsedResponse = try endpoint.parse(response)
         TS.assert(parsedResponse, equals: expectedResponse)
+    }
+    
+    func testDecodingNegativeRapidTestResult() throws {
+        
+        let response = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "2020-04-23T00:00:00Z",
+            "testResult": "NEGATIVE",
+            "testKit": "RAPID_RESULT",
+            "diagnosisKeySubmissionSupported": true,
+            "requiresConfirmatoryTest": true
+        }
+        """#))
+        
+        XCTAssertThrowsError(try endpoint.parse(response))
+    }
+    
+    func testDecodingVoidRapidSelfReportedTestResult() throws {
+        
+        let response = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "2020-04-23T00:00:00Z",
+            "testResult": "VOID",
+            "testKit": "RAPID_SELF_REPORTED",
+            "diagnosisKeySubmissionSupported": true,
+            "requiresConfirmatoryTest": false
+        }
+        """#))
+        
+        XCTAssertThrowsError(try endpoint.parse(response))
+    }
+    
+    func testDecodingUnconfirmedWithKeySubmissionSupported() throws {
+        
+        let response = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "2020-04-23T00:00:00Z",
+            "testResult": "POSITIVE",
+            "testKit": "RAPID_RESULT",
+            "diagnosisKeySubmissionSupported": true,
+            "requiresConfirmatoryTest": true
+        }
+        """#))
+        
+        XCTAssertThrowsError(try endpoint.parse(response))
     }
 }

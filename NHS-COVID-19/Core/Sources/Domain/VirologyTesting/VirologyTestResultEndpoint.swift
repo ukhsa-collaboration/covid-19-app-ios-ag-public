@@ -26,13 +26,29 @@ struct VirologyTestResultEndpoint: HTTPEndpoint {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .appNetworking
             let payload = try decoder.decode(ResponseBody.self, from: response.body.content)
+            
+            if (payload.requiresConfirmatoryTest ?? false) && payload.diagnosisKeySubmissionSupported {
+                throw VirologyTestResultResponseError.unconfirmedKeySharingNotSupported
+            }
+            
+            if (payload.requiresConfirmatoryTest ?? false) && payload.testResult != .positive {
+                throw VirologyTestResultResponseError.unconfirmedNonPostiveNotSupported
+            }
+            
+            if payload.testKit == .rapidResult || payload.testKit == .rapidSelfReported, payload.testResult != .positive {
+                throw VirologyTestResultResponseError.lfdVoidOrNegative
+            }
+            
             return .receivedResult(
-                VirologyTestResult(
-                    testResult: VirologyTestResult.TestResult(payload.testResult),
-                    testKitType: VirologyTestResult.TestKitType(payload.testKit),
-                    endDate: payload.testEndDate
-                ),
-                payload.diagnosisKeySubmissionSupported
+                PollVirologyTestResultResponse(
+                    virologyTestResult: VirologyTestResult(
+                        testResult: VirologyTestResult.TestResult(payload.testResult),
+                        testKitType: VirologyTestResult.TestKitType(payload.testKit),
+                        endDate: payload.testEndDate
+                    ),
+                    diagnosisKeySubmissionSupport: payload.diagnosisKeySubmissionSupported,
+                    requiresConfirmatoryTest: payload.requiresConfirmatoryTest ?? false
+                )
             )
         default:
             return .noResultYet
@@ -67,6 +83,8 @@ private struct ResponseBody: Codable {
     var testResult: TestResult
     var testKit: TestKitType
     var diagnosisKeySubmissionSupported: Bool
+    #warning("Remove the optional here as soon as this field is implemented in other envs.")
+    var requiresConfirmatoryTest: Bool?
 }
 
 private extension VirologyTestResult.TestResult {

@@ -38,7 +38,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testResult": "POSITIVE",
             "testKit" : "RAPID_RESULT",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
-            "diagnosisKeySubmissionSupported" : true
+            "diagnosisKeySubmissionSupported" : true,
+            "requiresConfirmatoryTest": false
         }
         """#))
         
@@ -50,12 +51,67 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: try XCTUnwrap(formatter.date(from: date))
             ),
-            diagnosisKeySubmissionSupport: .supported(diagnosisKeySubmissionToken: submissionToken)
+            diagnosisKeySubmissionSupport: .supported(diagnosisKeySubmissionToken: submissionToken),
+            requiresConfirmatoryTest: false
         )
         
         let parsedResponse = try endpoint.parse(actualResponse)
         
         TS.assert(parsedResponse, equals: expectedResponse)
+    }
+    
+    func testDecodingUnconfirmedWithKeyShareSupport() throws {
+        let date = "2021-01-10T00:00:00.0000000Z"
+        let submissionToken = DiagnosisKeySubmissionToken(value: .random())
+        
+        let actualResponse = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "\#(date)",
+            "testResult": "POSITIVE",
+            "testKit" : "RAPID_RESULT",
+            "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
+            "diagnosisKeySubmissionSupported" : true,
+            "requiresConfirmatoryTest": true
+        }
+        """#))
+        
+        XCTAssertThrowsError(try endpoint.parse(actualResponse))
+    }
+    
+    func testDecodingUnconfirmedTestWithNegativeResult() throws {
+        let date = "2021-01-10T00:00:00.0000000Z"
+        let submissionToken = DiagnosisKeySubmissionToken(value: .random())
+        
+        let actualResponse = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "\#(date)",
+            "testResult": "NEGATIVE",
+            "testKit" : "LAB_RESULT",
+            "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
+            "diagnosisKeySubmissionSupported" : false,
+            "requiresConfirmatoryTest": true
+        }
+        """#))
+        
+        XCTAssertThrowsError(try endpoint.parse(actualResponse))
+    }
+    
+    func testDecodingUnconfirmedTestWithVoidResult() throws {
+        let date = "2021-01-10T00:00:00.0000000Z"
+        let submissionToken = DiagnosisKeySubmissionToken(value: .random())
+        
+        let actualResponse = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "\#(date)",
+            "testResult": "VOID",
+            "testKit" : "LAB_RESULT",
+            "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
+            "diagnosisKeySubmissionSupported" : false,
+            "requiresConfirmatoryTest": true
+        }
+        """#))
+        
+        XCTAssertThrowsError(try endpoint.parse(actualResponse))
     }
     
     func testDecodingPositiveLfdDiagnosisKeySubmissionNotSupported() throws {
@@ -67,7 +123,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testResult": "POSITIVE",
             "testKit" : "RAPID_RESULT",
             "diagnosisKeySubmissionToken": null,
-            "diagnosisKeySubmissionSupported" : false
+            "diagnosisKeySubmissionSupported" : false,
+            "requiresConfirmatoryTest": true
         }
         """#))
         
@@ -79,7 +136,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: try XCTUnwrap(formatter.date(from: date))
             ),
-            diagnosisKeySubmissionSupport: .notSupported
+            diagnosisKeySubmissionSupport: .notSupported,
+            requiresConfirmatoryTest: true
         )
         
         let parsedResponse = try endpoint.parse(actualResponse)
@@ -96,7 +154,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testResult": "POSITIVE",
             "testKit" : "Invalid",
             "diagnosisKeySubmissionToken": null,
-            "diagnosisKeySubmissionSupported" : false
+            "diagnosisKeySubmissionSupported" : false,
+            "requiresConfirmatoryTest": true
         }
         """#))
         XCTAssertThrowsError(try endpoint.parse(actualResponse))
@@ -111,7 +170,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testResult": "VOID",
             "testKit" : "RAPID_RESULT",
             "diagnosisKeySubmissionToken": null,
-            "diagnosisKeySubmissionSupported" : false
+            "diagnosisKeySubmissionSupported" : false,
+            "requiresConfirmatoryTest": false
         }
         """#))
         
@@ -127,7 +187,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testResult": "NEGATIVE",
             "testKit" : "RAPID_RESULT",
             "diagnosisKeySubmissionToken": null,
-            "diagnosisKeySubmissionSupported" : false
+            "diagnosisKeySubmissionSupported" : false,
+            "requiresConfirmatoryTest": true
         }
         """#))
         

@@ -65,11 +65,11 @@ class MyDataScreenTests: XCTestCase {
             XCTAssertTrue(screen.cellDeleteButton.exists)
             screen.cellDeleteButton.tap()
             
-            XCTAssertTrue(app.staticTexts[runner.scenario.venueID1].displayed)
-            XCTAssertFalse(app.staticTexts[runner.scenario.venueID2ToDelete].displayed)
-            XCTAssertTrue(app.staticTexts[runner.scenario.venueID3].displayed)
-            XCTAssertTrue(app.staticTexts[runner.scenario.venueID4].displayed)
-            XCTAssertTrue(app.staticTexts[runner.scenario.venueID5].displayed)
+            XCTAssertTrue(app.staticTexts[runner.scenario.venueID1].existsAndNotEmpty)
+            XCTAssertFalse(app.staticTexts[runner.scenario.venueID2ToDelete].existsAndNotEmpty)
+            XCTAssertTrue(app.staticTexts[runner.scenario.venueID3].existsAndNotEmpty)
+            XCTAssertTrue(app.staticTexts[runner.scenario.venueID4].existsAndNotEmpty)
+            XCTAssertTrue(app.staticTexts[runner.scenario.venueID5].existsAndNotEmpty)
             
         }
     }

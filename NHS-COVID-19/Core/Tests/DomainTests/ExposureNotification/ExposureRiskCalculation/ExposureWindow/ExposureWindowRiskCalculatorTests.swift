@@ -43,10 +43,41 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
         XCTAssertEqual(riskScoreCalculator.calledWithScanInstances, expectedScanInstances)
     }
     
+    func testFiltersOutScanInstanceWithZeroSecondsSinceLastScan() {
+        let expectedAttenuation = UInt8(50)
+        let expectedSecondsSinceLastScan = 180
+        let scanInstances: [ExposureNotificationScanInstance] = [
+            MockScanInstance(minimumAttenuation: 45, secondsSinceLastScan: 0, typicalAttenuation: 1),
+            MockScanInstance(minimumAttenuation: expectedAttenuation, secondsSinceLastScan: expectedSecondsSinceLastScan, typicalAttenuation: 1)
+        ]
+        let exposureWindows: [ExposureNotificationExposureWindow] = [MockExposureWindow(enScanInstances: scanInstances, date: Date(), infectiousness: .standard)]
+        
+        _ = riskCalculator.riskInfo(
+            for: exposureWindows,
+            configuration: .dummyForTesting,
+            riskScoreCalculator: riskScoreCalculator
+        )
+        
+        let expectedScanInstances = [ScanInstance(attenuationValue: expectedAttenuation, secondsSinceLastScan: expectedSecondsSinceLastScan)]
+        XCTAssertEqual(riskScoreCalculator.calledWithScanInstances, expectedScanInstances)
+    }
+    
+    func testDoesNotCallRiskScoreWithNoScanInstances() {
+        let exposureWindows: [ExposureNotificationExposureWindow] = [MockExposureWindow(enScanInstances: [], date: Date(), infectiousness: .standard)]
+        
+        _ = riskCalculator.riskInfo(
+            for: exposureWindows,
+            configuration: .dummyForTesting,
+            riskScoreCalculator: riskScoreCalculator
+        )
+        
+        XCTAssertNil(riskScoreCalculator.calledWithScanInstances)
+    }
+    
     func testRiskCalculatorReturnsExposureRiskInfo() {
         let expectedRiskScore = 22.0
         let expectedExposureRiskInfo = ExposureRiskInfo(riskScore: expectedRiskScore * 60, riskScoreVersion: 1, day: .today, isConsideredRisky: true)
-        let exposureWindows: [ExposureNotificationExposureWindow] = [MockExposureWindow(enScanInstances: [], date: Date(), infectiousness: .standard)]
+        let exposureWindows: [ExposureNotificationExposureWindow] = [MockExposureWindow(enScanInstances: [MockScanInstance.dummyValue], date: Date(), infectiousness: .standard)]
         riskScoreCalculator.riskScore = expectedRiskScore
         
         let exposureRiskInfo = riskCalculator.riskInfo(
@@ -69,8 +100,8 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
             isConsideredRisky: true
         )
         let exposureWindows: [ExposureNotificationExposureWindow] = [
-            MockExposureWindow(enScanInstances: [], date: olderDate, infectiousness: .standard),
-            MockExposureWindow(enScanInstances: [], date: newerDate, infectiousness: .standard),
+            MockExposureWindow(enScanInstances: [MockScanInstance.dummyValue], date: olderDate, infectiousness: .standard),
+            MockExposureWindow(enScanInstances: [MockScanInstance.dummyValue], date: newerDate, infectiousness: .standard),
         ]
         riskScoreCalculator.riskScore = expectedRiskScore
         
@@ -89,7 +120,7 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
         riskScoreCalculator.riskScore = 100.0
         
         let exposureRiskInfo = riskCalculator.riskInfo(
-            for: [MockExposureWindow(enScanInstances: [], date: Date(), infectiousness: .standard)],
+            for: [MockExposureWindow(enScanInstances: [MockScanInstance.dummyValue], date: Date(), infectiousness: .standard)],
             configuration: .dummyForTesting,
             riskScoreCalculator: riskScoreCalculator
         )
@@ -167,7 +198,7 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
     }
     
     private func getWindowsForDates(dates: [Date]) -> [MockExposureWindow] {
-        return dates.map { MockExposureWindow(enScanInstances: [], date: $0, infectiousness: .high) }
+        return dates.map { MockExposureWindow(enScanInstances: [MockScanInstance.dummyValue], date: $0, infectiousness: .high) }
     }
 }
 
@@ -202,6 +233,8 @@ struct MockScanInstance: ExposureNotificationScanInstance {
     let minimumAttenuation: ENAttenuation
     let secondsSinceLastScan: Int
     let typicalAttenuation: ENAttenuation
+    
+    static let dummyValue = MockScanInstance(minimumAttenuation: 50, secondsSinceLastScan: 180, typicalAttenuation: 49)
 }
 
 extension Date {

@@ -155,7 +155,7 @@
 "symptom_list_secondary_action" = "Bu belirtilerden herhangi biri bende yok";
 "symptom_list_error_heading" = "Bir sorun var";
 "symptom_list_error_description" = "Belirtilerinizi işaretlemeli ya da \"Bu belirtilerden herhangi biri bende yok\" seçeneğini seçmelisiniz";
-"symptom_list_discard_alert_title" = "Herhangi bir belirtinizin olmadığını teyit edin";
+"symptom_list_discard_alert_title" = "Bu belirtilerden herhangi birisine sahip olmadığınızı teyit edin";
 "symptom_list_discard_alert_body" = "Seçilen tüm belirtilerin seçimi kaldırılacaktır.";
 "symptom_list_discard_alert_cancel" = "İptal";
 "symptom_list_discard_alert_discard" = "Onayla";
@@ -338,7 +338,7 @@
 "checkin_information_help_scanning_section_description" = "QR kodunu tarayamıyorsanız ve başka bir şekilde kontrol etmeniz gerekiyorsa, lütfen bir personel ile konuşun.";
 "checkin_information_whats_a_qr_code_section_title" = "Resmi bir NHS QR kodunu nasıl tanırım?";
 "checkin_information_whats_a_qr_code_section_description_new" = "Resmi İngilizce/Galce NHS QR kod posteri buna benzemektedir. Ortadaki kare olan QR kodunu görüntülemek için telefonunuzun kamerasını kullanın.";
-"about_this_app_software_information_date_of_release_description" = "1/2021";
+"about_this_app_software_information_date_of_release_description" = "2/2021";
 "link_test_result_enter_code_example" = "Örnek: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Test kodu";
 "link_test_result_button_title" = "Devam";
@@ -348,7 +348,7 @@
 "home_link_test_result_button_title" = "Test sonucunu girin";
 "about_this_app_software_information_app_name %@" = "Uygulama adı: %@";
 "about_this_app_software_information_version %@" = "Sürüm: %@";
-"about_this_app_software_information_date_of_release" = "Sürüm tarihi: 1/2021";
+"about_this_app_software_information_date_of_release" = "Sürüm tarihi: 2/2021";
 "link_test_result_title" = "Test sonucunu girin";
 "link_provide_feedback" = "https://covid19.nhs.uk/contact-us.html";
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
@@ -501,3 +501,15 @@
 "mydata_test_result_rapid_result" = "RAPID_RESULT";
 "exposure_acknowledgement_warning" = "Koronavirüs ile enfekte olmuş bir kişinin yanında bulunmuş olabilirsiniz. Kendinizi ve diğer kişileri güvende tutmak için lütfen evde kalın.";
 "mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";
+"positive_test_result_requires_follow_up_test_subtitle" = "ve bir takip testi için randevu alın";
+"positive_test_result_requires_follow_up_test_start_to_isolate_info" = "Koronavirüs test sonucunuz pozitif";
+"positive_test_result_requires_follow_up_test_explanation" = "Uygulamanın kişisel karantina günlerini nasıl hesapladığını anlamak için SSS (sıkça sorulan sorular) bölümünü ziyaret edin\n\nHızlı bir sürüntü testi yaptırdığınızdan, şimdi bu sonucun doğrulanması için laboratuvara gönderilmek üzere farklı türde test daha yaptırmalısınız.\n\nBu zaman zarfında kendinizi, birlikte yaşadığınız diğer tüm bireylerle birlikte derhal karantinaya almalısınız.";
+"positive_test_result_requires_follow_up_test_book_test_button" = "Bir takip testi için randevu alın";
+"positive_test_result_already_confirmed_positive_title" = "Kişisel karantinaya devam edilecek süre";
+"positive_test_result_already_confirmed_positive_info" = "Koronavirüs test sonucunuz pozitif";
+"positive_test_result_already_confirmed_positive_explanation" = "Uygulamanın kişisel karantina günlerini nasıl hesapladığını anlamak için aşağıdaki SSS (sıkça sorulan sorular) bağlantısını ziyaret edin";
+"positive_test_result_already_confirmed_positive_continue" = "Devam";
+"mydata_test_result_follow_up_test" = "Takip testi";
+"mydata_test_result_follow_up_not_required" = "Gerekmiyor";
+"mydata_test_result_follow_up_pending" = "Beklemede";
+"mydata_test_result_follow_up_complete" = "Tamamlanmış";

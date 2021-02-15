@@ -55,7 +55,7 @@ class IsolationStateChangeNotifierTests: XCTestCase {
         let cancellable = notifier.alertUserToChanges(in: subject)
         defer { cancellable.cancel() }
         
-        subject.send(.isolationFinishedButNotAcknowledged(Isolation(fromDay: .today, untilStartOfDay: .today, reason: .contactCase(.exposureDetection))))
+        subject.send(.isolationFinishedButNotAcknowledged(Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: nil, isContactCase: true))))
         
         XCTAssertEqual(notificationManager.removePendingNotificationType, .isolationState)
     }
@@ -66,7 +66,7 @@ class IsolationStateChangeNotifierTests: XCTestCase {
         
         let day = GregorianDay(year: 2020, month: 5, day: 23)
         
-        subject.send(.isolating(Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: day, timeZone: .current), reason: .contactCase(.exposureDetection)), endAcknowledged: false, startAcknowledged: true))
+        subject.send(.isolating(Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: day, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: nil, isContactCase: true)), endAcknowledged: false, startAcknowledged: true))
         
         let triggerAt = mutating(DateComponents()) {
             $0.year = 2020
@@ -85,7 +85,7 @@ class IsolationStateChangeNotifierTests: XCTestCase {
         
         let day = GregorianDay(year: 2020, month: 5, day: 1)
         
-        subject.send(.isolating(Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: day, timeZone: .current), reason: .contactCase(.exposureDetection)), endAcknowledged: false, startAcknowledged: true))
+        subject.send(.isolating(Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: day, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: nil, isContactCase: true)), endAcknowledged: false, startAcknowledged: true))
         
         let triggerAt = mutating(DateComponents()) {
             $0.year = 2020

@@ -155,7 +155,7 @@
 "symptom_list_secondary_action" = "I don’t have any of these symptoms";
 "symptom_list_error_heading" = "There is a problem";
 "symptom_list_error_description" = "You need to either choose your symptoms or select “I donʼt have any of these symptoms”";
-"symptom_list_discard_alert_title" = "Confirm you do not have any symptoms";
+"symptom_list_discard_alert_title" = "Confirm you do not have any of these symptoms";
 "symptom_list_discard_alert_body" = "Any selected symptoms will be unselected.";
 "symptom_list_discard_alert_cancel" = "Cancel";
 "symptom_list_discard_alert_discard" = "Confirm";
@@ -338,7 +338,7 @@
 "checkin_information_help_scanning_section_description" = "If you are not able to scan a QR code and need to check in another way, please speak to a member of staff.";
 "checkin_information_whats_a_qr_code_section_title" = "How do I recognise an official NHS QR code?";
 "checkin_information_whats_a_qr_code_section_description_new" = "This is what the official English/Welsh NHS QR code poster looks like. Use your phone camera to scan the QR code which is the square in the middle.";
-"about_this_app_software_information_date_of_release_description" = "1/2021";
+"about_this_app_software_information_date_of_release_description" = "2/2021";
 "link_test_result_enter_code_example" = "Example: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Test code";
 "link_test_result_button_title" = "Continue";
@@ -348,7 +348,7 @@
 "home_link_test_result_button_title" = "Enter test result";
 "about_this_app_software_information_app_name %@" = "App name: %@";
 "about_this_app_software_information_version %@" = "Version: %@";
-"about_this_app_software_information_date_of_release" = "Date of release: 1/2021";
+"about_this_app_software_information_date_of_release" = "Date of release: 2/2021";
 "link_test_result_title" = "Enter test result";
 "link_provide_feedback" = "https://covid19.nhs.uk/contact-us.html";
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
@@ -501,3 +501,15 @@
 "mydata_test_result_rapid_result" = "RAPID_RESULT";
 "exposure_acknowledgement_warning" = "The app has detected that you have been in contact with someone who has coronavirus. Please stay at home and self-isolate to keep yourself and others safe.";
 "mydata_test_result_rapid_self_reported" = "RAPID_SELF_REPORTED";
+"positive_test_result_requires_follow_up_test_subtitle" = "and book a follow-up test";
+"positive_test_result_requires_follow_up_test_start_to_isolate_info" = "Your coronavirus test result is positive.";
+"positive_test_result_requires_follow_up_test_explanation" = "To understand how the app calculates self-isolation days, visit the FAQs.\n\nBecause you took a rapid swab test, you now need to get another type of test that is sent to a lab to verify the result.\n\nIn the meantime, you and anyone you live with must self-isolate immediately.";
+"positive_test_result_requires_follow_up_test_book_test_button" = "Book a follow-up test";
+"positive_test_result_already_confirmed_positive_title" = "Continue to self-isolate for";
+"positive_test_result_already_confirmed_positive_info" = "Your coronavirus test result is positive";
+"positive_test_result_already_confirmed_positive_explanation" = "To understand how the app calculates self-isolation days, visit the FAQs.";
+"positive_test_result_already_confirmed_positive_continue" = "Continue";
+"mydata_test_result_follow_up_test" = "Follow-up test";
+"mydata_test_result_follow_up_not_required" = "Not required";
+"mydata_test_result_follow_up_pending" = "Pending";
+"mydata_test_result_follow_up_complete" = "Complete";

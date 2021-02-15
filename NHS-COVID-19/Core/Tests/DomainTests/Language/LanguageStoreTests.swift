@@ -39,7 +39,14 @@ class LanguageStoreTests: XCTestCase {
     }
     
     func testDeleteLanguage() throws {
-        languageStore.save(localeConfiguration: .systemPreferred)
+        encryptedStore.stored["language"] = #"""
+        {
+            "languageCode": "en"
+        }
+        """# .data(using: .utf8)!
+        languageStore = LanguageStore(store: encryptedStore)
+        XCTAssertEqual(languageStore.languageCode, "en")
+        languageStore.delete()
         XCTAssertNil(languageStore.languageCode)
     }
 }

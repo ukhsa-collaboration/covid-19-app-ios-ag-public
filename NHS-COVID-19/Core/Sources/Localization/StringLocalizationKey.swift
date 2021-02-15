@@ -210,6 +210,10 @@ public enum StringLocalizationKey: String, CaseIterable {
     case positive_test_result_info
     case positive_test_result_explanation
     case positive_test_results_continue
+    case positive_test_result_already_confirmed_positive_title
+    case positive_test_result_already_confirmed_positive_info
+    case positive_test_result_already_confirmed_positive_explanation
+    case positive_test_result_already_confirmed_positive_continue
     case void_test_result_no_isolation_title
     case void_test_result_no_isolation_header
     case void_test_result_info
@@ -342,6 +346,10 @@ public enum StringLocalizationKey: String, CaseIterable {
     case mydata_test_result_lab_result
     case mydata_test_result_rapid_result
     case mydata_test_result_rapid_self_reported
+    case mydata_test_result_follow_up_test
+    case mydata_test_result_follow_up_not_required
+    case mydata_test_result_follow_up_pending
+    case mydata_test_result_follow_up_complete
     
     case accessability_error_os_out_of_date
     case accessability_error_update_the_app
@@ -471,6 +479,11 @@ public enum StringLocalizationKey: String, CaseIterable {
     case settings_language_tr
     case settings_language_ur
     case settings_language_cy
+    
+    case positive_test_result_requires_follow_up_test_subtitle
+    case positive_test_result_requires_follow_up_test_explanation
+    case positive_test_result_requires_follow_up_test_book_test_button
+    case positive_test_result_requires_follow_up_test_start_to_isolate_info
     
 }
 
