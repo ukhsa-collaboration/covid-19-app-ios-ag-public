@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -76,21 +76,6 @@ class LinkTestResultScreenTests: XCTestCase {
             
             XCTAssert(app.staticTexts[runner.scenario.continueConfirmationAlertTitle].exists)
             XCTAssert(app.staticTexts[code].exists)
-        }
-    }
-    
-    func testDraggingDismissesKeyboard() throws {
-        try runner.run { app in
-            let screen = LinkTestResultScreen(app: app)
-            
-            let code = runner.scenario.TestCodes.valid.rawValue
-            
-            screen.testCodeTextField.tap()
-            screen.testCodeTextField.typeText(code)
-            screen.header
-                .press(forDuration: 0.1, thenDragTo: screen.testCodeTextField)
-            
-            XCTAssertFalse(screen.testCodeTextField.hasKeyboardFocus)
         }
     }
     

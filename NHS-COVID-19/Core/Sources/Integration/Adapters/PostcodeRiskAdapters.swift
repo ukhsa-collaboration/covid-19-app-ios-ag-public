@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Domain
@@ -18,17 +18,17 @@ extension RiskLevelBanner.ViewModel {
     ) {
         let colorScheme: ColorScheme
         
-        switch risk.style.colorScheme {
-        case .green:
-            colorScheme = .green
-        case .amber:
-            colorScheme = .amber
-        case .yellow:
-            colorScheme = .yellow
-        case .red:
-            colorScheme = .red
-        case .neutral:
-            colorScheme = .neutral
+        if let colorName = risk.style.colorSchemeV2 {
+            colorScheme = ColorScheme(rawValue: colorName) ?? .neutral
+        } else {
+            #warning("Remove fallback to old field after the backend is deployed")
+            switch risk.style.colorScheme {
+            case .green: colorScheme = .green
+            case .amber: colorScheme = .amber
+            case .yellow: colorScheme = .yellow
+            case .red: colorScheme = .red
+            case .neutral: colorScheme = .neutral
+            }
         }
         
         if let policyData = risk.style.policyData {

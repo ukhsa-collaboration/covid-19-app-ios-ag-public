@@ -48,7 +48,7 @@ class HousekeeperTests: XCTestCase {
             today: GregorianDay(year: 2020, month: 7, day: 24),
             isolationInfo: IsolationInfo.empty,
             isolationLogicalState: IsolationLogicalState.isolating(
-                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 26, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false)), endAcknowledged: false, startAcknowledged: false
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 26, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)), endAcknowledged: false, startAcknowledged: false
             )
         )
         _ = housekeeper.executeHousekeeping()
@@ -62,7 +62,7 @@ class HousekeeperTests: XCTestCase {
             today: GregorianDay(year: 2020, month: 7, day: 24),
             isolationInfo: IsolationInfo.empty,
             isolationLogicalState: IsolationLogicalState.isolationFinishedButNotAcknowledged(
-                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 23, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false))
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 23, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil))
             )
         )
         _ = housekeeper.executeHousekeeping()
@@ -78,7 +78,7 @@ class HousekeeperTests: XCTestCase {
             today: GregorianDay(year: 2020, month: 7, day: 24),
             isolationInfo: IsolationInfo.empty,
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet:
-                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 20, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false))
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 20, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil))
             )
         )
         _ = housekeeper.executeHousekeeping()
@@ -92,7 +92,7 @@ class HousekeeperTests: XCTestCase {
             today: GregorianDay(year: 2020, month: 7, day: 24),
             isolationInfo: IsolationInfo.empty,
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet:
-                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 8, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false))
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 8, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil))
             )
         )
         _ = housekeeper.executeHousekeeping()

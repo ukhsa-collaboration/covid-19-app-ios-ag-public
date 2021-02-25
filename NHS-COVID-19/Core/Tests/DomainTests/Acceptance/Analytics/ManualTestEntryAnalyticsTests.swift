@@ -1,7 +1,8 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
+import Common
 import Foundation
 import XCTest
 @testable import Domain
@@ -36,6 +37,7 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.hasTestedPositiveBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
+            assertField.equals(expected: 1, \.didAskForSymptomsOnPositiveTestEntry)
         }
         
         // Dates: 4th-13th Jan -> Analytics packets for: 3rd-12th Jan
@@ -125,6 +127,35 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
         assertAnalyticsPacketIsNormal()
     }
     
+    func testDidSetSymptomsOnsetDayAfterEnteredPostiveTestResult() throws {
+        
+        assertAnalyticsPacketIsNormal()
+        
+        // When the user provides a symptomsOnsetDay after entering test results, an indexCaseInfo will be created with IsolationTrigger = .selfDiagnosis (where the onset day will be saved)
+        // After that the testInfo of the created indexCaseInfo will be updated with the given test result.
+        try manualTestResultEntry.enterPositive(
+            symptomsOnsetDay: LocalDay.today.gregorianDay.advanced(by: -1),
+            endDate: LocalDay.today.gregorianDay.startDate(in: .utc)
+        )
+        
+        assertOnFields { assertField in
+            // onset day analytics field
+            assertField.equals(expected: 1, \.didAskForSymptomsOnPositiveTestEntry)
+            assertField.equals(expected: 1, \.didRememberOnsetSymptomsDateBeforeReceivedTestResult)
+            assertField.equals(expected: 1, \.didHaveSymptomsBeforeReceivedTestResult)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+            
+            // positive confirmed analytics field
+            assertField.equals(expected: 1, \.startedIsolation)
+            assertField.equals(expected: 1, \.receivedPositiveTestResult)
+            assertField.equals(expected: 1, \.receivedPositiveTestResultEnteredManually)
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
+            assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
+        }
+    }
+    
     func testManuallyEnteredNegativeTestResult() throws {
         try manualTestResultEntry.enterNegative()
         
@@ -145,5 +176,35 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
         }
         
         assertAnalyticsPacketIsNormal()
+    }
+    
+    func testOptIntoDCT() throws {
+        let riskyContact = RiskyContact(configuration: $instance)
+        
+        assertAnalyticsPacketIsNormal()
+        
+        riskyContact.trigger(exposureDate: currentDateProvider.currentDate) {
+            self.assertOnFields { assertField in
+                assertField.isPresent(\.isIsolatingBackgroundTick)
+                assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
+                assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+                assertField.equals(expected: 1, \.receivedRiskyContactNotification)
+                assertField.equals(expected: 1, \.startedIsolation)
+            }
+        }
+        
+        let action = try context().dailyContactTestingEarlyTerminationSupport()
+        switch action {
+        case .enabled(let optOutOfIsolation):
+            optOutOfIsolation()
+        default:
+            XCTFail("Expected .enabled to be returned from dailyContactTestingEarlyTerminationSupport")
+        }
+        assertOnFields { assertField in
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
+            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.equals(expected: 1, \.declaredNegativeResultFromDCT)
+        }
     }
 }

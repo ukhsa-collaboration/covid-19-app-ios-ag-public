@@ -20,11 +20,14 @@ public class SymptomsReviewViewControllerScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             SymptomsReviewViewController(
-                [
-                    SymptomInfo(isConfirmed: false, heading: deniedForFeverish, content: ""),
-                    SymptomInfo(isConfirmed: true, heading: confirmedForCough, content: ""),
-                ],
-                dateSelectionWindow: 14,
+                symptomsQuestionnaire: InterfaceSymptomsQuestionnaire(
+                    riskThreshold: 1.0,
+                    symptoms: [
+                        SymptomInfo(isConfirmed: false, heading: deniedForFeverish, content: ""),
+                        SymptomInfo(isConfirmed: true, heading: confirmedForCough, content: ""),
+                    ],
+                    dateSelectionWindow: 14
+                ),
                 interactor: Interactor(viewController: parent)
             )
         }
@@ -42,7 +45,7 @@ private class Interactor: SymptomsReviewViewController.Interacting {
         viewController?.showAlert(title: "\(index)")
     }
     
-    func confirmSymptoms(selectedDay: GregorianDay?, hasCheckedNoDate: Bool) -> Result<Void, UIValidationError> {
+    func confirmSymptoms(riskThreshold: Double, selectedDay: GregorianDay?, hasCheckedNoDate: Bool) -> Result<Void, UIValidationError> {
         viewController?.showAlert(title: SymptomsReviewViewControllerScenario.confirmTapped)
         return .success(())
     }

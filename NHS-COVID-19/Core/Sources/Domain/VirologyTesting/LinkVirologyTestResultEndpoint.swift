@@ -24,11 +24,11 @@ struct LinkVirologyTestResultEndpoint: HTTPEndpoint {
         decoder.dateDecodingStrategy = .appNetworking
         let payload = try decoder.decode(ResponseBody.self, from: response.body.content)
         
-        if (payload.requiresConfirmatoryTest ?? false) && payload.diagnosisKeySubmissionSupported {
+        if payload.requiresConfirmatoryTest && payload.diagnosisKeySubmissionSupported {
             throw VirologyTestResultResponseError.unconfirmedKeySharingNotSupported
         }
         
-        if (payload.requiresConfirmatoryTest ?? false) && payload.testResult != .positive {
+        if payload.requiresConfirmatoryTest && payload.testResult != .positive {
             throw VirologyTestResultResponseError.unconfirmedNonPostiveNotSupported
         }
         
@@ -36,7 +36,7 @@ struct LinkVirologyTestResultEndpoint: HTTPEndpoint {
             Metrics.signpostReceivedFromManual(
                 testResult: VirologyTestResult.TestResult(payload.testResult),
                 testKitType: VirologyTestResult.TestKitType(payload.testKit),
-                requiresConfirmatoryTest: payload.requiresConfirmatoryTest ?? false
+                requiresConfirmatoryTest: payload.requiresConfirmatoryTest
             )
             throw VirologyTestResultResponseError.lfdVoidOrNegative
         }
@@ -48,7 +48,7 @@ struct LinkVirologyTestResultEndpoint: HTTPEndpoint {
                 endDate: payload.testEndDate
             ),
             diagnosisKeySubmissionSupport: try DiagnosisKeySubmissionSupport(payload),
-            requiresConfirmatoryTest: payload.requiresConfirmatoryTest ?? false
+            requiresConfirmatoryTest: payload.requiresConfirmatoryTest
         )
     }
 }
@@ -81,8 +81,7 @@ private struct ResponseBody: Codable {
     var testKit: TestKitType
     var diagnosisKeySubmissionToken: String?
     var diagnosisKeySubmissionSupported: Bool
-    #warning("Remove the optional here as soon as this field is implemented in other envs.")
-    var requiresConfirmatoryTest: Bool?
+    var requiresConfirmatoryTest: Bool
 }
 
 private extension VirologyTestResult.TestKitType {

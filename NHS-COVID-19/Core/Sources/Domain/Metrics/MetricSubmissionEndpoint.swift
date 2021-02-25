@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -128,6 +128,12 @@ private struct SubmissionPayload: Codable {
         var isIsolatingForTestedLFDPositiveBackgroundTick = 0
         
         var launchedTestOrdering = 0
+        
+        var didAskForSymptomsOnPositiveTestEntry = 0
+        var didHaveSymptomsBeforeReceivedTestResult = 0
+        var didRememberOnsetSymptomsDateBeforeReceivedTestResult = 0
+        
+        var declaredNegativeResultFromDCT = 0
     }
     
     var includesMultipleApplicationVersions: Bool
@@ -228,6 +234,10 @@ private extension Metric {
         case .hasRiskyContactNotificationsEnabledBackgroundTick: return \.hasRiskyContactNotificationsEnabledBackgroundTick
         case .totalRiskyContactReminderNotifications: return \.totalRiskyContactReminderNotifications
         case .launchedTestOrdering: return \.launchedTestOrdering
+        case .didAskForSymptomsOnPositiveTestEntry: return \.didAskForSymptomsOnPositiveTestEntry
+        case .didHaveSymptomsBeforeReceivedTestResult: return \.didHaveSymptomsBeforeReceivedTestResult
+        case .didRememberOnsetSymptomsDateBeforeReceivedTestResult: return \.didRememberOnsetSymptomsDateBeforeReceivedTestResult
+        case .declaredNegativeResultFromDCT: return \.declaredNegativeResultFromDCT
         }
     }
     

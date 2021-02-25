@@ -16,6 +16,20 @@ class MockDataProvider: ObservableObject {
         _objectWillChange.eraseToAnyPublisher()
     }
     
+    @UserDefault("mocks.blackPostcodes", defaultValue: "")
+    var blackPostcodes: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.maroonPostcodes", defaultValue: "")
+    var maroonPostcodes: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
     @UserDefault("mocks.redPostcodes", defaultValue: "")
     var redPostcodes: String {
         didSet {
@@ -46,6 +60,20 @@ class MockDataProvider: ObservableObject {
     
     @UserDefault("mocks.neutralPostcodes", defaultValue: "")
     var neutralPostcodes: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.blackLocalAuthorities", defaultValue: "")
+    var blackLocalAuthorities: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.maroonLocalAuthorities", defaultValue: "")
+    var maroonLocalAuthorities: String {
         didSet {
             _objectWillChange.send()
         }

@@ -40,7 +40,7 @@ class ExposureWindowHousekeeperTests: XCTestCase {
     func testHousekeeperDoesNothingIfInIsolation() throws {
         let housekeeper = createHouseKeeper(
             isolationLogicalState: IsolationLogicalState.isolating(
-                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 26, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false)), endAcknowledged: false, startAcknowledged: false
+                Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 26, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)), endAcknowledged: false, startAcknowledged: false
             ),
             isWaitingForExposureApproval: false
         )

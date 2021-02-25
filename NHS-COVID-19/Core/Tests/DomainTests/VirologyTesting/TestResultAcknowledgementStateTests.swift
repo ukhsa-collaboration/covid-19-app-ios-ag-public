@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -36,7 +36,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolating(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false)),
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)),
             endAcknowledged: false,
             startAcknowledged: true
         )
@@ -47,6 +47,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
             positiveAcknowledgement: positiveAcknowledgement,
+            keySubmissionAllowed: true,
             completionHandler: { _ in }
         )
         
@@ -65,7 +66,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolating(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false)),
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)),
             endAcknowledged: false,
             startAcknowledged: true
         )
@@ -76,6 +77,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
             positiveAcknowledgement: positiveAcknowledgement,
+            keySubmissionAllowed: true,
             completionHandler: { _ in }
         )
         
@@ -94,7 +96,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolationFinishedButNotAcknowledged(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false))
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil))
         )
         
         let state = TestResultAcknowledgementState(
@@ -103,6 +105,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
             positiveAcknowledgement: positiveAcknowledgement,
+            keySubmissionAllowed: true,
             completionHandler: { _ in }
         )
         
@@ -128,6 +131,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
             positiveAcknowledgement: positiveAcknowledgement,
+            keySubmissionAllowed: true,
             completionHandler: { _ in }
         )
         
@@ -153,6 +157,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
             positiveAcknowledgement: positiveAcknowledgement,
+            keySubmissionAllowed: true,
             completionHandler: { _ in }
         )
         
@@ -161,7 +166,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         }
     }
     
-    func testNegativeIsolating() {
+    func testNegativeIsolatingDueToContactCase() {
         let result = VirologyStateTestResult(
             testResult: .negative,
             testKitType: .labResult,
@@ -171,7 +176,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolating(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false)),
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(contactCaseInfo: Isolation.ContactCaseInfo(optOutOfIsolationDay: nil))),
             endAcknowledged: false,
             startAcknowledged: true
         )
@@ -179,13 +184,44 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         let state = TestResultAcknowledgementState(
             result: result,
             newIsolationState: isolationState,
-            currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
-            indexCaseInfo: indexCaseInfo,
+            currentIsolationState: isolationState,
+            indexCaseInfo: nil,
             positiveAcknowledgement: positiveAcknowledgement,
+            keySubmissionAllowed: true,
             completionHandler: { _ in }
         )
         
         if case TestResultAcknowledgementState.neededForNegativeResultContinueToIsolate = state {} else {
+            XCTFail()
+        }
+    }
+    
+    func testNegativeIsolatingDueToSelfDiagnosis() {
+        let result = VirologyStateTestResult(
+            testResult: .negative,
+            testKitType: .labResult,
+            endDate: Date(),
+            diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
+            requiresConfirmatoryTest: false
+        )
+        
+        let isolationState = IsolationLogicalState.isolating(
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)),
+            endAcknowledged: false,
+            startAcknowledged: true
+        )
+        
+        let state = TestResultAcknowledgementState(
+            result: result,
+            newIsolationState: isolationState,
+            currentIsolationState: isolationState,
+            indexCaseInfo: indexCaseInfo,
+            positiveAcknowledgement: positiveAcknowledgement,
+            keySubmissionAllowed: true,
+            completionHandler: { _ in }
+        )
+        
+        if case TestResultAcknowledgementState.neededForNegativeAfterPositiveResultContinueToIsolate = state {} else {
             XCTFail()
         }
     }
@@ -200,7 +236,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolationFinishedButNotAcknowledged(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false))
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil))
         )
         
         let state = TestResultAcknowledgementState(
@@ -209,6 +245,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
             positiveAcknowledgement: positiveAcknowledgement,
+            keySubmissionAllowed: true,
             completionHandler: { _ in }
         )
         
@@ -234,6 +271,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
             positiveAcknowledgement: positiveAcknowledgement,
+            keySubmissionAllowed: true,
             completionHandler: { _ in }
         )
         
@@ -252,7 +290,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolating(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: true, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false)),
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: true, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)),
             endAcknowledged: false,
             startAcknowledged: true
         )
@@ -263,6 +301,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             currentIsolationState: isolationState,
             indexCaseInfo: indexCaseInfo,
             positiveAcknowledgement: positiveAcknowledgement,
+            keySubmissionAllowed: true,
             completionHandler: { _ in }
         )
         
@@ -281,7 +320,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolating(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false)),
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)),
             endAcknowledged: false,
             startAcknowledged: true
         )
@@ -292,6 +331,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
             positiveAcknowledgement: positiveAcknowledgement,
+            keySubmissionAllowed: true,
             completionHandler: { _ in }
         )
         
@@ -317,6 +357,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
             positiveAcknowledgement: positiveAcknowledgement,
+            keySubmissionAllowed: true,
             completionHandler: { _ in }
         )
         
@@ -335,7 +376,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolationFinishedButNotAcknowledged(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false))
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil))
         )
         
         let state = TestResultAcknowledgementState(
@@ -344,6 +385,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
             positiveAcknowledgement: positiveAcknowledgement,
+            keySubmissionAllowed: true,
             completionHandler: { _ in }
         )
         

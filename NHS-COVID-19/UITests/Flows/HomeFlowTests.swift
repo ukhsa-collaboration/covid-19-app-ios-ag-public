@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -104,6 +104,49 @@ class HomeFlowTests: XCTestCase {
             runner.step("Contact tracing off") {
                 """
                 User now sees that contact tracing is off
+                """
+            }
+        }
+    }
+    
+    func testDailyContactTestingOnIfFeatureFlagEnabled() throws {
+        
+        // turn dct feature on
+        $runner.enable(\.$dailyContactTestingToggle)
+        
+        // put user into isolation
+        $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.contact.rawValue
+        
+        $runner.report(scenario: "HomeFlow", "Daily Contact Testing On") {
+            """
+            Users see the Daily Contact Testing checkbox on the test entry screen
+            """
+        }
+        try runner.run { app in
+            let homeScreen = HomeScreen(app: app)
+            
+            app.checkOnHomeScreen(postcode: postcode)
+            
+            app.scrollTo(element: homeScreen.enterTestResultButton)
+            homeScreen.enterTestResultButton.tap()
+            
+            let linkTestResult = LinkTestResultWithDCTScreen(app: app)
+            
+            linkTestResult.checkBox(checked: false).tap()
+            
+            linkTestResult.continueButton.tap()
+            
+            let dailyConfirmationScreen = DailyContactTestingConfirmationScreen(app: app)
+            
+            XCTAssert(dailyConfirmationScreen.confirmButton.exists)
+            
+            dailyConfirmationScreen.confirmButton.tap()
+            
+            XCTAssert(dailyConfirmationScreen.confirmAlert.exists)
+            
+            runner.step("User saw confirm alert") {
+                """
+                User now sees the daily contact testing confirm screen
                 """
             }
         }

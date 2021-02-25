@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -146,7 +146,7 @@ struct HomeView: View {
             }
             
         }
-        .environment(\.locale, Locale(identifier: currentLanguageCode()))
+        .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }
     
     private func buttons() -> some View {
@@ -173,11 +173,11 @@ struct HomeView: View {
                 NavigationButton(imageName: .finance, foregroundColor: Color(.background), backgroundColor: Color(.styleGreen), text: localize(.home_financial_support_button_title), action: interactor.didTapFinancialSupportButton)
             }
             
+            NavigationButton(imageName: .chain, foregroundColor: Color(.background), backgroundColor: Color(.nhsLightBlue), text: localize(.home_link_test_result_button_title), action: interactor.didTapLinkTestResultButton)
+            
             NavigationButton(imageName: .settings, foregroundColor: Color(.background), backgroundColor: Color(.amber), text: localize(.home_settings_button_title), action: interactor.didTapSettingsButton)
             
             NavigationButton(imageName: .info, foregroundColor: Color(.background), backgroundColor: Color(.styleTurquoise), text: localize(.home_about_the_app_button_title), action: interactor.didTapAboutButton)
-            
-            NavigationButton(imageName: .chain, foregroundColor: Color(.background), backgroundColor: Color(.nhsLightBlue), text: localize(.home_link_test_result_button_title), action: interactor.didTapLinkTestResultButton)
             
             ToggleButton(isToggledOn: $exposureNotifications.enabled, imageName: .bluetooth, text: localize(.home_toggle_exposure_notification_title))
         }

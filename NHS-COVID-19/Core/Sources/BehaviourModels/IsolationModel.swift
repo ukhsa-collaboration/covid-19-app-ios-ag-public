@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -9,26 +9,39 @@ public struct IsolationModel {
     
     public enum ContactCaseState: Equatable, CaseIterable {
         case noIsolation
-        case isolationActive
-        case isolationFinished
+        
+        case isolating
+        
+        case notIsolatingAndHadRiskyContactPreviously
+        
+        case notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT
     }
     
     public enum SymptomaticCaseState: Equatable, CaseIterable {
         case noIsolation
-        case isolationActive
-        case isolationFinished
         
-        /// Only possible if started isolation as symptomatic and then received a negative result.
-        case isolationFinishedAndHasNegativeTest
+        case isolating
+        
+        case notIsolatingAndHadSymptomsPreviously
     }
     
+    /// Isolation cases involving a case
+    ///
+    /// Consider renaming this as this isn't _alway_ involve a positive test (could be a negative test).
     public enum PositiveTestCaseState: Equatable, CaseIterable {
         case noIsolation
-        case isolationActive
-        case isolationFinished
         
-        /// This could be due to a positive test that was then overridden OR you actually never had a positive test, and this is the first test you enter
-        case isolationFinishedAndHasNegativeTest
+        case isolatingWithConfirmedTest
+        case isolatingWithUnconfirmedTest
+        
+        case notIsolatingAndHadConfirmedTestPreviously
+        case notIsolatingAndHadUnconfirmedTestPreviously
+        
+        /// This could be due to a positive test that was then overridden OR you actually never had a positive test, and this is the first test you enter.
+        ///
+        /// Consider breaking this into two separate cases for when we do and do not have a previous P isolation. Do not do this until we have a
+        /// more advanced model that captures expected data stored on disk to verify whether indeed we want to be able to represent these separately.
+        case notIsolatingAndHasNegativeTest
     }
     
     public struct State: Hashable, CaseIterable {
@@ -40,9 +53,26 @@ public struct IsolationModel {
     public enum Event: Equatable, CaseIterable {
         // External:
         case riskyContact
+        case riskyContactWithExposureDayOlderThanIsolationTerminationDueToDCT
+        
         case selfDiagnosedSymptomatic
-        case receivedPositiveTest
+        
+        case terminateRiskyContactDueToDCT
+        
+        case receivedConfirmedPositiveTest
+        case receivedConfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate
+        case receivedConfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate
+        case receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedSymptomOnsetDate
+        
+        case receivedUnconfirmedPositiveTest
+        case receivedUnconfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate
+        case receivedUnconfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate
+        case receivedUnconfirmedPositiveTestWithIsolationPeriodOlderThanAssumedSymptomOnsetDate
+        
         case receivedNegativeTest
+        case receivedNegativeTestWithEndDateOlderThanRememberedUnconfirmedTestEndDate
+        case receivedNegativeTestWithEndDateOlderThanAssumedSymptomOnsetDate
+        
         case receivedVoidTest
         
         // Time-based:
@@ -71,374 +101,44 @@ public struct IsolationModel {
         var event: Event
         var mutations: IsolationModel.StateMutations
     }
+}
+
+public protocol IsolationRuleSet {
     
-    public static let unreachableStatePredicates: [StatePredicate] = [
-        StatePredicate(
-            symptomatic: [.isolationFinished, .isolationFinishedAndHasNegativeTest],
-            positiveTest: [.isolationActive]
-        ),
-        StatePredicate(
-            symptomatic: [.isolationActive],
-            positiveTest: [.isolationFinished, .isolationFinishedAndHasNegativeTest]
-        ),
-        StatePredicate(
-            symptomatic: [.isolationFinished],
-            positiveTest: [.isolationFinishedAndHasNegativeTest]
-        ),
-        StatePredicate(
-            symptomatic: [.isolationFinishedAndHasNegativeTest],
-            positiveTest: [.isolationFinished]
-        ),
-        StatePredicate(
-            symptomatic: [.isolationFinishedAndHasNegativeTest],
-            positiveTest: [.isolationFinishedAndHasNegativeTest]
-        ),
-    ]
+    typealias StatePredicate = IsolationModel.StatePredicate
+    typealias Rule = IsolationModel.Rule
+    typealias Event = IsolationModel.Event
+    typealias State = IsolationModel.State
     
-    public static let rulesRespondingToExternalEvents: [Rule] = [
-        Rule(
-            """
-            A risky contact will start a contact isolation.
-            Risky contacts are only considered when the user is not already in contact or positive isolation
-            """,
-            predicate: StatePredicate(
-                contact: [.noIsolation, .isolationFinished],
-                positiveTest: [.noIsolation, .isolationFinished, .isolationFinishedAndHasNegativeTest]
-            ),
-            event: .riskyContact,
-            update: .init(contact: .isolationActive)
-        ),
-        
-        Rule(
-            """
-            A symptomatic isolation will start on a symptomatic self-diagnosis.
-            Symptom entry is only allowed if not already isolating as symptomatic or positive.
-            """,
-            predicate: StatePredicate(
-                symptomatic: [.noIsolation, .isolationFinished, .isolationFinishedAndHasNegativeTest],
-                positiveTest: [.noIsolation, .isolationFinished, .isolationFinishedAndHasNegativeTest]
-            ),
-            event: .selfDiagnosedSymptomatic,
-            update: .init(
-                symptomatic: .isolationActive,
-                positiveTest: .noIsolation
-            )
-        ),
-        
-        Rule(
-            """
-            A positive test isolation will start on a positive test.
-            """,
-            predicate: StatePredicate(
-                symptomatic: [.noIsolation],
-                positiveTest: [.noIsolation]
-            ),
-            event: .receivedPositiveTest,
-            update: .init(
-                positiveTest: .isolationActive
-            )
-        ),
-        
-        Rule(
-            """
-            A positive test will not start a new isolation if a positive test isolation is expired.
-            The positive test will be stored is there is not one.
-            """,
-            predicates: [
-                StatePredicate(
-                    symptomatic: [.isolationFinished],
-                    positiveTest: [.isolationFinished, .noIsolation]
-                ),
-                StatePredicate(
-                    symptomatic: [.noIsolation],
-                    positiveTest: [.isolationFinished]
-                ),
-            ],
-            event: .receivedPositiveTest,
-            update: .init()
-        ),
-        
-        Rule(
-            """
-            A positive test will start a new isolation if previous symptomatic or positive test isolation ended and has negative test.
-            """,
-            predicates: [
-                StatePredicate(
-                    symptomatic: [.isolationFinishedAndHasNegativeTest],
-                    positiveTest: [.noIsolation]
-                ),
-                StatePredicate(
-                    symptomatic: [.noIsolation],
-                    positiveTest: [.isolationFinishedAndHasNegativeTest]
-                ),
-            ],
-            event: .receivedPositiveTest,
-            update: .init(
-                symptomatic: .noIsolation,
-                positiveTest: .isolationActive
-            )
-        ),
-        
-        Rule(
-            """
-            A symptomatic or positive test isolation will continue on a new positive test.
-            The positive test will be stored is there is not one.
-            """,
-            predicates: [
-                StatePredicate(
-                    symptomatic: [.noIsolation],
-                    positiveTest: [.isolationActive]
-                ),
-                StatePredicate(
-                    symptomatic: [.isolationActive],
-                    positiveTest: [.noIsolation]
-                ),
-                StatePredicate(
-                    symptomatic: [.isolationActive],
-                    positiveTest: [.isolationActive]
-                ),
-            ],
-            event: .receivedPositiveTest,
-            update: .init(positiveTest: .isolationActive)
-        ),
-        
-        Rule(
-            """
-            A negative test will not override a positive isolation (active or finished).
-            """,
-            predicate: StatePredicate(
-                positiveTest: [.isolationActive, .isolationFinished, .isolationFinishedAndHasNegativeTest]
-            ),
-            event: .receivedNegativeTest,
-            update: .init()
-        ),
-        
-        Rule(
-            """
-            A negative test when has no in symptomatic or positive isolation state will be stored.
-            """,
-            predicate: StatePredicate(
-                symptomatic: [.noIsolation],
-                positiveTest: [.noIsolation]
-            ),
-            event: .receivedNegativeTest,
-            update: .init(positiveTest: .isolationFinishedAndHasNegativeTest)
-        ),
-        
-        Rule(
-            """
-            A negative test when symptomatic isolation is finished will be stored if there isn’t one.
-            """,
-            predicate: StatePredicate(
-                symptomatic: [.isolationFinished, .isolationFinishedAndHasNegativeTest],
-                positiveTest: [.noIsolation]
-            ),
-            event: .receivedNegativeTest,
-            update: .init(symptomatic: .isolationFinishedAndHasNegativeTest)
-        ),
-        
-        Rule(
-            """
-            A negative test will end symptomatic isolation if not also positive.
-            The test result will be stored.
-            """,
-            predicate: StatePredicate(
-                symptomatic: [.isolationActive],
-                positiveTest: [.noIsolation]
-            ),
-            event: .receivedNegativeTest,
-            update: .init(symptomatic: .isolationFinishedAndHasNegativeTest)
-        ),
-        
-        Rule(
-            """
-            A void test will never change isolation state.
-            """,
-            predicate: StatePredicate(),
-            event: .receivedVoidTest,
-            update: .init()
-        ),
-    ]
+    static var unreachableStatePredicates: [StatePredicate] { get }
     
-    public static let rulesAutomaticallyTriggeredOverTime: [Rule] = [
-        
-        Rule(
-            """
-            A contact isolation will end.
-            """,
-            predicate: StatePredicate(contact: [.isolationActive]),
-            event: .contactIsolationEnded,
-            update: .init(contact: .isolationFinished)
-        ),
-        
-        Rule(
-            """
-            A positive test isolation will end.
-            """,
-            predicate: StatePredicate(
-                symptomatic: [.noIsolation],
-                positiveTest: [.isolationActive]
-            ),
-            event: .indexIsolationEnded,
-            update: .init(positiveTest: .isolationFinished)
-        ),
-        
-        Rule(
-            """
-            A symptomatic isolation will end.
-            """,
-            predicate: StatePredicate(
-                symptomatic: [.isolationActive],
-                positiveTest: [.noIsolation]
-            ),
-            event: .indexIsolationEnded,
-            update: .init(symptomatic: .isolationFinished)
-        ),
-        
-        Rule(
-            """
-            A combined symptomatic and positive test isolation will end together.
-            """,
-            predicate: StatePredicate(
-                symptomatic: [.isolationActive],
-                positiveTest: [.isolationActive]
-            ),
-            event: .indexIsolationEnded,
-            update: .init(
-                symptomatic: .isolationFinished,
-                positiveTest: .isolationFinished
-            )
-        ),
-        
-        Rule(
-            """
-            After retention period ends all isolation is deleted.
-            """,
-            predicate: StatePredicate(
-                contact: [.noIsolation, .isolationFinished],
-                symptomatic: [.noIsolation, .isolationFinished, .isolationFinishedAndHasNegativeTest],
-                positiveTest: [.noIsolation, .isolationFinished, .isolationFinishedAndHasNegativeTest]
-            ),
-            event: .retentionPeriodEnded,
-            update: .init(
-                contact: .noIsolation,
-                symptomatic: .noIsolation,
-                positiveTest: .noIsolation
-            )
-        ),
-    ]
+    static var rulesRespondingToExternalEvents: [Rule] { get }
+    static var rulesAutomaticallyTriggeredOverTime: [Rule] { get }
+    static var fillerRules: [Rule] { get }
+}
+
+extension IsolationRuleSet {
     
-    public static let realRules: [Rule] = rulesRespondingToExternalEvents + rulesAutomaticallyTriggeredOverTime
+    public static var realRules: [Rule] { rulesRespondingToExternalEvents + rulesAutomaticallyTriggeredOverTime }
     
-    /// Rules that are defined for completeness of the state machine, but we don't expect them as should be "impossible" for reasons not captured in state machine.
-    public static let fillerRules: [Rule] = [
-        Rule(
-            filler: """
-            We block risky contacts events during an existing contact or positive isolation.
-            """,
-            predicates: [
-                StatePredicate(
-                    contact: [.isolationActive]
-                ),
-                StatePredicate(
-                    contact: [.noIsolation, .isolationFinished],
-                    positiveTest: [.isolationActive]
-                ),
-            ],
-            event: .riskyContact
-        ),
-        
-        Rule(
-            filler: """
-            If not in contact isolation, then the event to end it is meaningless.
-            """,
-            predicate: StatePredicate(contact: [.noIsolation, .isolationFinished]),
-            event: .contactIsolationEnded
-        ),
-        
-        Rule(
-            filler: """
-            We do not allow new self-diagnosis during an active symptomatic or positive isolation.
-            """,
-            predicates: [
-                StatePredicate(
-                    symptomatic: [.isolationActive],
-                    positiveTest: [.noIsolation]
-                ),
-                StatePredicate(
-                    symptomatic: [.noIsolation],
-                    positiveTest: [.isolationActive]
-                ),
-                StatePredicate(
-                    symptomatic: [.isolationActive],
-                    positiveTest: [.isolationActive]
-                ),
-            ],
-            event: .selfDiagnosedSymptomatic
-        ),
-        
-        Rule(
-            filler: """
-            If not in symptomatic or positive test isolation, then the event to finish it is meaningless.
-            """,
-            predicate: StatePredicate(
-                symptomatic: [.noIsolation, .isolationFinished, .isolationFinishedAndHasNegativeTest],
-                positiveTest: [.noIsolation, .isolationFinished, .isolationFinishedAndHasNegativeTest]
-            ),
-            event: .indexIsolationEnded
-        ),
-        
-        Rule(
-            filler: """
-            Retention period should not end if we have an active isolation.
-            """,
-            predicates: [
-                StatePredicate(
-                    contact: [.isolationActive],
-                    symptomatic: [.noIsolation, .isolationFinished, .isolationFinishedAndHasNegativeTest],
-                    positiveTest: [.noIsolation, .isolationFinished, .isolationFinishedAndHasNegativeTest]
-                ),
-                StatePredicate(
-                    contact: [.noIsolation, .isolationFinished],
-                    symptomatic: [.isolationActive],
-                    positiveTest: [.noIsolation, .isolationFinished, .isolationFinishedAndHasNegativeTest]
-                ),
-                StatePredicate(
-                    contact: [.noIsolation, .isolationFinished],
-                    symptomatic: [.noIsolation, .isolationFinished, .isolationFinishedAndHasNegativeTest],
-                    positiveTest: [.isolationActive]
-                ),
-                StatePredicate(
-                    contact: [.isolationActive],
-                    symptomatic: [.isolationActive],
-                    positiveTest: [.noIsolation, .isolationFinished, .isolationFinishedAndHasNegativeTest]
-                ),
-                StatePredicate(
-                    contact: [.noIsolation, .isolationFinished],
-                    symptomatic: [.isolationActive],
-                    positiveTest: [.isolationActive]
-                ),
-                StatePredicate(
-                    contact: [.isolationActive],
-                    symptomatic: [.noIsolation, .isolationFinished, .isolationFinishedAndHasNegativeTest],
-                    positiveTest: [.isolationActive]
-                ),
-                StatePredicate(
-                    contact: [.isolationActive],
-                    symptomatic: [.isolationActive],
-                    positiveTest: [.isolationActive]
-                ),
-            ],
-            event: .retentionPeriodEnded
-        ),
-    ]
-    
-    public static let allRules = realRules + fillerRules
+    public static var allRules: [Rule] { realRules + fillerRules }
     
     public static func rules(matching state: State, for event: Event, includeFiller: Bool = true) -> [Rule] {
         (includeFiller ? allRules : realRules)
             .filter { $0.event == event }
             .filter { $0.predicates.contains { $0.matches(state) } }
+    }
+    
+    public static var reachableStates: [IsolationModel.State] {
+        State.allCases
+            .filter { !unreachableStates.contains($0) }
+    }
+    
+    public static var unreachableStates: [IsolationModel.State] {
+        var visitedCases = Set<IsolationModel.State>()
+        return unreachableStatePredicates
+            .flatMap { $0.allMatchedCases }
+            .filter { visitedCases.insert($0).inserted }
     }
     
 }
@@ -453,18 +153,6 @@ extension IsolationModel.State {
                 }
             }
         }
-    }()
-    
-    public static let reachableCases: [IsolationModel.State] = {
-        allCases
-            .filter { !unreachableCases.contains($0) }
-    }()
-    
-    public static let unreachableCases: [IsolationModel.State] = {
-        var visitedCases = Set<IsolationModel.State>()
-        return IsolationModel.unreachableStatePredicates
-            .flatMap { $0.allMatchedCases }
-            .filter { visitedCases.insert($0).inserted }
     }()
     
 }
@@ -493,22 +181,26 @@ extension IsolationModel.StatePredicate {
     
 }
 
+private extension IsolationModel.StateMutations {
+    
+    func update(_ state: inout IsolationModel.State) {
+        if let contact = contact {
+            state.contact = contact
+        }
+        if let symptomatic = symptomatic {
+            state.symptomatic = symptomatic
+        }
+        if let positiveTest = positiveTest {
+            state.positiveTest = positiveTest
+        }
+    }
+    
+}
+
 extension IsolationModel.Rule {
     
     public func apply(to state: IsolationModel.State) -> IsolationModel.State {
-        mutating(state, with: update)
-    }
-    
-    func update(_ state: inout IsolationModel.State) {
-        if let contact = mutations.contact {
-            state.contact = contact
-        }
-        if let symptomatic = mutations.symptomatic {
-            state.symptomatic = symptomatic
-        }
-        if let positiveTest = mutations.positiveTest {
-            state.positiveTest = positiveTest
-        }
+        mutating(state, with: mutations.update)
     }
     
 }

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -9,8 +9,8 @@ import SwiftUI
 
 extension RiskLevelBanner {
     public struct ViewModel {
-        public enum ColorScheme {
-            case green, yellow, red, amber, neutral
+        public enum ColorScheme: String {
+            case green, yellow, red, amber, neutral, maroon, black
         }
         
         var postcode: String
@@ -44,6 +44,10 @@ extension RiskLevelBanner {
                 image = UIImage(.riskLevelAmber)
             case .red:
                 image = UIImage(.riskLevelRed)
+            case .maroon:
+                image = UIImage(.riskLevelMaroon)
+            case .black:
+                image = UIImage(.riskLevelBlack)
             }
             
             riskLevelInfoViewModel = RiskLevelInfoViewController.ViewModel(
@@ -95,6 +99,9 @@ private extension RiskLevelBanner.ViewModel.ColorScheme {
     }
     
     var fontColor: ColorName {
+        if case .black = self {
+            return .lightSurface
+        }
         return .primaryText
     }
     
@@ -110,6 +117,10 @@ private extension RiskLevelBanner.ViewModel.ColorScheme {
             return .riskLevelIconAmber
         case .red:
             return .riskLevelIconRed
+        case .maroon:
+            return .riskLevelIconMaroon
+        case .black:
+            return .riskLevelIconBlack
         }
     }
     
@@ -125,6 +136,10 @@ private extension RiskLevelBanner.ViewModel.ColorScheme {
             return .riskLevelBackgroundAmber
         case .red:
             return .riskLevelBackgroundRed
+        case .maroon:
+            return .riskLevelBackgroundMaroon
+        case .black:
+            return .riskLevelBackgroundBlack
         }
     }
     
@@ -132,6 +147,8 @@ private extension RiskLevelBanner.ViewModel.ColorScheme {
         switch self {
         case .neutral:
             return .riskLevelBorderNeutral
+        case .black:
+            return .riskLevelBorderBlack
         default:
             return iconColor
         }

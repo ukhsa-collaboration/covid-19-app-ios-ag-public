@@ -1,13 +1,15 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
+import Common
 import Domain
 import Foundation
 
 enum AcknowledgementNeededState {
     case notNeeded
+    case askForSymptomsOnsetDay(testEndDay: GregorianDay, didFinishAskForSymptomsOnsetDay: () -> Void, didConfirmSymptoms: () -> Void, setOnsetDay: (GregorianDay) -> Void)
     case neededForPositiveResultStartToIsolate(interactor: SendKeysLoadingFlowViewControllerInteractor, isolationEndDate: Date, keySubmissionSupported: Bool, requiresConfirmatoryTest: Bool)
     case neededForPositiveResultContinueToIsolate(interactor: SendKeysLoadingFlowViewControllerInteractor, isolationEndDate: Date, keySubmissionSupported: Bool, requiresConfirmatoryTest: Bool)
     case neededForPositiveResultNotIsolating(interactor: SendKeysLoadingFlowViewControllerInteractor, keySubmissionSupported: Bool)
@@ -15,7 +17,7 @@ enum AcknowledgementNeededState {
     case neededForNegativeAfterPositiveResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
     case neededForNegativeResultNotIsolating(interactor: NegativeTestResultNoIsolationViewControllerInteractor)
     case neededForEndOfIsolation(interactor: EndOfIsolationViewControllerInteractor, isolationEndDate: Date, isIndexCase: Bool)
-    case neededForStartOfIsolationExposureDetection(interactor: ExposureAcknowledgementViewControllerInteractor, isolationEndDate: Date)
+    case neededForStartOfIsolationExposureDetection(interactor: ExposureAcknowledgementViewControllerInteractor, isolationEndDate: Date, showDailyContactTesting: Bool)
     case neededForRiskyVenue(interactor: RiskyVenueInformationInteractor, venueName: String, checkInDate: Date)
     case neededForVoidResultContinueToIsolate(interactor: VoidTestResultFlowInteracting, isolationEndDate: Date)
     case neededForVoidResultNotIsolating(interactor: VoidTestResultFlowInteracting)
@@ -78,7 +80,7 @@ enum AcknowledgementNeededState {
                         return .neededForEndOfIsolation(interactor: interactor, isolationEndDate: isolation.endDate, isIndexCase: isolation.isIndexCase)
                     case .neededForStart(let isolation, let acknowledge):
                         let interactor = ExposureAcknowledgementViewControllerInteractor(openURL: context.openURL, acknowledge: acknowledge)
-                        return .neededForStartOfIsolationExposureDetection(interactor: interactor, isolationEndDate: isolation.endDate)
+                        return .neededForStartOfIsolationExposureDetection(interactor: interactor, isolationEndDate: isolation.endDate, showDailyContactTesting: context.shouldShowDailyContactTestingInformFeature())
                     case .notNeeded:
                         switch riskyVenueAckState {
                         case .needed(let acknowledge, let venueName, let checkInDate):
@@ -100,6 +102,8 @@ enum AcknowledgementNeededState {
                         acknowledge: acknowledge
                     )
                     return .neededForVoidResultNotIsolating(interactor: interactor)
+                case .askForSymptomsOnsetDay(let testEndDay, let didFinishAskForSymptomsOnsetDay, let didConfirmSymptoms, let setOnsetDay):
+                    return .askForSymptomsOnsetDay(testEndDay: testEndDay, didFinishAskForSymptomsOnsetDay: didFinishAskForSymptomsOnsetDay, didConfirmSymptoms: didConfirmSymptoms, setOnsetDay: setOnsetDay)
                 }
             }
             .eraseToAnyPublisher()

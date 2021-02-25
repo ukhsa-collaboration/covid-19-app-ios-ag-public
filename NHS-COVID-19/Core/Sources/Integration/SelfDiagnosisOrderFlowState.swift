@@ -24,7 +24,7 @@ enum SelfDiagnosisOrderFlowState {
                     ))
                 } else {
                     return .selfDiagnosis(SelfDiagnosisFlowInteractor(
-                        selfDiagnosisManager: context.selfDiagnosisManager!,
+                        selfDiagnosisManager: context.selfDiagnosisManager,
                         orderTest: {
                             testOrdering.send(true)
                         },

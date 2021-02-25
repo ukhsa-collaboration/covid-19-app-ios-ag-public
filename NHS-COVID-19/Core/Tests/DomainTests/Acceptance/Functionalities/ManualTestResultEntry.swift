@@ -1,7 +1,8 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
+import Common
 import Foundation
 import TestSupport
 @testable import Domain
@@ -23,9 +24,19 @@ struct ManualTestResultEntry {
     
     private let validToken = "f3dzcfdt"
     
-    func enterPositive(requiresConfirmatoryTest: Bool = false) throws {
-        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .positive, testKitType: .labResult, requiresConfirmatoryTest: requiresConfirmatoryTest)
-        switch testResultAcknowledgementState {
+    func enterPositive(requiresConfirmatoryTest: Bool = false, symptomsOnsetDay: GregorianDay? = nil, endDate: Date? = nil) throws {
+        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .positive, testKitType: .labResult, requiresConfirmatoryTest: requiresConfirmatoryTest, endDate: endDate ?? currentDateProvider.currentDate)
+        if case .askForSymptomsOnsetDay(_, let didFinishAskForSymptomsOnsetDay, let didConfirmSymptoms, let onsetDay) = testResultAcknowledgementState {
+            if let symptomsOnsetDay = symptomsOnsetDay {
+                didConfirmSymptoms()
+                onsetDay(symptomsOnsetDay)
+            }
+            didFinishAskForSymptomsOnsetDay()
+        }
+        
+        let testResultAcknowledgementStateResult = try context.testResultAcknowledgementState.await()
+        
+        switch try testResultAcknowledgementStateResult.get() {
         case .neededForPositiveResultStartToIsolate(let positiveAcknowledgement, _, _, _),
              .neededForPositiveResultContinueToIsolate(let positiveAcknowledgement, _, _, _):
             _ = try positiveAcknowledgement.acknowledge().await()
@@ -35,7 +46,7 @@ struct ManualTestResultEntry {
     }
     
     func enterNegative() throws {
-        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .negative, testKitType: .labResult, requiresConfirmatoryTest: false)
+        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .negative, testKitType: .labResult, requiresConfirmatoryTest: false, endDate: currentDateProvider.currentDate)
         guard case .neededForNegativeResultNotIsolating(let negativeAcknowledgement) = testResultAcknowledgementState else {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
@@ -43,15 +54,15 @@ struct ManualTestResultEntry {
     }
     
     func enterVoid() throws {
-        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .void, testKitType: .labResult, requiresConfirmatoryTest: false)
+        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .void, testKitType: .labResult, requiresConfirmatoryTest: false, endDate: currentDateProvider.currentDate)
         guard case .neededForVoidResultNotIsolating(let voidAcknowledgement) = testResultAcknowledgementState else {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
         voidAcknowledgement()
     }
     
-    private func getAcknowledgementState(resultType: VirologyTestResult.TestResult, testKitType: VirologyTestResult.TestKitType, requiresConfirmatoryTest: Bool) throws -> TestResultAcknowledgementState {
-        let result = getTestResult(result: resultType, testKitType: testKitType, endDate: currentDateProvider.currentDate, diagnosisKeySubmissionSupported: !requiresConfirmatoryTest, requiresConfirmatoryTest: requiresConfirmatoryTest)
+    private func getAcknowledgementState(resultType: VirologyTestResult.TestResult, testKitType: VirologyTestResult.TestKitType, requiresConfirmatoryTest: Bool, endDate: Date) throws -> TestResultAcknowledgementState {
+        let result = getTestResult(result: resultType, testKitType: testKitType, endDate: endDate, diagnosisKeySubmissionSupported: !requiresConfirmatoryTest, requiresConfirmatoryTest: requiresConfirmatoryTest)
         apiClient.response(for: "/virology-test/v2/cta-exchange", response: .success(.ok(with: .json(result))))
         let manager = context.virologyTestingManager
         _ = try manager.linkExternalTestResult(with: validToken).await()

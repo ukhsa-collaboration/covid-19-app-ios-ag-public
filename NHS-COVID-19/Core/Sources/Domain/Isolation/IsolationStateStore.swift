@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -18,11 +18,14 @@ struct IsolationStateInfo: Codable, Equatable, DataConvertible {
 }
 
 class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
-    enum Operation {
+    enum Operation: Equatable {
         case nothing
+        case ignore
         case update
         case overwrite
         case confirm
+        case updateAndConfirm
+        case overwriteAndConfirm
     }
     
     @Encrypted private var isolationStateInfoStorage: IsolationStateInfo?
@@ -77,14 +80,15 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
         return save(isolationInfo)
     }
     
-    func newIsolationStateInfo(for testResult: TestResult, testKitType: TestKitType?, requiresConfirmatoryTest: Bool, receivedOn: GregorianDay, npexDay: GregorianDay, operation: IsolationStateStore.Operation) -> IsolationStateInfo {
-        let isolationInfo = mutating(self.isolationInfo) {
-            if requiresConfirmatoryTest == false, testResult == .positive {
+    func newIsolationStateInfo(from currentIsolationInfo: IsolationInfo?, for testResult: TestResult, testKitType: TestKitType?, requiresConfirmatoryTest: Bool, receivedOn: GregorianDay, npexDay: GregorianDay, operation: IsolationStateStore.Operation) -> IsolationStateInfo {
+        
+        let isolationInfo = mutating(currentIsolationInfo ?? .empty) {
+            if requiresConfirmatoryTest == false, testResult == .positive, operation != .ignore {
                 $0.contactCaseInfo = nil
             }
             
             switch operation {
-            case .nothing:
+            case .nothing, .ignore:
                 return
             case .update:
                 if var indexCaseInfo = $0.indexCaseInfo {
@@ -108,6 +112,35 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
                     onsetDay: nil,
                     testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOnDay: receivedOn)
                 )
+            case .updateAndConfirm:
+                if let storedIndexCaseInfo = $0.indexCaseInfo {
+                    var indexCaseInfo = storedIndexCaseInfo
+                    indexCaseInfo.set(testResult: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOn: receivedOn)
+                    if let confirmedDay = storedIndexCaseInfo.testInfo?.confirmedOnDay ?? $0.indexCaseInfo?.assumedTestEndDay {
+                        indexCaseInfo.confirmTest(confirmationDay: confirmedDay)
+                    }
+                    $0.indexCaseInfo = indexCaseInfo
+                } else {
+                    var indexCaseInfo = IndexCaseInfo(
+                        isolationTrigger: .manualTestEntry(npexDay: npexDay),
+                        onsetDay: nil,
+                        testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOnDay: receivedOn)
+                    )
+                    if let confirmedDay = $0.indexCaseInfo?.testInfo?.confirmedOnDay ?? $0.indexCaseInfo?.assumedTestEndDay {
+                        indexCaseInfo.confirmTest(confirmationDay: confirmedDay)
+                    }
+                    $0.indexCaseInfo = indexCaseInfo
+                }
+            case .overwriteAndConfirm:
+                var indexCaseInfo = IndexCaseInfo(
+                    isolationTrigger: .manualTestEntry(npexDay: npexDay),
+                    onsetDay: nil,
+                    testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOnDay: receivedOn)
+                )
+                if let confirmedDay = $0.indexCaseInfo?.testInfo?.confirmedOnDay ?? $0.indexCaseInfo?.assumedTestEndDay {
+                    indexCaseInfo.confirmTest(confirmationDay: confirmedDay)
+                }
+                $0.indexCaseInfo = indexCaseInfo
             }
         }
         return IsolationStateInfo(isolationInfo: isolationInfo, configuration: configuration)

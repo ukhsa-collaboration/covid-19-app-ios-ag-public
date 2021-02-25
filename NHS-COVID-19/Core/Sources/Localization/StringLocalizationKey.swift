@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -13,9 +13,13 @@ public enum StringLocalizationKey: String, CaseIterable {
     case home_strapline_accessiblity_label_wls
     
     case unrecoverable_error_page_title
+    case unrecoverable_error_heading_1
+    case unrecoverable_error_heading_2
+    case unrecoverable_error_bulleted_list
+    case unrecoverable_error_description_2
+    case unrecoverable_error_link
+    
     case update_app_button_title
-    case unrecoverable_error_title
-    case unrecoverable_error_description
     
     case bluetooth_disabled_title
     case bluetooth_disabled_description
@@ -192,6 +196,8 @@ public enum StringLocalizationKey: String, CaseIterable {
     case exposure_acknowledgement_button
     case exposure_acknowledgement_link_label
     case exposure_acknowledgement_link
+    case exposure_acknowledgement_dct_blurb
+    case exposure_acknowledgement_dct_link
     
     case end_of_isolation_isolate_title
     case end_of_isolation_finished_description
@@ -326,9 +332,11 @@ public enum StringLocalizationKey: String, CaseIterable {
     case mydata_section_encounter_description
     case mydata_section_date_description
     case mydata_section_exposure_notification_description
+    case mydata_section_daily_testing_description
     case mydata_section_self_isolation_end_date_description
     case mydata_exposure_notification_details_exposure_date_description
     case mydata_exposure_notification_details_notification_date_description
+    case mydata_daily_testing_opt_in_date_description
     case mydata_test_result_positive
     case mydata_test_result_negative
     case mydata_test_result_void
@@ -369,7 +377,9 @@ public enum StringLocalizationKey: String, CaseIterable {
     case link_how_this_app_works
     case link_provide_feedback
     case link_exposure_faq
+    case link_daily_contact_testing
     case link_visit_uk_gov
+    case link_cant_run_this_app_faq
     
     case cancel
     case back
@@ -403,6 +413,14 @@ public enum StringLocalizationKey: String, CaseIterable {
     case link_test_result_enter_code_textfield_label
     case link_test_result_enter_code_invalid_error
     case link_test_result_button_title
+    
+    case link_test_result_enter_code_daily_contact_testing_heading
+    case link_test_result_enter_code_daily_contact_testing_paragraph
+    case link_test_result_enter_code_daily_contact_testing_bulleted_list
+    case link_test_result_enter_code_daily_contact_testing_checkbox
+    case link_test_result_enter_code_daily_contact_testing_top_erorr_box_heading
+    case link_test_result_enter_code_daily_contact_testing_top_erorr_box_text_both_entered
+    case link_test_result_enter_code_daily_contact_testing_top_erorr_box_text_none_entered
     
     case checkin_confirmation_title
     
@@ -485,6 +503,24 @@ public enum StringLocalizationKey: String, CaseIterable {
     case positive_test_result_requires_follow_up_test_book_test_button
     case positive_test_result_requires_follow_up_test_start_to_isolate_info
     
+    case daily_contact_testing_confirmation_screen_title
+    case daily_contact_testing_confirmation_screen_heading
+    case daily_contact_testing_confirmation_screen_description
+    case daily_contact_testing_confirmation_screen_bulleted_list_continue_heading
+    case daily_contact_testing_confirmation_screen_bulleted_list_continue
+    case daily_contact_testing_confirmation_screen_bulleted_list_no_longer_heading
+    case daily_contact_testing_confirmation_screen_bulleted_list_no_longer
+    case daily_contact_testing_confirmation_screen_confirm_button_title
+    case daily_contact_testing_confirmation_screen_alert_title
+    case daily_contact_testing_confirmation_screen_alert_body_description
+    case daily_contact_testing_confirmation_screen_alert_confirm_button_title
+    
+    case test_check_symptoms_heading
+    case test_check_symptoms_yes
+    case test_check_symptoms_no
+    case test_symptoms_date_heading
+    case test_symptoms_date_continue
+    case test_check_symptoms_points
 }
 
 public enum ParameterisedStringLocalizable: Equatable {

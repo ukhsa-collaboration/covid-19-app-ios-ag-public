@@ -1,0 +1,8 @@
+CODE_SIGN_ENTITLEMENTS = IsolationModelPreviews/IsolationModelPreviews.entitlements
+CODE_SIGN_IDENTITY[sdk=macosx*] = -
+INFOPLIST_FILE = IsolationModelPreviews/Info.plist
+IPHONEOS_DEPLOYMENT_TARGET = 13.6
+PRODUCT_BUNDLE_IDENTIFIER = uk.nhs.covid19.IsolationModelPreviews
+SDKROOT = iphoneos
+SUPPORTS_MACCATALYST = YES
+TARGETED_DEVICE_FAMILY = 1,2,6

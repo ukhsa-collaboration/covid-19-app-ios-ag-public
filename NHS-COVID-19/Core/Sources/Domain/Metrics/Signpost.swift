@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -55,6 +55,11 @@ public enum Metric: String, CaseIterable {
     case totalRiskyContactReminderNotifications
     
     case launchedTestOrdering
+    
+    case didAskForSymptomsOnPositiveTestEntry
+    case didHaveSymptomsBeforeReceivedTestResult
+    case didRememberOnsetSymptomsDateBeforeReceivedTestResult
+    case declaredNegativeResultFromDCT
 }
 
 public enum Metrics {

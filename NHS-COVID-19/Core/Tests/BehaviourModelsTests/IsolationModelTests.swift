@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import BehaviourModels
@@ -7,11 +7,13 @@ import Common
 import TestSupport
 import XCTest
 
-class IsolationModelTests: XCTestCase {
+class IsolationModelRuleSetTests: XCTestCase {
+    
+    fileprivate var ruleSet: IsolationRuleSet.Type { IsolationModelCurrentRuleSet.self }
     
     func testThereIsExactlyOneRuleForEachStateAndEvent() {
         let failures = allTransitions.compactMap { state, event -> String? in
-            let matchedRules = IsolationModel.rules(matching: state, for: event)
+            let matchedRules = ruleSet.rules(matching: state, for: event)
             switch matchedRules.count {
             case 1:
                 return nil
@@ -41,11 +43,11 @@ class IsolationModelTests: XCTestCase {
     
     func testAllPossibleStatesAreReachableWithRealRules() {
         let visitedStates = Set(allTransitions.compactMap { state, event in
-            IsolationModel.rules(matching: state, for: event, includeFiller: false).first?.apply(to: state)
+            ruleSet.rules(matching: state, for: event, includeFiller: false).first?.apply(to: state)
         })
         
         // Not converting this type into a set so the output order is deterministic
-        let unvisitedStates = mutating(IsolationModel.State.reachableCases) {
+        let unvisitedStates = mutating(ruleSet.reachableStates) {
             $0.removeAll(where: visitedStates.contains)
         }
         
@@ -57,11 +59,11 @@ class IsolationModelTests: XCTestCase {
     
     func testForbiddenStatesAreNotReachable() {
         let visitedStates = Set(allTransitions.compactMap { state, event in
-            IsolationModel.rules(matching: state, for: event).first?.apply(to: state)
+            ruleSet.rules(matching: state, for: event).first?.apply(to: state)
         })
         
         // Not converting this type into a set so the output order is deterministic
-        let visitedUnreachableStates = mutating(IsolationModel.State.unreachableCases) {
+        let visitedUnreachableStates = mutating(ruleSet.unreachableStates) {
             $0.removeAll { !visitedStates.contains($0) }
         }
         
@@ -72,7 +74,7 @@ class IsolationModelTests: XCTestCase {
     }
     
     private var allTransitions: [(IsolationModel.State, IsolationModel.Event)] {
-        IsolationModel.State.reachableCases.flatMap { state in
+        ruleSet.reachableStates.flatMap { state in
             IsolationModel.Event.allCases.map { event in
                 (state, event)
             }

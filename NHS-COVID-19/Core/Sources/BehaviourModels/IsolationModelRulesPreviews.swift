@@ -1,17 +1,25 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
 import SwiftUI
 
-struct RuleView: View {
+private typealias PreviewedRules = IsolationModelCurrentRuleSet
+
+public struct RuleView: View {
+    
+    public init(rule: IsolationModel.Rule) {
+        self.rule = rule
+    }
+    
     var rule: IsolationModel.Rule
     
-    var body: some View {
+    public var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(rule.description)
-            ForEach(rule.transitions) {
+                .frame(minHeight: 100, alignment: .bottom)
+            ForEach(rule.transitions(excludeStates: PreviewedRules.unreachableStates)) {
                 TransitionView(transition: $0)
             }
         }
@@ -21,7 +29,7 @@ struct RuleView: View {
 struct IsolationModelRulesRespondingToExternalEventsPreviews: PreviewProvider {
     
     static var previews: some View {
-        ForEach(IsolationModel.rulesRespondingToExternalEvents, id: \.description) { rule in
+        ForEach(PreviewedRules.rulesRespondingToExternalEvents, id: \.description) { rule in
             RuleView(rule: rule)
                 .padding()
                 .previewLayout(.sizeThatFits)
@@ -33,7 +41,7 @@ struct IsolationModelRulesRespondingToExternalEventsPreviews: PreviewProvider {
 struct IsolationModelRulesAutomaticallyTriggeredOverTimePreviews: PreviewProvider {
     
     static var previews: some View {
-        ForEach(IsolationModel.rulesAutomaticallyTriggeredOverTime, id: \.description) { rule in
+        ForEach(PreviewedRules.rulesAutomaticallyTriggeredOverTime, id: \.description) { rule in
             RuleView(rule: rule)
                 .padding()
                 .previewLayout(.sizeThatFits)
@@ -45,7 +53,7 @@ struct IsolationModelRulesAutomaticallyTriggeredOverTimePreviews: PreviewProvide
 struct IsolationModelFillerRulesPreviews: PreviewProvider {
     
     static var previews: some View {
-        ForEach(IsolationModel.fillerRules, id: \.description) { rule in
+        ForEach(PreviewedRules.fillerRules, id: \.description) { rule in
             RuleView(rule: rule)
                 .padding()
                 .previewLayout(.sizeThatFits)
@@ -57,7 +65,7 @@ struct IsolationModelFillerRulesPreviews: PreviewProvider {
 struct IsolationModelUnreachableStatesPreviews: PreviewProvider {
     
     static var previews: some View {
-        ForEach(StateCollection.unreachableStateCollections) { collection in
+        ForEach(PreviewedRules.unreachableStateCollections) { collection in
             StateView(collection: collection)
                 .padding()
                 .previewLayout(.sizeThatFits)

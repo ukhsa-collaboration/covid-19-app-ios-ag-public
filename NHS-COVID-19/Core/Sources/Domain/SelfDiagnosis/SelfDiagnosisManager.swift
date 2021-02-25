@@ -6,12 +6,14 @@ import Combine
 import Common
 import Foundation
 
-public class SelfDiagnosisManager {
-    
+public protocol SelfDiagnosisManaging {
+    func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError>
+    func evaluateSymptoms(symptoms: [(Symptom, Bool)], onsetDay: GregorianDay?, threshold: Double) -> IsolationState
+}
+
+public class SelfDiagnosisManager: SelfDiagnosisManaging {
     private let httpClient: HTTPClient
     private let calculateIsolationState: (GregorianDay?) -> IsolationState
-    
-    public var threshold: Double?
     
     init(httpClient: HTTPClient, calculateIsolationState: @escaping (GregorianDay?) -> IsolationState) {
         self.httpClient = httpClient
@@ -40,7 +42,7 @@ public class SelfDiagnosisManager {
             .reduce(0, +)
         
         guard sum >= threshold else {
-            return .noNeedToIsolate
+            return .noNeedToIsolate()
         }
         
         return calculateIsolationState(onsetDay)

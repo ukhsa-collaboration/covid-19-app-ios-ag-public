@@ -133,6 +133,6 @@ public struct NavigationButton: View {
         .background(colorScheme.backgroundColor)
         .clipShape(RoundedRectangle(cornerRadius: .menuButtonCornerRadius))
         .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.04), radius: .stripeWidth, x: 0, y: 0)
-        .environment(\.locale, Locale(identifier: currentLanguageCode()))
+        .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }
 }

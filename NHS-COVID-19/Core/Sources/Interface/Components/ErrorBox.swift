@@ -31,6 +31,6 @@ public struct ErrorBox: View {
         .accessibilityElement()
         .accessibility(label: Text(verbatim: localize(.symptom_card_accessibility_label(heading: heading, content: description))))
         .accessibility(addTraits: .isStaticText)
-        .environment(\.locale, Locale(identifier: currentLanguageCode()))
+        .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }
 }

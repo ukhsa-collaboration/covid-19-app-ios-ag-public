@@ -22,7 +22,7 @@ class SelfDiagnosisManagerTests: XCTestCase {
     ]
     
     override func setUp() {
-        isolationState = .noNeedToIsolate
+        isolationState = .noNeedToIsolate()
         selfDiagnosisManager = SelfDiagnosisManager(httpClient: MockHTTPClient()) { _ in self.isolationState }
         addTeardownBlock {
             self.selfDiagnosisManager = nil
@@ -30,22 +30,22 @@ class SelfDiagnosisManagerTests: XCTestCase {
     }
     
     func testNoNeedToIsolateIfThresholdNotReached() {
-        XCTAssertEqual(selfDiagnosisManager.evaluateSymptoms(symptoms: symptoms, onsetDay: nil, threshold: 3), .noNeedToIsolate)
+        XCTAssertEqual(selfDiagnosisManager.evaluateSymptoms(symptoms: symptoms, onsetDay: nil, threshold: 3), .noNeedToIsolate())
     }
     
     func testIsolateIfExactlyReachedThreshold() {
-        isolationState = .isolate(Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false)))
+        isolationState = .isolate(Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)))
         XCTAssertEqual(selfDiagnosisManager.evaluateSymptoms(symptoms: symptoms, onsetDay: nil, threshold: 2), isolationState)
     }
     
     func testIsolateIfExactlyAboveThreshold() {
-        isolationState = .isolate(Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false)))
+        isolationState = .isolate(Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)))
         XCTAssertEqual(selfDiagnosisManager.evaluateSymptoms(symptoms: symptoms, onsetDay: nil, threshold: 1), isolationState)
     }
     
     func testNoNeedToIsolateIfAboveThresholdButIsolationNotRequired() {
-        isolationState = .noNeedToIsolate
-        XCTAssertEqual(selfDiagnosisManager.evaluateSymptoms(symptoms: symptoms, onsetDay: nil, threshold: 1), .noNeedToIsolate)
+        isolationState = .noNeedToIsolate()
+        XCTAssertEqual(selfDiagnosisManager.evaluateSymptoms(symptoms: symptoms, onsetDay: nil, threshold: 1), .noNeedToIsolate())
     }
     
 }

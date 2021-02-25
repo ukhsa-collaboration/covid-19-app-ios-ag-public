@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -174,6 +174,7 @@ struct SubmissionPayload: Decodable {
         var receivedRiskyContactNotification: MetricField = 0
         var receivedUnconfirmedPositiveTestResult: MetricField = 0
         var startedIsolation: MetricField = 0
+        var declaredNegativeResultFromDCT: MetricField = 0
         
         // How many times background tasks ran
         var totalBackgroundTasks: MetricField = 0
@@ -198,6 +199,9 @@ struct SubmissionPayload: Decodable {
         var launchedIsolationPaymentsApplication: MetricField = 0
         var haveActiveIpcTokenBackgroundTick: MetricField = 0
         
+        var didAskForSymptomsOnPositiveTestEntry: MetricField = 0
+        var didHaveSymptomsBeforeReceivedTestResult: MetricField = 0
+        var didRememberOnsetSymptomsDateBeforeReceivedTestResult: MetricField = 0
     }
     
     var includesMultipleApplicationVersions: Bool

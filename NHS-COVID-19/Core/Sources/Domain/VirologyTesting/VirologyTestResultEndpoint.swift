@@ -27,11 +27,11 @@ struct VirologyTestResultEndpoint: HTTPEndpoint {
             decoder.dateDecodingStrategy = .appNetworking
             let payload = try decoder.decode(ResponseBody.self, from: response.body.content)
             
-            if (payload.requiresConfirmatoryTest ?? false) && payload.diagnosisKeySubmissionSupported {
+            if payload.requiresConfirmatoryTest && payload.diagnosisKeySubmissionSupported {
                 throw VirologyTestResultResponseError.unconfirmedKeySharingNotSupported
             }
             
-            if (payload.requiresConfirmatoryTest ?? false) && payload.testResult != .positive {
+            if payload.requiresConfirmatoryTest && payload.testResult != .positive {
                 throw VirologyTestResultResponseError.unconfirmedNonPostiveNotSupported
             }
             
@@ -47,7 +47,7 @@ struct VirologyTestResultEndpoint: HTTPEndpoint {
                         endDate: payload.testEndDate
                     ),
                     diagnosisKeySubmissionSupport: payload.diagnosisKeySubmissionSupported,
-                    requiresConfirmatoryTest: payload.requiresConfirmatoryTest ?? false
+                    requiresConfirmatoryTest: payload.requiresConfirmatoryTest
                 )
             )
         default:
@@ -83,8 +83,7 @@ private struct ResponseBody: Codable {
     var testResult: TestResult
     var testKit: TestKitType
     var diagnosisKeySubmissionSupported: Bool
-    #warning("Remove the optional here as soon as this field is implemented in other envs.")
-    var requiresConfirmatoryTest: Bool?
+    var requiresConfirmatoryTest: Bool
 }
 
 private extension VirologyTestResult.TestResult {

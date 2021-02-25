@@ -67,4 +67,8 @@ struct HomeScreen {
     var reminderAlertButton: XCUIElement {
         app.buttons[localized: .exposure_notification_reminder_alert_button]
     }
+    
+    var enterTestResultButton: XCUIElement {
+        app.buttons[localized: .home_link_test_result_button_title]
+    }
 }

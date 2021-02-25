@@ -2,16 +2,15 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
-import Foundation
 import Common
+import Foundation
 @testable import Domain
 
 struct Questionnaire {
-    
-    let manager: SelfDiagnosisManager
+    let manager: SelfDiagnosisManaging
     
     init(context: RunningAppContext) {
-        self.manager = context.selfDiagnosisManager!
+        manager = context.selfDiagnosisManager
     }
     
     func selfDiagnosePositive(onsetDay: GregorianDay) throws {

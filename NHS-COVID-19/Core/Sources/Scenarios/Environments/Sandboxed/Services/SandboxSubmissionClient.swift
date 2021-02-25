@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -27,6 +27,23 @@ class SandboxSubmissionClient: HTTPClient {
             }
             """#))
             
+            return Result.success(response)
+        }
+        
+        if request.path == "/virology-test/v2/cta-exchange" {
+            let date = GregorianDay.today.startDate(in: .utc)
+            let dateString = ISO8601DateFormatter().string(from: date)
+            
+            let response = HTTPResponse.ok(with: .json(#"""
+            {
+            "testEndDate": "\#(dateString)",
+            "testResult": "POSITIVE",
+            "testKit":"LAB_RESULT",
+            "diagnosisKeySubmissionToken": "\#(UUID().uuidString)",
+            "diagnosisKeySubmissionSupported": true,
+            "requiresConfirmatoryTest": false
+            }
+            """#))
             return Result.success(response)
         }
         

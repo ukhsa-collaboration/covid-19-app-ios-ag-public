@@ -86,51 +86,6 @@ class AppAvailabilityEndpointTests: XCTestCase {
         TS.assert(try endpoint.parse(response), equals: expected)
     }
     
-    func testDecodingWithNoRecommendedVersions() throws {
-        let minimumOSVersionDescription = UUID().uuidString
-        let minimumAppVersionDescription = UUID().uuidString
-        
-        let response = HTTPResponse.ok(with: .json("""
-        {
-          "minimumOSVersion": {
-            "value": "13.5.0",
-            "description": {
-              "en-GB": "\(minimumOSVersionDescription)"
-            }
-          },
-          "minimumAppVersion": {
-            "value": "3.0.0",
-            "description": {
-              "en-GB": "\(minimumAppVersionDescription)"
-            }
-          },
-        }
-        """))
-        
-        let expected = AppAvailability(
-            iOSVersion: AppAvailability.VersionRequirement(
-                minimumSupported: Version(major: 13, minor: 5),
-                descriptions: [Locale(identifier: "en-GB"): minimumOSVersionDescription]
-            ),
-            recommendediOSVersion: AppAvailability.RecommendationRequirement(
-                minimumRecommended: Version(major: 13, minor: 5),
-                titles: [:],
-                descriptions: [Locale(identifier: "en-GB"): minimumOSVersionDescription]
-            ),
-            appVersion: AppAvailability.VersionRequirement(
-                minimumSupported: Version(major: 3),
-                descriptions: [Locale(identifier: "en-GB"): minimumAppVersionDescription]
-            ),
-            recommendedAppVersion: AppAvailability.RecommendationRequirement(
-                minimumRecommended: Version(major: 3),
-                titles: [:],
-                descriptions: [Locale(identifier: "en-GB"): minimumAppVersionDescription]
-            )
-        )
-        
-        TS.assert(try endpoint.parse(response), equals: expected)
-    }
-    
     func testDecodingValueWithMinorAndPatchVersionsOmitted() throws {
         let minimumOSVersionDescription = UUID().uuidString
         let recommendedOSVersionTitle = UUID().uuidString

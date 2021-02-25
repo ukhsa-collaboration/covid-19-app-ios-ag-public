@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -110,7 +110,7 @@ class SelfDiagnosisFlowTest: XCTestCase {
             
             let date = GregorianDay.today.advanced(by: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset).startDate(in: .current)
             
-            app.checkOnHomeScreenIsolating(date: date)
+            app.checkOnHomeScreenIsolating(date: date, days: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset)
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -70,7 +70,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let isolation = Isolation(
             fromDay: .today,
             untilStartOfDay: .today,
-            reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false)
+            reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)
         )
         let context = makeRunningAppContext(
             isolationAckState: .neededForEnd(isolation, acknowledge: {}),
@@ -90,7 +90,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let isolation = Isolation(
             fromDay: .today,
             untilStartOfDay: .today,
-            reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false)
+            reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)
         )
         
         let context = makeRunningAppContext(
@@ -110,7 +110,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let isolation = Isolation(
             fromDay: .today,
             untilStartOfDay: .today,
-            reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), isContactCase: false)
+            reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)
         )
         
         let context = makeRunningAppContext(
@@ -130,7 +130,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let isolation = Isolation(
             fromDay: .today,
             untilStartOfDay: .today,
-            reason: Isolation.Reason(indexCaseInfo: nil, isContactCase: true)
+            reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(optOutOfIsolationDay: nil))
         )
         
         let context = makeRunningAppContext(
@@ -176,8 +176,8 @@ class AcknowledgementNeededStateTests: XCTestCase {
             country: Just(.england).eraseToAnyPublisher().domainProperty(),
             openSettings: {},
             openURL: { _ in },
-            selfDiagnosisManager: nil,
-            isolationState: Just(.noNeedToIsolate).domainProperty(), testInfo: Just(nil).domainProperty(),
+            selfDiagnosisManager: MockSelfDiagnosisManager(),
+            isolationState: Just(.noNeedToIsolate()).domainProperty(), testInfo: Just(nil).domainProperty(),
             isolationAcknowledgementState: Result.success(isolationAckState).publisher.eraseToAnyPublisher(),
             exposureNotificationStateController: ExposureNotificationStateController(
                 manager: MockExposureNotificationManager()
@@ -190,10 +190,12 @@ class AcknowledgementNeededStateTests: XCTestCase {
             riskyCheckInsAcknowledgementState: Result.success(riskyCheckInsAckState).publisher.eraseToAnyPublisher(),
             currentDateProvider: currentDateProvider,
             exposureNotificationReminder: ExposureNotificationReminder(),
-            appReviewPresenter: AppReviewPresenter(checkInsStore: nil, reviewController: MockStoreReviewController(), currentDateProvider: currentDateProvider),
+            appReviewPresenter: MockAppReviewPresenter(reviewController: MockStoreReviewController(), currentDateProvider: currentDateProvider),
             isolationPaymentState: .constant(.disabled),
             currentLocaleConfiguration: Just(.systemPreferred).eraseToAnyPublisher().domainProperty(),
-            storeNewLanguage: { _ in }
+            storeNewLanguage: { _ in },
+            shouldShowDailyContactTestingInformFeature: { true },
+            dailyContactTestingEarlyTerminationSupport: { .disabled }
         )
     }
     
@@ -215,7 +217,34 @@ class AcknowledgementNeededStateTests: XCTestCase {
         func provideExposureDetails() -> (encounterDate: Date, notificationDate: Date)? {
             nil
         }
+    }
+    
+    private class MockSelfDiagnosisManager: SelfDiagnosisManaging {
+        public var threshold: Double?
         
+        public func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError> {
+            return Future<SymptomsQuestionnaire, NetworkRequestError> { promise in
+                promise(.success(SymptomsQuestionnaire(symptoms: [], riskThreshold: 0.0, dateSelectionWindow: 0)))
+            }.eraseToAnyPublisher()
+        }
+        
+        public func evaluateSymptoms(symptoms: [(Symptom, Bool)], onsetDay: GregorianDay?, threshold: Double) -> IsolationState {
+            return .noNeedToIsolate()
+        }
+    }
+    
+    private class MockAppReviewPresenter: AppReviewPresenting {
+        private let reviewController: StoreReviewControlling
+        private let currentDateProvider: DateProviding
+        
+        func presentReview() {
+            reviewController.requestAppReview()
+        }
+        
+        init(reviewController: StoreReviewControlling, currentDateProvider: DateProviding) {
+            self.reviewController = reviewController
+            self.currentDateProvider = currentDateProvider
+        }
     }
 }
 

@@ -141,17 +141,6 @@ public func currentLocaleIdentifier(
     }
 }
 
-@available(*, deprecated, renamed: "currentLocaleIdentifier")
-public func currentLanguageCode(
-    localeConfiguration: LocaleConfiguration? = nil,
-    supportedLocalizations: [String] = Bundle.main.supportedLocalizations
-) -> String {
-    currentLocaleIdentifier(
-        localeConfiguration: localeConfiguration,
-        supportedLocalizations: supportedLocalizations
-    )
-}
-
 public func localize(_ key: StringLocalizationKey) -> String {
     Localization.current.localize(key)
 }

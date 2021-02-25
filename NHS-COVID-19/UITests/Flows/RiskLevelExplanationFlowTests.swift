@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -19,7 +19,7 @@ class RiskLevelExplanationFlowTests: XCTestCase {
         $runner.initialState.postcode = postcode
         $runner.initialState.localAuthorityId = "E09000026"
         
-        $runner.report(scenario: "Risk Level Info", "Neutral path") {
+        $runner.report(scenario: "Area risk level", "Neutral risk (low)") {
             """
             Users see the home screen with neutral risk and navigate to risk level alert info
             """
@@ -50,7 +50,7 @@ class RiskLevelExplanationFlowTests: XCTestCase {
         $runner.initialState.postcode = postcode
         $runner.initialState.localAuthorityId = "E09000022"
         
-        $runner.report(scenario: "Risk Level Info", "Green path") {
+        $runner.report(scenario: "Area risk level", "Green risk (low)") {
             """
             Users see the home screen with green risk and navigate to risk level alert info
             """
@@ -81,7 +81,7 @@ class RiskLevelExplanationFlowTests: XCTestCase {
         $runner.initialState.postcode = postcode
         $runner.initialState.localAuthorityId = "E09000024"
         
-        $runner.report(scenario: "Risk Level Info", "Yellow path") {
+        $runner.report(scenario: "Area risk level", "Yellow risk (medium)") {
             """
             Users see the home screen with yellow risk and navigate to risk level alert info
             """
@@ -112,7 +112,7 @@ class RiskLevelExplanationFlowTests: XCTestCase {
         $runner.initialState.postcode = postcode
         $runner.initialState.localAuthorityId = "E09000023"
         
-        $runner.report(scenario: "Risk Level Info", "Amber path") {
+        $runner.report(scenario: "Area risk level", "Amber risk (medium)") {
             """
             Users see the home screen with amber risk and navigate to risk level alert info
             """
@@ -143,9 +143,71 @@ class RiskLevelExplanationFlowTests: XCTestCase {
         $runner.initialState.postcode = postcode
         $runner.initialState.localAuthorityId = "E09000025"
         
-        $runner.report(scenario: "Risk Level Info", "Red path") {
+        $runner.report(scenario: "Area risk level", "Red risk (high)") {
             """
             Users see the home screen with red risk and navigate to risk level alert info
+            """
+        }
+        try runner.run { app in
+            let homeScreen = HomeScreen(app: app)
+            
+            app.checkOnHomeScreen(postcode: postcode, alertLevel: 3)
+            
+            runner.step("Home Screen") {
+                """
+                When the user is on the Home screen and can tap on risk level banner
+                """
+            }
+            
+            homeScreen.riskLevelBanner(for: postcode, title: "[postcode] is in Local Alert Level 3").tap()
+            
+            runner.step("Risk level info") {
+                """
+                Users is on Risk level info screen
+                """
+            }
+        }
+    }
+    
+    func testMaroonPath() throws {
+        let postcode = "SW17"
+        $runner.initialState.postcode = postcode
+        $runner.initialState.localAuthorityId = "E09000032"
+        
+        $runner.report(scenario: "Area risk level", "Maroon risk (high)") {
+            """
+            Users see the home screen with maroon risk and navigate to risk level alert info
+            """
+        }
+        try runner.run { app in
+            let homeScreen = HomeScreen(app: app)
+            
+            app.checkOnHomeScreen(postcode: postcode, alertLevel: 3)
+            
+            runner.step("Home Screen") {
+                """
+                When the user is on the Home screen and can tap on risk level banner
+                """
+            }
+            
+            homeScreen.riskLevelBanner(for: postcode, title: "[postcode] is in Local Alert Level 3").tap()
+            
+            runner.step("Risk level info") {
+                """
+                Users is on Risk level info screen
+                """
+            }
+        }
+    }
+    
+    func testBlackPath() throws {
+        let postcode = "SW20"
+        $runner.initialState.postcode = postcode
+        $runner.initialState.localAuthorityId = "E09000021"
+        
+        $runner.report(scenario: "Area risk level", "Black risk (very high)") {
+            """
+            Users see the home screen with black risk and navigate to risk level alert info
             """
         }
         try runner.run { app in

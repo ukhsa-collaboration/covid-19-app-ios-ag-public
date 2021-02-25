@@ -17,7 +17,7 @@ class LocalAuthorityFlowTests: XCTestCase {
     
     func testSelectLocalAuthority() throws {
         $runner.initialState.postcode = "ST15"
-        $runner.report(scenario: "Confirm Local Authority", "Happy path - Select local authority") {
+        $runner.report(scenario: "Local Authority", "Happy path - Select local authority") {
             """
             Inform about the need of a local authority, choose a local authority from the list, and reach home screen.
             """
@@ -67,7 +67,7 @@ class LocalAuthorityFlowTests: XCTestCase {
     
     func testConfirmLocalAuthority() throws {
         $runner.initialState.postcode = "S1"
-        $runner.report(scenario: "Confirm Local Authority", "Happy path - Single local authority") {
+        $runner.report(scenario: "Local Authority", "Happy path - Single local authority") {
             """
             Inform about the need of a local authority, confirm the local authority, and reach home screen.
             """

@@ -8,7 +8,7 @@ import UIKit
 
 public class SelectLocalAuthorityScreenScenario: Scenario {
     
-    public static let name = "On-boarding - Local authority"
+    public static let name = "Onboarding - Local authority"
     public static let kind = ScenarioKind.screen
     public static let linkAlertTitle = "Visit cov.uk is tapped"
     public static let confirmAlertTitle = "Confirm button tapped"

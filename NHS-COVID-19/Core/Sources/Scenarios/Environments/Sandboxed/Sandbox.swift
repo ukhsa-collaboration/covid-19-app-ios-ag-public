@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -120,6 +120,8 @@ public enum Sandbox {
     public enum Config {
         public enum Isolation {
             public static let indexCaseSinceSelfDiagnosisUnknownOnset = 8
+            public static let indexCaseSinceTestResultEndDate = 5
+            public static let indexCaseSinceSelfDiagnosisOnset = 1
         }
     }
 }

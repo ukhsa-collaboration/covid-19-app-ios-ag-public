@@ -72,7 +72,9 @@ class ConfigurationViewController: UIViewController {
     func getFeatureString(feature: Feature) -> String {
         switch feature {
         case .dailyContactTesting:
-            return "Daily Contact Testing"
+            return "Daily Contact Testing (ACTION)"
+        case .offerDCTOnExposureNotification:
+            return "Offer DCT To Everyone (INFORM)"
         }
     }
     

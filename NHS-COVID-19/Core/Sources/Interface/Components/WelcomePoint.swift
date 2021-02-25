@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import UIKit
@@ -18,7 +18,7 @@ public class WelcomePoint: UIView {
         
         let imageView = UIImageView(image)
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = UIColor(.background)
+        imageView.tintColor = UIColor(.surface)
         
         let containerView = UIView()
         containerView.addAutolayoutSubview(imageView)

@@ -40,7 +40,7 @@ struct ExposureNotificationContext {
         exposureDetectionStore = ExposureDetectionStore(store: services.encryptedStore)
         let controller = ExposureNotificationDetectionController(manager: services.exposureNotificationManager)
         
-        self.trafficObfuscationClient = TrafficObfuscationClient(client: services.apiClient)
+        self.trafficObfuscationClient = TrafficObfuscationClient(client: services.apiClient, rateLimiter: ObfuscationRateLimiter())
         let trafficObfuscationClient = self.trafficObfuscationClient
         
         let exposureRiskManager: ExposureRiskManaging
@@ -201,7 +201,7 @@ struct ExposureNotificationContext {
                 var sendKeyState: TestResultAcknowledgementState.SendKeysState = .sent
                 if let indexCaseInfo = indexCaseInfo, let submissionToken = token {
                     return self.exposureKeysManager.sendKeys(
-                        for: indexCaseInfo.assumedOnsetDay,
+                        for: indexCaseInfo.assumedOnsetDayForExposureKeys,
                         token: submissionToken
                     )
                     .catch { (error) -> AnyPublisher<Void, Error> in

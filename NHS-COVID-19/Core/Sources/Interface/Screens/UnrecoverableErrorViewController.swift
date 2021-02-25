@@ -1,14 +1,21 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
 import UIKit
 
+public protocol UnrecoverableErrorViewControllerInteracting {
+    func faqLinkTapped()
+}
+
 public class UnrecoverableErrorViewController: RecoverableErrorViewController {
+    public typealias Interacting = UnrecoverableErrorViewControllerInteracting
     
-    public init() {
-        super.init(error: NonRecoverableErrorDetail())
+    public init(interactor: Interacting) {
+        super.init(error: NonRecoverableErrorDetail(
+            link: (title: localize(.unrecoverable_error_link), act: interactor.faqLinkTapped))
+        )
     }
     
     required init?(coder: NSCoder) {
@@ -18,21 +25,32 @@ public class UnrecoverableErrorViewController: RecoverableErrorViewController {
 }
 
 private struct NonRecoverableErrorDetail: ErrorDetail {
-    let action: (title: String, act: () -> Void)? = nil
-    let actionTitle: String? = nil
+    var action: (title: String, act: () -> Void)? = nil
+    var link: (title: String, act: () -> Void)
     var logoStrapLineStyle: LogoStrapline.Style = .onboarding
     
     let title = localize(.unrecoverable_error_page_title)
     
     var content: [UIView] {
-        let titleLabel = BaseLabel()
-        titleLabel.styleAsHeading()
-        titleLabel.text = localize(.unrecoverable_error_title)
+        let headingOne = BaseLabel()
+        headingOne.styleAsHeading()
+        headingOne.text = localize(.unrecoverable_error_heading_1)
+        
+        let headingTwo = BaseLabel()
+        headingTwo.styleAsHeading()
+        headingTwo.text = localize(.unrecoverable_error_heading_2)
         
         let descriptionLabel = BaseLabel()
         descriptionLabel.styleAsBody()
-        descriptionLabel.text = localize(.unrecoverable_error_description)
+        descriptionLabel.text = localize(.unrecoverable_error_description_2)
         
-        return [titleLabel, descriptionLabel]
+        return [
+            headingOne,
+            BulletedList(rows: localizeAndSplit(.unrecoverable_error_bulleted_list)),
+            headingTwo,
+            descriptionLabel,
+            LinkButton(title: link.title, action: link.act),
+        ]
+        
     }
 }

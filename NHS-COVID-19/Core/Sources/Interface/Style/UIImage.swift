@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import SwiftUI
@@ -57,6 +57,8 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case riskLevelYellow = "RiskLevel/Yellow"
     case riskLevelAmber = "RiskLevel/Amber"
     case riskLevelRed = "RiskLevel/Red"
+    case riskLevelMaroon = "RiskLevel/Maroon"
+    case riskLevelBlack = "RiskLevel/Black"
     
     case riskLevelDefaultIcon = "RiskLevel/Icons/DefaultIcon"
     case riskLevelBarsAndPubsIcon = "RiskLevel/Icons/BarsAndPubs"
@@ -67,6 +69,18 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case riskLevelTravellingIcon = "RiskLevel/Icons/Travelling"
     case riskLevelWorshipIcon = "RiskLevel/Icons/Worship"
     case riskLevelWeddingsAndFuneralsIcon = "RiskLevel/Icons/WeddingsAndFunerals"
+    case riskLevelBusinessesIcon = "RiskLevel/Icons/Businesses"
+    case riskLevelRetailIcon = "RiskLevel/Icons/Retail"
+    case riskLevelEntertainmentIcon = "RiskLevel/Icons/Entertainment"
+    case riskLevelPersonalCareIcon = "RiskLevel/Icons/PersonalCare"
+    case riskLevelLargeEventsIcon = "RiskLevel/Icons/LargeEvents"
+    case riskLevelClinicallyExtremelyVulnerableIcon = "RiskLevel/Icons/ClinicallyExtremelyVulnerable"
+    case riskLevelSocialDistancingIcon = "RiskLevel/Icons/SocialDistancing"
+    case riskLevelFaceCoveringsIcon = "RiskLevel/Icons/FaceCoverings"
+    case riskLevelMeetingOutdoorsIcon = "RiskLevel/Icons/MeetingOutdoors"
+    case riskLevelMeetingIndoorsIcon = "RiskLevel/Icons/MeetingIndoors"
+    case riskLevelWorkIcon = "RiskLevel/Icons/Work"
+    case riskLevelInternationalTravelIcon = "RiskLevel/Icons/InternationalTravel"
     
     case symbolRef = "Symbols/Ref"
     case symbolinfo = "Symbols/Info"

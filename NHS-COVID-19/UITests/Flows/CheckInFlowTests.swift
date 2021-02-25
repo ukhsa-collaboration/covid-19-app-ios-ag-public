@@ -21,7 +21,7 @@ class CheckInFlowTests: XCTestCase {
     }
     
     func testHappyPath() throws {
-        $runner.report(scenario: "Check-In Flow", "Happy path") {
+        $runner.report(scenario: "Venue check-in", "Happy path") {
             """
             Users can check into venues by scanning a qr-code
             """
@@ -81,7 +81,7 @@ class CheckInFlowTests: XCTestCase {
         $runner.initialState.shouldScanQRCode = false
         $runner.initialState.cameraAuthorized = true
         
-        $runner.report(scenario: "Check-In Flow", "Show More info") {
+        $runner.report(scenario: "Venue check-in", "Show More info") {
             """
             Users scans an invalid qr-code
             """
@@ -120,7 +120,7 @@ class CheckInFlowTests: XCTestCase {
     func testInvalidQRCode() throws {
         $runner.initialState.scannedQRCode = "INVALID"
         
-        $runner.report(scenario: "Check-In Flow", "Invalid QRCode") {
+        $runner.report(scenario: "Venue check-in", "Invalid QRCode") {
             """
             Users scans an invalid qr-code
             """
@@ -173,7 +173,7 @@ class CheckInFlowTests: XCTestCase {
     }
     
     func testDenyCameraAccess() throws {
-        $runner.report(scenario: "Check-In Flow", "Deny Camera Access") {
+        $runner.report(scenario: "Venue check-in", "Deny Camera Access") {
             """
             Users denies camera access for venue check-in
             """
@@ -219,7 +219,7 @@ class CheckInFlowTests: XCTestCase {
     func testCameraUnavailable() throws {
         $runner.initialState.cameraUnavailable = true
         
-        $runner.report(scenario: "Check-In Flow", "Unsupported Phone") {
+        $runner.report(scenario: "Venue check-in", "Unsupported Phone") {
             """
             The camera is not available to load or start
             """

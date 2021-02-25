@@ -10,7 +10,7 @@ import Interface
 import Localization
 
 struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting {
-    let selfDiagnosisManager: SelfDiagnosisManager
+    let selfDiagnosisManager: SelfDiagnosisManaging
     let orderTest: () -> Void
     let symptomMapper = SymptomMapping()
     let openURL: (URL) -> Void
@@ -18,11 +18,11 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
     func fetchQuestionnaire() -> AnyPublisher<InterfaceSymptomsQuestionnaire, Error> {
         selfDiagnosisManager.fetchQuestionnaire()
             .map { questionnaire in
-                self.selfDiagnosisManager.threshold = questionnaire.riskThreshold
                 let symptomInfos: [SymptomInfo] = questionnaire.symptoms.map { symptom in
                     self.symptomMapper.interfaceSymptomFrom(domainSymptom: symptom)
                 }
                 return InterfaceSymptomsQuestionnaire(
+                    riskThreshold: questionnaire.riskThreshold,
                     symptoms: symptomInfos,
                     dateSelectionWindow: questionnaire.dateSelectionWindow
                 )
@@ -31,8 +31,8 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
             .eraseToAnyPublisher()
     }
     
-    func evaluateSymptoms(symptoms: [SymptomInfo], onsetDay: GregorianDay?) -> Date? {
-        switch _evaluateSymptoms(symptoms, onsetDay: onsetDay) {
+    func evaluateSymptoms(riskThreshold: Double, symptoms: [SymptomInfo], onsetDay: GregorianDay?) -> Date? {
+        switch _evaluateSymptoms(riskThreshold: riskThreshold, symptoms: symptoms, onsetDay: onsetDay) {
         case .isolate(let isolation):
             return isolation.endDate
         case .noNeedToIsolate:
@@ -40,16 +40,12 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
         }
     }
     
-    private func _evaluateSymptoms(_ symptoms: [SymptomInfo], onsetDay: GregorianDay?) -> Domain.IsolationState {
-        guard let threshold = selfDiagnosisManager.threshold else {
-            preconditionFailure("threshold value should have been stored before, but was nil")
-        }
-        
+    private func _evaluateSymptoms(riskThreshold: Double, symptoms: [SymptomInfo], onsetDay: GregorianDay?) -> Domain.IsolationState {
         let domainSymptoms = symptoms.map { interfaceSymptom in
             (symptomMapper.domainSymptomFrom(interfaceSymptom: interfaceSymptom), interfaceSymptom.isConfirmed)
         }
         
-        return selfDiagnosisManager.evaluateSymptoms(symptoms: domainSymptoms, onsetDay: onsetDay, threshold: threshold)
+        return selfDiagnosisManager.evaluateSymptoms(symptoms: domainSymptoms, onsetDay: onsetDay, threshold: riskThreshold)
     }
     
     func openTestkitOrder() {

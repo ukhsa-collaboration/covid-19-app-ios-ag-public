@@ -2,7 +2,10 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Combine
+import Common
 import Scenarios
+import TestSupport
 import XCTest
 @testable import Domain
 
@@ -10,13 +13,18 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
     var virologyStore: VirologyTestingStateStore!
     var userNotificationManager: MockUserNotificationsManager!
     var coordinator: VirologyTestingStateCoordinator!
+    var isInterestedInAskingForSymptomsOnsetDay: Bool = true
     
     override func setUp() {
         virologyStore = VirologyTestingStateStore(store: MockEncryptedStore())
         userNotificationManager = MockUserNotificationsManager()
         coordinator = VirologyTestingStateCoordinator(
             virologyTestingStateStore: virologyStore,
-            userNotificationsManager: userNotificationManager
+            userNotificationsManager: userNotificationManager,
+            isInterestedInAskingForSymptomsOnsetDay: {
+                self.isInterestedInAskingForSymptomsOnsetDay
+            },
+            setRequiresOnsetDay: {}
         )
     }
     
@@ -60,6 +68,48 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
         XCTAssertNil(userNotificationManager.notificationType)
         let savedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
         XCTAssertEqual(savedResult.testResult, TestResult(response.virologyTestResult.testResult))
+    }
+    
+    func testDoesNotRequireToAskForSymptomsOnsetDayTestResultRequiresConfirmatoryTest() {
+        let virologyTestResult = VirologyTestResult(
+            testResult: .positive,
+            testKitType: .labResult,
+            endDate: Date()
+        )
+        
+        XCTAssertFalse(coordinator.requiresOnsetDay(virologyTestResult, requiresConfirmatoryTest: true))
+    }
+    
+    func testDoesNotRequireToAskForSymptomsOnsetDayTestResultNegative() {
+        let virologyTestResult = VirologyTestResult(
+            testResult: .negative,
+            testKitType: .labResult,
+            endDate: Date()
+        )
+        
+        XCTAssertFalse(coordinator.requiresOnsetDay(virologyTestResult, requiresConfirmatoryTest: false))
+    }
+    
+    func testDoesNotRequireToAskForSymptomsOnsetDayIsNotInterestedInAskingForSymptomsOnsetDay() {
+        let virologyTestResult = VirologyTestResult(
+            testResult: .positive,
+            testKitType: .labResult,
+            endDate: Date()
+        )
+        
+        isInterestedInAskingForSymptomsOnsetDay = false
+        
+        XCTAssertFalse(coordinator.requiresOnsetDay(virologyTestResult, requiresConfirmatoryTest: false))
+    }
+    
+    func testRequireToAskForSymptomsOnsetDay() {
+        let virologyTestResult = VirologyTestResult(
+            testResult: .positive,
+            testKitType: .labResult,
+            endDate: Date()
+        )
+        
+        XCTAssertTrue(coordinator.requiresOnsetDay(virologyTestResult, requiresConfirmatoryTest: false))
     }
     
     func testHandleSaveOrderTestKitResponseTests() throws {

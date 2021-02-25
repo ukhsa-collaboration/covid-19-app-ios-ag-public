@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -15,6 +15,8 @@ struct IsolationContext {
     private let notificationCenter: NotificationCenter
     private let currentDateProvider: DateProviding
     private let removeExposureDetectionNotifications: () -> Void
+    
+    var shouldAskForSymptoms = CurrentValueSubject<Bool, Never>(false)
     
     init(
         isolationConfiguration: CachedResponse<IsolationConfiguration>,
@@ -66,26 +68,46 @@ struct IsolationContext {
         completionHandler: @escaping (TestResultAcknowledgementState.SendKeysState) -> Void
     ) -> AnyPublisher<TestResultAcknowledgementState, Never> {
         isolationStateStore.$isolationStateInfo
-            .combineLatest(currentDateProvider.today)
-            .map { isolationStateInfo, _ in
+            .combineLatest(currentDateProvider.today, shouldAskForSymptoms)
+            .map { isolationStateInfo, _, shouldAskForSymptoms in
                 guard let result = result else {
                     return TestResultAcknowledgementState.notNeeded
                 }
+                
+                if shouldAskForSymptoms {
+                    return TestResultAcknowledgementState.askForSymptomsOnsetDay(
+                        testEndDay: result.endDay,
+                        didFinishAskForSymptomsOnsetDay: {
+                            self.shouldAskForSymptoms.send(false)
+                        }, didConfirmSymptoms: {
+                            Metrics.signpost(.didHaveSymptomsBeforeReceivedTestResult)
+                        },
+                        setOnsetDay: { onsetDay in
+                            let info = IndexCaseInfo(isolationTrigger: .selfDiagnosis(currentDateProvider.currentGregorianDay(timeZone: .utc)), onsetDay: onsetDay, testInfo: nil)
+                            self.isolationStateStore.set(info)
+                            Metrics.signpost(.didRememberOnsetSymptomsDateBeforeReceivedTestResult)
+                        }
+                    )
+                }
+                
                 let currentIsolationState = IsolationLogicalState(stateInfo: isolationStateInfo, day: self.currentDateProvider.currentLocalDay)
                 
                 let testResultIsolationOperation = TestResultIsolationOperation(
                     currentIsolationState: currentIsolationState,
-                    storedIsolationInfo: self.isolationStateStore.isolationInfo,
-                    result: result
+                    storedIsolationInfo: isolationStateInfo?.isolationInfo,
+                    result: result,
+                    configuration: isolationStateStore.configuration
                 )
                 
+                let storeOperation = testResultIsolationOperation.storeOperation()
                 let newIsolationStateInfo = isolationStateStore.newIsolationStateInfo(
+                    from: isolationStateInfo?.isolationInfo,
                     for: result.testResult,
                     testKitType: result.testKitType,
                     requiresConfirmatoryTest: result.requiresConfirmatoryTest,
                     receivedOn: self.currentDateProvider.currentGregorianDay(timeZone: .current),
-                    npexDay: GregorianDay(date: result.endDate, timeZone: .utc),
-                    operation: testResultIsolationOperation.storeOperation()
+                    npexDay: result.endDay,
+                    operation: storeOperation
                 )
                 
                 let newIsolationState = IsolationLogicalState(stateInfo: newIsolationStateInfo, day: self.currentDateProvider.currentLocalDay)
@@ -95,7 +117,8 @@ struct IsolationContext {
                     newIsolationState: newIsolationState,
                     currentIsolationState: currentIsolationState,
                     indexCaseInfo: newIsolationStateInfo.isolationInfo.indexCaseInfo,
-                    positiveAcknowledgement: positiveAcknowledgement
+                    positiveAcknowledgement: positiveAcknowledgement,
+                    keySubmissionAllowed: storeOperation != .ignore
                 ) { shareKeyState in
                     isolationStateStore.isolationStateInfo = newIsolationStateInfo
                     
@@ -129,6 +152,29 @@ struct IsolationContext {
             ),
         ]
     }
+    
+    var dailyContactTestingEarlyTerminationSupport: DailyContactTestingEarlyIsolationTerminationSupport {
+        
+        guard let isContactCaseOnly = isolationStateManager.isolationLogicalState.currentValue.activeIsolation?.isContactCaseOnly,
+            isContactCaseOnly else {
+            return .disabled
+        }
+        
+        return .enabled(optOutOfIsolation: {
+            guard let contactCaseInfo = isolationStateStore.isolationInfo.contactCaseInfo else {
+                return // assert? - invalid state...
+            }
+            
+            Metrics.signpost(.declaredNegativeResultFromDCT)
+            
+            let updatedContactCase = mutating(contactCaseInfo) {
+                $0.optOutOfIsolationDay = GregorianDay.today // date provider?
+            }
+            self.isolationStateStore.set(updatedContactCase)
+            self.isolationStateStore.acknowldegeEndOfIsolation()
+        })
+    }
+    
 }
 
 private extension NotificationCenter {

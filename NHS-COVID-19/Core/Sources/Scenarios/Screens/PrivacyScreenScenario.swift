@@ -8,7 +8,7 @@ import UIKit
 
 public class PrivacyScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
-    public static var name: String = "On-boarding - Privacy and data"
+    public static var name: String = "Onboarding - Privacy and data"
     
     public static let privacyNoticeTapped = "Privacy Notice tapped"
     public static let termsOfUseTapped = "Terms of use tapped"

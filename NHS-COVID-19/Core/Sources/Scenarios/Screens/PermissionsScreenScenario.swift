@@ -10,7 +10,7 @@ import UIKit
 
 public class PermissionsScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
-    public static var name: String = "On-boarding - Permissions"
+    public static var name: String = "Onboarding - Permissions"
     
     public static let continueConfirmationAlertTitle = "Continue tapped"
     

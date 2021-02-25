@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -17,12 +17,14 @@ public enum ExternalLink {
     case testingPrivacyNotice
     case nhs111Online
     case exposureFAQs
+    case dailyContactTestingInformation
     case howThisAppWorks
     case provideFeedback
     case visitUKgov
     case financialSupportEngland
     case financialSupportWales
     case financialSupportPrivacyNotice
+    case cantRunThisAppFAQs
     
     public var url: URL {
         switch self {
@@ -54,6 +56,8 @@ public enum ExternalLink {
             return localizeURL(.link_provide_feedback)
         case .exposureFAQs:
             return localizeURL(.link_exposure_faq)
+        case .dailyContactTestingInformation:
+            return localizeURL(.link_daily_contact_testing)
         case .visitUKgov:
             return localizeURL(.link_visit_uk_gov)
         case .financialSupportEngland:
@@ -62,6 +66,8 @@ public enum ExternalLink {
             return localizeURL(.financial_support_help_wales_link)
         case .financialSupportPrivacyNotice:
             return localizeURL(.financial_support_privacy_notice_link)
+        case .cantRunThisAppFAQs:
+            return localizeURL(.link_cant_run_this_app_faq)
         }
     }
 }

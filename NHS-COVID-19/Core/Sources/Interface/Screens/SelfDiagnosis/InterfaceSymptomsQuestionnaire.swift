@@ -5,10 +5,12 @@
 import SwiftUI
 
 public struct InterfaceSymptomsQuestionnaire {
+    public var riskThreshold: Double
     public var symptoms: [SymptomInfo]
     public var dateSelectionWindow: Int
     
-    public init(symptoms: [SymptomInfo], dateSelectionWindow: Int) {
+    public init(riskThreshold: Double, symptoms: [SymptomInfo], dateSelectionWindow: Int) {
+        self.riskThreshold = riskThreshold
         self.symptoms = symptoms
         self.dateSelectionWindow = dateSelectionWindow
     }

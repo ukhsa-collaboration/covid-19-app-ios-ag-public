@@ -1,21 +1,28 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
 import Foundation
 
-struct IsolationIndexCaseInfo: Equatable {
-    var hasPositiveTestResult: Bool
-    var testKitType: TestKitType?
-    var isSelfDiagnosed: Bool
-    var isPendingConfirmation: Bool
-}
+// TODO: remove this in a non-functional PR later
+typealias IsolationIndexCaseInfo = Isolation.IndexCaseInfo
 
 public struct Isolation: Equatable {
+    struct IndexCaseInfo: Equatable {
+        var hasPositiveTestResult: Bool
+        var testKitType: TestKitType?
+        var isSelfDiagnosed: Bool
+        var isPendingConfirmation: Bool
+    }
+    
+    struct ContactCaseInfo: Equatable {
+        var optOutOfIsolationDay: GregorianDay?
+    }
+    
     struct Reason: Equatable {
         var indexCaseInfo: IsolationIndexCaseInfo?
-        var isContactCase: Bool
+        var contactCaseInfo: Isolation.ContactCaseInfo?
     }
     
     public var fromDay: LocalDay
@@ -54,7 +61,7 @@ extension Isolation {
     }
     
     var isContactCase: Bool {
-        return reason.isContactCase
+        return reason.contactCaseInfo != nil
     }
     
     var isContactCaseOnly: Bool {
@@ -63,5 +70,9 @@ extension Isolation {
     
     var hasPositiveTestResult: Bool {
         return reason.indexCaseInfo?.hasPositiveTestResult ?? false
+    }
+    
+    var isSelfDiagnosed: Bool {
+        return reason.indexCaseInfo?.isSelfDiagnosed ?? false
     }
 }

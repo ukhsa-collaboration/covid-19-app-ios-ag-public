@@ -8,7 +8,7 @@ import UIKit
 
 public class AuthorizationDeniedScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
-    public static var name: String = "On-boarding - Exposure Logging denied"
+    public static var name: String = "Onboarding - Exposure Logging denied"
     
     public static let openSettingsTapped = "Go to settings tapped!"
     

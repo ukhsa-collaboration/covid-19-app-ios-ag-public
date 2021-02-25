@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -33,12 +33,7 @@ public struct RunningAppContext {
     public var country: DomainProperty<Country>
     public var openSettings: () -> Void
     public var openURL: (URL) -> Void
-    
-    #warning("This type does not need to be optional")
-    // Currently this is only optional so we can create a `RunningAppContext` easily in tests.
-    // Instead of exposing the type directly, we should have an protocol so we can mock it more easily.
-    public var selfDiagnosisManager: SelfDiagnosisManager?
-    
+    public var selfDiagnosisManager: SelfDiagnosisManaging
     public var isolationState: DomainProperty<IsolationState>
     public var testInfo: DomainProperty<IndexCaseInfo.TestInfo?>
     public var isolationAcknowledgementState: AnyPublisher<IsolationAcknowledgementState, Never>
@@ -51,12 +46,20 @@ public struct RunningAppContext {
     public var riskyCheckInsAcknowledgementState: AnyPublisher<RiskyCheckInsAcknowledgementState, Never>
     public var currentDateProvider: DateProviding
     public var exposureNotificationReminder: ExposureNotificationReminder
-    public var appReviewPresenter: AppReviewPresenter
+    public var appReviewPresenter: AppReviewPresenting
     public var getLocalAuthorities: GetLocalAuthorities?
     public var storeLocalAuthorities: StoreLocalAuthorities?
     public var isolationPaymentState: DomainProperty<IsolationPaymentState>
     public var currentLocaleConfiguration: DomainProperty<LocaleConfiguration>
     public var storeNewLanguage: (_ localeConfiguration: LocaleConfiguration) -> Void
+    public var shouldShowDailyContactTestingInformFeature: () -> Bool
+    public var dailyContactTestingEarlyTerminationSupport: () -> DailyContactTestingEarlyIsolationTerminationSupport
+}
+
+// FIXME: Move to a more suitable place
+public enum DailyContactTestingEarlyIsolationTerminationSupport {
+    case enabled(optOutOfIsolation: () -> Void)
+    case disabled
 }
 
 public typealias GetLocalAuthorities = (_ postcode: Postcode) -> Result<Set<LocalAuthority>, PostcodeValidationError>
@@ -100,7 +103,7 @@ public enum ApplicationState {
     /// Application can’t finish starting. There’s no standard way for the user to recover from this.
     ///
     /// This can happen, for example, if certain authorization is restricted, or if another app is using ExposureNotification API.
-    case failedToStart
+    case failedToStart(openURL: (URL) -> Void)
     
     /// Application needs to show onboarding.
     case onboarding(complete: () -> Void, openURL: (URL) -> Void)

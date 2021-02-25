@@ -5,19 +5,23 @@
 import Foundation
 import SwiftUI
 
-struct StateView: View {
+public struct StateView: View {
     
     var collection: StateCollection
     
-    var body: some View {
+    public init(collection: StateCollection) {
+        self.collection = collection
+    }
+    
+    public var body: some View {
         VStack(alignment: .trailing) {
             HStack {
-                CaseStateView(label: "C", status: collection.contact)
-                CaseStateView(label: "S", status: collection.symptomatic)
-                CaseStateView(label: "P", status: collection.positiveTest)
+                CaseStateView(condition: collection.contact)
+                CaseStateView(condition: collection.symptomatic)
+                CaseStateView(condition: collection.positiveTest)
             }
             .padding()
-            .border(Color.black, width: 1)
+            .border(Color.primary, width: 1)
             Text(counterText)
         }
     }
@@ -35,19 +39,25 @@ struct StateView: View {
 
 private struct CaseStateView: View {
     
-    var label: String
-    var status: StateCollection.Status
+    var condition: StateCollection.Condition
     
     var body: some View {
-        Text(label)
-            .frame(width: 15, height: 30)
-            .padding()
-            .background(fillColor.brightness(0.1))
-            .border(Color.black, width: 1)
+        VStack {
+            Text("")
+                .font(.caption)
+            Text(condition.label)
+                .font(.body)
+            Text(condition.caption)
+                .font(.caption)
+        }
+        .frame(width: 90, height: 30)
+        .padding(.vertical, 30)
+        .background(fillColor.brightness(0.1))
+        .border(Color.black, width: 1)
     }
     
     var fillColor: Color {
-        switch status {
+        switch condition.status {
         case .any:
             return Color(UIColor.systemGray2)
         case .noIsolation:
@@ -67,9 +77,9 @@ struct StateViewPreviews: PreviewProvider {
     static var previews: some View {
         StateView(
             collection: StateCollection(
-                contact: .any,
-                symptomatic: .isolationActive,
-                positiveTest: .isolationFinished,
+                contact: .init(label: "C", status: .any),
+                symptomatic: .init(label: "S", status: .isolationActive),
+                positiveTest: .init(label: "P", caption: "Unconfirmed", status: .isolationFinished),
                 counter: 2
             )
         )

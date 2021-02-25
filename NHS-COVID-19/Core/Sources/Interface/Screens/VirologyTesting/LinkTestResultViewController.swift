@@ -1,13 +1,20 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
 import Localization
-import UIKit
+import SwiftUI
 
 public protocol LinkTestResultViewControllerInteracting {
-    func submit(testCode: String) -> AnyPublisher<Void, DisplayableError>
+    func submit(testCode: String, isCheckBoxChecked: Bool?) -> AnyPublisher<Void, LinkTestValidationError>
+    var shouldShowDCTInfoView: Bool { get }
+}
+
+public enum LinkTestValidationError: Error {
+    case testCode(DisplayableError)
+    case testCodeEnteredAndCheckBoxChecked
+    case noneEntered
 }
 
 public class LinkTestResultViewController: UIViewController {
@@ -97,6 +104,65 @@ public class LinkTestResultViewController: UIViewController {
         headingLabel, exampleLabel, errorTitle, testCodeTextField
     )
     
+    private lazy var scrollView: UIScrollView = {
+        UIScrollView()
+    }()
+    
+    private var topErrorBoxView: UIView? {
+        willSet {
+            if let view = newValue {
+                topErrorBoxView?.removeFromSuperview()
+                stackView.insertArrangedSubview(view, at: 0)
+                scrollView.setContentOffset(.zero, animated: true)
+                UIAccessibility.post(notification: .layoutChanged, argument: view)
+            } else {
+                topErrorBoxView?.removeFromSuperview()
+                view.layoutIfNeeded()
+            }
+        }
+    }
+    
+    private var errorState: LinkTestValidationError? = .none {
+        willSet {
+            switch newValue {
+            case .noneEntered:
+                hideCodeEntryError()
+                showTopErrorBox(localize(.link_test_result_enter_code_daily_contact_testing_top_erorr_box_text_none_entered))
+            case .testCode(let error):
+                topErrorBoxView = nil
+                showCodeEntryError(error.localizedDescription)
+            case .testCodeEnteredAndCheckBoxChecked:
+                hideCodeEntryError()
+                showTopErrorBox(localize(.link_test_result_enter_code_daily_contact_testing_top_erorr_box_text_both_entered))
+            case .none:
+                topErrorBoxView = nil
+                hideCodeEntryError()
+            }
+        }
+    }
+    
+    private func hideCodeEntryError() {
+        errorTitle.isHidden = true
+        informationBox.style = .noNews
+        testCodeTextField.layer.borderColor = UIColor(.secondaryText).cgColor
+    }
+    
+    private func showCodeEntryError(_ error: String) {
+        errorTitle.isHidden = false
+        errorTitle.text = error
+        informationBox.error()
+        testCodeTextField.layer.borderColor = UIColor(.errorRed).cgColor
+        UIAccessibility.post(notification: .layoutChanged, argument: errorTitle)
+        
+        scrollView.scroll(to: informationBox)
+    }
+    
+    private func showTopErrorBox(_ error: String) {
+        let errorBox = ErrorBox(localize(.link_test_result_enter_code_daily_contact_testing_top_erorr_box_heading), description: error)
+        topErrorBoxView = UIHostingController(rootView: errorBox).view
+        topErrorBoxView?.backgroundColor = .clear
+    }
+    
     func stack(for labels: [UILabel]) -> UIStackView {
         let stackView = UIStackView(arrangedSubviews: labels)
         stackView.axis = .vertical
@@ -106,8 +172,34 @@ public class LinkTestResultViewController: UIViewController {
         return stackView
     }
     
+    private var checkBoxInfo: CheckBoxInfo?
+    
+    private func dailyContactInfoStackView(checkBox: UIHostingController<CheckBox>) -> UIStackView {
+        let title = BaseLabel().set(text: localize(.link_test_result_enter_code_daily_contact_testing_heading)).styleAsHeading()
+        let paragraph = BaseLabel().set(text: localize(.link_test_result_enter_code_daily_contact_testing_paragraph)).styleAsBody()
+        let bulletedList = BulletedList(
+            rows: localizeAndSplit(.link_test_result_enter_code_daily_contact_testing_bulleted_list)
+        )
+        
+        let stack = UIStackView(arrangedSubviews: [title, paragraph, bulletedList, checkBox.view])
+        
+        stack.axis = .vertical
+        stack.alignment = .fill
+        stack.distribution = .equalSpacing
+        stack.spacing = .standardSpacing
+        stack.layoutMargins = .standard
+        stack.isLayoutMarginsRelativeArrangement = true
+        return stack
+        
+    }
+    
     public init(interactor: Interacting) {
         self.interactor = interactor
+        
+        if interactor.shouldShowDCTInfoView {
+            checkBoxInfo = CheckBoxInfo(isConfirmed: false, heading: localize(.link_test_result_enter_code_daily_contact_testing_checkbox))
+        }
+        
         super.init(nibName: nil, bundle: nil)
         
         title = localize(.link_test_result_title)
@@ -118,6 +210,7 @@ public class LinkTestResultViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private var stackView = UIStackView()
     override public func viewDidLoad() {
         super.viewDidLoad()
         
@@ -126,12 +219,21 @@ public class LinkTestResultViewController: UIViewController {
         let view = self.view!
         view.styleAsScreenBackground(with: traitCollection)
         
-        let content = [
+        var content = [
             stack(for: [titleLabel, descriptionLabel]),
             informationBox,
         ]
         
-        let stackView = UIStackView(arrangedSubviews: content)
+        // If Daily Contact Testing Info should be displayed
+        if let checkBoxInfo = checkBoxInfo {
+            let checkBox = CheckBox(viewModel: checkBoxInfo)
+            let checkboxHostingVC = checkBox.hostingVC
+            addChild(checkboxHostingVC)
+            content.append(dailyContactInfoStackView(checkBox: checkboxHostingVC))
+        }
+        
+        stackView = UIStackView(arrangedSubviews: content)
+        
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -139,7 +241,6 @@ public class LinkTestResultViewController: UIViewController {
         stackView.layoutMargins = .standard
         stackView.isLayoutMarginsRelativeArrangement = true
         
-        let scrollView = UIScrollView()
         scrollView.addFillingSubview(stackView)
         
         view.addAutolayoutSubview(scrollView)
@@ -192,23 +293,24 @@ public class LinkTestResultViewController: UIViewController {
         }
         
         testCodeTextField.resignFirstResponder()
-        if let textFieldContent = testCodeTextField.text {
-            cancellable = interactor.submit(testCode: textFieldContent)
-                .receive(on: RunLoop.main)
-                .sink(
-                    receiveCompletion: { [weak self] completion in
-                        CATransaction.disableActions {
-                            self?.submitButton.isEnabled = true
-                            self?.testCodeTextField.rightViewMode = .never
-                        }
-                        
-                        if case .failure(let error) = completion {
-                            self?.showError(error.localizedDescription)
-                        }
-                    },
-                    receiveValue: {}
-                )
-        }
+        
+        cancellable = interactor.submit(testCode: testCodeTextField.text ?? "", isCheckBoxChecked: checkBoxInfo?.isConfirmed)
+            .receive(on: RunLoop.main)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    CATransaction.disableActions {
+                        self?.submitButton.isEnabled = true
+                        self?.testCodeTextField.rightViewMode = .never
+                    }
+                    
+                    if case .failure(let error) = completion {
+                        self?.errorState = error
+                    } else {
+                        self?.errorState = nil
+                    }
+                },
+                receiveValue: {}
+            )
     }
     
     private func showError(_ error: String) {
@@ -251,5 +353,11 @@ private extension CharacterSet {
         var allowedChars = CharacterSet()
         allowedChars.insert(charactersIn: "0123456789abcdefghjkmnpqrstvwxyz")
         return allowedChars
+    }
+}
+
+extension View {
+    var hostingVC: UIHostingController<Self> {
+        return UIHostingController(rootView: self)
     }
 }

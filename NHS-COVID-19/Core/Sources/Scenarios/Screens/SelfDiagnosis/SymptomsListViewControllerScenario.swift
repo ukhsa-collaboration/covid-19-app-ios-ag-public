@@ -28,7 +28,7 @@ public class SymptomsListViewControllerScenario: Scenario {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
             return SymptomListViewController(
-                [
+                symptoms: [
                     SymptomInfo(isConfirmed: false, heading: symptom1Heading, content: symptom1Content),
                     SymptomInfo(isConfirmed: true, heading: symptom2Heading, content: symptom2Content),
                 ],

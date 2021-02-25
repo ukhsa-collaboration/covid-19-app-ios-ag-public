@@ -15,7 +15,11 @@ struct TransitionView: View {
             VStack(spacing: 8) {
                 Text(transition.label)
                     .font(.caption)
+                #if targetEnvironment(macCatalyst)
+                Image("arrow.forward")
+                #else
                 Image(systemName: "arrow.forward")
+                #endif
             }
             .frame(width: 200)
             StateView(collection: transition.to)
@@ -38,16 +42,16 @@ private extension Transition {
     
     static let sample = Transition(
         from: StateCollection(
-            contact: .noIsolation,
-            symptomatic: .any,
-            positiveTest: .any,
+            contact: .init(label: "C", status: .noIsolation),
+            symptomatic: .init(label: "S", status: .any),
+            positiveTest: .init(label: "P", status: .any),
             counter: 10
         ),
         label: "Risky contact",
         to: StateCollection(
-            contact: .isolationActive,
-            symptomatic: .any,
-            positiveTest: .any
+            contact: .init(label: "C", status: .isolationActive),
+            symptomatic: .init(label: "S", status: .any),
+            positiveTest: .init(label: "P", status: .any)
         )
     )
     

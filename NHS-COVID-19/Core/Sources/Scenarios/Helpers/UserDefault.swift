@@ -5,12 +5,13 @@
 import Foundation
 
 @propertyWrapper
-struct UserDefault<Value> {
+public struct UserDefault<Value> {
     
     private let get: () -> Value
     private let set: (Value) -> Void
+    public let key: String
     
-    var wrappedValue: Value {
+    public var wrappedValue: Value {
         get {
             get()
         }
@@ -19,7 +20,7 @@ struct UserDefault<Value> {
         }
     }
     
-    var projectedValue: UserDefault<Value> {
+    public var projectedValue: UserDefault<Value> {
         self
     }
 }
@@ -29,6 +30,7 @@ extension UserDefault {
     init(_ key: String, defaultValue: Value, userDefaults: UserDefaults = .standard) {
         get = { userDefaults[key: key] ?? defaultValue }
         set = { userDefaults[key: key] = $0 }
+        self.key = key
     }
     
 }
@@ -38,6 +40,7 @@ extension UserDefault {
     init<T>(_ key: String, userDefaults: UserDefaults = .standard) where Value == T? {
         get = { userDefaults[key: key] }
         set = { userDefaults[key: key] = $0 }
+        self.key = key
     }
     
 }
@@ -47,6 +50,7 @@ extension UserDefault where Value: RawRepresentable {
     init(_ key: String, defaultValue: Value, userDefaults: UserDefaults = .standard) {
         get = { userDefaults[rawValueKey: key] ?? defaultValue }
         set = { userDefaults[rawValueKey: key] = $0 }
+        self.key = key
     }
     
 }
@@ -56,6 +60,7 @@ extension UserDefault {
     init<T: RawRepresentable>(_ key: String, userDefaults: UserDefaults = .standard) where Value == T? {
         get = { userDefaults[rawValueKey: key] }
         set = { userDefaults[rawValueKey: key] = $0 }
+        self.key = key
     }
     
 }

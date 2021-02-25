@@ -3,7 +3,7 @@
 --trimwhitespace nonblank-lines
 --importgrouping testable-bottom
 --wraparguments before-first
---header "\nCopyright © 2020 NHSX. All rights reserved.\n"
+--header "\nCopyright © 2021 DHSC. All rights reserved.\n"
 --ifdef no-indent
 
 # Rules

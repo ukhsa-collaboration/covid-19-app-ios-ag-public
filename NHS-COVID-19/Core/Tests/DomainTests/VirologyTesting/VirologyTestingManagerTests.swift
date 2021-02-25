@@ -24,7 +24,9 @@ class VirologyTestingManagerTests: XCTestCase {
             httpClient: mockServer,
             virologyTestingStateCoordinator: VirologyTestingStateCoordinator(
                 virologyTestingStateStore: virologyStore,
-                userNotificationsManager: notificationManager
+                userNotificationsManager: notificationManager,
+                isInterestedInAskingForSymptomsOnsetDay: { false },
+                setRequiresOnsetDay: {}
             ),
             ctaTokenValidator: validator,
             country: { .england }
@@ -80,7 +82,8 @@ class VirologyTestingManagerTests: XCTestCase {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
             "testResult": "POSITIVE",
             "testKit": "LAB_RESULT",
-            "diagnosisKeySubmissionSupported": true
+            "diagnosisKeySubmissionSupported": true,
+            "requiresConfirmatoryTest": false
         }
         """#))
         
@@ -118,7 +121,8 @@ class VirologyTestingManagerTests: XCTestCase {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
             "testResult": "POSITIVE",
             "testKit": "LAB_RESULT",
-            "diagnosisKeySubmissionSupported": true
+            "diagnosisKeySubmissionSupported": true,
+            "requiresConfirmatoryTest": false
         }
         """#))
         
@@ -142,7 +146,8 @@ class VirologyTestingManagerTests: XCTestCase {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
             "testResult": "NEGATIVE",
             "testKit": "LAB_RESULT",
-            "diagnosisKeySubmissionSupported": true
+            "diagnosisKeySubmissionSupported": true,
+            "requiresConfirmatoryTest": false
         }
         """#))
         
@@ -166,7 +171,8 @@ class VirologyTestingManagerTests: XCTestCase {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
             "testResult": "VOID",
             "testKit": "LAB_RESULT",
-            "diagnosisKeySubmissionSupported": true
+            "diagnosisKeySubmissionSupported": true,
+            "requiresConfirmatoryTest": false
         }
         """#))
         

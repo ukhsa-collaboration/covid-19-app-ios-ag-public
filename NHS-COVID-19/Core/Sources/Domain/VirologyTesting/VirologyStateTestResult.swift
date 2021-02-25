@@ -2,6 +2,7 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Common
 import Foundation
 
 struct VirologyStateTestResult {
@@ -10,4 +11,10 @@ struct VirologyStateTestResult {
     var endDate: Date
     var diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?
     var requiresConfirmatoryTest: Bool
+}
+
+extension VirologyStateTestResult {
+    var endDay: GregorianDay {
+        GregorianDay(date: endDate, timeZone: .utc)
+    }
 }

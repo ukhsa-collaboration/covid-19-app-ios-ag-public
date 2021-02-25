@@ -65,6 +65,6 @@ public struct SymptomCard: View {
             )
         )
         .accessibility(addTraits: .isButton)
-        .environment(\.locale, Locale(identifier: currentLanguageCode()))
+        .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }
 }

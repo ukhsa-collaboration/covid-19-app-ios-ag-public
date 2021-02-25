@@ -26,7 +26,7 @@ class CircuitBreaker {
     private let riskyCheckinsProvider: RiskyCheckinsProvider
     private let handleContactCase: (RiskInfo) -> Void
     private let handleDontWorryNotification: () -> Void
-    private let interestedInExposureNotifications: () -> Bool
+    private let exposureNotificationProcessingBehaviour: () -> ExposureNotificationProcessingBehaviour
     
     private enum Resolution: Equatable {
         case proceed
@@ -40,14 +40,14 @@ class CircuitBreaker {
         riskyCheckinsProvider: RiskyCheckinsProvider,
         handleContactCase: @escaping (RiskInfo) -> Void,
         handleDontWorryNotification: @escaping () -> Void,
-        interestedInExposureNotifications: @escaping () -> Bool
+        exposureNotificationProcessingBehaviour: @escaping () -> ExposureNotificationProcessingBehaviour
     ) {
         self.client = client
         self.exposureInfoProvider = exposureInfoProvider
         self.riskyCheckinsProvider = riskyCheckinsProvider
         self.handleContactCase = handleContactCase
         self.handleDontWorryNotification = handleDontWorryNotification
-        self.interestedInExposureNotifications = interestedInExposureNotifications
+        self.exposureNotificationProcessingBehaviour = exposureNotificationProcessingBehaviour
     }
     
     func processPendingApprovals() -> AnyPublisher<Void, Never> {
@@ -63,7 +63,8 @@ class CircuitBreaker {
             return client.sendObfuscatedTraffic(for: .circuitBreaker).eraseToAnyPublisher()
         }
         
-        guard interestedInExposureNotifications() else {
+        guard exposureNotificationProcessingBehaviour()
+            .shouldNotifyForExposure(on: riskInfo.day) else {
             if showDontWorryNotificationIfNeeded {
                 handleDontWorryNotification()
                 showDontWorryNotificationIfNeeded = false

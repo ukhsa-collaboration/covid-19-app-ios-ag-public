@@ -1,12 +1,14 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
+import Common
 import Foundation
 
 public enum TestResultAcknowledgementState {
     case notNeeded
+    case askForSymptomsOnsetDay(testEndDay: GregorianDay, didFinishAskForSymptomsOnsetDay: () -> Void, didConfirmSymptoms: () -> Void, setOnsetDay: (GregorianDay) -> Void)
     case neededForNegativeResultContinueToIsolate(acknowledge: () -> Void, isolationEndDate: Date)
     case neededForNegativeResultNotIsolating(acknowledge: () -> Void)
     case neededForNegativeAfterPositiveResultContinueToIsolate(acknowledge: () -> Void, isolationEndDate: Date)
@@ -42,8 +44,10 @@ public enum TestResultAcknowledgementState {
         currentIsolationState: IsolationLogicalState,
         indexCaseInfo: IndexCaseInfo?,
         positiveAcknowledgement: PositiveAcknowledgement,
+        keySubmissionAllowed: Bool,
         completionHandler: @escaping (SendKeysState) -> Void
     ) {
+        let keySubmissionSupported = keySubmissionAllowed && result.diagnosisKeySubmissionToken != nil
         switch (result.testResult, newIsolationState) {
         case (.positive, .isolating(let isolation, _, _)) where currentIsolationState.isIsolating == true:
             self = TestResultAcknowledgementState.neededForPositiveResultContinueToIsolate(
@@ -54,7 +58,7 @@ public enum TestResultAcknowledgementState {
                     completionHandler
                 ),
                 isolationEndDate: isolation.endDate,
-                keySubmissionSupported: result.diagnosisKeySubmissionToken != nil,
+                keySubmissionSupported: keySubmissionSupported,
                 requiresConfirmatoryTest: result.requiresConfirmatoryTest
             )
         case (.positive, .isolating(let isolation, _, _)):
@@ -66,7 +70,7 @@ public enum TestResultAcknowledgementState {
                     completionHandler
                 ),
                 isolationEndDate: isolation.endDate,
-                keySubmissionSupported: result.diagnosisKeySubmissionToken != nil,
+                keySubmissionSupported: keySubmissionSupported,
                 requiresConfirmatoryTest: result.requiresConfirmatoryTest
             )
         case (.positive, _):
@@ -78,9 +82,10 @@ public enum TestResultAcknowledgementState {
                     indexCaseInfo,
                     completionHandler
                 ),
-                keySubmissionSupported: result.diagnosisKeySubmissionToken != nil
+                keySubmissionSupported: keySubmissionSupported
             )
-        case (.negative, .isolating(let isolation, _, _)) where isolation.hasPositiveTestResult:
+        case (.negative, .isolating(let isolation, _, _))
+            where isolation.hasPositiveTestResult || isolation.isSelfDiagnosed:
             self = TestResultAcknowledgementState.neededForNegativeAfterPositiveResultContinueToIsolate(
                 acknowledge: { completionHandler(.notSent) },
                 isolationEndDate: isolation.endDate

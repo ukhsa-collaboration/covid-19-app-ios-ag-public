@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -11,11 +11,27 @@ struct RiskyPostDistrictsHandler: RequestHandler {
     var dataProvider: MockDataProvider
     
     var response: Result<HTTPResponse, HTTPRequestError> {
+        let blackRiskIndicator = "black"
+        let maroonRiskIndicator = "maroon"
         let redRiskIndicator = "red"
         let amberRiskIndicator = "amber"
         let yellowRiskIndicator = "yellow"
         let greenRiskIndicator = "green"
         let neutralRiskIndicator = "neutral"
+        
+        let blackPostcodes = dataProvider.blackPostcodes.components(separatedBy: ",")
+            .lazy
+            .filter { !$0.isEmpty }
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .map { "\"\($0)\": \"\(blackRiskIndicator)\"," }
+            .joined(separator: "")
+        
+        let maroonPostcodes = dataProvider.maroonPostcodes.components(separatedBy: ",")
+            .lazy
+            .filter { !$0.isEmpty }
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .map { "\"\($0)\": \"\(maroonRiskIndicator)\"," }
+            .joined(separator: "")
         
         let redPostcodes = dataProvider.redPostcodes.components(separatedBy: ",")
             .lazy
@@ -52,7 +68,21 @@ struct RiskyPostDistrictsHandler: RequestHandler {
             .map { "\"\($0)\": \"\(neutralRiskIndicator)\"," }
             .joined(separator: "")
         
-        let redLocalAuthorities = dataProvider.redPostcodes.components(separatedBy: ",")
+        let blackLocalAuthorities = dataProvider.blackLocalAuthorities.components(separatedBy: ",")
+            .lazy
+            .filter { !$0.isEmpty }
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .map { "\"\($0)\": \"\(blackRiskIndicator)\"," }
+            .joined(separator: "")
+        
+        let maroonLocalAuthorities = dataProvider.maroonLocalAuthorities.components(separatedBy: ",")
+            .lazy
+            .filter { !$0.isEmpty }
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .map { "\"\($0)\": \"\(maroonRiskIndicator)\"," }
+            .joined(separator: "")
+        
+        let redLocalAuthorities = dataProvider.redLocalAuthorities.components(separatedBy: ",")
             .lazy
             .filter { !$0.isEmpty }
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
@@ -183,6 +213,114 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                         "policyContent": {
                             "en": "Up to 15 guests for weddings, 30 for funerals and 15 for wakes. Wedding receptions not permitted."
                         }
+                    },
+                    {
+                        "policyIcon": "businesses",
+                        "policyHeading": {
+                            "en": "Businesses"
+                        },
+                        "policyContent": {
+                            "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                        }
+                    },
+                    {
+                        "policyIcon": "retail",
+                        "policyHeading": {
+                            "en": "Retail"
+                        },
+                        "policyContent": {
+                            "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                        }
+                    },
+                    {
+                        "policyIcon": "entertainment",
+                        "policyHeading": {
+                            "en": "Entertainment"
+                        },
+                        "policyContent": {
+                            "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                        }
+                    },
+                    {
+                        "policyIcon": "personal-care",
+                        "policyHeading": {
+                            "en": "Personal Care"
+                        },
+                        "policyContent": {
+                            "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                        }
+                    },
+                    {
+                        "policyIcon": "large-events",
+                        "policyHeading": {
+                            "en": "Large Events"
+                        },
+                        "policyContent": {
+                            "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                        }
+                    },
+                    {
+                        "policyIcon": "clinically-extremely-vulnerable",
+                        "policyHeading": {
+                            "en": "Clinically Extremely Vulnerable"
+                        },
+                        "policyContent": {
+                            "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                        }
+                    },
+                    {
+                        "policyIcon": "social-distancing",
+                        "policyHeading": {
+                            "en": "Social Distancing"
+                        },
+                        "policyContent": {
+                            "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                        }
+                    },
+                    {
+                        "policyIcon": "face-coverings",
+                        "policyHeading": {
+                            "en": "Face Coverings"
+                        },
+                        "policyContent": {
+                            "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                        }
+                    },
+                    {
+                        "policyIcon": "meeting-outdoors",
+                        "policyHeading": {
+                            "en": "Meeting Outdoors"
+                        },
+                        "policyContent": {
+                            "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                        }
+                    },
+                    {
+                        "policyIcon": "meeting-indoors",
+                        "policyHeading": {
+                            "en": "Meeting Indoors"
+                        },
+                        "policyContent": {
+                            "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                        }
+                    },
+                    {
+                        "policyIcon": "work",
+                        "policyHeading": {
+                            "en": "Work"
+                        },
+                        "policyContent": {
+                            "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                        }
+                    },
+                    {
+                        "policyIcon": "international-travel",
+                        "policyHeading": {
+                            "en": "International Travel"
+                        },
+                        "policyContent": {
+                            "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                        }
                     }
                 ]
             }
@@ -197,6 +335,8 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                 \(yellowPostcodes)
                 \(amberPostcodes)
                 \(redPostcodes)
+                \(maroonPostcodes)
+                \(blackPostcodes)
             },
             "localAuthorities": {
                 \(neutralLocalAuthorities)
@@ -204,10 +344,13 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                 \(yellowLocalAuthorities)
                 \(amberLocalAuthorities)
                 \(redLocalAuthorities)
+                \(maroonLocalAuthorities)
+                \(blackLocalAuthorities)
             },
             "riskLevels" : {
                 "\(neutralRiskIndicator)": {
                     "colorScheme": "neutral",
+                    "colorSchemeV2": "neutral",
                     "name": {
                         "en": "[postcode] is in Local Alert Level 1"
                     },
@@ -227,6 +370,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                 },
                 "\(greenRiskIndicator)": {
                     "colorScheme": "green",
+                    "colorSchemeV2": "green",
                     "name": {
                         "en": "[postcode] is in Local Alert Level 1"
                     },
@@ -246,6 +390,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                 },
                 "\(yellowRiskIndicator)": {
                     "colorScheme": "yellow",
+                    "colorSchemeV2": "yellow",
                     "name": {
                         "en": "[postcode] is in Local Alert Level 2"
                     },
@@ -265,6 +410,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                 },
                 "\(amberRiskIndicator)": {
                     "colorScheme": "amber",
+                    "colorSchemeV2": "amber",
                     "name": {
                         "en": "[postcode] is in Local Alert Level 3"
                     },
@@ -284,6 +430,47 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                 },
                 "\(redRiskIndicator)": {
                     "colorScheme": "red",
+                    "colorSchemeV2": "red",
+                    "name": {
+                        "en": "[postcode] is in Local Alert Level 3"
+                    },
+                    "heading": {
+                        "en": "Data from the NHS shows that the spread of coronavirus in your area is high."
+                    },
+                    "content": {
+                        "en": "Your local authority is using additional measures to those in place for the rest of the country because of high levels of infection in your local area.\\n\\nFind out the restrictions for your local area to help reduce the spread of coronavirus."
+                    },
+                    "linkTitle": {
+                        "en": "Restrictions in your area"
+                    },
+                    "linkUrl": {
+                        "en": "https://example.com"
+                    },
+                    "policyData": \(policyData(alertLevel: 3))
+                },
+                "\(maroonRiskIndicator)": {
+                    "colorScheme": "neutral",
+                    "colorSchemeV2": "maroon",
+                    "name": {
+                        "en": "[postcode] is in Local Alert Level 3"
+                    },
+                    "heading": {
+                        "en": "Data from the NHS shows that the spread of coronavirus in your area is high."
+                    },
+                    "content": {
+                        "en": "Your local authority is using additional measures to those in place for the rest of the country because of high levels of infection in your local area.\\n\\nFind out the restrictions for your local area to help reduce the spread of coronavirus."
+                    },
+                    "linkTitle": {
+                        "en": "Restrictions in your area"
+                    },
+                    "linkUrl": {
+                        "en": "https://example.com"
+                    },
+                    "policyData": \(policyData(alertLevel: 3))
+                },
+                "\(blackRiskIndicator)": {
+                    "colorScheme": "neutral",
+                    "colorSchemeV2": "black",
                     "name": {
                         "en": "[postcode] is in Local Alert Level 3"
                     },

@@ -16,6 +16,7 @@ public protocol HomeFlowViewControllerInteracting {
     func makeTestingInformationViewController() -> UIViewController?
     func makeFinancialSupportViewController() -> UIViewController?
     func makeLinkTestResultViewController() -> UIViewController?
+    func makeDailyConfirmationViewController(parentVC: UIViewController, with terminate: @escaping () -> Void) -> UIViewController?
     func getMyDataViewModel() -> MyDataViewController.ViewModel
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never>
     func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn)
@@ -197,6 +198,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         guard let viewController = flowInteractor.makeLinkTestResultViewController() else {
             return
         }
+        
         flowController?.present(viewController, animated: true)
     }
     

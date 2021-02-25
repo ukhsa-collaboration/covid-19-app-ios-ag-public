@@ -15,7 +15,7 @@ public enum UIValidationError: Error {
 
 public protocol SelfDiagnosisFlowViewControllerInteracting: BookATestInfoViewControllerInteracting {
     func fetchQuestionnaire() -> AnyPublisher<InterfaceSymptomsQuestionnaire, Error>
-    func evaluateSymptoms(symptoms: [SymptomInfo], onsetDay: GregorianDay?) -> Date?
+    func evaluateSymptoms(riskThreshold: Double, symptoms: [SymptomInfo], onsetDay: GregorianDay?) -> Date?
     
     func openTestkitOrder()
     func furtherAdviceLinkTapped()
@@ -42,8 +42,11 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
     @Published
     fileprivate var state: State = .start
     
-    fileprivate var symptoms = [SymptomInfo]()
-    private var dateSelectionWindow = 0
+    fileprivate var symptomsQuestionnaire = InterfaceSymptomsQuestionnaire(
+        riskThreshold: 0.0,
+        symptoms: [SymptomInfo](),
+        dateSelectionWindow: 0
+    )
     fileprivate var initialIsolationState: IsolationState
     
     private var cancellables = [AnyCancellable]()
@@ -83,13 +86,13 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
             return LoadingViewController(interactor: interactor, title: localize(.diagnosis_questionnaire_title))
         case .loaded(let symptomIndex):
             let interactor = SymptomListViewControllerInteractor(controller: self)
-            return SymptomListViewController(symptoms, symptomIndex: symptomIndex, interactor: interactor)
+            return SymptomListViewController(symptoms: symptomsQuestionnaire.symptoms, symptomIndex: symptomIndex, interactor: interactor)
         case .failedToLoad:
             let interactor = LoadingErrorControllerInteractor(controller: self)
             return LoadingErrorViewController(interacting: interactor, title: localize(.diagnosis_questionnaire_title))
         case .reviewing:
             let interactor = SymptomsReviewViewControllerInteractor(controller: self)
-            return SymptomsReviewViewController(symptoms, dateSelectionWindow: dateSelectionWindow, interactor: interactor)
+            return SymptomsReviewViewController(symptomsQuestionnaire: symptomsQuestionnaire, interactor: interactor)
         case .noSymptoms(.notIsolating):
             let interactor = NoSymptomsViewControllerInteractor(controller: self)
             return NoSymptomsViewController(interactor: interactor)
@@ -118,8 +121,7 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
                     }
                 },
                 receiveValue: { [weak self] symptomsQuestionnaire in
-                    self?.symptoms = symptomsQuestionnaire.symptoms
-                    self?.dateSelectionWindow = symptomsQuestionnaire.dateSelectionWindow
+                    self?.symptomsQuestionnaire = symptomsQuestionnaire
                 }
             )
             .store(in: &cancellables)
@@ -195,7 +197,7 @@ private struct SymptomListViewControllerInteractor: SymptomListViewController.In
             return .success(())
         }
         
-        guard controller.symptoms.contains(where: { $0.isConfirmed }) else {
+        guard controller.symptomsQuestionnaire.symptoms.contains(where: { $0.isConfirmed }) else {
             return .failure(.noSymptomSelected)
         }
         
@@ -263,14 +265,14 @@ private struct SymptomsReviewViewControllerInteractor: SymptomsReviewViewControl
         controller?.state = .loaded(index)
     }
     
-    public func confirmSymptoms(selectedDay: GregorianDay?, hasCheckedNoDate: Bool) -> Result<Void, UIValidationError> {
+    public func confirmSymptoms(riskThreshold: Double, selectedDay: GregorianDay?, hasCheckedNoDate: Bool) -> Result<Void, UIValidationError> {
         guard let controller = controller else {
             return .success(())
         }
         if selectedDay == nil, !hasCheckedNoDate {
             return .failure(.neitherDateNorNoDateCheckSet)
         } else {
-            if let isolationEndDate = controller.interactor.evaluateSymptoms(symptoms: controller.symptoms, onsetDay: selectedDay) {
+            if let isolationEndDate = controller.interactor.evaluateSymptoms(riskThreshold: riskThreshold, symptoms: controller.symptomsQuestionnaire.symptoms, onsetDay: selectedDay) {
                 controller.state = .hasSymptoms(isolationEndDate: isolationEndDate)
             } else {
                 controller.state = .noSymptoms(currentIsolationState: controller.initialIsolationState)

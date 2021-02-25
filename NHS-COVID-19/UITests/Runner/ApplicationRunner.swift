@@ -23,6 +23,19 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
                 description: description()
             )
         }
+        
+        var enabledFeatures: Set<String> = []
+        
+        private mutating func enable<T>(feature: UserDefault<T>) {
+            enabledFeatures.insert(feature.key)
+        }
+        
+        mutating func enable<T>(_ keyPath: KeyPath<FeatureToggleStorage, UserDefault<T>>) {
+            let featureToggleStorage = FeatureToggleStorage()
+            
+            enable(feature: featureToggleStorage[keyPath: keyPath])
+        }
+        
     }
     
     private var configuration: Configuration
@@ -114,6 +127,10 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
         app.launchEnvironment[Runner.disableAnimations] = configuration.disableAnimations ? "1" : "0"
         app.launchEnvironment[Runner.disableHardwareKeyboard] = "1"
         app.launchArguments = ["-\(Runner.activeScenarioDefaultKey)", Scenario.id] + configuration.initialState.launchArguments
+        
+        FeatureToggleStorage().allFeatureKeys.forEach {
+            app.launchArguments += ["-\($0)", configuration.enabledFeatures.contains($0) ? "<true/>" : "<false/>"]
+        }
         
         testBundle.becomeCurrentForTesting()
         

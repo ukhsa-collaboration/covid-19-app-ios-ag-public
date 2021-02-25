@@ -2,9 +2,9 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Combine
 import Scenarios
 import TestSupport
-import Combine
 import XCTest
 @testable import Domain
 
@@ -14,12 +14,12 @@ class MetricCollectorTests: XCTestCase {
     private var store: MockEncryptedStore!
     private var collector: MetricCollector!
     private var enabled: MetricsState!
-
+    
     override func setUp() {
         store = MockEncryptedStore()
         
         enabled = MetricsState()
-
+        
         enabled.set(rawState: RawState.onboardedRawState.domainProperty())
         
         let currentDateProvider = MockDateProvider { [weak self] in
@@ -48,16 +48,16 @@ class MetricCollectorTests: XCTestCase {
     }
     
     func testNotStoringMetricsWhenDisabled() {
-
+        
         enabled.set(rawState: RawState.notOnboardedRawState.domainProperty())
-
+        
         date = Date(timeIntervalSinceReferenceDate: 1000)
         collector.record(.runningNormallyTick)
         collector.record(.runningNormallyTick)
         collector.record(.contactCaseBackgroundTick)
         
         let actual = store.stored["metrics"]?.normalizingJSON()
-
+        
         XCTAssertNil(actual)
     }
     
@@ -171,14 +171,14 @@ class MetricCollectorTests: XCTestCase {
         
         let actualBefore = store.stored["metrics"]
         XCTAssertNotNil(actualBefore)
-
+        
         collector.delete()
         
         let actualAfter = store.stored["metrics"]?.normalizingJSON()
         XCTAssertNil(actualAfter)
     }
-
-  func testGettingCountOfLFDRecordedMetric() {
+    
+    func testGettingCountOfLFDRecordedMetric() {
         store.stored["metrics"] = """
         {
             "entries": [

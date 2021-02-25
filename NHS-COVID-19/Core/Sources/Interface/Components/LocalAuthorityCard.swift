@@ -63,6 +63,6 @@ public struct LocalAuthorityCard: View {
             )
         )
         .accessibility(addTraits: .isButton)
-        .environment(\.locale, Locale(identifier: currentLanguageCode()))
+        .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }
 }

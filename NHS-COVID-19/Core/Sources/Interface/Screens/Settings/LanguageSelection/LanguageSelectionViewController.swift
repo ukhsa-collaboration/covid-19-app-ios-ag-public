@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -225,11 +225,11 @@ extension LanguageSelectionViewController {
                 guard let newValue = language else {
                     return
                 }
-                endonymLabel.attributedText = NSAttributedString(
+                endonymLabel.text = newValue.endonym
+                endonymLabel.setValue(NSAttributedString(
                     string: newValue.endonym,
                     attributes: [.accessibilitySpeechLanguage: language?.isoCode ?? "en"]
-                )
-                
+                ), forKey: "accessibilityLabel")
                 exonymLabel.text = newValue.exonym
             }
         }

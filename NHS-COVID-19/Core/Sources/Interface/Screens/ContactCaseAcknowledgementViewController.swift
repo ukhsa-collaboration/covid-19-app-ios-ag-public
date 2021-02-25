@@ -11,6 +11,7 @@ public protocol ContactCaseAcknowledgementViewControllerInteracting {
     func acknowledge()
     func didTapOnlineLink()
     func exposureFAQsLinkTapped()
+    func didTapDailyContactTesting()
 }
 
 private class ContactCaseAcknowledgementContent: PrimaryButtonStickyFooterScrollingContent {
@@ -19,7 +20,10 @@ private class ContactCaseAcknowledgementContent: PrimaryButtonStickyFooterScroll
     let interactor: Interacting
     let duration: Int
     
-    public init(interactor: Interacting, isolationEndDate: Date, type: ContactCaseAcknowledgementViewController.ContactCaseType) {
+    public init(interactor: Interacting,
+                isolationEndDate: Date,
+                type: ContactCaseAcknowledgementViewController.ContactCaseType,
+                showDailyContactTesting: Bool) {
         self.interactor = interactor
         duration = LocalDay.today.daysRemaining(until: isolationEndDate)
         
@@ -29,7 +33,7 @@ private class ContactCaseAcknowledgementContent: PrimaryButtonStickyFooterScroll
         pleaseIsolateStack.isAccessibilityElement = true
         pleaseIsolateStack.accessibilityTraits = [.header, .staticText]
         
-        super.init(scrollingViews: [
+        var viewStack: [StackViewContentProvider] = [
             UIImageView(.isolationStartContact)
                 .styleAsDecoration(),
             pleaseIsolateStack,
@@ -47,7 +51,21 @@ private class ContactCaseAcknowledgementContent: PrimaryButtonStickyFooterScroll
                 title: localize(.exposure_acknowledgement_link),
                 action: interactor.didTapOnlineLink
             ),
-        ], primaryButton: (
+        ]
+        
+        if showDailyContactTesting {
+            viewStack.append(contentsOf: [
+                BaseLabel()
+                    .styleAsBody()
+                    .set(text: localize(.exposure_acknowledgement_dct_blurb)),
+                LinkButton(
+                    title: localize(.exposure_acknowledgement_dct_link),
+                    action: interactor.didTapDailyContactTesting
+                ),
+            ])
+        }
+        
+        super.init(scrollingViews: viewStack, primaryButton: (
             title: localize(.exposure_acknowledgement_button),
             action: interactor.acknowledge
         ))
@@ -62,8 +80,17 @@ public class ContactCaseAcknowledgementViewController: StickyFooterScrollingCont
         case riskyVenue
     }
     
-    public init(interactor: Interacting, isolationEndDate: Date, type: ContactCaseType) {
-        super.init(content: ContactCaseAcknowledgementContent(interactor: interactor, isolationEndDate: isolationEndDate, type: type))
+    public init(interactor: Interacting,
+                isolationEndDate: Date,
+                type: ContactCaseType,
+                showDailyContactTesting: Bool) {
+        super.init(
+            content: ContactCaseAcknowledgementContent(
+                interactor: interactor,
+                isolationEndDate: isolationEndDate,
+                type: type,
+                showDailyContactTesting: showDailyContactTesting
+            ))
     }
     
     required init?(coder: NSCoder) {

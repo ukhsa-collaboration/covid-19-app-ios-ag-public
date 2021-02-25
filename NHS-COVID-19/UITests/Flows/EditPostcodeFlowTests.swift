@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -42,6 +42,7 @@ class EditPostcodeFlowTest: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: homeScreen.aboutButton)
             homeScreen.aboutButton.tap()
             
             let aboutThisAppScreen = AboutThisAppScreen(app: app)
@@ -137,6 +138,7 @@ class EditPostcodeFlowTest: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: homeScreen.aboutButton)
             homeScreen.aboutButton.tap()
             
             let aboutThisAppScreen = AboutThisAppScreen(app: app)

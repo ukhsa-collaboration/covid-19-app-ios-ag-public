@@ -2,9 +2,9 @@
 // Copyright © 2020 NHSX. All rights reserved.
 //
 
+import Combine
 import Common
 import Scenarios
-import Combine
 import XCTest
 @testable import Domain
 
@@ -17,12 +17,12 @@ class MetricUploadChunkCreatorTests: XCTestCase {
     
     override func setUp() {
         currentDate = Date()
-
+        
         let store = MockEncryptedStore()
-
+        
         enabled = MetricsState()
         enabled.set(rawState: RawState.onboardedRawState.domainProperty())
-
+        
         let currentDateProvider = MockDateProvider { self.currentDate }
         collector = MetricCollector(encryptedStore: store, currentDateProvider: currentDateProvider, enabled: enabled)
         creator = MetricUploadChunkCreator(

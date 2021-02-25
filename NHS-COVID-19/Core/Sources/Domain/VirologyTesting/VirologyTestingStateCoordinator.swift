@@ -19,10 +19,14 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
     
     private let virologyTestingStateStore: VirologyTestingStateStore
     private let userNotificationsManager: UserNotificationManaging
+    private let isInterestedInAskingForSymptomsOnsetDay: () -> Bool
+    private var setRequiresOnsetDay: () -> Void
     
-    init(virologyTestingStateStore: VirologyTestingStateStore, userNotificationsManager: UserNotificationManaging) {
+    init(virologyTestingStateStore: VirologyTestingStateStore, userNotificationsManager: UserNotificationManaging, isInterestedInAskingForSymptomsOnsetDay: @escaping () -> Bool, setRequiresOnsetDay: @escaping () -> Void) {
         self.virologyTestingStateStore = virologyTestingStateStore
         self.userNotificationsManager = userNotificationsManager
+        self.isInterestedInAskingForSymptomsOnsetDay = isInterestedInAskingForSymptomsOnsetDay
+        self.setRequiresOnsetDay = setRequiresOnsetDay
     }
     
     func saveOrderTestKitResponse(_ orderTestKitResponse: OrderTestkitResponse) {
@@ -64,6 +68,14 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         }
     }
     
+    func requiresOnsetDay(_ result: VirologyTestResult, requiresConfirmatoryTest: Bool) -> Bool {
+        guard requiresConfirmatoryTest == false, result.testKitType == .labResult, result.testResult == .positive else {
+            return false
+        }
+        
+        return isInterestedInAskingForSymptomsOnsetDay()
+    }
+    
     private func handleWithNotification(_ result: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?, requiresConfirmatoryTest: Bool) {
         sendNotification()
         handle(result, diagnosisKeySubmissionToken: diagnosisKeySubmissionToken, requiresConfirmatoryTest: requiresConfirmatoryTest)
@@ -75,6 +87,9 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
             diagnosisKeySubmissionToken: result.testResult == .positive ? diagnosisKeySubmissionToken : nil,
             requiresConfirmatoryTest: requiresConfirmatoryTest
         )
+        if requiresOnsetDay(result, requiresConfirmatoryTest: requiresConfirmatoryTest) {
+            setRequiresOnsetDay()
+        }
     }
     
     private func sendNotification() {

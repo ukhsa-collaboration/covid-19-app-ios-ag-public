@@ -161,8 +161,8 @@ class EnabledExposureManager {
         _ summary: ENExposureDetectionSummary,
         configuration: ENExposureConfiguration,
         completion: @escaping (Result<Detection, Error>) -> Void
-    ) -> Progress {
-        return self.manager.getExposureInfo(summary: summary, userExplanation: "Verifying exposure info.") { infos, error in
+    ) {
+        _ = manager.getExposureInfo(summary: summary, userExplanation: "Verifying exposure info.") { infos, error in
             if let error = error {
                 completion(.failure(error))
             }
@@ -183,7 +183,7 @@ class EnabledExposureManager {
         configuration: ENExposureConfiguration,
         completion: @escaping (Result<[ENExposureWindow], Error>) -> Void
     ) -> Progress {
-        return self.manager.getExposureWindows(summary: summary) { windows, error in
+        return manager.getExposureWindows(summary: summary) { windows, error in
             if let error = error {
                 completion(.failure(error))
             }

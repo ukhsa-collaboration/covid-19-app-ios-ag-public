@@ -28,8 +28,9 @@ extension CoordinatedAppController {
                 return BaseNavigationController(rootViewController: vc)
             }
             
-        case .failedToStart:
-            let vc = UnrecoverableErrorViewController()
+        case .failedToStart(let openURL):
+            let interactor = UnrecoverableErrorViewControllerInteractor(_openURL: openURL)
+            let vc = UnrecoverableErrorViewController(interactor: interactor)
             return BaseNavigationController(rootViewController: vc)
             
         case .onboarding(let complete, let openURL):
@@ -193,11 +194,12 @@ extension CoordinatedAppController {
                             isIndexCase: isIndexCase,
                             currentDateProvider: context.currentDateProvider
                         )
-                    case .neededForStartOfIsolationExposureDetection(let interactor, let isolationEndDate):
+                    case .neededForStartOfIsolationExposureDetection(let interactor, let isolationEndDate, let showDailyContactTesting):
                         return ContactCaseAcknowledgementViewController(
                             interactor: interactor,
                             isolationEndDate: isolationEndDate,
-                            type: .exposureDetection
+                            type: .exposureDetection,
+                            showDailyContactTesting: showDailyContactTesting
                         )
                     case .neededForRiskyVenue(let interactor, let venueName, let checkInDate):
                         return RiskyVenueInformationViewController(
@@ -267,6 +269,13 @@ extension CoordinatedAppController {
                         
                         navigationVC.viewControllers = [nonNegativeVC]
                         return navigationVC
+                    case .askForSymptomsOnsetDay(let testEndDay, let didFinishAskForSymptomsOnsetDay, let didConfirmSymptoms, let setOnsetDay):
+                        return SymptomsOnsetDayFlowViewController(
+                            testEndDay: testEndDay,
+                            didFinishAskForSymptomsOnsetDay: didFinishAskForSymptomsOnsetDay,
+                            setOnsetDay: setOnsetDay,
+                            recordDidHaveSymptoms: didConfirmSymptoms
+                        )
                     }
                 }
         }
@@ -505,5 +514,14 @@ private struct LocalAuthorityUpdateIteractor: LocalAuthorityFlowViewController.I
 extension LocalAuthoritySelectionError {
     init(_ error: LocalAuthorityUnsupportedCountryError) {
         self = .unsupportedCountry
+    }
+}
+
+private struct UnrecoverableErrorViewControllerInteractor: UnrecoverableErrorViewControllerInteracting {
+    
+    let _openURL: (URL) -> Void
+    
+    func faqLinkTapped() {
+        _openURL(ExternalLink.faq.url)
     }
 }

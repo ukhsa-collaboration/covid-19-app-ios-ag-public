@@ -21,7 +21,7 @@ private class BulletPoint: UIView {
         let symbol = makeSymbol(from: symbolProperties.type)
         let stackView = UIStackView(arrangedSubviews: [symbol, hiddenLabel])
         stackView.alignment = .center
-        stackView.distribution = .fillProportionally
+        stackView.distribution = .fill
         
         NSLayoutConstraint.activate([
             // Hides the label but center alignment still works
@@ -34,7 +34,7 @@ private class BulletPoint: UIView {
     private lazy var mainStack: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [bulletPointStackView])
         stackView.alignment = .firstBaseline
-        stackView.distribution = .fillProportionally
+        stackView.distribution = .fill
         stackView.spacing = .standardSpacing
         
         stackView.isAccessibilityElement = true
@@ -113,7 +113,7 @@ public class BulletedList: UIView {
     
     public init(
         symbolProperties: SymbolProperties = SymbolProperties(type: .fullCircle, size: .halfSpacing, color: .nhsBlue),
-        rows: [String]
+        rows: [String] = []
     ) {
         self.symbolProperties = symbolProperties
         super.init(frame: .zero)

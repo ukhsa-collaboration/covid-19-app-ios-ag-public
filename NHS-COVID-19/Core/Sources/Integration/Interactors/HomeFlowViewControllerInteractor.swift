@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -127,14 +127,58 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     }
     
     func makeLinkTestResultViewController() -> UIViewController? {
+        
+        let baseNavigationController = BaseNavigationController()
+        
         let interactor = LinkTestResultInteractor(
+            dailyContactTestingEarlyTerminationSupport: context.dailyContactTestingEarlyTerminationSupport(),
+            showNextScreen: { terminate in
+                if let dailyConfirmationVC = makeDailyConfirmationViewController(
+                    parentVC: baseNavigationController,
+                    with: terminate
+                ) {
+                    baseNavigationController.pushViewController(dailyConfirmationVC, animated: true)
+                }
+            },
             _submit: { testCode in
                 self.context.virologyTestingManager.linkExternalTestResult(with: testCode)
                     .mapError(DisplayableError.init)
                     .eraseToAnyPublisher()
             }
+            
         )
-        return BaseNavigationController(rootViewController: LinkTestResultViewController(interactor: interactor))
+        baseNavigationController.pushViewController(LinkTestResultViewController(interactor: interactor), animated: false)
+        
+        return baseNavigationController
+    }
+    
+    func makeDailyConfirmationViewController(parentVC: UIViewController, with terminate: @escaping () -> Void) -> UIViewController? {
+        
+        let interactor = DailyContactTestingConfirmationInteractor(
+            action: {
+                let alertController = makeDCTConfirmationAlert(with: terminate)
+                parentVC.present(alertController, animated: true)
+            }
+            
+        )
+        
+        return DailyContactTestingConfirmationViewController(interactor: interactor)
+    }
+    
+    private func makeDCTConfirmationAlert(with action: @escaping () -> Void) -> UIAlertController {
+        let alertController = UIAlertController(
+            title: localize(.daily_contact_testing_confirmation_screen_alert_title),
+            message: localize(.daily_contact_testing_confirmation_screen_alert_body_description),
+            preferredStyle: .alert
+        )
+        
+        let confirmAction = UIAlertAction(title: localize(.daily_contact_testing_confirmation_screen_alert_confirm_button_title), style: .default) { _ in action() }
+        
+        alertController.addAction(UIAlertAction(title: localize(.cancel), style: .default))
+        alertController.addAction(confirmAction)
+        alertController.preferredAction = confirmAction
+        
+        return alertController
     }
     
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never> {
@@ -196,6 +240,15 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                 return nil
             }
         }()
+        // TODO: We may want to pass this through as an interface property or similar rather than computing its instantaneous value here.
+        let dailyTestingOptInDate = { () -> Date? in
+            switch context.isolationState.currentValue {
+            case .isolate:
+                return nil
+            case .noNeedToIsolate(let date):
+                return date
+            }
+        }()
         
         return .init(
             postcode: context.postcodeInfo.map { $0?.postcode.value }.interfaceProperty,
@@ -209,7 +262,8 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                     notificationDate: details.notificationDate
                 )
             },
-            selfIsolationEndDate: selfIsolationEndDate
+            selfIsolationEndDate: selfIsolationEndDate,
+            dailyTestingOptInDate: dailyTestingOptInDate
         )
     }
     
@@ -219,6 +273,10 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     
     func openAdvice() {
         context.openURL(ExternalLink.generalAdvice.url)
+    }
+    
+    func openDailyContactTestingInformation() {
+        context.openURL(ExternalLink.dailyContactTestingInformation.url)
     }
     
     func deleteAppData() {

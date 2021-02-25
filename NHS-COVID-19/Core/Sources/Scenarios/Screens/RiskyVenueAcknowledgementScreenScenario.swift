@@ -23,7 +23,8 @@ public class RiskyVenueAcknowledgementScreenScenario: Scenario {
             return ContactCaseAcknowledgementViewController(
                 interactor: interactor,
                 isolationEndDate: Date(timeIntervalSinceNow: Self.days * 86400),
-                type: .riskyVenue
+                type: .riskyVenue,
+                showDailyContactTesting: false
             )
         }
     }
@@ -45,4 +46,6 @@ private class Interactor: ContactCaseAcknowledgementViewController.Interacting {
     func exposureFAQsLinkTapped() {
         viewController?.showAlert(title: RiskyVenueAcknowledgementScreenScenario.exposureFAQTapped)
     }
+    
+    func didTapDailyContactTesting() {}
 }

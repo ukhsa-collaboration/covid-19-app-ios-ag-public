@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -33,7 +33,7 @@ class SandboxDistributeClient: HTTPClient {
 private let isolationConfig = """
 {
   "durationDays": {
-    "indexCaseSinceSelfDiagnosisOnset": 1,
+    "indexCaseSinceSelfDiagnosisOnset": \(Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisOnset),
     "indexCaseSinceSelfDiagnosisUnknownOnset": \(Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset),
     "contactCase": 3,
     "maxIsolation": \(Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset),
@@ -157,6 +157,114 @@ private func policyData(alertLevel: Int) -> String {
                 "policyContent": {
                     "en": "Up to 15 guests for weddings, 30 for funerals and 15 for wakes. Wedding receptions not permitted."
                 }
+            },
+            {
+                "policyIcon": "businesses",
+                "policyHeading": {
+                    "en": "Businesses"
+                },
+                "policyContent": {
+                    "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                }
+            },
+            {
+                "policyIcon": "retail",
+                "policyHeading": {
+                    "en": "Retail"
+                },
+                "policyContent": {
+                    "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                }
+            },
+            {
+                "policyIcon": "entertainment",
+                "policyHeading": {
+                    "en": "Entertainment"
+                },
+                "policyContent": {
+                    "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                }
+            },
+            {
+                "policyIcon": "personal-care",
+                "policyHeading": {
+                    "en": "Personal Care"
+                },
+                "policyContent": {
+                    "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                }
+            },
+            {
+                "policyIcon": "large-events",
+                "policyHeading": {
+                    "en": "Large Events"
+                },
+                "policyContent": {
+                    "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                }
+            },
+            {
+                "policyIcon": "clinically-extremely-vulnerable",
+                "policyHeading": {
+                    "en": "Clinically Extremely Vulnerable"
+                },
+                "policyContent": {
+                    "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                }
+            },
+            {
+                "policyIcon": "social-distancing",
+                "policyHeading": {
+                    "en": "Social Distancing"
+                },
+                "policyContent": {
+                    "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                }
+            },
+            {
+                "policyIcon": "face-coverings",
+                "policyHeading": {
+                    "en": "Face Coverings"
+                },
+                "policyContent": {
+                    "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                }
+            },
+            {
+                "policyIcon": "meeting-outdoors",
+                "policyHeading": {
+                    "en": "Meeting Outdoors"
+                },
+                "policyContent": {
+                    "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                }
+            },
+            {
+                "policyIcon": "meeting-indoors",
+                "policyHeading": {
+                    "en": "Meeting Indoors"
+                },
+                "policyContent": {
+                    "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                }
+            },
+            {
+                "policyIcon": "work",
+                "policyHeading": {
+                    "en": "Work"
+                },
+                "policyContent": {
+                    "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                }
+            },
+            {
+                "policyIcon": "international-travel",
+                "policyHeading": {
+                    "en": "International Travel"
+                },
+                "policyContent": {
+                    "en": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                }
             }
         ]
     }
@@ -171,17 +279,43 @@ private let riskyPostcodes = """
         "SW14": "yellow",
         "SW15": "red",
         "SW16": "neutral",
+        "SW17": "maroon",
+        "SW21": "black",
     },
     "localAuthorities": {
+        "E09000021": "black",
         "E09000022": "green",
         "E09000023": "amber",
         "E09000024": "yellow",
         "E09000025": "red",
         "E09000026": "neutral",
+        "E09000032": "maroon",
+
     },
     "riskLevels" : {
+        "black": {
+            "colorScheme": "neutral",
+            "colorSchemeV2": "black",
+            "name": { "en": "[postcode] is in Local Alert Level 3" },
+            "heading": {},
+            "content": {},
+            "linkTitle": { "en": "Restrictions in your area" },
+            "linkUrl": {},
+            "policyData": \(policyData(alertLevel: 3))
+        },
+        "maroon": {
+            "colorScheme": "neutral",
+            "colorSchemeV2": "maroon",
+            "name": { "en": "[postcode] is in Local Alert Level 3" },
+            "heading": {},
+            "content": {},
+            "linkTitle": { "en": "Restrictions in your area" },
+            "linkUrl": {},
+            "policyData": \(policyData(alertLevel: 3))
+        },
         "red": {
             "colorScheme": "red",
+            "colorSchemeV2": "red",
             "name": { "en": "[postcode] is in Local Alert Level 3" },
             "heading": {},
             "content": {},
@@ -191,6 +325,7 @@ private let riskyPostcodes = """
         },
         "amber": {
             "colorScheme": "amber",
+            "colorSchemeV2": "amber",
             "name": { "en": "[postcode] is in Local Alert Level 3" },
             "heading": {},
             "content": {},
@@ -200,6 +335,7 @@ private let riskyPostcodes = """
         },
         "yellow": {
             "colorScheme": "yellow",
+            "colorSchemeV2": "yellow",
             "name": { "en": "[postcode] is in Local Alert Level 2" },
             "heading": {},
             "content": {},
@@ -209,6 +345,7 @@ private let riskyPostcodes = """
         },
         "green": {
             "colorScheme": "green",
+            "colorSchemeV2": "green",
             "name": { "en": "[postcode] is in Local Alert Level 1" },
             "heading": {},
             "content": {},
@@ -218,6 +355,7 @@ private let riskyPostcodes = """
         },
         "neutral": {
             "colorScheme": "neutral",
+            "colorSchemeV2": "neutral",
             "name": { "en": "[postcode] is in Local Alert Level 1" },
             "heading": {},
             "content": {},

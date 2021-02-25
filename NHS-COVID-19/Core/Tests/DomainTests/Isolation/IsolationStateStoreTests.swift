@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -338,20 +338,24 @@ class IsolationStateStoreTests: XCTestCase {
         let testDay = GregorianDay(year: 2020, month: 7, day: 13)
         let npexDay = GregorianDay(year: 2020, month: 7, day: 16)
         
-        store.set(IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: nil,
-            testInfo: nil
-        ))
+        // Given
+        let isolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfIsolation: false,
+            indexCaseInfo: IndexCaseInfo(
+                isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
+                onsetDay: nil,
+                testInfo: nil
+            ),
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: .today
+            )
+        )
         
-        store.set(ContactCaseInfo(
-            exposureDay: exposureDay,
-            isolationFromStartOfDay: .today
-        ))
-        
-        XCTAssertNotNil(store.isolationInfo.contactCaseInfo)
-        
+        // When
         store.isolationStateInfo = store.newIsolationStateInfo(
+            from: isolationInfo,
             for: .positive,
             testKitType: .labResult,
             requiresConfirmatoryTest: false,
@@ -360,6 +364,7 @@ class IsolationStateStoreTests: XCTestCase {
             operation: .update
         )
         
+        // Then
         XCTAssertNil(store.isolationInfo.contactCaseInfo)
     }
     
@@ -368,13 +373,21 @@ class IsolationStateStoreTests: XCTestCase {
         let testDay = GregorianDay(year: 2020, month: 7, day: 13)
         let npexDay = GregorianDay(year: 2020, month: 7, day: 16)
         
-        store.set(IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: nil,
-            testInfo: nil
-        ))
+        // Given
+        let isolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfIsolation: false,
+            indexCaseInfo: IndexCaseInfo(
+                isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
+                onsetDay: nil,
+                testInfo: nil
+            ),
+            contactCaseInfo: nil
+        )
         
+        // When
         store.isolationStateInfo = store.newIsolationStateInfo(
+            from: isolationInfo,
             for: .positive,
             testKitType: .labResult,
             requiresConfirmatoryTest: false,
@@ -383,6 +396,7 @@ class IsolationStateStoreTests: XCTestCase {
             operation: .update
         )
         
+        // Then
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.result, TestResult.positive)
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.receivedOnDay, testDay)
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.isolationTrigger.startDay, selfDiagnosisDay)
@@ -391,8 +405,17 @@ class IsolationStateStoreTests: XCTestCase {
     func testStoreTestResultNothingOperation() throws {
         let testDay = GregorianDay(year: 2020, month: 7, day: 16)
         
+        // Given
+        let isolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfIsolation: false,
+            indexCaseInfo: nil,
+            contactCaseInfo: nil
+        )
+        
         // When
         store.isolationStateInfo = store.newIsolationStateInfo(
+            from: isolationInfo,
             for: .void,
             testKitType: .labResult,
             requiresConfirmatoryTest: false,
@@ -410,14 +433,20 @@ class IsolationStateStoreTests: XCTestCase {
         let selfDiagnosisDay = testDay.advanced(by: -6)
         
         // Given
-        store.set(IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: selfDiagnosisDay),
-            onsetDay: nil,
-            testInfo: IndexCaseInfo.TestInfo(result: .void, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: testDay.advanced(by: -4))
-        ))
+        let isolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfIsolation: false,
+            indexCaseInfo: IndexCaseInfo(
+                isolationTrigger: .manualTestEntry(npexDay: selfDiagnosisDay),
+                onsetDay: nil,
+                testInfo: IndexCaseInfo.TestInfo(result: .void, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: testDay.advanced(by: -4))
+            ),
+            contactCaseInfo: nil
+        )
         
         // When
         store.isolationStateInfo = store.newIsolationStateInfo(
+            from: isolationInfo,
             for: .positive,
             testKitType: .labResult,
             requiresConfirmatoryTest: false,
@@ -435,8 +464,17 @@ class IsolationStateStoreTests: XCTestCase {
     func testStoreTestResultOverwriteUpdateOperation() throws {
         let testDay = GregorianDay(year: 2020, month: 7, day: 16)
         
+        // Given
+        let isolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfIsolation: false,
+            indexCaseInfo: nil,
+            contactCaseInfo: nil
+        )
+        
         // When
         store.isolationStateInfo = store.newIsolationStateInfo(
+            from: isolationInfo,
             for: .positive,
             testKitType: .labResult,
             requiresConfirmatoryTest: false,
@@ -452,18 +490,28 @@ class IsolationStateStoreTests: XCTestCase {
     }
     
     func testConfirmTestResultOperation() {
+        let exposureDay = GregorianDay(year: 2020, month: 7, day: 11)
         let testDay = GregorianDay(year: 2020, month: 7, day: 16)
         let npexDayConfirmed = GregorianDay(year: 2020, month: 7, day: 20)
         
         // Given
-        store.set(IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: testDay),
-            onsetDay: nil,
-            testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: testDay.advanced(by: -4))
-        ))
+        let isolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfIsolation: false,
+            indexCaseInfo: IndexCaseInfo(
+                isolationTrigger: .manualTestEntry(npexDay: testDay),
+                onsetDay: nil,
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: testDay.advanced(by: -4))
+            ),
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: .today
+            )
+        )
         
         // When
         store.isolationStateInfo = store.newIsolationStateInfo(
+            from: isolationInfo,
             for: .positive,
             testKitType: .labResult,
             requiresConfirmatoryTest: false,
@@ -473,8 +521,120 @@ class IsolationStateStoreTests: XCTestCase {
         )
         
         // THEN
+        XCTAssertNil(store.isolationStateInfo?.isolationInfo.contactCaseInfo)
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.receivedOnDay, testDay.advanced(by: -4))
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.requiresConfirmatoryTest, true)
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.confirmedOnDay, npexDayConfirmed)
+    }
+    
+    func testIgnoreTestResultOperation() {
+        let exposureDay = GregorianDay(year: 2020, month: 7, day: 11)
+        let testDay = GregorianDay(year: 2020, month: 7, day: 16)
+        let npexDayConfirmed = GregorianDay(year: 2020, month: 7, day: 20)
+        
+        // Given
+        let isolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfIsolation: false,
+            indexCaseInfo: nil,
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: .today
+            )
+        )
+        
+        // When
+        store.isolationStateInfo = store.newIsolationStateInfo(
+            from: isolationInfo,
+            for: .positive,
+            testKitType: .labResult,
+            requiresConfirmatoryTest: false,
+            receivedOn: testDay,
+            npexDay: npexDayConfirmed,
+            operation: .ignore
+        )
+        
+        // THEN
+        XCTAssertNotNil(store.isolationStateInfo?.isolationInfo.contactCaseInfo)
+        XCTAssertNil(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo)
+    }
+    
+    func testOverwriteAndConfirmTestResultOperation() {
+        let exposureDay = GregorianDay(year: 2020, month: 7, day: 11)
+        let testDay = GregorianDay(year: 2020, month: 7, day: 13)
+        let npexDay = GregorianDay(year: 2020, month: 7, day: 16)
+        let newNpexDay = GregorianDay(year: 2020, month: 7, day: 18)
+        
+        // Given
+        let isolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfIsolation: false,
+            indexCaseInfo: IndexCaseInfo(
+                isolationTrigger: .manualTestEntry(npexDay: npexDay),
+                onsetDay: nil,
+                testInfo: nil
+            ),
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: .today
+            )
+        )
+        
+        // When
+        store.isolationStateInfo = store.newIsolationStateInfo(
+            from: isolationInfo,
+            for: .positive,
+            testKitType: .labResult,
+            requiresConfirmatoryTest: false,
+            receivedOn: testDay,
+            npexDay: newNpexDay,
+            operation: .overwriteAndConfirm
+        )
+        
+        // Then
+        XCTAssertNil(store.isolationInfo.contactCaseInfo)
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.isolationTrigger, .manualTestEntry(npexDay: newNpexDay))
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.receivedOnDay, testDay)
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.requiresConfirmatoryTest, false)
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.confirmedOnDay, npexDay)
+    }
+    
+    func testUpdateAndConfirmTestResultOperation() {
+        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
+        let exposureDay = GregorianDay(year: 2020, month: 7, day: 11)
+        let testDay = GregorianDay(year: 2020, month: 7, day: 13)
+        let npexDay = GregorianDay(year: 2020, month: 7, day: 16)
+        
+        // Given
+        let isolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfIsolation: false,
+            indexCaseInfo: IndexCaseInfo(
+                isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
+                onsetDay: selfDiagnosisDay,
+                testInfo: nil
+            ),
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: .today
+            )
+        )
+        
+        // When
+        store.isolationStateInfo = store.newIsolationStateInfo(
+            from: isolationInfo,
+            for: .positive,
+            testKitType: .labResult,
+            requiresConfirmatoryTest: false,
+            receivedOn: testDay,
+            npexDay: npexDay,
+            operation: .updateAndConfirm
+        )
+        
+        // Then
+        XCTAssertNil(store.isolationInfo.contactCaseInfo)
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.isolationTrigger, .selfDiagnosis(selfDiagnosisDay))
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.receivedOnDay, testDay)
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.requiresConfirmatoryTest, false)
     }
 }

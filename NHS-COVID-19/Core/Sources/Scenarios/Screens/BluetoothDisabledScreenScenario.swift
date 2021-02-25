@@ -8,7 +8,7 @@ import UIKit
 
 public class BluetoothDisabledScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
-    public static var name: String = "On-boarding - Bluetooth not enabled"
+    public static var name: String = "Onboarding - Bluetooth not enabled"
     
     public static let enableTapped = "Go to settings tapped!"
     

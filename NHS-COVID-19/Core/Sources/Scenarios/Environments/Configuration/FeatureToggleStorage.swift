@@ -5,10 +5,17 @@
 import Common
 import Domain
 
-struct FeatureToggleStorage {
+public struct FeatureToggleStorage {
     
     @UserDefault("scenario.toggle.dailyContactTesting", defaultValue: Feature.productionEnabledFeatures.contains(.dailyContactTesting))
-    var dailyContactTestingToggle: Bool
+    public var dailyContactTestingToggle: Bool
+    
+    #warning("Retrieve key from UserDefault")
+    public var allFeatureKeys: [String] {
+        [$dailyContactTestingToggle.key]
+    }
+    
+    public init() {}
     
     static func getEnabledFeatures() -> [Feature] {
         let store = FeatureToggleStorage()

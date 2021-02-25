@@ -27,4 +27,8 @@ struct ExposureAcknowledgementViewControllerInteractor: ContactCaseAcknowledgeme
     func exposureFAQsLinkTapped() {
         openURL(ExternalLink.exposureFAQs.url)
     }
+    
+    func didTapDailyContactTesting() {
+        openURL(ExternalLink.dailyContactTestingInformation.url)
+    }
 }

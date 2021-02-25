@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -49,7 +49,7 @@ public class ApplicationCoordinator {
     private let housekeeper: Housekeeper
     private let exposureNotificationReminder: ExposureNotificationReminder
     private let completedOnboardingForCurrentSession = CurrentValueSubject<Bool, Never>(false)
-    private let appReviewPresenter: AppReviewPresenter
+    private let appReviewPresenter: AppReviewPresenting
     public let country: DomainProperty<Country>
     private let shouldRecommendUpdate = CurrentValueSubject<Bool, Never>(true)
     private let policyManager: PolicyVersionManager
@@ -59,6 +59,8 @@ public class ApplicationCoordinator {
     private let userNotificationManager: UserNotificationManaging
     
     private var recommendedUpdateManager: RecommendedUpdateManager?
+    
+    private var isFeatureEnabled: (Feature) -> Bool
     
     @Published
     public var state = ApplicationState.starting
@@ -165,7 +167,13 @@ public class ApplicationCoordinator {
             httpClient: services.apiClient,
             virologyTestingStateCoordinator: VirologyTestingStateCoordinator(
                 virologyTestingStateStore: virologyTestingStateStore,
-                userNotificationsManager: services.userNotificationsManager
+                userNotificationsManager: services.userNotificationsManager,
+                isInterestedInAskingForSymptomsOnsetDay: { (isolationContext.isolationStateStore.isolationInfo.indexCaseInfo?.isInterestedInAskingForSymptomsOnsetDay ?? true)
+                },
+                setRequiresOnsetDay: {
+                    isolationContext.shouldAskForSymptoms.send(true)
+                    Metrics.signpost(.didAskForSymptomsOnPositiveTestEntry)
+                }
             ),
             ctaTokenValidator: CTATokenValidator(),
             country: { country.currentValue }
@@ -174,6 +182,8 @@ public class ApplicationCoordinator {
         let isolationStateManager = isolationContext.isolationStateManager
         
         let interestedInExposureNotifications = { isolationStateManager.state.interestedInExposureNotifications }
+        
+        let exposureNotificationProcessingBehaviour = { isolationStateManager.state.exposureNotificationProcessingBehaviour }
         
         isolationPaymentContext = IsolationPaymentContext(
             services: services,
@@ -205,7 +215,7 @@ public class ApplicationCoordinator {
         )
         
         circuitBreaker = CircuitBreaker(
-            client: CircuitBreakerClient(httpClient: services.apiClient),
+            client: CircuitBreakerClient(httpClient: services.apiClient, rateLimiter: ObfuscationRateLimiter()),
             exposureInfoProvider: exposureNotificationContext.exposureDetectionStore,
             riskyCheckinsProvider: checkInContext.checkInsStore,
             handleContactCase: { riskInfo in
@@ -215,7 +225,7 @@ public class ApplicationCoordinator {
                 services.userNotificationsManager.add(type: .exposureDetection, at: nil, withCompletionHandler: nil)
             },
             handleDontWorryNotification: exposureNotificationContext.handleDontWorryNotification,
-            interestedInExposureNotifications: interestedInExposureNotifications
+            exposureNotificationProcessingBehaviour: exposureNotificationProcessingBehaviour
         )
         
         housekeeper = Housekeeper(
@@ -244,15 +254,20 @@ public class ApplicationCoordinator {
             neededVersion: Self.latestPolicyAppVersion
         )
         
-        trafficObfuscationClient = TrafficObfuscationClient(client: services.apiClient)
+        trafficObfuscationClient = TrafficObfuscationClient(client: services.apiClient, rateLimiter: ObfuscationRateLimiter())
+        
+        isFeatureEnabled = { feature in
+            enabledFeatures.contains(feature)
+        }
         
         metricReporter.set(rawState: rawState.domainProperty())
-
+        
         monitorRawState()
         
         setupBackgroundTask()
         
         setupChangeNotifiers(using: services.userNotificationsManager)
+        
     }
     
     private func monitorRawState() {
@@ -282,7 +297,7 @@ public class ApplicationCoordinator {
             }
             return .appUnavailable(reason)
         case .failedToStart:
-            return .failedToStart
+            return .failedToStart(openURL: application.open)
         case .onboarding:
             let completedOnboardingForCurrentSession = self.completedOnboardingForCurrentSession
             return .onboarding(
@@ -344,7 +359,19 @@ public class ApplicationCoordinator {
                     storeLocalAuthorities: localAuthorityManager.store,
                     isolationPaymentState: isolationPaymentContext.isolationPaymentState,
                     currentLocaleConfiguration: languageStore.$configuration.domainProperty(),
-                    storeNewLanguage: languageStore.save
+                    storeNewLanguage: languageStore.save,
+                    shouldShowDailyContactTestingInformFeature: { [weak self] in
+                        guard let self = self else { return false }
+                        return self.isFeatureEnabled(.dailyContactTesting) && self.isFeatureEnabled(.offerDCTOnExposureNotification)
+                    },
+                    dailyContactTestingEarlyTerminationSupport: { [weak self] in
+                        guard let self = self else { return .disabled }
+                        guard self.isFeatureEnabled(.dailyContactTesting) else {
+                            return .disabled
+                        }
+                        return self.isolationContext.dailyContactTestingEarlyTerminationSupport
+                        
+                    }
                 )
             )
         case .recommendingUpdate(let reason, let titles, let descriptions):

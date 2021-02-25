@@ -99,7 +99,7 @@ public struct IsolatingIndicator: View {
         .accessibilityElement(children: .ignore)
         .accessibility(label: Text(accessibilityLabel))
         .accessibility(addTraits: .isStaticText)
-        .environment(\.locale, Locale(identifier: currentLanguageCode()))
+        .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }
     
     private var accessibilityLabel: String {

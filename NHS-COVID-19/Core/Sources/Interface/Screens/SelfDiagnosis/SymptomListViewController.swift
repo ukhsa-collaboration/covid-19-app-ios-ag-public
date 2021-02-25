@@ -22,7 +22,7 @@ public class SymptomListViewController: UIViewController {
     private let symptoms: [SymptomInfo]
     private let symptomIndex: Int?
     
-    public init(_ symptoms: [SymptomInfo], symptomIndex: Int?, interactor: Interacting) {
+    public init(symptoms: [SymptomInfo], symptomIndex: Int?, interactor: Interacting) {
         self.symptoms = symptoms
         self.interactor = interactor
         self.symptomIndex = symptomIndex

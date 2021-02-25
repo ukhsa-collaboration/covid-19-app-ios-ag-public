@@ -26,7 +26,7 @@ class CircuitBreakerTests: XCTestCase {
             
             var handleContactCase: (RiskInfo) -> Void = { _ in }
             var handleDontWorryNotification: () -> Void = {}
-            var interestedInExposureNotifications: () -> Bool = { true }
+            var exposureNotificationProcessingBehaviour: () -> ExposureNotificationProcessingBehaviour = { .allExposures }
         }
         
         let circuitBreaker: CircuitBreaker
@@ -38,7 +38,7 @@ class CircuitBreakerTests: XCTestCase {
                 riskyCheckinsProvider: configuration.checkInsStore,
                 handleContactCase: configuration.handleContactCase,
                 handleDontWorryNotification: configuration.handleDontWorryNotification,
-                interestedInExposureNotifications: configuration.interestedInExposureNotifications
+                exposureNotificationProcessingBehaviour: configuration.exposureNotificationProcessingBehaviour
             )
         }
     }
@@ -68,7 +68,7 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testApprovalEndpointNotCalledAndRiskClearedIfNotInterestedInEN() throws {
-        $instance.interestedInExposureNotifications = { false }
+        $instance.exposureNotificationProcessingBehaviour = { .doNotProcessExposures }
         store.save(riskInfo: RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5)))
         try processPendingApprovals()
         XCTAssertNil(client.approvalType)
@@ -76,7 +76,7 @@ class CircuitBreakerTests: XCTestCase {
     }
     
     func testApprovalEndpointShowsDontWorryAlertIfAskedToWhenDroppingRisks() throws {
-        $instance.interestedInExposureNotifications = { false }
+        $instance.exposureNotificationProcessingBehaviour = { .doNotProcessExposures }
         store.save(riskInfo: RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5)))
         
         var handledDontWorryNotification = false

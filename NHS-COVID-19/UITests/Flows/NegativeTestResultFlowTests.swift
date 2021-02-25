@@ -22,6 +22,7 @@ class NegativeTestResultFlowTests: XCTestCase {
         $runner.initialState.localAuthorityId = "E09000022"
         $runner.initialState.testResult = "negative"
         $runner.initialState.requiresConfirmatoryTest = false
+        try? $runner.initialState.set(testResultEndDate: Date())
     }
     
     func testWithoutIsolation() throws {

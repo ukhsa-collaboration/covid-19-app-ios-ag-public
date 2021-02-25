@@ -9,18 +9,16 @@ import UIKit
 
 public protocol SymptomsReviewInteracting {
     func changeSymptomAnswer(index: Int)
-    func confirmSymptoms(selectedDay: GregorianDay?, hasCheckedNoDate: Bool) -> Result<Void, UIValidationError>
+    func confirmSymptoms(riskThreshold: Double, selectedDay: GregorianDay?, hasCheckedNoDate: Bool) -> Result<Void, UIValidationError>
 }
 
 public class SymptomsReviewViewController: UIViewController {
     public typealias Interacting = SymptomsReviewInteracting
-    private let symptoms: [SymptomInfo]
-    private let dateSelectionWindow: Int
+    private let symptomsQuestionnaire: InterfaceSymptomsQuestionnaire
     private let interactor: Interacting
     
-    public init(_ symptoms: [SymptomInfo], dateSelectionWindow: Int, interactor: Interacting) {
-        self.symptoms = symptoms
-        self.dateSelectionWindow = dateSelectionWindow
+    public init(symptomsQuestionnaire: InterfaceSymptomsQuestionnaire, interactor: Interacting) {
+        self.symptomsQuestionnaire = symptomsQuestionnaire
         self.interactor = interactor
         super.init(nibName: nil, bundle: nil)
         title = localize(.symptom_review_title)
@@ -147,7 +145,7 @@ public class SymptomsReviewViewController: UIViewController {
     let noDateChecked = UIImageView(image: UIImage(systemName: "checkmark.square.fill"))
     let toolbar = UIToolbar()
     
-    lazy var earliestOnsetDate = GregorianDay.today - DayDuration(dateSelectionWindow - 1)
+    lazy var earliestOnsetDate = GregorianDay.today - DayDuration(symptomsQuestionnaire.dateSelectionWindow - 1)
     
     func getDay(for row: Int) -> (GregorianDay, String) {
         let rowDate = earliestOnsetDate + DayDuration(row)
@@ -184,7 +182,7 @@ public class SymptomsReviewViewController: UIViewController {
         var confirmedSymptoms = [UIView]()
         var deniedSymptoms = [UIView]()
         
-        for (index, symptom) in symptoms.enumerated() {
+        for (index, symptom) in symptomsQuestionnaire.symptoms.enumerated() {
             let symptomLabel = BaseLabel().styleAsBoldBody().set(text: symptom.heading)
             
             let symptomButton = UIButton()
@@ -272,7 +270,7 @@ public class SymptomsReviewViewController: UIViewController {
         textField.becomeFirstResponder()
         
         if selectedDay == nil {
-            let row = dateSelectionWindow - 1
+            let row = symptomsQuestionnaire.dateSelectionWindow - 1
             let (rowDate, rowString) = getDay(for: row)
             selectedDay = rowDate
             textField.text = rowString
@@ -309,7 +307,7 @@ public class SymptomsReviewViewController: UIViewController {
     }
     
     @objc func confirmSymptoms() {
-        switch interactor.confirmSymptoms(selectedDay: selectedDay, hasCheckedNoDate: noDateUnchecked.isHidden) {
+        switch interactor.confirmSymptoms(riskThreshold: symptomsQuestionnaire.riskThreshold, selectedDay: selectedDay, hasCheckedNoDate: noDateUnchecked.isHidden) {
         case .success(()):
             break
         case .failure:
@@ -333,7 +331,7 @@ extension SymptomsReviewViewController: UIPickerViewDelegate {
     }
     
     public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        dateSelectionWindow
+        symptomsQuestionnaire.dateSelectionWindow
     }
     
     public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {

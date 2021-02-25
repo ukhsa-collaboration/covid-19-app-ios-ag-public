@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -142,6 +142,8 @@ extension RiskyPostcodes {
         }
         
         public var colorScheme: ColorScheme
+        #warning("Make non-optional after the backend is deployed")
+        public var colorSchemeV2: String?
         public var name: LocaleString
         public var heading: LocaleString
         public var content: LocaleString

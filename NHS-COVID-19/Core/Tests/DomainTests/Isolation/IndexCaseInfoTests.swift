@@ -7,7 +7,6 @@ import XCTest
 @testable import Domain
 
 class IndexCaseInfoTests: XCTestCase {
-
     func testAssumedOnsetDayReturnsOnsetDayWhenPresent() {
         let onsetDay = GregorianDay(dateComponents: DateComponents(year: 2020, month: 7, day: 7))
         let selfDiagnosisDay = GregorianDay(dateComponents: DateComponents(year: 2020, month: 7, day: 7))
@@ -18,7 +17,8 @@ class IndexCaseInfoTests: XCTestCase {
             testInfo: nil
         )
         
-        XCTAssertEqual(info.assumedOnsetDay, onsetDay)
+        XCTAssertEqual(info.assumedOnsetDayForSelfDiagnosis, onsetDay)
+        XCTAssertEqual(info.assumedOnsetDayForExposureKeys, onsetDay)
     }
     
     func testAssumedOnsetDayReturnsTwoDaysBeforeSelfDiagnosisDayWhenOnsetDayNotPresent() {
@@ -31,7 +31,8 @@ class IndexCaseInfoTests: XCTestCase {
         )
         
         let expectedOnsetDay = selfDiagnosisDay.advanced(by: -2)
-        XCTAssertEqual(info.assumedOnsetDay, expectedOnsetDay)
+        XCTAssertEqual(info.assumedOnsetDayForSelfDiagnosis, expectedOnsetDay)
+        XCTAssertEqual(info.assumedOnsetDayForExposureKeys, expectedOnsetDay)
     }
     
     func testAssumedOnsetDayReturnsThreeDaysBeforeTestResultDayWhenOnsetDayNotPresent() {
@@ -44,7 +45,7 @@ class IndexCaseInfoTests: XCTestCase {
         )
         
         let expectedOnsetDay = manualTestEntryDay.advanced(by: -3)
-        XCTAssertEqual(info.assumedOnsetDay, expectedOnsetDay)
+        XCTAssertNil(info.assumedOnsetDayForSelfDiagnosis)
+        XCTAssertEqual(info.assumedOnsetDayForExposureKeys, expectedOnsetDay)
     }
-    
 }

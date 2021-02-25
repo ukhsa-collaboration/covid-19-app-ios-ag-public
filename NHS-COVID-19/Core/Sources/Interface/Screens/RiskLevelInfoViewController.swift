@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -51,6 +51,18 @@ extension RiskLevelInfoViewController.Policy {
         case "travelling": return ImageName.riskLevelTravellingIcon
         case "exercise": return ImageName.riskLevelExerciseIcon
         case "weddings-and-funerals": return ImageName.riskLevelWeddingsAndFuneralsIcon
+        case "businesses": return ImageName.riskLevelBusinessesIcon
+        case "retail": return ImageName.riskLevelRetailIcon
+        case "entertainment": return ImageName.riskLevelEntertainmentIcon
+        case "personal-care": return ImageName.riskLevelPersonalCareIcon
+        case "large-events": return ImageName.riskLevelLargeEventsIcon
+        case "clinically-extremely-vulnerable": return ImageName.riskLevelClinicallyExtremelyVulnerableIcon
+        case "social-distancing": return ImageName.riskLevelSocialDistancingIcon
+        case "face-coverings": return ImageName.riskLevelFaceCoveringsIcon
+        case "meeting-outdoors": return ImageName.riskLevelMeetingOutdoorsIcon
+        case "meeting-indoors": return ImageName.riskLevelMeetingIndoorsIcon
+        case "work": return ImageName.riskLevelWorkIcon
+        case "international-travel": return ImageName.riskLevelInternationalTravelIcon
         default: return ImageName.riskLevelDefaultIcon
         }
     }

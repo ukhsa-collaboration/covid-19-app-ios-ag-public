@@ -7,7 +7,7 @@ import Interface
 import UIKit
 
 public class StartOnboardingScreenScenario: Scenario {
-    public static let name = "On-boarding - Welcome"
+    public static let name = "Onboarding - Welcome"
     public static let kind = ScenarioKind.screen
     public static let continueConfirmationAlertTitle = "Age confirmation tapped"
     public static let rejectAlertTitle = "Age rejection tapped"

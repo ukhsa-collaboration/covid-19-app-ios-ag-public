@@ -7,7 +7,7 @@ import Interface
 import UIKit
 
 public class EnterPostcodeScreenScenario: Scenario {
-    public static let name = "On-boarding - Postcode district"
+    public static let name = "Onboarding - Postcode district"
     public static let kind = ScenarioKind.screen
     
     public enum Postcodes: String {
