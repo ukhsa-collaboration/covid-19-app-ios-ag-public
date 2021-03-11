@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -34,6 +34,16 @@ class DynamicRiskLevelScreenTests: XCTestCase {
             XCTAssert(screen.linktoWebsiteAlertTitle.exists)
         }
     }
+    
+    func testTapFindTestCenterLink() throws {
+        try runner.run { app in
+            let screen = RiskLevelHighInfoScreen(app: app)
+            
+            app.scrollTo(element: screen.linkFindTestCenter)
+            screen.linkFindTestCenter.tap()
+            XCTAssert(screen.linkFindTestCenterAlertTitle.exists)
+        }
+    }
 }
 
 private extension RiskLevelHighInfoScreen {
@@ -43,6 +53,14 @@ private extension RiskLevelHighInfoScreen {
     
     var linkToWebsiteLinkButton: XCUIElement {
         app.links[verbatim: DynamicRiskLevelScreenScenario.linkTitle]
+    }
+    
+    var linkFindTestCenterAlertTitle: XCUIElement {
+        app.staticTexts[DynamicRiskLevelScreenScenario.linkFindTestCenterTapped]
+    }
+    
+    var linkFindTestCenter: XCUIElement {
+        app.links[verbatim: DynamicRiskLevelScreenScenario.findTestCenterLinkTitle]
     }
     
     var heading: [XCUIElement] {

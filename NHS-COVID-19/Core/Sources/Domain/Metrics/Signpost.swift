@@ -50,6 +50,10 @@ public enum Metric: String, CaseIterable {
     case receivedVoidLFDTestResultEnteredManually
     case receivedUnconfirmedPositiveTestResult
     
+    case receivedPositiveSelfRapidTestResultEnteredManually
+    case isIsolatingForTestedSelfRapidPositiveBackgroundTick
+    case hasTestedSelfRapidPositiveBackgroundTick
+    
     case acknowledgedStartOfIsolationDueToRiskyContact
     case hasRiskyContactNotificationsEnabledBackgroundTick
     case totalRiskyContactReminderNotifications
@@ -60,6 +64,10 @@ public enum Metric: String, CaseIterable {
     case didHaveSymptomsBeforeReceivedTestResult
     case didRememberOnsetSymptomsDateBeforeReceivedTestResult
     case declaredNegativeResultFromDCT
+    
+    case receivedRiskyVenueM1Warning
+    case receivedRiskyVenueM2Warning
+    case hasReceivedRiskyVenueM2WarningBackgroundTick
 }
 
 public enum Metrics {
@@ -98,7 +106,7 @@ public enum Metrics {
         Self.signpostReceived(testResult, requiresConfirmatoryTest: requiresConfirmatoryTest)
         
         switch testKitType {
-        case .rapidResult, .rapidSelfReported:
+        case .rapidResult:
             switch testResult {
             case .positive:
                 signpost(.receivedPositiveLFDTestResultEnteredManually)
@@ -106,6 +114,13 @@ public enum Metrics {
                 signpost(.receivedNegativeLFDTestResultEnteredManually)
             case .void:
                 signpost(.receivedVoidLFDTestResultEnteredManually)
+            }
+        case .rapidSelfReported:
+            switch testResult {
+            case .positive:
+                signpost(.receivedPositiveSelfRapidTestResultEnteredManually)
+            case .negative, .void:
+                break
             }
         case .labResult:
             switch testResult {
@@ -138,7 +153,7 @@ public enum Metrics {
             case .void:
                 signpost(.receivedVoidTestResultViaPolling)
             }
-        case .rapidResult, .rapidSelfReported:
+        case .rapidResult:
             switch testResult {
             case .positive:
                 signpost(.receivedPositiveLFDTestResultViaPolling)
@@ -147,7 +162,8 @@ public enum Metrics {
             case .void:
                 signpost(.receivedVoidLFDTestResultViaPolling)
             }
-            
+        case .rapidSelfReported:
+            break
         }
         
     }

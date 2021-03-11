@@ -29,7 +29,7 @@ class URLSessionTests: XCTestCase {
         XCTAssertEqual(configuration.httpCookieAcceptPolicy, .never)
         XCTAssertFalse(configuration.httpShouldSetCookies)
         XCTAssertNil(configuration.httpCookieStorage)
-        XCTAssertNil(configuration.urlCache)
+        XCTAssertEqual(configuration.requestCachePolicy, .reloadRevalidatingCacheData)
     }
     
     func test_trust_validtor_is_used_to_configure_delegate() throws {

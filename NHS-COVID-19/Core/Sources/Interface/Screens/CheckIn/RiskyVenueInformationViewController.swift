@@ -1,12 +1,12 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
 import UIKit
 
 public protocol RiskyVenueInformationViewControllerInteracting {
-    func goHome()
+    func goHomeTapped()
 }
 
 extension RiskyVenueInformationViewController {
@@ -14,7 +14,8 @@ extension RiskyVenueInformationViewController {
         var venueName: String
         var checkInDate: Date
         
-        public init(venueName: String, checkInDate: Date) {
+        public init(venueName: String,
+                    checkInDate: Date) {
             self.venueName = venueName
             self.checkInDate = checkInDate
         }
@@ -39,7 +40,7 @@ extension RiskyVenueInformationViewController {
                 scrollingViews: scrollingViews,
                 primaryButton: (
                     title: localize(.checkin_risky_venue_information_button_title),
-                    action: interactor.goHome
+                    action: interactor.goHomeTapped
                 )
             )
         }

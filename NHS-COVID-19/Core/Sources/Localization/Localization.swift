@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -161,6 +161,9 @@ func localizeURL(_ key: StringLocalizationKey) -> URL {
     }
     
     let localizedString = NSLocalizedString(rawValue, tableName: nil, bundle: Localization.current.bundle, value: "", comment: "")
+    
+    guard localizedString != rawValue else { return URL(string: localize(key))! }
+    
     return URL(string: localizedString) ?? URL(string: localize(key))!
 }
 

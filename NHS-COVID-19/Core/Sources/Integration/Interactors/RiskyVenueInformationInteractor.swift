@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -7,13 +7,14 @@ import Interface
 import UIKit
 
 struct RiskyVenueInformationInteractor: RiskyVenueInformationViewController.Interacting {
-    private var _goHome: () -> Void
     
-    init(goHome: @escaping () -> Void) {
-        _goHome = goHome
+    private var _goHomeTapped: () -> Void
+    
+    init(goHomeTapped: @escaping () -> Void) {
+        _goHomeTapped = goHomeTapped
     }
     
-    func goHome() {
-        _goHome()
+    func goHomeTapped() {
+        _goHomeTapped()
     }
 }

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -25,10 +25,20 @@ struct LinkVirologyTestResultEndpoint: HTTPEndpoint {
         let payload = try decoder.decode(ResponseBody.self, from: response.body.content)
         
         if payload.requiresConfirmatoryTest && payload.diagnosisKeySubmissionSupported {
+            Metrics.signpostReceivedFromManual(
+                testResult: VirologyTestResult.TestResult(payload.testResult),
+                testKitType: VirologyTestResult.TestKitType(payload.testKit),
+                requiresConfirmatoryTest: payload.requiresConfirmatoryTest
+            )
             throw VirologyTestResultResponseError.unconfirmedKeySharingNotSupported
         }
         
         if payload.requiresConfirmatoryTest && payload.testResult != .positive {
+            Metrics.signpostReceivedFromManual(
+                testResult: VirologyTestResult.TestResult(payload.testResult),
+                testKitType: VirologyTestResult.TestKitType(payload.testKit),
+                requiresConfirmatoryTest: payload.requiresConfirmatoryTest
+            )
             throw VirologyTestResultResponseError.unconfirmedNonPostiveNotSupported
         }
         

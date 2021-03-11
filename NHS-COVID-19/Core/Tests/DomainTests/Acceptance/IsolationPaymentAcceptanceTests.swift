@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -58,6 +58,90 @@ class IsolationPaymentAcceptanceTests: AcceptanceTestCase {
         }
     }
     
+    func testIsolationPaymentStateIsClearedAfterDeletingAllData() throws {
+        apiClient.response(for: "/isolation-payment/ipc-token/create", response: .success(.ok(with: .json("""
+        {
+            "ipcToken": "\(UUID().uuidString)",
+            "isEnabled": true
+        }
+        """))))
+        
+        let currentState = try context().isolationPaymentState
+        guard case .disabled = currentState.currentValue else {
+            throw TestError("Unexpected state \(currentState.currentValue)")
+        }
+        
+        // Mock a Risky Contact and call Background Task
+        riskyContact.trigger(exposureDate: currentDateProvider.currentDate) {
+            self.coordinator.performBackgroundTask(task: NoOpBackgroundTask())
+        }
+        
+        // Assert that now we have enabled state
+        guard case .enabled = currentState.currentValue else {
+            throw TestError("Unexpected state \(currentState)")
+        }
+        
+        XCTAssert($instance.encryptedStore.dataEncryptor("isolation_payment_store").hasValue)
+        
+        // Delete all data
+        try context().deleteAllData()
+        
+        XCTAssertFalse($instance.encryptedStore.dataEncryptor("isolation_payment_store").hasValue)
+        
+    }
+    
+    func testIsolationPaymentIsReEvaluatedOnNewIsolationAfterDeletingAllData() throws {
+        apiClient.response(for: "/isolation-payment/ipc-token/create", response: .success(.ok(with: .json("""
+        {
+            "ipcToken": "\(UUID().uuidString)",
+            "isEnabled": true
+        }
+        """))))
+        
+        var currentState = try context().isolationPaymentState
+        guard case .disabled = currentState.currentValue else {
+            throw TestError("Unexpected state \(currentState.currentValue)")
+        }
+        
+        // Mock a Risky Contact and call Background Task
+        riskyContact.trigger(exposureDate: currentDateProvider.currentDate) {
+            self.coordinator.performBackgroundTask(task: NoOpBackgroundTask())
+        }
+        
+        // Assert that now we have enabled state
+        guard case .enabled = currentState.currentValue else {
+            throw TestError("Unexpected state \(currentState)")
+        }
+        
+        // Delete all data
+        try context().deleteAllData()
+        
+        // Complete onboarding again
+        try completeReOnboarding()
+        
+        // get the new state. It _could_ have changed during de/re-onboarding.
+        currentState = try context().isolationPaymentState
+        guard case .noNeedToIsolate = try context().isolationState.currentValue else {
+            throw TestError("Expected not to be isolating")
+        }
+        
+        apiClient.response(for: "/isolation-payment/ipc-token/create", response: .success(.ok(with: .json("""
+        {
+            "isEnabled": false
+        }
+        """))))
+        
+        // Mock a Risky Contact and call Background Task
+        riskyContact.trigger(exposureDate: currentDateProvider.currentDate) {
+            self.coordinator.performBackgroundTask(task: NoOpBackgroundTask())
+        }
+        
+        guard case .disabled = try context().isolationPaymentState.currentValue else {
+            throw TestError("Unexpected state \(currentState.currentValue)")
+        }
+        
+    }
+    
     func testIsolationPaymentStateWithNoAPIResponse() throws {
         let currentState = try context().isolationPaymentState
         guard case .disabled = currentState.currentValue else {
@@ -75,4 +159,3 @@ class IsolationPaymentAcceptanceTests: AcceptanceTestCase {
         }
     }
 }
-

@@ -29,7 +29,6 @@ enum LogicalState: Equatable {
 public struct RunningAppContext {
     public var checkInContext: CheckInContext?
     public var postcodeInfo: DomainProperty<(postcode: Postcode, localAuthority: LocalAuthority?, risk: DomainProperty<RiskyPostcodeEndpointManager.PostcodeRisk?>)?>
-    public var savePostcode: ((String) -> Result<Void, PostcodeValidationError>)?
     public var country: DomainProperty<Country>
     public var openSettings: () -> Void
     public var openURL: (URL) -> Void
@@ -47,8 +46,8 @@ public struct RunningAppContext {
     public var currentDateProvider: DateProviding
     public var exposureNotificationReminder: ExposureNotificationReminder
     public var appReviewPresenter: AppReviewPresenting
-    public var getLocalAuthorities: GetLocalAuthorities?
-    public var storeLocalAuthorities: StoreLocalAuthorities?
+    public var getLocalAuthorities: GetLocalAuthorities
+    public var storeLocalAuthorities: StoreLocalAuthorities
     public var isolationPaymentState: DomainProperty<IsolationPaymentState>
     public var currentLocaleConfiguration: DomainProperty<LocaleConfiguration>
     public var storeNewLanguage: (_ localeConfiguration: LocaleConfiguration) -> Void

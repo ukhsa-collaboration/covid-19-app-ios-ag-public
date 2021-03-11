@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -30,7 +30,8 @@ extension HomeScreenScenario {
                 linkTitle: "Restrictions in your area",
                 linkURL: nil,
                 footer: [],
-                policies: []
+                policies: [],
+                shouldShowMassTestingLink: .constant(true)
             )
         } else {
             return nil

@@ -177,11 +177,12 @@ public class LinkTestResultViewController: UIViewController {
     private func dailyContactInfoStackView(checkBox: UIHostingController<CheckBox>) -> UIStackView {
         let title = BaseLabel().set(text: localize(.link_test_result_enter_code_daily_contact_testing_heading)).styleAsHeading()
         let paragraph = BaseLabel().set(text: localize(.link_test_result_enter_code_daily_contact_testing_paragraph)).styleAsBody()
+        let bulletedListTitle = BaseLabel().set(text: localize(.link_test_result_enter_code_daily_contact_testing_bulleted_list_title)).styleAsBody()
         let bulletedList = BulletedList(
             rows: localizeAndSplit(.link_test_result_enter_code_daily_contact_testing_bulleted_list)
         )
         
-        let stack = UIStackView(arrangedSubviews: [title, paragraph, bulletedList, checkBox.view])
+        let stack = UIStackView(arrangedSubviews: [title, paragraph, bulletedListTitle, bulletedList, checkBox.view])
         
         stack.axis = .vertical
         stack.alignment = .fill

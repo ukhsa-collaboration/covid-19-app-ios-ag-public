@@ -202,6 +202,10 @@ struct SubmissionPayload: Decodable {
         var didAskForSymptomsOnPositiveTestEntry: MetricField = 0
         var didHaveSymptomsBeforeReceivedTestResult: MetricField = 0
         var didRememberOnsetSymptomsDateBeforeReceivedTestResult: MetricField = 0
+        
+        var receivedPositiveSelfRapidTestResultEnteredManually: MetricField = 0
+        var isIsolatingForTestedSelfRapidPositiveBackgroundTick: MetricField = 0
+        var hasTestedSelfRapidPositiveBackgroundTick: MetricField = 0
     }
     
     var includesMultipleApplicationVersions: Bool

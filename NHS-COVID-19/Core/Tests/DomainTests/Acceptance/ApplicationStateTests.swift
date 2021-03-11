@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -320,5 +320,126 @@ class ApplicationStateTests: AcceptanceTestCase {
         guard case .neededForNegativeResultContinueToIsolate = testResultAcknowledgementState else {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
+    }
+    
+    func testRiskyPostcodesInvalidatedOnDeleteAllData() throws {
+        let mockDataProvider = MockDataProvider()
+        mockDataProvider.yellowPostcodes = "B44"
+        
+        let handler = RiskyPostDistrictsHandler(dataProvider: mockDataProvider)
+        distributeClient.response(
+            for: "/distribution/risky-post-districts-v2",
+            response: handler.response
+        )
+        
+        // Complete onboarding
+        try completeRunning()
+        
+        let riskColorBeforeRefresh = try context().postcodeInfo.currentValue?.risk.currentValue?.style.colorScheme
+        
+        XCTAssertEqual(riskColorBeforeRefresh, .yellow, "Postcode B44 not considered 'yellow' risk when it should be")
+        
+        // change the data on the 'server.'
+        // B44 is now going into a red tier
+        mockDataProvider.yellowPostcodes = ""
+        mockDataProvider.redPostcodes = "B44"
+        distributeClient.response(
+            for: "/distribution/risky-post-districts-v2",
+            response: handler.response
+        )
+        
+        // Delete all data and complete re-onboarding.
+        // Should trigger a re-download of the risky post districts.
+        try context().deleteAllData()
+        try completeReOnboarding()
+        
+        let riskColorAfterRefresh = try context().postcodeInfo.currentValue?.risk.currentValue?.style.colorScheme
+        
+        XCTAssertEqual(riskColorAfterRefresh, .red, "Postcode B44 should be considered 'red' risk. Maybe it was not reloaded properly?")
+        
+    }
+    
+    func testRiskyPostcodesInvalidatedOnChangePostcode() throws {
+        
+        let mockDataProvider = MockDataProvider()
+        mockDataProvider.yellowPostcodes = "B44"
+        
+        let handler = RiskyPostDistrictsHandler(dataProvider: mockDataProvider)
+        distributeClient.response(
+            for: "/distribution/risky-post-districts-v2",
+            response: handler.response
+        )
+        
+        // Complete onboarding
+        try completeRunning()
+        
+        let riskColorBeforeRefresh = try context().postcodeInfo.currentValue?.risk.currentValue?.style.colorScheme
+        
+        XCTAssertEqual(riskColorBeforeRefresh, .yellow)
+        
+        // change the data on the 'server.'
+        // B44 is now going into a red tier
+        mockDataProvider.yellowPostcodes = ""
+        mockDataProvider.redPostcodes = "B44"
+        distributeClient.response(
+            for: "/distribution/risky-post-districts-v2",
+            response: handler.response
+        )
+        
+        // 'Change' the local authority. Even though we're
+        // setting it to the same value, setting the local authority
+        // should trigger a re-download of the risky post districts.
+        let newLocalAuthority = try context().getLocalAuthorities(Postcode("B44")).get().first!
+        try _ = context().storeLocalAuthorities(Postcode("B44"), newLocalAuthority)
+        
+        let riskColorAfterRefresh = try context().postcodeInfo.currentValue?.risk.currentValue?.style.colorScheme
+        
+        XCTAssertEqual(riskColorAfterRefresh, .red, "Postcode B44 should be considered 'red' risk. Maybe it was not reloaded properly?")
+        
+    }
+    
+    func testRiskyPostcodesManagerRateLimitsDownloads() throws {
+        
+        let mockDataProvider = MockDataProvider()
+        mockDataProvider.yellowPostcodes = "B44"
+        
+        let handler = RiskyPostDistrictsHandler(dataProvider: mockDataProvider)
+        distributeClient.response(
+            for: "/distribution/risky-post-districts-v2",
+            response: handler.response
+        )
+
+        // Complete onboarding
+        try completeRunning()
+
+        let riskColorBeforeRefresh = try context().postcodeInfo.currentValue?.risk.currentValue?.style.colorScheme
+        XCTAssertEqual(riskColorBeforeRefresh, .yellow)
+        
+        // update the mock date provider
+        mockDataProvider.yellowPostcodes = ""
+        mockDataProvider.redPostcodes = "B44"
+
+        // update the client
+        distributeClient.response(
+            for: "/distribution/risky-post-districts-v2",
+            response: RiskyPostDistrictsHandler(dataProvider: mockDataProvider).response
+        )
+                
+        // trigger an update
+        NotificationCenter.default.post(name: UIApplication.willEnterForegroundNotification, object: nil)
+        
+        // confirm that we didn't fetch the new content as it's been too soon since the last call
+        let riskColorAfterRefresh = try context().postcodeInfo.currentValue?.risk.currentValue?.style.colorScheme
+        XCTAssertEqual(riskColorAfterRefresh, .yellow)
+        
+        // advance the clock 11 minutes
+        currentDateProvider.setDate(currentDateProvider.currentDate.addingTimeInterval(11 * 60))
+        
+        // trigger an update
+        NotificationCenter.default.post(name: UIApplication.willEnterForegroundNotification, object: nil)
+        
+        // this time confirm it's been updated
+        let riskColorAfterRefresh2 = try context().postcodeInfo.currentValue?.risk.currentValue?.style.colorScheme
+        XCTAssertEqual(riskColorAfterRefresh2, .red)
     }
 }

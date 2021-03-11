@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -114,10 +114,35 @@ class MockDataProvider: ObservableObject {
         }
     }
     
-    @UserDefault("mocks.riskyVenueIDs", defaultValue: "")
-    var riskyVenueIDs: String {
+    @UserDefault("mocks.riskyVenueIDsWarnAndInform", defaultValue: "")
+    var riskyVenueIDsWarnAndInform: String {
         didSet {
             _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.riskyVenueIDsWarnAndBookTest", defaultValue: "")
+    var riskyVenueIDsWarnAndBookTest: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.optionToBookATest", defaultValue: 11)
+    var optionToBookATest: Int {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    var optionToBookATestString: String {
+        get {
+            String(optionToBookATest)
+        }
+        set {
+            if let value = Int(newValue) {
+                optionToBookATest = value
+            }
         }
     }
     

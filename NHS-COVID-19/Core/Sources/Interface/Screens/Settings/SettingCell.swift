@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -55,6 +55,41 @@ extension SettingsViewController {
             let dequeued = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as? LanguageCell ?? LanguageCell()
             dequeued.accessoryType = .disclosureIndicator
             return dequeued.setting(language: language)
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+    }
+    
+    class TextCell: UITableViewCell {
+        static let reuseIdentifier = String(describing: TextCell.self)
+        let titleLabel: UILabel
+        let subtitleLabel: UILabel
+        
+        override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+            titleLabel = BaseLabel().styleAsBody()
+            subtitleLabel = BaseLabel().styleAsSecondaryBody()
+            super.init(style: style, reuseIdentifier: reuseIdentifier)
+            backgroundColor = UIColor(.surface)
+            
+            contentView.addAutolayoutSubview(titleLabel)
+            contentView.addAutolayoutSubview(subtitleLabel)
+            
+            let stackView = UIStackView.vertical(with: [titleLabel, subtitleLabel])
+            contentView.addCellContentSubview(stackView)
+        }
+        
+        private func setting(title: String, subtitle: String) -> TextCell {
+            titleLabel.set(text: title)
+            subtitleLabel.set(text: subtitle)
+            return self
+        }
+        
+        static func create(tableView: UITableView, title: String, subtitle: String) -> TextCell {
+            let dequeuedCell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as? TextCell ?? TextCell()
+            dequeuedCell.accessoryType = .disclosureIndicator
+            return dequeuedCell.setting(title: title, subtitle: subtitle)
         }
         
         required init?(coder: NSCoder) {

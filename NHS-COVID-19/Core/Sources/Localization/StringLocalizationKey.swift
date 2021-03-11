@@ -334,6 +334,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case mydata_section_exposure_notification_description
     case mydata_section_daily_testing_description
     case mydata_section_self_isolation_end_date_description
+    case mydata_section_venue_of_risk
     case mydata_exposure_notification_details_exposure_date_description
     case mydata_exposure_notification_details_notification_date_description
     case mydata_daily_testing_opt_in_date_description
@@ -380,6 +381,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case link_daily_contact_testing
     case link_visit_uk_gov
     case link_cant_run_this_app_faq
+    case link_find_test_center
     
     case cancel
     case back
@@ -417,6 +419,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case link_test_result_enter_code_daily_contact_testing_heading
     case link_test_result_enter_code_daily_contact_testing_paragraph
     case link_test_result_enter_code_daily_contact_testing_bulleted_list
+    case link_test_result_enter_code_daily_contact_testing_bulleted_list_title
     case link_test_result_enter_code_daily_contact_testing_checkbox
     case link_test_result_enter_code_daily_contact_testing_top_erorr_box_heading
     case link_test_result_enter_code_daily_contact_testing_top_erorr_box_text_both_entered
@@ -521,6 +524,19 @@ public enum StringLocalizationKey: String, CaseIterable {
     case test_symptoms_date_heading
     case test_symptoms_date_continue
     case test_check_symptoms_points
+    
+    case settings_row_manage_my_data_title
+    case settings_row_manage_my_data_subtitle
+    
+    case risk_level_mass_testing_title
+    case risk_level_mass_testing_description
+    case risk_level_mass_testing_link_title
+    
+    case checkin_risky_venue_information_warn_and_book_a_test_close_button
+    case checkin_risky_venue_information_warn_and_book_a_test_title
+    case checkin_risky_venue_information_warn_and_book_a_test_description
+    case checkin_risky_venue_information_book_a_test_button_title
+    case checkin_risky_venue_information_will_book_a_test_later_button_title
 }
 
 public enum ParameterisedStringLocalizable: Equatable {

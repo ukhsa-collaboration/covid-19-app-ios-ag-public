@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -33,7 +33,9 @@ struct ConfigureMocksView: View {
                     TextFieldRow(label: "Neutral Risk", text: $dataProvider.neutralLocalAuthorities)
                 }
                 Section(header: Text(verbatim: "Check In")) {
-                    TextFieldRow(label: "High Risk Venue IDs", text: $dataProvider.riskyVenueIDs)
+                    TextFieldRow(label: "Risky Venue IDs (warn and inform)", text: $dataProvider.riskyVenueIDsWarnAndInform)
+                    TextFieldRow(label: "Risky Venue IDs (warn and book a test)", text: $dataProvider.riskyVenueIDsWarnAndBookTest)
+                    TextFieldRow(label: "Option to book a test (in days)", text: $dataProvider.optionToBookATestString)
                 }
                 Section(header: Text(verbatim: "Virology testing")) {
                     Picker(selection: $dataProvider.testKitType, label: Text("Test kit type")) {

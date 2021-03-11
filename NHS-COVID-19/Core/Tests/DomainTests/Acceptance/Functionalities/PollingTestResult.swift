@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -21,8 +21,8 @@ struct PollingTestResult {
         self.context = context
     }
     
-    func receivePositiveAndAcknowledge(runBackgroundTasks: @escaping () -> Void) throws {
-        let testResultAcknowledgementState = try receiveResultAndGetAcknowledgementState(resultType: .positive, testKitType: .labResult, diagnosisKeySubmissionSupported: true, requiresConfirmatoryTest: false, runBackgroundTasks: runBackgroundTasks)
+    func receivePositiveAndAcknowledge(testKitType: VirologyTestResult.TestKitType = .labResult, runBackgroundTasks: @escaping () -> Void) throws {
+        let testResultAcknowledgementState = try receiveResultAndGetAcknowledgementState(resultType: .positive, testKitType: testKitType, diagnosisKeySubmissionSupported: true, requiresConfirmatoryTest: false, runBackgroundTasks: runBackgroundTasks)
         guard case .neededForPositiveResultContinueToIsolate(let positiveAcknowledgement, _, _, _) = testResultAcknowledgementState else {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }

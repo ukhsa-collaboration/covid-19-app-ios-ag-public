@@ -124,6 +124,10 @@ private struct SubmissionPayload: Codable {
         var receivedVoidLFDTestResultEnteredManually = 0
         var receivedUnconfirmedPositiveTestResult = 0
         
+        var receivedPositiveSelfRapidTestResultEnteredManually = 0
+        var isIsolatingForTestedSelfRapidPositiveBackgroundTick = 0
+        var hasTestedSelfRapidPositiveBackgroundTick = 0
+        
         var hasTestedLFDPositiveBackgroundTick = 0
         var isIsolatingForTestedLFDPositiveBackgroundTick = 0
         
@@ -134,6 +138,11 @@ private struct SubmissionPayload: Codable {
         var didRememberOnsetSymptomsDateBeforeReceivedTestResult = 0
         
         var declaredNegativeResultFromDCT = 0
+        
+        // Warn & Inform/Book a Test
+        var receivedRiskyVenueM1Warning = 0
+        var receivedRiskyVenueM2Warning = 0
+        var hasReceivedRiskyVenueM2WarningBackgroundTick = 0
     }
     
     var includesMultipleApplicationVersions: Bool
@@ -238,6 +247,18 @@ private extension Metric {
         case .didHaveSymptomsBeforeReceivedTestResult: return \.didHaveSymptomsBeforeReceivedTestResult
         case .didRememberOnsetSymptomsDateBeforeReceivedTestResult: return \.didRememberOnsetSymptomsDateBeforeReceivedTestResult
         case .declaredNegativeResultFromDCT: return \.declaredNegativeResultFromDCT
+        case .receivedPositiveSelfRapidTestResultEnteredManually:
+            return \.receivedPositiveSelfRapidTestResultEnteredManually
+        case .isIsolatingForTestedSelfRapidPositiveBackgroundTick:
+            return \.isIsolatingForTestedSelfRapidPositiveBackgroundTick
+        case .hasTestedSelfRapidPositiveBackgroundTick:
+            return \.hasTestedSelfRapidPositiveBackgroundTick
+        case .receivedRiskyVenueM1Warning:
+            return \.receivedRiskyVenueM1Warning
+        case .receivedRiskyVenueM2Warning:
+            return \.receivedRiskyVenueM2Warning
+        case .hasReceivedRiskyVenueM2WarningBackgroundTick:
+            return \.hasReceivedRiskyVenueM2WarningBackgroundTick
         }
     }
     

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Integration
@@ -8,7 +8,7 @@ import UIKit
 
 public class RiskyVenueInformationScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
-    public static var name: String = "CheckIn - Risky Venue Information"
+    public static var name: String = "CheckIn - Risky Venue - Warn Only"
     
     public static let venueName = "McDonald"
     public static let checkInDate = Calendar.current.date(from: DateComponents(year: 2020, month: 7, day: 10))!
@@ -33,7 +33,7 @@ private class Interactor: RiskyVenueInformationViewController.Interacting {
         self.viewController = viewController
     }
     
-    func goHome() {
+    func goHomeTapped() {
         viewController?.showAlert(title: RiskyVenueInformationScreenScenario.goHomeTapped)
     }
     

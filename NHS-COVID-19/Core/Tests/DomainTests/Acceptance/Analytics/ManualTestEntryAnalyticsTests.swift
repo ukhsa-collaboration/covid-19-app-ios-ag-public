@@ -207,4 +207,38 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             assertField.equals(expected: 1, \.declaredNegativeResultFromDCT)
         }
     }
+    
+    func testHasTestedPositiveSelfRapidTestResultEnteredManually() throws {
+        assertAnalyticsPacketIsNormal()
+        
+        try manualTestResultEntry.enterPositive(testKitType: .rapidSelfReported)
+        
+        // The day of entering the test result
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.startedIsolation)
+            
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForTestedSelfRapidPositiveBackgroundTick)
+            
+            assertField.equals(expected: 1, \.receivedPositiveTestResult)
+            assertField.equals(expected: 1, \.receivedPositiveSelfRapidTestResultEnteredManually)
+            
+            assertField.isPresent(\.hasTestedSelfRapidPositiveBackgroundTick)
+        }
+        
+        // The day after, until end of isolation
+        assertOnFieldsForDateRange(dateRange: 4 ... 13) { assertField in
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForTestedSelfRapidPositiveBackgroundTick)
+            
+            assertField.isPresent(\.hasTestedSelfRapidPositiveBackgroundTick)
+        }
+        
+        // 14 Days after isolation - data retention
+        assertOnFieldsForDateRange(dateRange: 14 ... 27) { assertField in
+            assertField.isPresent(\.hasTestedSelfRapidPositiveBackgroundTick)
+        }
+        
+        assertAnalyticsPacketIsNormal()
+    }
 }

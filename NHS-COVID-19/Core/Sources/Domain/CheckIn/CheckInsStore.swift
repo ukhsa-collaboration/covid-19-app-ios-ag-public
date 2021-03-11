@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -11,7 +11,12 @@ public typealias CheckIns = [CheckIn]
 private struct CheckInsWrapper: Codable, DataConvertible {
     var checkIns: CheckIns
     var riskApprovalTokens: [String: CircuitBreakerApprovalToken]
+    #warning("This is stored on the device - do not rename without some kind of way of loading existing structures with the mis-spelled name")
     var unacknowldegedRiskyVenueIds: [String]
+    
+    // For the purposes of this struct, "risky" = "triggering a 'warn and book a test' notification"
+    var mostRecentRiskyVenueCheckInDay: GregorianDay?
+    var cachedRiskyVenueConfiguration: RiskyVenueConfiguration?
     
     var riskyCheckIns: CheckIns {
         checkIns.filter { $0.isRisky }
@@ -36,6 +41,8 @@ public class CheckInsStore {
         unacknowledgedRiskyCheckIns = unacknowldegedRiskyVenueIds.compactMap { venueId in
             riskyCheckIns.first { $0.venueId.caseInsensitiveCompare(venueId) == .orderedSame }
         }
+        mostRecentRiskyCheckInDay = info?.mostRecentRiskyVenueCheckInDay
+        mostRecentRiskyVenueConfiguration = info?.cachedRiskyVenueConfiguration
     }
     
     private(set) var riskyCheckIns: [CheckIn] = []
@@ -43,12 +50,14 @@ public class CheckInsStore {
     @Published
     private(set) var unacknowledgedRiskyCheckIns: [CheckIn] = [] {
         didSet {
-            lastUnacknowledgedRiskyCheckIns = unacknowledgedRiskyCheckIns.sorted { $0.checkedIn.date < $1.checkedIn.date }.last
+            mostRecentAndSevereUnacknowledgedRiskyCheckIn = unacknowledgedRiskyCheckIns.sorted {
+                $0.isMoreRecentAndSevere(than: $1)
+            }.first
         }
     }
     
     @Published
-    private(set) var lastUnacknowledgedRiskyCheckIns: CheckIn? = nil
+    private(set) var mostRecentAndSevereUnacknowledgedRiskyCheckIn: CheckIn? = nil
     
     var riskApprovalTokens: [String: CircuitBreakerApprovalToken] {
         get {
@@ -61,9 +70,20 @@ public class CheckInsStore {
     
     var detectedNewRiskyCheckIns = PassthroughSubject<Void, Never>()
     
-    required init(store: EncryptedStoring, venueDecoder: QRCode) {
+    @Published
+    private(set) var mostRecentRiskyCheckInDay: GregorianDay? = nil
+    
+    @Published
+    private(set) var mostRecentRiskyVenueConfiguration: RiskyVenueConfiguration? = nil
+    
+    private let getCachedRiskyVenueConfiguration: () -> RiskyVenueConfiguration
+    
+    required init(store: EncryptedStoring,
+                  venueDecoder: QRCode,
+                  getCachedRiskyVenueConfiguration: @escaping () -> RiskyVenueConfiguration) {
         self.venueDecoder = venueDecoder
         _checkInsInfo = store.encrypted("checkins")
+        self.getCachedRiskyVenueConfiguration = getCachedRiskyVenueConfiguration
         updateProperties()
     }
     
@@ -83,6 +103,31 @@ public class CheckInsStore {
         Metrics.signpost(.checkedIn)
     }
     
+    func saveMostRecentRiskyVenueCheckIn(on newRiskyCheckInDay: GregorianDay) {
+        guard var mutatedWrapper = checkInsInfo else {
+            return
+        }
+        
+        if let existingRiskyCheckInDay = mutatedWrapper.mostRecentRiskyVenueCheckInDay,
+            existingRiskyCheckInDay >= newRiskyCheckInDay {
+            return
+        }
+        
+        /// NOTE: For now, `mostRecentRiskyVenueCheckInDay` and `cachedRiskyVenueConfiguration` are updated and saved together.
+        mutatedWrapper.mostRecentRiskyVenueCheckInDay = newRiskyCheckInDay
+        mutatedWrapper.cachedRiskyVenueConfiguration = getCachedRiskyVenueConfiguration()
+        save(mutatedWrapper)
+    }
+    
+    func deleteMostRecentRiskyVenueCheckIn() {
+        guard var mutatedWrapper = checkInsInfo else {
+            return
+        }
+        mutatedWrapper.mostRecentRiskyVenueCheckInDay = nil
+        mutatedWrapper.cachedRiskyVenueConfiguration = nil
+        save(mutatedWrapper)
+    }
+    
     public func load() -> CheckIns? {
         checkInsInfo?.checkIns
     }
@@ -96,16 +141,27 @@ public class CheckInsStore {
         self.checkInsInfo = updateRiskyProperties(checkInsInfo)
     }
     
-    func updateRisk(_ venueIds: [String]) {
+    func updateRisk(_ riskyVenues: [RiskyVenue]) {
         guard let existingCheckIns = checkInsInfo?.checkIns else { return }
-        let updatedCheckins = existingCheckIns.map { checkIn -> CheckIn in
-            let containingRiskyVenueId = venueIds.contains { $0.caseInsensitiveCompare(checkIn.venueId) == .orderedSame }
-            if containingRiskyVenueId {
-                return mutating(checkIn) {
-                    $0.isRisky = true
+        var updatedCheckins: CheckIns = []
+        
+        existingCheckIns.forEach { checkIn in
+            let relevantRiskyVenue = riskyVenues
+                .filter { riskyVenue in
+                    riskyVenue.id.caseInsensitiveCompare(checkIn.venueId) == .orderedSame
+                        && riskyVenue.riskyInterval.intersects(checkIn.checkedInInterval)
                 }
+                .sorted()
+                .first
+            
+            if let riskyVenue = relevantRiskyVenue {
+                let mutatedCheckIn = mutating(checkIn) {
+                    $0.isRisky = true
+                    $0.venueMessageType = riskyVenue.messageType
+                }
+                updatedCheckins.append(mutatedCheckIn)
             } else {
-                return checkIn
+                updatedCheckins.append(checkIn)
             }
         }
         
@@ -126,10 +182,21 @@ public class CheckInsStore {
             }
         }
         
+        if let mostRecentDay = mostRecentWarnAndBookATestCheckInDay(from: updatedCheckins) {
+            saveMostRecentRiskyVenueCheckIn(on: mostRecentDay)
+        }
+        
         save(updatedCheckins)
         if approval == .yes {
             checkInsInfo?.unacknowldegedRiskyVenueIds.append(venueId)
         }
+    }
+    
+    private func mostRecentWarnAndBookATestCheckInDay(from checkIns: [CheckIn]) -> GregorianDay? {
+        return checkIns
+            .filter { $0.circuitBreakerApproval == .yes && $0.venueMessageType == .some(.warnAndBookATest) }
+            .sorted { $0.isMoreRecentAndSevere(than: $1) }
+            .first?.checkedIn.day
     }
     
     func deleteLatest() {
@@ -192,7 +259,9 @@ public class CheckInsStore {
         save(CheckInsWrapper(
             checkIns: checkIns,
             riskApprovalTokens: checkInsInfo?.riskApprovalTokens ?? [:],
-            unacknowldegedRiskyVenueIds: checkInsInfo?.unacknowldegedRiskyVenueIds ?? []
+            unacknowldegedRiskyVenueIds: checkInsInfo?.unacknowldegedRiskyVenueIds ?? [],
+            mostRecentRiskyVenueCheckInDay: checkInsInfo?.mostRecentRiskyVenueCheckInDay,
+            cachedRiskyVenueConfiguration: checkInsInfo?.cachedRiskyVenueConfiguration
         ))
     }
     

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -15,7 +15,7 @@ class AppReviewPresenterTests: XCTestCase {
     
     override func setUp() {
         storeReviewController = MockStoreReviewController()
-        checkInsStore = CheckInsStore(store: MockEncryptedStore(), venueDecoder: .forTests)
+        checkInsStore = CheckInsStore(store: MockEncryptedStore(), venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         currentDate = UTCHour(year: 2020, month: 5, day: 15, hour: 10)
         appReviewPresenter = AppReviewPresenter(
             checkInsStore: checkInsStore,

@@ -157,6 +157,14 @@ extension IsolationModel.State {
     
 }
 
+extension Set where Element: CaseIterable {
+    
+    static func all(except exceptions: Element...) -> Set<Element> {
+        Set(Element.allCases).symmetricDifference(exceptions)
+    }
+    
+}
+
 extension IsolationModel.StatePredicate {
     
     public func matches(_ state: IsolationModel.State) -> Bool {

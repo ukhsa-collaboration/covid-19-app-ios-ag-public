@@ -30,7 +30,7 @@ public class ApplicationCoordinator {
     private let appAvailabilityManager: AppAvailabilityManager
     private let metricReporter: MetricReporter
     private let userNotificationsStateController: UserNotificationsStateController
-    private var cancellabes = [AnyCancellable]()
+    private var cancellables = [AnyCancellable]()
     private let processingTaskRequestManager: ProcessingTaskRequestManaging
     private var backgroundTaskAggregator: BackgroundTaskAggregator?
     private let postcodeStore: PostcodeStore
@@ -41,12 +41,12 @@ public class ApplicationCoordinator {
     private let isolationContext: IsolationContext
     private let riskyPostcodeEndpointManager: RiskyPostcodeEndpointManager
     private let postcodeInfo: DomainProperty<(postcode: Postcode, localAuthority: LocalAuthority?, risk: DomainProperty<RiskyPostcodeEndpointManager.PostcodeRisk?>)?>
-    private let savePostcode: (String) -> Result<Void, PostcodeValidationError>
     private let notificationCenter: NotificationCenter
     private let virologyTestingManager: VirologyTestingManager
     private let virologyTestingStateStore: VirologyTestingStateStore
     private let circuitBreaker: CircuitBreaker
     private let housekeeper: Housekeeper
+    private let riskyVenueHousekeeper: RiskyVenueHousekeeper
     private let exposureNotificationReminder: ExposureNotificationReminder
     private let completedOnboardingForCurrentSession = CurrentValueSubject<Bool, Never>(false)
     private let appReviewPresenter: AppReviewPresenting
@@ -103,17 +103,11 @@ public class ApplicationCoordinator {
             distributeClient: distributeClient,
             storage: services.cacheStorage,
             postcode: postcodeStore.$postcode.eraseToAnyPublisher(),
-            localAuthority: localAuthority.eraseToAnyPublisher()
+            localAuthority: localAuthority.eraseToAnyPublisher(),
+            currentDateProvider: currentDateProvider
         )
         
         postcodeInfo = riskyPostcodeEndpointManager.postcodeInfo
-        savePostcode = { (postcodeValue: String) in
-            let result = services.postcodeValidator.validatedPostcode(from: postcodeValue)
-            if case .success(let postcode) = result {
-                postcodeStore.save(postcode: postcode)
-            }
-            return result.map { _ in }
-        }
         
         self.riskyPostcodeEndpointManager = riskyPostcodeEndpointManager
         self.postcodeStore = postcodeStore
@@ -149,17 +143,35 @@ public class ApplicationCoordinator {
             return IsolationState(logicalState: isolationContext.isolationStateStore.set(info))
         }
         
-        let checkInsStore = CheckInsStore(store: services.encryptedStore, venueDecoder: services.venueDecoder)
+        let riskyVenueConfiguration = CachedResponse(
+            httpClient: distributeClient,
+            endpoint: RiskyVenuesConfigurationEndpoint(),
+            storage: services.cacheStorage,
+            name: "risky_venue_configuration",
+            initialValue: .default
+        )
+        
+        let checkInsStore = CheckInsStore(
+            store: services.encryptedStore,
+            venueDecoder: services.venueDecoder,
+            getCachedRiskyVenueConfiguration: { riskyVenueConfiguration.value }
+        )
+        let checkInsManager = CheckInsManager(
+            checkInsStore: checkInsStore,
+            httpClient: distributeClient,
+            riskyVenueConfiguration: riskyVenueConfiguration
+        )
         checkInContext = CheckInContext(
             checkInsStore: checkInsStore,
-            checkInsManager: CheckInsManager(checkInsStore: checkInsStore, httpClient: distributeClient),
+            checkInsManager: checkInsManager,
             qrCodeScanner: QRCodeScanner(
                 cameraManager: services.cameraManager,
                 cameraStateController: CameraStateController(
                     manager: services.cameraManager,
                     notificationCenter: notificationCenter
                 )
-            )
+            ),
+            currentDateProvider: currentDateProvider
         )
         
         virologyTestingStateStore = VirologyTestingStateStore(store: services.encryptedStore)
@@ -235,6 +247,11 @@ public class ApplicationCoordinator {
             getToday: { dateProvider.currentGregorianDay(timeZone: .current) }
         )
         
+        riskyVenueHousekeeper = RiskyVenueHousekeeper(
+            checkInsStore: checkInContext.checkInsStore,
+            getToday: { dateProvider.currentGregorianDay(timeZone: .current) }
+        )
+        
         exposureNotificationReminder = ExposureNotificationReminder(
             userNotificationManager: services.userNotificationsManager,
             userNotificationStateController: userNotificationsStateController,
@@ -280,7 +297,7 @@ public class ApplicationCoordinator {
                 guard let self = self else { return }
                 self.state = self.makeState(for: logicalState)
             }
-            .store(in: &cancellabes)
+            .store(in: &cancellables)
     }
     
     private func makeState(for logicalState: LogicalState) -> ApplicationState {
@@ -331,7 +348,6 @@ public class ApplicationCoordinator {
                 RunningAppContext(
                     checkInContext: checkInContext,
                     postcodeInfo: postcodeInfo,
-                    savePostcode: savePostcode,
                     country: country,
                     openSettings: application.openSettings,
                     openURL: application.open,
@@ -356,7 +372,13 @@ public class ApplicationCoordinator {
                     exposureNotificationReminder: exposureNotificationReminder,
                     appReviewPresenter: appReviewPresenter,
                     getLocalAuthorities: localAuthorityManager.localAuthorities,
-                    storeLocalAuthorities: localAuthorityManager.store,
+                    storeLocalAuthorities: { postcode, localAuthority in
+                        let result = self.localAuthorityManager.store(postcode: postcode, localAuthority: localAuthority)
+                        if case .success = result {
+                            self.riskyPostcodeEndpointManager.reload()
+                        }
+                        return result
+                    },
                     isolationPaymentState: isolationPaymentContext.isolationPaymentState,
                     currentLocaleConfiguration: languageStore.$configuration.domainProperty(),
                     storeNewLanguage: languageStore.save,
@@ -400,14 +422,15 @@ public class ApplicationCoordinator {
     private func makeRiskyCheckInsAcknowledgementState() -> AnyPublisher<RiskyCheckInsAcknowledgementState, Never> {
         let checkInContext = self.checkInContext
         
-        return checkInContext.checkInsStore.$lastUnacknowledgedRiskyCheckIns
+        return checkInContext.checkInsStore.$mostRecentAndSevereUnacknowledgedRiskyCheckIn
             .removeDuplicates()
             .map { lastRiskyCheckIn in
                 if let lastRiskyCheckIn = lastRiskyCheckIn {
                     return .needed(
                         acknowledge: checkInContext.checkInsStore.acknowldegeRiskyCheckIns,
                         venueName: lastRiskyCheckIn.venueName,
-                        checkInDate: lastRiskyCheckIn.checkedIn.date
+                        checkInDate: lastRiskyCheckIn.checkedIn.date,
+                        resolution: RiskyVenueResolution(lastRiskyCheckIn.venueMessageType ?? RiskyVenue.MessageType.warnAndInform)
                     )
                 }
                 return RiskyCheckInsAcknowledgementState.notNeeded
@@ -480,9 +503,14 @@ public class ApplicationCoordinator {
                 jobs: self.makeBackgroundJobs(for: state)
             )
             if self.shouldImmediatelyRunBackgroundJobs(in: state) {
+                // this starts fetching all the config and state data
                 self.backgroundTaskAggregator?.performBackgroundTask(backgroundTask: NoOpBackgroundTask())
             }
-        }.store(in: &cancellabes)
+            // start checking that we have the latest postcode info once we are in an on-boarded state
+            if case .runningExposureNotification = state {
+                self.riskyPostcodeEndpointManager.monitorRiskyPostcodes()
+            }
+        }.store(in: &cancellables)
     }
     
     private func shouldImmediatelyRunBackgroundJobs(in state: ApplicationState) -> Bool {
@@ -590,11 +618,23 @@ public class ApplicationCoordinator {
         )
         enabledJobs.append(housekeepingJob)
         
+        let riskyVenueHousekeepingJob = BackgroundTaskAggregator.Job(
+            preferredFrequency: Self.housekeepingJobBackgroundTaskFrequency,
+            work: riskyVenueHousekeeper.executeHousekeeping
+        )
+        enabledJobs.append(riskyVenueHousekeepingJob)
+        
         enabledJobs.append(
             contentsOf: isolationContext.makeBackgroundJobs(
                 metricsFrequency: Self.metricsJobBackgroundTaskFrequency,
                 housekeepingFrequency: Self.housekeepingJobBackgroundTaskFrequency
             )
+        )
+        
+        enabledJobs.append(
+            contentsOf: checkInsManager.makeBackgroundJobs(
+                metricsFrequency: Self.metricsJobBackgroundTaskFrequency,
+                housekeepingFrequency: Self.housekeepingJobBackgroundTaskFrequency)
         )
         
         enabledJobs.append(
@@ -639,11 +679,14 @@ public class ApplicationCoordinator {
         
         changeNotifier
             .alertUserToChanges(in: risk, type: .postcode)
-            .store(in: &cancellabes)
+            .store(in: &cancellables)
         
         RiskyCheckInsChangeNotifier(notificationManager: userNotificationsManager)
-            .alertUserToChanges(in: checkInContext.checkInsStore.$unacknowledgedRiskyCheckIns)
-            .store(in: &cancellabes)
+            .alertUserToChanges(
+                in: checkInContext.checkInsStore.$mostRecentAndSevereUnacknowledgedRiskyCheckIn
+                    .map { $0?.venueMessageType }
+            )
+            .store(in: &cancellables)
         
         changeNotifier
             .alertUserToChanges(
@@ -656,7 +699,7 @@ public class ApplicationCoordinator {
                     }
                 }
             )
-            .store(in: &cancellabes)
+            .store(in: &cancellables)
         
         let initialState = appAvailabilityManager.metadata.state
         
@@ -695,11 +738,11 @@ public class ApplicationCoordinator {
                     }
                 }
             )
-            .store(in: &cancellabes)
+            .store(in: &cancellables)
         
         IsolationStateChangeNotifier(notificationManager: userNotificationsManager)
             .alertUserToChanges(in: isolationContext.isolationStateManager.$state)
-            .store(in: &cancellabes)
+            .store(in: &cancellables)
     }
     
     private func requestPermissions() {
@@ -746,6 +789,8 @@ public class ApplicationCoordinator {
         virologyTestingStateStore.delete()
         metricReporter.delete()
         languageStore.delete()
+        isolationPaymentContext.deleteAllData()
+        riskyPostcodeEndpointManager.reload()
     }
     
     private func deleteCheckIn(with id: String) {

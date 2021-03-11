@@ -96,7 +96,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let context = makeRunningAppContext(
             isolationAckState: .neededForEnd(isolation, acknowledge: {}),
             testResultAckState: .neededForPositiveResult(acknowledge: { Empty().eraseToAnyPublisher() }, isolationEndDate: Date(), keySubmissionSupported: true, requiresConfirmatoryTest: false),
-            riskyCheckInsAckState: .needed(acknowledge: {}, venueName: "Venue", checkInDate: Date())
+            riskyCheckInsAckState: .needed(acknowledge: {}, venueName: "Venue", checkInDate: Date(), resolution: .warnAndInform)
         )
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
@@ -116,7 +116,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let context = makeRunningAppContext(
             isolationAckState: .neededForEnd(isolation, acknowledge: {}),
             testResultAckState: .neededForNegativeResultNotIsolating(acknowledge: {}),
-            riskyCheckInsAckState: .needed(acknowledge: {}, venueName: "Venue", checkInDate: Date())
+            riskyCheckInsAckState: .needed(acknowledge: {}, venueName: "Venue", checkInDate: Date(), resolution: .warnAndInform)
         )
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
@@ -152,16 +152,17 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let context = makeRunningAppContext(
             isolationAckState: .notNeeded,
             testResultAckState: .notNeeded,
-            riskyCheckInsAckState: .needed(acknowledge: {}, venueName: expectedVenueName, checkInDate: expectedCheckInDate)
+            riskyCheckInsAckState: .needed(acknowledge: {}, venueName: expectedVenueName, checkInDate: expectedCheckInDate, resolution: .warnAndInform)
         )
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         
-        if case let .neededForRiskyVenue(_, venueName, checkInDate) = state,
-            venueName == expectedVenueName,
-            checkInDate == expectedCheckInDate {
-            XCTAssert(true)
+        guard case let .neededForRiskyVenue(_, venueName, checkInDate) = state else {
+            XCTFail("Wrong type of state")
+            return
         }
+        XCTAssertEqual(venueName, expectedVenueName)
+        XCTAssertEqual(checkInDate, expectedCheckInDate)
     }
     
     private func makeRunningAppContext(
@@ -191,6 +192,12 @@ class AcknowledgementNeededStateTests: XCTestCase {
             currentDateProvider: currentDateProvider,
             exposureNotificationReminder: ExposureNotificationReminder(),
             appReviewPresenter: MockAppReviewPresenter(reviewController: MockStoreReviewController(), currentDateProvider: currentDateProvider),
+            getLocalAuthorities: { _ in
+                .success(Set<LocalAuthority>())
+            },
+            storeLocalAuthorities: { _, _ in
+                .success(())
+            },
             isolationPaymentState: .constant(.disabled),
             currentLocaleConfiguration: Just(.systemPreferred).eraseToAnyPublisher().domainProperty(),
             storeNewLanguage: { _ in },

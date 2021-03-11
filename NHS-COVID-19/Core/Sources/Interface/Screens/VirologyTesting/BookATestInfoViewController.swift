@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -78,7 +78,6 @@ public class BookATestInfoViewController: ScrollingContentViewController {
         
         title = localize(.virology_book_a_test_title)
         navigationController?.setNavigationBarHidden(false, animated: true)
-        
         if shouldHaveCancelButton {
             navigationItem.leftBarButtonItem = UIBarButtonItem(title: localize(.cancel), style: .done, target: self, action: #selector(didTapCancel))
         }

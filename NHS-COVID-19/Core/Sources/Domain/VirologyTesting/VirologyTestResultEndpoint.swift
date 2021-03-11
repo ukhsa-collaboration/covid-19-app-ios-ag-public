@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -28,14 +28,29 @@ struct VirologyTestResultEndpoint: HTTPEndpoint {
             let payload = try decoder.decode(ResponseBody.self, from: response.body.content)
             
             if payload.requiresConfirmatoryTest && payload.diagnosisKeySubmissionSupported {
+                Metrics.signpostReceivedViaPolling(
+                    testResult: VirologyTestResult.TestResult(payload.testResult),
+                    testKitType: VirologyTestResult.TestKitType(payload.testKit),
+                    requiresConfirmatoryTest: payload.requiresConfirmatoryTest
+                )
                 throw VirologyTestResultResponseError.unconfirmedKeySharingNotSupported
             }
             
             if payload.requiresConfirmatoryTest && payload.testResult != .positive {
+                Metrics.signpostReceivedViaPolling(
+                    testResult: VirologyTestResult.TestResult(payload.testResult),
+                    testKitType: VirologyTestResult.TestKitType(payload.testKit),
+                    requiresConfirmatoryTest: payload.requiresConfirmatoryTest
+                )
                 throw VirologyTestResultResponseError.unconfirmedNonPostiveNotSupported
             }
             
             if payload.testKit == .rapidResult || payload.testKit == .rapidSelfReported, payload.testResult != .positive {
+                Metrics.signpostReceivedViaPolling(
+                    testResult: VirologyTestResult.TestResult(payload.testResult),
+                    testKitType: VirologyTestResult.TestKitType(payload.testKit),
+                    requiresConfirmatoryTest: payload.requiresConfirmatoryTest
+                )
                 throw VirologyTestResultResponseError.lfdVoidOrNegative
             }
             

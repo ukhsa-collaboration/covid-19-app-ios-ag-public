@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -60,5 +60,9 @@ struct IsolationPaymentContext {
             Metrics.signpost(.haveActiveIpcTokenBackgroundTick)
         }
         return Empty().eraseToAnyPublisher()
+    }
+    
+    func deleteAllData() {
+        store.delete()
     }
 }

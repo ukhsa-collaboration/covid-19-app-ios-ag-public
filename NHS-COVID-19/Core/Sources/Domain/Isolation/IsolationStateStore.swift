@@ -215,8 +215,10 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
                     switch testKit {
                     case .labResult:
                         Metrics.signpost(.testedPositiveBackgroundTick)
-                    case .rapidResult, .rapidSelfReported:
+                    case .rapidResult:
                         Metrics.signpost(.hasTestedLFDPositiveBackgroundTick)
+                    case .rapidSelfReported:
+                        Metrics.signpost(.hasTestedSelfRapidPositiveBackgroundTick)
                     }
                 } else {
                     Metrics.signpost(.testedPositiveBackgroundTick)

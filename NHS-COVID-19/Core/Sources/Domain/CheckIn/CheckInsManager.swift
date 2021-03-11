@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -12,8 +12,16 @@ public struct CheckInsManager {
     
     var checkInsStoreLoad: () -> CheckIns?
     var checkInsStoreDeleteExpired: (UTCHour) -> Void
-    var updateRisk: ([String]) -> Void
+    var updateRisk: ([RiskyVenue]) -> Void
     var fetchRiskyVenues: () -> AnyPublisher<[RiskyVenue], NetworkRequestError>
+    var mostRecentRiskyVenueCheckInDay: DomainProperty<GregorianDay?>? = nil
+
+    let riskyVenueConfiguration: CachedResponse<RiskyVenueConfiguration>
+    
+    #warning("refactor this, possibly move bg tasks somewhere else")
+    mutating func setMostRecentRiskyVenueCheckInDay(_ property: DomainProperty<GregorianDay?>) {
+        mostRecentRiskyVenueCheckInDay = property
+    }
     
     func deleteExpiredCheckIns() -> AnyPublisher<Void, Never> {
         let now = LocalDay.today.advanced(by: -Self.numberOfPersistingDays)
@@ -26,32 +34,38 @@ public struct CheckInsManager {
             return Just(()).eraseToAnyPublisher()
         }
         return fetchRiskyVenues()
-            .map {
-                Self.matchRiskyVenues($0, with: checkIns)
-            }
             .map(updateRisk)
             .replaceError(with: ())
             .eraseToAnyPublisher()
     }
     
-    private static func matchRiskyVenues(_ riskyVenues: [RiskyVenue], with checkIns: CheckIns) -> [String] {
-        riskyVenues.filter { riskyVenue in
-            checkIns.contains { checkIn in
-                checkIn.venueId.caseInsensitiveCompare(riskyVenue.id) == .orderedSame &&
-                    riskyVenue.riskyInterval.intersects(checkIn.checkedInInterval)
-            }
-        }.map { $0.id }
+    func makeBackgroundJobs(metricsFrequency: Double, housekeepingFrequency: Double) -> [BackgroundTaskAggregator.Job] {
+        [
+            BackgroundTaskAggregator.Job(
+                preferredFrequency: metricsFrequency,
+                work: {
+                    if self.mostRecentRiskyVenueCheckInDay?.currentValue != nil {
+                        Metrics.signpost(.hasReceivedRiskyVenueM2WarningBackgroundTick)
+                    }
+                    return Empty().eraseToAnyPublisher()
+                }
+            ),
+            BackgroundTaskAggregator.Job(
+                preferredFrequency: housekeepingFrequency,
+                work: riskyVenueConfiguration.update
+            ),
+        ]
     }
-    
 }
 
 extension CheckInsManager {
-    init(checkInsStore: CheckInsStore, httpClient: HTTPClient) {
+    init(checkInsStore: CheckInsStore, httpClient: HTTPClient, riskyVenueConfiguration: CachedResponse<RiskyVenueConfiguration>) {
         self.init(
             checkInsStoreLoad: checkInsStore.load,
             checkInsStoreDeleteExpired: checkInsStore.deleteExpired,
             updateRisk: checkInsStore.updateRisk,
-            fetchRiskyVenues: { httpClient.fetch(RiskyVenuesEndpoint()) }
+            fetchRiskyVenues: { httpClient.fetch(RiskyVenuesEndpoint()) },
+            riskyVenueConfiguration: riskyVenueConfiguration
         )
     }
 }

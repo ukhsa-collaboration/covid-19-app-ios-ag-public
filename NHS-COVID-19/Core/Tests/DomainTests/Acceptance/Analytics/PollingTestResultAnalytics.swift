@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -162,5 +162,51 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
             assertFields.isPresent(\.isIsolatingBackgroundTick)
             assertFields.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
         }
+    }
+    
+    func testReceivingPositiveSelfRapidTestResult() throws {
+        assertAnalyticsPacketIsNormal()
+        
+        // Fill questionnaire and order a test
+        try questionnaire.selfDiagnosePositive(onsetDay: currentDateProvider.currentGregorianDay(timeZone: .utc))
+        try testOrdering.order()
+        
+        // Receive rapid-self-reported positive test result via polling
+        try pollingTestResult.receivePositiveAndAcknowledge(testKitType: .rapidSelfReported) {
+            self.advanceToNextBackgroundTaskExecution()
+        }
+        
+        // The day of entering the test result
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.startedIsolation)
+            assertField.equals(expected: 1, \.completedQuestionnaireAndStartedIsolation)
+            
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.isIsolatingForTestedSelfRapidPositiveBackgroundTick)
+            
+            assertField.equals(expected: 1, \.receivedPositiveTestResult)
+            
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.hasTestedSelfRapidPositiveBackgroundTick)
+        }
+        
+        // As long as the user is in isolation
+        assertOnFieldsForDateRange(dateRange: 4 ... 13) { assertField in
+            assertField.isPresent(\.isIsolatingBackgroundTick)
+            assertField.isPresent(\.isIsolatingForTestedSelfRapidPositiveBackgroundTick)
+            assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+            
+            assertField.isPresent(\.hasTestedSelfRapidPositiveBackgroundTick)
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+        }
+        
+        // 14 Days after isolation - data retention
+        assertOnFieldsForDateRange(dateRange: 14 ... 27) { assertField in
+            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isPresent(\.hasTestedSelfRapidPositiveBackgroundTick)
+        }
+        
+        assertAnalyticsPacketIsNormal()
     }
 }

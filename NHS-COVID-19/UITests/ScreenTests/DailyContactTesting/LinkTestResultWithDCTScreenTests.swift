@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -28,6 +28,7 @@ class LinkTestResultWithDCTScreenTests: XCTestCase {
             XCTAssert(screen.dctHeading.exists)
             XCTAssert(screen.dctHeading.exists)
             XCTAssert(screen.dctParagraph.exists)
+            XCTAssert(screen.dctBulletedListTitle.exists)
             XCTAssert(screen.dctBulletedList.allExist)
             
             XCTAssert(screen.checkBox(checked: false).exists)

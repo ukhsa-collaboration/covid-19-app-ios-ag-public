@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -14,6 +14,7 @@ public class SettingsScreenScenario: Scenario {
     
     public static let language: String = "English"
     public static let didTapLanguage = "Tapped language"
+    public static let didTapManageMyData = "Tapped manage my data"
     
     static var appController: AppController {
         NavigationAppController { parent in
@@ -21,6 +22,8 @@ public class SettingsScreenScenario: Scenario {
                 viewModel: SettingsViewController.ViewModel(),
                 interacting: Interactor(_didTapLanguage: {
                     parent.showAlert(title: didTapLanguage)
+                }, _didTapManageMyData: {
+                    parent.showAlert(title: didTapManageMyData)
                 })
             )
         }
@@ -29,8 +32,13 @@ public class SettingsScreenScenario: Scenario {
 
 private struct Interactor: SettingsViewController.Interacting {
     var _didTapLanguage: () -> Void
+    var _didTapManageMyData: () -> Void
     
     func didTapLanguage() {
         _didTapLanguage()
+    }
+    
+    func didTapManageMyData() {
+        _didTapManageMyData()
     }
 }

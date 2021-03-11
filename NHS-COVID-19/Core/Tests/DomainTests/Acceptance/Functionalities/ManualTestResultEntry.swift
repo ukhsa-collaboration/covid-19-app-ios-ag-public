@@ -24,8 +24,8 @@ struct ManualTestResultEntry {
     
     private let validToken = "f3dzcfdt"
     
-    func enterPositive(requiresConfirmatoryTest: Bool = false, symptomsOnsetDay: GregorianDay? = nil, endDate: Date? = nil) throws {
-        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .positive, testKitType: .labResult, requiresConfirmatoryTest: requiresConfirmatoryTest, endDate: endDate ?? currentDateProvider.currentDate)
+    func enterPositive(requiresConfirmatoryTest: Bool = false, symptomsOnsetDay: GregorianDay? = nil, endDate: Date? = nil, testKitType: VirologyTestResult.TestKitType = .labResult) throws {
+        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .positive, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, endDate: endDate ?? currentDateProvider.currentDate)
         if case .askForSymptomsOnsetDay(_, let didFinishAskForSymptomsOnsetDay, let didConfirmSymptoms, let onsetDay) = testResultAcknowledgementState {
             if let symptomsOnsetDay = symptomsOnsetDay {
                 didConfirmSymptoms()

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -157,6 +157,25 @@ extension AcceptanceTestCase {
         exposureNotificationManager.activationCompletionHandler?(nil)
         
         try completeUserNotificationsAuthorization(authorizationStatus: .authorized)
+        
+        guard case .runningExposureNotification = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+    }
+    
+    func completeReOnboarding() throws {
+        
+        guard case .onboarding(let complete, _) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        
+        complete()
+        
+        guard case .postcodeAndLocalAuthorityRequired(_, _, let savePostcode) = coordinator.state else {
+            throw TestError("Unexpected state \(coordinator.state)")
+        }
+        
+        try savePostcode(.init("B44"), LocalAuthority(name: "Local Authority 1", id: .init("LA1"), country: .england)).get()
         
         guard case .runningExposureNotification = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")

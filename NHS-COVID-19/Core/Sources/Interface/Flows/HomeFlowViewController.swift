@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -30,8 +30,7 @@ public protocol HomeFlowViewControllerInteracting {
     func openProvideFeedbackLink()
     func deleteAppData()
     func updateVenueHistories(deleting venueHistory: VenueHistory) -> [VenueHistory]
-    func save(postcode: String) -> Result<Void, DisplayableError>
-    func makeLocalAuthorityOnboardingIteractor() -> LocalAuthorityFlowViewController.Interacting?
+    func makeLocalAuthorityOnboardingInteractor() -> LocalAuthorityFlowViewController.Interacting
     func getCurrentLocaleConfiguration() -> InterfaceProperty<LocaleConfiguration>
     func storeNewLanguage(_ localeConfiguration: LocaleConfiguration) -> Void
 }
@@ -266,6 +265,10 @@ private struct RiskLevelInfoInteractor: RiskLevelInfoViewController.Interacting 
     public func didTapWebsiteLink(url: URL) {
         interactor.openWebsiteLinkfromRisklevelInfoScreen(url: url)
     }
+    
+    public func didTapFindTestCenterLink(url: URL) {
+        interactor.openWebsiteLinkfromRisklevelInfoScreen(url: url)
+    }
 }
 
 private struct MyDataViewInteractor: MyDataViewController.Interacting {
@@ -278,34 +281,9 @@ private struct MyDataViewInteractor: MyDataViewController.Interacting {
         updateVenueHistories = interactor.updateVenueHistories
         didTapEditPostcode = { [weak flowController] in
             
-            if let localAuthorityInteractor = interactor.makeLocalAuthorityOnboardingIteractor() {
-                let localAuthorityFlowVC = LocalAuthorityFlowViewController(localAuthorityInteractor, isEditMode: true)
-                localAuthorityFlowVC.modalPresentationStyle = .fullScreen
-                flowController?.present(localAuthorityFlowVC, animated: true)
-            } else {
-                let interactor = EditPostcodeInteractor(flowController: flowController, interactor: interactor)
-                let viewController = EditPostcodeViewController(interactor: interactor, isLocalAuthorityEnabled: false)
-                flowController?.pushViewController(viewController, animated: true)
-            }
-        }
-    }
-}
-
-private struct EditPostcodeInteractor: EditPostcodeViewController.Interacting {
-    var savePostcode: (String) -> Result<Void, DisplayableError>
-    var didTapCancel: () -> Void
-    
-    init(flowController: HomeFlowViewController?, interactor: HomeFlowViewController.Interacting) {
-        savePostcode = { [weak flowController] postcode in
-            let result = interactor.save(postcode: postcode)
-            if case .success = result {
-                flowController?.popViewController(animated: true)
-            }
-            return result
-        }
-        
-        didTapCancel = {
-            flowController?.popViewController(animated: true)
+            let localAuthorityFlowVC = LocalAuthorityFlowViewController(interactor.makeLocalAuthorityOnboardingInteractor(), isEditMode: true)
+            localAuthorityFlowVC.modalPresentationStyle = .fullScreen
+            flowController?.present(localAuthorityFlowVC, animated: true)
         }
     }
 }
@@ -322,6 +300,11 @@ private struct SettingsInteractor: SettingsViewController.Interacting {
     func didTapLanguage() {
         guard let viewController = makeLanguageSelectionViewController() else { return }
         flowController?.pushViewController(viewController, animated: true)
+    }
+    
+    func didTapManageMyData() {
+        let manageMyDataVC = makeManageMyDataViewController()
+        flowController?.pushViewController(manageMyDataVC, animated: true)
     }
     
     func makeLanguageSelectionViewController() -> UIViewController? {
@@ -346,6 +329,11 @@ private struct SettingsInteractor: SettingsViewController.Interacting {
             interacting: interactor
         )
         return viewController
+    }
+    
+    func makeManageMyDataViewController() -> UIViewController {
+        let interactor = MyDataViewInteractor(flowController: flowController, interactor: self.interactor)
+        return MyDataViewController(viewModel: self.interactor.getMyDataViewModel(), interactor: interactor)
     }
 }
 

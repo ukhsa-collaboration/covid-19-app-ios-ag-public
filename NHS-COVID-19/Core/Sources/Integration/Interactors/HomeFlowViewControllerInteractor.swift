@@ -10,9 +10,6 @@ import Localization
 import UIKit
 
 struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
-    func save(postcode: String) -> Result<Void, DisplayableError> {
-        context.savePostcode?(postcode).mapError(DisplayableError.init) ?? .success(())
-    }
     
     func getCurrentLocaleConfiguration() -> InterfaceProperty<LocaleConfiguration> {
         context.currentLocaleConfiguration.interfaceProperty
@@ -25,11 +22,12 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     var context: RunningAppContext
     var currentDateProvider: DateProviding
     
-    func makeLocalAuthorityOnboardingIteractor() -> LocalAuthorityFlowViewController.Interacting? {
-        guard let getLocalAuthorities = context.getLocalAuthorities, let storeLocalAuthorities = context.storeLocalAuthorities else {
-            return nil
-        }
-        return LocalAuthorityOnboardingIteractor(openURL: context.openURL, getLocalAuthorities: getLocalAuthorities, storeLocalAuthority: storeLocalAuthorities)
+    func makeLocalAuthorityOnboardingInteractor() -> LocalAuthorityFlowViewController.Interacting {
+        return LocalAuthorityOnboardingInteractor(
+            openURL: context.openURL,
+            getLocalAuthorities: context.getLocalAuthorities,
+            storeLocalAuthority: context.storeLocalAuthorities
+        )
     }
     
     func makeDiagnosisViewController() -> UIViewController? {
@@ -194,20 +192,9 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     }
     
     func getMyDataViewModel() -> MyDataViewController.ViewModel {
-        let venueHistories = context.checkInContext?.checkInsStore.load()?.map { checkIn -> VenueHistory in
-            VenueHistory(
-                id: checkIn.venueId,
-                organisation: checkIn.venueName,
-                checkedIn: checkIn.checkedIn.date,
-                checkedOut: checkIn.checkedOut.date,
-                delete: {
-                    self.context.deleteCheckIn(checkIn.id)
-                }
-            )
-        } ?? []
+        let venueHistories = loadVenueHistory()
         
         let testResultDetails: MyDataViewController.ViewModel.TestResultDetails? = context.testInfo.currentValue.map {
-            
             // map from the Domain level ConfirmationStatus to the Interface level ConfirmationStatus
             let confirmationStatus: MyDataViewController.ViewModel.TestResultDetails.ConfirmationStatus = { testInfo in
                 switch testInfo.confirmationStatus {
@@ -249,6 +236,8 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                 return date
             }
         }()
+        // TODO: We may want to pass this through as an interface property or similar rather than computing its instantaneous value here.
+        let venueOfRiskDate = context.checkInContext?.didRecentlyVisitSevereRiskyVenueProperty().currentValue
         
         return .init(
             postcode: context.postcodeInfo.map { $0?.postcode.value }.interfaceProperty,
@@ -263,8 +252,26 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                 )
             },
             selfIsolationEndDate: selfIsolationEndDate,
-            dailyTestingOptInDate: dailyTestingOptInDate
+            dailyTestingOptInDate: dailyTestingOptInDate,
+            venueOfRiskDate: venueOfRiskDate?.startDate(in: .current)
         )
+    }
+    
+    func loadVenueHistory() -> [VenueHistory] {
+        context.checkInContext?.checkInsStore.load()?
+            .sorted { $0.venueName.lowercased() < $1.venueName.lowercased() }
+            .sorted { $0.checkedIn.date > $1.checkedIn.date }
+            .map { checkIn -> VenueHistory in
+                VenueHistory(
+                    id: checkIn.venueId,
+                    organisation: checkIn.venueName,
+                    checkedIn: checkIn.checkedIn.date,
+                    checkedOut: checkIn.checkedOut.date,
+                    delete: {
+                        self.context.deleteCheckIn(checkIn.id)
+                    }
+                )
+            } ?? []
     }
     
     func openIsolationAdvice() {
@@ -285,18 +292,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     
     func updateVenueHistories(deleting venueHistory: VenueHistory) -> [VenueHistory] {
         venueHistory.delete()
-        
-        return context.checkInContext?.checkInsStore.load()?.map { checkIn -> VenueHistory in
-            VenueHistory(
-                id: checkIn.venueId,
-                organisation: checkIn.venueName,
-                checkedIn: checkIn.checkedIn.date,
-                checkedOut: checkIn.checkedOut.date,
-                delete: {
-                    self.context.deleteCheckIn(checkIn.id)
-                }
-            )
-        } ?? []
+        return loadVenueHistory()
     }
     
     func openTearmsOfUseLink() {

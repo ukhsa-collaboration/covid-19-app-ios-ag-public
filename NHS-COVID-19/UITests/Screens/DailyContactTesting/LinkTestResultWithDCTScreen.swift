@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import XCTest
@@ -53,6 +53,10 @@ struct LinkTestResultWithDCTScreen {
     
     var dctParagraph: XCUIElement {
         app.staticTexts[localized: .link_test_result_enter_code_daily_contact_testing_paragraph]
+    }
+    
+    var dctBulletedListTitle: XCUIElement {
+        app.staticTexts[localized: .link_test_result_enter_code_daily_contact_testing_bulleted_list_title]
     }
     
     var dctBulletedList: [XCUIElement] {

@@ -14,19 +14,23 @@ class CachedResponse<Output> {
     
     private let httpClient: HTTPClient
     private let endpoint: ResponseEchoingEndpoint<Output>
-    
+    private let currentDateProvider: DateProviding?
+
     @FileStored
     private var cachedData: Data?
     
     @Published
     private(set) var value: Output
+    private(set) var lastUpdated: Date?
+    private(set) var updating: Bool = false
     
     init<Endpoint>(
         httpClient: HTTPClient,
         endpoint: Endpoint,
         storage: FileStoring,
         name: String,
-        initialValue: Output
+        initialValue: Output,
+        currentDateProvider: DateProviding? = nil
     ) where Endpoint: HTTPEndpoint, Endpoint.Input == Void, Endpoint.Output == Output {
         self.httpClient = httpClient
         self.endpoint = ResponseEchoingEndpoint(endpoint)
@@ -34,21 +38,33 @@ class CachedResponse<Output> {
         _cachedData = FileStored<Data>(storage: storage, name: name)
         let storedValue = _cachedData.response.flatMap { try? endpoint.parse($0) }
         value = storedValue ?? initialValue
+        self.currentDateProvider = currentDateProvider
     }
     
     /// Attempts to update the cache.
     ///
     /// This method does nothing if the network call fails.
     func update() -> AnyPublisher<Void, Never> {
-        httpClient.fetch(endpoint)
+        #warning("'updating' may not be changed atomically but at worst should result in multiple fetches rather than none")
+        updating = true
+        return httpClient.fetch(endpoint)
             .map(receive)
-            .catch { _ in Empty() }
+            .catch(failed)
             .eraseToAnyPublisher()
     }
     
+    private func failed(_ error: Error) -> AnyPublisher<Void, Never> {
+        updating = false
+        return Empty().eraseToAnyPublisher()
+    }
+    
     private func receive(_ response: HTTPResponse, _ output: Output) {
+        if let currentDateProvider = currentDateProvider {
+            lastUpdated = currentDateProvider.currentDate
+        }
         cachedData = response.body.content
         value = output
+        updating = false
     }
     
 }

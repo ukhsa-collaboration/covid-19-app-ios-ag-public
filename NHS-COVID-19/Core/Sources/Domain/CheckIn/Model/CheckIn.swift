@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -8,6 +8,7 @@ import Foundation
 public struct CheckIn: Codable, Equatable {
     var isRisky: Bool
     var circuitBreakerApproval: CircuitBreakerApproval
+    var venueMessageType: RiskyVenue.MessageType?
     
     public var venueId: String
     public var venueName: String
@@ -24,10 +25,12 @@ public struct CheckIn: Codable, Equatable {
         venueName: String,
         checkedIn: UTCHour,
         checkedOut: UTCHour,
-        isRisky: Bool
+        isRisky: Bool,
+        venueMessageType: RiskyVenue.MessageType?
     ) {
         self.venueId = venueId
         self.venueName = venueName
+        self.venueMessageType = venueMessageType
         self.checkedIn = checkedIn
         self.checkedOut = checkedOut
         self.isRisky = isRisky
@@ -35,13 +38,14 @@ public struct CheckIn: Codable, Equatable {
         circuitBreakerApproval = .pending
     }
     
-    init(venue: Venue, checkedIn: UTCHour, checkedOut: UTCHour, isRisky: Bool) {
+    init(venue: Venue, checkedIn: UTCHour, checkedOut: UTCHour, isRisky: Bool, venueMessageType: RiskyVenue.MessageType? = nil) {
         self.init(
             venueId: venue.id,
             venueName: venue.organisation,
             checkedIn: checkedIn,
             checkedOut: checkedOut,
-            isRisky: isRisky
+            isRisky: isRisky,
+            venueMessageType: venueMessageType
         )
     }
     
@@ -53,6 +57,7 @@ public struct CheckIn: Codable, Equatable {
         case checkedIn
         case checkedOut
         case id
+        case venueMessageType
     }
     
     public init(from decoder: Decoder) throws {
@@ -64,12 +69,13 @@ public struct CheckIn: Codable, Equatable {
         checkedIn = try container.decode(UTCHour.self, forKey: .checkedIn)
         checkedOut = try container.decode(UTCHour.self, forKey: .checkedOut)
         id = try container.decodeIfPresent(String.self, forKey: .id) ?? UUID().uuidString
+        venueMessageType = try container.decodeIfPresent(RiskyVenue.MessageType.self, forKey: .venueMessageType)
     }
     
 }
 
 extension CheckIn {
-    init(venue: Venue, checkedInDate: Date, untilEndOfDayIn: Calendar = .current, isRisky: Bool = false) {
+    init(venue: Venue, checkedInDate: Date, untilEndOfDayIn: Calendar = .current, isRisky: Bool = false, venueMessageType: RiskyVenue.MessageType? = nil) {
         let checkedIn = UTCHour(roundedDownToQuarter: checkedInDate)
         let minimumCheckout = UTCHour(roundedUpToQuarter: checkedInDate)
         let checkout = UTCHour(roundedDownToQuarter: LocalDay(date: checkedInDate, timeZone: untilEndOfDayIn.timeZone).advanced(by: 1).startOfDay)
@@ -77,7 +83,18 @@ extension CheckIn {
             venue: venue,
             checkedIn: checkedIn,
             checkedOut: max(minimumCheckout, checkout),
-            isRisky: isRisky
+            isRisky: isRisky,
+            venueMessageType: venueMessageType
         )
+    }
+}
+
+extension CheckIn {
+    func isMoreRecentAndSevere(than other: CheckIn) -> Bool {
+        if venueMessageType == other.venueMessageType {
+            return checkedIn.date > other.checkedIn.date
+        } else {
+            return venueMessageType == RiskyVenue.MessageType.warnAndBookATest
+        }
     }
 }

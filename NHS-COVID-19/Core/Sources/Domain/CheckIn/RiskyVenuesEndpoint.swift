@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -22,12 +22,6 @@ struct RiskyVenuesEndpoint: HTTPEndpoint {
 }
 
 private struct Payload: Codable {
-    enum MessageType: String, Codable {
-        case m1 = "M1"
-        case m2 = "M2"
-        case m3 = "M3"
-    }
-    
     struct RiskyWindow: Codable {
         var from: Date
         var until: Date
@@ -36,7 +30,7 @@ private struct Payload: Codable {
     struct Venue: Codable {
         var id: String
         var riskyWindow: RiskyWindow
-        var messageType: MessageType?
+        var messageType: String
     }
     
     var venues: [Venue]
@@ -64,16 +58,14 @@ private extension DateInterval {
 
 private extension RiskyVenue.MessageType {
     
-    init(_ messageType: Payload.MessageType?) {
+    init(_ messageType: String) {
         switch messageType {
-        case .m1:
-            self = .inform
-        case .m2:
-            self = .isolate
-        case .m3:
-            self = .inform
-        case .none:
-            self = .inform
+        case "M1":
+            self = .warnAndInform
+        case "M2":
+            self = .warnAndBookATest
+        default:
+            self = .warnAndInform
         }
     }
 }

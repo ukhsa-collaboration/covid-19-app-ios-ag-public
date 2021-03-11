@@ -10,17 +10,18 @@ extension URLSessionConfiguration {
         httpCookieAcceptPolicy = .never
         httpShouldSetCookies = false
         httpCookieStorage = nil
-        urlCache = nil
+        if #available(iOS 13, *) {
+            requestCachePolicy = .reloadRevalidatingCacheData
+        } else {
+            requestCachePolicy = .useProtocolCachePolicy // If-None-Match is not properly implemented in iOS < 13
+        }
     }
 }
 
 public extension URLSession {
     
     convenience init(trustValidator: TrustValidating) {
-        // Use of `ephemeral` here is a precaution. We are disabling all caching manually anyway, but using this instead
-        // of `default` means if we miss something (especially as new properties are added over time) we’ll inherit the
-        // `ephemeral` value instead of the `default` one.
-        let configuration: URLSessionConfiguration = .ephemeral
+        let configuration: URLSessionConfiguration = .default
         configuration.secure()
         
         let delegate = TrustValidatingURLSessionDelegate(validator: trustValidator)

@@ -74,3 +74,10 @@ GCC_WARN_UNDECLARED_SELECTOR = YES
 GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE
 GCC_WARN_UNUSED_FUNCTION = YES
 GCC_WARN_UNUSED_VARIABLE = YES
+
+// Deals with a problem where building with Xcode 12.3+ would result in the app
+// crashing with this stack trace on iOS 13.5:
+// `dyld: Symbol not found: _OBJC_CLASS_$_ENExposureWindow`
+// All calls to `ENExposureWindow` are wrapped in `@available` for iOS 13.7 or
+// above.
+OTHER_LDFLAGS = $(inherited) -weak_framework ExposureNotification

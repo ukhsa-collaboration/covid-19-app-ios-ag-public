@@ -2,12 +2,14 @@
 // Copyright © 2021 DHSC. All rights reserved.
 //
 
+import Common
 import Foundation
 import Localization
 import SwiftUI
 
 public protocol RiskLevelInfoInteracting {
     func didTapWebsiteLink(url: URL)
+    func didTapFindTestCenterLink(url: URL)
 }
 
 extension RiskLevelInfoViewController {
@@ -21,6 +23,7 @@ extension RiskLevelInfoViewController {
         var linkURL: URL?
         var footer: [String]
         var policies: [Policy]
+        var shouldShowMassTestingLink: InterfaceProperty<Bool>
     }
     
     public struct Policy {
@@ -75,7 +78,7 @@ extension RiskLevelInfoViewController {
         
         init(viewModel: ViewModel, interactor: Interacting) {
             
-            let stackedViews: [StackViewContentProvider] = [
+            var stackedViews: [StackViewContentProvider] = [
                 UIImageView(image: viewModel.image).styleAsDecoration(),
                 BaseLabel().set(text: viewModel.infoTitle).styleAsPageHeader(),
                 viewModel.heading.map {
@@ -95,6 +98,19 @@ extension RiskLevelInfoViewController {
                     BaseLabel().set(text: $0).styleAsBody()
                 },
             ]
+            
+            if viewModel.shouldShowMassTestingLink.wrappedValue {
+                stackedViews.append(contentsOf: [
+                    BaseLabel().set(text: localize(.risk_level_mass_testing_title)).styleAsTertiaryTitle(),
+                    BaseLabel().set(text: localize(.risk_level_mass_testing_description)).styleAsBody(),
+                    LinkButton(
+                        title: localize(.risk_level_mass_testing_link_title),
+                        action: {
+                            interactor.didTapFindTestCenterLink(url: ExternalLink.findTestCenter.url)
+                        }
+                    ),
+                ])
+            }
             
             let contentStack = UIStackView(arrangedSubviews: stackedViews.flatMap { $0.content })
             contentStack.axis = .vertical

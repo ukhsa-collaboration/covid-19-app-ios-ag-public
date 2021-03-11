@@ -1,9 +1,12 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
 import Common
+import Foundation
+import Logging
+import UIKit
 
 public class RiskyPostcodeEndpointManager {
     public struct PostcodeRisk: Equatable {
@@ -23,27 +26,36 @@ public class RiskyPostcodeEndpointManager {
         }
     }
     
-    private let cachedResponseV2: CachedResponse<RiskyPostcodes>
-    private var cancellable: AnyCancellable?
+    private static let logger = Logger(label: "RiskyPostcodeEndpointManager")
+
+    private let currentDateProvider: DateProviding
+    private let cachedResponse: CachedResponse<RiskyPostcodes>
+    private var cancellables = [AnyCancellable]()
+    private var currentPostcodeFetchCancellable: AnyCancellable?
+    private var rawState: DomainProperty<RawState>?
     
+    static let minimumUpdateInterval: TimeInterval = 10 * 60
+
     let postcodeInfo: DomainProperty<(postcode: Postcode, localAuthority: LocalAuthority?, risk: DomainProperty<PostcodeRisk?>)?>
     
     var isEmpty: Bool {
-        cachedResponseV2.value.isEmpty
+        cachedResponse.value.isEmpty
     }
     
-    init(distributeClient: HTTPClient, storage: FileStoring, postcode: AnyPublisher<Postcode?, Never>, localAuthority: AnyPublisher<LocalAuthority?, Never>) {
-        let cachedResponseV2 = CachedResponse(
+    init(distributeClient: HTTPClient, storage: FileStoring, postcode: AnyPublisher<Postcode?, Never>, localAuthority: AnyPublisher<LocalAuthority?, Never>, currentDateProvider: DateProviding) {
+        
+        let cachedResponse = CachedResponse(
             httpClient: distributeClient,
             endpoint: RiskyPostcodesEndpointV2(),
             storage: storage,
             name: "risky_postcodes_v2",
-            initialValue: RiskyPostcodes(postDistricts: [:], riskLevels: [:])
+            initialValue: RiskyPostcodes(postDistricts: [:], riskLevels: [:]),
+            currentDateProvider: currentDateProvider
         )
         
         postcodeInfo = postcode.combineLatest(localAuthority) { postcode, localAuthority -> (postcode: Postcode, localAuthority: LocalAuthority?, risk: DomainProperty<PostcodeRisk?>)? in
             guard let postcode = postcode else { return nil }
-            let risk = cachedResponseV2.$value
+            let risk = cachedResponse.$value
                 .map { v2 -> PostcodeRisk? in
                     if let localAuthority = localAuthority,
                         let v2LocalAuthorityRisk = v2.riskStyle(for: localAuthority.id) {
@@ -59,10 +71,69 @@ public class RiskyPostcodeEndpointManager {
         }
         .domainProperty()
         
-        self.cachedResponseV2 = cachedResponseV2
+        self.cachedResponse = cachedResponse
+        self.currentDateProvider = currentDateProvider
     }
     
+    /// Trigger a discretionary update based on the last time it was downloaded
     func update() -> AnyPublisher<Void, Never> {
-        cachedResponseV2.update().eraseToAnyPublisher()
+        
+        guard !cachedResponse.updating else {
+            Self.logger.info("Ignoring risky postcode update as we're already fetching it")
+            return Just(()).eraseToAnyPublisher()
+        }
+
+        // check we don't reload the content too often - this may become obsolete when http caching is implememted
+        let now = currentDateProvider.currentDate
+        if let lastUpdate = cachedResponse.lastUpdated, now.timeIntervalSince(lastUpdate) < Self.minimumUpdateInterval {
+            Self.logger.info("Ignoring risky postcode update as the last one was too recent")
+            return Just(()).eraseToAnyPublisher()
+        }
+                
+        Self.logger.info("Loading risky postcode content")
+
+        return startUpdate()
+    }
+    
+    /// Force a reload regardless of the last time it was done e.g. postcode change
+    func reload() {
+        startUpdate()
+            .sink{}
+            .store(in: &cancellables)
+    }
+    
+    private func startUpdate() -> AnyPublisher<Void, Never> {
+        return cachedResponse
+            .update()
+            .eraseToAnyPublisher()
+    }
+}
+
+extension RiskyPostcodeEndpointManager {
+    
+    func monitorRiskyPostcodes() {
+
+        // assuming this is called shortly after the app launches, check if we need to update now
+        self.runUpdate()
+
+        // now listen for foreground events and check again when they happen
+        #warning("This is adding a new sub to .willEnterForegroundNotification when the app transitions in and out of .fullyOnboarded")
+        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
+            .sink { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.runUpdate()
+            }
+            .store(in: &self.cancellables)
+    }
+    
+    private func runUpdate() {
+        
+        Self.logger.debug("Starting postcode update call")
+        self.currentPostcodeFetchCancellable = self.update().sink { [weak self] _ in
+            Self.logger.debug("Completed postcode update call")
+            self?.currentPostcodeFetchCancellable = nil
+        }
     }
 }

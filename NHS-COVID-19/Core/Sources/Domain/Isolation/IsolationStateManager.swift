@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -50,8 +50,10 @@ class IsolationStateManager {
                         switch testType {
                         case .labResult:
                             Metrics.signpost(.isolatedForTestedPositiveBackgroundTick)
-                        case .rapidResult, .rapidSelfReported:
+                        case .rapidResult:
                             Metrics.signpost(.isIsolatingForTestedLFDPositiveBackgroundTick)
+                        case .rapidSelfReported:
+                            Metrics.signpost(.isIsolatingForTestedSelfRapidPositiveBackgroundTick)
                         }
                     } else {
                         Metrics.signpost(.isolatedForTestedPositiveBackgroundTick)

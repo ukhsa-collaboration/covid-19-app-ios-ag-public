@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -229,7 +229,7 @@ extension UIStackView {
     static func vertical(with views: [UIView]) -> UIStackView {
         let stack = UIStackView(arrangedSubviews: views)
         stack.axis = .vertical
-        stack.spacing = .standardSpacing
+        stack.spacing = .halfSpacing
         stack.layoutMargins = .standard
         stack.isLayoutMarginsRelativeArrangement = true
         return stack

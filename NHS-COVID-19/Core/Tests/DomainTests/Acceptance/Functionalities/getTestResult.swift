@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -11,7 +11,6 @@ func getTestResult(result: VirologyTestResult.TestResult, testKitType: VirologyT
     {
         "diagnosisKeySubmissionToken": "6B162698-ADC5-47AF-8790-71ACF770FFAF",
         "requiresConfirmatoryTest": \(requiresConfirmatoryTest),
-        "testKit": "LAB_RESULT",
         "testEndDate": "\(timestamp)",
         "testResult": "\(String(from: result))",
         "testKit": "\(String(from: testKitType))",

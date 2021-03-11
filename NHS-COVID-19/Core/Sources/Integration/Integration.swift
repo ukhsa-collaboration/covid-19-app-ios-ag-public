@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -43,7 +43,7 @@ extension CoordinatedAppController {
         case .authorizationRequired(let requestPermissions, let country):
             return PermissionsViewController(country: country.interfaceProperty, submit: requestPermissions)
         case .postcodeAndLocalAuthorityRequired(let openURL, let getLocalAuthorities, let storeLocalAuthority):
-            let interactor = LocalAuthorityOnboardingIteractor(
+            let interactor = LocalAuthorityOnboardingInteractor(
                 openURL: openURL,
                 getLocalAuthorities: getLocalAuthorities,
                 storeLocalAuthority: storeLocalAuthority
@@ -52,7 +52,7 @@ extension CoordinatedAppController {
         case .localAuthorityRequired(let postcode, let localAuthorities, let openURL, let storeLocalAuthority):
             let localAuthoritiesForPostcode = Dictionary(uniqueKeysWithValues: localAuthorities.map { (UUID(), $0) })
             
-            let interactor = LocalAuthorityUpdateIteractor(
+            let interactor = LocalAuthorityUpdateInteractor(
                 postcode: postcode,
                 localAuthoritiesForPostcode: localAuthoritiesForPostcode,
                 openURL: openURL,
@@ -206,6 +206,33 @@ extension CoordinatedAppController {
                             interactor: interactor,
                             viewModel: .init(venueName: venueName, checkInDate: checkInDate)
                         )
+                    case .neededForRiskyVenueWarnAndBookATest(let acknowledge, _, _):
+                        let navigationVC = BaseNavigationController()
+                        let interactor = RiskyVenueInformationBookATestInteractor(
+                            bookATestTapped: {
+                                let virologyInteractor = VirologyTestingFlowInteractor(
+                                    virologyTestOrderInfoProvider: context.virologyTestingManager,
+                                    openURL: context.openURL,
+                                    acknowledge: acknowledge
+                                )
+                                
+                                let bookATestInfoInteractor = BookATestInfoViewControllerInteractor(
+                                    didTapBookATest: {
+                                        let virologyFlowVC = VirologyTestingFlowViewController(virologyInteractor)
+                                        navigationVC.present(virologyFlowVC, animated: true)
+                                    },
+                                    openURL: context.openURL
+                                )
+                                
+                                let bookATestInfoVC = BookATestInfoViewController(interactor: bookATestInfoInteractor, shouldHaveCancelButton: false)
+                                navigationVC.pushViewController(bookATestInfoVC, animated: true)
+                            }, goHomeTapped: {
+                                acknowledge()
+                            }
+                        )
+                        let riskyVenueInformationBookATestViewController = RiskyVenueInformationBookATestViewController(interactor: interactor)
+                        navigationVC.viewControllers = [riskyVenueInformationBookATestViewController]
+                        return navigationVC
                     case .neededForVoidResultContinueToIsolate(let interactor, let isolationEndDate):
                         
                         let navigationVC = BaseNavigationController()
@@ -307,6 +334,10 @@ extension CoordinatedAppController {
             currentDateProvider: context.currentDateProvider
         )
         
+        let shouldShowMassTestingLink = context.country.map { country in
+            country == .england
+        }.interfaceProperty
+        
         let riskLevelBannerViewModel = context.postcodeInfo
             .map { postcodeInfo -> AnyPublisher<RiskLevelBanner.ViewModel?, Never> in
                 guard let postcodeInfo = postcodeInfo else { return Just(nil).eraseToAnyPublisher() }
@@ -316,7 +347,8 @@ extension CoordinatedAppController {
                         return RiskLevelBanner.ViewModel(
                             postcode: postcodeInfo.postcode,
                             localAuthority: postcodeInfo.localAuthority,
-                            risk: riskLevel
+                            risk: riskLevel,
+                            shouldShowMassTestingLink: shouldShowMassTestingLink
                         )
                     }
                     .eraseToAnyPublisher()
@@ -331,13 +363,17 @@ extension CoordinatedAppController {
             paused: context.exposureNotificationStateController.isEnabledPublisher.map { !$0 }.property(initialValue: false)
         )
         
-        let showOrderTestButton = context.isolationState.map { state in
+        let didRecentlyVisitSevereRiskyVenue = context.checkInContext?.didRecentlyVisitSevereRiskyVenue() ?? Just<GregorianDay?>(nil).eraseToAnyPublisher()
+        
+        let showOrderTestButton = context.isolationState.combineLatest(didRecentlyVisitSevereRiskyVenue) { state, didRecentlyVisitSevereRiskyVenue in
+            var shouldShowBookTestButton: Bool = false
             switch state {
             case .isolate(let isolation):
-                return isolation.canBookTest
+                shouldShowBookTestButton = isolation.canBookTest
             default:
-                return false
+                shouldShowBookTestButton = false
             }
+            return shouldShowBookTestButton || didRecentlyVisitSevereRiskyVenue != nil
         }
         .property(initialValue: false)
         
@@ -418,7 +454,7 @@ private struct PolicyUpdateInteractor: PolicyUpdateViewController.Interacting {
     }
 }
 
-class LocalAuthorityOnboardingIteractor: LocalAuthorityFlowViewController.Interacting {
+class LocalAuthorityOnboardingInteractor: LocalAuthorityFlowViewController.Interacting {
     private let openURL: (URL) -> Void
     private let getLocalAuthorities: (Postcode) -> Result<Set<Domain.LocalAuthority>, PostcodeValidationError>
     private let storeLocalAuthority: (Postcode, Domain.LocalAuthority) -> Result<Void, LocalAuthorityUnsupportedCountryError>
@@ -469,7 +505,7 @@ class LocalAuthorityOnboardingIteractor: LocalAuthorityFlowViewController.Intera
     }
 }
 
-private struct LocalAuthorityUpdateIteractor: LocalAuthorityFlowViewController.Interacting {
+private struct LocalAuthorityUpdateInteractor: LocalAuthorityFlowViewController.Interacting {
     private let openURL: (URL) -> Void
     private let storeLocalAuthority: (Postcode, Domain.LocalAuthority) -> Result<Void, LocalAuthorityUnsupportedCountryError>
     private let postcode: Postcode
@@ -522,6 +558,6 @@ private struct UnrecoverableErrorViewControllerInteractor: UnrecoverableErrorVie
     let _openURL: (URL) -> Void
     
     func faqLinkTapped() {
-        _openURL(ExternalLink.faq.url)
+        _openURL(ExternalLink.cantRunThisAppFAQs.url)
     }
 }

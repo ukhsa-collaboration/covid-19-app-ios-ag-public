@@ -27,7 +27,8 @@ extension RiskLevelBanner {
             linkTitle: String,
             linkURL: URL?,
             footer: [String],
-            policies: [RiskLevelInfoViewController.Policy]
+            policies: [RiskLevelInfoViewController.Policy],
+            shouldShowMassTestingLink: InterfaceProperty<Bool>
         ) {
             self.postcode = postcode
             self.colorScheme = colorScheme
@@ -59,7 +60,8 @@ extension RiskLevelBanner {
                 linkTitle: linkTitle,
                 linkURL: linkURL,
                 footer: footer,
-                policies: policies
+                policies: policies,
+                shouldShowMassTestingLink: shouldShowMassTestingLink
             )
         }
     }

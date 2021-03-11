@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -33,7 +33,8 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     linkTitle: "",
                     linkURL: nil,
                     footer: [],
-                    policies: []
+                    policies: [],
+                    shouldShowMassTestingLink: .constant(true)
                 )
             case .green:
                 return RiskLevelBanner.ViewModel(
@@ -46,7 +47,8 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     linkTitle: "",
                     linkURL: nil,
                     footer: [],
-                    policies: []
+                    policies: [],
+                    shouldShowMassTestingLink: .constant(true)
                 )
             case .yellow:
                 return RiskLevelBanner.ViewModel(
@@ -59,7 +61,8 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     linkTitle: "",
                     linkURL: nil,
                     footer: [],
-                    policies: []
+                    policies: [],
+                    shouldShowMassTestingLink: .constant(true)
                 )
             case .amber:
                 return RiskLevelBanner.ViewModel(
@@ -72,7 +75,8 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     linkTitle: "",
                     linkURL: nil,
                     footer: [],
-                    policies: []
+                    policies: [],
+                    shouldShowMassTestingLink: .constant(true)
                 )
             case .red:
                 return RiskLevelBanner.ViewModel(
@@ -85,7 +89,8 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     linkTitle: "",
                     linkURL: nil,
                     footer: [],
-                    policies: []
+                    policies: [],
+                    shouldShowMassTestingLink: .constant(true)
                 )
             }
         }

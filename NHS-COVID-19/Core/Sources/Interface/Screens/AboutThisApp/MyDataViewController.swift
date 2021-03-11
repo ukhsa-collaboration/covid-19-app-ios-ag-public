@@ -67,6 +67,7 @@ public class MyDataViewController: UITableViewController {
         var exposureNotificationDetails: ExposureNotificationDetails?
         var selfIsolationEndDate: Date?
         var dailyTestingOptInDate: Date?
+        var venueOfRiskDate: Date?
 
         public struct ExposureNotificationDetails {
             let encounterDate: Date
@@ -125,7 +126,8 @@ public class MyDataViewController: UITableViewController {
             symptomsOnsetDate: Date?,
             exposureNotificationDetails: ExposureNotificationDetails?,
             selfIsolationEndDate: Date?,
-            dailyTestingOptInDate: Date?
+            dailyTestingOptInDate: Date?,
+            venueOfRiskDate: Date?
         ) {
             _postcode = postcode
             _localAuthority = localAuthority
@@ -135,6 +137,7 @@ public class MyDataViewController: UITableViewController {
             self.exposureNotificationDetails = exposureNotificationDetails
             self.selfIsolationEndDate = selfIsolationEndDate
             self.dailyTestingOptInDate = dailyTestingOptInDate
+            self.venueOfRiskDate = venueOfRiskDate
         }
     }
     
@@ -159,6 +162,7 @@ public class MyDataViewController: UITableViewController {
         case notificationDate(Date)
         case lastDayOfSelfIsolation(Date)
         case dailyTestingOptIn(Date)
+        case venueOfRiskDate(Date)
     }
     
     private struct Section {
@@ -221,6 +225,15 @@ public class MyDataViewController: UITableViewController {
             )
         }
 
+        let venueOfRiskDateSection: Section? = viewModel.venueOfRiskDate.map {
+            Section(
+                header: .basic(title: localize(.mydata_section_venue_of_risk)),
+                rows: [
+                    .venueOfRiskDate($0),
+                ]
+            )
+        }
+        
         let venueHistories = viewModel.venueHistories.isEmpty ? nil : Section(
             header: .venueHistory(
                 title: localize(.mydata_section_venue_history_description),
@@ -233,7 +246,7 @@ public class MyDataViewController: UITableViewController {
             rows: viewModel.venueHistories.map { .venueHistory($0) }
         )
         
-        return [postCodeSection, testResultSection, symptomsOnsetSection, exposureNotificationSection, lastDayOfSelfIsolationSection, dailyTestingOptInSection, venueHistories].compactMap { $0 }
+        return [postCodeSection, testResultSection, symptomsOnsetSection, exposureNotificationSection, venueOfRiskDateSection, lastDayOfSelfIsolationSection, dailyTestingOptInSection, venueHistories].compactMap { $0 }
     }
     
     private var cancellable: AnyCancellable?
@@ -296,6 +309,8 @@ public class MyDataViewController: UITableViewController {
             cell = DateCell.create(tableView: tableView, title: localize(.mydata_section_date_description), date: justBeforeEndOfIsolation)
         case .dailyTestingOptIn(let date):
             cell = DateCell.create(tableView: tableView, title: localize(.mydata_daily_testing_opt_in_date_description), date: date)
+        case .venueOfRiskDate(let date):
+            cell = DateCell.create(tableView: tableView, title: localize(.mydata_section_date_description), date: date)
         case .encounterDate(let date):
             cell = DateCell.create(tableView: tableView, title: localize(.mydata_exposure_notification_details_exposure_date_description), date: date)
         case .notificationDate(let date):
@@ -401,7 +416,7 @@ public class MyDataViewController: UITableViewController {
             switch content[indexPath.section].rows[indexPath.row] {
             case .venueHistory(let venueHistory):
                 deleteRow(for: venueHistory, at: indexPath)
-            case .postcode, .testDate, .testResult, .testKitType, .confirmationStatus, .symptomsOnsetDate, .encounterDate, .notificationDate, .lastDayOfSelfIsolation, .dailyTestingOptIn:
+            case .postcode, .testDate, .testResult, .testKitType, .confirmationStatus, .symptomsOnsetDate, .encounterDate, .notificationDate, .lastDayOfSelfIsolation, .dailyTestingOptIn, .venueOfRiskDate:
                 break
             }
         }

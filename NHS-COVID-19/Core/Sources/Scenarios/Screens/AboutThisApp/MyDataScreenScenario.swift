@@ -36,6 +36,7 @@ public class MyDataScreenScenario: Scenario {
     public static let notificationDate = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 11, hour: 8))!
     public static let endSelfIsolationDate = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 22, hour: 8))!
     public static let dailyTestingOptInDate = Calendar.utc.date(from: DateComponents(year: 2021, month: 1, day: 27, hour: 8))!
+    public static let venueOfRiskDate = Calendar.utc.date(from: DateComponents(year: 2021, month: 2, day: 25, hour: 21))!
 
     fileprivate static var venueHistories = [
         VenueHistory(
@@ -94,7 +95,8 @@ public class MyDataScreenScenario: Scenario {
                         notificationDate: notificationDate
                     ),
                     selfIsolationEndDate: endSelfIsolationDate,
-                    dailyTestingOptInDate: dailyTestingOptInDate
+                    dailyTestingOptInDate: dailyTestingOptInDate,
+                    venueOfRiskDate: venueOfRiskDate
                 ),
                 interactor: Interactor(
                     didTapEditPostcode: { parent.showAlert(title: didTapEditPostcode) },

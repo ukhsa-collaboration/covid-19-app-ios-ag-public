@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -13,6 +13,8 @@ class CheckInsStoreTests: XCTestCase {
     
     private var encryptedStore: MockEncryptedStore!
     private var checkInsStore: CheckInsStore!
+    private static var standardOptionToBookATestDuration = 14
+    private var optionToBookATestDuration = standardOptionToBookATestDuration
     
     var cancellable: AnyCancellable?
     
@@ -20,7 +22,7 @@ class CheckInsStoreTests: XCTestCase {
         super.setUp()
         
         encryptedStore = MockEncryptedStore()
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests)
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(self.optionToBookATestDuration)) })
     }
     
     func testLoadingNotRiskyCheckInData() throws {
@@ -61,7 +63,7 @@ class CheckInsStoreTests: XCTestCase {
             "unacknowldegedRiskyVenueIds": [],
         }
         """# .data(using: .utf8)!
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests)
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         
         let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
         
@@ -113,7 +115,7 @@ class CheckInsStoreTests: XCTestCase {
             "unacknowldegedRiskyVenueIds": [],
         }
         """# .data(using: .utf8)!
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests)
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         
         let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
         
@@ -172,7 +174,7 @@ class CheckInsStoreTests: XCTestCase {
             "unacknowldegedRiskyVenueIds": [],
         }
         """# .data(using: .utf8)!
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests)
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         
         let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
         
@@ -227,7 +229,7 @@ class CheckInsStoreTests: XCTestCase {
             "unacknowldegedRiskyVenueIds": [],
         }
         """# .data(using: .utf8)!
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests)
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         
         let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
         
@@ -253,7 +255,7 @@ class CheckInsStoreTests: XCTestCase {
         {
         }
         """# .data(using: .utf8)!
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests)
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         XCTAssertNil(checkInsStore.load())
     }
     
@@ -296,7 +298,18 @@ class CheckInsStoreTests: XCTestCase {
         checkInsStore.save(c3)
         checkInsStore.save(c4)
         
-        checkInsStore.updateRisk(["CDJK2345", "DCJK2345"])
+        checkInsStore.updateRisk(
+            [RiskyVenue(
+                id: "cdjk2345",
+                riskyInterval: UTCHour.riskyTimeInterval,
+                messageType: .warnAndInform
+            ),
+             RiskyVenue(
+                 id: "DCjk2345",
+                 riskyInterval: UTCHour.riskyTimeInterval,
+                 messageType: .warnAndInform
+             )]
+        )
         
         let checkIns = try XCTUnwrap(checkInsStore.load())
         for checkIn in checkIns {
@@ -329,7 +342,18 @@ class CheckInsStoreTests: XCTestCase {
         checkInsStore.save(c3)
         checkInsStore.save(c4)
         
-        checkInsStore.updateRisk(["cdjk2345", "DCjk2345"])
+        checkInsStore.updateRisk(
+            [RiskyVenue(
+                id: "cdjk2345",
+                riskyInterval: UTCHour.riskyTimeInterval,
+                messageType: .warnAndInform
+            ),
+             RiskyVenue(
+                 id: "DCjk2345",
+                 riskyInterval: UTCHour.riskyTimeInterval,
+                 messageType: .warnAndInform
+             )]
+        )
         
         let checkIns = try XCTUnwrap(checkInsStore.load())
         for checkIn in checkIns {
@@ -352,23 +376,213 @@ class CheckInsStoreTests: XCTestCase {
     }
     
     func testUpdateRiskyVenuesTriggerPublishedProperty() throws {
-        let now = UTCHour(year: 2020, month: 5, day: 15, hour: 10).date
-        let c1 = CheckIn(venue: .random(), checkedInDate: now.hoursAgo(48), isRisky: false)
-        let c2 = CheckIn(venue: .random(), checkedInDate: now.hoursAgo(24), isRisky: false)
-        let c3 = CheckIn(venue: .random(), checkedInDate: now.addHours(24), isRisky: false)
-        let c4 = CheckIn(venue: .random(), checkedInDate: now.addHours(48), isRisky: false)
+        let c1 = CheckIn(venue: .random(), checkedInDate: UTCHour.before.date, isRisky: false)
+        let c2 = CheckIn(venue: .random(), checkedIn: UTCHour.during, checkedOut: UTCHour.during, isRisky: false)
+        let c3 = CheckIn(venue: .random(), checkedIn: UTCHour.duringLater, checkedOut: UTCHour.duringLater, isRisky: false)
+        let c4 = CheckIn(venue: .random(), checkedInDate: UTCHour.after.date, isRisky: false)
         checkInsStore.save(c1)
         checkInsStore.save(c2)
         checkInsStore.save(c3)
         checkInsStore.save(c4)
         
         let expectedRiskyCheckIns = [
-            try c2.changeToRisky(),
-            try c3.changeToRisky(),
+            try c2.changeToRiskyWarnAndInform(),
+            try c3.changeToRiskyWarnAndInform(),
         ]
         
-        checkInsStore.updateRisk([c2.venueId, c3.venueId])
+        checkInsStore.updateRisk(
+            [RiskyVenue(
+                id: c2.venueId,
+                riskyInterval: UTCHour.riskyTimeInterval,
+                messageType: .warnAndInform
+            ),
+             RiskyVenue(
+                 id: c3.venueId,
+                 riskyInterval: UTCHour.riskyTimeInterval,
+                 messageType: .warnAndInform
+             )]
+        )
         TS.assert(checkInsStore.riskyCheckIns, equals: expectedRiskyCheckIns)
+        TS.assert((checkInsStore.load() ?? []).count, equals: 4)
+    }
+    
+    func testUpdateRiskyVenuesOnlyChangeIntersectingCheckins() throws {
+        let venue = Venue.random()
+        let c1 = CheckIn(venue: venue, checkedIn: UTCHour.before, checkedOut: UTCHour.before, isRisky: false)
+        let c2 = CheckIn(venue: venue, checkedIn: UTCHour.during, checkedOut: UTCHour.during, isRisky: false)
+        let c3 = CheckIn(venue: .random(), checkedIn: UTCHour.duringLater, checkedOut: UTCHour.duringLater, isRisky: false)
+        let c4 = CheckIn(venue: venue, checkedInDate: UTCHour.after.date, isRisky: false)
+        checkInsStore.save(c1)
+        checkInsStore.save(c2)
+        checkInsStore.save(c3)
+        checkInsStore.save(c4)
+        
+        let expectedRiskyCheckIns = [
+            try c2.changeToRiskyWarnAndInform(),
+            try c3.changeToRiskyWarnAndInform(),
+        ]
+        
+        checkInsStore.updateRisk(
+            [RiskyVenue(
+                id: c2.venueId,
+                riskyInterval: UTCHour.riskyTimeInterval,
+                messageType: .warnAndInform
+            ),
+             RiskyVenue(
+                 id: c3.venueId,
+                 riskyInterval: UTCHour.riskyTimeInterval,
+                 messageType: .warnAndInform
+             )]
+        )
+        TS.assert(checkInsStore.riskyCheckIns, equals: expectedRiskyCheckIns)
+        TS.assert((checkInsStore.load() ?? []).count, equals: 4)
+    }
+    
+    func testUpdateRiskyVenueIfCheckInInTimeIntervallAndCheckoutAfter() throws {
+        let venue = Venue.random()
+        let c1 = CheckIn(venue: venue, checkedIn: UTCHour.during, checkedOut: UTCHour.after, isRisky: false)
+        checkInsStore.save(c1)
+        
+        let expectedRiskyCheckIns = [
+            try c1.changeToRiskyWarnAndInform(),
+        ]
+        
+        checkInsStore.updateRisk(
+            [RiskyVenue(
+                id: c1.venueId,
+                riskyInterval: UTCHour.riskyTimeInterval,
+                messageType: .warnAndInform
+            )]
+        )
+        TS.assert(checkInsStore.riskyCheckIns, equals: expectedRiskyCheckIns)
+    }
+    
+    func testUpdateRiskyVenueIdNotCaseSensitive() throws {
+        let venue = Venue(id: "DCjk2345", organisation: .random())
+        let c1 = CheckIn(venue: venue, checkedIn: UTCHour.before, checkedOut: UTCHour.during, isRisky: false)
+        checkInsStore.save(c1)
+        
+        let expectedRiskyCheckIns = [
+            try c1.changeToRiskyWarnAndInform(),
+        ]
+        
+        checkInsStore.updateRisk(
+            [RiskyVenue(
+                id: "DCJK2345",
+                riskyInterval: UTCHour.riskyTimeInterval,
+                messageType: .warnAndInform
+            )]
+        )
+        TS.assert(checkInsStore.riskyCheckIns, equals: expectedRiskyCheckIns)
+    }
+    
+    func testUpdateRiskyVenueIfCheckInBeforeTimeIntervallAndCheckoutDuring() throws {
+        let venue = Venue.random()
+        let c1 = CheckIn(venue: venue, checkedIn: UTCHour.before, checkedOut: UTCHour.during, isRisky: false)
+        checkInsStore.save(c1)
+        
+        let expectedRiskyCheckIns = [
+            try c1.changeToRiskyWarnAndInform(),
+        ]
+        
+        checkInsStore.updateRisk(
+            [RiskyVenue(
+                id: c1.venueId,
+                riskyInterval: UTCHour.riskyTimeInterval,
+                messageType: .warnAndInform
+            )]
+        )
+        TS.assert(checkInsStore.riskyCheckIns, equals: expectedRiskyCheckIns)
+    }
+    
+    func testUpdateRiskyVenueIfCheckInBeforeTimeIntervallAndCheckoutAfter() throws {
+        let venue = Venue.random()
+        let c1 = CheckIn(venue: venue, checkedIn: UTCHour.before, checkedOut: UTCHour.after, isRisky: false)
+        checkInsStore.save(c1)
+        
+        let expectedRiskyCheckIns = [
+            try c1.changeToRiskyWarnAndInform(),
+        ]
+        
+        checkInsStore.updateRisk(
+            [RiskyVenue(
+                id: c1.venueId,
+                riskyInterval: UTCHour.riskyTimeInterval,
+                messageType: .warnAndInform
+            )]
+        )
+        TS.assert(checkInsStore.riskyCheckIns, equals: expectedRiskyCheckIns)
+    }
+    
+    func testUpdateRiskyVenuesNoRiskyVenue() throws {
+        let c1 = CheckIn(venue: .random(), checkedInDate: UTCHour.before.date, isRisky: false)
+        let c2 = CheckIn(venue: .random(), checkedIn: UTCHour.during, checkedOut: UTCHour.during, isRisky: false)
+        let c3 = CheckIn(venue: .random(), checkedIn: UTCHour.duringLater, checkedOut: UTCHour.duringLater, isRisky: false)
+        let c4 = CheckIn(venue: .random(), checkedInDate: UTCHour.after.date, isRisky: false)
+        checkInsStore.save(c1)
+        checkInsStore.save(c2)
+        checkInsStore.save(c3)
+        checkInsStore.save(c4)
+        
+        checkInsStore.updateRisk([])
+        
+        XCTAssertTrue(checkInsStore.riskyCheckIns.isEmpty)
+        TS.assert((checkInsStore.load() ?? []).count, equals: 4)
+    }
+    
+    func testUpdateRiskyVenuesSameVenueDifferentMessageType() throws {
+        let c1 = CheckIn(venue: .random(), checkedInDate: UTCHour.before.date, isRisky: false)
+        let c2 = CheckIn(venue: .random(), checkedInDate: UTCHour.during.date, isRisky: false)
+        checkInsStore.save(c1)
+        checkInsStore.save(c2)
+        
+        let expectedRiskyCheckIns = [
+            try c2.changeToRiskyWarnAndBookATest(),
+        ]
+        
+        checkInsStore.updateRisk(
+            [RiskyVenue(
+                id: c2.venueId,
+                riskyInterval: UTCHour.riskyTimeInterval,
+                messageType: .warnAndBookATest
+            ),
+             RiskyVenue(
+                 id: c2.venueId,
+                 riskyInterval: UTCHour.riskyTimeInterval,
+                 messageType: .warnAndInform
+             )]
+        )
+        TS.assert(checkInsStore.riskyCheckIns, equals: expectedRiskyCheckIns)
+    }
+    
+    func testUpdateRiskyVenuesEmptyCheckInAndOutBefore() throws {
+        let c1 = CheckIn(venue: .random(), checkedIn: UTCHour.before, checkedOut: UTCHour.before, isRisky: false)
+        
+        checkInsStore.save(c1)
+        
+        checkInsStore.updateRisk(
+            [RiskyVenue(
+                id: c1.venueId,
+                riskyInterval: UTCHour.riskyTimeInterval,
+                messageType: .warnAndBookATest
+            )]
+        )
+        XCTAssertTrue(checkInsStore.riskyCheckIns.isEmpty)
+    }
+    
+    func testUpdateRiskyVenuesEmptyCheckInAndOutAfter() throws {
+        let c1 = CheckIn(venue: .random(), checkedIn: UTCHour.after, checkedOut: UTCHour.after, isRisky: false)
+        
+        checkInsStore.save(c1)
+        
+        checkInsStore.updateRisk(
+            [RiskyVenue(
+                id: c1.venueId,
+                riskyInterval: UTCHour.riskyTimeInterval,
+                messageType: .warnAndBookATest
+            )]
+        )
+        XCTAssertTrue(checkInsStore.riskyCheckIns.isEmpty)
     }
     
     func testCheckInWithPayloadSaveSuccess() throws {
@@ -464,6 +678,420 @@ class CheckInsStoreTests: XCTestCase {
         checkInsStore.delete(checkInId: checkIns[0].id)
         TS.assert(checkInsStore.load(), equals: [checkIns[1], checkIns[2]])
     }
+    
+    func testLastUnacknowledgedRiskyCheckInsOnlyWarnAndInformUnacknowledged() throws {
+        encryptedStore.stored["checkins"] = #"""
+        {
+            "checkIns": [
+                {
+                    "venueId" : "DCJK2345",
+                    "venueName" : "venue1",
+                    "checkedIn" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 22
+                        },
+                        "hour" : 5,
+                        "minutes": 0
+                    },
+                    "checkedOut" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 22
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                    "circuitBreakerApproval" : "pending",
+                    "isRisky" : true,
+                    "id": "\#(UUID().uuidString)",
+                    "venueMessageType": "warnAndInform",
+                },
+                {
+                    "venueId" : "CDEF2345",
+                    "venueName" : "venue2",
+                    "checkedIn" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 24
+                        },
+                        "hour" : 5,
+                        "minutes": 0
+                    },
+                    "checkedOut" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 24
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                    "circuitBreakerApproval" : "pending",
+                    "isRisky" : true,
+                    "id": "\#(UUID().uuidString)",
+                    "venueMessageType": "warnAndInform",
+                },
+                {
+                    "venueId" : "DCJK2346",
+                    "venueName" : "venue3",
+                    "checkedIn" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 23
+                        },
+                        "hour" : 5,
+                        "minutes": 0
+                    },
+                    "checkedOut" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 23
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                    "circuitBreakerApproval" : "pending",
+                    "isRisky" : true,
+                    "id": "\#(UUID().uuidString)",
+                    "venueMessageType": "warnAndInform",
+                }
+            ],
+            "riskApprovalTokens": {},
+            "unacknowldegedRiskyVenueIds": ["CDEF2345", "DCJK2345", "DCJK2346"],
+        }
+        """# .data(using: .utf8)!
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        
+        let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
+        XCTAssert(loadedCheckIns.count == 3)
+        
+        XCTAssertEqual(checkInsStore.mostRecentAndSevereUnacknowledgedRiskyCheckIn?.venueId, "CDEF2345")
+    }
+    
+    func testLastUnacknowledgedRiskyCheckInsOnlyWarnAndBookATestUnacknowledged() throws {
+        encryptedStore.stored["checkins"] = #"""
+        {
+            "checkIns": [
+                {
+                    "venueId" : "DCJK2345",
+                    "venueName" : "venue1",
+                    "checkedIn" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 22
+                        },
+                        "hour" : 5,
+                        "minutes": 0
+                    },
+                    "checkedOut" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 22
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                    "circuitBreakerApproval" : "pending",
+                    "isRisky" : true,
+                    "id": "\#(UUID().uuidString)",
+                    "venueMessageType": "warnAndBookATest",
+                },
+                {
+                    "venueId" : "CDEF2345",
+                    "venueName" : "venue2",
+                    "checkedIn" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 24
+                        },
+                        "hour" : 5,
+                        "minutes": 0
+                    },
+                    "checkedOut" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 24
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                    "circuitBreakerApproval" : "pending",
+                    "isRisky" : true,
+                    "id": "\#(UUID().uuidString)",
+                    "venueMessageType": "warnAndBookATest",
+                },
+                {
+                    "venueId" : "DCJK2346",
+                    "venueName" : "venue3",
+                    "checkedIn" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 23
+                        },
+                        "hour" : 5,
+                        "minutes": 0
+                    },
+                    "checkedOut" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 23
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                    "circuitBreakerApproval" : "pending",
+                    "isRisky" : true,
+                    "id": "\#(UUID().uuidString)",
+                    "venueMessageType": "warnAndBookATest",
+                }
+            ],
+            "riskApprovalTokens": {},
+            "unacknowldegedRiskyVenueIds": ["DCJK2346", "CDEF2345", "DCJK2345"],
+        }
+        """# .data(using: .utf8)!
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        
+        let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
+        XCTAssert(loadedCheckIns.count == 3)
+        
+        XCTAssertEqual(checkInsStore.mostRecentAndSevereUnacknowledgedRiskyCheckIn?.venueId, "CDEF2345")
+    }
+    
+    func testLastUnacknowledgedRiskyCheckInsWarnAndBookATestPlusWarnAndInformUnacknowledged() throws {
+        encryptedStore.stored["checkins"] = #"""
+        {
+            "checkIns": [
+                {
+                    "venueId" : "DCJK2345",
+                    "venueName" : "venue1",
+                    "checkedIn" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 22
+                        },
+                        "hour" : 5,
+                        "minutes": 0
+                    },
+                    "checkedOut" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 22
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                    "circuitBreakerApproval" : "pending",
+                    "isRisky" : true,
+                    "id": "\#(UUID().uuidString)",
+                    "venueMessageType": "warnAndBookATest",
+                },
+                {
+                    "venueId" : "CDEF2345",
+                    "venueName" : "venue2",
+                    "checkedIn" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 24
+                        },
+                        "hour" : 5,
+                        "minutes": 0
+                    },
+                    "checkedOut" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 24
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                    "circuitBreakerApproval" : "pending",
+                    "isRisky" : true,
+                    "id": "\#(UUID().uuidString)",
+                    "venueMessageType": "warnAndInform",
+                },
+                {
+                    "venueId" : "DCJK2346",
+                    "venueName" : "venue3",
+                    "checkedIn" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 23
+                        },
+                        "hour" : 5,
+                        "minutes": 0
+                    },
+                    "checkedOut" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 23
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                    "circuitBreakerApproval" : "pending",
+                    "isRisky" : true,
+                    "id": "\#(UUID().uuidString)",
+                    "venueMessageType": "warnAndBookATest",
+                }
+            ],
+            "riskApprovalTokens": {},
+            "unacknowldegedRiskyVenueIds": ["DCJK2346", "CDEF2345", "DCJK2345"],
+        }
+        """# .data(using: .utf8)!
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        
+        let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
+        XCTAssert(loadedCheckIns.count == 3)
+        
+        XCTAssertEqual(checkInsStore.mostRecentAndSevereUnacknowledgedRiskyCheckIn?.venueId, "DCJK2346")
+    }
+    
+    func testDateOfLastRiskyCheckInStored() throws {
+        encryptedStore.stored["checkins"] = #"""
+        {
+            "checkIns": [
+                {
+                    "venueId" : "DCJK2345",
+                    "venueName" : "venue1",
+                    "checkedIn" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 22
+                        },
+                        "hour" : 5,
+                        "minutes": 0
+                    },
+                    "checkedOut" : {
+                        "day" : {
+                            "year" : 2021,
+                            "month" : 2,
+                            "day" : 22
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                    "circuitBreakerApproval" : "pending",
+                    "isRisky" : true,
+                    "id": "\#(UUID().uuidString)"
+                }
+            ],
+            "riskApprovalTokens": {},
+            "unacknowldegedRiskyVenueIds": [],
+        }
+        """# .data(using: .utf8)!
+        
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        
+        _ = try XCTUnwrap(checkInsStore.load())
+        
+        checkInsStore.saveMostRecentRiskyVenueCheckIn(
+            on: GregorianDay(year: 2021, month: 2, day: 22)
+        )
+        
+        XCTAssertEqual(checkInsStore.mostRecentRiskyCheckInDay, GregorianDay(year: 2021, month: 2, day: 22))
+        XCTAssertEqual(checkInsStore.mostRecentRiskyVenueConfiguration?.optionToBookATest, DayDuration(14))
+    }
+    
+    func testStoreMostRecentRiskyVenueCheckInDateAndConfiguration() throws {
+        let now = UTCHour(year: 2021, month: 1, day: 22, hour: 8, minutes: 0)
+        let c1 = CheckIn(venue: .random(), checkedInDate: now.date.addHours(-24), isRisky: false)
+        var c2 = CheckIn(venue: .random(), checkedInDate: now.date, isRisky: false)
+        c2 = try c2.changeToRiskyWarnAndBookATest()
+        
+        checkInsStore.save(c1)
+        checkInsStore.save(c2)
+        
+        checkInsStore.saveMostRecentRiskyVenueCheckIn(on: c1.checkedIn.day)
+        
+        optionToBookATestDuration = 22
+        
+        checkInsStore.set(.yes, for: c2.venueId)
+        
+        XCTAssertEqual(c2.checkedIn.day, checkInsStore.mostRecentRiskyCheckInDay)
+        XCTAssertEqual(optionToBookATestDuration, checkInsStore.mostRecentRiskyVenueConfiguration?.optionToBookATest.days)
+    }
+    
+    func testDoNotStoreWarnAndInformVenueCheckInDateAndConfiguration() throws {
+        let now = UTCHour(year: 2021, month: 1, day: 22, hour: 8, minutes: 0)
+        let c1 = CheckIn(venue: .random(), checkedInDate: now.date.addHours(-24), isRisky: false)
+        var c2 = CheckIn(venue: .random(), checkedInDate: now.date, isRisky: false)
+        c2 = try c2.changeToRiskyWarnAndInform()
+        
+        checkInsStore.save(c1)
+        checkInsStore.save(c2)
+        
+        checkInsStore.saveMostRecentRiskyVenueCheckIn(on: c1.checkedIn.day)
+        
+        optionToBookATestDuration = 22
+        
+        checkInsStore.set(.yes, for: c2.venueId)
+        
+        XCTAssertEqual(c1.checkedIn.day, checkInsStore.mostRecentRiskyCheckInDay)
+        XCTAssertEqual(Self.standardOptionToBookATestDuration, checkInsStore.mostRecentRiskyVenueConfiguration?.optionToBookATest.days)
+    }
+    
+    func testDoNotStoreOlderVenueCheckinDateAndConfiguration() throws {
+        let now = UTCHour(year: 2021, month: 1, day: 22, hour: 8, minutes: 0)
+        let c1 = CheckIn(venue: .random(), checkedInDate: now.date, isRisky: false)
+        var c2 = CheckIn(venue: .random(), checkedInDate: now.date.addHours(-24), isRisky: false)
+        c2 = try c2.changeToRiskyWarnAndBookATest()
+        
+        checkInsStore.save(c1)
+        checkInsStore.save(c2)
+        
+        checkInsStore.saveMostRecentRiskyVenueCheckIn(on: c1.checkedIn.day)
+        
+        optionToBookATestDuration = 22
+        
+        checkInsStore.set(.yes, for: c2.venueId)
+        
+        XCTAssertEqual(c1.checkedIn.day, checkInsStore.mostRecentRiskyCheckInDay)
+        XCTAssertEqual(Self.standardOptionToBookATestDuration, checkInsStore.mostRecentRiskyVenueConfiguration?.optionToBookATest.days)
+    }
+    
+    func testRemoveMostRecentCheckInDayAndConfiguration() throws {
+        let now = UTCHour(year: 2021, month: 1, day: 22, hour: 8, minutes: 0)
+        let c1 = CheckIn(venue: .random(), checkedInDate: now.date, isRisky: false)
+        var c2 = CheckIn(venue: .random(), checkedInDate: now.date.addHours(-24), isRisky: false)
+        c2 = try c2.changeToRiskyWarnAndBookATest()
+        
+        checkInsStore.save(c1)
+        checkInsStore.save(c2)
+        
+        checkInsStore.saveMostRecentRiskyVenueCheckIn(on: c1.checkedIn.day)
+        
+        optionToBookATestDuration = 22
+        
+        checkInsStore.set(.yes, for: c2.venueId)
+        
+        XCTAssertEqual(c1.checkedIn.day, checkInsStore.mostRecentRiskyCheckInDay)
+        XCTAssertEqual(Self.standardOptionToBookATestDuration, checkInsStore.mostRecentRiskyVenueConfiguration?.optionToBookATest.days)
+        
+        checkInsStore.deleteMostRecentRiskyVenueCheckIn()
+        
+        XCTAssertNil(checkInsStore.mostRecentRiskyCheckInDay)
+        XCTAssertNil(checkInsStore.mostRecentRiskyVenueConfiguration)
+    }
+    
 }
 
 extension Date {
@@ -478,7 +1106,38 @@ extension Date {
     
 }
 
+extension CheckIn {
+    
+    func changeToRiskyWarnAndInform() throws -> Self {
+        guard !isRisky else {
+            throw TestError("checkIn must not be risky")
+        }
+        
+        return mutating(self) {
+            $0.isRisky = true
+            $0.venueMessageType = .warnAndInform
+        }
+    }
+    
+    func changeToRiskyWarnAndBookATest() throws -> Self {
+        guard !isRisky else {
+            throw TestError("checkIn must not be risky")
+        }
+        
+        return mutating(self) {
+            $0.isRisky = true
+            $0.venueMessageType = .warnAndBookATest
+        }
+    }
+}
+
 extension UTCHour {
+    static var before = UTCHour(day: .standard, hour: 5)
+    static var during = UTCHour(day: .standard, hour: 7)
+    static var duringLater = UTCHour(day: .standard, hour: 7, minutes: 30)
+    static var after = UTCHour(day: .standard, hour: 9)
+    static var riskyTimeInterval = DateInterval(start: UTCHour(day: .standard, hour: 6).date, end: UTCHour(day: .standard, hour: 8).date)
+    
     init(year: Int, month: Int, day: Int, hour: Int) {
         self.init(year: year, month: month, day: day, hour: hour, minutes: 0)
     }
@@ -486,4 +1145,8 @@ extension UTCHour {
     init(day: GregorianDay, hour: Int) {
         self.init(day: day, hour: hour, minutes: 0)
     }
+}
+
+extension GregorianDay {
+    static var standard = GregorianDay(year: 2020, month: 5, day: 5)
 }

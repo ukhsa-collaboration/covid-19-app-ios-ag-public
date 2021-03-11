@@ -14,7 +14,8 @@ extension RiskLevelBanner.ViewModel {
     public init(
         postcode: Postcode,
         localAuthority: Domain.LocalAuthority?,
-        risk: RiskyPostcodeEndpointManager.PostcodeRisk
+        risk: RiskyPostcodeEndpointManager.PostcodeRisk,
+        shouldShowMassTestingLink: InterfaceProperty<Bool>
     ) {
         let colorScheme: ColorScheme
         
@@ -60,7 +61,8 @@ extension RiskLevelBanner.ViewModel {
                         heading: policy.policyHeading.localizedString(),
                         body: policy.policyContent.localizedString()
                     )
-                }
+                },
+                shouldShowMassTestingLink: shouldShowMassTestingLink
             )
         } else {
             let title = risk.style.name.localizedString().replacingOccurrences(of: Self.postcodePlaceholder, with: postcode.value)
@@ -75,7 +77,8 @@ extension RiskLevelBanner.ViewModel {
                 linkTitle: risk.style.linkTitle.localizedString(),
                 linkURL: URL(string: risk.style.linkUrl.localizedString(contentType: .url)),
                 footer: [],
-                policies: []
+                policies: [],
+                shouldShowMassTestingLink: shouldShowMassTestingLink
             )
         }
     }

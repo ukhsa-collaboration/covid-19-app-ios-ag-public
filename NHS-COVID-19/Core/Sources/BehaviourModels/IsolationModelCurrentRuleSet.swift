@@ -50,8 +50,8 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             See below for exceptions if contact is old.
             """,
             predicate: StatePredicate(
-                contact: [.noIsolation, .notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT],
-                positiveTest: [.noIsolation, .notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest, .isolatingWithUnconfirmedTest]
+                contact: .all(except: .isolating),
+                positiveTest: .all(except: .isolatingWithConfirmedTest)
             ),
             event: .riskyContact,
             update: .init(contact: .isolating)
@@ -63,7 +63,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             """,
             predicate: StatePredicate(
                 contact: [.notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT],
-                positiveTest: [.noIsolation, .notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest, .isolatingWithUnconfirmedTest]
+                positiveTest: .all(except: .isolatingWithConfirmedTest)
             ),
             event: .riskyContactWithExposureDayOlderThanIsolationTerminationDueToDCT,
             update: .init()
@@ -86,8 +86,8 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             Symptom entry is only allowed if not already isolating as symptomatic or positive.
             """,
             predicate: StatePredicate(
-                symptomatic: [.noIsolation, .notIsolatingAndHadSymptomsPreviously],
-                positiveTest: [.noIsolation, .notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
+                symptomatic: .all(except: .isolating),
+                positiveTest: .all(except: .isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest)
             ),
             event: .selfDiagnosedSymptomatic,
             update: .init(
@@ -358,7 +358,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             """,
             predicate: StatePredicate(
                 symptomatic: [.noIsolation, .notIsolatingAndHadSymptomsPreviously],
-                positiveTest: [.noIsolation, .notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
+                positiveTest: .all(except: .isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest)
             ),
             event: .receivedUnconfirmedPositiveTest,
             update: .init(
@@ -493,8 +493,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             """,
             predicates: [
                 StatePredicate(
-                    symptomatic: [.notIsolatingAndHadSymptomsPreviously, .isolating],
-                    positiveTest: [.noIsolation, .notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHasNegativeTest, .isolatingWithConfirmedTest]
+                    symptomatic: [.notIsolatingAndHadSymptomsPreviously, .isolating]
                 ),
             ],
             event: .receivedUnconfirmedPositiveTestWithIsolationPeriodOlderThanAssumedSymptomOnsetDate,
@@ -667,9 +666,29 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             """,
             predicates: [
                 StatePredicate(
-                    contact: [.noIsolation, .notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT],
-                    symptomatic: [.noIsolation, .notIsolatingAndHadSymptomsPreviously],
+                    contact: [.notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT],
+                    symptomatic: [.noIsolation],
                     positiveTest: [.noIsolation, .notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
+                ),
+                StatePredicate(
+                    contact: [.noIsolation],
+                    symptomatic: [.notIsolatingAndHadSymptomsPreviously],
+                    positiveTest: [.noIsolation, .notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
+                ),
+                StatePredicate(
+                    contact: [.notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT],
+                    symptomatic: [.notIsolatingAndHadSymptomsPreviously],
+                    positiveTest: [.noIsolation]
+                ),
+                StatePredicate(
+                    contact: [.noIsolation],
+                    symptomatic: [.noIsolation],
+                    positiveTest: [.notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
+                ),
+                StatePredicate(
+                    contact: [.notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT],
+                    symptomatic: [.notIsolatingAndHadSymptomsPreviously],
+                    positiveTest: [.notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
                 ),
             ],
             event: .retentionPeriodEnded,
@@ -754,10 +773,22 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             If not in symptomatic or positive test isolation, then the event to finish it is meaningless.
             """,
             predicate: StatePredicate(
-                symptomatic: [.noIsolation, .notIsolatingAndHadSymptomsPreviously],
-                positiveTest: [.noIsolation, .notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
+                symptomatic: .all(except: .isolating),
+                positiveTest: .all(except: .isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest)
             ),
             event: .indexIsolationEnded
+        ),
+        
+        Rule(
+            filler: """
+            Ending retention period with no isolation is meaningless.
+            """,
+            predicate: StatePredicate(
+                contact: [.noIsolation],
+                symptomatic: [.noIsolation],
+                positiveTest: [.noIsolation]
+            ),
+            event: .retentionPeriodEnded
         ),
         
         Rule(
@@ -767,32 +798,32 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             predicates: [
                 StatePredicate(
                     contact: [.isolating],
-                    symptomatic: [.noIsolation, .notIsolatingAndHadSymptomsPreviously],
-                    positiveTest: [.noIsolation, .notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
+                    symptomatic: .all(except: .isolating),
+                    positiveTest: .all(except: .isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest)
                 ),
                 StatePredicate(
-                    contact: [.noIsolation, .notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT],
+                    contact: .all(except: .isolating),
                     symptomatic: [.isolating],
-                    positiveTest: [.noIsolation, .notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
+                    positiveTest: .all(except: .isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest)
                 ),
                 StatePredicate(
-                    contact: [.noIsolation, .notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT],
-                    symptomatic: [.noIsolation, .notIsolatingAndHadSymptomsPreviously],
+                    contact: .all(except: .isolating),
+                    symptomatic: .all(except: .isolating),
                     positiveTest: [.isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest]
                 ),
                 StatePredicate(
                     contact: [.isolating],
                     symptomatic: [.isolating],
-                    positiveTest: [.noIsolation, .notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHasNegativeTest, .notIsolatingAndHadUnconfirmedTestPreviously]
+                    positiveTest: .all(except: .isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest)
                 ),
                 StatePredicate(
-                    contact: [.noIsolation, .notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT],
+                    contact: .all(except: .isolating),
                     symptomatic: [.isolating],
                     positiveTest: [.isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest]
                 ),
                 StatePredicate(
                     contact: [.isolating],
-                    symptomatic: [.noIsolation, .notIsolatingAndHadSymptomsPreviously],
+                    symptomatic: .all(except: .isolating),
                     positiveTest: [.isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest]
                 ),
                 StatePredicate(
@@ -809,7 +840,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             This event is not possible if we do not have an unconfirmed test.
             """,
             predicate: StatePredicate(
-                positiveTest: [.noIsolation, .isolatingWithConfirmedTest, .notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
+                positiveTest: .all(except: .isolatingWithUnconfirmedTest, .notIsolatingAndHadUnconfirmedTestPreviously)
             ),
             event: .receivedNegativeTestWithEndDateOlderThanRememberedUnconfirmedTestEndDate
         ),
@@ -829,7 +860,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             This event is not possible if we do not have negative tests.
             """,
             predicate: StatePredicate(
-                positiveTest: Set(IsolationModel.PositiveTestCaseState.allCases.filter { $0 != .notIsolatingAndHasNegativeTest })
+                positiveTest: .all(except: .notIsolatingAndHasNegativeTest)
             ),
             event: .receivedConfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate
         ),
@@ -859,7 +890,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             This event is not possible if we do not have negative tests.
             """,
             predicate: StatePredicate(
-                positiveTest: Set(IsolationModel.PositiveTestCaseState.allCases.filter { $0 != .notIsolatingAndHasNegativeTest })
+                positiveTest: .all(except: .notIsolatingAndHasNegativeTest)
             ),
             event: .receivedUnconfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate
         ),
@@ -889,11 +920,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             This event is not possible if isolation wasn't terminated due to DCT.
             """,
             predicate: StatePredicate(
-                contact: [
-                    .noIsolation,
-                    .isolating,
-                    .notIsolatingAndHadRiskyContactPreviously,
-                ]
+                contact: .all(except: .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT)
             ),
             event: .riskyContactWithExposureDayOlderThanIsolationTerminationDueToDCT,
             update: .init()

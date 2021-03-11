@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -61,7 +61,7 @@ class RiskyVenuesEndpointTests: XCTestCase {
         let riskyVenue = try RiskyVenue(
             id: id,
             riskyInterval: DateInterval(start: date(from), end: date(until)),
-            messageType: .inform
+            messageType: .warnAndInform
         )
         
         let riskyVenues = try endpoint.parse(response)
@@ -100,7 +100,7 @@ class RiskyVenuesEndpointTests: XCTestCase {
         let riskyVenue = try RiskyVenue(
             id: id,
             riskyInterval: DateInterval(start: date(from), end: date(until)),
-            messageType: .isolate
+            messageType: .warnAndBookATest
         )
         
         let riskyVenues = try endpoint.parse(response)
@@ -122,7 +122,8 @@ class RiskyVenuesEndpointTests: XCTestCase {
                     "riskyWindow": {
                         "from": "\#(from)",
                         "until": "\#(until)"
-                    }
+                    },
+                    "messageType": "M1"
                 }
             ]
         }
@@ -137,12 +138,16 @@ class RiskyVenuesEndpointTests: XCTestCase {
         let riskyVenue = try RiskyVenue(
             id: id,
             riskyInterval: DateInterval(start: date(from), end: date(until)),
-            messageType: .inform
+            messageType: .warnAndInform
         )
         
-        let riskyVenues = try endpoint.parse(response)
+        do {
+            let riskyVenues = try endpoint.parse(response)
+            TS.assert(riskyVenues, equals: [riskyVenue])
+        } catch {
+            print(error)
+        }
         
-        TS.assert(riskyVenues, equals: [riskyVenue])
     }
     
 }

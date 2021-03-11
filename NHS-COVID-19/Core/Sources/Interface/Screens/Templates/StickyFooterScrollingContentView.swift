@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -37,12 +37,21 @@ class BasicStickyFooterScrollingContent: StickyFooterScrollingContent {
 }
 
 class PrimaryButtonStickyFooterScrollingContent: BasicStickyFooterScrollingContent {
-    init(scrollingViews: [StackViewContentProvider], primaryButton: (title: String, action: () -> Void)) {
+    init(scrollingViews: [StackViewContentProvider], primaryButton: (title: String, action: () -> Void), secondaryButton: (title: String, action: () -> Void)? = nil) {
+        
+        let bottomView: SecondaryButton? = {
+            if secondaryButton != nil {
+                return SecondaryButton(title: secondaryButton!.title, action: secondaryButton!.action)
+            } else {
+                return nil
+            }
+        }()
+        
         super.init(
             scrollingViews: scrollingViews,
             footerViews: (
                 top: PrimaryButton(title: primaryButton.title, action: primaryButton.action),
-                bottom: nil
+                bottom: bottomView
             )
         )
     }

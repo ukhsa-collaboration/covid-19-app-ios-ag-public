@@ -19,6 +19,7 @@ enum AcknowledgementNeededState {
     case neededForEndOfIsolation(interactor: EndOfIsolationViewControllerInteractor, isolationEndDate: Date, isIndexCase: Bool)
     case neededForStartOfIsolationExposureDetection(interactor: ExposureAcknowledgementViewControllerInteractor, isolationEndDate: Date, showDailyContactTesting: Bool)
     case neededForRiskyVenue(interactor: RiskyVenueInformationInteractor, venueName: String, checkInDate: Date)
+    case neededForRiskyVenueWarnAndBookATest(acknowledge: () -> Void, venueName: String, checkInDate: Date)
     case neededForVoidResultContinueToIsolate(interactor: VoidTestResultFlowInteracting, isolationEndDate: Date)
     case neededForVoidResultNotIsolating(interactor: VoidTestResultFlowInteracting)
     
@@ -83,9 +84,14 @@ enum AcknowledgementNeededState {
                         return .neededForStartOfIsolationExposureDetection(interactor: interactor, isolationEndDate: isolation.endDate, showDailyContactTesting: context.shouldShowDailyContactTestingInformFeature())
                     case .notNeeded:
                         switch riskyVenueAckState {
-                        case .needed(let acknowledge, let venueName, let checkInDate):
-                            let interactor = RiskyVenueInformationInteractor(goHome: acknowledge)
-                            return neededForRiskyVenue(interactor: interactor, venueName: venueName, checkInDate: checkInDate)
+                        case .needed(let acknowledge, let venueName, let checkInDate, let resolution):
+                            switch resolution {
+                            case .warnAndInform:
+                                let interactor = RiskyVenueInformationInteractor(goHomeTapped: acknowledge)
+                                return neededForRiskyVenue(interactor: interactor, venueName: venueName, checkInDate: checkInDate)
+                            case .warnAndBookATest:
+                                return neededForRiskyVenueWarnAndBookATest(acknowledge: acknowledge, venueName: venueName, checkInDate: checkInDate)
+                            }
                         case .notNeeded:
                             return .notNeeded
                         }

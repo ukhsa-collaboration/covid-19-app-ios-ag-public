@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -8,6 +8,7 @@ import UIKit
 
 public protocol SettingsViewControllerInteracting {
     func didTapLanguage()
+    func didTapManageMyData()
 }
 
 public class SettingsViewController: UITableViewController {
@@ -31,11 +32,13 @@ public class SettingsViewController: UITableViewController {
     
     private enum Row {
         case language(InterfaceProperty<String>)
+        case manageMyData
     }
     
     private var content: [Section] {
         let languageRow = Row.language(viewModel.$language)
-        let section = Section(rows: [languageRow])
+        let manageMyDataRow = Row.manageMyData
+        let section = Section(rows: [languageRow, manageMyDataRow])
         return [section]
     }
     
@@ -74,6 +77,8 @@ public class SettingsViewController: UITableViewController {
         switch content[indexPath.section].rows[indexPath.row] {
         case .language(let language):
             cell = LanguageCell.create(tableView: tableView, language: language)
+        case .manageMyData:
+            cell = TextCell.create(tableView: tableView, title: localize(.settings_row_manage_my_data_title), subtitle: localize(.settings_row_manage_my_data_subtitle))
         }
         return cell
     }
@@ -92,6 +97,7 @@ public class SettingsViewController: UITableViewController {
     override public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch content[indexPath.section].rows[indexPath.row] {
         case .language: interacting.didTapLanguage()
+        case .manageMyData: interacting.didTapManageMyData()
         }
     }
 }

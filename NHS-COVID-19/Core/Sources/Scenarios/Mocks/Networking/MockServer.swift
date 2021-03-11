@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -29,6 +29,7 @@ class MockServer: HTTPClient {
             LookUpHandler(dataProvider: dataProvider),
             RiskyPostDistrictsHandler(dataProvider: dataProvider),
             RiskyVenueHandler(dataProvider: dataProvider),
+            RiskyVenueConfigurationHandler(dataProvider: dataProvider),
             SymptomaticQuestionnaireHandler(),
             VirologyTestOrderHandler(dataProvider: dataProvider),
             VirologyTestResultsHandler(dataProvider: dataProvider),
