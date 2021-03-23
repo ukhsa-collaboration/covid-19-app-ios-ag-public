@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -88,8 +88,7 @@ struct ExposureDetectionManager {
     
     func detectionMatchesCheckFrequency(currentDate: Date) -> Bool {
         let checkFrequency = exposureRiskManager.checkFrequency
-        let lastCheckDate = exposureDetectionStore.load()?.lastKeyDownloadDate ?? .distantPast
-        return lastCheckDate.advanced(by: checkFrequency) < currentDate
+        return earliestDateForProcessing(currentDate: currentDate).advanced(by: checkFrequency) < currentDate
     }
     
     private func detectExposures(currentDate: Date, configuration: ExposureDetectionConfiguration) -> AnyPublisher<ExposureRiskInfo?, Never> {
@@ -106,8 +105,7 @@ struct ExposureDetectionManager {
     private typealias Increments = (increments: [Increment], checkDate: Date)
     
     private func calculateIncrements(currentDate: Date) -> Increments {
-        let oldestDownloadDate = Calendar.utc.date(byAdding: Self.oldestDownloadDate, to: currentDate)!
-        var lastCheckDate = exposureDetectionStore.load()?.lastKeyDownloadDate ?? oldestDownloadDate
+        var lastCheckDate = earliestDateForProcessing(currentDate: currentDate)
         var increments = [Increment]()
         
         while let incrementInfo = Increment.nextIncrement(lastCheckDate: lastCheckDate, now: currentDate) {
@@ -128,6 +126,15 @@ struct ExposureDetectionManager {
         } else {
             return calculateRiskInfo(with: increments, lastCheckDate: lastCheckDate, configuration: configuration)
         }
+    }
+    
+    /// Earliest date we want to consider when downloading batch files.
+    ///
+    /// Note that without further processing this may not exactly match an increment date. Rather, this is used to determine which increment we would be interested in.
+    private func earliestDateForProcessing(currentDate: Date) -> Date {
+        let oldestDateSignificantForEN = Calendar.utc.date(byAdding: Self.oldestDownloadDate, to: currentDate)!
+        let lastKeyDownloadDate = exposureDetectionStore.load()?.lastKeyDownloadDate ?? .distantPast
+        return max(lastKeyDownloadDate, oldestDateSignificantForEN)
     }
     
     private func calculateRiskInfo(with increments: [Increment], lastCheckDate: Date, configuration: ExposureDetectionConfiguration) -> AnyPublisher<ExposureRiskInfo?, Never> {
@@ -192,8 +199,7 @@ struct ExposureDetectionManager {
     private func detectExposuresIncrementally(currentDate: Date, configuration: ExposureDetectionConfiguration) -> AnyPublisher<ExposureRiskInfo?, Never> {
         var risks: AnyPublisher<ExposureRiskInfo?, Error> = Empty().eraseToAnyPublisher()
         
-        let oldestDownloadDate = Calendar.utc.date(byAdding: Self.oldestDownloadDate, to: currentDate)!
-        var lastCheckDate = exposureDetectionStore.load()?.lastKeyDownloadDate ?? oldestDownloadDate
+        var lastCheckDate = earliestDateForProcessing(currentDate: currentDate)
         
         while let incrementInfo = Increment.nextIncrement(lastCheckDate: lastCheckDate, now: currentDate) {
             lastCheckDate = incrementInfo.checkDate

@@ -14,14 +14,6 @@ public struct CheckInsManager {
     var checkInsStoreDeleteExpired: (UTCHour) -> Void
     var updateRisk: ([RiskyVenue]) -> Void
     var fetchRiskyVenues: () -> AnyPublisher<[RiskyVenue], NetworkRequestError>
-    var mostRecentRiskyVenueCheckInDay: DomainProperty<GregorianDay?>? = nil
-
-    let riskyVenueConfiguration: CachedResponse<RiskyVenueConfiguration>
-    
-    #warning("refactor this, possibly move bg tasks somewhere else")
-    mutating func setMostRecentRiskyVenueCheckInDay(_ property: DomainProperty<GregorianDay?>) {
-        mostRecentRiskyVenueCheckInDay = property
-    }
     
     func deleteExpiredCheckIns() -> AnyPublisher<Void, Never> {
         let now = LocalDay.today.advanced(by: -Self.numberOfPersistingDays)
@@ -30,7 +22,7 @@ public struct CheckInsManager {
     }
     
     func evaluateVenuesRisk() -> AnyPublisher<Void, Never> {
-        guard let checkIns = checkInsStoreLoad() else {
+        guard checkInsStoreLoad() != nil else {
             return Just(()).eraseToAnyPublisher()
         }
         return fetchRiskyVenues()
@@ -38,34 +30,15 @@ public struct CheckInsManager {
             .replaceError(with: ())
             .eraseToAnyPublisher()
     }
-    
-    func makeBackgroundJobs(metricsFrequency: Double, housekeepingFrequency: Double) -> [BackgroundTaskAggregator.Job] {
-        [
-            BackgroundTaskAggregator.Job(
-                preferredFrequency: metricsFrequency,
-                work: {
-                    if self.mostRecentRiskyVenueCheckInDay?.currentValue != nil {
-                        Metrics.signpost(.hasReceivedRiskyVenueM2WarningBackgroundTick)
-                    }
-                    return Empty().eraseToAnyPublisher()
-                }
-            ),
-            BackgroundTaskAggregator.Job(
-                preferredFrequency: housekeepingFrequency,
-                work: riskyVenueConfiguration.update
-            ),
-        ]
-    }
 }
 
 extension CheckInsManager {
-    init(checkInsStore: CheckInsStore, httpClient: HTTPClient, riskyVenueConfiguration: CachedResponse<RiskyVenueConfiguration>) {
+    init(checkInsStore: CheckInsStore, httpClient: HTTPClient) {
         self.init(
             checkInsStoreLoad: checkInsStore.load,
             checkInsStoreDeleteExpired: checkInsStore.deleteExpired,
             updateRisk: checkInsStore.updateRisk,
-            fetchRiskyVenues: { httpClient.fetch(RiskyVenuesEndpoint()) },
-            riskyVenueConfiguration: riskyVenueConfiguration
+            fetchRiskyVenues: { httpClient.fetch(RiskyVenuesEndpoint()) }
         )
     }
 }

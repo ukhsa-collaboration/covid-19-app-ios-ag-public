@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import UIKit
@@ -17,6 +17,13 @@ extension UIView {
     public func addAutolayoutSubview(_ subview: UIView) {
         subview.translatesAutoresizingMaskIntoConstraints = false
         addSubview(subview)
+    }
+    
+    @discardableResult
+    public func resistsSizeChange(along axis: NSLayoutConstraint.Axis = .horizontal) -> UIView {
+        setContentCompressionResistancePriority(.required, for: axis)
+        setContentHuggingPriority(.required, for: axis)
+        return self
     }
     
     public func addFillingSubview(_ subview: UIView, inset: CGFloat = 0) {

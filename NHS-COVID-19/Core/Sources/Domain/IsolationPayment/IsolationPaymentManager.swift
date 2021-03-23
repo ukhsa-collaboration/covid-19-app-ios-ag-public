@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -48,6 +48,5 @@ class IsolationPaymentManager {
             .handleEvents(receiveOutput: isolationPaymentInfoProvider.save)
             .map { _ in }
             .eraseToAnyPublisher()
-        
     }
 }

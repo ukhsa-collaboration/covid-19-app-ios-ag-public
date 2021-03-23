@@ -39,7 +39,7 @@ struct IsolationPaymentContext {
     
     var isolationPaymentState: DomainProperty<IsolationPaymentState> {
         isolationState
-            .combineLatest(store.$isolationPaymentState)
+            .combineLatest(store.isolationPaymentRawState)
             .map { isolationState, isolationPaymentState in
                 guard
                     isolationState.isInCorrectIsolationStateToApplyForFinancialSupport,

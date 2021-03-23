@@ -12,6 +12,7 @@ public struct CheckIn: Codable, Equatable {
     
     public var venueId: String
     public var venueName: String
+    public var venuePostcode: String?
     public var checkedIn: UTCHour
     public var checkedOut: UTCHour
     public var id: String
@@ -23,6 +24,7 @@ public struct CheckIn: Codable, Equatable {
     init(
         venueId: String,
         venueName: String,
+        venuePostcode: String?,
         checkedIn: UTCHour,
         checkedOut: UTCHour,
         isRisky: Bool,
@@ -30,6 +32,7 @@ public struct CheckIn: Codable, Equatable {
     ) {
         self.venueId = venueId
         self.venueName = venueName
+        self.venuePostcode = venuePostcode
         self.venueMessageType = venueMessageType
         self.checkedIn = checkedIn
         self.checkedOut = checkedOut
@@ -42,6 +45,7 @@ public struct CheckIn: Codable, Equatable {
         self.init(
             venueId: venue.id,
             venueName: venue.organisation,
+            venuePostcode: venue.postcode,
             checkedIn: checkedIn,
             checkedOut: checkedOut,
             isRisky: isRisky,
@@ -54,6 +58,7 @@ public struct CheckIn: Codable, Equatable {
         case circuitBreakerApproval
         case venueId
         case venueName
+        case venuePostcode
         case checkedIn
         case checkedOut
         case id
@@ -66,6 +71,7 @@ public struct CheckIn: Codable, Equatable {
         circuitBreakerApproval = try container.decode(CircuitBreakerApproval.self, forKey: .circuitBreakerApproval)
         venueId = try container.decode(String.self, forKey: .venueId)
         venueName = try container.decode(String.self, forKey: .venueName)
+        venuePostcode = try container.decodeIfPresent(String.self, forKey: .venuePostcode)
         checkedIn = try container.decode(UTCHour.self, forKey: .checkedIn)
         checkedOut = try container.decode(UTCHour.self, forKey: .checkedOut)
         id = try container.decodeIfPresent(String.self, forKey: .id) ?? UUID().uuidString
@@ -91,10 +97,12 @@ extension CheckIn {
 
 extension CheckIn {
     func isMoreRecentAndSevere(than other: CheckIn) -> Bool {
-        if venueMessageType == other.venueMessageType {
-            return checkedIn.date > other.checkedIn.date
+        let selfSeverity = venueMessageType?.severity ?? .level0
+        let otherSeverity = other.venueMessageType?.severity ?? .level0
+        if selfSeverity != otherSeverity {
+            return selfSeverity > otherSeverity
         } else {
-            return venueMessageType == RiskyVenue.MessageType.warnAndBookATest
+            return checkedIn.date > other.checkedIn.date
         }
     }
 }

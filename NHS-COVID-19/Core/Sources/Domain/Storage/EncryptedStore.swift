@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -14,6 +14,10 @@ extension EncryptedStoring {
     
     func encrypted<Wrapped>(_ name: String) -> Encrypted<Wrapped> {
         Encrypted(dataEncryptor(name))
+    }
+    
+    func encrypted<Wrapped>(_ name: String) -> PublishedEncrypted<Wrapped> {
+        PublishedEncrypted(dataEncryptor(name))
     }
     
 }

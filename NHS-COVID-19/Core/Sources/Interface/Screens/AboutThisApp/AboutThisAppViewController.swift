@@ -168,7 +168,7 @@ extension AboutThisAppViewController {
             InformationBox.information.orange([
                 .heading(.about_this_app_my_data_heading),
                 .body(.about_this_app_my_data_description),
-                .linkButton(.about_this_app_my_data_button, image: nil, interactor.didTapSeeData),
+                .body(.about_this_app_my_data_app_settings),
             ]),
             InformationBox.information.pink([
                 .heading(.about_this_app_our_policies_heading),

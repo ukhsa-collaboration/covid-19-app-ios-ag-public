@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import UIKit
@@ -121,4 +121,15 @@ extension UILabel {
         adjustsFontForContentSizeCategory = true
     }
     
+}
+
+extension UILabel {
+    
+    @discardableResult
+    func accessibilitySpellOut() -> Self {
+        if let text = self.text {
+            accessibilityAttributedLabel = NSAttributedString(string: text, attributes: [.accessibilitySpeechSpellOut: true])
+        }
+        return self
+    }
 }

@@ -134,6 +134,68 @@ class CheckInsStoreTests: XCTestCase {
         XCTAssertEqual(checkInsStore.riskyCheckIns[0].isRisky, true)
     }
     
+    func testLoadingRiskyCheckInDataWithPostcode() throws {
+        
+        let venueId = "CDEF2345"
+        let venueName = "Awesome Shop"
+        let venuePostcode = "SW11ABC"
+        let checkedIn = UTCHour(day: GregorianDay(year: 2020, month: 5, day: 15), hour: 5)
+        let checkedOut = UTCHour(day: GregorianDay(year: 2020, month: 5, day: 15), hour: 7)
+        
+        encryptedStore.stored["checkins"] = #"""
+        {
+            "checkIns": [
+                {
+                    "venueId" : "\#(venueId)",
+                    "venueName" : "\#(venueName)",
+                    "venuePostcode" : "\#(venuePostcode)",
+                    "checkedIn" : {
+                        "day" : {
+                            "year" : 2020,
+                            "month" : 5,
+                            "day" : 15
+                        },
+                        "hour" : 5,
+                        "minutes": 0
+                    },
+                    "checkedOut" : {
+                        "day" : {
+                            "year" : 2020,
+                            "month" : 5,
+                            "day" : 15
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                    "circuitBreakerApproval" : "pending",
+                    "isRisky" : true,
+                }
+            ],
+            "riskApprovalTokens": {},
+            "unacknowldegedRiskyVenueIds": [],
+        }
+        """# .data(using: .utf8)!
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        
+        let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
+        
+        XCTAssertEqual(loadedCheckIns.count, 1)
+        XCTAssertEqual(loadedCheckIns[0].venueId, venueId)
+        XCTAssertEqual(loadedCheckIns[0].venueName, venueName)
+        XCTAssertEqual(loadedCheckIns[0].venuePostcode, venuePostcode)
+        XCTAssertEqual(loadedCheckIns[0].checkedIn, checkedIn)
+        XCTAssertEqual(loadedCheckIns[0].checkedOut, checkedOut)
+        XCTAssertEqual(loadedCheckIns[0].isRisky, true)
+        
+        XCTAssertEqual(checkInsStore.riskyCheckIns.count, 1)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].venueId, venueId)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].venueName, venueName)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].venuePostcode, venuePostcode)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].checkedIn, checkedIn)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].checkedOut, checkedOut)
+        XCTAssertEqual(checkInsStore.riskyCheckIns[0].isRisky, true)
+    }
+    
     func testLoadingNotRiskyCheckInDataWithCheckedInDate() throws {
         let venueId = "CDEF2345"
         let venueName = "Awesome Shop"
@@ -263,6 +325,23 @@ class CheckInsStoreTests: XCTestCase {
         let now = UTCHour(year: 2020, month: 5, day: 15, hour: 10).date
         var c1 = CheckIn(venue: .random(), checkedInDate: now.hoursAgo(1), isRisky: false)
         let c2 = CheckIn(venue: .random(), checkedInDate: now.addHours(1), isRisky: false)
+        
+        checkInsStore.save(c1)
+        TS.assert(checkInsStore.load(), equals: [c1])
+        
+        checkInsStore.save(c2)
+        c1.checkedOut = UTCHour(roundedUpToQuarter: c2.checkedIn.date)
+        TS.assert(checkInsStore.load(), equals: [c1, c2])
+    }
+    
+    func testSaveCheckInSucessWithPostcode() throws {
+        let now = UTCHour(year: 2020, month: 5, day: 15, hour: 10).date
+        
+        var c1 = CheckIn(venue: .randomWithPostcode(), checkedInDate: now.hoursAgo(1), isRisky: false)
+        XCTAssertNotNil(c1.venuePostcode)
+        
+        let c2 = CheckIn(venue: .random(), checkedInDate: now.addHours(1), isRisky: false)
+        XCTAssertNil(c2.venuePostcode)
         
         checkInsStore.save(c1)
         TS.assert(checkInsStore.load(), equals: [c1])
@@ -583,6 +662,23 @@ class CheckInsStoreTests: XCTestCase {
             )]
         )
         XCTAssertTrue(checkInsStore.riskyCheckIns.isEmpty)
+    }
+    
+    func testUpdateRiskyVenuesEmptyCheckInAndOutAfterWithPostcode() throws {
+        let c1 = CheckIn(venue: .randomWithPostcode(), checkedIn: UTCHour.after, checkedOut: UTCHour.after, isRisky: false)
+        
+        checkInsStore.save(c1)
+        
+        checkInsStore.updateRisk(
+            [RiskyVenue(
+                id: c1.venueId,
+                riskyInterval: UTCHour.riskyTimeInterval,
+                messageType: .warnAndBookATest
+            )]
+        )
+        XCTAssertTrue(checkInsStore.riskyCheckIns.isEmpty)
+        
+        TS.assert(checkInsStore.load(), equals: [c1])
     }
     
     func testCheckInWithPayloadSaveSuccess() throws {

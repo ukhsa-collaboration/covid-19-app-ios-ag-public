@@ -1,7 +1,8 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
+import Combine
 import Foundation
 
 private struct IsolationPaymentInfo: Codable, DataConvertible, Equatable {
@@ -10,21 +11,20 @@ private struct IsolationPaymentInfo: Codable, DataConvertible, Equatable {
 }
 
 class IsolationPaymentStore {
-    @Encrypted private var isolationPaymentInfo: IsolationPaymentInfo? {
-        didSet {
-            isolationPaymentState = _isolationPaymentInfo.wrappedValue.flatMap { IsolationPaymentRawState($0) }
-        }
-    }
+    @PublishedEncrypted private var isolationPaymentInfo: IsolationPaymentInfo?
     
-    @Published var isolationPaymentState: IsolationPaymentRawState?
+    private(set) lazy var isolationPaymentRawState: DomainProperty<IsolationPaymentRawState?> = {
+        $isolationPaymentInfo
+            .map { $0.flatMap(IsolationPaymentRawState.init) }
+    }()
     
     init(store: EncryptedStoring) {
         _isolationPaymentInfo = store.encrypted("isolation_payment_store")
-        isolationPaymentState = _isolationPaymentInfo.wrappedValue.flatMap { IsolationPaymentRawState($0) }
     }
     
+    @available(*, deprecated, message: "Use isolationPaymentRawState instead.")
     func load() -> IsolationPaymentRawState? {
-        return isolationPaymentState
+        isolationPaymentRawState.currentValue
     }
     
     func save(_ state: IsolationPaymentRawState) {

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -27,7 +27,7 @@ struct VenueCheckInInformationScreen {
     }
     
     var whatsAQRCodeDescription: XCUIElement {
-        app.staticTexts[localized: .checkin_information_whats_a_qr_code_section_description_new]
+        app.staticTexts[localized: .checkin_information_whats_a_qr_code_section_description]
     }
     
     var qrCodePosterDescription: XCUIElement {
@@ -52,14 +52,6 @@ struct VenueCheckInInformationScreen {
     
     var howItWorksDescription: XCUIElement {
         app.staticTexts[localized: .checkin_information_how_it_works_section_description]
-    }
-    
-    var howItHelpsTitle: XCUIElement {
-        app.staticTexts[localized: .checkin_information_how_it_helps_section_title]
-    }
-    
-    var howItHelpsDescription: XCUIElement {
-        app.staticTexts[localized: .checkin_information_how_it_helps_section_description]
     }
     
     var cancelButton: XCUIElement {

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -45,6 +45,13 @@ public class VenueCheckInInformationViewController: UIViewController {
         )
     }()
     
+    private lazy var howToScanSection: UIView = {
+        createSection(
+            header: localize(.checkin_information_how_to_scan_section_title),
+            description: localize(.checkin_information_how_to_scan_section_description)
+        )
+    }()
+    
     private lazy var whatsAQRCodeSection: UIView = {
         var content = [UIView]()
         
@@ -55,7 +62,7 @@ public class VenueCheckInInformationViewController: UIViewController {
         
         let descriptionLabel = BaseLabel()
         descriptionLabel.styleAsBody()
-        descriptionLabel.text = localize(.checkin_information_whats_a_qr_code_section_description_new)
+        descriptionLabel.text = localize(.checkin_information_whats_a_qr_code_section_description)
         content.append(descriptionLabel)
         
         let imageDescriptionLabel = BaseLabel()
@@ -102,13 +109,6 @@ public class VenueCheckInInformationViewController: UIViewController {
         createSection(
             header: localize(.checkin_information_how_it_works_section_title),
             description: localize(.checkin_information_how_it_works_section_description)
-        )
-    }()
-    
-    private lazy var howItHelpsSection: UIView = {
-        createSection(
-            header: localize(.checkin_information_how_it_helps_section_title),
-            description: localize(.checkin_information_how_it_helps_section_description)
         )
     }()
     
@@ -196,11 +196,10 @@ public class VenueCheckInInformationViewController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: localize(.cancel), style: .plain, target: self, action: #selector(didTapDismiss))
         
         let content = [
-            checkinDescriptionSection,
+            howItWorksSection,
+            howToScanSection,
             helpScanningSection,
             whatsAQRCodeSection,
-            howItWorksSection,
-            howItHelpsSection,
         ]
         let stackView = UIStackView(arrangedSubviews: content)
         stackView.axis = .vertical

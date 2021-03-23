@@ -363,7 +363,7 @@ extension CoordinatedAppController {
             paused: context.exposureNotificationStateController.isEnabledPublisher.map { !$0 }.property(initialValue: false)
         )
         
-        let didRecentlyVisitSevereRiskyVenue = context.checkInContext?.didRecentlyVisitSevereRiskyVenue() ?? Just<GregorianDay?>(nil).eraseToAnyPublisher()
+        let didRecentlyVisitSevereRiskyVenue = context.checkInContext?.recentlyVisitedSevereRiskyVenue ?? DomainProperty<GregorianDay?>.constant(nil)
         
         let showOrderTestButton = context.isolationState.combineLatest(didRecentlyVisitSevereRiskyVenue) { state, didRecentlyVisitSevereRiskyVenue in
             var shouldShowBookTestButton: Bool = false

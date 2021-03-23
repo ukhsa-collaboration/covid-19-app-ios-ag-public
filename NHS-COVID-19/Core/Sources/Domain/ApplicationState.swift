@@ -136,3 +136,13 @@ public enum ApplicationState {
     /// Application is properly set up and is running exposure detection
     case runningExposureNotification(RunningAppContext)
 }
+
+extension ApplicationState {
+    var isAppUnavailable: Bool {
+        if case .appUnavailable = self {
+            return true
+        } else {
+            return false
+        }
+    }
+}

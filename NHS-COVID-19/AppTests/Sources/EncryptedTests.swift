@@ -1,11 +1,11 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import XCTest
 @testable import Domain
 
-struct Base64EncodedString: DataConvertible, Equatable {
+private struct Base64EncodedString: DataConvertible, Equatable {
     
     private var value = ""
     
@@ -24,10 +24,10 @@ struct Base64EncodedString: DataConvertible, Equatable {
 
 class EncryptedTests: XCTestCase {
     private var encrypted: Encrypted<Base64EncodedString>!
-    var keyString = Base64EncodedString("5S0+ofPG2UuweJMAJuJYq5jv/hKwgZgsZzXVuC4SyKE=")
-    var tagString = Base64EncodedString("RURFQ0YzMTYtMUJCQS00NkI0LTgxQUYtNzg1RjdCQzZBOTM2")
-    var plaintextString = Base64EncodedString("NUFBRjdCRDQtMkJDQS00REQ2LUEwMTItNkNGRTI0QkY1NEUy")
-    var ciphertextString = Base64EncodedString("W2pg9G4N4i+AjwxjmzT3dc5IHcL6TQyGSXOd3tfKeKKlHpr8JXwa9kMcIR1fdDc8DOl2U7XxsA0lBw60X6MQVQ==")
+    private var keyString = Base64EncodedString("5S0+ofPG2UuweJMAJuJYq5jv/hKwgZgsZzXVuC4SyKE=")
+    private var tagString = Base64EncodedString("RURFQ0YzMTYtMUJCQS00NkI0LTgxQUYtNzg1RjdCQzZBOTM2")
+    private var plaintextString = Base64EncodedString("NUFBRjdCRDQtMkJDQS00REQ2LUEwMTItNkNGRTI0QkY1NEUy")
+    private var ciphertextString = Base64EncodedString("W2pg9G4N4i+AjwxjmzT3dc5IHcL6TQyGSXOd3tfKeKKlHpr8JXwa9kMcIR1fdDc8DOl2U7XxsA0lBw60X6MQVQ==")
     
     override func tearDown() {
         super.tearDown()

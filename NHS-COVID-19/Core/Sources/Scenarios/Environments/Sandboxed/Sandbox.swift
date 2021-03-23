@@ -48,6 +48,11 @@ public enum Sandbox {
             case disabled
         }
         
+        public enum RiskyVenueMessageType: String {
+            case warnAndInform
+            case warnAndBookATest
+        }
+        
         public static let validQRCode = "UKC19TRACING:1:eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjMifQ.eyJpZCI6IjRXVDU5TTVZIiwib3BuIjoiR292ZXJubWVudCBPZmZpY2UgT2YgSHVtYW4gUmVzb3VyY2VzIn0.ZIvwm9rxiRTm4o-koafL6Bzre9pakcyae8m6_MSyvAl-CFkUgfm6gcXYn4gg5OScKZ1-XayHBGwEdps0RKXs4g"
     }
     
@@ -103,6 +108,12 @@ public enum Sandbox {
         @TestInjected("sandbox.isolationPaymentState", defaultValue: Text.IsolationPaymentState.disabled.rawValue)
         public var isolationPaymentState: String
         
+        @TestInjected("sandbox.riskyVenueMessageType")
+        public var riskyVenueMessageType: String?
+
+        @TestInjected("sandbox.hasAcknowledgedStartOfIsolation", defaultValue: true)
+        public var hasAcknowledgedStartOfIsolation: Bool
+        
         public func set(testResultEndDate: Date) throws {
             let data = try JSONEncoder().encode(testResultEndDate)
             testResultEndDateString = String(data: data, encoding: .utf8)!
@@ -122,6 +133,7 @@ public enum Sandbox {
             public static let indexCaseSinceSelfDiagnosisUnknownOnset = 8
             public static let indexCaseSinceTestResultEndDate = 5
             public static let indexCaseSinceSelfDiagnosisOnset = 1
+            public static let contactCaseSinceExposureDay = 12
         }
     }
 }

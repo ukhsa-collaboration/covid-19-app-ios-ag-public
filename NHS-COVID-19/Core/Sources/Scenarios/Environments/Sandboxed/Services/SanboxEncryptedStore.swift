@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -56,6 +56,10 @@ class SandboxEncryptedStore: EncryptedStoring {
         
         saveIsolationState()
         saveIsolationPaymentState()
+        
+        if let riskyVenueMessageType = host.initialState.riskyVenueMessageType {
+            saveRiskyVenue()
+        }
     }
     
     func saveIsolationState() {
@@ -101,7 +105,7 @@ class SandboxEncryptedStore: EncryptedStoring {
                 },
                 "isolationInfo" : {
                     "hasAcknowledgedEndOfIsolation": false,
-                    "hasAcknowledgedStartOfIsolation": true,
+                    "hasAcknowledgedStartOfIsolation": \#(host.initialState.hasAcknowledgedStartOfIsolation),
                     "contactCaseInfo" : {
                         "exposureDay" : {
                             "day" : \#(exposureDay.day),
@@ -132,6 +136,49 @@ class SandboxEncryptedStore: EncryptedStoring {
             }
             """# .data(using: .utf8)!
         }
+    }
+    
+    func saveRiskyVenue() {
+        guard let messageType = host.initialState.riskyVenueMessageType else {
+            return
+        }
+        
+        let checkInDay = GregorianDay.today
+        let venueId = UUID().uuidString
+        stored["checkins"] = #"""
+        {
+            "checkIns": [
+                {
+                    "venueId" : "\#(venueId)",
+                    "venueName" : "Venue",
+                    "checkedIn" : {
+                        "day" : {
+                            "year" : \#(checkInDay.year),
+                            "month" : \#(checkInDay.month),
+                            "day" : \#(checkInDay.day)
+                        },
+                        "hour" : 5,
+                        "minutes": 0
+                    },
+                    "checkedOut" : {
+                        "day" : {
+                            "year" : \#(checkInDay.year),
+                            "month" : \#(checkInDay.month),
+                            "day" : \#(checkInDay.day)
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                    "circuitBreakerApproval" : "pending",
+                    "isRisky" : true,
+                    "id": "\#(UUID().uuidString)",
+                    "venueMessageType": "\#(messageType)",
+                }
+            ],
+            "riskApprovalTokens": {},
+            "unacknowldegedRiskyVenueIds": ["\#(venueId)"],
+        }
+        """# .data(using: .utf8)!
     }
     
     func dataEncryptor(_ name: String) -> DataEncrypting {

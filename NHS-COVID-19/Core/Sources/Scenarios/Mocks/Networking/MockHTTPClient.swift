@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -10,7 +10,7 @@ public class MockHTTPClient: HTTPClient {
     public var lastRequest: HTTPRequest?
     public var requests = [HTTPRequest]()
     public var response: Result<HTTPResponse, HTTPRequestError>?
-    private var responses: [String:Result<HTTPResponse, HTTPRequestError>] = [:]
+    private var responses: [String: Result<HTTPResponse, HTTPRequestError>] = [:]
     
     public init() {}
     
@@ -32,4 +32,14 @@ public class MockHTTPClient: HTTPClient {
         requests = []
         response = nil
     }
+}
+
+extension MockHTTPClient {
+    
+    func register(_ requestHandler: RequestHandler) {
+        for path in requestHandler.paths {
+            response(for: path, response: requestHandler.response)
+        }
+    }
+    
 }

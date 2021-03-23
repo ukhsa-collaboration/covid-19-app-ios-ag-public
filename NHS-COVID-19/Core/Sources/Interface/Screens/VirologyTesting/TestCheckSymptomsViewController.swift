@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -56,7 +56,7 @@ public class TestCheckSymptomsViewController: StickyFooterScrollingContentViewCo
     public init(interactor: Interacting) {
         self.interactor = interactor
         super.init(content: TestCheckSymptomsContent(interactor: interactor))
-        title = localize(.link_test_result_title)
+        title = localize(.link_test_result_symptom_information_title)
     }
     
     required init?(coder: NSCoder) {

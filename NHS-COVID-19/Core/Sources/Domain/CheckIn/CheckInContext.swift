@@ -10,28 +10,48 @@ public struct CheckInContext {
     public var checkInsManager: CheckInsManager
     public var qrCodeScanner: QRCodeScanner
     public var currentDateProvider: DateProviding
+    private let riskyVenueConfiguration: CachedResponse<RiskyVenueConfiguration>
+    public var recentlyVisitedSevereRiskyVenue: DomainProperty<GregorianDay?>
     
-    init(checkInsStore: CheckInsStore, checkInsManager: CheckInsManager, qrCodeScanner: QRCodeScanner, currentDateProvider: DateProviding) {
+    init(checkInsStore: CheckInsStore,
+         checkInsManager: CheckInsManager,
+         qrCodeScanner: QRCodeScanner,
+         currentDateProvider: DateProviding,
+         riskyVenueConfiguration: CachedResponse<RiskyVenueConfiguration>) {
         self.checkInsStore = checkInsStore
         self.checkInsManager = checkInsManager
         self.qrCodeScanner = qrCodeScanner
         self.currentDateProvider = currentDateProvider
-        self.checkInsManager.setMostRecentRiskyVenueCheckInDay(didRecentlyVisitSevereRiskyVenueProperty()) 
-    }
-    
-    public func didRecentlyVisitSevereRiskyVenue() -> AnyPublisher<GregorianDay?, Never> {
-        checkInsStore.$mostRecentRiskyCheckInDay.combineLatest(currentDateProvider.today) { mostRecentRiskyCheckInDay, today -> GregorianDay? in
+        self.riskyVenueConfiguration = riskyVenueConfiguration
+        
+        recentlyVisitedSevereRiskyVenue = checkInsStore.$mostRecentRiskyCheckInDay.combineLatest(currentDateProvider.today, checkInsStore.$mostRecentRiskyVenueConfiguration) { mostRecentRiskyCheckInDay, today, mostRecentRiskyVenueConfiguration -> GregorianDay? in
             guard let mostRecentRiskyCheckInDay = mostRecentRiskyCheckInDay,
-                let mostRecentRiskyVenueConfiguration = checkInsStore.mostRecentRiskyVenueConfiguration
+                let mostRecentRiskyVenueConfiguration = mostRecentRiskyVenueConfiguration
             else {
                 return nil
             }
             return mostRecentRiskyCheckInDay.distance(to: currentDateProvider.currentGregorianDay(timeZone: .current)) < mostRecentRiskyVenueConfiguration.optionToBookATest.days ? mostRecentRiskyCheckInDay : nil
         }
-        .eraseToAnyPublisher()
+        .domainProperty()
     }
     
-    public func didRecentlyVisitSevereRiskyVenueProperty() -> DomainProperty<GregorianDay?> {
-        didRecentlyVisitSevereRiskyVenue().domainProperty()
+    func makeBackgroundJobs(metricsFrequency: Double, housekeepingFrequency: Double) -> [BackgroundTaskAggregator.Job] {
+        [
+            BackgroundTaskAggregator.Job(
+                preferredFrequency: metricsFrequency,
+                work: recordMetrics
+            ),
+            BackgroundTaskAggregator.Job(
+                preferredFrequency: housekeepingFrequency,
+                work: riskyVenueConfiguration.update
+            ),
+        ]
+    }
+    
+    private func recordMetrics() -> AnyPublisher<Void, Never> {
+        if recentlyVisitedSevereRiskyVenue.currentValue != nil {
+            Metrics.signpost(.hasReceivedRiskyVenueM2WarningBackgroundTick)
+        }
+        return Empty().eraseToAnyPublisher()
     }
 }

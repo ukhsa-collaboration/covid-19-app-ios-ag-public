@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -25,8 +25,6 @@ class VenueCheckInInformationScreenTests: XCTestCase {
             XCTAssert(screen.qrCodePosterImageWLS.exists)
             XCTAssert(screen.howItWorksTitle.exists)
             XCTAssert(screen.howItWorksDescription.exists)
-            XCTAssert(screen.howItHelpsTitle.exists)
-            XCTAssert(screen.howItHelpsDescription.exists)
             XCTAssert(screen.cancelButton.exists)
         }
     }

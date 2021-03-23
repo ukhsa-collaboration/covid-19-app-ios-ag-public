@@ -6,116 +6,68 @@ import Common
 import Foundation
 
 struct RiskyPostDistrictsHandler: RequestHandler {
+    enum Indicator: String, CaseIterable {
+        case black
+        case maroon
+        case red
+        case amber
+        case yellow
+        case green
+        case neutral
+    }
+    
+    struct RiskLevelData {
+        var postcodes: Set<String> = []
+        var localAuthorities: Set<String> = []
+    }
+    
     var paths = ["/distribution/risky-post-districts-v2"]
     
     var dataProvider: MockDataProvider
     
     var response: Result<HTTPResponse, HTTPRequestError> {
-        let blackRiskIndicator = "black"
-        let maroonRiskIndicator = "maroon"
-        let redRiskIndicator = "red"
-        let amberRiskIndicator = "amber"
-        let yellowRiskIndicator = "yellow"
-        let greenRiskIndicator = "green"
-        let neutralRiskIndicator = "neutral"
+        Self.response([
+            .black: RiskLevelData(
+                postcodes: dataProvider.blackPostcodes.commaSeparatedComponents,
+                localAuthorities: dataProvider.blackLocalAuthorities.commaSeparatedComponents
+            ),
+            .maroon: RiskLevelData(
+                postcodes: dataProvider.maroonPostcodes.commaSeparatedComponents,
+                localAuthorities: dataProvider.maroonLocalAuthorities.commaSeparatedComponents
+            ),
+            .red: RiskLevelData(
+                postcodes: dataProvider.redPostcodes.commaSeparatedComponents,
+                localAuthorities: dataProvider.redLocalAuthorities.commaSeparatedComponents
+            ),
+            .amber: RiskLevelData(
+                postcodes: dataProvider.amberPostcodes.commaSeparatedComponents,
+                localAuthorities: dataProvider.amberLocalAuthorities.commaSeparatedComponents
+            ),
+            .yellow: RiskLevelData(
+                postcodes: dataProvider.yellowPostcodes.commaSeparatedComponents,
+                localAuthorities: dataProvider.yellowLocalAuthorities.commaSeparatedComponents
+            ),
+            .green: RiskLevelData(
+                postcodes: dataProvider.greenPostcodes.commaSeparatedComponents,
+                localAuthorities: dataProvider.greenLocalAuthorities.commaSeparatedComponents
+            ),
+            .neutral: RiskLevelData(
+                postcodes: dataProvider.neutralPostcodes.commaSeparatedComponents,
+                localAuthorities: dataProvider.neutralLocalAuthorities.commaSeparatedComponents
+            ),
+        ])
+    }
+    
+    static func response(_ data: [Indicator: RiskLevelData]) -> Result<HTTPResponse, HTTPRequestError> {
+        let postcodeIndicators = data.flatMap { indicator, data in
+            data.postcodes.map { "\"\($0)\": \"\(indicator.rawValue)\"," }
+        }
+        .joined(separator: "")
         
-        let blackPostcodes = dataProvider.blackPostcodes.components(separatedBy: ",")
-            .lazy
-            .filter { !$0.isEmpty }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .map { "\"\($0)\": \"\(blackRiskIndicator)\"," }
-            .joined(separator: "")
-        
-        let maroonPostcodes = dataProvider.maroonPostcodes.components(separatedBy: ",")
-            .lazy
-            .filter { !$0.isEmpty }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .map { "\"\($0)\": \"\(maroonRiskIndicator)\"," }
-            .joined(separator: "")
-        
-        let redPostcodes = dataProvider.redPostcodes.components(separatedBy: ",")
-            .lazy
-            .filter { !$0.isEmpty }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .map { "\"\($0)\": \"\(redRiskIndicator)\"," }
-            .joined(separator: "")
-        
-        let amberPostcodes = dataProvider.amberPostcodes.components(separatedBy: ",")
-            .lazy
-            .filter { !$0.isEmpty }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .map { "\"\($0)\": \"\(amberRiskIndicator)\"," }
-            .joined(separator: "")
-        
-        let yellowPostcodes = dataProvider.yellowPostcodes.components(separatedBy: ",")
-            .lazy
-            .filter { !$0.isEmpty }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .map { "\"\($0)\": \"\(yellowRiskIndicator)\"," }
-            .joined(separator: "")
-        
-        let greenPostcodes = dataProvider.greenPostcodes.components(separatedBy: ",")
-            .lazy
-            .filter { !$0.isEmpty }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .map { "\"\($0)\": \"\(greenRiskIndicator)\"," }
-            .joined(separator: "")
-        
-        let neutralPostcodes = dataProvider.neutralPostcodes.components(separatedBy: ",")
-            .lazy
-            .filter { !$0.isEmpty }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .map { "\"\($0)\": \"\(neutralRiskIndicator)\"," }
-            .joined(separator: "")
-        
-        let blackLocalAuthorities = dataProvider.blackLocalAuthorities.components(separatedBy: ",")
-            .lazy
-            .filter { !$0.isEmpty }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .map { "\"\($0)\": \"\(blackRiskIndicator)\"," }
-            .joined(separator: "")
-        
-        let maroonLocalAuthorities = dataProvider.maroonLocalAuthorities.components(separatedBy: ",")
-            .lazy
-            .filter { !$0.isEmpty }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .map { "\"\($0)\": \"\(maroonRiskIndicator)\"," }
-            .joined(separator: "")
-        
-        let redLocalAuthorities = dataProvider.redLocalAuthorities.components(separatedBy: ",")
-            .lazy
-            .filter { !$0.isEmpty }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .map { "\"\($0)\": \"\(redRiskIndicator)\"," }
-            .joined(separator: "")
-        
-        let amberLocalAuthorities = dataProvider.amberLocalAuthorities.components(separatedBy: ",")
-            .lazy
-            .filter { !$0.isEmpty }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .map { "\"\($0)\": \"\(amberRiskIndicator)\"," }
-            .joined(separator: "")
-        
-        let yellowLocalAuthorities = dataProvider.yellowLocalAuthorities.components(separatedBy: ",")
-            .lazy
-            .filter { !$0.isEmpty }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .map { "\"\($0)\": \"\(yellowRiskIndicator)\"," }
-            .joined(separator: "")
-        
-        let greenLocalAuthorities = dataProvider.greenLocalAuthorities.components(separatedBy: ",")
-            .lazy
-            .filter { !$0.isEmpty }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .map { "\"\($0)\": \"\(greenRiskIndicator)\"," }
-            .joined(separator: "")
-        
-        let neutralLocalAuthorities = dataProvider.neutralLocalAuthorities.components(separatedBy: ",")
-            .lazy
-            .filter { !$0.isEmpty }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .map { "\"\($0)\": \"\(neutralRiskIndicator)\"," }
-            .joined(separator: "")
+        let localAuthorityIndicators = data.flatMap { indicator, data in
+            data.localAuthorities.map { "\"\($0)\": \"\(indicator.rawValue)\"," }
+        }
+        .joined(separator: "")
         
         func policyData(alertLevel: Int) -> String {
             """
@@ -330,25 +282,13 @@ struct RiskyPostDistrictsHandler: RequestHandler {
         let json = """
         {
             "postDistricts" : {
-                \(neutralPostcodes)
-                \(greenPostcodes)
-                \(yellowPostcodes)
-                \(amberPostcodes)
-                \(redPostcodes)
-                \(maroonPostcodes)
-                \(blackPostcodes)
+                \(postcodeIndicators)
             },
             "localAuthorities": {
-                \(neutralLocalAuthorities)
-                \(greenLocalAuthorities)
-                \(yellowLocalAuthorities)
-                \(amberLocalAuthorities)
-                \(redLocalAuthorities)
-                \(maroonLocalAuthorities)
-                \(blackLocalAuthorities)
+                \(localAuthorityIndicators)
             },
             "riskLevels" : {
-                "\(neutralRiskIndicator)": {
+                "\(Indicator.neutral.rawValue)": {
                     "colorScheme": "neutral",
                     "colorSchemeV2": "neutral",
                     "name": {
@@ -368,7 +308,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     },
                     "policyData": \(policyData(alertLevel: 1))
                 },
-                "\(greenRiskIndicator)": {
+                "\(Indicator.green.rawValue)": {
                     "colorScheme": "green",
                     "colorSchemeV2": "green",
                     "name": {
@@ -388,7 +328,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     },
                     "policyData": \(policyData(alertLevel: 1))
                 },
-                "\(yellowRiskIndicator)": {
+                "\(Indicator.yellow.rawValue)": {
                     "colorScheme": "yellow",
                     "colorSchemeV2": "yellow",
                     "name": {
@@ -408,7 +348,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     },
                     "policyData": \(policyData(alertLevel: 2))
                 },
-                "\(amberRiskIndicator)": {
+                "\(Indicator.amber.rawValue)": {
                     "colorScheme": "amber",
                     "colorSchemeV2": "amber",
                     "name": {
@@ -428,7 +368,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     },
                     "policyData": \(policyData(alertLevel: 3))
                 },
-                "\(redRiskIndicator)": {
+                "\(Indicator.red.rawValue)": {
                     "colorScheme": "red",
                     "colorSchemeV2": "red",
                     "name": {
@@ -448,7 +388,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     },
                     "policyData": \(policyData(alertLevel: 3))
                 },
-                "\(maroonRiskIndicator)": {
+                "\(Indicator.maroon.rawValue)": {
                     "colorScheme": "neutral",
                     "colorSchemeV2": "maroon",
                     "name": {
@@ -468,7 +408,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     },
                     "policyData": \(policyData(alertLevel: 3))
                 },
-                "\(blackRiskIndicator)": {
+                "\(Indicator.black.rawValue)": {
                     "colorScheme": "neutral",
                     "colorSchemeV2": "black",
                     "name": {
@@ -494,4 +434,17 @@ struct RiskyPostDistrictsHandler: RequestHandler {
         
         return Result.success(.ok(with: .json(json)))
     }
+}
+
+private extension String {
+    
+    var commaSeparatedComponents: Set<String> {
+        Set(
+            components(separatedBy: ",")
+                .lazy
+                .filter { !$0.isEmpty }
+                .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+        )
+    }
+    
 }

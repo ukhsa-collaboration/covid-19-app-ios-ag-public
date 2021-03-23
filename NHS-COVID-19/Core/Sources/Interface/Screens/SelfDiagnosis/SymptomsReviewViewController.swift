@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -86,16 +86,33 @@ public class SymptomsReviewViewController: UIViewController {
     
     private let calendarImage: UIImageView = {
         let image = UIImageView(image: UIImage(.calendar))
-        image.widthAnchor.constraint(equalTo: image.heightAnchor).isActive = true
+        #warning("Set the correct image size")
+        image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 30).isActive = true
         image.tintColor = UIColor(.primaryText)
         return image
     }()
     
+    private lazy var dateLabel: UILabel = configuring(BaseLabel().styleAsBoldBody()) {
+        $0.numberOfLines = 0
+    }
+    
     private lazy var dateStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [textField, calendarImage])
+        let labels = UIView()
+        labels.addFillingSubview(dateLabel)
+        labels.addAutolayoutSubview(textField)
+        NSLayoutConstraint.activate([
+            textField.leadingAnchor.constraint(equalTo: labels.leadingAnchor),
+            textField.trailingAnchor.constraint(equalTo: labels.trailingAnchor),
+            textField.topAnchor.constraint(equalTo: labels.topAnchor),
+        ])
+        textField.alpha = 0
+        let stack = UIStackView(arrangedSubviews: [labels, calendarImage])
         stack.isLayoutMarginsRelativeArrangement = true
         stack.layoutMargins = .standard
+        stack.alignment = .center
         stack.isUserInteractionEnabled = false
+        stack.accessibilityElementsHidden = true
         return stack
     }()
     
@@ -112,15 +129,11 @@ public class SymptomsReviewViewController: UIViewController {
         return button
     }()
     
-    private let dateLabel = BaseLabel().styleAsTertiaryTitle().set(text: localize(.symptom_review_date_heading))
+    private let dateHeadingLabel = BaseLabel().styleAsTertiaryTitle().set(text: localize(.symptom_review_date_heading))
     
-    private lazy var dateInfoBox = InformationBox.error(dateLabel, dateContainer, noDateContainer)
+    private lazy var dateInfoBox = InformationBox.error(dateHeadingLabel, dateContainer, noDateContainer)
     
-    private lazy var textField: UITextField = {
-        let textField = BaseTextField()
-        textField.accessibilityElementsHidden = true
-        return textField
-    }()
+    private lazy var textField: UITextField = BaseTextField()
     
     private var confirmButton: UIButton = {
         let confirmButton = UIButton()
@@ -221,8 +234,8 @@ public class SymptomsReviewViewController: UIViewController {
         
         textField.inputAccessoryView = toolbar
         textField.inputView = datePicker
-        textField.font = UIFont.boldSystemFont(ofSize: 16)
-        textField.placeholder = localize(.symptom_review_date_placeholder)
+        
+        dateLabel.text = localize(.symptom_review_date_placeholder)
         
         let calendarImage = UIImageView(image: UIImage(.calendar))
         calendarImage.widthAnchor.constraint(equalTo: calendarImage.heightAnchor).isActive = true
@@ -273,7 +286,7 @@ public class SymptomsReviewViewController: UIViewController {
             let row = symptomsQuestionnaire.dateSelectionWindow - 1
             let (rowDate, rowString) = getDay(for: row)
             selectedDay = rowDate
-            textField.text = rowString
+            dateLabel.text = rowString
             dateContainer.accessibilityValue = rowString
             datePicker.selectRow(row, inComponent: 0, animated: false)
         }
@@ -288,7 +301,7 @@ public class SymptomsReviewViewController: UIViewController {
         noDateChecked.isHidden.toggle()
         if selectedDay != nil {
             selectedDay = nil
-            textField.text = nil
+            dateLabel.text = localize(.symptom_review_date_placeholder)
         }
         
         if noDateChecked.isHidden {
@@ -342,7 +355,7 @@ extension SymptomsReviewViewController: UIPickerViewDelegate {
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let (rowDate, rowString) = getDay(for: row)
         selectedDay = rowDate
-        textField.text = rowString
+        dateLabel.text = rowString
         dateContainer.accessibilityValue = rowString
     }
 }

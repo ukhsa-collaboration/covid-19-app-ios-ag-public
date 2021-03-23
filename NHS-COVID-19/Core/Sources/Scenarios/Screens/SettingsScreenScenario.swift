@@ -14,7 +14,10 @@ public class SettingsScreenScenario: Scenario {
     
     public static let language: String = "English"
     public static let didTapLanguage = "Tapped language"
-    public static let didTapManageMyData = "Tapped manage my data"
+    public static let didTapMyData = "Tapped My data"
+    public static let didTapDeleteAppData = "Tapped delete app data"
+    public static let didTapVenueHistory = "Tapped venue history"
+    public static let didTapMyArea = "Tapped My area"
     
     static var appController: AppController {
         NavigationAppController { parent in
@@ -23,7 +26,13 @@ public class SettingsScreenScenario: Scenario {
                 interacting: Interactor(_didTapLanguage: {
                     parent.showAlert(title: didTapLanguage)
                 }, _didTapManageMyData: {
-                    parent.showAlert(title: didTapManageMyData)
+                    parent.showAlert(title: didTapMyData)
+                }, _didTapMyArea: {
+                    parent.showAlert(title: didTapMyArea)
+                }, _didTapDeleteAppData: {
+                    parent.showAlert(title: didTapDeleteAppData)
+                }, _didTapVenueHistory: {
+                    parent.showAlert(title: didTapVenueHistory)
                 })
             )
         }
@@ -33,6 +42,9 @@ public class SettingsScreenScenario: Scenario {
 private struct Interactor: SettingsViewController.Interacting {
     var _didTapLanguage: () -> Void
     var _didTapManageMyData: () -> Void
+    var _didTapMyArea: () -> Void
+    var _didTapDeleteAppData: () -> Void
+    var _didTapVenueHistory: () -> Void
     
     func didTapLanguage() {
         _didTapLanguage()
@@ -40,5 +52,17 @@ private struct Interactor: SettingsViewController.Interacting {
     
     func didTapManageMyData() {
         _didTapManageMyData()
+    }
+    
+    func didTapMyArea() {
+        _didTapMyArea()
+    }
+    
+    func didTapDeleteAppData() {
+        _didTapDeleteAppData()
+    }
+    
+    func didTapVenueHistory() {
+        _didTapVenueHistory()
     }
 }

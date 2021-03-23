@@ -14,12 +14,11 @@ class CheckInConfirmationScreenTests: XCTestCase {
         try runner.run { app in
             let screen = CheckInConfirmationScreen(app: app)
             
-            XCTAssertTrue(screen.title.exists)
             XCTAssertTrue(screen.description.exists)
             XCTAssertTrue(screen.homeButton.exists)
             XCTAssertTrue(screen.wrongButton.exists)
             XCTAssertTrue(screen.dateTime(CheckInConfirmationScreenScenario.checkinDate).exists)
-            XCTAssertTrue(app.staticTexts[verbatim: CheckInConfirmationScreenScenario.venueName].exists)
+            XCTAssertTrue(screen.thankYouText(with: CheckInConfirmationScreenScenario.venueName).exists)
         }
     }
     

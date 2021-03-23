@@ -6,123 +6,6 @@ import Localization
 import UIKit
 
 extension MyDataViewController {
-    class PostcodeCell: UITableViewCell {
-        static let reuseIdentifier = String(describing: PostcodeCell.self)
-        let postcodeLabel: UILabel
-        let localAuthorityLabel: UILabel
-        
-        let stack: UIStackView = {
-            let stack = UIStackView()
-            stack.axis = .vertical
-            stack.alignment = .firstBaseline
-            stack.distribution = .fillProportionally
-            stack.spacing = .halfSpacing
-            return stack
-        }()
-        
-        override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-            postcodeLabel = BaseLabel().styleAsBody()
-            localAuthorityLabel = BaseLabel().styleAsBody()
-            super.init(style: style, reuseIdentifier: reuseIdentifier)
-            backgroundColor = UIColor(.surface)
-            stack.addArrangedSubview(localAuthorityLabel)
-            stack.addArrangedSubview(postcodeLabel)
-            contentView.addCellContentSubview(stack, inset: .standardSpacing)
-        }
-        
-        var postcode: (InterfaceProperty<String?>)? {
-            didSet {
-                postcode?.sink { [weak self] postcode in
-                    self?.postcodeLabel.text = postcode
-                }
-            }
-        }
-        
-        var localAuthority: (InterfaceProperty<String?>)? {
-            didSet {
-                localAuthority?.sink { [weak self] authority in
-                    self?.localAuthorityLabel.text = authority
-                }
-            }
-        }
-        
-        private func setting(postcode: InterfaceProperty<String?>, localAuthority: InterfaceProperty<String?>) -> PostcodeCell {
-            self.postcode = postcode
-            self.localAuthority = localAuthority
-            return self
-        }
-        
-        static func create(tableView: UITableView, postcode: InterfaceProperty<String?>, localAuthority: InterfaceProperty<String?>) -> PostcodeCell {
-            let dequeued = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as? PostcodeCell
-            return (dequeued ?? PostcodeCell()).setting(postcode: postcode, localAuthority: localAuthority)
-        }
-        
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
-    }
-}
-
-extension MyDataViewController {
-    class VenueHistoryCell: UITableViewCell {
-        static let reuseIdentifier = String(describing: VenueHistoryCell.self)
-        
-        let titleLabel: UILabel
-        let idLabel: UILabel
-        let dateLabel: UILabel
-        
-        override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-            titleLabel = BaseLabel().styleAsBody()
-            idLabel = BaseLabel().styleAsSecondaryBody()
-            dateLabel = BaseLabel().styleAsSecondaryBody()
-            
-            super.init(style: style, reuseIdentifier: reuseIdentifier)
-            backgroundColor = UIColor(.surface)
-            
-            contentView.addAutolayoutSubview(titleLabel)
-            contentView.addAutolayoutSubview(dateLabel)
-            contentView.addAutolayoutSubview(idLabel)
-            
-            idLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
-            idLabel.setContentHuggingPriority(.required, for: .horizontal)
-            
-            let headerStack = UIStackView(arrangedSubviews: [titleLabel, idLabel])
-            headerStack.axis = .horizontal
-            headerStack.alignment = .firstBaseline
-            headerStack.distribution = .fillProportionally
-            headerStack.spacing = .standardSpacing
-            
-            let cellStack = UIStackView(arrangedSubviews: [headerStack, dateLabel])
-            cellStack.axis = .vertical
-            cellStack.spacing = .standardSpacing
-            cellStack.layoutMargins = .standard
-            cellStack.isLayoutMarginsRelativeArrangement = true
-            
-            contentView.addCellContentSubview(cellStack)
-        }
-        
-        private func setting(venueHistory: VenueHistory) -> VenueHistoryCell {
-            titleLabel.set(text: venueHistory.organisation)
-            idLabel.set(text: venueHistory.id)
-            dateLabel.set(text: localize(.mydata_date_interval_description(
-                startdate: venueHistory.checkedIn,
-                endDate: venueHistory.checkedOut
-            )))
-            return self
-        }
-        
-        static func create(tableView: UITableView, venueHistory: VenueHistory) -> VenueHistoryCell {
-            let dequeued = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as? VenueHistoryCell
-            return (dequeued ?? VenueHistoryCell()).setting(venueHistory: venueHistory)
-        }
-        
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
-    }
-}
-
-extension MyDataViewController {
     class DateCell: UITableViewCell {
         static let reuseIdentifier = String(describing: DateCell.self)
         
@@ -215,22 +98,22 @@ extension MyDataViewController {
 }
 
 extension UIStackView {
-    static func horizontal(with views: [UIView], layoutMargins: UIEdgeInsets = .standard) -> UIStackView {
+    static func horizontal(with views: [UIView], layoutMargins: UIEdgeInsets = .standard, distribution: UIStackView.Distribution = .fillProportionally) -> UIStackView {
         let stack = UIStackView(arrangedSubviews: views)
         stack.axis = .horizontal
         stack.alignment = .firstBaseline
-        stack.distribution = .fillProportionally
+        stack.distribution = distribution
         stack.spacing = .standardSpacing
         stack.layoutMargins = layoutMargins
         stack.isLayoutMarginsRelativeArrangement = true
         return stack
     }
     
-    static func vertical(with views: [UIView]) -> UIStackView {
+    static func vertical(with views: [UIView], layoutMargins: UIEdgeInsets = .standard) -> UIStackView {
         let stack = UIStackView(arrangedSubviews: views)
         stack.axis = .vertical
         stack.spacing = .halfSpacing
-        stack.layoutMargins = .standard
+        stack.layoutMargins = layoutMargins
         stack.isLayoutMarginsRelativeArrangement = true
         return stack
     }

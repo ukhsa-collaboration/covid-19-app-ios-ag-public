@@ -15,17 +15,17 @@ class EditPostcodeFlowTest: XCTestCase {
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = true
         $runner.initialState.postcode = "S1"
-        $runner.initialState.localAuthorityId = "Sheffield"
+        $runner.initialState.localAuthorityId = "E08000019" // Sheffield
     }
     
     func testEditPostCodeAndLocalAuthorityWithoutLocalAuthoritySelection() throws {
         
-        let newPostcode = "S1"
-        let localAuhtority = "Sheffield"
+        let newPostcode = "L4"
+        let localAuthority = "Liverpool"
         
         $runner.report(scenario: "Edit postcode", "Happy path - confirm local authority") {
             """
-            Enter a valid new postcode, confirm the local authority and reach My Data screen again.
+            Enter a valid new postcode, confirm the local authority and reach My Area screen again.
             """
         }
         
@@ -33,41 +33,44 @@ class EditPostcodeFlowTest: XCTestCase {
             
             let homeScreen = HomeScreen(app: app)
             app.checkOnHomeScreenNotIsolating()
-            XCTAssert(homeScreen.aboutButton.exists)
+            XCTAssert(homeScreen.settingsButton.exists)
             
             runner.step("Home screen") {
                 """
                 The user is presented the Home screen.
-                The user presses the About This App entry to proceed.
+                The user presses the Settings to continue.
                 """
             }
             
-            app.scrollTo(element: homeScreen.aboutButton)
-            homeScreen.aboutButton.tap()
+            app.scrollTo(element: homeScreen.settingsButton)
+            homeScreen.settingsButton.tap()
             
-            let aboutThisAppScreen = AboutThisAppScreen(app: app)
-            XCTAssert(aboutThisAppScreen.seeDataButton.exists)
+            let settingsScreen = SettingsScreen(app: app)
+            XCTAssert(settingsScreen.myAreaRow.exists)
             
-            runner.step("About This App screen") {
+            runner.step("Settings screen") {
                 """
-                The user is presented the About This App screen.
-                The user presses the Manage My Data link to proceed.
-                """
-            }
-            
-            aboutThisAppScreen.seeDataButton.tap()
-            
-            let myDataScreen = MyDataScreen(app: app)
-            XCTAssert(myDataScreen.editPostcodeButton.exists)
-            
-            runner.step("My Data screen") {
-                """
-                The user is presented the My Data screen.
-                The user presses the Edit button of the postcode section.
+                The user is presented the Settings screen.
+                The user presses the My Area button to proceed.
                 """
             }
             
-            myDataScreen.editPostcodeButton.tap()
+            settingsScreen.myAreaRow.tap()
+            
+            let myAreaScreen = MyAreaScreen(app: app)
+            XCTAssert(myAreaScreen.edit.exists)
+            
+            XCTAssert(myAreaScreen.postcodeCellValue(postcode: "S1").exists)
+            XCTAssert(myAreaScreen.localAuthorityCellValue(localAuthority: "Sheffield").exists)
+            
+            runner.step("My Area screen") {
+                """
+                The user is presented the My Area screen.
+                The user presses the Edit button.
+                """
+            }
+            
+            myAreaScreen.edit.tap()
             
             let editPostcodeScreen = EditPostcodeScreen(app: app)
             XCTAssert(editPostcodeScreen.continueButton.exists)
@@ -102,26 +105,27 @@ class EditPostcodeFlowTest: XCTestCase {
             
             localAuthorityConfirmationScreen.button.tap()
             
-            let myDataScreenNewPostcode = MyDataScreen(app: app)
-            let postcodeCellElements = myDataScreenNewPostcode.postcodeAndLocalAuthorityCell(postcode: newPostcode, localAuthority: localAuhtority)
-            XCTAssert(postcodeCellElements[0].exists)
-            XCTAssert(postcodeCellElements[1].exists)
+            let myAreaScreenNewPostcodeAndLocalAuthority = MyAreaScreen(app: app)
+            XCTAssert(myAreaScreenNewPostcodeAndLocalAuthority.postcodeCellValue(postcode: newPostcode).exists)
+            XCTAssert(myAreaScreenNewPostcodeAndLocalAuthority.localAuthorityCellValue(localAuthority: localAuthority).exists)
             
-            runner.step("My Data screen - new postcode and local authority") {
+            runner.step("My Area screen - new postcode and local authority") {
                 """
-                The user is presented the My Data screen again with the newly entered postcode and confirmed local authority.
+                The user is presented the My Area screen again with the newly entered postcode and confirmed local authority.
                 """
             }
+            
         }
     }
     
     func testEditPostCodeAndLocalAuthorityWithLocalAuthoritySelection() throws {
+        
         let newPostcode = "LL20"
-        let localAuhtority = "Wrexham / Wrecsam"
+        let localAuthority = "Wrexham / Wrecsam"
         
         $runner.report(scenario: "Edit postcode", "Happy path - select local authority") {
             """
-            Enter a valid new postcode, select the local authority and reach My Data screen again.
+            Enter a valid new postcode, select the local authority and reach My Area screen again.
             """
         }
         
@@ -129,41 +133,44 @@ class EditPostcodeFlowTest: XCTestCase {
             
             let homeScreen = HomeScreen(app: app)
             app.checkOnHomeScreenNotIsolating()
-            XCTAssert(homeScreen.aboutButton.exists)
+            XCTAssert(homeScreen.settingsButton.exists)
             
             runner.step("Home screen") {
                 """
                 The user is presented the Home screen.
-                The user presses the About This App entry to proceed.
+                The user presses the Settings to continue.
                 """
             }
             
-            app.scrollTo(element: homeScreen.aboutButton)
-            homeScreen.aboutButton.tap()
+            app.scrollTo(element: homeScreen.settingsButton)
+            homeScreen.settingsButton.tap()
             
-            let aboutThisAppScreen = AboutThisAppScreen(app: app)
-            XCTAssert(aboutThisAppScreen.seeDataButton.exists)
+            let settingsScreen = SettingsScreen(app: app)
+            XCTAssert(settingsScreen.myAreaRow.exists)
             
-            runner.step("About This App screen") {
+            runner.step("Settings screen") {
                 """
-                The user is presented the About This App screen.
-                The user presses the Manage My Data link to proceed.
-                """
-            }
-            
-            aboutThisAppScreen.seeDataButton.tap()
-            
-            let myDataScreen = MyDataScreen(app: app)
-            XCTAssert(myDataScreen.editPostcodeButton.exists)
-            
-            runner.step("My Data screen") {
-                """
-                The user is presented the My Data screen.
-                The user presses the Edit button of the postcode section.
+                The user is presented the Settings screen.
+                The user presses the My Area button to proceed.
                 """
             }
             
-            myDataScreen.editPostcodeButton.tap()
+            settingsScreen.myAreaRow.tap()
+            
+            let myAreaScreen = MyAreaScreen(app: app)
+            XCTAssert(myAreaScreen.edit.exists)
+            
+            XCTAssert(myAreaScreen.postcodeCellValue(postcode: "S1").exists)
+            XCTAssert(myAreaScreen.localAuthorityCellValue(localAuthority: "Sheffield").exists)
+            
+            runner.step("My Area screen") {
+                """
+                The user is presented the My Area screen.
+                The user presses the Edit button.
+                """
+            }
+            
+            myAreaScreen.edit.tap()
             
             let editPostcodeScreen = EditPostcodeScreen(app: app)
             XCTAssert(editPostcodeScreen.continueButton.exists)
@@ -196,7 +203,7 @@ class EditPostcodeFlowTest: XCTestCase {
                 """
             }
             
-            localAuthorityScreen.localAuthorityCard(checked: false, title: localAuhtority).tap()
+            localAuthorityScreen.localAuthorityCard(checked: false, title: localAuthority).tap()
             
             runner.step("Your Local Authority screen - selected local authority") {
                 """
@@ -208,16 +215,16 @@ class EditPostcodeFlowTest: XCTestCase {
             app.scrollTo(element: localAuthorityScreen.button)
             localAuthorityScreen.button.tap()
             
-            let myDataScreenNewPostcode = MyDataScreen(app: app)
-            let postcodeCellElements = myDataScreenNewPostcode.postcodeAndLocalAuthorityCell(postcode: newPostcode, localAuthority: localAuhtority)
-            XCTAssert(postcodeCellElements[0].exists)
-            XCTAssert(postcodeCellElements[1].exists)
+            let myAreaScreenNewPostcodeAndLocalAuthority = MyAreaScreen(app: app)
+            XCTAssert(myAreaScreenNewPostcodeAndLocalAuthority.postcodeCellValue(postcode: newPostcode).exists)
+            XCTAssert(myAreaScreenNewPostcodeAndLocalAuthority.localAuthorityCellValue(localAuthority: localAuthority).exists)
             
-            runner.step("My Data screen -  new postcode and select local authority") {
+            runner.step("My Area screen - new postcode and local authority") {
                 """
-                The user is presented the My Data screen with the new postcode and the selected local authority.
+                The user is presented the My Area screen again with the newly entered postcode and confirmed local authority.
                 """
             }
+            
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -51,4 +51,9 @@ struct SymptomsReviewScreen {
     var confirmAlertText: XCUIElement {
         app.staticTexts[SymptomsReviewViewControllerScenario.confirmTapped]
     }
+    
+    var dateButton: XCUIElement {
+        app.buttons[localized: .symptom_review_date_placeholder]
+    }
+    
 }

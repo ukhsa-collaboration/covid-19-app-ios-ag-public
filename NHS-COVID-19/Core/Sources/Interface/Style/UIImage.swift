@@ -90,6 +90,8 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case symbolInstructionForUse = "Symbols/InstructionForUse"
     case appUpdateImage = "AppUpdateImage"
     
+    case settingInfo = "SettingInfo"
+    
     public var id: ImageName {
         self
     }

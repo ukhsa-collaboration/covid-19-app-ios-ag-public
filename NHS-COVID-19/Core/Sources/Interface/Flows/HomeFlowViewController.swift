@@ -18,6 +18,7 @@ public protocol HomeFlowViewControllerInteracting {
     func makeLinkTestResultViewController() -> UIViewController?
     func makeDailyConfirmationViewController(parentVC: UIViewController, with terminate: @escaping () -> Void) -> UIViewController?
     func getMyDataViewModel() -> MyDataViewController.ViewModel
+    func getMyAreaViewModel() -> MyAreaTableViewController.ViewModel
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never>
     func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn)
     var shouldShowCheckIn: Bool { get }
@@ -33,6 +34,7 @@ public protocol HomeFlowViewControllerInteracting {
     func makeLocalAuthorityOnboardingInteractor() -> LocalAuthorityFlowViewController.Interacting
     func getCurrentLocaleConfiguration() -> InterfaceProperty<LocaleConfiguration>
     func storeNewLanguage(_ localeConfiguration: LocaleConfiguration) -> Void
+    func getVenueHistoryViewModel() -> VenueHistoryViewController.ViewModel
 }
 
 public enum ExposureNotificationReminderIn: Int, CaseIterable {
@@ -248,11 +250,9 @@ private struct AboutThisAppInteractor: AboutThisAppViewController.Interacting {
     }
     
     public func didTapSeeData() {
-        let interactor = MyDataViewInteractor(flowController: flowController, interactor: self.interactor)
-        let viewController = MyDataViewController(viewModel: self.interactor.getMyDataViewModel(), interactor: interactor)
+        let viewController = MyDataViewController(viewModel: interactor.getMyDataViewModel())
         flowController?.pushViewController(viewController, animated: true)
     }
-    
 }
 
 private struct RiskLevelInfoInteractor: RiskLevelInfoViewController.Interacting {
@@ -271,24 +271,12 @@ private struct RiskLevelInfoInteractor: RiskLevelInfoViewController.Interacting 
     }
 }
 
-private struct MyDataViewInteractor: MyDataViewController.Interacting {
-    var deleteAppData: () -> Void
-    var updateVenueHistories: (VenueHistory) -> [VenueHistory]
-    var didTapEditPostcode: () -> Void
-    
-    init(flowController: HomeFlowViewController?, interactor: HomeFlowViewController.Interacting) {
-        deleteAppData = interactor.deleteAppData
-        updateVenueHistories = interactor.updateVenueHistories
-        didTapEditPostcode = { [weak flowController] in
-            
-            let localAuthorityFlowVC = LocalAuthorityFlowViewController(interactor.makeLocalAuthorityOnboardingInteractor(), isEditMode: true)
-            localAuthorityFlowVC.modalPresentationStyle = .fullScreen
-            flowController?.present(localAuthorityFlowVC, animated: true)
-        }
-    }
-}
-
 private struct SettingsInteractor: SettingsViewController.Interacting {
+    func didTapMyArea() {
+        guard let viewController = makeMyAreaViewController() else { return }
+        flowController?.pushViewController(viewController, animated: true)
+    }
+    
     private weak var flowController: HomeFlowViewController?
     private var interactor: HomeFlowViewControllerInteracting
     
@@ -305,6 +293,23 @@ private struct SettingsInteractor: SettingsViewController.Interacting {
     func didTapManageMyData() {
         let manageMyDataVC = makeManageMyDataViewController()
         flowController?.pushViewController(manageMyDataVC, animated: true)
+    }
+    
+    private func makeMyAreaViewController() -> UIViewController? {
+        let interactor = MyAreaTableViewControllerInteractor(flowController: flowController, interactor: self.interactor)
+        return MyAreaTableViewController(viewModel: self.interactor.getMyAreaViewModel(), interactor: interactor)
+    }
+    
+    func didTapDeleteAppData() {
+        interactor.deleteAppData()
+    }
+    
+    func didTapVenueHistory() {
+        let venueHistoryVC = VenueHistoryViewController(
+            viewModel: interactor.getVenueHistoryViewModel(),
+            interactor: VenueHistoryViewControllerInteractor(homeFlowInteractor: interactor)
+        )
+        flowController?.pushViewController(venueHistoryVC, animated: true)
     }
     
     func makeLanguageSelectionViewController() -> UIViewController? {
@@ -332,8 +337,7 @@ private struct SettingsInteractor: SettingsViewController.Interacting {
     }
     
     func makeManageMyDataViewController() -> UIViewController {
-        let interactor = MyDataViewInteractor(flowController: flowController, interactor: self.interactor)
-        return MyDataViewController(viewModel: self.interactor.getMyDataViewModel(), interactor: interactor)
+        return MyDataViewController(viewModel: interactor.getMyDataViewModel())
     }
 }
 
@@ -342,5 +346,34 @@ struct LanguageSelectionViewControllerInteractor: LanguageSelectionViewControlle
     
     public func didSelect(configuration: LocaleConfiguration) {
         _didSelectLanguage(configuration)
+    }
+}
+
+struct MyAreaTableViewControllerInteractor: MyAreaTableViewController.Interacting {
+    var _didTapEditPostcode: () -> Void
+    
+    internal init(flowController: HomeFlowViewController?, interactor: HomeFlowViewController.Interacting) {
+        _didTapEditPostcode = { [weak flowController] in
+            
+            let localAuthorityFlowVC = LocalAuthorityFlowViewController(
+                interactor.makeLocalAuthorityOnboardingInteractor(),
+                isEditMode: true
+            )
+            localAuthorityFlowVC.modalPresentationStyle = .fullScreen
+            flowController?.present(localAuthorityFlowVC, animated: true)
+        }
+    }
+    
+    func didTapEditPostcode() {
+        _didTapEditPostcode()
+    }
+    
+}
+
+struct VenueHistoryViewControllerInteractor: VenueHistoryViewController.Interacting {
+    var updateVenueHistories: (VenueHistory) -> [VenueHistory]
+    
+    init(homeFlowInteractor: HomeFlowViewController.Interacting) {
+        updateVenueHistories = homeFlowInteractor.updateVenueHistories
     }
 }

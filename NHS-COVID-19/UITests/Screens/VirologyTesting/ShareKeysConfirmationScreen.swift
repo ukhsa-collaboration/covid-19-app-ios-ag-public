@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -15,6 +15,10 @@ struct ShareKeysConfirmationScreen {
     
     var heading: XCUIElement {
         app.staticTexts[localized: .share_keys_confirmation_heading]
+    }
+    
+    var privacyNotice: XCUIElement {
+        app.staticTexts[localized: .share_keys_confirmation_privacy_notice]
     }
     
     var informationTitle: XCUIElement {

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -51,4 +51,10 @@ extension LocalDay {
         self.init(gregorianDay: gregorianDay, timeZone: timeZone)
     }
     
+}
+
+extension LocalDay: Comparable {
+    public static func < (lhs: LocalDay, rhs: LocalDay) -> Bool {
+        lhs.gregorianDay < rhs.gregorianDay
+    }
 }

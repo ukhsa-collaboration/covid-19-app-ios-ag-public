@@ -40,4 +40,9 @@ struct TestSymptomsReviewScreen {
     var dateTextField: XCUIElement {
         app.staticTexts[localized: .symptom_review_date_placeholder]
     }
+    
+    var dateButton: XCUIElement {
+        app.buttons[localized: .symptom_review_date_placeholder]
+    }
+    
 }

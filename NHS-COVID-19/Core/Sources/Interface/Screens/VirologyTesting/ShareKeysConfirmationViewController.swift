@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -23,8 +23,11 @@ private class ShareKeysConfirmationContent: StickyFooterScrollingContent {
         scrollingContent = BasicContent(
             views: [
                 UIStackView(content: BasicContent(
-                    views: [BaseLabel().styleAsPageHeader().set(text: localize(.share_keys_confirmation_heading))],
-                    spacing: 0,
+                    views: [
+                        BaseLabel().styleAsPageHeader().set(text: localize(.share_keys_confirmation_heading)),
+                        BaseLabel().styleAsBody().set(text: localize(.share_keys_confirmation_privacy_notice)),
+                    ],
+                    spacing: .standardSpacing,
                     margins: mutating(.zero) {
                         $0.left = Self.infoboxInset
                         $0.right = Self.infoboxInset

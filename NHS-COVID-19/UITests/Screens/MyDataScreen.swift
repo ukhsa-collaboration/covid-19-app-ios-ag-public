@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -10,7 +10,7 @@ struct MyDataScreen {
     var app: XCUIApplication
     
     var title: XCUIElement {
-        app.staticTexts[localized: .mydata_title]
+        app.staticTexts[localized: .mydata_screen_title]
     }
     
     var postcodeSectionHeader: XCUIElement {
@@ -25,30 +25,6 @@ struct MyDataScreen {
         app.staticTexts[localized: .mydata_section_test_result_description]
     }
     
-    var editVenueHistoryButton: XCUIElement {
-        app.buttons[localized: .mydata_venue_history_edit_button_accessibility_description]
-    }
-    
-    var doneVenueHistoryButton: XCUIElement {
-        app.buttons[localized: .mydata_venue_history_done_button_accessibility_description]
-    }
-    
-    var deleteDataButton: XCUIElement {
-        app.buttons[localized: .mydata_data_deletion_button_title]
-    }
-    
-    func postcodeCell(postcode: String) -> XCUIElement {
-        app.staticTexts[verbatim: postcode]
-    }
-    
-    func postcodeAndLocalAuthorityCell(postcode: String, localAuthority: String) -> [XCUIElement] {
-        [app.staticTexts[verbatim: postcode], app.staticTexts[verbatim: localAuthority]]
-    }
-    
-    var editPostcodeButton: XCUIElement {
-        app.buttons[localized: .mydata_section_LocalAuthority_edit_button_accessibility_description]
-    }
-    
     func testResult(testResult: String) -> XCUIElement {
         app.staticTexts[verbatim: testResult]
     }
@@ -59,17 +35,5 @@ struct MyDataScreen {
     
     func cellTestKitType(testKitType: String) -> XCUIElement {
         app.staticTexts[verbatim: testKitType]
-    }
-    
-    var cellDeleteButton: XCUIElement {
-        app.tables.buttons[localized: .delete]
-    }
-    
-    var deleteDataAlert: XCUIElement {
-        app.buttons[localized: .mydata_delete_data_alert_title]
-    }
-    
-    var deleteDataAlertConfirmationButton: XCUIElement {
-        app.buttons[localized: .mydata_delete_data_alert_button_title]
     }
 }

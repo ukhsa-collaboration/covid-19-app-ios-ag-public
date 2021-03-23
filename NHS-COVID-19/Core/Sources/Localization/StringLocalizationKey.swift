@@ -120,16 +120,21 @@ public enum StringLocalizationKey: String, CaseIterable {
     case checkin_camera_qrcode_scanner_title
     case checkin_camera_qrcode_scanner_status_label
     case checkin_camera_qrcode_scanner_description_label
+    case checkin_camera_qrcode_scanner_help_button_title
     case checkin_confirmation_explanation
+    case checkin_confirmation_simplified_explanation
     case checkin_confirmation_button_title
     case checkin_wrong_button_title
+    case checkin_cancel_checkin_button_title
     case checkin_qrcode_scanner_close_button_title
     case checkin_information_title_new
     case checkin_information_description
     case checkin_information_help_scanning_section_title
+    case checkin_information_how_to_scan_section_title
+    case checkin_information_how_to_scan_section_description
     case checkin_information_help_scanning_section_description
     case checkin_information_whats_a_qr_code_section_title
-    case checkin_information_whats_a_qr_code_section_description_new
+    case checkin_information_whats_a_qr_code_section_description
     case checkin_information_how_it_works_section_title
     case checkin_information_how_it_works_section_description
     case checkin_information_how_it_helps_section_title
@@ -292,6 +297,11 @@ public enum StringLocalizationKey: String, CaseIterable {
     case settings_language_confirm_selection_alert_no
     case settings_language_confirm_selection_alert_yes
     
+    case my_area_title
+    case my_area_edit_button_title
+    case my_area_postcode_disctrict
+    case my_area_local_authority
+    
     case about_this_app_title
     case about_this_app_how_this_app_works_heading
     case about_this_app_how_this_app_works_paragraph1
@@ -310,6 +320,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case about_this_app_my_data_heading
     case about_this_app_my_data_description
     case about_this_app_my_data_button
+    case about_this_app_my_data_app_settings
     case about_this_app_software_information_heading
     case about_this_app_software_information_app_name
     case about_this_app_software_information_version
@@ -322,26 +333,29 @@ public enum StringLocalizationKey: String, CaseIterable {
     case about_this_app_feedback_information_link_title
     case about_this_app_footer_text
     
-    case mydata_title
+    case mydata_screen_title
     case mydata_section_postcode_description
     case mydata_section_LocalAuthority_description
     case mydata_section_LocalAuthority_edit_button_accessibility_description
     case mydata_section_test_result_description
     case mydata_section_venue_history_description
-    case mydata_section_symptoms_description
+    case mydata_section_symptoms_heading
+    case mydata_section_symptoms_date
     case mydata_section_encounter_description
     case mydata_section_date_description
     case mydata_section_exposure_notification_description
     case mydata_section_daily_testing_description
-    case mydata_section_self_isolation_end_date_description
-    case mydata_section_venue_of_risk
+    case mydata_section_self_isolation_heading
+    case mydata_section_self_isolation_end_date
+    case mydata_section_venue_of_risk_heading
+    case mydata_section_venue_of_risk_date
     case mydata_exposure_notification_details_exposure_date_description
     case mydata_exposure_notification_details_notification_date_description
     case mydata_daily_testing_opt_in_date_description
     case mydata_test_result_positive
     case mydata_test_result_negative
     case mydata_test_result_void
-    case mydata_data_deletion_button_title
+    case mydata_delete_and_reset_data_button_title
     case mydata_delete_data_alert_title
     case mydata_delete_data_alert_description
     case mydata_delete_data_alert_button_title
@@ -355,7 +369,8 @@ public enum StringLocalizationKey: String, CaseIterable {
     case mydata_test_result_lab_result
     case mydata_test_result_rapid_result
     case mydata_test_result_rapid_self_reported
-    case mydata_test_result_follow_up_test
+    case mydata_test_result_follow_up_test_date
+    case mydata_test_result_follow_up_test_status
     case mydata_test_result_follow_up_not_required
     case mydata_test_result_follow_up_pending
     case mydata_test_result_follow_up_complete
@@ -415,6 +430,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case link_test_result_enter_code_textfield_label
     case link_test_result_enter_code_invalid_error
     case link_test_result_button_title
+    case link_test_result_symptom_information_title
     
     case link_test_result_enter_code_daily_contact_testing_heading
     case link_test_result_enter_code_daily_contact_testing_paragraph
@@ -429,6 +445,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     
     case share_keys_confirmation_title
     case share_keys_confirmation_heading
+    case share_keys_confirmation_privacy_notice
     case share_keys_confirmation_info_title
     case share_keys_confirmation_info_body
     case share_keys_confirmation_i_understand
@@ -527,6 +544,8 @@ public enum StringLocalizationKey: String, CaseIterable {
     
     case settings_row_manage_my_data_title
     case settings_row_manage_my_data_subtitle
+    case settings_row_my_area_title
+    case settings_row_my_data_title
     
     case risk_level_mass_testing_title
     case risk_level_mass_testing_description
@@ -537,6 +556,11 @@ public enum StringLocalizationKey: String, CaseIterable {
     case checkin_risky_venue_information_warn_and_book_a_test_description
     case checkin_risky_venue_information_book_a_test_button_title
     case checkin_risky_venue_information_will_book_a_test_later_button_title
+    
+    case settings_no_records
+    case settings_venue_history
+    
+    case venue_history_postcode_unavailable
 }
 
 public enum ParameterisedStringLocalizable: Equatable {
@@ -546,8 +570,8 @@ public enum ParameterisedStringLocalizable: Equatable {
         case risk_level_banner_text = "risk_level_banner_text %@ %@"
         
         case checkin_confirmation_date = "checkin_confirmation_date %@"
-        case checkin_camera_qrcode_scanner_help_button_title = "checkin_camera_qrcode_scanner_help_button_title %@"
         case checkin_risky_venue_information_title = "checkin_risky_venue_information_title %@ %@"
+        case checkin_confirmation_thankyou = "checkin_confirmation_thankyou %1$@"
         
         case symptom_card_accessibility_label = "symptom_card_accessibility_label %@ %@"
         case symptom_card_checkbox_accessibility_label = "symptom_card_checkbox_accessibility_label %@ %@ %@"
@@ -585,13 +609,14 @@ public enum ParameterisedStringLocalizable: Equatable {
         case local_authority_card_checkbox_accessibility_label = "local_authority_card_checkbox_accessibility_label %@ %@"
         case local_authority_screen_description = "local_authority_screen_description %@"
         case settings_language_confirm_selection_alert_description = "settings_language_confirm_selection_alert_description %@"
+        case venue_history_heading_accessibility_label = "venue_history_heading_accessibility_label %@"
     }
     
     case numbered_list_item(index: Int, text: String)
     
     case checkin_confirmation_date(date: Date)
-    case checkin_camera_qrcode_scanner_help_button_title
     case checkin_risky_venue_information_title(venue: String, date: Date)
+    case checkin_confirmation_thankyou(venue: String)
     
     case risk_level_banner_text(postcode: String, risk: String)
     
@@ -636,6 +661,7 @@ public enum ParameterisedStringLocalizable: Equatable {
     case local_authority_card_checkbox_accessibility_label(value: String, content: String)
     case local_authority_screen_description(postcode: String)
     case settings_language_confirm_selection_alert_description(selectedLanguage: String)
+    case venue_history_heading_accessibility_label(date: Date)
     
     var key: Key {
         switch self {
@@ -643,7 +669,7 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .risk_level_banner_text: return .risk_level_banner_text
         case .checkin_confirmation_date: return .checkin_confirmation_date
         case .checkin_risky_venue_information_title: return .checkin_risky_venue_information_title
-        case .checkin_camera_qrcode_scanner_help_button_title: return .checkin_camera_qrcode_scanner_help_button_title
+        case .checkin_confirmation_thankyou: return .checkin_confirmation_thankyou
         case .symptom_card_accessibility_label: return .symptom_card_accessibility_label
         case .symptom_card_checkbox_accessibility_label: return .symptom_card_checkbox_accessibility_label
         case .symptom_onset_select_day: return .symptom_onset_select_day
@@ -676,6 +702,7 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .local_authority_card_checkbox_accessibility_label: return .local_authority_card_checkbox_accessibility_label
         case .local_authority_screen_description: return .local_authority_screen_description
         case .settings_language_confirm_selection_alert_description: return .settings_language_confirm_selection_alert_description
+        case .venue_history_heading_accessibility_label: return .venue_history_heading_accessibility_label
         }
     }
     
@@ -689,13 +716,13 @@ public enum ParameterisedStringLocalizable: Equatable {
             return [
                 DateFormatter.mediumDateShortTime.string(from: date),
             ]
-        case .checkin_camera_qrcode_scanner_help_button_title:
-            return ["\u{24D8}"]
         case .checkin_risky_venue_information_title(let venue, let date):
             return [
                 venue,
                 DateFormatter.mediumDateShortTime.string(from: date),
             ]
+        case .checkin_confirmation_thankyou(let venue):
+            return [venue]
         case .symptom_card_accessibility_label(let heading, let content):
             return [heading, content]
         case .symptom_card_checkbox_accessibility_label(let value, let heading, let content):
@@ -765,6 +792,8 @@ public enum ParameterisedStringLocalizable: Equatable {
             return [postcode]
         case .settings_language_confirm_selection_alert_description(let selectedLanguage):
             return [selectedLanguage]
+        case .venue_history_heading_accessibility_label(let date):
+            return [DateFormatter.dayOfYear.string(from: date)]
         }
     }
     

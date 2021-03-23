@@ -33,7 +33,7 @@ class AboutThisAppScreenTests: XCTestCase {
             
             XCTAssert(screen.showMyDataHeading.exists)
             XCTAssert(screen.showMyDataDescription.exists)
-            XCTAssert(screen.seeDataButton.exists)
+            XCTAssert(screen.seeDataDescription.exists)
             
             XCTAssert(screen.softwareInformationHeading.exists)
             XCTAssert(screen.appName.exists)
@@ -78,15 +78,7 @@ class AboutThisAppScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.accessibilityStatementTapped].exists)
         }
     }
-    
-    func seeDatainkAction() throws {
-        try runner.run { app in
-            let screen = AboutThisAppScreen(app: app)
-            screen.seeDataButton.tap()
-            XCTAssertTrue(app.staticTexts[runner.scenario.seeDataTapped].exists)
-        }
-    }
-    
+        
     func testProvideFeedbackLinkAction() throws {
         try runner.run { app in
             let screen = AboutThisAppScreen(app: app)

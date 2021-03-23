@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import UIKit
@@ -12,6 +12,11 @@ extension UIButton {
         tintColor = UIColor(.primaryButtonLabel)
         titleLabel?.setDynamicTextStyle(.headline)
         titleLabel?.textAlignment = .center
+        
+        // for .custom buttons, tintColor has no effect on the title so set it manually
+        if buttonType == .custom {
+            setTitleColor(tintColor, for: .normal)
+        }
         
         NSLayoutConstraint.activate([
             heightAnchor.constraint(greaterThanOrEqualToConstant: .buttonMinimumHeight),

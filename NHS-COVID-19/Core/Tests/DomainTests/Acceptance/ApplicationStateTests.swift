@@ -323,13 +323,9 @@ class ApplicationStateTests: AcceptanceTestCase {
     }
     
     func testRiskyPostcodesInvalidatedOnDeleteAllData() throws {
-        let mockDataProvider = MockDataProvider()
-        mockDataProvider.yellowPostcodes = "B44"
-        
-        let handler = RiskyPostDistrictsHandler(dataProvider: mockDataProvider)
         distributeClient.response(
             for: "/distribution/risky-post-districts-v2",
-            response: handler.response
+            response: RiskyPostDistrictsHandler.response([.yellow: .init(postcodes: ["B44"])])
         )
         
         // Complete onboarding
@@ -341,11 +337,9 @@ class ApplicationStateTests: AcceptanceTestCase {
         
         // change the data on the 'server.'
         // B44 is now going into a red tier
-        mockDataProvider.yellowPostcodes = ""
-        mockDataProvider.redPostcodes = "B44"
         distributeClient.response(
             for: "/distribution/risky-post-districts-v2",
-            response: handler.response
+            response: RiskyPostDistrictsHandler.response([.red: .init(postcodes: ["B44"])])
         )
         
         // Delete all data and complete re-onboarding.
@@ -361,13 +355,9 @@ class ApplicationStateTests: AcceptanceTestCase {
     
     func testRiskyPostcodesInvalidatedOnChangePostcode() throws {
         
-        let mockDataProvider = MockDataProvider()
-        mockDataProvider.yellowPostcodes = "B44"
-        
-        let handler = RiskyPostDistrictsHandler(dataProvider: mockDataProvider)
         distributeClient.response(
             for: "/distribution/risky-post-districts-v2",
-            response: handler.response
+            response: RiskyPostDistrictsHandler.response([.yellow: .init(postcodes: ["B44"])])
         )
         
         // Complete onboarding
@@ -379,11 +369,9 @@ class ApplicationStateTests: AcceptanceTestCase {
         
         // change the data on the 'server.'
         // B44 is now going into a red tier
-        mockDataProvider.yellowPostcodes = ""
-        mockDataProvider.redPostcodes = "B44"
         distributeClient.response(
             for: "/distribution/risky-post-districts-v2",
-            response: handler.response
+            response: RiskyPostDistrictsHandler.response([.red: .init(postcodes: ["B44"])])
         )
         
         // 'Change' the local authority. Even though we're
@@ -400,31 +388,23 @@ class ApplicationStateTests: AcceptanceTestCase {
     
     func testRiskyPostcodesManagerRateLimitsDownloads() throws {
         
-        let mockDataProvider = MockDataProvider()
-        mockDataProvider.yellowPostcodes = "B44"
-        
-        let handler = RiskyPostDistrictsHandler(dataProvider: mockDataProvider)
         distributeClient.response(
             for: "/distribution/risky-post-districts-v2",
-            response: handler.response
+            response: RiskyPostDistrictsHandler.response([.yellow: .init(postcodes: ["B44"])])
         )
-
+        
         // Complete onboarding
         try completeRunning()
-
+        
         let riskColorBeforeRefresh = try context().postcodeInfo.currentValue?.risk.currentValue?.style.colorScheme
         XCTAssertEqual(riskColorBeforeRefresh, .yellow)
         
-        // update the mock date provider
-        mockDataProvider.yellowPostcodes = ""
-        mockDataProvider.redPostcodes = "B44"
-
         // update the client
         distributeClient.response(
             for: "/distribution/risky-post-districts-v2",
-            response: RiskyPostDistrictsHandler(dataProvider: mockDataProvider).response
+            response: RiskyPostDistrictsHandler.response([.red: .init(postcodes: ["B44"])])
         )
-                
+        
         // trigger an update
         NotificationCenter.default.post(name: UIApplication.willEnterForegroundNotification, object: nil)
         

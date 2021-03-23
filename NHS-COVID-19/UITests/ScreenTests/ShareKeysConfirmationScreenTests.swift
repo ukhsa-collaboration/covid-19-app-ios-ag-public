@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -16,6 +16,7 @@ class ShareKeysConfirmationScreenTests: XCTestCase {
             
             XCTAssert(screen.title.exists)
             XCTAssert(screen.heading.exists)
+            XCTAssert(screen.privacyNotice.exists)
             XCTAssert(screen.informationTitle.exists)
             XCTAssert(screen.informationBody.exists)
             XCTAssert(screen.iUnderstand.exists)

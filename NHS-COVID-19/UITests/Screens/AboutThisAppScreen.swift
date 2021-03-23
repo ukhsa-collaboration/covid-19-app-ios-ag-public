@@ -72,8 +72,8 @@ struct AboutThisAppScreen {
         app.staticTexts[localized: .about_this_app_my_data_description]
     }
     
-    var seeDataButton: XCUIElement {
-        app.links[localized: .about_this_app_my_data_button]
+    var seeDataDescription: XCUIElement {
+        app.staticTexts[localized: .about_this_app_my_data_app_settings]
     }
     
     var softwareInformationHeading: XCUIElement {

@@ -15,6 +15,13 @@ struct RiskyVenue: Equatable {
         /// Invite the person to book a test because other people have tested positive at a venue
         /// they checked in to.
         case warnAndBookATest
+        
+        var severity: VenueMessageTypeSeverityLevel {
+            switch self {
+            case .warnAndInform: return .level1
+            case .warnAndBookATest: return .level2
+            }
+        }
     }
     
     var id: String
@@ -22,17 +29,16 @@ struct RiskyVenue: Equatable {
     var messageType: MessageType
 }
 
+enum VenueMessageTypeSeverityLevel: Comparable {
+    case level0
+    case level1
+    case level2
+}
+
 extension RiskyVenue: Comparable {
     /// Order .warnAndBookATest venues before the others
     static func < (lhs: RiskyVenue, rhs: RiskyVenue) -> Bool {
-        switch (lhs.messageType, rhs.messageType) {
-        case (.warnAndBookATest, _):
-            return true
-        case (_, .warnAndBookATest):
-            return false
-        default:
-            return true
-        }
+        return lhs.messageType.severity > rhs.messageType.severity
     }
 }
 

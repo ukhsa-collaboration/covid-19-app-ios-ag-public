@@ -39,35 +39,11 @@ class CheckInsManagerTests: XCTestCase {
             updateRisk: {
                 self.actualRiskyVenues = $0
             },
-            fetchRiskyVenues: fetchRiskyVenues,
-            riskyVenueConfiguration: CachedResponse(
-                httpClient: client,
-                endpoint: RiskyVenuesConfigurationEndpoint(),
-                storage: FileStorage(forNewCachesOf: .random()),
-                name: "risky_venue_configuration",
-                initialValue: RiskyVenueConfiguration(optionToBookATest: 11)
-            )
+            fetchRiskyVenues: fetchRiskyVenues
         )
         
         addTeardownBlock {
             self.checkInsManager = nil
         }
-    }
-    
-    func testMakeBackgroundJobs() throws {
-        let backgroundJobs = checkInsManager.makeBackgroundJobs(
-            metricsFrequency: 1.0,
-            housekeepingFrequency: 1.0
-        )
-        
-        XCTAssertEqual(backgroundJobs.count, 2)
-        
-        try backgroundJobs.forEach { job in
-            try job.work().await().get()
-        }
-        
-        let request = try XCTUnwrap(client.lastRequest)
-        let expectedRequest = try RiskyVenuesConfigurationEndpoint().request(for: ())
-        XCTAssertEqual(request, expectedRequest)
     }
 }

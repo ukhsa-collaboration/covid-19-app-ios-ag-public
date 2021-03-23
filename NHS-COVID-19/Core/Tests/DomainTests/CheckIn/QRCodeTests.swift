@@ -1,11 +1,18 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import CryptoKit
 import TestSupport
 import XCTest
 @testable import Domain
+
+// To generate a new payload:
+// 1. go to jwt.io
+// 2. Paste in an existing payload from below from after the 'UKC19TRACING:1:' to the end of the string
+// 3. The Header should be { "alg": "ES256", "typ": "JWT", "kid": "3" }
+// 4. Edit the Payload JSON
+// 5. Use the default public/private key pair to generate a new encoded jwt
 
 private extension P256.Signing.PublicKey {
     
@@ -33,6 +40,16 @@ class QRCodeDecoderTests: XCTestCase {
         let venue = Venue(
             id: "4WT59M5Y",
             organisation: "Government Office Of Human Resources"
+        )
+        TS.assert(try qrCode.parse(payload), equals: venue)
+    }
+    
+    func testValidQRCodeWithPostcode() throws {
+        let payload = "UKC19TRACING:1:eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjMifQ.eyJpZCI6IjRXVDU5TTVZIiwib3BuIjoiR292ZXJubWVudCBPZmZpY2UgT2YgSHVtYW4gUmVzb3VyY2VzIiwicGMiOiJDTTEifQ.cGzgB0sBV6c9A5LMHgO56SECqPILnCELlr4731iCyJxKFYPrr4a5R5B_wAbkluoJHfSRX7iwbZrJdWbt4z3feA"
+        let venue = Venue(
+            id: "4WT59M5Y",
+            organisation: "Government Office Of Human Resources",
+            postcode: "CM1"
         )
         TS.assert(try qrCode.parse(payload), equals: venue)
     }

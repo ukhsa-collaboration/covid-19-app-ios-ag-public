@@ -78,9 +78,9 @@ public class SuccessHomeScreenScenario: HomeScreenScenario {
 }
 
 public class DisabledFeaturesHomeScreenScenario: HomeScreenScenario {
-    public static var name = "Features disabled Homescreen"
+    public static var name = "Home Screen – All Features disabled"
     
-    public static var kind = ScenarioKind.prototype
+    public static var kind = ScenarioKind.screen
     
     public static var riskyPostcodeEnabled = false
     public static var selfDiagnosisEnabled = false

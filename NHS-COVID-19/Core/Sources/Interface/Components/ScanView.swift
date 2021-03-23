@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -55,12 +55,27 @@ class ScanView: UIView {
         return descriptionLabel
     }()
     
+    private lazy var helpButtonContainer: UIView = {
+        let sv = UIStackView(arrangedSubviews: [UIView(), helpButton, UIView()])
+        sv.distribution = .equalSpacing
+        return sv
+    }()
+    
     private lazy var helpButton: UIView = {
         let helpButton = UIButton()
+        helpButton.layer.cornerRadius = .buttonCornerRadius
+        helpButton.backgroundColor = UIColor(white: 1, alpha: 0.2)
+        
+        helpButton.contentEdgeInsets = UIEdgeInsets(
+            top: .halfSpacing,
+            left: .standardSpacing,
+            bottom: .halfSpacing,
+            right: .standardSpacing
+        )
+        
         let helpButtonTitle = localize(.checkin_camera_qrcode_scanner_help_button_title)
         helpButton.styleAsPlain(with: UIColor(.surface))
         helpButton.setTitle(helpButtonTitle, for: .normal)
-        helpButton.accessibilityLabel = localize(.checkin_camera_qrcode_scanner_help_button_accessibility_label)
         helpButton.addTarget(self, action: #selector(helpTapped), for: .touchUpInside)
         return helpButton
     }()
@@ -68,9 +83,9 @@ class ScanView: UIView {
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             titleLabel,
-            helpButton,
             statusLabel,
             descriptionLabel,
+            helpButtonContainer,
         ])
         stackView.spacing = .standardSpacing
         stackView.axis = .vertical

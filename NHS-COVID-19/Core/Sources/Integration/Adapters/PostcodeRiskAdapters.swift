@@ -78,7 +78,7 @@ extension RiskLevelBanner.ViewModel {
                 linkURL: URL(string: risk.style.linkUrl.localizedString(contentType: .url)),
                 footer: [],
                 policies: [],
-                shouldShowMassTestingLink: shouldShowMassTestingLink
+                shouldShowMassTestingLink: InterfaceProperty.constant(false)
             )
         }
     }

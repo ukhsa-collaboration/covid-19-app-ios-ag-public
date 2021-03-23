@@ -94,9 +94,6 @@ extension RiskLevelInfoViewController {
                         body: policy.body
                     )
                 },
-                viewModel.footer.map {
-                    BaseLabel().set(text: $0).styleAsBody()
-                },
             ]
             
             if viewModel.shouldShowMassTestingLink.wrappedValue {
@@ -111,6 +108,12 @@ extension RiskLevelInfoViewController {
                     ),
                 ])
             }
+            
+            stackedViews.append(contentsOf:
+                viewModel.footer.map {
+                    BaseLabel().set(text: $0).styleAsBody()
+                }
+            )
             
             let contentStack = UIStackView(arrangedSubviews: stackedViews.flatMap { $0.content })
             contentStack.axis = .vertical

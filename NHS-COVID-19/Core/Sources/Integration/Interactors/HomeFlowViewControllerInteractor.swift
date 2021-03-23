@@ -191,6 +191,13 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         context.checkInContext != nil
     }
     
+    func getMyAreaViewModel() -> MyAreaTableViewController.ViewModel {
+        MyAreaTableViewController.ViewModel(
+            postcode: context.postcodeInfo.map { $0?.postcode.value }.interfaceProperty,
+            localAuthority: context.postcodeInfo.map { $0?.localAuthority?.name }.interfaceProperty
+        )
+    }
+    
     func getMyDataViewModel() -> MyDataViewController.ViewModel {
         let venueHistories = loadVenueHistory()
         
@@ -237,13 +244,10 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             }
         }()
         // TODO: We may want to pass this through as an interface property or similar rather than computing its instantaneous value here.
-        let venueOfRiskDate = context.checkInContext?.didRecentlyVisitSevereRiskyVenueProperty().currentValue
+        let venueOfRiskDate = context.checkInContext?.recentlyVisitedSevereRiskyVenue.currentValue
         
         return .init(
-            postcode: context.postcodeInfo.map { $0?.postcode.value }.interfaceProperty,
-            localAuthority: context.postcodeInfo.map { $0?.localAuthority?.name }.interfaceProperty,
             testResultDetails: testResultDetails,
-            venueHistories: venueHistories,
             symptomsOnsetDate: symptomsOnsetDate,
             exposureNotificationDetails: exposureDetails.map { details in
                 MyDataViewController.ViewModel.ExposureNotificationDetails(
@@ -259,12 +263,11 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     
     func loadVenueHistory() -> [VenueHistory] {
         context.checkInContext?.checkInsStore.load()?
-            .sorted { $0.venueName.lowercased() < $1.venueName.lowercased() }
-            .sorted { $0.checkedIn.date > $1.checkedIn.date }
             .map { checkIn -> VenueHistory in
                 VenueHistory(
                     id: checkIn.venueId,
                     organisation: checkIn.venueName,
+                    postcode: checkIn.venuePostcode,
                     checkedIn: checkIn.checkedIn.date,
                     checkedOut: checkIn.checkedOut.date,
                     delete: {
@@ -272,6 +275,10 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                     }
                 )
             } ?? []
+    }
+    
+    func getVenueHistoryViewModel() -> VenueHistoryViewController.ViewModel {
+        return VenueHistoryViewController.ViewModel(venueHistories: loadVenueHistory())
     }
     
     func openIsolationAdvice() {

@@ -158,8 +158,7 @@ public class ApplicationCoordinator {
         )
         let checkInsManager = CheckInsManager(
             checkInsStore: checkInsStore,
-            httpClient: distributeClient,
-            riskyVenueConfiguration: riskyVenueConfiguration
+            httpClient: distributeClient
         )
         checkInContext = CheckInContext(
             checkInsStore: checkInsStore,
@@ -171,7 +170,8 @@ public class ApplicationCoordinator {
                     notificationCenter: notificationCenter
                 )
             ),
-            currentDateProvider: currentDateProvider
+            currentDateProvider: currentDateProvider,
+            riskyVenueConfiguration: riskyVenueConfiguration
         )
         
         virologyTestingStateStore = VirologyTestingStateStore(store: services.encryptedStore)
@@ -551,6 +551,15 @@ public class ApplicationCoordinator {
             break
         }
         
+        if !state.isAppUnavailable {
+            enabledJobs.append(
+                BackgroundTaskAggregator.Job(
+                    preferredFrequency: Self.metricsUploadJobBackgroundTaskFrequency,
+                    work: metricReporter.uploadMetrics
+                )
+            )
+        }
+        
         return enabledJobs
     }
     
@@ -632,9 +641,10 @@ public class ApplicationCoordinator {
         )
         
         enabledJobs.append(
-            contentsOf: checkInsManager.makeBackgroundJobs(
+            contentsOf: checkInContext.makeBackgroundJobs(
                 metricsFrequency: Self.metricsJobBackgroundTaskFrequency,
-                housekeepingFrequency: Self.housekeepingJobBackgroundTaskFrequency)
+                housekeepingFrequency: Self.housekeepingJobBackgroundTaskFrequency
+            )
         )
         
         enabledJobs.append(
@@ -655,13 +665,6 @@ public class ApplicationCoordinator {
             BackgroundTaskAggregator.Job(
                 preferredFrequency: Self.metricsJobBackgroundTaskFrequency,
                 work: userNotificationsStateController.recordMetrics
-            )
-        )
-        
-        enabledJobs.append(
-            BackgroundTaskAggregator.Job(
-                preferredFrequency: Self.metricsUploadJobBackgroundTaskFrequency,
-                work: metricReporter.uploadMetrics
             )
         )
         
