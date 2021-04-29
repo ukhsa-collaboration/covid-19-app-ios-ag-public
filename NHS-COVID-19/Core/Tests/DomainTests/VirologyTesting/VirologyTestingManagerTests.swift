@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -196,7 +196,7 @@ class VirologyTestingManagerTests: XCTestCase {
             "requiresConfirmatoryTest": false,
             "testKit": "LAB_RESULT",
             "testResult": "POSITIVE",
-            "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
+            "diagnosisKeySubmissionToken": "\#(submissionToken.value)"
         }
         """#))
         
@@ -218,7 +218,7 @@ class VirologyTestingManagerTests: XCTestCase {
             "diagnosisKeySubmissionSupported": false,
             "requiresConfirmatoryTest": false,
             "testKit": "LAB_RESULT",
-            "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
+            "diagnosisKeySubmissionToken": "\#(submissionToken.value)"
         }
         """#))
         
@@ -240,7 +240,7 @@ class VirologyTestingManagerTests: XCTestCase {
             "diagnosisKeySubmissionSupported": false,
             "requiresConfirmatoryTest": false,
             "testKit": "LAB_RESULT",
-            "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
+            "diagnosisKeySubmissionToken": "\#(submissionToken.value)"
         }
         """#))
         

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import BackgroundTasks
@@ -27,7 +27,7 @@ class BackgroundTaskAggregator {
     }
     
     func performBackgroundTask(backgroundTask: BackgroundTask) {
-        Self.logger.info("staring background task")
+        Self.logger.info("starting background task")
         Metrics.begin(.backgroundTasks)
         
         let cancellable = Publishers.Sequence<[Job], Never>(sequence: jobs)

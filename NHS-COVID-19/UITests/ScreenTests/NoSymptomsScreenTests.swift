@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -15,9 +15,13 @@ class NoSymptomsScreenTests: XCTestCase {
             let screen = NoSymptomsScreen(app: app)
             
             XCTAssert(screen.heading.exists)
-            XCTAssert(screen.description1.exists)
-            XCTAssert(screen.description2.exists)
-            XCTAssert(screen.link.exists)
+            
+            screen.stillGetTestBodyElements.forEach { XCTAssert($0.exists) }
+            XCTAssert(screen.gettingTestedLink.exists)
+            
+            screen.developSymptomsBodyElements.forEach { XCTAssert($0.exists) }
+            XCTAssert(screen.nhs111Link.exists)
+            
             XCTAssert(screen.returnHomeButton.exists)
         }
     }
@@ -31,11 +35,20 @@ class NoSymptomsScreenTests: XCTestCase {
         }
     }
     
+    func testGettingTestedLinkTapped() throws {
+        try runner.run { app in
+            let screen = NoSymptomsScreen(app: app)
+            
+            screen.gettingTestedLink.tap()
+            XCTAssert(screen.gettingTestedLinkAlertTitle.exists)
+        }
+    }
+    
     func testNHS111LinkTapped() throws {
         try runner.run { app in
             let screen = NoSymptomsScreen(app: app)
             
-            screen.link.tap()
+            screen.nhs111Link.tap()
             XCTAssert(screen.nhs111LinkAlertTitle.exists)
         }
     }

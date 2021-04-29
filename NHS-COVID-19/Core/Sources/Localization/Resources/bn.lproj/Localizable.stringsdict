@@ -98,22 +98,6 @@
 				<string>%ld দিন</string>
 			</dict>
 		</dict>
-		<key>isolation_days_subtitle %ld</key>
-		<dict>
-			<key>NSStringLocalizedFormatKey</key>
-			<string>%#@days@</string>
-			<key>days</key>
-			<dict>
-				<key>NSStringFormatSpecTypeKey</key>
-				<string>NSStringPluralRuleType</string>
-				<key>NSStringFormatValueTypeKey</key>
-				<string>li</string>
-				<key>one</key>
-				<string>দিন বাকি</string>
-				<key>other</key>
-				<string>দিন বাকি</string>
-			</dict>
-		</dict>
 		<key>exposure_acknowledgement_days %ld</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
@@ -160,6 +144,22 @@
 				<string>আপনাকে %3$@-এ %2$@ পর্যন্ত স্ব-বিচ্ছিন্ন থাকতে হবে । %1$ld দিন বাকি আছে।</string>
 				<key>other</key>
 				<string>আপনাকে %3$@-এ %2$@ পর্যন্ত স্ব-বিচ্ছিন্ন থাকতে হবে। %1$ld দিন বাকি আছে।</string>
+			</dict>
+		</dict>
+		<key>isolation_days_subtitle %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>দিন বাকি</string>
+				<key>other</key>
+				<string>দিন বাকি</string>
 			</dict>
 		</dict>
 		<key>positive_test_start_to_isolate_accessibility_label %ld</key>

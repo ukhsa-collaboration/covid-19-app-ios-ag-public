@@ -23,28 +23,28 @@ public class VenueHistoryScreenScenario: Scenario {
     
     fileprivate static var venueHistories = [
         VenueHistory(
-            id: venueID1,
+            id: VenueHistory.ID(value: UUID().uuidString),
+            venueId: venueID1,
             organisation: venueNames[0],
             postcode: venuePostcodes[0],
             checkedIn: checkinDate1,
-            checkedOut: checkinDate1,
-            delete: {}
+            checkedOut: checkinDate1
         ),
         VenueHistory(
-            id: venueID2,
+            id: VenueHistory.ID(value: UUID().uuidString),
+            venueId: venueID2,
             organisation: venueNames[1],
             postcode: venuePostcodes[1],
             checkedIn: checkinDate1,
-            checkedOut: checkinDate1,
-            delete: {}
+            checkedOut: checkinDate1
         ),
         VenueHistory(
-            id: venueID3,
+            id: VenueHistory.ID(value: UUID().uuidString),
+            venueId: venueID3,
             organisation: venueNames[2],
             postcode: venuePostcodes[2],
             checkedIn: checkinDate2,
-            checkedOut: checkinDate2,
-            delete: {}
+            checkedOut: checkinDate2
         ),
     ]
     

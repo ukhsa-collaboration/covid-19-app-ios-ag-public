@@ -23,10 +23,10 @@ struct PollingTestResult {
     
     func receivePositiveAndAcknowledge(testKitType: VirologyTestResult.TestKitType = .labResult, runBackgroundTasks: @escaping () -> Void) throws {
         let testResultAcknowledgementState = try receiveResultAndGetAcknowledgementState(resultType: .positive, testKitType: testKitType, diagnosisKeySubmissionSupported: true, requiresConfirmatoryTest: false, runBackgroundTasks: runBackgroundTasks)
-        guard case .neededForPositiveResultContinueToIsolate(let positiveAcknowledgement, _, _, _) = testResultAcknowledgementState else {
+        guard case .neededForPositiveResultContinueToIsolate(let acknowledge, _, _) = testResultAcknowledgementState else {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
-        _ = try positiveAcknowledgement.acknowledge().await()
+        acknowledge()
         apiClient.reset()
     }
     

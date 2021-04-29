@@ -112,5 +112,4 @@ class CheckInContextTest: XCTestCase {
         
         XCTAssertNil(checkInContext.recentlyVisitedSevereRiskyVenue.currentValue)
     }
-    
 }

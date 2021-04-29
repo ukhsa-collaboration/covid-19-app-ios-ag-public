@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -48,7 +48,11 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
                 testKitType: response.virologyTestResult.testKitType,
                 requiresConfirmatoryTest: response.requiresConfirmatoryTest
             )
-            handleWithNotification(response.virologyTestResult, diagnosisKeySubmissionToken: response.diagnosisKeySubmissionSupport ? virologyTestTokens.diagnosisKeySubmissionToken : nil, requiresConfirmatoryTest: response.requiresConfirmatoryTest)
+            handleWithNotification(
+                response.virologyTestResult,
+                diagnosisKeySubmissionToken: response.diagnosisKeySubmissionSupport ? virologyTestTokens.diagnosisKeySubmissionToken : nil,
+                requiresConfirmatoryTest: response.requiresConfirmatoryTest
+            )
         case .noResultYet:
             return
         }
@@ -62,9 +66,17 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         )
         switch response.diagnosisKeySubmissionSupport {
         case .supported(let token):
-            handle(response.virologyTestResult, diagnosisKeySubmissionToken: token, requiresConfirmatoryTest: response.requiresConfirmatoryTest)
+            handle(
+                response.virologyTestResult,
+                diagnosisKeySubmissionToken: token,
+                requiresConfirmatoryTest: response.requiresConfirmatoryTest
+            )
         case .notSupported:
-            handle(response.virologyTestResult, diagnosisKeySubmissionToken: nil, requiresConfirmatoryTest: response.requiresConfirmatoryTest)
+            handle(
+                response.virologyTestResult,
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: response.requiresConfirmatoryTest
+            )
         }
     }
     

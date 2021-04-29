@@ -7,12 +7,8 @@ import XCTest
 struct ContactCaseAcknowledgementScreen {
     var app: XCUIApplication
     
-    var explanation1: XCUIElement {
-        app.staticTexts[localized: .exposure_acknowledgement_explaination_1]
-    }
-    
-    var explanation2: XCUIElement {
-        app.staticTexts[localized: .exposure_acknowledgement_explaination_2]
+    var explanation: [XCUIElement] {
+        app.staticTexts[localized: .exposure_acknowledgement_explaination]
     }
     
     var faqslinkLabel: XCUIElement {

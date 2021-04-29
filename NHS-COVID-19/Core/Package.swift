@@ -83,7 +83,6 @@ let package = Package(
         .target(
             name: "BehaviourModels",
             dependencies: [
-                "Common",
             ]
         ),
         .target(
@@ -138,6 +137,7 @@ let package = Package(
             name: "DomainTests",
             dependencies: [
                 "Domain",
+                "BehaviourModels",
                 "Scenarios",
                 "TestSupport",
             ]

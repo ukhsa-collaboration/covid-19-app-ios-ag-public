@@ -44,6 +44,7 @@ public class ApplicationCoordinator {
     private let notificationCenter: NotificationCenter
     private let virologyTestingManager: VirologyTestingManager
     private let virologyTestingStateStore: VirologyTestingStateStore
+    private let keySharingStore: KeySharingStore
     private let circuitBreaker: CircuitBreaker
     private let housekeeper: Housekeeper
     private let riskyVenueHousekeeper: RiskyVenueHousekeeper
@@ -57,6 +58,7 @@ public class ApplicationCoordinator {
     private let isolationPaymentContext: IsolationPaymentContext
     private let trafficObfuscationClient: TrafficObfuscationClient
     private let userNotificationManager: UserNotificationManaging
+    private let diagnosisKeySharer: DomainProperty<DiagnosisKeySharer?>
     
     private var recommendedUpdateManager: RecommendedUpdateManager?
     
@@ -69,6 +71,7 @@ public class ApplicationCoordinator {
     private var languageStore: LanguageStore
     
     public let localeConfiguration: DomainProperty<LocaleConfiguration>
+    private let keySharingContext: KeySharingContext
     
     public init(services: ApplicationServices, enabledFeatures: [Feature]) {
         application = services.application
@@ -204,6 +207,9 @@ public class ApplicationCoordinator {
             isolationStateStore: isolationContext.isolationStateStore
         )
         
+        let keySharingStore = KeySharingStore(store: services.encryptedStore)
+        self.keySharingStore = keySharingStore
+        
         exposureNotificationContext = ExposureNotificationContext(
             services: services,
             isolationLength: isolationContext.isolationConfiguration.value.contactCase,
@@ -211,6 +217,27 @@ public class ApplicationCoordinator {
             getPostcode: { postcodeStore.postcode },
             getLocalAuthority: { postcodeStore.localAuthorityId }
         )
+        
+        diagnosisKeySharer = isolationContext.isolationStateStore.$isolationStateInfo
+            .map { [exposureNotificationContext, keySharingStore, currentDateProvider] state -> DomainProperty<DiagnosisKeySharer?> in
+                guard let indexCaseInfo = state?.isolationInfo.indexCaseInfo else {
+                    return .constant(nil)
+                }
+                
+                return exposureNotificationContext.exposureKeysManager.makeDiagnosisKeySharer(
+                    assumedOnsetDay: indexCaseInfo.assumedOnsetDayForExposureKeys,
+                    currentDateProvider: currentDateProvider,
+                    keySharingInfo: keySharingStore.info,
+                    completionHandler: { result in
+                        switch result {
+                        case .markInitialFlowComplete:
+                            keySharingStore.didFinishInitialKeySharingFlow()
+                        case .markToDelete:
+                            keySharingStore.reset()
+                        }
+                    }
+                )
+            }.switchToLatest().domainProperty()
         
         userNotificationsStateController = UserNotificationsStateController(
             manager: services.userNotificationsManager,
@@ -250,6 +277,16 @@ public class ApplicationCoordinator {
         riskyVenueHousekeeper = RiskyVenueHousekeeper(
             checkInsStore: checkInContext.checkInsStore,
             getToday: { dateProvider.currentGregorianDay(timeZone: .current) }
+        )
+        
+        keySharingContext = KeySharingContext(
+            currentDateProvider: currentDateProvider,
+            contactCaseIsolationDuration: self.isolationContext.isolationConfiguration.value.contactCase,
+            onsetDay: { [isolationContext] in
+                isolationContext.isolationStateStore.isolationInfo.indexCaseInfo?.assumedOnsetDayForExposureKeys
+            },
+            keySharingStore: keySharingStore,
+            userNotificationManager: services.userNotificationsManager
         )
         
         exposureNotificationReminder = ExposureNotificationReminder(
@@ -393,7 +430,8 @@ public class ApplicationCoordinator {
                         }
                         return self.isolationContext.dailyContactTestingEarlyTerminationSupport
                         
-                    }
+                    },
+                    diagnosisKeySharer: diagnosisKeySharer
                 )
             )
         case .recommendingUpdate(let reason, let titles, let descriptions):
@@ -446,15 +484,18 @@ public class ApplicationCoordinator {
                 }
                 
                 return self.isolationContext.makeResultAcknowledgementState(
-                    result: result,
-                    positiveAcknowledgement: self.exposureNotificationContext.positiveAcknowledgement
-                ) { [weak self] shareKeyState in
+                    result: result
+                ) { [weak self] keySubmissionAllowed in
                     guard let self = self else { return }
-                    self.virologyTestingStateStore.remove(testResult: result)
                     
-                    if case .notSent = shareKeyState {
-                        self.trafficObfuscationClient.sendSingleTraffic(for: TrafficObfuscator.keySubmission)
+                    if keySubmissionAllowed, let diagnosisKeySubmissionToken = result.diagnosisKeySubmissionToken {
+                        self.keySharingStore.save(
+                            token: diagnosisKeySubmissionToken,
+                            acknowledgmentTime: UTCHour(containing: self.currentDateProvider.currentDate)
+                        )
                     }
+                    
+                    self.virologyTestingStateStore.remove(testResult: result)
                     
                     self.exposureNotificationContext.postExposureWindows(
                         result: result.testResult,
@@ -571,9 +612,7 @@ public class ApplicationCoordinator {
         let exposureNotificationContext = self.exposureNotificationContext
         let isolationContext = self.isolationContext
         let exposureWindowHouskeeper = ExposureWindowHousekeeper(
-            getIsolationLogicalState: { isolationContext.isolationStateManager.state },
-            isWaitingForExposureApproval: { exposureNotificationContext.isWaitingForApproval },
-            clearExposureWindowData: exposureNotificationContext.deleteExposureWindows
+            deleteExpiredExposureWindows: exposureNotificationContext.deleteExpiredExposureWindows
         )
         let expsoureNotificationJob = BackgroundTaskAggregator.Job(
             preferredFrequency: Self.exposureDetectionBackgroundTaskFrequency
@@ -666,6 +705,17 @@ public class ApplicationCoordinator {
                 preferredFrequency: Self.metricsJobBackgroundTaskFrequency,
                 work: userNotificationsStateController.recordMetrics
             )
+        )
+        
+        let keySharingContext = self.keySharingContext
+        enabledJobs.append(
+            BackgroundTaskAggregator.Job(
+                preferredFrequency: Self.housekeepingJobBackgroundTaskFrequency
+            ) {
+                keySharingContext.executeHouseKeeper()
+                    .append(Deferred(createPublisher: keySharingContext.showReminderNotificationIfNeeded))
+                    .eraseToAnyPublisher()
+            }
         )
         
         return enabledJobs

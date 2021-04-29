@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -20,6 +20,7 @@ public protocol SelfDiagnosisFlowViewControllerInteracting: BookATestInfoViewCon
     func openTestkitOrder()
     func furtherAdviceLinkTapped()
     func nhs111LinkTapped()
+    func gettingTestedLinkTapped()
     func exposureFAQsLinkTapped()
 }
 
@@ -221,6 +222,10 @@ private struct NoSymptomsViewControllerInteractor: NoSymptomsViewController.Inte
     
     public func didTapNHS111Link() {
         controller?.interactor.nhs111LinkTapped()
+    }
+    
+    public func didTapGettingTestedLink() {
+        controller?.interactor.gettingTestedLinkTapped()
     }
     
     public func didTapReturnHome() {

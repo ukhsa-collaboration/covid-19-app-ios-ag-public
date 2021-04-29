@@ -36,6 +36,8 @@ public class BookATestInfoViewController: ScrollingContentViewController {
     
     private let shouldHaveCancelButton: Bool
     
+    public var didCancel: (() -> Void)?
+    
     public init(interactor: Interacting, shouldHaveCancelButton: Bool) {
         self.shouldHaveCancelButton = shouldHaveCancelButton
         
@@ -84,6 +86,7 @@ public class BookATestInfoViewController: ScrollingContentViewController {
     }
     
     @objc private func didTapCancel() {
+        didCancel?()
         navigationController?.dismiss(animated: true)
     }
 }

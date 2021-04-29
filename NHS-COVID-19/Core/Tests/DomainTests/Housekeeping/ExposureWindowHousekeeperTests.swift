@@ -9,10 +9,12 @@ import XCTest
 
 class ExposureWindowHousekeeperTests: XCTestCase {
     
-    var cleared = false
+    // we're just checking that the hosekeeping function is called, not that
+    // the windows are deleted - that's done ExposureNotificationContextTests
+    var deleteExpiredExposureWindowsCalled = false
     
     override func setUp() {
-        cleared = false
+        deleteExpiredExposureWindowsCalled = false
     }
     
     private func createHouseKeeper(
@@ -20,9 +22,7 @@ class ExposureWindowHousekeeperTests: XCTestCase {
         isWaitingForExposureApproval: Bool
     ) -> ExposureWindowHousekeeper {
         ExposureWindowHousekeeper(
-            getIsolationLogicalState: { isolationLogicalState },
-            isWaitingForExposureApproval: { isWaitingForExposureApproval },
-            clearExposureWindowData: { self.cleared = true }
+            deleteExpiredExposureWindows: { self.deleteExpiredExposureWindowsCalled = true }
         )
     }
     
@@ -34,10 +34,10 @@ class ExposureWindowHousekeeperTests: XCTestCase {
         
         _ = housekeeper.executeHousekeeping()
         
-        XCTAssertTrue(cleared)
+        XCTAssertTrue(deleteExpiredExposureWindowsCalled)
     }
     
-    func testHousekeeperDoesNothingIfInIsolation() throws {
+    func testHousekeeperStillWorksIfInIsolation() throws {
         let housekeeper = createHouseKeeper(
             isolationLogicalState: IsolationLogicalState.isolating(
                 Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 26, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)), endAcknowledged: false, startAcknowledged: false
@@ -47,10 +47,10 @@ class ExposureWindowHousekeeperTests: XCTestCase {
         
         _ = housekeeper.executeHousekeeping()
         
-        XCTAssertFalse(cleared)
+        XCTAssert(deleteExpiredExposureWindowsCalled)
     }
     
-    func testHousekeeperDoesNothingIfNotInIsolationButIsWaitingForExposureApproval() throws {
+    func testHousekeeperStillWorksIfNotInIsolationButIsWaitingForExposureApproval() throws {
         let housekeeper = createHouseKeeper(
             isolationLogicalState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             isWaitingForExposureApproval: true
@@ -58,6 +58,6 @@ class ExposureWindowHousekeeperTests: XCTestCase {
         
         _ = housekeeper.executeHousekeeping()
         
-        XCTAssertFalse(cleared)
+        XCTAssert(deleteExpiredExposureWindowsCalled)
     }
 }

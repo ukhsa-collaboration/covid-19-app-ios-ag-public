@@ -244,7 +244,7 @@ extension VenueHistoryViewController {
         
         private func setting(venueHistory: VenueHistory) -> VenueHistoryCell {
             organisationLabel.set(text: venueHistory.organisation)
-            venueIdLabel.set(text: venueHistory.id)
+            venueIdLabel.set(text: venueHistory.venueId)
                 .accessibilitySpellOut()
             if let postcode = venueHistory.postcode {
                 postcodeLabel.set(text: postcode)

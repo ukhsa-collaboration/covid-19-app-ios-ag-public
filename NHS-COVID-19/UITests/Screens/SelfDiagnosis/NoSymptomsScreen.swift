@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -13,15 +13,19 @@ struct NoSymptomsScreen {
         app.staticTexts[localized: .no_symptoms_heading]
     }
     
-    var description1: XCUIElement {
-        app.staticTexts[localized: .no_symptoms_body_1]
+    var stillGetTestBodyElements: [XCUIElement] {
+        localizeAndSplit(.no_symptoms_still_get_test_body).map { app.staticTexts[$0] }
     }
     
-    var description2: XCUIElement {
-        app.staticTexts[localized: .no_symptoms_body_2]
+    var gettingTestedLink: XCUIElement {
+        app.links[localized: .no_symptoms_getting_tested_link_label]
     }
     
-    var link: XCUIElement {
+    var developSymptomsBodyElements: [XCUIElement] {
+        localizeAndSplit(.no_symptoms_develop_symptoms_body).map { app.staticTexts[$0] }
+    }
+    
+    var nhs111Link: XCUIElement {
         app.links[localized: .no_symptoms_link]
     }
     
@@ -31,6 +35,10 @@ struct NoSymptomsScreen {
     
     var returnHomeButtonAlertTitle: XCUIElement {
         app.staticTexts[NoSymptomsViewControllerScenario.returnHomeTapped]
+    }
+    
+    var gettingTestedLinkAlertTitle: XCUIElement {
+        app.staticTexts[NoSymptomsViewControllerScenario.gettingTestedLinkTapped]
     }
     
     var nhs111LinkAlertTitle: XCUIElement {

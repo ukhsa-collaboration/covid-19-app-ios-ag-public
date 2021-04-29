@@ -30,19 +30,27 @@ struct VenueCheckInInformationScreen {
         app.staticTexts[localized: .checkin_information_whats_a_qr_code_section_description]
     }
     
-    var qrCodePosterDescription: XCUIElement {
+    var qrCodePosterEnglandHospitalityLabel: XCUIElement {
+        app.staticTexts[localized: .qr_code_poster_description_hospitality]
+    }
+    
+    var qrCodePosterEnglandHospitalityImage: XCUIElement {
+        app.images[localized: .qr_code_poster_accessibility_label_hospitality]
+    }
+    
+    var qrCodePosterEnglandLabel: XCUIElement {
         app.staticTexts[localized: .qr_code_poster_description]
     }
     
-    var qrCodePosterImage: XCUIElement {
+    var qrCodePosterEnglandImage: XCUIElement {
         app.images[localized: .qr_code_poster_accessibility_label]
     }
     
-    var qrCodePosterDescriptionWLS: XCUIElement {
+    var qrCodePosterWalesDescription: XCUIElement {
         app.staticTexts[localized: .qr_code_poster_description_wls]
     }
     
-    var qrCodePosterImageWLS: XCUIElement {
+    var qrCodePosterWalesImage: XCUIElement {
         app.images[localized: .qr_code_poster_accessibility_label_wls]
     }
     

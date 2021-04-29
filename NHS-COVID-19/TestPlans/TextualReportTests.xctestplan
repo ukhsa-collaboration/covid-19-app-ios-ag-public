@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "319CFE9B-E1D4-42C5-B939-FF45BCD7CBE6",
+      "name" : "Configuration 1",
+      "options" : {
+        "environmentVariableEntries" : [
+          {
+            "key" : "test_mode",
+            "value" : "textReport"
+          }
+        ]
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "environmentVariableEntries" : [
+
+    ]
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:NHS-COVID-19\/NHS-COVID-19.xcodeproj",
+        "identifier" : "89AD486A2461A1C00013EC66",
+        "name" : "AppTests"
+      }
+    }
+  ],
+  "version" : 1
+}

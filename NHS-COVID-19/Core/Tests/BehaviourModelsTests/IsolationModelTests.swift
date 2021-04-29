@@ -6,6 +6,7 @@ import BehaviourModels
 import Common
 import TestSupport
 import XCTest
+import Foundation
 
 class IsolationModelRuleSetTests: XCTestCase {
     

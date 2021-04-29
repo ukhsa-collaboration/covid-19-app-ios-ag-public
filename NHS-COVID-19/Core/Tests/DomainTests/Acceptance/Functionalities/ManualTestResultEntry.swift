@@ -37,9 +37,9 @@ struct ManualTestResultEntry {
         let testResultAcknowledgementStateResult = try context.testResultAcknowledgementState.await()
         
         switch try testResultAcknowledgementStateResult.get() {
-        case .neededForPositiveResultStartToIsolate(let positiveAcknowledgement, _, _, _),
-             .neededForPositiveResultContinueToIsolate(let positiveAcknowledgement, _, _, _):
-            _ = try positiveAcknowledgement.acknowledge().await()
+        case .neededForPositiveResultStartToIsolate(let acknowledge, _, _),
+             .neededForPositiveResultContinueToIsolate(let acknowledge, _, _):
+            acknowledge()
         default:
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }

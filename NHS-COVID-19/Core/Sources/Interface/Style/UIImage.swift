@@ -16,6 +16,7 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case linkTest = "LinkTest"
     case onboardingPrivacy = "PrivacyScreemBannerImage"
     case tickImage = "TickIcon"
+    case tick = "Tick"
     case menuChevron = "ChevronMenuIcon"
     case warningIcon = "WarningIcon"
     case camera = "Camera"
@@ -44,6 +45,7 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case chain = "Chain"
     case logoWales = "Logo Wales"
     case qrCodePoster = "QRCodePoster"
+    case qrCodePosterHospitality = "QRCodePosterHospitality"
     case qrCodePosterWales = "QRCodePosterWales"
     case isolationStartIndex = "IsolationStartIndex"
     case isolationStartContact = "IsolationStartContact"
@@ -51,6 +53,12 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case isolationEndedWarning = "IsolationEndedWarning"
     case isolationEnded = "IsolationEnded"
     case policy = "Policy"
+    
+    // MARK: Key sharing
+    
+    case shareKeys = "ShareKeys"
+    
+    // MARK: Risk levels
     
     case riskLevelNeutral = "RiskLevel/Neutral"
     case riskLevelGreen = "RiskLevel/Green"
@@ -86,11 +94,13 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case symbolinfo = "Symbols/Info"
     case symbolRelease = "Symbols/Release"
     case symbolManufacturer = "Symbols/Manufacturer"
-    case symbolCE = "Symbols/CE"
+    case symbolUKCA = "Symbols/UKCA"
     case symbolInstructionForUse = "Symbols/InstructionForUse"
     case appUpdateImage = "AppUpdateImage"
     
     case settingInfo = "SettingInfo"
+    case privacyIcon = "PrivacyIcon"
+    case shareKeysReview = "ShareKeysReview"
     
     public var id: ImageName {
         self

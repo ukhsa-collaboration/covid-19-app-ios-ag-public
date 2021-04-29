@@ -2,12 +2,11 @@
 // Copyright © 2021 DHSC. All rights reserved.
 //
 
-import Common
 import Foundation
 
 public struct IsolationModel {
     
-    public enum ContactCaseState: Equatable, CaseIterable {
+    public enum ContactCaseState: String, Codable, Equatable, CaseIterable {
         case noIsolation
         
         case isolating
@@ -17,7 +16,7 @@ public struct IsolationModel {
         case notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT
     }
     
-    public enum SymptomaticCaseState: Equatable, CaseIterable {
+    public enum SymptomaticCaseState: String, Codable, Equatable, CaseIterable {
         case noIsolation
         
         case isolating
@@ -28,7 +27,7 @@ public struct IsolationModel {
     /// Isolation cases involving a case
     ///
     /// Consider renaming this as this isn't _alway_ involve a positive test (could be a negative test).
-    public enum PositiveTestCaseState: Equatable, CaseIterable {
+    public enum PositiveTestCaseState: String, Codable, Equatable, CaseIterable {
         case noIsolation
         
         case isolatingWithConfirmedTest
@@ -44,13 +43,13 @@ public struct IsolationModel {
         case notIsolatingAndHasNegativeTest
     }
     
-    public struct State: Hashable, CaseIterable {
+    public struct State: Codable, Hashable, CaseIterable {
         var contact: ContactCaseState
         var symptomatic: SymptomaticCaseState
         var positiveTest: PositiveTestCaseState
     }
     
-    public enum Event: Equatable, CaseIterable {
+    public enum Event: String, Codable, Equatable, CaseIterable {
         // External:
         case riskyContact
         case riskyContactWithExposureDayOlderThanIsolationTerminationDueToDCT
@@ -80,6 +79,12 @@ public struct IsolationModel {
         case indexIsolationEnded
         
         case retentionPeriodEnded
+    }
+    
+    public struct Transition: Codable {
+        public var initialState: State
+        public var event: Event
+        public var finalState: State
     }
     
     public struct StatePredicate {
@@ -139,6 +144,19 @@ extension IsolationRuleSet {
         return unreachableStatePredicates
             .flatMap { $0.allMatchedCases }
             .filter { visitedCases.insert($0).inserted }
+    }
+    
+    public static var validTransitions: [IsolationModel.Transition] {
+        reachableStates.flatMap { state in
+            IsolationModel.Event.allCases.compactMap { event in
+                guard let rule = rules(matching: state, for: event, includeFiller: false).first else { return nil }
+                return IsolationModel.Transition(
+                    initialState: state,
+                    event: event,
+                    finalState: rule.apply(to: state)
+                )
+            }
+        }
     }
     
 }

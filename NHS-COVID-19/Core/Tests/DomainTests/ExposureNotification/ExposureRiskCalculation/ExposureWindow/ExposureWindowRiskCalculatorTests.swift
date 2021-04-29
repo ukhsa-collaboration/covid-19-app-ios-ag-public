@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -48,7 +48,7 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
         let expectedSecondsSinceLastScan = 180
         let scanInstances: [ExposureNotificationScanInstance] = [
             MockScanInstance(minimumAttenuation: 45, secondsSinceLastScan: 0, typicalAttenuation: 1),
-            MockScanInstance(minimumAttenuation: expectedAttenuation, secondsSinceLastScan: expectedSecondsSinceLastScan, typicalAttenuation: 1)
+            MockScanInstance(minimumAttenuation: expectedAttenuation, secondsSinceLastScan: expectedSecondsSinceLastScan, typicalAttenuation: 1),
         ]
         let exposureWindows: [ExposureNotificationExposureWindow] = [MockExposureWindow(enScanInstances: scanInstances, date: Date(), infectiousness: .standard)]
         
@@ -152,7 +152,7 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
         XCTAssertTrue(submittedWindows.isEmpty)
     }
     
-    func testReturnsMostRecentRiskyExposureInfo() {
+    func testReturnsMostRecentRiskyExposureInfoAndSubmitRiskyWindows() {
         class StubRiskScoreCalculator: ExposureWindowRiskScoreCalculator {
             var answers = [10.0, 9.0, 1.0]
             
@@ -179,6 +179,7 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
             infectiousnessFactorCalculator: MockExposureWindowInfectiousnessFactorCalculator(),
             dateProvider: dateProvider,
             isolationLength: DayDuration(10),
+            nonRiskyWindowSelector: MockNonRiskyWindowSelector(allow: false),
             submitExposureWindows: { windowInfo in submittedWindows.append(contentsOf: windowInfo) }
         )
         
@@ -186,6 +187,43 @@ class ExposureWindowRiskCalculatorTests: XCTestCase {
         
         XCTAssertEqual(riskInfo, expectedRiskInfo)
         XCTAssertEqual(submittedWindows.count, 2)
+    }
+    
+    func testReturnsMostRecentRiskyExposureInfoAndSubmitAllWindows() {
+        class StubRiskScoreCalculator: ExposureWindowRiskScoreCalculator {
+            var answers = [10.0, 9.0, 1.0]
+            
+            func calculate(instances: [ScanInstance]) -> Double {
+                return answers.removeFirst()
+            }
+        }
+        
+        let riskyScore = 540.0
+        let (olderDate, newerDate, newestDate) = getThreeConsecutiveDates()
+        let dateProvider = MockDateProvider { Date.dateFrom(year: 2020, month: 7, day: 4) }
+        
+        let expectedRiskInfo = ExposureRiskInfo(
+            riskScore: riskyScore,
+            riskScoreVersion: 2,
+            day: GregorianDay(date: newerDate, timeZone: .utc),
+            isConsideredRisky: true
+        )
+        var config = ExposureDetectionConfiguration.dummyForTesting
+        config.v2RiskThreshold = 100.0
+        
+        var submittedWindows = [(ExposureNotificationExposureWindow, ExposureRiskInfo)]()
+        let riskCalc = ExposureWindowRiskCalculator(
+            infectiousnessFactorCalculator: MockExposureWindowInfectiousnessFactorCalculator(),
+            dateProvider: dateProvider,
+            isolationLength: DayDuration(10),
+            nonRiskyWindowSelector: MockNonRiskyWindowSelector(allow: true),
+            submitExposureWindows: { windowInfo in submittedWindows.append(contentsOf: windowInfo) }
+        )
+        
+        let riskInfo = riskCalc.riskInfo(for: getWindowsForDates(dates: [olderDate, newerDate, newestDate]), configuration: config, riskScoreCalculator: StubRiskScoreCalculator())
+        
+        XCTAssertEqual(riskInfo, expectedRiskInfo)
+        XCTAssertEqual(submittedWindows.count, 3)
     }
     
     private func getThreeConsecutiveDates() -> (Date, Date, Date) {
@@ -243,4 +281,8 @@ extension Date {
         components.calendar = .current
         return components.date!
     }
+}
+
+private struct MockNonRiskyWindowSelector: NonRiskyWindowSelecting {
+    var allow: Bool
 }

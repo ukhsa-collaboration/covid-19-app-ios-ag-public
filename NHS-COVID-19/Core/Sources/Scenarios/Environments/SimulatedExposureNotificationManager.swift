@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -13,6 +13,7 @@ class SimulatedExposureNotificationManager: ExposureNotificationManaging {
     
     private let queue = DispatchQueue.main
     private let dataProvider = MockScenario.mockDataProvider
+    private let dateProvider: DateProviding
     
     var instanceAuthorizationStatus: AuthorizationStatus
     
@@ -30,7 +31,8 @@ class SimulatedExposureNotificationManager: ExposureNotificationManaging {
             .eraseToAnyPublisher()
     }
     
-    init() {
+    init(dateProvider: DateProviding) {
+        self.dateProvider = dateProvider
         instanceAuthorizationStatus = .unknown
         exposureNotificationStatus = .unknown
         exposureNotificationEnabled = false
@@ -53,8 +55,22 @@ class SimulatedExposureNotificationManager: ExposureNotificationManaging {
     }
     
     func getDiagnosisKeys(completionHandler: @escaping ENGetDiagnosisKeysHandler) {
+        var diagnosisKeys = [ENTemporaryExposureKey]()
+        let calendar = Calendar.current
+        let today = dateProvider.currentGregorianDay(timeZone: .current)
+        
+        (1 ... 14).forEach { index in
+            let diagnosisKey = ENTemporaryExposureKey()
+            var date = today.advanced(by: -index).dateComponents
+            date.calendar = calendar
+            diagnosisKey.keyData = "\(date.day!).\(date.month!).\(date.year!)".data(using: .utf8)!
+            diagnosisKey.rollingStartNumber = UInt32(exactly: date.date!.timeIntervalSince1970 / (60 * 10))!
+            diagnosisKey.rollingPeriod = UInt32(24 * (60 / 10)) // Amount of 10 minute periods in 24 hours
+            diagnosisKeys.append(diagnosisKey)
+        }
+        
         queue.async {
-            completionHandler([], nil)
+            completionHandler(diagnosisKeys, nil)
         }
     }
     

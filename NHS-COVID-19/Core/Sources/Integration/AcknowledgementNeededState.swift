@@ -8,11 +8,10 @@ import Domain
 import Foundation
 
 enum AcknowledgementNeededState {
-    case notNeeded
     case askForSymptomsOnsetDay(testEndDay: GregorianDay, didFinishAskForSymptomsOnsetDay: () -> Void, didConfirmSymptoms: () -> Void, setOnsetDay: (GregorianDay) -> Void)
-    case neededForPositiveResultStartToIsolate(interactor: SendKeysLoadingFlowViewControllerInteractor, isolationEndDate: Date, keySubmissionSupported: Bool, requiresConfirmatoryTest: Bool)
-    case neededForPositiveResultContinueToIsolate(interactor: SendKeysLoadingFlowViewControllerInteractor, isolationEndDate: Date, keySubmissionSupported: Bool, requiresConfirmatoryTest: Bool)
-    case neededForPositiveResultNotIsolating(interactor: SendKeysLoadingFlowViewControllerInteractor, keySubmissionSupported: Bool)
+    case neededForPositiveResultStartToIsolate(acknowledge: () -> Void, isolationEndDate: Date, requiresConfirmatoryTest: Bool)
+    case neededForPositiveResultContinueToIsolate(acknowledge: () -> Void, isolationEndDate: Date, requiresConfirmatoryTest: Bool)
+    case neededForPositiveResultNotIsolating(acknowledge: () -> Void)
     case neededForNegativeResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
     case neededForNegativeAfterPositiveResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
     case neededForNegativeResultNotIsolating(interactor: NegativeTestResultNoIsolationViewControllerInteractor)
@@ -23,7 +22,7 @@ enum AcknowledgementNeededState {
     case neededForVoidResultContinueToIsolate(interactor: VoidTestResultFlowInteracting, isolationEndDate: Date)
     case neededForVoidResultNotIsolating(interactor: VoidTestResultFlowInteracting)
     
-    static func makeAcknowledgementState(context: RunningAppContext) -> AnyPublisher<AcknowledgementNeededState, Never> {
+    static func makeAcknowledgementState(context: RunningAppContext) -> AnyPublisher<AcknowledgementNeededState?, Never> {
         context.testResultAcknowledgementState
             .combineLatest(context.isolationAcknowledgementState, context.riskyCheckInsAcknowledgementState)
             .map { testResultAckState, isolationResultAckState, riskyVenueAckState in
@@ -46,33 +45,21 @@ enum AcknowledgementNeededState {
                         ),
                         isolationEndDate: isolationEndDate
                     )
-                case .neededForPositiveResultStartToIsolate(let acknowledge, let isolationEndDate, let keySubmissionSupported, let requiresConfirmatoryTest):
+                case .neededForPositiveResultStartToIsolate(let acknowledge, let isolationEndDate, let requiresConfirmatoryTest):
                     return .neededForPositiveResultStartToIsolate(
-                        interactor: SendKeysLoadingFlowViewControllerInteractor(
-                            acknowledgement: acknowledge,
-                            openURL: context.openURL
-                        ),
+                        acknowledge: acknowledge,
                         isolationEndDate: isolationEndDate,
-                        keySubmissionSupported: keySubmissionSupported,
                         requiresConfirmatoryTest: requiresConfirmatoryTest
                     )
-                case .neededForPositiveResultContinueToIsolate(let acknowledge, let isolationEndDate, let keySubmissionSupported, let requiresConfirmatoryTest):
+                case .neededForPositiveResultContinueToIsolate(let acknowledge, let isolationEndDate, let requiresConfirmatoryTest):
                     return .neededForPositiveResultContinueToIsolate(
-                        interactor: SendKeysLoadingFlowViewControllerInteractor(
-                            acknowledgement: acknowledge,
-                            openURL: context.openURL
-                        ),
+                        acknowledge: acknowledge,
                         isolationEndDate: isolationEndDate,
-                        keySubmissionSupported: keySubmissionSupported,
                         requiresConfirmatoryTest: requiresConfirmatoryTest
                     )
-                case .neededForPositiveResultNotIsolating(let acknowledge, let keySubmissionSupported):
+                case .neededForPositiveResultNotIsolating(let acknowledge):
                     return .neededForPositiveResultNotIsolating(
-                        interactor: SendKeysLoadingFlowViewControllerInteractor(
-                            acknowledgement: acknowledge,
-                            openURL: context.openURL
-                        ),
-                        keySubmissionSupported: keySubmissionSupported
+                        acknowledge: acknowledge
                     )
                 case .notNeeded:
                     switch isolationResultAckState {
@@ -93,7 +80,7 @@ enum AcknowledgementNeededState {
                                 return neededForRiskyVenueWarnAndBookATest(acknowledge: acknowledge, venueName: venueName, checkInDate: checkInDate)
                             }
                         case .notNeeded:
-                            return .notNeeded
+                            return nil
                         }
                     }
                     

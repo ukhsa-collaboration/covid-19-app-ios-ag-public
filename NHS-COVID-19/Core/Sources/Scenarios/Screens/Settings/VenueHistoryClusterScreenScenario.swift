@@ -13,22 +13,18 @@ public class VenueHistoryClusterScreenScenario: Scenario {
     
     public static let didTapEditButton = "Tapped edit button"
     
-    public static let venueID1 = "HF912159M5Y"
-    public static let venueID2 = "884UGHFJRI"
-    public static let venueID3 = "3345GJHOTP"
-    
     fileprivate static var venueHistories: [VenueHistory] = {
         let date1 = UTCHour(year: 2020, month: 7, day: 9, hour: 19, minutes: 30).date
         let date2 = date1.addingTimeInterval(60 * 60 * 24 * 30)
         return Array(1 ..< 30).map {
             let date = Date.randomBetween(start: date1, end: date2)
             return VenueHistory(
-                id: [venueID1, venueID2, venueID3].randomElement()!,
+                id: VenueHistory.ID(value: UUID().uuidString),
+                venueId: String.randomVenueID(),
                 organisation: "Venue \($0)",
-                postcode: nil,
+                postcode: String.randomPostcodeOrNil(),
                 checkedIn: date,
-                checkedOut: date.addingTimeInterval(600),
-                delete: {}
+                checkedOut: date.addingTimeInterval(600)
             )
         }
     }()

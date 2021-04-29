@@ -2,6 +2,7 @@
 // Copyright © 2021 DHSC. All rights reserved.
 //
 
+import Foundation
 import Localization
 import XCTest
 
@@ -35,5 +36,17 @@ struct MyDataScreen {
     
     func cellTestKitType(testKitType: String) -> XCUIElement {
         app.staticTexts[verbatim: testKitType]
+    }
+    
+    var exposureNotificationSectionHeader: XCUIElement {
+        app.staticTexts[localized: .mydata_section_exposure_notification_description]
+    }
+    
+    func exposureNotificationEncounterDateCell(date: Date) -> XCUIElement {
+        app.staticTexts[localized: .mydata_date_description(date: date)]
+    }
+    
+    var noRecordsYetLabel: XCUIElement {
+        app.staticTexts[localized: .settings_no_records]
     }
 }

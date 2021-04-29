@@ -25,29 +25,17 @@ struct LinkVirologyTestResultEndpoint: HTTPEndpoint {
         let payload = try decoder.decode(ResponseBody.self, from: response.body.content)
         
         if payload.requiresConfirmatoryTest && payload.diagnosisKeySubmissionSupported {
-            Metrics.signpostReceivedFromManual(
-                testResult: VirologyTestResult.TestResult(payload.testResult),
-                testKitType: VirologyTestResult.TestKitType(payload.testKit),
-                requiresConfirmatoryTest: payload.requiresConfirmatoryTest
-            )
+            signpostReceivedFromManual(payload)
             throw VirologyTestResultResponseError.unconfirmedKeySharingNotSupported
         }
         
         if payload.requiresConfirmatoryTest && payload.testResult != .positive {
-            Metrics.signpostReceivedFromManual(
-                testResult: VirologyTestResult.TestResult(payload.testResult),
-                testKitType: VirologyTestResult.TestKitType(payload.testKit),
-                requiresConfirmatoryTest: payload.requiresConfirmatoryTest
-            )
+            signpostReceivedFromManual(payload)
             throw VirologyTestResultResponseError.unconfirmedNonPostiveNotSupported
         }
         
         if payload.testKit == .rapidResult || payload.testKit == .rapidSelfReported, payload.testResult != .positive {
-            Metrics.signpostReceivedFromManual(
-                testResult: VirologyTestResult.TestResult(payload.testResult),
-                testKitType: VirologyTestResult.TestKitType(payload.testKit),
-                requiresConfirmatoryTest: payload.requiresConfirmatoryTest
-            )
+            signpostReceivedFromManual(payload)
             throw VirologyTestResultResponseError.lfdVoidOrNegative
         }
         
@@ -58,6 +46,14 @@ struct LinkVirologyTestResultEndpoint: HTTPEndpoint {
                 endDate: payload.testEndDate
             ),
             diagnosisKeySubmissionSupport: try DiagnosisKeySubmissionSupport(payload),
+            requiresConfirmatoryTest: payload.requiresConfirmatoryTest
+        )
+    }
+    
+    private func signpostReceivedFromManual(_ payload: ResponseBody) {
+        Metrics.signpostReceivedFromManual(
+            testResult: VirologyTestResult.TestResult(payload.testResult),
+            testKitType: VirologyTestResult.TestKitType(payload.testKit),
             requiresConfirmatoryTest: payload.requiresConfirmatoryTest
         )
     }

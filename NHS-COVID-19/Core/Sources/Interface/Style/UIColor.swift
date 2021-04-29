@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import SwiftUI
@@ -46,6 +46,9 @@ public enum ColorName: String, CaseIterable, Identifiable {
     case riskLevelIconBlack = "RiskLevel/Icon/Black"
     case riskLevelBorderNeutral = "RiskLevel/Border/Neutral"
     case riskLevelBorderBlack = "RiskLevel/Border/Black"
+    
+    case borderColor = "Border color"
+    case bookFreeTest = "Book Free Test"
     
     public var id: ColorName {
         self

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -157,14 +157,8 @@ extension ContactCaseAcknowledgementViewController.ContactCaseType {
     var content: [UIView] {
         switch self {
         case .exposureDetection:
-            return [
-                BaseLabel()
-                    .styleAsBody()
-                    .set(text: localize(.exposure_acknowledgement_explaination_1)),
-                BaseLabel()
-                    .styleAsBody()
-                    .set(text: localize(.exposure_acknowledgement_explaination_2)),
-            ]
+            return localizeAndSplit(.exposure_acknowledgement_explaination)
+                .map { BaseLabel().styleAsBody().set(text: String($0)) }
         case .riskyVenue:
             return localizeAndSplit(.risky_venue_isolation_description)
                 .map { BaseLabel().styleAsBody().set(text: String($0)) }

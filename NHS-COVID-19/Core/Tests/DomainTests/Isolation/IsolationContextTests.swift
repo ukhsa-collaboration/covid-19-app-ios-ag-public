@@ -143,16 +143,6 @@ class IsolationContextTests: XCTestCase {
     private func makeResultAcknowledgementState(result: VirologyStateTestResult) -> AnyPublisher<TestResultAcknowledgementState, Never> {
         isolationContext.makeResultAcknowledgementState(
             result: result,
-            positiveAcknowledgement: { _, _, _, completionHandler in TestResultAcknowledgementState.PositiveResultAcknowledgement(
-                acknowledge: {
-                    completionHandler(.sent)
-                    return Empty().eraseToAnyPublisher()
-                },
-                acknowledgeWithoutSending: {
-                    completionHandler(.notSent)
-                }
-            )
-            },
             completionHandler: { _ in }
         )
     }
@@ -168,10 +158,9 @@ class IsolationContextTests: XCTestCase {
         
         let state = try makeResultAcknowledgementState(result: result).await().get()
         
-        if case TestResultAcknowledgementState.neededForPositiveResultStartToIsolate(let ack, _, let keySubmissionSupported, let requiresConfirmatory) = state {
-            XCTAssertTrue(keySubmissionSupported)
+        if case TestResultAcknowledgementState.neededForPositiveResultStartToIsolate(let acknowledge, _, let requiresConfirmatory) = state {
             XCTAssertFalse(requiresConfirmatory)
-            _ = ack.acknowledge()
+            acknowledge()
             XCTAssertTrue(isolationContext.isolationStateManager.state.isIsolating)
         } else {
             XCTFail("Unexpected state \(state)")
@@ -200,12 +189,11 @@ class IsolationContextTests: XCTestCase {
         
         let state = try makeResultAcknowledgementState(result: result).await().get()
         
-        if case TestResultAcknowledgementState.neededForPositiveResultNotIsolating(let ack, let keySubmissionSupported) = state {
-            XCTAssertTrue(keySubmissionSupported)
-            _ = ack.acknowledge()
+        if case TestResultAcknowledgementState.neededForPositiveResultNotIsolating(let acknowledge) = state {
+            acknowledge()
             XCTAssertFalse(isolationContext.isolationStateManager.state.isIsolating)
             XCTAssertTrue(isolationContext.isolationStateStore
-                .isolationInfo.hasAcknowledgedEndOfIsolation ?? false)
+                .isolationInfo.hasAcknowledgedEndOfIsolation)
         } else {
             XCTFail("Unexpected state \(state)")
         }
@@ -232,9 +220,8 @@ class IsolationContextTests: XCTestCase {
         
         let state = try makeResultAcknowledgementState(result: result).await().get()
         
-        if case TestResultAcknowledgementState.neededForPositiveResultNotIsolating(let ack, let keySubmissionSupported) = state {
-            XCTAssertFalse(keySubmissionSupported)
-            ack.acknowledgeWithoutSending()
+        if case TestResultAcknowledgementState.neededForPositiveResultNotIsolating(let acknowledge) = state {
+            acknowledge()
             XCTAssertFalse(isolationContext.isolationStateManager.state.isIsolating)
         } else {
             XCTFail("Unexpected state \(state)")
@@ -262,10 +249,9 @@ class IsolationContextTests: XCTestCase {
         
         let state = try makeResultAcknowledgementState(result: result).await().get()
         
-        if case TestResultAcknowledgementState.neededForPositiveResultStartToIsolate(let ack, _, let keySubmissionSupported, let requiresConfirmatory) = state {
-            XCTAssertTrue(keySubmissionSupported)
+        if case TestResultAcknowledgementState.neededForPositiveResultStartToIsolate(let acknowledge, _, let requiresConfirmatory) = state {
             XCTAssertTrue(requiresConfirmatory)
-            _ = ack.acknowledge()
+            acknowledge()
             XCTAssertTrue(isolationContext.isolationStateManager.state.isIsolating)
         } else {
             XCTFail("Unexpected state \(state)")

@@ -86,7 +86,7 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
             
             positiveScreen.continueButton.tap()
             
-            let shareScreen = ShareKeysConfirmationScreen(app: app)
+            let shareScreen = ShareKeysScreen(app: app)
             XCTAssertTrue(shareScreen.heading.exists)
             
             runner.step("Share random ids") {
@@ -96,8 +96,7 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
                 """
             }
             
-            #warning("Find out why it finds multiple elements with the accessibility label continue - it smells like a bug")
-            shareScreen.app.buttons.element(boundBy: 1).tap()
+            shareScreen.continueButton.tap()
             
             let alertScreen = SimulatedShareRandomIdsScreen(app: app)
             alertScreen.shareButton.tap()
@@ -106,6 +105,15 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
                 """
                 The user is asked by the system to confirm sharing the device random ids.
                 The user taps on Share button to proceed.
+                """
+            }
+            
+            let thankYouScreen = ThankYouScreen(app: app)
+            thankYouScreen.backHomeButtonText.tap()
+            
+            runner.step("Thank you screen") {
+                """
+                The user is presented the thank you message.
                 """
             }
             
@@ -199,7 +207,7 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
             
             positiveScreen.continueButton.tap()
             
-            let shareScreen = ShareKeysConfirmationScreen(app: app)
+            let shareScreen = ShareKeysScreen(app: app)
             XCTAssertTrue(shareScreen.heading.exists)
             
             runner.step("Share random ids") {
@@ -209,8 +217,7 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
                 """
             }
             
-            #warning("Find out why it finds multiple elements with the accessibility label continue - it smells like a bug")
-            shareScreen.app.buttons.element(boundBy: 1).tap()
+            shareScreen.continueButton.tap()
             
             let alertScreen = SimulatedShareRandomIdsScreen(app: app)
             alertScreen.shareButton.tap()
@@ -219,6 +226,15 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
                 """
                 The user is asked by the system to confirm sharing the device random ids.
                 The user taps on Share button to proceed.
+                """
+            }
+            
+            let thankYouScreen = ThankYouScreen(app: app)
+            thankYouScreen.backHomeButtonText.tap()
+            
+            runner.step("Thank you screen") {
+                """
+                The user is presented the thank you message.
                 """
             }
             
@@ -313,7 +329,7 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
             
             positiveScreen.continueButton.tap()
             
-            let shareScreen = ShareKeysConfirmationScreen(app: app)
+            let shareScreen = ShareKeysScreen(app: app)
             XCTAssertTrue(shareScreen.heading.exists)
             
             runner.step("Share random ids") {
@@ -323,8 +339,7 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
                 """
             }
             
-            #warning("Find out why it finds multiple elements with the accessibility label continue - it smells like a bug")
-            shareScreen.app.buttons.element(boundBy: 1).tap()
+            shareScreen.continueButton.tap()
             
             let alertScreen = SimulatedShareRandomIdsScreen(app: app)
             alertScreen.shareButton.tap()
@@ -333,6 +348,15 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
                 """
                 The user is asked by the system to confirm sharing the device random ids.
                 The user taps on Share button to proceed.
+                """
+            }
+            
+            let thankYouScreen = ThankYouScreen(app: app)
+            thankYouScreen.backHomeButtonText.tap()
+            
+            runner.step("Thank you screen") {
+                """
+                The user is presented the thank you message.
                 """
             }
             

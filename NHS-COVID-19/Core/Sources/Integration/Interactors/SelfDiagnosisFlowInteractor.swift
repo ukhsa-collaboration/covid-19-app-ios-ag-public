@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -58,6 +58,10 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
     
     func nhs111LinkTapped() {
         openURL(ExternalLink.nhs111Online.url)
+    }
+    
+    func gettingTestedLinkTapped() {
+        openURL(ExternalLink.getTested.url)
     }
     
     func exposureFAQsLinkTapped() {

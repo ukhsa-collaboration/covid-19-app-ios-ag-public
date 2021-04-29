@@ -1,7 +1,8 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
+import Common
 import Domain
 import Foundation
 import Integration
@@ -28,12 +29,21 @@ public class MockScenario: Scenario {
 
 private extension ApplicationServices {
     
+    private convenience init(simulatedENServicesFor environment: Environment) {
+        let dateProvider = DateProvider()
+        self.init(
+            standardServicesFor: environment,
+            dateProvider: dateProvider,
+            exposureNotificationManager: SimulatedExposureNotificationManager(dateProvider: dateProvider)
+        )
+    }
+    
     convenience init(developmentServicesFor environment: Environment) {
         #if targetEnvironment(simulator)
-        self.init(standardServicesFor: environment, exposureNotificationManager: SimulatedExposureNotificationManager())
+        self.init(simulatedENServicesFor: environment)
         #else
         if MockScenario.mockDataProvider.useFakeENContacts {
-            self.init(standardServicesFor: environment, exposureNotificationManager: SimulatedExposureNotificationManager())
+            self.init(simulatedENServicesFor: environment)
         } else {
             self.init(standardServicesFor: environment)
         }

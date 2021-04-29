@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -13,17 +13,20 @@ class ExposureWindowRiskCalculator {
     private let infectiousnessFactorCalculator: ExposureWindowInfectiousnessFactorCalculator
     private let dateProvider: DateProviding
     private let isolationLength: DayDuration
+    private let nonRiskyWindowSelector: NonRiskyWindowSelecting
     private let submitExposureWindows: ([(ExposureNotificationExposureWindow, ExposureRiskInfo)]) -> Void
     
     init(
         infectiousnessFactorCalculator: ExposureWindowInfectiousnessFactorCalculator = ExposureWindowInfectiousnessFactorCalculator(),
         dateProvider: DateProviding,
         isolationLength: DayDuration,
+        nonRiskyWindowSelector: NonRiskyWindowSelecting = NonRiskyWindowSelector(),
         submitExposureWindows: @escaping ([(ExposureNotificationExposureWindow, ExposureRiskInfo)]) -> Void
     ) {
         self.infectiousnessFactorCalculator = infectiousnessFactorCalculator
         self.dateProvider = dateProvider
         self.isolationLength = isolationLength
+        self.nonRiskyWindowSelector = nonRiskyWindowSelector
         self.submitExposureWindows = submitExposureWindows
     }
     
@@ -32,7 +35,9 @@ class ExposureWindowRiskCalculator {
         configuration: ExposureDetectionConfiguration,
         riskScoreCalculator: ExposureWindowRiskScoreCalculator
     ) -> ExposureRiskInfo? {
-        var riskyWindows = [(ExposureNotificationExposureWindow, ExposureRiskInfo)]()
+        var windows = [(ExposureNotificationExposureWindow, ExposureRiskInfo)]()
+        
+        let shouldIncludeNonRiskyWindows = nonRiskyWindowSelector.allow
         
         let maxRiskInfo = exposureWindows.compactMap { exposureWindow in
             // We've seen in our field test data that on rare occasion we get a ScanInstance with a secondsSinceLastScan of 0
@@ -56,9 +61,12 @@ class ExposureWindowRiskCalculator {
             )
             
             if riskInfo.isConsideredRisky, isRecentDate(exposureRiskInfo: riskInfo) {
-                riskyWindows.append((exposureWindow, riskInfo))
+                windows.append((exposureWindow, riskInfo))
                 Metrics.signpost(.totalExposureWindowsConsideredRisky)
             } else {
+                if shouldIncludeNonRiskyWindows {
+                    windows.append((exposureWindow, riskInfo))
+                }
                 Metrics.signpost(.totalExposureWindowsNotConsideredRisky)
             }
             
@@ -67,7 +75,7 @@ class ExposureWindowRiskCalculator {
         .filter { isRecentDate(exposureRiskInfo: $0) }
         .max { $1.isHigherPriority(than: $0) }
         
-        submitExposureWindows(riskyWindows)
+        submitExposureWindows(windows)
         return maxRiskInfo
     }
     

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import CryptoKit
@@ -7,26 +7,29 @@ import Foundation
 
 extension P256.Signing.PublicKey {
     
+    @available(iOS, deprecated: 14.0)
     fileprivate enum Errors: Error {
         case dataIsNotBase64Encoded
     }
     
-    #warning("Use the implementation provided by the OS on iOS 14.")
-    // This needs to be done in two stages.
-    // * When we start using Xcode 12, implement an availability check and use new API if available.
-    // * Whenever we stop supporting iOS 13, we can delete this completely.
+    @available(iOS, deprecated: 14.0, renamed: "init(pemRepresentation:)")
     public init(pemRepresentationCompatibility string: String) throws {
-        let undecoratedString = string
-            .split(separator: "\n")
-            .filter { !($0.isEmpty || $0.hasPrefix("-----")) }
-            .joined()
-        
-        guard let asn1 = Data(base64Encoded: undecoratedString) else {
-            throw Errors.dataIsNotBase64Encoded
+        if #available(iOS 14, *) {
+            try self.init(pemRepresentation: string)
+        } else {
+            let undecoratedString = string
+                .split(separator: "\n")
+                .filter { !($0.isEmpty || $0.hasPrefix("-----")) }
+                .joined()
+            
+            guard let asn1 = Data(base64Encoded: undecoratedString) else {
+                throw Errors.dataIsNotBase64Encoded
+            }
+            try self.init(asn1Encoded: asn1)
         }
-        try self.init(asn1Encoded: asn1)
     }
     
+    @available(iOS, deprecated: 14.0)
     private init(asn1Encoded data: Data) throws {
         var scanner = ASN1Scanner(data: data)
         try scanner.scanSequenceHeader()
@@ -49,6 +52,7 @@ extension P256.Signing.PublicKey {
     
 }
 
+@available(iOS, deprecated: 14.0)
 private enum EllipticCurveErrors: Error {
     case invalidASN1
     case publicKeyConversionFailed

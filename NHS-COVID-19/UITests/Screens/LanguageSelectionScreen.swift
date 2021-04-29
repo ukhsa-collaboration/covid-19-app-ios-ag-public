@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -20,4 +20,11 @@ struct LanguageSelectionScreen {
         app.staticTexts[localized: .settings_language_override_languages]
     }
     
+    var currentSelectedLanguageCell: XCUIElement {
+        app.tables.cells.element(boundBy: 0)
+    }
+    
+    var newSelectedLanguageCell: XCUIElement {
+        app.tables.cells.element(boundBy: 4)
+    }
 }

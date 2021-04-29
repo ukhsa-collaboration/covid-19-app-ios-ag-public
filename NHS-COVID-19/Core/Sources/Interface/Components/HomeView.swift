@@ -152,34 +152,96 @@ struct HomeView: View {
     private func buttons() -> some View {
         Group {
             if showOrderTestButton.wrappedValue {
-                NavigationButton(imageName: .swab, foregroundColor: Color(.background), backgroundColor: Color(.styleOrange), text: localize(.home_testing_information_button_title), action: interactor.didTapTestingInformationButton)
+                NavigationButton(
+                    imageName: .swab,
+                    foregroundColor: Color(.background),
+                    backgroundColor: Color(.bookFreeTest),
+                    text: localize(.home_testing_information_button_title),
+                    action: interactor.didTapTestingInformationButton
+                )
             }
             
             if interactor.shouldShowCheckIn {
-                NavigationButton(imageName: .qrCode, foregroundColor: Color(.background), backgroundColor: Color(.stylePurple), text: localize(.home_checkin_button_title), action: interactor.didTapCheckInButton)
+                NavigationButton(
+                    imageName: .qrCode,
+                    foregroundColor: Color(.background),
+                    backgroundColor: Color(.stylePurple),
+                    text: localize(.home_checkin_button_title),
+                    action: interactor.didTapCheckInButton
+                )
             }
             
             if shouldShowSelfDiagnosis.wrappedValue {
-                NavigationButton(imageName: .thermometer, foregroundColor: Color(.background), backgroundColor: Color(.styleOrange), text: localize(.home_diagnosis_button_title), action: interactor.didTapDiagnosisButton)
+                NavigationButton(
+                    imageName: .thermometer,
+                    foregroundColor: Color(.background),
+                    backgroundColor: Color(.styleOrange),
+                    text: localize(.home_diagnosis_button_title),
+                    action: interactor.didTapDiagnosisButton
+                )
             }
             
             if isolationViewModel.isolationState == .notIsolating {
-                NavigationButton(imageName: .read, iconName: .externalLink, foregroundColor: Color(.background), backgroundColor: Color(.stylePink), text: localize(.home_default_advice_button_title), action: interactor.didTapAdviceButton).linkify(.home_default_advice_button_title)
+                NavigationButton(
+                    imageName: .read,
+                    iconName: .externalLink,
+                    foregroundColor: Color(.background),
+                    backgroundColor: Color(.stylePink),
+                    text: localize(.home_default_advice_button_title),
+                    action: interactor.didTapAdviceButton
+                )
+                .linkify(.home_default_advice_button_title)
             } else {
-                NavigationButton(imageName: .read, iconName: .externalLink, foregroundColor: Color(.background), backgroundColor: Color(.stylePink), text: localize(.home_isolation_advice_button_title), action: interactor.didTapIsolationAdviceButton).linkify(.home_isolation_advice_button_title)
+                NavigationButton(
+                    imageName: .read,
+                    iconName: .externalLink,
+                    foregroundColor: Color(.background),
+                    backgroundColor: Color(.stylePink),
+                    text: localize(.home_isolation_advice_button_title),
+                    action: interactor.didTapIsolationAdviceButton
+                )
+                .linkify(.home_isolation_advice_button_title)
             }
             
             if showFinancialSupportButton.wrappedValue {
-                NavigationButton(imageName: .finance, foregroundColor: Color(.background), backgroundColor: Color(.styleGreen), text: localize(.home_financial_support_button_title), action: interactor.didTapFinancialSupportButton)
+                NavigationButton(
+                    imageName: .finance,
+                    foregroundColor: Color(.background),
+                    backgroundColor: Color(.styleGreen),
+                    text: localize(.home_financial_support_button_title),
+                    action: interactor.didTapFinancialSupportButton
+                )
             }
             
-            NavigationButton(imageName: .chain, foregroundColor: Color(.background), backgroundColor: Color(.nhsLightBlue), text: localize(.home_link_test_result_button_title), action: interactor.didTapLinkTestResultButton)
+            NavigationButton(
+                imageName: .chain,
+                foregroundColor: Color(.background),
+                backgroundColor: Color(.nhsLightBlue),
+                text: localize(.home_link_test_result_button_title),
+                action: interactor.didTapLinkTestResultButton
+            )
             
-            NavigationButton(imageName: .settings, foregroundColor: Color(.background), backgroundColor: Color(.amber), text: localize(.home_settings_button_title), action: interactor.didTapSettingsButton)
+            NavigationButton(
+                imageName: .settings,
+                foregroundColor: Color(.background),
+                backgroundColor: Color(.amber),
+                text: localize(.home_settings_button_title),
+                action: interactor.didTapSettingsButton
+            )
             
-            NavigationButton(imageName: .info, foregroundColor: Color(.background), backgroundColor: Color(.styleTurquoise), text: localize(.home_about_the_app_button_title), action: interactor.didTapAboutButton)
+            NavigationButton(
+                imageName: .info,
+                foregroundColor: Color(.background),
+                backgroundColor: Color(.styleTurquoise),
+                text: localize(.home_about_the_app_button_title),
+                action: interactor.didTapAboutButton
+            )
             
-            ToggleButton(isToggledOn: $exposureNotifications.enabled, imageName: .bluetooth, text: localize(.home_toggle_exposure_notification_title))
+            ToggleButton(
+                isToggledOn: $exposureNotifications.enabled,
+                imageName: .bluetooth,
+                text: localize(.home_toggle_exposure_notification_title)
+            )
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -19,6 +19,7 @@ struct App {
         .strings("InfoPlist"),
         .bundle("Settings"),
         .bundle("Core_Domain"),
+        .bundle("Core_Localization"),
         .content(name: "PostalDistricts", suffix: "json"),
     ]
 }

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -70,6 +70,7 @@ private struct ExposureWindowEventPayload: Codable {
             var scanInstances: [ScanInstance]
             var riskScore: Double
             var riskCalculationVersion: Int
+            var isConsideredRisky: Bool
         }
         
         struct ScanInstance: Codable {
@@ -125,9 +126,9 @@ private extension EpidemiologicalEventType {
     var version: Int {
         switch self {
         case .exposureWindow:
-            return 1
-        case .exposureWindowPositiveTest:
             return 2
+        case .exposureWindowPositiveTest:
+            return 3
         }
     }
     
@@ -149,6 +150,7 @@ private extension ExposureWindowEventPayload.Event.Payload {
         scanInstances = window.scanInstances.map(ExposureWindowEventPayload.Event.ScanInstance.init)
         riskScore = window.riskScore
         riskCalculationVersion = window.riskCalculationVersion
+        isConsideredRisky = window.isConsideredRisky
     }
 }
 
@@ -162,8 +164,6 @@ private extension ExposureWindowEventPayload.Event.Infectiousness {
             self = .standard
         case .high:
             self = .high
-        @unknown default:
-            self = .none
         }
     }
 }

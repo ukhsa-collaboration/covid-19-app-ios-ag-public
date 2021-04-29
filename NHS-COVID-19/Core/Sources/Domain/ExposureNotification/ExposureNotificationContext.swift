@@ -1,11 +1,26 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
 import Common
 import ExposureNotification
 import Foundation
+
+extension Array where Element == ExposureWindowInfo {
+    var riskyWindows: [Element] {
+        filter { $0.isConsideredRisky }
+    }
+    
+    var nonRiskyWindows: [Element] {
+        filter { !$0.isConsideredRisky }
+    }
+}
+
+extension ExposureWindowInfo {
+    static let nonRiskyWindowSendLimit = 15
+    static let nonRiskyWindowStoreLimit = 15
+}
 
 struct ExposureNotificationContext {
     var exposureNotificationStateController: ExposureNotificationStateController
@@ -21,6 +36,8 @@ struct ExposureNotificationContext {
     var trafficObfuscationClient: TrafficObfuscationClient
     
     private var userNotificationManager: UserNotificationManaging
+    
+    static let exposureWindowExpiryDays = 14
     
     var isWaitingForApproval: Bool {
         exposureDetectionStore.exposureInfo?.approvalToken != nil
@@ -64,8 +81,9 @@ struct ExposureNotificationContext {
                         let infos = windowInfo.map {
                             ExposureWindowInfo(exposureWindow: $0.0, riskInfo: $0.1)
                         }
-                        exposureWindowAnalyticsHandler.post(windowInfo: infos, eventType: .exposureWindow)
-                        trafficObfuscationClient.sendTraffic(for: TrafficObfuscator.exposureWindow, randomRange: 2 ... 15, numberOfActualCalls: infos.count)
+                        exposureWindowAnalyticsHandler.post(windowInfo: Self.windowsToSend(infos), eventType: .exposureWindow)
+                        trafficObfuscationClient.sendTraffic(for: TrafficObfuscator.exposureWindow, randomRange: 2 ... 15, numberOfActualCalls: Self.windowsToSend(infos).count)
+                        
                         exposureWindowStore.append(infos)
                     }
                 )
@@ -78,7 +96,10 @@ struct ExposureNotificationContext {
         
         exposureKeysManager = ExposureKeysManager(
             controller: controller,
-            submissionClient: services.apiClient
+            submissionClient: services.apiClient,
+            trafficObfuscationClient: trafficObfuscationClient,
+            contactCaseIsolationDuration: isolationLength,
+            currentDateProvider: currentDateProvider
         )
         
         exposureDetectionManager = ExposureDetectionManager(
@@ -107,6 +128,13 @@ struct ExposureNotificationContext {
         exposureNotificationStateController.activate()
     }
     
+    static func windowsToSend(
+        _ windows: [ExposureWindowInfo],
+        limit: Int = ExposureWindowInfo.nonRiskyWindowSendLimit
+    ) -> [ExposureWindowInfo] {
+        windows.riskyWindows + windows.nonRiskyWindows.suffix(limit)
+    }
+    
     func detectExposures(deferShouldShowDontWorryNotification: @escaping () -> Void) -> AnyPublisher<Void, Never> {
         return diagnosisKeyCacheHouskeeper.deleteFilesOlderThanADay()
             .append(
@@ -116,12 +144,21 @@ struct ExposureNotificationContext {
             .eraseToAnyPublisher()
     }
     
-    func deleteExposureWindows() {
+    func calculateExpiredWindowsDay(_ relativeTo: Date, offset: Int) -> GregorianDay {
+        let expiredDate = GregorianDay(date: relativeTo, timeZone: .current).advanced(by: offset)
+        return expiredDate
+    }
+    
+    var expiredWindowsDay: GregorianDay {
+        return calculateExpiredWindowsDay(currentDateProvider.currentDate, offset: -Self.exposureWindowExpiryDays)
+    }
+    
+    func deleteExpiredExposureWindows() {
         guard let exposureWindowStore = exposureWindowStore else {
             return
         }
         
-        exposureWindowStore.delete()
+        exposureWindowStore.deleteWindows(includingAndPriorTo: expiredWindowsDay)
     }
     
     func postExposureWindows(result: TestResult, testKitType: TestKitType?, requiresConfirmatoryTest: Bool) {
@@ -189,47 +226,6 @@ struct ExposureNotificationContext {
             }
             .eraseToAnyPublisher()
     }
-    
-    func positiveAcknowledgement(
-        for token: DiagnosisKeySubmissionToken?,
-        endDate: Date?,
-        indexCaseInfo: IndexCaseInfo?,
-        completionHandler: @escaping (TestResultAcknowledgementState.SendKeysState) -> Void
-    ) -> TestResultAcknowledgementState.PositiveResultAcknowledgement {
-        TestResultAcknowledgementState.PositiveResultAcknowledgement(
-            acknowledge: {
-                var sendKeyState: TestResultAcknowledgementState.SendKeysState = .sent
-                if let indexCaseInfo = indexCaseInfo, let submissionToken = token {
-                    return self.exposureKeysManager.sendKeys(
-                        for: indexCaseInfo.assumedOnsetDayForExposureKeys,
-                        token: submissionToken
-                    )
-                    .catch { (error) -> AnyPublisher<Void, Error> in
-                        if (error as NSError).domain == ENErrorDomain {
-                            sendKeyState = .notSent
-                            return Empty().eraseToAnyPublisher()
-                        } else {
-                            return Fail(error: error).eraseToAnyPublisher()
-                        }
-                    }
-                    .handleEvents(receiveCompletion: { completion in
-                        switch completion {
-                        case .finished:
-                            completionHandler(sendKeyState)
-                        case .failure:
-                            break
-                        }
-                    })
-                    .eraseToAnyPublisher()
-                } else {
-                    completionHandler(.notSent)
-                    return Result.success(()).publisher.eraseToAnyPublisher()
-                }
-            },
-            acknowledgeWithoutSending: { completionHandler(.notSent) }
-        )
-    }
-    
 }
 
 class ExposureWindowAnalyticsHandler {

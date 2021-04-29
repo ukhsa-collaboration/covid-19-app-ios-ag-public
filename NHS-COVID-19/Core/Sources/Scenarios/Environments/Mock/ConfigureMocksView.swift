@@ -10,10 +10,13 @@ struct ConfigureMocksView: View {
     
     @ObservedObject
     var dataProvider: MockDataProvider
+    @Binding
+    var showDevView: Bool
     
     var body: some View {
         NavigationView {
             List {
+                Toggle("Assistive Dev View", isOn: $showDevView)
                 Section(header: Text(verbatim: "Postcode Risk")) {
                     TextFieldRow(label: "Black Risk", text: $dataProvider.blackPostcodes)
                     TextFieldRow(label: "Maroon Risk", text: $dataProvider.maroonPostcodes)

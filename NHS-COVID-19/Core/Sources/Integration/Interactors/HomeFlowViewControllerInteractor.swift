@@ -265,14 +265,12 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         context.checkInContext?.checkInsStore.load()?
             .map { checkIn -> VenueHistory in
                 VenueHistory(
-                    id: checkIn.venueId,
+                    id: VenueHistory.ID(value: checkIn.id),
+                    venueId: checkIn.venueId,
                     organisation: checkIn.venueName,
                     postcode: checkIn.venuePostcode,
                     checkedIn: checkIn.checkedIn.date,
-                    checkedOut: checkIn.checkedOut.date,
-                    delete: {
-                        self.context.deleteCheckIn(checkIn.id)
-                    }
+                    checkedOut: checkIn.checkedOut.date
                 )
             } ?? []
     }
@@ -298,7 +296,8 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     }
     
     func updateVenueHistories(deleting venueHistory: VenueHistory) -> [VenueHistory] {
-        venueHistory.delete()
+        let checkInId = venueHistory.id.value
+        context.deleteCheckIn(checkInId)
         return loadVenueHistory()
     }
     

@@ -12,6 +12,10 @@ struct VenueHistoryScreen {
         app.staticTexts[localized: .settings_venue_history]
     }
     
+    var noRecordsYetLabel: XCUIElement {
+        app.staticTexts[localized: .settings_no_records]
+    }
+    
     var editVenueHistoryButton: XCUIElement {
         app.buttons[localized: .mydata_venue_history_edit_button_title]
     }
@@ -30,5 +34,9 @@ struct VenueHistoryScreen {
     
     func cellPostcodeLabel(_ venuePostcode: String?) -> XCUIElement {
         app.staticTexts[venuePostcode ?? localize(.venue_history_postcode_unavailable)]
+    }
+    
+    func checkInCell() -> XCUIElement {
+        app.cells.element(boundBy: 0)
     }
 }

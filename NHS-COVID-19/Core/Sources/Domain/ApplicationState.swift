@@ -41,6 +41,7 @@ public struct RunningAppContext {
     public var testResultAcknowledgementState: AnyPublisher<TestResultAcknowledgementState, Never>
     public var symptomsOnsetAndExposureDetailsProvider: SymptomsOnsetDateAndExposureDetailsProviding
     public var deleteAllData: () -> Void
+    #warning("Make this function typesafe.")
     public var deleteCheckIn: (String) -> Void
     public var riskyCheckInsAcknowledgementState: AnyPublisher<RiskyCheckInsAcknowledgementState, Never>
     public var currentDateProvider: DateProviding
@@ -53,6 +54,7 @@ public struct RunningAppContext {
     public var storeNewLanguage: (_ localeConfiguration: LocaleConfiguration) -> Void
     public var shouldShowDailyContactTestingInformFeature: () -> Bool
     public var dailyContactTestingEarlyTerminationSupport: () -> DailyContactTestingEarlyIsolationTerminationSupport
+    public var diagnosisKeySharer: DomainProperty<DiagnosisKeySharer?>
 }
 
 // FIXME: Move to a more suitable place

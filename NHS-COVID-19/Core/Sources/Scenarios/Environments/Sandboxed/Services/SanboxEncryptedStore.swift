@@ -36,18 +36,32 @@ class SandboxEncryptedStore: EncryptedStoring {
         let endDate = host.initialState.testResultEndDateString ?? "610531200"
         
         if let testResult = host.initialState.testResult {
-            stored["virology_testing"] = #"""
-            {
-                "unacknowledgedTestResults":[
-                    {
-                        "result":"\#(testResult)",
-                        "endDate":\#(endDate),
-                        "diagnosisKeySubmissionToken":"\#(UUID().uuidString)",
-                        "requiresConfirmatoryTest": \#(host.initialState.requiresConfirmatoryTest)
-                    }
-                ]
+            if testResult == "positive" {
+                stored["virology_testing"] = #"""
+                {
+                    "unacknowledgedTestResults":[
+                        {
+                            "result":"\#(testResult)",
+                            "endDate":\#(endDate),
+                            "diagnosisKeySubmissionToken":"\#(UUID().uuidString)",
+                            "requiresConfirmatoryTest": \#(host.initialState.requiresConfirmatoryTest)
+                        }
+                    ]
+                }
+                """# .data(using: .utf8)
+            } else {
+                stored["virology_testing"] = #"""
+                {
+                    "unacknowledgedTestResults":[
+                        {
+                            "result":"\#(testResult)",
+                            "endDate":\#(endDate),
+                            "requiresConfirmatoryTest": \#(host.initialState.requiresConfirmatoryTest)
+                        }
+                    ]
+                }
+                """# .data(using: .utf8)
             }
-            """# .data(using: .utf8)
         }
         
         stored["policy_version"] = """
@@ -57,8 +71,12 @@ class SandboxEncryptedStore: EncryptedStoring {
         saveIsolationState()
         saveIsolationPaymentState()
         
-        if let riskyVenueMessageType = host.initialState.riskyVenueMessageType {
+        if host.initialState.riskyVenueMessageType != nil {
             saveRiskyVenue()
+        }
+        
+        if host.initialState.hasCheckIns {
+            saveCheckIns()
         }
     }
     
@@ -92,7 +110,7 @@ class SandboxEncryptedStore: EncryptedStoring {
             }
             """# .data(using: .utf8)!
         case .contact:
-            let exposureDay = GregorianDay.today.advanced(by: -2)
+            let exposureDay = GregorianDay.today.advanced(by: -Sandbox.Config.Isolation.daysSinceReceivingExposureNotification)
             let isolationFromStartOfDay = GregorianDay.today.advanced(by: -1)
             stored["isolation_state_info"] = #"""
             {
@@ -177,6 +195,45 @@ class SandboxEncryptedStore: EncryptedStoring {
             ],
             "riskApprovalTokens": {},
             "unacknowldegedRiskyVenueIds": ["\#(venueId)"],
+        }
+        """# .data(using: .utf8)!
+    }
+    
+    func saveCheckIns() {
+        let checkInDay = GregorianDay.today
+        
+        stored["checkins"] = #"""
+        {
+            "checkIns": [
+                {
+                    "venueId" : "12345",
+                    "venueName" : "Venue 1",
+                    "venuePostcode" : "S1",
+                    "checkedIn" : {
+                        "day" : {
+                            "year" : \#(checkInDay.year),
+                            "month" : \#(checkInDay.month),
+                            "day" : \#(checkInDay.day)
+                        },
+                        "hour" : 5,
+                        "minutes": 0
+                    },
+                    "checkedOut" : {
+                        "day" : {
+                            "year" : \#(checkInDay.year),
+                            "month" : \#(checkInDay.month),
+                            "day" : \#(checkInDay.day)
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                    "circuitBreakerApproval" : "pending",
+                    "isRisky" : false,
+                    "id": "\#(UUID().uuidString)",
+                }
+            ],
+            "riskApprovalTokens": {},
+            "unacknowldegedRiskyVenueIds": [],
         }
         """# .data(using: .utf8)!
     }

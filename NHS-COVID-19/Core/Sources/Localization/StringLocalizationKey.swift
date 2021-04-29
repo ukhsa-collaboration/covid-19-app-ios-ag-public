@@ -135,6 +135,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case checkin_information_help_scanning_section_description
     case checkin_information_whats_a_qr_code_section_title
     case checkin_information_whats_a_qr_code_section_description
+    case checkin_information_official_nhs_qr_codes_title
     case checkin_information_how_it_works_section_title
     case checkin_information_how_it_works_section_description
     case checkin_information_how_it_helps_section_title
@@ -165,6 +166,8 @@ public enum StringLocalizationKey: String, CaseIterable {
     case alert_app_availability_changed_body
     case alert_latest_app_version_update_title
     case alert_latest_app_version_update_body
+    case alert_share_keys_reminder_title
+    case alert_share_keys_reminder_body
     
     case diagnosis_questionnaire_title
     case loading
@@ -196,8 +199,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case exposure_faqs_link_button_title
     case exposure_acknowledgement_self_isolate_for
     case exposure_acknowledgement_warning
-    case exposure_acknowledgement_explaination_1
-    case exposure_acknowledgement_explaination_2
+    case exposure_acknowledgement_explaination
     case exposure_acknowledgement_button
     case exposure_acknowledgement_link_label
     case exposure_acknowledgement_link
@@ -248,8 +250,9 @@ public enum StringLocalizationKey: String, CaseIterable {
     case negative_test_result_no_isolation_button_label
     
     case no_symptoms_heading
-    case no_symptoms_body_1
-    case no_symptoms_body_2
+    case no_symptoms_still_get_test_body
+    case no_symptoms_getting_tested_link_label
+    case no_symptoms_develop_symptoms_body
     case no_symptoms_link
     case no_symptoms_return_home_button
     
@@ -397,6 +400,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case link_visit_uk_gov
     case link_cant_run_this_app_faq
     case link_find_test_center
+    case link_nhs_get_tested
     
     case cancel
     case back
@@ -432,6 +436,9 @@ public enum StringLocalizationKey: String, CaseIterable {
     case link_test_result_button_title
     case link_test_result_symptom_information_title
     
+    case link_test_result_thank_you_title
+    case link_test_result_thank_you_back_home_button
+    
     case link_test_result_enter_code_daily_contact_testing_heading
     case link_test_result_enter_code_daily_contact_testing_paragraph
     case link_test_result_enter_code_daily_contact_testing_bulleted_list
@@ -443,12 +450,27 @@ public enum StringLocalizationKey: String, CaseIterable {
     
     case checkin_confirmation_title
     
+    // MARK: Old 'share keys' screen
+    
     case share_keys_confirmation_title
     case share_keys_confirmation_heading
     case share_keys_confirmation_privacy_notice
     case share_keys_confirmation_info_title
     case share_keys_confirmation_info_body
     case share_keys_confirmation_i_understand
+    
+    // MARK: New 'share keys' screens
+    
+    case share_keys_and_venues_share_keys_title
+    case share_keys_and_venues_your_privacy_is_protected
+    case share_keys_and_venues_share_keys_heading
+    case share_keys_and_venues_share_keys_privacy_notice
+    case share_keys_and_venues_share_keys_how_it_helps_heading
+    case share_keys_and_venues_share_keys_how_it_helps_body
+    case share_keys_and_venues_share_keys_what_is_a_random_id_heading
+    case share_keys_and_venues_share_keys_what_is_a_random_id_body
+    case share_keys_and_venues_share_keys_button
+    
     case home_link_test_result_button_title
     
     case network_error_no_internet_connection
@@ -457,8 +479,10 @@ public enum StringLocalizationKey: String, CaseIterable {
     case delete
     
     case qr_code_poster_description
+    case qr_code_poster_description_hospitality
     case qr_code_poster_description_wls
     case qr_code_poster_accessibility_label
+    case qr_code_poster_accessibility_label_hospitality
     case qr_code_poster_accessibility_label_wls
     
     case positive_test_result_start_to_isolate_title
@@ -561,6 +585,13 @@ public enum StringLocalizationKey: String, CaseIterable {
     case settings_venue_history
     
     case venue_history_postcode_unavailable
+    
+    case share_keys_and_venues_reminder_screen_heading
+    case share_keys_and_venues_reminder_screen_privacy_notice
+    case share_keys_and_venues_reminder_screen_reconsider_sharing_heading
+    case share_keys_and_venues_reminder_screen_reconsider_sharing_body
+    case share_keys_and_venues_reminder_screen_back_to_share_button_title
+    case share_keys_and_venues_reminder_screen_do_not_share_button_title
 }
 
 public enum ParameterisedStringLocalizable: Equatable {

@@ -43,10 +43,6 @@ extension Isolation {
 }
 
 extension Isolation {
-    public var canBookTest: Bool {
-        isIndexCase
-    }
-    
     public var canFillQuestionnaire: Bool {
         !isIndexCase
     }

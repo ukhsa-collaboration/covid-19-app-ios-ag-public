@@ -16,6 +16,7 @@ public enum UserNotificationType: String {
     case latestAppVersionAvailable
     case exposureNotificationReminder
     case exposureDontWorry
+    case shareKeysReminder
 }
 
 public enum UserNotificationCategory: String {

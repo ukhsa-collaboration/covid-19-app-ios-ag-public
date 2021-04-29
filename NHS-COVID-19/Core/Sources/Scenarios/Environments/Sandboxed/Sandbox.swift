@@ -110,9 +110,12 @@ public enum Sandbox {
         
         @TestInjected("sandbox.riskyVenueMessageType")
         public var riskyVenueMessageType: String?
-
+        
         @TestInjected("sandbox.hasAcknowledgedStartOfIsolation", defaultValue: true)
         public var hasAcknowledgedStartOfIsolation: Bool
+        
+        @TestInjected("sandbox.hasCheckIns", defaultValue: false)
+        public var hasCheckIns: Bool
         
         public func set(testResultEndDate: Date) throws {
             let data = try JSONEncoder().encode(testResultEndDate)
@@ -134,6 +137,7 @@ public enum Sandbox {
             public static let indexCaseSinceTestResultEndDate = 5
             public static let indexCaseSinceSelfDiagnosisOnset = 1
             public static let contactCaseSinceExposureDay = 12
+            public static let daysSinceReceivingExposureNotification = 2
         }
     }
 }

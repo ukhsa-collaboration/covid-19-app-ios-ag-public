@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -57,7 +57,7 @@ class ExposureWindowStoreAcceptanceTests: AcceptanceTestCase {
                 ),
             ],
             riskScore: 131.44555790888523,
-            riskCalculationVersion: 2
+            riskCalculationVersion: 2, isConsideredRisky: true
         )
         
         exposureWindowStore.append([exposureWindow])

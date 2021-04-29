@@ -2,7 +2,6 @@
 // Copyright © 2021 DHSC. All rights reserved.
 //
 
-import Common
 import Foundation
 
 public struct StateCollection: Hashable, Identifiable {

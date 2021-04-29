@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -63,4 +63,10 @@ extension UTCHour: Comparable {
         lhs.date < rhs.date
     }
     
+}
+
+extension UTCHour {
+    public func isLaterThanOrEqualTo(hours: Int, after other: UTCHour) -> Bool {
+        date.timeIntervalSince(other.date) >= TimeInterval(60 * 60 * hours)
+    }
 }

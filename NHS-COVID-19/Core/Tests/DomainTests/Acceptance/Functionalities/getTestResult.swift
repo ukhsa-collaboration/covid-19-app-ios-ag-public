@@ -5,7 +5,12 @@
 import Foundation
 @testable import Domain
 
-func getTestResult(result: VirologyTestResult.TestResult, testKitType: VirologyTestResult.TestKitType, endDate: Date, diagnosisKeySubmissionSupported: Bool, requiresConfirmatoryTest: Bool) -> String {
+func getTestResult(result: VirologyTestResult.TestResult,
+                   testKitType: VirologyTestResult.TestKitType,
+                   endDate: Date,
+                   diagnosisKeySubmissionSupported: Bool,
+                   requiresConfirmatoryTest: Bool) -> String {
+    
     let timestamp = ISO8601DateFormatter().string(from: endDate)
     return """
     {

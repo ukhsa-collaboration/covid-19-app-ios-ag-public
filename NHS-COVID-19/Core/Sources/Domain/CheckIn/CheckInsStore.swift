@@ -11,7 +11,9 @@ public typealias CheckIns = [CheckIn]
 private struct CheckInsWrapper: Codable, DataConvertible {
     var checkIns: CheckIns
     var riskApprovalTokens: [String: CircuitBreakerApprovalToken]
-    #warning("This is stored on the device - do not rename without some kind of way of loading existing structures with the mis-spelled name")
+    
+    // IMPORTANT: This is mis-spelled, but do not rename it since it would break reading data in the wild.
+    // This type is private and only used for `Codable` conformance, so the impact is contained.
     var unacknowldegedRiskyVenueIds: [String]
     
     // For the purposes of this struct, "risky" = "triggering a 'warn and book a test' notification"
@@ -43,9 +45,13 @@ public class CheckInsStore {
         }
         mostRecentRiskyCheckInDay = info?.mostRecentRiskyVenueCheckInDay
         mostRecentRiskyVenueConfiguration = info?.cachedRiskyVenueConfiguration
+        checkIns = info?.checkIns ?? []
     }
     
     private(set) var riskyCheckIns: [CheckIn] = []
+    
+    @Published
+    private(set) var checkIns: [CheckIn] = []
     
     @Published
     private(set) var unacknowledgedRiskyCheckIns: [CheckIn] = [] {

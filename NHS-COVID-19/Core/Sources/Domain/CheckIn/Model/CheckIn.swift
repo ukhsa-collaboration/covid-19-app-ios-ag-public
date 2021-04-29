@@ -5,7 +5,7 @@
 import Common
 import Foundation
 
-public struct CheckIn: Codable, Equatable {
+public struct CheckIn: Codable, Equatable, Identifiable {
     var isRisky: Bool
     var circuitBreakerApproval: CircuitBreakerApproval
     var venueMessageType: RiskyVenue.MessageType?

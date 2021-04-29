@@ -98,22 +98,6 @@
 				<string>%ld days</string>
 			</dict>
 		</dict>
-		<key>isolation_days_subtitle %ld</key>
-		<dict>
-			<key>NSStringLocalizedFormatKey</key>
-			<string>%#@days@</string>
-			<key>days</key>
-			<dict>
-				<key>NSStringFormatSpecTypeKey</key>
-				<string>NSStringPluralRuleType</string>
-				<key>NSStringFormatValueTypeKey</key>
-				<string>li</string>
-				<key>one</key>
-				<string>day to go</string>
-				<key>other</key>
-				<string>days to go</string>
-			</dict>
-		</dict>
 		<key>exposure_acknowledgement_days %ld</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
@@ -162,6 +146,22 @@
 				<string>You need to self-isolate until %2$@ at %3$@. %1$ld days to go.</string>
 			</dict>
 		</dict>
+		<key>isolation_days_subtitle %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>day to go</string>
+				<key>other</key>
+				<string>days to go</string>
+			</dict>
+		</dict>
 		<key>positive_test_start_to_isolate_accessibility_label %ld</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
@@ -189,9 +189,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Self-isolate for %ld day and report any symptoms</string>
+				<string>[to be deleted]</string>
 				<key>other</key>
-				<string>Self-isolate for %ld days and report any symptoms</string>
+				<string>[to be deleted]</string>
 			</dict>
 		</dict>
 	</dict>

@@ -110,24 +110,6 @@
 				<string>%ld zile</string>
 			</dict>
 		</dict>
-		<key>isolation_days_subtitle %ld</key>
-		<dict>
-			<key>NSStringLocalizedFormatKey</key>
-			<string>%#@days@</string>
-			<key>days</key>
-			<dict>
-				<key>NSStringFormatSpecTypeKey</key>
-				<string>NSStringPluralRuleType</string>
-				<key>NSStringFormatValueTypeKey</key>
-				<string>li</string>
-				<key>one</key>
-				<string>zi rămasă</string>
-				<key>few</key>
-				<string>zile rămase</string>
-				<key>other</key>
-				<string>zile rămase</string>
-			</dict>
-		</dict>
 		<key>exposure_acknowledgement_days %ld</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
@@ -180,6 +162,24 @@
 				<string>Trebuie să vă auto-izolați până pe %2$@ la %3$@. %1$ld zile rămase.</string>
 				<key>other</key>
 				<string>Trebuie să vă auto-izolați până pe %2$@ la %3$@. %1$ld zile rămase.</string>
+			</dict>
+		</dict>
+		<key>isolation_days_subtitle %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>zi rămasă</string>
+				<key>few</key>
+				<string>zile rămase</string>
+				<key>other</key>
+				<string>zile rămase</string>
 			</dict>
 		</dict>
 		<key>positive_test_start_to_isolate_accessibility_label %ld</key>

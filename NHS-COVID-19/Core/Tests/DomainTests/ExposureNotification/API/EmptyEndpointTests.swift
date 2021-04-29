@@ -16,11 +16,7 @@ class EmptyEndpointTests: XCTestCase {
         
         let actual = try emptyEndpoint.request(for: trafficObfuscator).withCanonicalJSONBody()
         
-        let expected = HTTPRequest.post("/submission/empty-submission", body: .json(#"""
-        {
-          "source": "\#(trafficObfuscator)"
-        }
-        """#)).withCanonicalJSONBody()
+        let expected = HTTPRequest.get("/submission/empty-submission-v2")
         
         TS.assert(actual, equals: expected)
     }

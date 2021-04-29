@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -8,6 +8,7 @@ import UIKit
 public protocol NoSymptomsViewControllerInteracting {
     func didTapReturnHome()
     func didTapNHS111Link()
+    func didTapGettingTestedLink()
 }
 
 private class NoSymptomsContent: PrimaryButtonStickyFooterScrollingContent {
@@ -18,8 +19,15 @@ private class NoSymptomsContent: PrimaryButtonStickyFooterScrollingContent {
             scrollingViews: [
                 UIImageView(.isolationEnded).styleAsDecoration(),
                 BaseLabel().set(text: localize(.no_symptoms_heading)).styleAsPageHeader(),
-                BaseLabel().set(text: localize(.no_symptoms_body_1)).styleAsBody(),
-                BaseLabel().set(text: localize(.no_symptoms_body_2)).styleAsBody(),
+                
+                localizeAndSplit(.no_symptoms_still_get_test_body)
+                    .map { BaseLabel().set(text: $0).styleAsBody() },
+                
+                LinkButton(title: localize(.no_symptoms_getting_tested_link_label), action: interactor.didTapGettingTestedLink),
+                
+                localizeAndSplit(.no_symptoms_develop_symptoms_body)
+                    .map { BaseLabel().set(text: $0).styleAsBody() },
+                
                 LinkButton(title: localize(.no_symptoms_link), action: interactor.didTapNHS111Link),
             ],
             primaryButton: (

@@ -82,6 +82,11 @@ class UserNotificationManager {
                 $0.title = localize(.dont_worry_notification_title)
                 $0.body = localize(.dont_worry_notification_body)
             }
+        case .shareKeysReminder:
+            return configuring(UNMutableNotificationContent()) {
+                $0.title = localize(.alert_share_keys_reminder_title)
+                $0.body = localize(.alert_share_keys_reminder_body)
+            }
         }
     }
 }

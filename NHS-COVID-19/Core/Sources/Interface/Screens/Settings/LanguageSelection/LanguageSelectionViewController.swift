@@ -180,6 +180,8 @@ extension LanguageSelectionViewController {
                 
                 heightAnchor.constraint(greaterThanOrEqualToConstant: .buttonMinimumHeight).withPriority(.almostRequest),
                 
+                heightAnchor.constraint(greaterThanOrEqualTo: label.heightAnchor, constant: .standardSpacing).withPriority(.almostRequest),
+                
                 label.centerYAnchor.constraint(equalTo: centerYAnchor),
             ])
         }
@@ -208,6 +210,7 @@ extension LanguageSelectionViewController {
             exonymLabel = BaseLabel().styleAsCaption()
             super.init(style: style, reuseIdentifier: reuseIdentifier)
             selectionStyle = .none
+            backgroundColor = UIColor(.surface)
             
             contentView.addAutolayoutSubview(endonymLabel)
             contentView.addAutolayoutSubview(exonymLabel)

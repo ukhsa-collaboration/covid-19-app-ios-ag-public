@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import XCTest
@@ -66,37 +66,41 @@ extension DeviceConfiguration {
     }()
     
     static let reportConfigurationsSparse: Set<DeviceConfiguration> = {
-        Set(orientationAndStyle + contentSizes + languages)
+        Set(orientationAndStyleMinimal + contentSizesMinimal + languages)
     }()
     
     static let testConfigurationLanguages: Set<DeviceConfiguration> = {
         Set(languages)
     }()
     
-    private static var orientationAndStyle: [DeviceConfiguration] {
-        
-        let orientations: [UIDeviceOrientation] = [.portrait, .landscapeLeft]
-        
-        let interfaceStyles: [InterfaceStyle] = [.dark, .light]
-        
-        return orientations.flatMap { orientation in
-            interfaceStyles.map { interfaceStyle in
-                DeviceConfiguration(
-                    language: "en",
-                    orientation: orientation,
-                    contentSize: .medium,
-                    interfaceStyle: interfaceStyle
-                )
-            }
-        }
+    private static var orientationAndStyleMinimal: [DeviceConfiguration] {
+        [
+            DeviceConfiguration(
+                language: "en",
+                orientation: .portrait,
+                contentSize: .medium,
+                interfaceStyle: .light
+            ),
+            DeviceConfiguration(
+                language: "en",
+                orientation: .portrait,
+                contentSize: .medium,
+                interfaceStyle: .dark
+            ),
+            DeviceConfiguration(
+                language: "en",
+                orientation: .landscapeLeft,
+                contentSize: .medium,
+                interfaceStyle: .light
+            ),
+        ]
     }
     
-    private static var contentSizes: [DeviceConfiguration] {
+    private static var contentSizesMinimal: [DeviceConfiguration] {
         
         let contentSizes: [UIContentSizeCategory] = [
             .extraSmall,
             .medium,
-            .extraLarge,
             .accessibilityExtraExtraExtraLarge,
         ]
         

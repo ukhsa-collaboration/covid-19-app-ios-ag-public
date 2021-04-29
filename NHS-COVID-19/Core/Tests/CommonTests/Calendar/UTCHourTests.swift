@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -83,5 +83,22 @@ class UTCHourTests: XCTestCase {
         let expectedUTCHour = UTCHour(year: 2020, month: 12, day: 22, hour: 22, minutes: 45)
         
         XCTAssertEqual(utcHour, expectedUTCHour)
+    }
+    
+    func testIsLaterThanOrEqual() {
+        let startHour = UTCHour(year: 2021, month: 04, day: 07, hour: 21, minutes: 00)
+        
+        let twentyFiveHoursLater = UTCHour(year: 2021, month: 04, day: 08, hour: 22, minutes: 00)
+        XCTAssertTrue(twentyFiveHoursLater.isLaterThanOrEqualTo(hours: 24, after: startHour))
+        
+        let twoHoursLater = UTCHour(year: 2021, month: 04, day: 07, hour: 22, minutes: 00)
+        XCTAssertFalse(twoHoursLater
+            .isLaterThanOrEqualTo(hours: 24, after: startHour))
+        
+        XCTAssertFalse(startHour.isLaterThanOrEqualTo(hours: 24, after: twentyFiveHoursLater))
+        
+        let twentyFourHoursBefore = UTCHour(year: 2021, month: 04, day: 06, hour: 21, minutes: 00)
+        XCTAssertFalse(twentyFourHoursBefore
+            .isLaterThanOrEqualTo(hours: 24, after: startHour))
     }
 }

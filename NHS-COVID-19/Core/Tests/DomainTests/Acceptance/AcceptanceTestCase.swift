@@ -131,6 +131,11 @@ class AcceptanceTestCase: XCTestCase {
 }
 
 extension AcceptanceTestCase {
+    
+    func resetInstance() {
+        _instance.reset()
+    }
+    
     func completeRunning() throws {
         try completeExposureNotificationActivation(authorizationStatus: .unknown)
         try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)

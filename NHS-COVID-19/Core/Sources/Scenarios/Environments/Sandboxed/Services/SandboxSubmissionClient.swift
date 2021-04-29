@@ -66,6 +66,10 @@ class SandboxSubmissionClient: HTTPClient {
             return Result.success(response)
         }
         
+        if request.path == "/submission/risky-venue-history" {
+            return Result.success(.ok(with: .empty))
+        }
+        
         return Result.failure(.rejectedRequest(underlyingError: SimpleError("")))
     }
 }

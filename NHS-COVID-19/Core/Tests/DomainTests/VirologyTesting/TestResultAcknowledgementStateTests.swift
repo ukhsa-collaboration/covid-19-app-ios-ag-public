@@ -8,17 +8,9 @@ import XCTest
 @testable import Domain
 
 class TestResultAcknowledgementStateTests: XCTestCase {
-    var positiveAcknowledgement: TestResultAcknowledgementState.PositiveAcknowledgement!
     var indexCaseInfo: IndexCaseInfo!
     
     override func setUp() {
-        positiveAcknowledgement = { _, _, _, _ in
-            TestResultAcknowledgementState.PositiveResultAcknowledgement(
-                acknowledge: { Empty().eraseToAnyPublisher() },
-                acknowledgeWithoutSending: {}
-            )
-            
-        }
         indexCaseInfo = IndexCaseInfo(
             isolationTrigger: .selfDiagnosis(.today),
             onsetDay: nil,
@@ -46,9 +38,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             newIsolationState: isolationState,
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
-            positiveAcknowledgement: positiveAcknowledgement,
-            keySubmissionAllowed: true,
-            completionHandler: { _ in }
+            completionHandler: {}
         )
         
         if case TestResultAcknowledgementState.neededForPositiveResultStartToIsolate = state {} else {
@@ -76,9 +66,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             newIsolationState: isolationState,
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
-            positiveAcknowledgement: positiveAcknowledgement,
-            keySubmissionAllowed: true,
-            completionHandler: { _ in }
+            completionHandler: {}
         )
         
         if case TestResultAcknowledgementState.neededForPositiveResultStartToIsolate = state {} else {
@@ -104,9 +92,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             newIsolationState: isolationState,
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
-            positiveAcknowledgement: positiveAcknowledgement,
-            keySubmissionAllowed: true,
-            completionHandler: { _ in }
+            completionHandler: {}
         )
         
         if case TestResultAcknowledgementState.neededForPositiveResultNotIsolating = state {} else {
@@ -130,9 +116,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             newIsolationState: isolationState,
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
-            positiveAcknowledgement: positiveAcknowledgement,
-            keySubmissionAllowed: true,
-            completionHandler: { _ in }
+            completionHandler: {}
         )
         
         if case TestResultAcknowledgementState.neededForPositiveResultNotIsolating = state {} else {
@@ -156,9 +140,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             newIsolationState: isolationState,
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
-            positiveAcknowledgement: positiveAcknowledgement,
-            keySubmissionAllowed: true,
-            completionHandler: { _ in }
+            completionHandler: {}
         )
         
         if case TestResultAcknowledgementState.neededForPositiveResultNotIsolating = state {} else {
@@ -186,9 +168,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             newIsolationState: isolationState,
             currentIsolationState: isolationState,
             indexCaseInfo: nil,
-            positiveAcknowledgement: positiveAcknowledgement,
-            keySubmissionAllowed: true,
-            completionHandler: { _ in }
+            completionHandler: {}
         )
         
         if case TestResultAcknowledgementState.neededForNegativeResultContinueToIsolate = state {} else {
@@ -216,9 +196,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             newIsolationState: isolationState,
             currentIsolationState: isolationState,
             indexCaseInfo: indexCaseInfo,
-            positiveAcknowledgement: positiveAcknowledgement,
-            keySubmissionAllowed: true,
-            completionHandler: { _ in }
+            completionHandler: {}
         )
         
         if case TestResultAcknowledgementState.neededForNegativeAfterPositiveResultContinueToIsolate = state {} else {
@@ -244,9 +222,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             newIsolationState: isolationState,
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
-            positiveAcknowledgement: positiveAcknowledgement,
-            keySubmissionAllowed: true,
-            completionHandler: { _ in }
+            completionHandler: {}
         )
         
         if case TestResultAcknowledgementState.neededForNegativeResultNotIsolating = state {} else {
@@ -270,9 +246,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             newIsolationState: isolationState,
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
-            positiveAcknowledgement: positiveAcknowledgement,
-            keySubmissionAllowed: true,
-            completionHandler: { _ in }
+            completionHandler: {}
         )
         
         if case TestResultAcknowledgementState.neededForNegativeResultNotIsolating = state {} else {
@@ -300,9 +274,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             newIsolationState: isolationState,
             currentIsolationState: isolationState,
             indexCaseInfo: indexCaseInfo,
-            positiveAcknowledgement: positiveAcknowledgement,
-            keySubmissionAllowed: true,
-            completionHandler: { _ in }
+            completionHandler: {}
         )
         
         if case TestResultAcknowledgementState.neededForNegativeAfterPositiveResultContinueToIsolate = state {} else {
@@ -330,9 +302,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             newIsolationState: isolationState,
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
-            positiveAcknowledgement: positiveAcknowledgement,
-            keySubmissionAllowed: true,
-            completionHandler: { _ in }
+            completionHandler: {}
         )
         
         if case TestResultAcknowledgementState.neededForVoidResultContinueToIsolate = state {} else {
@@ -356,9 +326,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             newIsolationState: isolationState,
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
-            positiveAcknowledgement: positiveAcknowledgement,
-            keySubmissionAllowed: true,
-            completionHandler: { _ in }
+            completionHandler: {}
         )
         
         if case TestResultAcknowledgementState.neededForVoidResultNotIsolating = state {} else {
@@ -384,9 +352,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             newIsolationState: isolationState,
             currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             indexCaseInfo: indexCaseInfo,
-            positiveAcknowledgement: positiveAcknowledgement,
-            keySubmissionAllowed: true,
-            completionHandler: { _ in }
+            completionHandler: {}
         )
         
         if case TestResultAcknowledgementState.neededForVoidResultNotIsolating = state {} else {

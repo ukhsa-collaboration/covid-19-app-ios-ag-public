@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -44,6 +44,7 @@ class IsolationPaymentFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: homeScreen.financeButton)
             homeScreen.financeButton.tap()
             
             let financialSupportScreen = FinancialSupportScreen(app: app)

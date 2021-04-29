@@ -10,16 +10,10 @@ import Logging
 class ExposureWindowHousekeeper {
     private static let logger = Logger(label: "ExposureWindowHousekeeper")
     
-    private let getIsolationLogicalState: () -> IsolationLogicalState
-    private let isWaitingForExposureApproval: () -> Bool
-    private let clearExposureWindowData: () -> Void
+    private let deleteExpiredExposureWindows: () -> Void
     
-    init(getIsolationLogicalState: @escaping () -> IsolationLogicalState,
-         isWaitingForExposureApproval: @escaping () -> Bool,
-         clearExposureWindowData: @escaping () -> Void) {
-        self.getIsolationLogicalState = getIsolationLogicalState
-        self.isWaitingForExposureApproval = isWaitingForExposureApproval
-        self.clearExposureWindowData = clearExposureWindowData
+    init(deleteExpiredExposureWindows: @escaping () -> Void) {
+        self.deleteExpiredExposureWindows = deleteExpiredExposureWindows
     }
     
     func executeHousekeeping() -> AnyPublisher<Void, Never> {
@@ -28,12 +22,8 @@ class ExposureWindowHousekeeper {
                 promise(.success(()))
                 return
             }
-            Self.logger.debug("execute housekeeping")
-            let isolationLogicalState = self.getIsolationLogicalState()
-            if !isolationLogicalState.isIsolating && !self.isWaitingForExposureApproval() {
-                Self.logger.debug("deleting all exposure windows")
-                self.clearExposureWindowData()
-            }
+            Self.logger.debug("execute housekeeping; deleting expired exposure windows")
+            self.deleteExpiredExposureWindows()
             promise(.success(()))
         }.eraseToAnyPublisher()
     }

@@ -136,7 +136,7 @@ extension AboutThisAppViewController {
         }()
         
         let ceImage: UIView = {
-            let ceImage = UIImageView(.symbolCE).color(.primaryText).styleAsDecoration()
+            let ceImage = UIImageView(.symbolUKCA).color(.primaryText).styleAsDecoration()
             let ceImageStackView = UIStackView(arrangedSubviews: [ceImage, UIView()])
             ceImageStackView.alignment = .firstBaseline
             

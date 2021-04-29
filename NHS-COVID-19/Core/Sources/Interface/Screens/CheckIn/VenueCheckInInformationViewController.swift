@@ -53,51 +53,35 @@ public class VenueCheckInInformationViewController: UIViewController {
     }()
     
     private lazy var whatsAQRCodeSection: UIView = {
-        var content = [UIView]()
-        
-        let title = BaseLabel()
-        title.styleAsTertiaryTitle()
-        title.text = localize(.checkin_information_whats_a_qr_code_section_title)
-        content.append(title)
-        
-        let descriptionLabel = BaseLabel()
-        descriptionLabel.styleAsBody()
-        descriptionLabel.text = localize(.checkin_information_whats_a_qr_code_section_description)
-        content.append(descriptionLabel)
-        
-        let imageDescriptionLabel = BaseLabel()
-        imageDescriptionLabel.styleAsBody()
-        imageDescriptionLabel.text = localize(.qr_code_poster_description)
-        
-        let imageView = UIImageView(image: UIImage(.qrCodePoster))
-        imageView.contentMode = .scaleAspectFit
-        imageView.isAccessibilityElement = true
-        imageView.accessibilityLabel = localize(.qr_code_poster_accessibility_label)
-        
-        let imageStackView = UIStackView(arrangedSubviews: [imageDescriptionLabel, imageView])
-        imageStackView.axis = .vertical
-        imageStackView.alignment = .leading
-        imageStackView.spacing = .halfSpacing
-        content.append(imageStackView)
-        
-        let imageDescriptionLabelWLS = BaseLabel()
-        imageDescriptionLabelWLS.styleAsBody()
-        imageDescriptionLabelWLS.text = localize(.qr_code_poster_description_wls)
-        
-        let imageViewWLS = UIImageView(image: UIImage(.qrCodePosterWales))
-        imageViewWLS.contentMode = .scaleAspectFit
-        imageViewWLS.isAccessibilityElement = true
-        imageViewWLS.accessibilityLabel = localize(.qr_code_poster_accessibility_label_wls)
-        
-        let imageStackViewWLS = UIStackView(arrangedSubviews: [imageDescriptionLabelWLS, imageViewWLS])
-        imageStackViewWLS.axis = .vertical
-        imageStackViewWLS.alignment = .leading
-        imageStackViewWLS.spacing = .halfSpacing
-        content.append(imageStackViewWLS)
-        
-        let stackView = UIStackView(arrangedSubviews: content)
+        let stackView = UIStackView(
+            arrangedSubviews: [
+                BaseLabel()
+                    .styleAsTertiaryTitle()
+                    .set(text: localize(.checkin_information_whats_a_qr_code_section_title)),
+                BaseLabel()
+                    .styleAsBody()
+                    .set(text: localize(.checkin_information_whats_a_qr_code_section_description)),
+                BaseLabel()
+                    .styleAsTertiaryTitle()
+                    .set(text: localize(.checkin_information_official_nhs_qr_codes_title)),
+                createPosterStack(
+                    posterImage: UIImage(.qrCodePosterHospitality),
+                    labelText: localize(.qr_code_poster_description_hospitality),
+                    accessibilityLabel: localize(.qr_code_poster_accessibility_label_hospitality)
+                ),
+                createPosterStack(
+                    posterImage: UIImage(.qrCodePoster),
+                    labelText: localize(.qr_code_poster_description),
+                    accessibilityLabel: localize(.qr_code_poster_accessibility_label)
+                ),
+                createPosterStack(
+                    posterImage: UIImage(.qrCodePosterWales),
+                    labelText: localize(.qr_code_poster_description_wls),
+                    accessibilityLabel: localize(.qr_code_poster_accessibility_label_wls)
+                ),
+            ])
         stackView.axis = .vertical
-        stackView.alignment = .leading
+        stackView.alignment = .fill
         stackView.spacing = .standardSpacing
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.layoutMargins = .inner
@@ -111,6 +95,24 @@ public class VenueCheckInInformationViewController: UIViewController {
             description: localize(.checkin_information_how_it_works_section_description)
         )
     }()
+    
+    private func createPosterStack(posterImage: UIImage, labelText: String, accessibilityLabel: String) -> UIView {
+        let label = BaseLabel()
+        label.styleAsBody()
+        label.text = labelText
+        
+        let poster = UIImageView(image: posterImage)
+        poster.contentMode = .scaleAspectFit
+        poster.isAccessibilityElement = true
+        poster.accessibilityLabel = accessibilityLabel
+        
+        let posterStack = UIStackView(arrangedSubviews: [label, poster])
+        posterStack.axis = .vertical
+        posterStack.alignment = .fill
+        posterStack.spacing = .halfSpacing
+        
+        return posterStack
+    }
     
     private func createSection(header: String, description: String) -> UIView {
         var content = [UIView]()
@@ -129,46 +131,6 @@ public class VenueCheckInInformationViewController: UIViewController {
         stackView.axis = .vertical
         stackView.alignment = .leading
         stackView.spacing = .standardSpacing
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.layoutMargins = .inner
-        
-        return stackView
-    }
-    
-    private func createImageSection(
-        header: String,
-        description: String,
-        imageDescription: String,
-        image: UIImage,
-        imageAccessibilityLabel: String
-    ) -> UIView {
-        var content = [UIView]()
-        
-        let title = BaseLabel()
-        title.styleAsTertiaryTitle()
-        title.text = header
-        content.append(title)
-        
-        let descriptionLabel = BaseLabel()
-        descriptionLabel.styleAsBody()
-        descriptionLabel.text = description
-        content.append(descriptionLabel)
-        
-        let imageDescriptionLabel = BaseLabel()
-        imageDescriptionLabel.styleAsBody()
-        imageDescriptionLabel.text = description
-        content.append(imageDescriptionLabel)
-        
-        let imageView = UIImageView(image: image)
-        imageView.contentMode = .scaleAspectFit
-        imageView.isAccessibilityElement = true
-        imageView.accessibilityLabel = imageAccessibilityLabel
-        content.append(imageView)
-        
-        let stackView = UIStackView(arrangedSubviews: content)
-        stackView.axis = .vertical
-        stackView.alignment = .leading
-        stackView.spacing = .halfSpacing
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.layoutMargins = .inner
         

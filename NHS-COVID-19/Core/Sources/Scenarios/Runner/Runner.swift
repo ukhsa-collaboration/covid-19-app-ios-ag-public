@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -11,6 +11,7 @@ import UIKit
 public class Runner {
     
     public static let activeScenarioDefaultKey = "activeScenario"
+    public static let devViewDefaultKey = "devView"
     public static let interfaceStyleDefaultKey = "interfaceStyle"
     public static let disableAnimations = "disable_animations"
     public static let disableHardwareKeyboard = "disable_hardware_keyboard"
@@ -21,6 +22,13 @@ public class Runner {
     
     @UserDefault(Runner.activeScenarioDefaultKey)
     private var activeScenarioId: ScenarioId? {
+        didSet {
+            updateContent()
+        }
+    }
+    
+    @UserDefault(Runner.devViewDefaultKey, defaultValue: false)
+    private var showDevView: Bool? {
         didSet {
             updateContent()
         }
@@ -121,6 +129,23 @@ public class Runner {
     private func updateContent() {
         if let activeScenarioId = activeScenarioId {
             appController.content = activeScenarioId.scenarioType.appController
+            if showDevView ?? false {
+                if activeScenarioId.scenarioType.kind == .environment {
+                    if activeScenarioId.scenarioType.name == "Mock" {
+                        (appController.rootViewController as! WrappingViewController)
+                            .addDeveloperOptions { [weak self] in
+                                self?.showDebugUI()
+                            } onLongPress: { [weak self] in
+                                self?.performBackgroundTasks()
+                            }
+                    }
+                } else {
+                    (appController.rootViewController as! WrappingViewController)
+                        .addDeveloperOptions { [weak self] in
+                            self?.activeScenarioId = nil
+                        } onLongPress: {}
+                }
+            }
         } else {
             appController.content = ScenarioSelectorAppController(openDebug: { [weak self] in self?.showDebugUI(showFeatureGuard: true) }) { [weak self] id in
                 self?.activeScenarioId = id
@@ -134,11 +159,11 @@ public class Runner {
         let alert = UIAlertController(title: "Run background tasks", message: "When should the tasks start?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Immediately", style: .default) { _ in self.startTasks() })
         alert.addAction(UIAlertAction(title: "When app enters background", style: .default) { _ in self.startTasksWhenEnteringBackground() })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default) { _ in })
         // Wait a bit before showing the alert so that the rootViewController is already loaded
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             viewController.present(alert, animated: true, completion: nil)
         }
-        
     }
     
     private func startTasksWhenEnteringBackground() {
@@ -162,13 +187,21 @@ public class Runner {
     
     private func showDebugUI(showFeatureGuard: Bool = false) {
         let tabBar = UITabBarController()
-        let mocks = UIHostingController(rootView: ConfigureMocksView(dataProvider: MockScenario.mockDataProvider))
+        let mocks = UIHostingController(
+            rootView: ConfigureMocksView(
+                dataProvider: MockScenario.mockDataProvider,
+                showDevView: Binding(
+                    get: { [weak self] in self?.showDevView ?? false },
+                    set: { [weak self] value in self?.showDevView = value }
+                )
+            )
+        )
         mocks.title = "Mocks"
         mocks.tabBarItem.image = UIImage(systemName: "doc.text")
         
         var viewControllers = [
-            UINavigationController(rootViewController: LogsViewController(loggingManager: loggingManager)),
             mocks,
+            UINavigationController(rootViewController: LogsViewController(loggingManager: loggingManager)),
         ]
         
         if showFeatureGuard {

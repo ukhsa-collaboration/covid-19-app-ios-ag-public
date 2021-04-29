@@ -216,7 +216,7 @@ class MockDataProvider: ObservableObject {
         }
     }
     
-    @UserDefault("mocks.requiresConfirmatoryTest", defaultValue: true)
+    @UserDefault("mocks.requiresConfirmatoryTest", defaultValue: false)
     var requiresConfirmatoryTest: Bool {
         didSet {
             _objectWillChange.send()

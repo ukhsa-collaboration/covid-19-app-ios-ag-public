@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -194,4 +194,22 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
         
         XCTAssertThrowsError(try endpoint.parse(actualResponse))
     }
+    
+    func testDecodingInvalidVenueSharingResponse() throws {
+        let date = "2021-01-10T00:00:00.0000000Z"
+        
+        let actualResponse = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "\#(date)",
+            "testResult": "NEGATIVE",
+            "testKit" : "RAPID_RESULT",
+            "diagnosisKeySubmissionToken": null,
+            "diagnosisKeySubmissionSupported" : false,
+            "requiresConfirmatoryTest": true
+        }
+        """#))
+        
+        XCTAssertThrowsError(try endpoint.parse(actualResponse)) // expecting a venue sharing token
+    }
+    
 }

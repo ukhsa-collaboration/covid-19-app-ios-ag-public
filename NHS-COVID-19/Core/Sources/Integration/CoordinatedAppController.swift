@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -16,6 +16,8 @@ public class CoordinatedAppController: AppController {
     private var cancellable: [AnyCancellable] = []
     
     public var rootViewController: UIViewController = RootViewController()
+    
+    public let showBookATest = CurrentValueSubject<Bool, Never>(false)
     
     private var content: UIViewController? {
         didSet {

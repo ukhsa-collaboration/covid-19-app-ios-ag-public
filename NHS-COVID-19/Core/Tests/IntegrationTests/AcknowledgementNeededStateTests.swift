@@ -18,9 +18,8 @@ class AcknowledgementNeededStateTests: XCTestCase {
             riskyCheckInsAckState: .notNeeded
         )
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
-        guard case .notNeeded = state else {
+        if let state = state {
             XCTFail("Wrong state: got \(state)")
-            return
         }
     }
     
@@ -28,13 +27,13 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let date = Date()
         let context = makeRunningAppContext(
             isolationAckState: .notNeeded,
-            testResultAckState: .neededForPositiveResult(acknowledge: { Empty().eraseToAnyPublisher() }, isolationEndDate: date, keySubmissionSupported: true, requiresConfirmatoryTest: false),
+            testResultAckState: .neededForPositiveResultContinueToIsolate(acknowledge: {}, isolationEndDate: date, requiresConfirmatoryTest: false),
             riskyCheckInsAckState: .notNeeded
         )
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
-        guard case .neededForPositiveResultContinueToIsolate(_, let isolationEndDate, _, _) = state else {
-            XCTFail("Wrong state: got \(state)")
+        guard case .neededForPositiveResultContinueToIsolate(_, let isolationEndDate, _) = state else {
+            XCTFail("Wrong state: got \(String(describing: state))")
             return
         }
         XCTAssertEqual(date, isolationEndDate)
@@ -49,7 +48,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         guard case .neededForNegativeResultNotIsolating = state else {
-            XCTFail("Wrong state: got \(state)")
+            XCTFail("Wrong state: got \(String(describing: state))")
             return
         }
     }
@@ -64,7 +63,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         guard case .neededForNegativeResultContinueToIsolate(_, let isolationEndDate) = state else {
-            XCTFail("Wrong state: got \(state)")
+            XCTFail("Wrong state: got \(String(describing: state))")
             return
         }
         XCTAssertEqual(date, isolationEndDate)
@@ -84,7 +83,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         guard case .neededForEndOfIsolation(_, let isolationEndDate, let showAdvisory) = state else {
-            XCTFail("Wrong state: got \(state)")
+            XCTFail("Wrong state: got \(String(describing: state))")
             return
         }
         XCTAssertEqual(isolationEndDate, isolation.endDate)
@@ -100,14 +99,14 @@ class AcknowledgementNeededStateTests: XCTestCase {
         
         let context = makeRunningAppContext(
             isolationAckState: .neededForEnd(isolation, acknowledge: {}),
-            testResultAckState: .neededForPositiveResult(acknowledge: { Empty().eraseToAnyPublisher() }, isolationEndDate: Date(), keySubmissionSupported: true, requiresConfirmatoryTest: false),
+            testResultAckState: .neededForPositiveResultContinueToIsolate(acknowledge: {}, isolationEndDate: Date(), requiresConfirmatoryTest: false),
             riskyCheckInsAckState: .needed(acknowledge: {}, venueName: "Venue", checkInDate: Date(), resolution: .warnAndInform)
         )
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         
         guard case .neededForPositiveResultContinueToIsolate = state else {
-            XCTFail("Wrong state: got \(state)")
+            XCTFail("Wrong state: got \(String(describing: state))")
             return
         }
     }
@@ -128,7 +127,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         
         guard case .neededForNegativeResultNotIsolating = state else {
-            XCTFail("Wrong state: got \(state)")
+            XCTFail("Wrong state: got \(String(describing: state))")
             return
         }
     }
@@ -149,7 +148,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         
         guard case .neededForStartOfIsolationExposureDetection = state else {
-            XCTFail("Wrong state: got \(state)")
+            XCTFail("Wrong state: got \(String(describing: state))")
             return
         }
     }
@@ -166,7 +165,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
         
         guard case let .neededForRiskyVenue(_, venueName, checkInDate) = state else {
-            XCTFail("Wrong state: got \(state)")
+            XCTFail("Wrong state: got \(String(describing: state))")
             return
         }
         XCTAssertEqual(venueName, expectedVenueName)
@@ -210,7 +209,8 @@ class AcknowledgementNeededStateTests: XCTestCase {
             currentLocaleConfiguration: Just(.systemPreferred).eraseToAnyPublisher().domainProperty(),
             storeNewLanguage: { _ in },
             shouldShowDailyContactTestingInformFeature: { true },
-            dailyContactTestingEarlyTerminationSupport: { .disabled }
+            dailyContactTestingEarlyTerminationSupport: { .disabled },
+            diagnosisKeySharer: .constant(nil)
         )
     }
     

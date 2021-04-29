@@ -64,8 +64,7 @@ struct IsolationContext {
     
     func makeResultAcknowledgementState(
         result: VirologyStateTestResult?,
-        positiveAcknowledgement: @escaping TestResultAcknowledgementState.PositiveAcknowledgement,
-        completionHandler: @escaping (TestResultAcknowledgementState.SendKeysState) -> Void
+        completionHandler: @escaping (Bool) -> Void
     ) -> AnyPublisher<TestResultAcknowledgementState, Never> {
         isolationStateStore.$isolationStateInfo
             .combineLatest(currentDateProvider.today, shouldAskForSymptoms)
@@ -116,10 +115,8 @@ struct IsolationContext {
                     result: result,
                     newIsolationState: newIsolationState,
                     currentIsolationState: currentIsolationState,
-                    indexCaseInfo: newIsolationStateInfo.isolationInfo.indexCaseInfo,
-                    positiveAcknowledgement: positiveAcknowledgement,
-                    keySubmissionAllowed: storeOperation != .ignore
-                ) { shareKeyState in
+                    indexCaseInfo: newIsolationStateInfo.isolationInfo.indexCaseInfo
+                ) {
                     isolationStateStore.isolationStateInfo = newIsolationStateInfo
                     
                     if !newIsolationState.isIsolating {
@@ -130,7 +127,7 @@ struct IsolationContext {
                         isolationStateStore.restartIsolationAcknowledgement()
                     }
                     
-                    completionHandler(shareKeyState)
+                    completionHandler(storeOperation != .ignore)
                 }
             }
             .eraseToAnyPublisher()

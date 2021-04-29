@@ -15,6 +15,7 @@ build
 /TestReport
 /AppReport
 /TestResults.xcresult
+/ModelExport
 doc_gen
 TestResultsSummary
 

@@ -97,7 +97,7 @@
 				<key>few</key>
 				<string>Zostały %ld dni</string>
 				<key>many</key>
-				<string>Zostały %ld dni</string>
+				<string>Zostało %ld dni</string>
 				<key>other</key>
 				<string>Zostały %ld dni</string>
 			</dict>
@@ -120,26 +120,6 @@
 				<string>%ld dni</string>
 				<key>other</key>
 				<string>%ld dni</string>
-			</dict>
-		</dict>
-		<key>isolation_days_subtitle %ld</key>
-		<dict>
-			<key>NSStringLocalizedFormatKey</key>
-			<string>%#@days@</string>
-			<key>days</key>
-			<dict>
-				<key>NSStringFormatSpecTypeKey</key>
-				<string>NSStringPluralRuleType</string>
-				<key>NSStringFormatValueTypeKey</key>
-				<string>li</string>
-				<key>one</key>
-				<string>został dzień</string>
-				<key>few</key>
-				<string>zostały dni</string>
-				<key>many</key>
-				<string>zostały dni</string>
-				<key>other</key>
-				<string>zostały dni</string>
 			</dict>
 		</dict>
 		<key>exposure_acknowledgement_days %ld</key>
@@ -200,6 +180,26 @@
 				<string>Proszę izolować się do %2$@ do godz. %3$@. zostało %1$ld dni.</string>
 				<key>other</key>
 				<string>Proszę izolować się do %2$@ do godz. %3$@. zostało %1$ld dni.</string>
+			</dict>
+		</dict>
+		<key>isolation_days_subtitle %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>został %li dzień</string>
+				<key>few</key>
+				<string>zostały %li dni</string>
+				<key>many</key>
+				<string>zostało %li dni</string>
+				<key>other</key>
+				<string>zostało %li dni</string>
 			</dict>
 		</dict>
 		<key>positive_test_start_to_isolate_accessibility_label %ld</key>

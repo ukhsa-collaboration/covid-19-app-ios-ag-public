@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Domain
@@ -12,6 +12,7 @@ public class NoSymptomsViewControllerScenario: Scenario {
     public static var name: String = "Self-Diagnosis - No Symptoms"
     public static let returnHomeTapped: String = "Return home button tapped"
     public static let nhs111LinkTapped: String = "NHS 111 link tapped"
+    public static let gettingTestedLinkTapped: String = "Getting tested for coronavirus link tapped"
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
@@ -35,5 +36,9 @@ private class Interactor: NoSymptomsViewController.Interacting {
     
     func didTapNHS111Link() {
         viewController?.showAlert(title: NoSymptomsViewControllerScenario.nhs111LinkTapped)
+    }
+    
+    func didTapGettingTestedLink() {
+        viewController?.showAlert(title: NoSymptomsViewControllerScenario.gettingTestedLinkTapped)
     }
 }

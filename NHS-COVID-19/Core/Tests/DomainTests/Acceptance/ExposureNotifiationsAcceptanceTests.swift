@@ -28,6 +28,7 @@ class ExposureNotifiationsAcceptanceTests: AcceptanceTestCase {
         
         distributeClient.reset()
         distributeClient.register(ExposureConfigurationHandler())
+        registerExtraAPIClients()
         
         try performAndCompleteBackgorundTasks()
         
@@ -57,6 +58,7 @@ class ExposureNotifiationsAcceptanceTests: AcceptanceTestCase {
         
         distributeClient.reset()
         distributeClient.register(ExposureConfigurationHandler())
+        registerExtraAPIClients()
         
         try performAndCompleteBackgorundTasks()
         
@@ -76,6 +78,7 @@ class ExposureNotifiationsAcceptanceTests: AcceptanceTestCase {
         
         distributeClient.reset()
         distributeClient.register(ExposureConfigurationHandler())
+        registerExtraAPIClients()
         
         try performAndCompleteBackgorundTasks()
         
@@ -94,7 +97,9 @@ class ExposureNotifiationsAcceptanceTests: AcceptanceTestCase {
     private func completeRunningAndProcessENUntilStartDay() throws {
         $instance.exposureNotificationManager = MockWindowsExposureNotificationManager()
         currentDateProvider.setDate(startDay.startDate(in: .utc))
+        
         distributeClient.register(ExposureConfigurationHandler())
+        registerExtraAPIClients()
         
         for day in 20191219 ... 20191231 {
             distributeClient.response(for: "/distribution/daily/\(day)00.zip", response: KeysDistributionHandler.response())
@@ -113,6 +118,16 @@ class ExposureNotifiationsAcceptanceTests: AcceptanceTestCase {
         // Note, it's important to assert that this is saved to make sure background tasks as part of `completeRunning` have finished.
         TS.assert(state.lastKeyDownloadDate, equals: startDay.startDate(in: .utc))
         
+    }
+    
+    private func registerExtraAPIClients() {
+        #warning("This should not be necessary")
+        // For some reason `CircuitBreakerClient.sendObfuscatedTraffic` can end in a way that blocks the background
+        // tasks from completing. This seems to be some concurrency issue around when publisher event messages are sent.
+        // Not sure if it’s our bug or OS bug.
+        //
+        // For now, register an empty handler so we don't run into that edge case.
+        apiClient.register(EmptyHandler())
     }
 }
 

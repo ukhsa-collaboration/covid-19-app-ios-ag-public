@@ -13,11 +13,13 @@ public struct CheckInContext {
     private let riskyVenueConfiguration: CachedResponse<RiskyVenueConfiguration>
     public var recentlyVisitedSevereRiskyVenue: DomainProperty<GregorianDay?>
     
-    init(checkInsStore: CheckInsStore,
-         checkInsManager: CheckInsManager,
-         qrCodeScanner: QRCodeScanner,
-         currentDateProvider: DateProviding,
-         riskyVenueConfiguration: CachedResponse<RiskyVenueConfiguration>) {
+    init(
+        checkInsStore: CheckInsStore,
+        checkInsManager: CheckInsManager,
+        qrCodeScanner: QRCodeScanner,
+        currentDateProvider: DateProviding,
+        riskyVenueConfiguration: CachedResponse<RiskyVenueConfiguration>
+    ) {
         self.checkInsStore = checkInsStore
         self.checkInsManager = checkInsManager
         self.qrCodeScanner = qrCodeScanner

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -59,6 +59,11 @@ public class LoadingViewController: UIViewController {
             waitingLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             waitingLabel.topAnchor.constraint(equalToSystemSpacingBelow: spinner.bottomAnchor, multiplier: 1),
         ])
+    }
+    
+    override public func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     @objc func didTapCancel() {

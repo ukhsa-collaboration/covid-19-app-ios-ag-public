@@ -43,8 +43,9 @@ public class HomeViewController: UIViewController {
     
     private let country: InterfaceProperty<Country>
     let showLanguageSelectionScreen: (() -> Void)?
-    var didShowLanguageSelectionScreen: Bool = false
-    
+    private var didShowLanguageSelectionScreen = false
+    private var removeSnapshot: (() -> Void)?
+
     public init(
         interactor: Interacting,
         riskLevelBannerViewModel: InterfaceProperty<RiskLevelBanner.ViewModel?>,
@@ -123,9 +124,7 @@ public class HomeViewController: UIViewController {
             removeSnapshot = snapshot.removeFromSuperview
         }
     }
-    
-    var removeSnapshot: (() -> Void)?
-    
+        
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
@@ -189,11 +188,6 @@ public class HomeViewController: UIViewController {
                 self.navigationController?.popViewController(animated: false)
             }
         }
-        
-    }
-    
-    @objc private func aboutTapped() {
-        interactor.didTapAboutButton()
     }
     
     private func exposureNotificationSwitchValueChanged(_ isOn: Bool) {

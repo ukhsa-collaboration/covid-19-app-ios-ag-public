@@ -36,6 +36,7 @@ class MockServer: HTTPClient {
             LinkVirologyTestResultHandler(dataProvider: dataProvider),
             IsolationPaymentCreateHandler(),
             IsolationPaymentUpdateHandler(),
+            EmptyHandler(),
         ]
     }
     

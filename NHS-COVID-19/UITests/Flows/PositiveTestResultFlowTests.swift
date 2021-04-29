@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -56,12 +56,11 @@ class PositiveTestResultsFlowTest: XCTestCase {
                 """
             }
             
-            let shareScreen = ShareKeysConfirmationScreen(app: app)
+            let shareScreen = ShareKeysScreen(app: app)
             
             XCTAssertTrue(shareScreen.heading.exists)
             
-            #warning("Find out why it finds multiple elements with the accessibility label continue - it smells like a bug")
-            shareScreen.app.buttons.element(boundBy: 1).tap()
+            shareScreen.continueButton.tap()
             
             runner.step("Share random ids - System Alert") {
                 """
@@ -72,6 +71,15 @@ class PositiveTestResultsFlowTest: XCTestCase {
             
             let alertScreen = SimulatedShareRandomIdsScreen(app: app)
             alertScreen.shareButton.tap()
+            
+            runner.step("Thank you screen") {
+                """
+                The user is presented the thank you message.
+                """
+            }
+            
+            let thankYouScreen = ThankYouScreen(app: app)
+            thankYouScreen.backHomeButtonText.tap()
             
             runner.step("Homescreen") {
                 """
@@ -112,12 +120,11 @@ class PositiveTestResultsFlowTest: XCTestCase {
                 """
             }
             
-            let shareScreen = ShareKeysConfirmationScreen(app: app)
+            let shareScreen = ShareKeysScreen(app: app)
             
             XCTAssertTrue(shareScreen.heading.exists)
             
-            #warning("Find out why it finds multiple elements with the accessibility label continue - it smells like a bug")
-            shareScreen.app.buttons.element(boundBy: 1).tap()
+            shareScreen.continueButton.tap()
             
             runner.step("Share random ids - System Alert") {
                 """
@@ -128,6 +135,15 @@ class PositiveTestResultsFlowTest: XCTestCase {
             
             let alertScreen = SimulatedShareRandomIdsScreen(app: app)
             alertScreen.shareButton.tap()
+            
+            runner.step("Thank you screen") {
+                """
+                The user is presented the thank you message.
+                """
+            }
+            
+            let thankYouScreen = ThankYouScreen(app: app)
+            thankYouScreen.backHomeButtonText.tap()
             
             runner.step("Homescreen") {
                 """
@@ -168,12 +184,11 @@ class PositiveTestResultsFlowTest: XCTestCase {
                 """
             }
             
-            let shareScreen = ShareKeysConfirmationScreen(app: app)
+            let shareScreen = ShareKeysScreen(app: app)
             
             XCTAssertTrue(shareScreen.heading.exists)
             
-            #warning("Find out why it finds multiple elements with the accessibility label continue - it smells like a bug")
-            shareScreen.app.buttons.element(boundBy: 1).tap()
+            shareScreen.continueButton.tap()
             
             runner.step("Share random ids - System Alert") {
                 """
@@ -185,6 +200,15 @@ class PositiveTestResultsFlowTest: XCTestCase {
             let alertScreen = SimulatedShareRandomIdsScreen(app: app)
             alertScreen.shareButton.tap()
             
+            runner.step("Thank you screen") {
+                """
+                The user is presented the thank you message.
+                """
+            }
+            
+            let thankYouScreen = ThankYouScreen(app: app)
+            thankYouScreen.backHomeButtonText.tap()
+            
             runner.step("Homescreen") {
                 """
                 The user is presented the homescreen and is still isolating
@@ -194,5 +218,4 @@ class PositiveTestResultsFlowTest: XCTestCase {
             app.checkOnHomeScreen(postcode: postcode)
         }
     }
-    
 }

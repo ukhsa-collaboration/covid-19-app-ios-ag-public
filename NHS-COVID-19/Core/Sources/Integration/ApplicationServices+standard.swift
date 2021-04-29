@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import BackgroundTasks
@@ -14,7 +14,11 @@ extension ApplicationServices {
     
     private static let logger = Logger(label: "ApplicationServices")
     
-    public convenience init(standardServicesFor environment: Environment, exposureNotificationManager: ExposureNotificationManaging = ENManager()) {
+    public convenience init(
+        standardServicesFor environment: Environment,
+        dateProvider: DateProviding = DateProvider(),
+        exposureNotificationManager: ExposureNotificationManaging = ENManager()
+    ) {
         Self.logger.debug("initialising", metadata: .describing(environment.identifier))
         self.init(
             application: UIApplication.shared,
@@ -37,7 +41,7 @@ extension ApplicationServices {
             venueDecoder: environment.venueDecoder,
             appInfo: environment.appInfo,
             postcodeValidator: PostcodeValidator(),
-            currentDateProvider: DateProvider(),
+            currentDateProvider: dateProvider,
             storeReviewController: StoreReviewController()
         )
     }

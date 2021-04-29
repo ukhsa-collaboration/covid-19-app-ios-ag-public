@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -20,7 +20,7 @@ class ScenarioSelectorAppController: AppController {
             .map { ListSection(scenariosOfKind: $0, select: select, showInfo: { [weak self] info in self?.showInfo(info) }) }
             .filter { !$0.rows.isEmpty }
         
-        let listViewController = ScenarioSelecorViewController(title: "Scenarios", sections: sections)
+        let listViewController = ScenarioSelectorViewController(title: "Scenarios", sections: sections)
         listViewController._openDebug = openDebug
         navigationController.navigationBar.prefersLargeTitles = true
         navigationController.pushViewController(listViewController, animated: false)
@@ -32,7 +32,7 @@ class ScenarioSelectorAppController: AppController {
     
 }
 
-class ScenarioSelecorViewController: ListViewController {
+class ScenarioSelectorViewController: SearchableListViewController {
     
     var _openDebug: () -> Void = {}
     
