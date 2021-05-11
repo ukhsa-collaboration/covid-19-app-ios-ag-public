@@ -49,7 +49,10 @@ public enum ColorName: String, CaseIterable, Identifiable {
     
     case borderColor = "Border color"
     case bookFreeTest = "Book Free Test"
+    case contactTracingHubButton = "Contact Tracing Hub Button"
     
+    case accessibleButtonOutline = "Accessible Button Outline"
+
     public var id: ColorName {
         self
     }

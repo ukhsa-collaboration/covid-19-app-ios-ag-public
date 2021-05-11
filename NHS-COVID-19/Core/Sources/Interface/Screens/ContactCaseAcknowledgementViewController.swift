@@ -39,7 +39,6 @@ private class ContactCaseAcknowledgementContent: PrimaryButtonStickyFooterScroll
             pleaseIsolateStack,
             InformationBox.indication.warning(type.warning),
             type.content,
-            BaseLabel().set(text: localize(.exposure_faqs_link_label)).styleAsBody(),
             LinkButton(
                 title: localize(.exposure_faqs_link_button_title),
                 action: interactor.exposureFAQsLinkTapped

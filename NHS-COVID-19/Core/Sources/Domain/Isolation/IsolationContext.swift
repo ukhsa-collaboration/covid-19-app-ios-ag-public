@@ -82,7 +82,10 @@ struct IsolationContext {
                             Metrics.signpost(.didHaveSymptomsBeforeReceivedTestResult)
                         },
                         setOnsetDay: { onsetDay in
-                            let info = IndexCaseInfo(isolationTrigger: .selfDiagnosis(currentDateProvider.currentGregorianDay(timeZone: .utc)), onsetDay: onsetDay, testInfo: nil)
+                            let info = IndexCaseInfo(
+                                symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: currentDateProvider.currentGregorianDay(timeZone: .utc), onsetDay: onsetDay),
+                                testInfo: nil
+                            )
                             self.isolationStateStore.set(info)
                             Metrics.signpost(.didRememberOnsetSymptomsDateBeforeReceivedTestResult)
                         }

@@ -248,7 +248,7 @@ extension VenueHistoryViewController {
                 .accessibilitySpellOut()
             if let postcode = venueHistory.postcode {
                 postcodeLabel.set(text: postcode)
-                    .accessibilitySpellOut()
+                    .formatAsPostcode()
             } else {
                 postcodeLabel.set(text: localize(.venue_history_postcode_unavailable))
             }

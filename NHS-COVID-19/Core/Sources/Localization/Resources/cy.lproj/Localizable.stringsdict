@@ -2,30 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
-		<key>%ld exposure_notification_reminder_sheet_hours</key>
-		<dict>
-			<key>NSStringLocalizedFormatKey</key>
-			<string>%#@hours@</string>
-			<key>hours</key>
-			<dict>
-				<key>NSStringFormatSpecTypeKey</key>
-				<string>NSStringPluralRuleType</string>
-				<key>NSStringFormatValueTypeKey</key>
-				<string>li</string>
-				<key>zero</key>
-				<string>%ld awr</string>
-				<key>one</key>
-				<string>%ld awr</string>
-				<key>two</key>
-				<string>%ld awr</string>
-				<key>few</key>
-				<string>%ld awr</string>
-				<key>many</key>
-				<string>%ld awr</string>
-				<key>other</key>
-				<string>%ld awr</string>
-			</dict>
-		</dict>
 		<key>exposure_notification_reminder_alert_title %ld hours</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
@@ -240,6 +216,30 @@
 				<string>diwrnod i fynd</string>
 				<key>other</key>
 				<string>diwrnod i fynd</string>
+			</dict>
+		</dict>
+		<key>%ld exposure_notification_reminder_sheet_hours</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@hours@</string>
+			<key>hours</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>zero</key>
+				<string>%li awr</string>
+				<key>one</key>
+				<string>%li awr</string>
+				<key>two</key>
+				<string>%li awr</string>
+				<key>few</key>
+				<string>%li awr</string>
+				<key>many</key>
+				<string>%li awr</string>
+				<key>other</key>
+				<string>%li awr</string>
 			</dict>
 		</dict>
 		<key>positive_test_start_to_isolate_accessibility_label %ld</key>

@@ -55,7 +55,8 @@ public class MyDataViewController: UITableViewController {
         
         public struct TestResultDetails {
             let result: TestResult
-            let date: Date
+            let acknowledgementDate: Date?
+            let testEndDate: Date?
             let testKitType: TestKitType?
             
             public enum ConfirmationStatus: CustomStringConvertible {
@@ -84,9 +85,10 @@ public class MyDataViewController: UITableViewController {
             
             let confirmationStatus: ConfirmationStatus?
             
-            public init(result: TestResult, date: Date, testKitType: TestKitType?, confirmationStatus: ConfirmationStatus?) {
+            public init(result: TestResult, acknowledgementDate: Date, testEndDate: Date?, testKitType: TestKitType?, confirmationStatus: ConfirmationStatus?) {
                 self.result = result
-                self.date = date
+                self.acknowledgementDate = acknowledgementDate
+                self.testEndDate = testEndDate
                 self.testKitType = testKitType
                 self.confirmationStatus = confirmationStatus
             }
@@ -116,7 +118,8 @@ public class MyDataViewController: UITableViewController {
     }
     
     enum RowType {
-        case testDate(Date)
+        case testAcknowledgementDate(Date)
+        case testEndDate(Date)
         case testResult(TestResult)
         case testKitType(TestKitType)
         case confirmationDate(String)
@@ -139,7 +142,12 @@ public class MyDataViewController: UITableViewController {
             Section(
                 header: .basic(title: localize(.mydata_section_test_result_description)),
                 rows: [
-                    .testDate($0.date),
+                    $0.testEndDate.map { testEndDate in
+                        .testEndDate(testEndDate)
+                    },
+                    $0.acknowledgementDate.map { acknowledgementDate in
+                        .testAcknowledgementDate(acknowledgementDate)
+                    },
                     .testResult($0.result),
                     $0.testKitType.map { kitType in
                         .testKitType(kitType)
@@ -225,8 +233,10 @@ public class MyDataViewController: UITableViewController {
     override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: UITableViewCell
         switch content[indexPath.section].rows[indexPath.row] {
-        case .testDate(let date):
-            cell = DateCell.create(tableView: tableView, title: localize(.mydata_test_result_test_date), date: date)
+        case .testAcknowledgementDate(let date):
+            cell = DateCell.create(tableView: tableView, title: localize(.mydata_test_result_test_acknowledgement_date), date: date)
+        case .testEndDate(let date):
+            cell = DateCell.create(tableView: tableView, title: localize(.mydata_test_result_test_end_date), date: date)
         case .testResult(let result):
             cell = TextCell.create(tableView: tableView, title: localize(.mydata_test_result_test_result), value: result.description)
         case .testKitType(let testKitType):

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -7,8 +7,11 @@ import SwiftUI
 
 public struct PausedIndicator: View {
     @Environment(\.accessibilityReduceMotion) var reduceMotion
+    private let turnBackOnTapAction: () -> Void
     
-    fileprivate init() {}
+    fileprivate init(turnBackOnTapAction: @escaping () -> Void) {
+        self.turnBackOnTapAction = turnBackOnTapAction
+    }
     
     public var body: some View {
         VStack {
@@ -37,17 +40,24 @@ public struct PausedIndicator: View {
                 .font(.body)
                 .foregroundColor(Color(.primaryText))
                 .fixedSize(horizontal: false, vertical: true)
+            
+            Button.underlined(
+                text: localize(.risk_level_indicator_contact_tracing_turn_back_on_button),
+                action: turnBackOnTapAction
+            )
+            .foregroundColor(Color(.nhsLightBlue))
+            .font(Font.headline.weight(.bold))
+            .padding(.hairSpacing)
         }
         .contentShape(Rectangle())
-        .accessibility(label: Text(localize(.risk_level_indicator_contact_tracing_not_active)))
-        .accessibility(addTraits: .isImage)
+        .accessibilityElement(children: .contain)
         .frame(height: 280)
         .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }
 }
 
 extension RiskLevelIndicator {
-    static func makePausedIndicator() -> AnyView {
-        AnyView(PausedIndicator())
+    static func makePausedIndicator(turnBackOnTapAction: @escaping () -> Void) -> AnyView {
+        AnyView(PausedIndicator(turnBackOnTapAction: turnBackOnTapAction))
     }
 }

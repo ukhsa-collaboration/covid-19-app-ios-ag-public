@@ -54,7 +54,9 @@ class VenueHistoryScreenTests: XCTestCase {
                 XCTAssertTrue(element.exists)
             }
             for venuePostcode in runner.scenario.venuePostcodes {
-                let element = screen.cellPostcodeLabel(venuePostcode)
+                let formattedPostcode = venuePostcode.map { "\($0.prefix($0.count - 3)) \($0.suffix(3))" }
+                
+                let element = screen.cellPostcodeLabel(formattedPostcode)
                 XCTAssertTrue(element.exists)
             }
         }

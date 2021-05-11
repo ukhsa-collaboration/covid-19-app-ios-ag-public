@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import ArgumentParser
@@ -25,6 +25,7 @@ struct ReportCommand: ParsableCommand {
             GetCommand.self,
             GitTagForNewVersion.self,
             TestResultsSummaryCommand.self,
+            UnusedLocalizableKeysSummaryCommand.self,
         ]
     )
     

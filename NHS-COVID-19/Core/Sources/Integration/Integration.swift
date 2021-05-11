@@ -2,17 +2,16 @@
 // Copyright © 2021 DHSC. All rights reserved.
 //
 
-import Combine
-import Common
 import Domain
 import Interface
 import Localization
 import UIKit
-import UserNotifications
 
 extension CoordinatedAppController {
     
-    func makeContent(for state: ApplicationState) -> UIViewController {
+    func makeContent(
+        for state: ApplicationState
+    ) -> UIViewController {
         switch state {
         case .starting:
             let s = UIStoryboard(name: "LaunchScreen", bundle: nil)
@@ -21,27 +20,35 @@ extension CoordinatedAppController {
         case .appUnavailable(let reason):
             switch reason {
             case .iOSTooOld(let descriptions):
-                let vc = AppAvailabilityErrorViewController(viewModel: .init(errorType: .iOSTooOld, descriptions: descriptions))
+                let vc = AppAvailabilityErrorViewController(
+                    viewModel: .init(errorType: .iOSTooOld, descriptions: descriptions)
+                )
                 return BaseNavigationController(rootViewController: vc)
             case .appTooOld(let updateAvailable, let descriptions):
-                let vc = AppAvailabilityErrorViewController(viewModel: .init(errorType: .appTooOld(updateAvailable: updateAvailable), descriptions: descriptions))
+                let vc = AppAvailabilityErrorViewController(
+                    viewModel: .init(errorType: .appTooOld(updateAvailable: updateAvailable), descriptions: descriptions)
+                )
                 return BaseNavigationController(rootViewController: vc)
             }
             
         case .failedToStart(let openURL):
-            let interactor = UnrecoverableErrorViewControllerInteractor(_openURL: openURL)
+            let interactor = UnrecoverableErrorViewControllerInteractor(openURL: openURL)
             let vc = UnrecoverableErrorViewController(interactor: interactor)
             return BaseNavigationController(rootViewController: vc)
             
         case .onboarding(let complete, let openURL):
             let interactor = OnboardingInteractor(
-                _complete: complete,
-                _openURL: openURL
+                complete: complete,
+                openURL: openURL
             )
             return OnboardingFlowViewController(interactor: interactor)
             
         case .authorizationRequired(let requestPermissions, let country):
-            return PermissionsViewController(country: country.interfaceProperty, submit: requestPermissions)
+            return PermissionsViewController(
+                country: country.interfaceProperty,
+                submit: requestPermissions
+            )
+            
         case .postcodeAndLocalAuthorityRequired(let openURL, let getLocalAuthorities, let storeLocalAuthority):
             let interactor = LocalAuthorityOnboardingInteractor(
                 openURL: openURL,
@@ -49,6 +56,7 @@ extension CoordinatedAppController {
                 storeLocalAuthority: storeLocalAuthority
             )
             return LocalAuthorityFlowViewController(interactor)
+            
         case .localAuthorityRequired(let postcode, let localAuthorities, let openURL, let storeLocalAuthority):
             let localAuthoritiesForPostcode = Dictionary(uniqueKeysWithValues: localAuthorities.map { (UUID(), $0) })
             
@@ -63,34 +71,50 @@ extension CoordinatedAppController {
                 localAuthorities: localAuthoritiesForPostcode.map { Interface.LocalAuthority(id: $0.key, name: $0.value.name) }
             )
             return LocalAuthorityFlowViewController(interactor, viewModel: viewModel)
+            
         case .canNotRunExposureNotification(let reason, let country):
-            var vc: UIViewController
+            let vc: UIViewController
             switch reason {
             case let .authorizationDenied(openSettings):
-                let interactor = AuthorizationDeniedInteractor(_openSettings: openSettings)
-                vc = AuthorizationDeniedViewController(interacting: interactor, country: country)
+                let interactor = AuthorizationDeniedInteractor(openSettings: openSettings)
+                vc = AuthorizationDeniedViewController(
+                    interacting: interactor,
+                    country: country
+                )
             case .bluetoothDisabled:
                 vc = BluetoothDisabledViewController(country: country)
             }
             return BaseNavigationController(rootViewController: vc)
+            
         case .policyAcceptanceRequired(let saveCurrentVersion, let openURL):
             let interactor = PolicyUpdateInteractor(
                 saveCurrentVersion: saveCurrentVersion,
                 openURL: openURL
             )
             return PolicyUpdateViewController(interactor: interactor)
+            
         case .runningExposureNotification(let context):
             return viewControllerForRunningApp(with: context)
+            
         case .recommendedUpdate(let reason):
             switch reason {
             case .newRecommendedAppUpdate(let title, let descriptions, let dismissAction):
-                let vc = AppAvailabilityErrorViewController(viewModel: .init(errorType: .recommendingAppUpdate(title: title), descriptions: descriptions, secondaryBtnAction: dismissAction))
-                return vc
+                return AppAvailabilityErrorViewController(
+                    viewModel: .init(
+                        errorType: .recommendingAppUpdate(title: title),
+                        descriptions: descriptions,
+                        secondaryBtnAction: dismissAction
+                    )
+                )
             case .newRecommendedOSupdate(let title, let descriptions, let dismissAction):
-                let vc = AppAvailabilityErrorViewController(viewModel: .init(errorType: .recommendingOSUpdate(title: title), descriptions: descriptions, secondaryBtnAction: dismissAction))
-                return vc
+                return AppAvailabilityErrorViewController(
+                    viewModel: .init(
+                        errorType: .recommendingOSUpdate(title: title),
+                        descriptions: descriptions,
+                        secondaryBtnAction: dismissAction
+                    )
+                )
             }
-            
         }
     }
     
@@ -111,7 +135,11 @@ extension CoordinatedAppController {
             didTapCancel: acknowledge
         )
         
-        let nonNegativeVC = NonNegativeTestResultWithIsolationViewController(interactor: positiveTestInteractor, isolationEndDate: isolationEndDate, testResultType: .positive(isolation: isolation, requiresConfirmatoryTest: true))
+        let nonNegativeVC = NonNegativeTestResultWithIsolationViewController(
+            interactor: positiveTestInteractor,
+            isolationEndDate: isolationEndDate,
+            testResultType: .positive(isolation: isolation, requiresConfirmatoryTest: true)
+        )
         navigationVC.viewControllers = [nonNegativeVC]
         return navigationVC
     }
@@ -133,30 +161,36 @@ extension CoordinatedAppController {
         )
     }
     
-    private func viewControllerForRunningApp(with context: RunningAppContext) -> UIViewController {
-        return WrappingViewController {
+    private func viewControllerForRunningApp(
+        with context: RunningAppContext
+    ) -> UIViewController {
+        WrappingViewController {
             AcknowledgementNeededState.makeAcknowledgementState(context: context)
                 .regulate(as: .modelChange)
                 .map { [weak self] ackState in
+                    
                     guard let self = self else { return UIViewController() }
-                    guard let state = ackState else {
-                        return self.wrappingViewControllerForRunningAppIgnoringAcknowledgement(
+                    
+                    if let ackState = ackState {
+                        return self.acknowledgementViewController(
+                            for: ackState,
+                            context: context
+                        )
+                    } else {
+                        return self.postAcknowledgementViewController(
                             with: context
                         )
                     }
-                    return self.viewController(
-                        for: state,
-                        context: context
-                    )
                 }
         }
     }
     
-    private func viewController(
+    private func acknowledgementViewController(
         for state: AcknowledgementNeededState,
         context: RunningAppContext
     ) -> UIViewController {
         switch state {
+            
         case .neededForPositiveResultStartToIsolate(let acknowledge, let isolationEndDate, let requiresConfirmatoryTest):
             if requiresConfirmatoryTest {
                 return createBookFollowUpTestFlow(
@@ -173,6 +207,7 @@ extension CoordinatedAppController {
                     isolationEndDate: isolationEndDate
                 )
             }
+            
         case .neededForPositiveResultContinueToIsolate(let acknowledge, let isolationEndDate, let requiresConfirmatoryTest):
             if case .isolate(let isolation) = context.isolationState.currentValue,
                 isolation.hasConfirmedPositiveTestResult, requiresConfirmatoryTest {
@@ -180,7 +215,11 @@ extension CoordinatedAppController {
                     openURL: context.openURL,
                     didTapPrimaryButton: acknowledge
                 )
-                return NonNegativeTestResultWithIsolationViewController(interactor: positiveTestResultWithIsolationInteractor, isolationEndDate: isolationEndDate, testResultType: .positiveButAlreadyConfirmedPositive)
+                return NonNegativeTestResultWithIsolationViewController(
+                    interactor: positiveTestResultWithIsolationInteractor,
+                    isolationEndDate: isolationEndDate,
+                    testResultType: .positiveButAlreadyConfirmedPositive
+                )
             }
             
             if requiresConfirmatoryTest {
@@ -197,18 +236,29 @@ extension CoordinatedAppController {
                     isolationEndDate: isolationEndDate
                 )
             }
+            
         case .neededForPositiveResultNotIsolating(let acknowledge):
             let interactor = PositiveTestResultNoIsolationInteractor(
                 openURL: context.openURL,
                 didTapPrimaryButton: acknowledge
             )
             return NonNegativeTestResultNoIsolationViewController(interactor: interactor)
+            
         case .neededForNegativeResultContinueToIsolate(let interactor, let isolationEndDate):
-            return NegativeTestResultWithIsolationViewController(interactor: interactor, viewModel: .init(isolationEndDate: isolationEndDate, testResultType: .firstResult))
+            return NegativeTestResultWithIsolationViewController(
+                interactor: interactor,
+                viewModel: .init(isolationEndDate: isolationEndDate, testResultType: .firstResult)
+            )
+            
         case .neededForNegativeResultNotIsolating(let interactor):
             return NegativeTestResultNoIsolationViewController(interactor: interactor)
+            
         case .neededForNegativeAfterPositiveResultContinueToIsolate(interactor: let interactor, isolationEndDate: let isolationEndDate):
-            return NegativeTestResultWithIsolationViewController(interactor: interactor, viewModel: .init(isolationEndDate: isolationEndDate, testResultType: .afterPositive))
+            return NegativeTestResultWithIsolationViewController(
+                interactor: interactor,
+                viewModel: .init(isolationEndDate: isolationEndDate, testResultType: .afterPositive)
+            )
+            
         case .neededForEndOfIsolation(let interactor, let isolationEndDate, let isIndexCase):
             return EndOfIsolationViewController(
                 interactor: interactor,
@@ -216,6 +266,7 @@ extension CoordinatedAppController {
                 isIndexCase: isIndexCase,
                 currentDateProvider: context.currentDateProvider
             )
+            
         case .neededForStartOfIsolationExposureDetection(let interactor, let isolationEndDate, let showDailyContactTesting):
             return ContactCaseAcknowledgementViewController(
                 interactor: interactor,
@@ -223,13 +274,17 @@ extension CoordinatedAppController {
                 type: .exposureDetection,
                 showDailyContactTesting: showDailyContactTesting
             )
+            
         case .neededForRiskyVenue(let interactor, let venueName, let checkInDate):
             return RiskyVenueInformationViewController(
                 interactor: interactor,
                 viewModel: .init(venueName: venueName, checkInDate: checkInDate)
             )
+            
         case .neededForRiskyVenueWarnAndBookATest(let acknowledge, _, _):
+            
             let navigationVC = BaseNavigationController()
+            
             let interactor = RiskyVenueInformationBookATestInteractor(
                 bookATestTapped: {
                     let virologyInteractor = VirologyTestingFlowInteractor(
@@ -246,15 +301,20 @@ extension CoordinatedAppController {
                         openURL: context.openURL
                     )
                     
-                    let bookATestInfoVC = BookATestInfoViewController(interactor: bookATestInfoInteractor, shouldHaveCancelButton: false)
+                    let bookATestInfoVC = BookATestInfoViewController(
+                        interactor: bookATestInfoInteractor,
+                        shouldHaveCancelButton: false
+                    )
                     navigationVC.pushViewController(bookATestInfoVC, animated: true)
                 }, goHomeTapped: {
                     acknowledge()
                 }
             )
+            
             let riskyVenueInformationBookATestViewController = RiskyVenueInformationBookATestViewController(interactor: interactor)
             navigationVC.viewControllers = [riskyVenueInformationBookATestViewController]
             return navigationVC
+            
         case .neededForVoidResultContinueToIsolate(let interactor, let isolationEndDate):
             
             let navigationVC = BaseNavigationController()
@@ -268,10 +328,14 @@ extension CoordinatedAppController {
                 didTapCancel: interactor.acknowledge
             )
             
-            let nonNegativeVC = NonNegativeTestResultWithIsolationViewController(interactor: nonNegativeInteractor, isolationEndDate: isolationEndDate, testResultType: .void)
-            
+            let nonNegativeVC = NonNegativeTestResultWithIsolationViewController(
+                interactor: nonNegativeInteractor,
+                isolationEndDate: isolationEndDate,
+                testResultType: .void
+            )
             navigationVC.viewControllers = [nonNegativeVC]
             return navigationVC
+            
         case .neededForVoidResultNotIsolating(let interactor):
             let navigationVC = BaseNavigationController()
             
@@ -284,10 +348,13 @@ extension CoordinatedAppController {
                 openURL: context.openURL
             )
             
-            let nonNegativeVC = NonNegativeTestResultNoIsolationViewController(interactor: nonNegativeInteractor, testResultType: .void)
-            
+            let nonNegativeVC = NonNegativeTestResultNoIsolationViewController(
+                interactor: nonNegativeInteractor,
+                testResultType: .void
+            )
             navigationVC.viewControllers = [nonNegativeVC]
             return navigationVC
+            
         case .askForSymptomsOnsetDay(let testEndDay, let didFinishAskForSymptomsOnsetDay, let didConfirmSymptoms, let setOnsetDay):
             return SymptomsOnsetDayFlowViewController(
                 testEndDay: testEndDay,
@@ -298,10 +365,10 @@ extension CoordinatedAppController {
         }
     }
     
-    private func wrappingViewControllerForRunningAppIgnoringAcknowledgement(
+    private func postAcknowledgementViewController(
         with context: RunningAppContext
     ) -> UIViewController {
-        WrappingViewController { [showBookATest] in
+        WrappingViewController { [showBookATest, showContactTracingHub] in
             Localization.configurationChangePublisher
                 .map { _ in true }
                 .prepend(false)
@@ -309,7 +376,8 @@ extension CoordinatedAppController {
                     PostAcknowledgementViewController(
                         context: context,
                         shouldShowLanguageSelectionScreen: value,
-                        showBookATest: showBookATest
+                        showBookATest: showBookATest,
+                        showContactTracingHub: showContactTracingHub
                     )
                 }
         }
@@ -318,32 +386,28 @@ extension CoordinatedAppController {
 
 private struct OnboardingInteractor: OnboardingFlowViewController.Interacting {
     
-    var _complete: () -> Void
-    let _openURL: (URL) -> Void
-    
-    func complete() {
-        _complete()
-    }
+    var complete: () -> Void
+    let openURL: (URL) -> Void
     
     func didTapPrivacyNotice() {
-        _openURL(ExternalLink.privacy.url)
+        openURL(ExternalLink.privacy.url)
     }
     
     func didTapTermsOfUse() {
-        _openURL(ExternalLink.ourPolicies.url)
+        openURL(ExternalLink.ourPolicies.url)
     }
     
     func didTapAgree() {
-        _complete()
+        complete()
     }
 }
 
 private struct AuthorizationDeniedInteractor: AuthorizationDeniedViewController.Interacting {
     
-    var _openSettings: () -> Void
+    var openSettings: () -> Void
     
     func didTapSettings() {
-        _openSettings()
+        openSettings()
     }
 }
 
@@ -378,7 +442,9 @@ class LocalAuthorityOnboardingInteractor: LocalAuthorityFlowViewController.Inter
         self.storeLocalAuthority = storeLocalAuthority
     }
     
-    func localAuthorities(for postcode: String) -> Result<[Interface.LocalAuthority], DisplayableError> {
+    func localAuthorities(
+        for postcode: String
+    ) -> Result<[Interface.LocalAuthority], DisplayableError> {
         return getLocalAuthorities(Postcode(postcode))
             .map { authoritySet in
                 self.postcode = Postcode(postcode)
@@ -390,7 +456,9 @@ class LocalAuthorityOnboardingInteractor: LocalAuthorityFlowViewController.Inter
             .mapError(DisplayableError.init)
     }
     
-    func confirmLocalAuthority(_ localAuthority: Interface.LocalAuthority?) -> Result<Void, LocalAuthoritySelectionError> {
+    func confirmLocalAuthority(
+        _ localAuthority: Interface.LocalAuthority?
+    ) -> Result<Void, LocalAuthoritySelectionError> {
         if let localAuthority = localAuthority {
             if let postcode = self.postcode,
                 let authority = localAuthoritiesForPostcode?[localAuthority.id] {
@@ -430,12 +498,16 @@ private struct LocalAuthorityUpdateInteractor: LocalAuthorityFlowViewController.
     }
     
     #warning("Find a better way to avoid implementing this function")
-    func localAuthorities(for postcode: String) -> Result<[Interface.LocalAuthority], DisplayableError> {
+    func localAuthorities(
+        for postcode: String
+    ) -> Result<[Interface.LocalAuthority], DisplayableError> {
         assertionFailure("This should never be called.")
         return Result.success(localAuthoritiesForPostcode.map { Interface.LocalAuthority(id: $0.key, name: $0.value.name) })
     }
     
-    func confirmLocalAuthority(_ localAuthority: Interface.LocalAuthority?) -> Result<Void, LocalAuthoritySelectionError> {
+    func confirmLocalAuthority(
+        _ localAuthority: Interface.LocalAuthority?
+    ) -> Result<Void, LocalAuthoritySelectionError> {
         if let localAuthority = localAuthority {
             if let authority = localAuthoritiesForPostcode[localAuthority.id] {
                 return storeLocalAuthority(postcode, authority).mapError(LocalAuthoritySelectionError.init)
@@ -461,10 +533,10 @@ extension LocalAuthoritySelectionError {
 
 private struct UnrecoverableErrorViewControllerInteractor: UnrecoverableErrorViewControllerInteracting {
     
-    let _openURL: (URL) -> Void
+    let openURL: (URL) -> Void
     
     func faqLinkTapped() {
-        _openURL(ExternalLink.cantRunThisAppFAQs.url)
+        openURL(ExternalLink.cantRunThisAppFAQs.url)
     }
 }
 

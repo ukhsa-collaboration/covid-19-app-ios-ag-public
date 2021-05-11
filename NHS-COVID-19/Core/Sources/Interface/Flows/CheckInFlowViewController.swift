@@ -52,6 +52,8 @@ public class CheckInFlowViewController: BaseNavigationController {
     private var currentDateProvider: DateProviding
     private let goHomeCompletion: () -> Void
     
+    private weak var scannerViewController: QRCodeScannerViewController?
+    
     public init(cameraPermissionState: AnyPublisher<CameraPermissionState, Never>,
                 scanner: QRScanner,
                 interactor: Interacting,
@@ -129,6 +131,7 @@ public class CheckInFlowViewController: BaseNavigationController {
             DispatchQueue.main.async {
                 self.setOverrideTraitCollection(UITraitCollection(userInterfaceStyle: .light), forChild: vc)
             }
+            scannerViewController = vc
             return vc
         case .permissionDenied:
             return CameraAccessDeniedViewController(interactor: interactor)
@@ -175,7 +178,10 @@ extension CheckInFlowViewController: CameraFailureViewController.Interacting, Sc
         present(viewController, animated: true, completion: nil)
     }
     
-    public func didTapDismiss() {
-        dismiss(animated: true, completion: nil)
+    public func didTapDismiss() { // e.g. dismissHelp
+        dismiss(animated: true, completion: { [weak self] in
+            #warning("We need a cleaner way of communicating that the scanner window has become visible again or stopping/starting the camera when the help screen is shown")
+            self?.scannerViewController?.announceCameraIfRunning()
+        })
     }
 }

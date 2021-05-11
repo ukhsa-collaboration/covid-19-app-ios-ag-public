@@ -59,6 +59,8 @@
 		5F2E86F225C9C191000D8DD3 /* BehaviourModels in Frameworks */ = {isa = PBXBuildFile; productRef = 5F2E86F125C9C191000D8DD3 /* BehaviourModels */; };
 		5F91F20C25F2592A00A5FD94 /* success.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5F91F20525F258B800A5FD94 /* success.mp3 */; };
 		5F91F23425F275C800A5FD94 /* heartbeats.ahap in Resources */ = {isa = PBXBuildFile; fileRef = 5F91F23325F275C800A5FD94 /* heartbeats.ahap */; };
+		5FFF6351263AA72700BA77A2 /* ContactTracingHubScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FFF6350263AA72700BA77A2 /* ContactTracingHubScreen.swift */; };
+		5FFF635D263AA80400BA77A2 /* ContactTracingHubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FFF635C263AA80300BA77A2 /* ContactTracingHubTests.swift */; };
 		7F59ECF024C9D85C002987D3 /* MyDataScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F59ECEF24C9D85C002987D3 /* MyDataScreen.swift */; };
 		7F8C1A1324CEFFC30036417D /* CameraFailureScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8C1A1224CEFFC30036417D /* CameraFailureScreen.swift */; };
 		7F95D6C424D02CDD009C3B70 /* RiskyVenueInformationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F95D6C324D02CDD009C3B70 /* RiskyVenueInformationScreen.swift */; };
@@ -283,6 +285,8 @@
 		5F47A06925CC0B33006F4890 /* IsolationModelPreviews.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = IsolationModelPreviews.xcconfig; sourceTree = "<group>"; };
 		5F91F20525F258B800A5FD94 /* success.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = success.mp3; sourceTree = "<group>"; };
 		5F91F23325F275C800A5FD94 /* heartbeats.ahap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = heartbeats.ahap; sourceTree = "<group>"; };
+		5FFF6350263AA72700BA77A2 /* ContactTracingHubScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactTracingHubScreen.swift; sourceTree = "<group>"; };
+		5FFF635C263AA80300BA77A2 /* ContactTracingHubTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactTracingHubTests.swift; sourceTree = "<group>"; };
 		7F59ECEF24C9D85C002987D3 /* MyDataScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyDataScreen.swift; sourceTree = "<group>"; };
 		7F8C1A1224CEFFC30036417D /* CameraFailureScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraFailureScreen.swift; sourceTree = "<group>"; };
 		7F95D6C324D02CDD009C3B70 /* RiskyVenueInformationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskyVenueInformationScreen.swift; sourceTree = "<group>"; };
@@ -648,6 +652,7 @@
 				94AA418224C187980073E493 /* LoadingFailedScreenTests.swift */,
 				89A012AD24C4AE4000D159A9 /* EndOfIsolationScreenTests.swift */,
 				13DC05EC24C6055500E4D5BC /* CheckInConfirmationScreenTests.swift */,
+				5FFF635C263AA80300BA77A2 /* ContactTracingHubTests.swift */,
 				9485D9D824C8691800215CAB /* PositiveTestResultContinueIsolationScreenTests.swift */,
 				DD7CDD3B250A3863001DFB74 /* PositiveTestResultStartIsolationScreenTests.swift */,
 				222C188E24F01B37002C6CF6 /* VoidTestResultWithIsolationScreenTests.swift */,
@@ -963,6 +968,7 @@
 				8B84BE712587E3850008E74D /* LanguageSelectionScreen.swift */,
 				FD3BB7D525EE941A003ADF9B /* VenueHistoryScreen.swift */,
 				FDA5099F25FA22A400FADFA3 /* ContactCaseAcknowledgementScreen.swift */,
+				5FFF6350263AA72700BA77A2 /* ContactTracingHubScreen.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -971,7 +977,6 @@
 			isa = PBXGroup;
 			children = (
 				8B82B3B72600C73700A87955 /* ShareKeysScreen.swift */,
-
 				228071B3261E3FD600486992 /* ShareKeysReminderScreen.swift */,
 			);
 			path = StopTheSpread;
@@ -1484,6 +1489,7 @@
 				22B2D35624D1E47100814CEC /* NoSymptomsIsolatingScreenTests.swift in Sources */,
 				2273582525EEA2FE003C86DE /* MyAreaScreen.swift in Sources */,
 				0805240B25CAF06B001E0FF6 /* TestSymptomsReviewScreenTests.swift in Sources */,
+				5FFF6351263AA72700BA77A2 /* ContactTracingHubScreen.swift in Sources */,
 				133E8D5124CCA675002828DB /* BookATestScreenTests.swift in Sources */,
 				222C189124F01BD4002C6CF6 /* VoidTestResultWithIsolationScreen.swift in Sources */,
 				FDA9C8952554411B006E442E /* EditPostcodeFlowTests.swift in Sources */,
@@ -1543,6 +1549,7 @@
 				8955AA442463051E00D5EB3F /* HomeScreenTests.swift in Sources */,
 				7FF67E8724B4BA370097F2A0 /* QRCodeScannerScreenTests.swift in Sources */,
 				13DC05EF24C605AF00E4D5BC /* CheckInConfirmationScreen.swift in Sources */,
+				5FFF635D263AA80400BA77A2 /* ContactTracingHubTests.swift in Sources */,
 				DD7CDD3A250A376B001DFB74 /* PositiveTestResultStartIsolationScreen.swift in Sources */,
 				7FF67E8524B4A4E10097F2A0 /* CameraAccessDeniedScreen.swift in Sources */,
 				95004B0125078C0E00BD6F76 /* NegativeAfterPositiveTestResultScreen.swift in Sources */,

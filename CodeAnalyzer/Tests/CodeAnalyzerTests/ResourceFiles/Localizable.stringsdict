@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>%ld exposure_notification_reminder_sheet_hours</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@hours@</string>
+		<key>hours</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>li</string>
+			<key>zero</key>
+			<string>%ld ساعة&quot;،&quot;غير ذلك</string>
+			<key>one</key>
+			<string>%ld ساعة&quot;،&quot;غير ذلك</string>
+			<key>two</key>
+			<string>%ld ساعة&quot;،&quot;غير ذلك</string>
+			<key>few</key>
+			<string>%ld ساعة&quot;،&quot;غير ذلك</string>
+			<key>many</key>
+			<string>%ld ساعة&quot;،&quot;غير ذلك</string>
+			<key>other</key>
+			<string>%ld ساعة&quot;،&quot;غير ذلك</string>
+		</dict>
+	</dict>
+	<key>exposure_notification_reminder_alert_title %ld hours</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@hours@</string>
+		<key>hours</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>li</string>
+			<key>zero</key>
+			<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة</string>
+			<key>one</key>
+			<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة</string>
+			<key>two</key>
+			<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة</string>
+			<key>few</key>
+			<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة</string>
+			<key>many</key>
+			<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة</string>
+			<key>other</key>
+			<string>ضبط رسالة التذكير لتشغيل خاصية تتبع الاتصال مرة أخرى خلال %ld ساعة</string>
+		</dict>
+	</dict>
+	<key>positive_test_please_isolate_accessibility_label %ld</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@days@</string>
+		<key>days</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>li</string>
+			<key>zero</key>
+			<string>الاستمرار في العزل الذاتي لمدة %ld يوم</string>
+			<key>one</key>
+			<string>الاستمرار في العزل الذاتي لمدة %ld يوم</string>
+			<key>two</key>
+			<string>الاستمرار في العزل الذاتي لمدة %ld يوم</string>
+			<key>few</key>
+			<string>الاستمرار في العزل الذاتي لمدة %ld يوم</string>
+			<key>many</key>
+			<string>الاستمرار في العزل الذاتي لمدة %ld يوم</string>
+			<key>other</key>
+			<string>الاستمرار في العزل الذاتي لمدة %ld يوم</string>
+		</dict>
+	</dict>
+	<key>isolation_indicator_accessiblity_label days: %ld date: %@ time: %@</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@days@</string>
+		<key>days</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>li</string>
+			<key>zero</key>
+			<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld يمكنك الخروج الآن.</string>
+			<key>one</key>
+			<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld تبقى يوم واحد للخروج.</string>
+			<key>two</key>
+			<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld تبقى يومين للخروج.</string>
+			<key>few</key>
+			<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld أيام للخروج.</string>
+			<key>many</key>
+			<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld أيام للخروج.</string>
+			<key>other</key>
+			<string>تحتاج إلى عزل نفسك ذاتيًا حتى %2$@ في تمام الساعة %3$@. %1$ld أيام للخروج.</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

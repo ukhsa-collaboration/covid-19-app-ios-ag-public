@@ -2,22 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
-		<key>%ld exposure_notification_reminder_sheet_hours</key>
-		<dict>
-			<key>NSStringLocalizedFormatKey</key>
-			<string>%#@hours@</string>
-			<key>hours</key>
-			<dict>
-				<key>NSStringFormatSpecTypeKey</key>
-				<string>NSStringPluralRuleType</string>
-				<key>NSStringFormatValueTypeKey</key>
-				<string>li</string>
-				<key>one</key>
-				<string>%ld saat</string>
-				<key>other</key>
-				<string>%ld saat</string>
-			</dict>
-		</dict>
 		<key>exposure_notification_reminder_alert_title %ld hours</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
@@ -160,6 +144,22 @@
 				<string>kalan gün</string>
 				<key>other</key>
 				<string>kalan günler</string>
+			</dict>
+		</dict>
+		<key>%ld exposure_notification_reminder_sheet_hours</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@hours@</string>
+			<key>hours</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%li saat</string>
+				<key>other</key>
+				<string>%li saat</string>
 			</dict>
 		</dict>
 		<key>positive_test_start_to_isolate_accessibility_label %ld</key>

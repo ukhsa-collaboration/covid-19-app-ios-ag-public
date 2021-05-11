@@ -30,7 +30,7 @@ public class MockScenario: Scenario {
 private extension ApplicationServices {
     
     private convenience init(simulatedENServicesFor environment: Environment) {
-        let dateProvider = DateProvider()
+        let dateProvider = AdjustableDateProvider()
         self.init(
             standardServicesFor: environment,
             dateProvider: dateProvider,
@@ -45,7 +45,7 @@ private extension ApplicationServices {
         if MockScenario.mockDataProvider.useFakeENContacts {
             self.init(simulatedENServicesFor: environment)
         } else {
-            self.init(standardServicesFor: environment)
+            self.init(standardServicesFor: environment, dateProvider: AdjustableDateProvider())
         }
         #endif
     }

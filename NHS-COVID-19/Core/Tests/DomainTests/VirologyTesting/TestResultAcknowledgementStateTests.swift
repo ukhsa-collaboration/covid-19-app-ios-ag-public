@@ -12,8 +12,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
     
     override func setUp() {
         indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(.today),
-            onsetDay: nil,
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: .today, onsetDay: nil),
             testInfo: nil
         )
     }

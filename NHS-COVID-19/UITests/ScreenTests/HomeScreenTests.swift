@@ -52,16 +52,6 @@ class SuccessHomeScreenTests: XCTestCase {
         }
     }
     
-    func testExposureNotificationToggle() throws {
-        try runner.run { app in
-            let screen = HomeScreen(app: app)
-            
-            let exposureToggleAction = app.staticTexts[HomeScreenAlerts.exposureNotificationAlertTitle]
-            screen.exposureNotificationSwitch.tap()
-            XCTAssert(exposureToggleAction.displayed)
-        }
-    }
-    
     func testAdviceButton() throws {
         try runner.run { app in
             let screen = HomeScreen(app: app)
@@ -103,6 +93,17 @@ class SuccessHomeScreenTests: XCTestCase {
             app.scrollTo(element: screen.settingsButton)
             screen.settingsButton.tap()
             XCTAssert(settingsButtonAction.displayed)
+        }
+    }
+
+    func testContactTracingHubButton() throws {
+        try runner.run { app in
+            let screen = HomeScreen(app: app)
+            
+            let contactTracingHubButtonAction = app.staticTexts[HomeScreenAlerts.contactTracingHubAlertTitle]
+            app.scrollTo(element: screen.contactTracingHubButton)
+            screen.contactTracingHubButton.tap()
+            XCTAssert(contactTracingHubButtonAction.displayed)
         }
     }
 }

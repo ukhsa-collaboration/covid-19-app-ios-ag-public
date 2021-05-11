@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Integration
@@ -34,6 +34,12 @@ class AssuranceFunctionalEnvironmentScenario: EnvironmentScenario {
     static let name = "Assurance Functional"
     static let configuration = EnvironmentConfiguration.assuranceFunctional
     static var nameForSorting: String { "4" }
+}
+
+class SitEnvironmentScenario: EnvironmentScenario {
+    static let name = "SIT"
+    static let configuration = EnvironmentConfiguration.sit
+    static var nameForSorting: String { "4.1" }
 }
 
 class PenTestEnvironmentScenario: EnvironmentScenario {

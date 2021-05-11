@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+# Replaces ~ prefix with [COV-xxxx] to commit message.
+# JIRA id parsed from current branch name.
+
+if ARGV.empty?
+  # [WARNING] prepare-commit-msg hook: Need arguments
+  # Don't use 'puts' function because it leads to an error when use Xcode's Source Control tool
+  exit
+end
+
+commit_msg_file_path = ARGV[0]
+commit_msg = File.read(commit_msg_file_path)
+
+branch_name = %x(git branch --show-current).strip
+jira_task_branch_matches = branch_name.match(/COV-\d+/)
+
+if jira_task_branch_matches.nil?
+  # [WARNING] prepare-commit-msg hook isn't used because your branch name doesn't contain 'COV-xxxx' substring
+  # Don't use 'puts' function because it leads to an error when use Xcode's Source Control tool
+
+  if commit_msg.start_with?("~") # remove ~ if branch name doesn't contain Jira ID
+    commit_msg[0] = ''
+    commit_msg = commit_msg.strip
+    File.write(commit_msg_file_path, commit_msg)
+  end
+
+  exit
+end
+
+if !commit_msg.start_with?("~")
+  # [WARNING] prepare-commit-msg hook isn't used because your commit message doesn't start with tilde sign (e.g. "~ Your message")
+  # Don't use 'puts' function because it leads to an error when use Xcode's Source Control tool
+  exit
+end
+
+jira_task = jira_task_branch_matches[0]
+commit_msg[0] = "[#{jira_task}]"
+File.write(commit_msg_file_path, commit_msg)

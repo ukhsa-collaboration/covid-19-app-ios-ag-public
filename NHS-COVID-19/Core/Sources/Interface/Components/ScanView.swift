@@ -12,11 +12,11 @@ class ScanView: UIView {
     static let scanWindowWidthRatio: CGFloat = 0.85
     static let scanWindowCornerRadius: CGFloat = 16.0
     
-    var scanWindowBound: CGRect {
+    private var scanWindowBound: CGRect {
         CGRect(x: scanWindowX, y: scanWindowY, width: scanWindowWidth, height: scanWindowHeight)
     }
     
-    var helpHandler: () -> Void
+    private var helpHandler: () -> Void
     
     private var scanWindowWidth: CGFloat = 0
     private var scanWindowHeight: CGFloat = 0
@@ -25,8 +25,9 @@ class ScanView: UIView {
     
     private var cancellable: AnyCancellable?
     
-    var cameraState: AnyPublisher<QRScanner.State, Never>
-    
+    private var cameraState: AnyPublisher<QRScanner.State, Never>
+    private var announceable: Bool = false
+
     private lazy var titleLabel: UIView = {
         let titleLabel = BaseLabel()
         titleLabel.text = localize(.checkin_camera_qrcode_scanner_title)
@@ -64,7 +65,9 @@ class ScanView: UIView {
     private lazy var helpButton: UIView = {
         let helpButton = UIButton()
         helpButton.layer.cornerRadius = .buttonCornerRadius
-        helpButton.backgroundColor = UIColor(white: 1, alpha: 0.2)
+        helpButton.layer.borderWidth = 1
+        helpButton.layer.borderColor = UIColor(.accessibleButtonOutline).cgColor
+        helpButton.backgroundColor = .clear
         
         helpButton.contentEdgeInsets = UIEdgeInsets(
             top: .halfSpacing,
@@ -137,6 +140,7 @@ class ScanView: UIView {
         super.draw(rect)
         calculateScanWindow()
         drawScanWindow(rect)
+        #warning("we shouldn't be doing ui setup and config in the draw() method, layoutSubviews() is more appropriate")
         setupUI()
         setupBindings()
     }
@@ -180,7 +184,11 @@ class ScanView: UIView {
     }
     
     private func setupBindings() {
+        guard cancellable == nil else {
+            return
+        }
         cancellable = cameraState.sink { [weak self] state in
+            self?.announceable = state == .running
             switch state {
             case .starting:
                 self?.backgroundColor = .black
@@ -196,6 +204,7 @@ class ScanView: UIView {
             case .running:
                 self?.backgroundColor = .clear
                 self?.statusLabel.text = localize(.qrcoder_scanner_status_running)
+                self?.cameraActiveAnnouncement()
             case .stopped:
                 self?.statusLabel.text = localize(.qrcoder_scanner_status_stopped)
             }
@@ -204,6 +213,16 @@ class ScanView: UIView {
     
     @objc private func helpTapped() {
         helpHandler()
+    }
+    
+    func cameraActiveAnnouncement() {
+        #warning("Try and figure out how to defer an announcement until after the system has described the first UI element, usually the Close button")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+            guard self?.announceable == true else {
+                return
+            }
+            UIAccessibility.post(notification: .announcement, argument: NSAttributedString(string: localize(.camera_active_accessibility_announcement), attributes: [.accessibilitySpeechLanguage: currentLocaleIdentifier()]))
+        }
     }
 }
 

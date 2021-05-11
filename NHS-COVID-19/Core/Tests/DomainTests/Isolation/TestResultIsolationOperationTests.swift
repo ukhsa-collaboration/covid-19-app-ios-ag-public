@@ -66,8 +66,7 @@ class TestResultIsolationOperationTests: XCTestCase {
         
         // Given
         let isolationInfo = IsolationInfo(indexCaseInfo: IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: nil,
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
             testInfo: nil
         ), contactCaseInfo: nil)
         
@@ -96,8 +95,7 @@ class TestResultIsolationOperationTests: XCTestCase {
         
         // Given
         let isolationInfo = IsolationInfo(indexCaseInfo: IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: nil,
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
             testInfo: nil
         ), contactCaseInfo: nil)
         
@@ -125,13 +123,13 @@ class TestResultIsolationOperationTests: XCTestCase {
         let secondRapidTestReceivedDay = LocalDay.today
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: firstRapidTestNpexDay),
-            onsetDay: nil,
+            symptomaticInfo: nil,
             testInfo: IndexCaseInfo.TestInfo(
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
-                receivedOnDay: firstRapidTestReceivedDay
+                receivedOnDay: firstRapidTestReceivedDay,
+                testEndDay: firstRapidTestNpexDay
             )
         )
         
@@ -163,13 +161,13 @@ class TestResultIsolationOperationTests: XCTestCase {
         let secondRapidTestReceivedDay = GregorianDay(year: 2020, month: 7, day: 20)
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: firstRapidTestNpexDay),
-            onsetDay: nil,
+            symptomaticInfo: nil,
             testInfo: IndexCaseInfo.TestInfo(
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
-                receivedOnDay: firstRapidTestReceivedDay
+                receivedOnDay: firstRapidTestReceivedDay,
+                testEndDay: firstRapidTestNpexDay
             )
         )
         
@@ -201,13 +199,13 @@ class TestResultIsolationOperationTests: XCTestCase {
         let secondRapidTestReceivedDay = LocalDay.today.gregorianDay
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: firstRapidTestNpexDay),
-            onsetDay: nil,
+            symptomaticInfo: nil,
             testInfo: IndexCaseInfo.TestInfo(
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: false,
-                receivedOnDay: firstRapidTestReceivedDay
+                receivedOnDay: firstRapidTestReceivedDay,
+                testEndDay: firstRapidTestNpexDay
             )
         )
         
@@ -235,9 +233,8 @@ class TestResultIsolationOperationTests: XCTestCase {
     func testShouldStartIsolationBecauseOfPositiveTestResultRequiresConfirmatoryTestAfterBeingRecentlyReleasedFromIsolation() {
         let npexDay = LocalDay.today.advanced(by: -15)
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: npexDay.gregorianDay),
-            onsetDay: nil,
-            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: .today)
+            symptomaticInfo: nil,
+            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
         )
         let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
         
@@ -288,15 +285,16 @@ class TestResultIsolationOperationTests: XCTestCase {
     
     func testNotOverwritePositiveTestResult() throws {
         let testDay = GregorianDay(year: 2020, month: 7, day: 13)
+        let testEndDay = GregorianDay(year: 2020, month: 7, day: 16)
         
         let isolationInfo = IsolationInfo(indexCaseInfo: IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: GregorianDay(year: 2020, month: 7, day: 16)),
-            onsetDay: nil,
+            symptomaticInfo: nil,
             testInfo: IndexCaseInfo.TestInfo(
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
-                receivedOnDay: testDay
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
             )
         ), contactCaseInfo: nil)
         
@@ -341,9 +339,8 @@ class TestResultIsolationOperationTests: XCTestCase {
         
         // Given
         let isolationInfo = IsolationInfo(indexCaseInfo: IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(testReceivedDay.advanced(by: -2)),
-            onsetDay: nil,
-            testInfo: IndexCaseInfo.TestInfo(result: .negative, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: testReceivedDay.advanced(by: -1))
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: testReceivedDay.advanced(by: -2), onsetDay: nil),
+            testInfo: IndexCaseInfo.TestInfo(result: .negative, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: testReceivedDay.advanced(by: -1), testEndDay: nil)
         ), contactCaseInfo: nil)
         
         // When
@@ -366,17 +363,17 @@ class TestResultIsolationOperationTests: XCTestCase {
     
     func testNewTestResultShouldBeIgnoredWhenNewTestResultIsPositiveAndPreviousTestResultIsPositive() throws {
         let testDay = GregorianDay(year: 2020, month: 7, day: 16)
-        let selfDiagnosisDay = testDay.advanced(by: -6)
+        let testEndDay = testDay.advanced(by: -6)
         
         // Given
         let isolationInfo = IsolationInfo(indexCaseInfo: IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: selfDiagnosisDay),
-            onsetDay: nil,
+            symptomaticInfo: nil,
             testInfo: IndexCaseInfo.TestInfo(
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
-                receivedOnDay: testDay.advanced(by: -4)
+                receivedOnDay: testDay.advanced(by: -4),
+                testEndDay: testEndDay
             )
         ), contactCaseInfo: nil)
         
@@ -400,16 +397,16 @@ class TestResultIsolationOperationTests: XCTestCase {
     
     func testNewTestResultShouldBeSavedWhenNewTestResultIsPositiveAndPreviousTestResultIsVoid() throws {
         let testDay = LocalDay.today.gregorianDay
-        let selfDiagnosisDay = testDay.advanced(by: -6)
+        let testEndDay = testDay.advanced(by: -6)
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: selfDiagnosisDay),
-            onsetDay: nil,
+            symptomaticInfo: nil,
             testInfo: IndexCaseInfo.TestInfo(
                 result: .void,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
-                receivedOnDay: testDay.advanced(by: -4)
+                receivedOnDay: testDay.advanced(by: -4),
+                testEndDay: testEndDay
             )
         )
         
@@ -459,13 +456,13 @@ class TestResultIsolationOperationTests: XCTestCase {
         
         // Given
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: testDay),
-            onsetDay: nil,
+            symptomaticInfo: nil,
             testInfo: IndexCaseInfo.TestInfo(
                 result: .negative,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
-                receivedOnDay: testDay.advanced(by: -4)
+                receivedOnDay: testDay.advanced(by: -4),
+                testEndDay: testDay
             )
         )
         
@@ -493,17 +490,17 @@ class TestResultIsolationOperationTests: XCTestCase {
     
     func testNewTestResultShouldBeSavedWhenNewTestResultIsNegativeAndPreviousTestResultIsVoid() {
         let testDay = LocalDay.today.gregorianDay
-        let selfDiagnosisDay = testDay.advanced(by: -6)
+        let testEndDay = testDay.advanced(by: -6)
         
         // Given
         let isolationInfo = IsolationInfo(indexCaseInfo: IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: selfDiagnosisDay),
-            onsetDay: nil,
+            symptomaticInfo: nil,
             testInfo: IndexCaseInfo.TestInfo(
                 result: .void,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
-                receivedOnDay: testDay.advanced(by: -4)
+                receivedOnDay: testDay.advanced(by: -4),
+                testEndDay: testEndDay
             )
         ), contactCaseInfo: nil)
         
@@ -546,17 +543,17 @@ class TestResultIsolationOperationTests: XCTestCase {
     
     func testNewTestNegativeResultShouldOverwriteWhenUnconfirmedEndDateIsOlder() throws {
         let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
-        let selfDiagnosisDay = testDay.advanced(by: -6)
+        let testEndDay = testDay.advanced(by: -6)
         let newEndDay = LocalDay.today.gregorianDay
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: selfDiagnosisDay),
-            onsetDay: nil,
+            symptomaticInfo: nil,
             testInfo: IndexCaseInfo.TestInfo(
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
-                receivedOnDay: testDay
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
             )
         )
         
@@ -584,17 +581,17 @@ class TestResultIsolationOperationTests: XCTestCase {
     
     func testNewTestNegativeResultShouldDoNothingWhenUnconfirmedEndDateIsNewer() throws {
         let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
-        let selfDiagnosisDay = testDay.advanced(by: -6)
+        let testEndDay = testDay.advanced(by: -6)
         let newEndDay = testDay.advanced(by: -7)
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: selfDiagnosisDay),
-            onsetDay: nil,
+            symptomaticInfo: nil,
             testInfo: IndexCaseInfo.TestInfo(
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
-                receivedOnDay: testDay
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
             )
         )
         
@@ -625,8 +622,7 @@ class TestResultIsolationOperationTests: XCTestCase {
         let endDay = LocalDay.today
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: nil,
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
             testInfo: nil
         )
         
@@ -657,8 +653,7 @@ class TestResultIsolationOperationTests: XCTestCase {
         let endDay = LocalDay.today.gregorianDay.advanced(by: -7)
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: nil,
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
             testInfo: nil
         )
         
@@ -715,8 +710,7 @@ class TestResultIsolationOperationTests: XCTestCase {
         let endDay = LocalDay.today.gregorianDay.advanced(by: -1)
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: selfDiagnosisDay,
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
             testInfo: nil
         )
         
@@ -748,13 +742,13 @@ class TestResultIsolationOperationTests: XCTestCase {
         let endDay = LocalDay.today.gregorianDay.advanced(by: -1)
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: selfDiagnosisDay,
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
             testInfo: IndexCaseInfo.TestInfo(
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
-                receivedOnDay: testDay
+                receivedOnDay: testDay,
+                testEndDay: nil
             )
         )
         
@@ -786,13 +780,13 @@ class TestResultIsolationOperationTests: XCTestCase {
         let endDay = LocalDay.today.gregorianDay.advanced(by: -1)
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: selfDiagnosisDay,
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
             testInfo: IndexCaseInfo.TestInfo(
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
-                receivedOnDay: testDay
+                receivedOnDay: testDay,
+                testEndDay: nil
             )
         )
         
@@ -824,13 +818,13 @@ class TestResultIsolationOperationTests: XCTestCase {
         let endDay = LocalDay.today.gregorianDay.advanced(by: -1)
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: npexDay),
-            onsetDay: nil,
+            symptomaticInfo: nil,
             testInfo: IndexCaseInfo.TestInfo(
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
-                receivedOnDay: testDay
+                receivedOnDay: testDay,
+                testEndDay: npexDay
             )
         )
         
@@ -862,13 +856,13 @@ class TestResultIsolationOperationTests: XCTestCase {
         let endDay = LocalDay.today.gregorianDay.advanced(by: -1)
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: npexDay),
-            onsetDay: nil,
+            symptomaticInfo: nil,
             testInfo: IndexCaseInfo.TestInfo(
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
-                receivedOnDay: testDay
+                receivedOnDay: testDay,
+                testEndDay: npexDay
             )
         )
         
@@ -900,13 +894,13 @@ class TestResultIsolationOperationTests: XCTestCase {
         let endDay = LocalDay.today.gregorianDay.advanced(by: -1)
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: nil,
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
             testInfo: IndexCaseInfo.TestInfo(
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
-                receivedOnDay: testDay
+                receivedOnDay: testDay,
+                testEndDay: nil
             )
         )
         
@@ -938,13 +932,13 @@ class TestResultIsolationOperationTests: XCTestCase {
         let endDay = LocalDay.today.gregorianDay.advanced(by: -1)
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: nil,
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
             testInfo: IndexCaseInfo.TestInfo(
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
-                receivedOnDay: testDay
+                receivedOnDay: testDay,
+                testEndDay: nil
             )
         )
         
@@ -976,13 +970,13 @@ class TestResultIsolationOperationTests: XCTestCase {
         let endDay = LocalDay.today.gregorianDay.advanced(by: -1)
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: nil,
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
             testInfo: IndexCaseInfo.TestInfo(
                 result: .negative,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
-                receivedOnDay: testDay
+                receivedOnDay: testDay,
+                testEndDay: nil
             )
         )
         
@@ -1014,13 +1008,13 @@ class TestResultIsolationOperationTests: XCTestCase {
         let endDay = LocalDay.today.gregorianDay.advanced(by: -1)
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: npexDay),
-            onsetDay: nil,
+            symptomaticInfo: nil,
             testInfo: IndexCaseInfo.TestInfo(
                 result: .negative,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
-                receivedOnDay: testDay
+                receivedOnDay: testDay,
+                testEndDay: npexDay
             )
         )
         
@@ -1052,13 +1046,13 @@ class TestResultIsolationOperationTests: XCTestCase {
         let endDay = LocalDay.today.gregorianDay.advanced(by: -1)
         
         let indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: nil,
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
             testInfo: IndexCaseInfo.TestInfo(
                 result: .negative,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
-                receivedOnDay: testDay
+                receivedOnDay: testDay,
+                testEndDay: nil
             )
         )
         
@@ -1088,9 +1082,8 @@ class TestResultIsolationOperationTests: XCTestCase {
 private extension IndexCaseInfo {
     init(selfDiagnosisDay: GregorianDay, onsetDay: GregorianDay?, testResult: TestResult?) {
         self.init(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: onsetDay,
-            testInfo: testResult.map { TestInfo(result: $0, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: .today) }
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: onsetDay),
+            testInfo: testResult.map { TestInfo(result: $0, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: .today, testEndDay: nil) }
         )
     }
 }

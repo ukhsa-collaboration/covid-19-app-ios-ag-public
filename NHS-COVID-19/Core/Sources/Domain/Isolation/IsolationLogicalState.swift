@@ -6,14 +6,14 @@ import Combine
 import Common
 import Foundation
 
-struct IsolationInfo: Codable, Equatable, DataConvertible {
+struct IsolationInfo: Decodable, Equatable {
     var hasAcknowledgedEndOfIsolation: Bool = false
     var hasAcknowledgedStartOfIsolation: Bool = false
     var indexCaseInfo: IndexCaseInfo?
     var contactCaseInfo: ContactCaseInfo?
     
     var isolationStartDay: GregorianDay? {
-        switch (indexCaseInfo?.isolationTrigger.startDay, contactCaseInfo?.exposureDay) {
+        switch (indexCaseInfo?.startDay, contactCaseInfo?.exposureDay) {
         case (.none, .none): return nil
         case (.some(let indexIsolationStartDay), .some(let exposureDay)): return min(indexIsolationStartDay, exposureDay)
         case (.some(let indexIsolationStartDay), .none): return indexIsolationStartDay
@@ -36,66 +36,23 @@ struct IsolationInfo: Codable, Equatable, DataConvertible {
     static let empty = IsolationInfo(indexCaseInfo: nil, contactCaseInfo: nil)
 }
 
-struct IsolationConfiguration: Codable, Equatable {
-    var maxIsolation: DayDuration
-    var contactCase: DayDuration
-    var indexCaseSinceSelfDiagnosisOnset: DayDuration
-    var indexCaseSinceSelfDiagnosisUnknownOnset: DayDuration
-    var housekeepingDeletionPeriod: DayDuration
-    var indexCaseSinceNPEXDayNoSelfDiagnosis: DayDuration
-    
-    private enum CodingKeys: String, CodingKey {
-        case maxIsolation
-        case contactCase
-        case indexCaseSinceSelfDiagnosisOnset
-        case indexCaseSinceSelfDiagnosisUnknownOnset
-        case housekeepingDeletionPeriod
-        case indexCaseSinceNPEXDayNoSelfDiagnosis
-    }
-}
-
-extension IsolationConfiguration {
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        maxIsolation = try container.decode(DayDuration.self, forKey: .maxIsolation)
-        contactCase = try container.decode(DayDuration.self, forKey: .contactCase)
-        indexCaseSinceSelfDiagnosisOnset = try container.decode(DayDuration.self, forKey: .indexCaseSinceSelfDiagnosisOnset)
-        indexCaseSinceSelfDiagnosisUnknownOnset = try container.decode(DayDuration.self, forKey: .indexCaseSinceSelfDiagnosisUnknownOnset)
-        housekeepingDeletionPeriod = try container.decode(DayDuration.self, forKey: .housekeepingDeletionPeriod)
-        
-        // value of the "10" is the historical default value before we were persisting this field.
-        indexCaseSinceNPEXDayNoSelfDiagnosis = try container.decodeIfPresent(DayDuration.self, forKey: .indexCaseSinceNPEXDayNoSelfDiagnosis) ?? 10
-        
-    }
-    
-    static let `default` = IsolationConfiguration(
-        maxIsolation: 21,
-        contactCase: 11,
-        indexCaseSinceSelfDiagnosisOnset: 11,
-        indexCaseSinceSelfDiagnosisUnknownOnset: 9,
-        housekeepingDeletionPeriod: 14,
-        indexCaseSinceNPEXDayNoSelfDiagnosis: 11
-    )
-}
-
 public struct IndexCaseInfo: Equatable {
     enum IsolationTrigger: Equatable {
         case selfDiagnosis(GregorianDay)
+        #warning("Remove npexDay parameter from here as we are now storing testEndDay in TestInfo.")
         case manualTestEntry(npexDay: GregorianDay)
-        
-        var startDay: GregorianDay {
-            switch self {
-            case .selfDiagnosis(let day):
-                return day
-            case .manualTestEntry(let npexDay):
-                return npexDay
-            }
-        }
     }
     
-    public struct TestInfo: Codable, Equatable {
+    public struct TestInfo: Decodable, Equatable {
+        private enum CodingKeys: CodingKey {
+            case result
+            case testKitType
+            case requiresConfirmatoryTest
+            case receivedOnDay
+            case confirmedOnDay
+            case testEndDay
+        }
+        
         public enum ConfirmationStatus: Equatable {
             case pending
             case confirmed(onDay: GregorianDay)
@@ -107,6 +64,7 @@ public struct IndexCaseInfo: Equatable {
         public var requiresConfirmatoryTest: Bool
         public var receivedOnDay: GregorianDay
         public var confirmedOnDay: GregorianDay?
+        public var testEndDay: GregorianDay?
         
         public var confirmationStatus: ConfirmationStatus {
             if requiresConfirmatoryTest {
@@ -128,21 +86,57 @@ public struct IndexCaseInfo: Equatable {
             confirmedOnDay = try container.decodeIfPresent(GregorianDay.self, forKey: .confirmedOnDay)
         }
         
-        public init(result: TestResult, testKitType: TestKitType? = nil, requiresConfirmatoryTest: Bool, receivedOnDay: GregorianDay, confirmedOnDay: GregorianDay? = nil) {
+        public init(
+            result: TestResult,
+            testKitType: TestKitType? = nil,
+            requiresConfirmatoryTest: Bool,
+            receivedOnDay: GregorianDay,
+            confirmedOnDay: GregorianDay? = nil,
+            testEndDay: GregorianDay?
+        ) {
             self.result = result
             self.testKitType = testKitType
             self.requiresConfirmatoryTest = requiresConfirmatoryTest
             self.receivedOnDay = receivedOnDay
             self.confirmedOnDay = confirmedOnDay
+            self.testEndDay = testEndDay
         }
     }
     
+    public struct SymptomaticInfo: Equatable {
+        var selfDiagnosisDay: GregorianDay
+        var onsetDay: GregorianDay?
+    }
+    
     var isolationTrigger: IsolationTrigger
-    var onsetDay: GregorianDay?
+    var symptomaticInfo: SymptomaticInfo?
     var testInfo: TestInfo?
+    
+    init(
+        symptomaticInfo: SymptomaticInfo?,
+        testInfo: IndexCaseInfo.TestInfo?
+    ) {
+        if let symptomaticInfo = symptomaticInfo {
+            isolationTrigger = .selfDiagnosis(symptomaticInfo.selfDiagnosisDay)
+        } else {
+            #warning("This is very risky. There's no indication that from the two parameters passed one must be non-null")
+            isolationTrigger = .manualTestEntry(npexDay: testInfo!.testEndDay!)
+        }
+        self.symptomaticInfo = symptomaticInfo
+        self.testInfo = testInfo
+    }
+    
+    var startDay: GregorianDay {
+        switch isolationTrigger {
+        case .selfDiagnosis(let day):
+            return day
+        case .manualTestEntry(let npexDay):
+            return npexDay
+        }
+    }
 }
 
-extension IndexCaseInfo: Codable {
+extension IndexCaseInfo: Decodable {
     enum CodingKeys: String, CodingKey {
         case npexDay
         case selfDiagnosisDay
@@ -154,36 +148,26 @@ extension IndexCaseInfo: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         let onsetDay = try container.decodeIfPresent(GregorianDay.self, forKey: .onsetDay)
-        let testInfo = try container.decodeIfPresent(TestInfo.self, forKey: .testInfo)
+        var testInfo = try container.decodeIfPresent(TestInfo.self, forKey: .testInfo)
+        let selfDiagnosisDay = try container.decodeIfPresent(GregorianDay.self, forKey: .selfDiagnosisDay)
         
-        if let day = try container.decodeIfPresent(GregorianDay.self, forKey: .npexDay) {
-            self.init(isolationTrigger: .manualTestEntry(npexDay: day), onsetDay: onsetDay, testInfo: testInfo)
-            return
-        }
-        if let day = try container.decodeIfPresent(GregorianDay.self, forKey: .selfDiagnosisDay) {
-            self.init(isolationTrigger: .selfDiagnosis(day), onsetDay: onsetDay, testInfo: testInfo)
-            return
+        if testInfo?.testEndDay == nil, let npexDay = try container.decodeIfPresent(GregorianDay.self, forKey: .npexDay) {
+            testInfo?.testEndDay = npexDay
         }
         
-        throw DecodingError.keyNotFound(
-            CodingKeys.selfDiagnosisDay,
-            DecodingError.Context(codingPath: container.codingPath, debugDescription: "Could not find self diagnosis day or npex day")
-        )
+        if let selfDiagnosisDay = selfDiagnosisDay {
+            let symptomaticInfo = SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: onsetDay)
+            self.init(symptomaticInfo: symptomaticInfo, testInfo: testInfo)
+        } else if let testInfo = testInfo {
+            self.init(symptomaticInfo: nil, testInfo: testInfo)
+        } else {
+            throw DecodingError.keyNotFound(
+                CodingKeys.selfDiagnosisDay,
+                DecodingError.Context(codingPath: container.codingPath, debugDescription: "Could not find self diagnosis day or npex day")
+            )
+        }
     }
     
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        
-        try container.encodeIfPresent(onsetDay, forKey: .onsetDay)
-        try container.encodeIfPresent(testInfo, forKey: .testInfo)
-        
-        switch isolationTrigger {
-        case .selfDiagnosis(let day):
-            try container.encode(day, forKey: .selfDiagnosisDay)
-        case .manualTestEntry(let npexDay):
-            try container.encode(npexDay, forKey: .npexDay)
-        }
-    }
 }
 
 extension IndexCaseInfo {
@@ -191,7 +175,7 @@ extension IndexCaseInfo {
     private static let assumedDaysFromOnsetToTestResult = -3
     
     var assumedOnsetDayForSelfDiagnosis: GregorianDay? {
-        if let onsetDay = onsetDay {
+        if let onsetDay = symptomaticInfo?.onsetDay {
             return onsetDay
         } else {
             switch isolationTrigger {
@@ -204,7 +188,7 @@ extension IndexCaseInfo {
     }
     
     var assumedOnsetDayForExposureKeys: GregorianDay {
-        if let onsetDay = onsetDay {
+        if let onsetDay = symptomaticInfo?.onsetDay {
             return onsetDay
         } else {
             switch isolationTrigger {
@@ -219,7 +203,7 @@ extension IndexCaseInfo {
     var assumedTestEndDay: GregorianDay? {
         switch isolationTrigger {
         case .selfDiagnosis:
-            return testInfo?.receivedOnDay
+            return testInfo?.testEndDay ?? testInfo?.receivedOnDay
         case .manualTestEntry(let npexDay):
             return npexDay
         }
@@ -241,8 +225,20 @@ extension IndexCaseInfo {
         }
     }
     
-    mutating func set(testResult: TestResult, testKitType: TestKitType?, requiresConfirmatoryTest: Bool, receivedOn: GregorianDay) {
-        testInfo = TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOnDay: receivedOn)
+    mutating func set(
+        testResult: TestResult,
+        testKitType: TestKitType?,
+        requiresConfirmatoryTest: Bool,
+        receivedOn: GregorianDay,
+        testEndDay: GregorianDay?
+    ) {
+        testInfo = TestInfo(
+            result: testResult,
+            testKitType: testKitType,
+            requiresConfirmatoryTest: requiresConfirmatoryTest,
+            receivedOnDay: receivedOn,
+            testEndDay: testEndDay
+        )
     }
     
     mutating func confirmTest(confirmationDay: GregorianDay) {
@@ -250,41 +246,7 @@ extension IndexCaseInfo {
     }
 }
 
-public enum TestResult: String, Codable, Equatable {
-    case positive
-    case negative
-    case void
-    
-    init(_ virologyTestResult: VirologyTestResult.TestResult) {
-        switch virologyTestResult {
-        case .positive:
-            self = .positive
-        case .negative:
-            self = .negative
-        case .void:
-            self = .void
-        }
-    }
-}
-
-public enum TestKitType: String, Codable, Equatable {
-    case labResult
-    case rapidResult
-    case rapidSelfReported
-    
-    init(_ virologyTestKit: VirologyTestResult.TestKitType) {
-        switch virologyTestKit {
-        case .labResult:
-            self = .labResult
-        case .rapidResult:
-            self = .rapidResult
-        case .rapidSelfReported:
-            self = .rapidSelfReported
-        }
-    }
-}
-
-struct ContactCaseInfo: Codable, Equatable {
+struct ContactCaseInfo: Decodable, Equatable {
     var exposureDay: GregorianDay
     var isolationFromStartOfDay: GregorianDay
     var optOutOfIsolationDay: GregorianDay?
@@ -506,14 +468,14 @@ extension _Isolation {
     
     fileprivate init?(indexCaseInfo: IndexCaseInfo, configuration: IsolationConfiguration) {
         let isPendingConfirmation = indexCaseInfo.testInfo?.confirmationStatus == .pending
-        switch (indexCaseInfo.onsetDay, indexCaseInfo.testInfo?.result, indexCaseInfo.isolationTrigger) {
+        switch (indexCaseInfo.symptomaticInfo?.onsetDay, indexCaseInfo.testInfo?.result, indexCaseInfo.isolationTrigger) {
         case (_, .negative, .manualTestEntry):
             return nil
         case (_, .void, .manualTestEntry):
             return nil
         case (_, .negative, .selfDiagnosis(_)):
             self.init(
-                fromDay: indexCaseInfo.isolationTrigger.startDay,
+                fromDay: indexCaseInfo.startDay,
                 untilStartOfDay: indexCaseInfo.testInfo!.receivedOnDay,
                 reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true, isPendingConfirmation: isPendingConfirmation), contactCaseInfo: nil)
             )
@@ -531,13 +493,13 @@ extension _Isolation {
             )
         case (.some(let day), _, .manualTestEntry(npexDay: _)):
             self.init(
-                fromDay: indexCaseInfo.isolationTrigger.startDay,
+                fromDay: indexCaseInfo.startDay,
                 untilStartOfDay: day + configuration.indexCaseSinceSelfDiagnosisOnset,
                 reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: false, isPendingConfirmation: isPendingConfirmation), contactCaseInfo: nil)
             )
         case (.some(let day), _, .selfDiagnosis(_)):
             self.init(
-                fromDay: indexCaseInfo.isolationTrigger.startDay,
+                fromDay: indexCaseInfo.startDay,
                 untilStartOfDay: day + configuration.indexCaseSinceSelfDiagnosisOnset,
                 reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true, isPendingConfirmation: isPendingConfirmation), contactCaseInfo: nil)
             )

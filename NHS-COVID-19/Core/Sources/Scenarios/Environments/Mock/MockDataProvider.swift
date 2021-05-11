@@ -10,10 +10,36 @@ class MockDataProvider: ObservableObject {
     static let testResults = ["POSITIVE", "NEGATIVE", "VOID"]
     static let testKitType = ["LAB_RESULT", "RAPID_RESULT", "RAPID_SELF_REPORTED"]
     
+    private let _numberOfDaysFromNowDidChange = PassthroughSubject<Int, Never>()
     private let _objectWillChange = PassthroughSubject<Void, Never>()
     
     var objectWillChange: AnyPublisher<Void, Never> {
         _objectWillChange.eraseToAnyPublisher()
+    }
+    
+    @UserDefault("mocks.numberOfDaysFromNow", defaultValue: 0)
+    var numberOfDaysFromNow: Int {
+        didSet {
+            _numberOfDaysFromNowDidChange.send(numberOfDaysFromNow)
+            _objectWillChange.send()
+        }
+    }
+    
+    var numberOfDaysFromNowString: String {
+        get {
+            numberOfDaysFromNow > 0
+                ? "+\(numberOfDaysFromNow)"
+                : String(numberOfDaysFromNow)
+        }
+        set {
+            if let value = Int(newValue) {
+                numberOfDaysFromNow = value
+            }
+        }
+    }
+    
+    var numberOfDaysFromNowDidChange: AnyPublisher<Int, Never> {
+        _numberOfDaysFromNowDidChange.eraseToAnyPublisher()
     }
     
     @UserDefault("mocks.blackPostcodes", defaultValue: "")

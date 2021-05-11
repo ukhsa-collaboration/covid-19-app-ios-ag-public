@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -135,12 +135,12 @@ extension AboutThisAppViewController {
             return stackView
         }()
         
-        let ceImage: UIView = {
-            let ceImage = UIImageView(.symbolUKCA).color(.primaryText).styleAsDecoration()
-            let ceImageStackView = UIStackView(arrangedSubviews: [ceImage, UIView()])
-            ceImageStackView.alignment = .firstBaseline
+        let ukcaConformityView: UIView = {
+            let ukcaBadge = UIImageView(.symbolUKCA).color(.primaryText).styleAsDecoration()
+            let ukcaBadgeStack = UIStackView(arrangedSubviews: [ukcaBadge, UIView()])
+            ukcaBadgeStack.alignment = .firstBaseline
             
-            let indentedStackView = UIStackView(arrangedSubviews: [ceImageStackView])
+            let indentedStackView = UIStackView(arrangedSubviews: [ukcaBadgeStack])
             indentedStackView.axis = .vertical
             indentedStackView.distribution = .fill
             indentedStackView.spacing = .hairSpacing
@@ -152,6 +152,9 @@ extension AboutThisAppViewController {
                 right: 0
             )
             indentedStackView.isLayoutMarginsRelativeArrangement = true
+            
+            indentedStackView.isAccessibilityElement = true
+            indentedStackView.accessibilityLabel = localize(.ukca_compliance_announcement)
             
             return indentedStackView
         }()
@@ -188,7 +191,7 @@ extension AboutThisAppViewController {
                 .view(versionView),
                 .view(dateOfReleaseView),
                 .view(manufacturerView),
-                .view(ceImage),
+                .view(ukcaConformityView),
             ]),
             InformationBox.information.purple([
                 .heading(.about_this_app_feedback_information_title),

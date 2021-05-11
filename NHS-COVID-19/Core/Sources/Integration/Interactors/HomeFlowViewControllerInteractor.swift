@@ -179,6 +179,23 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         return alertController
     }
     
+    public func makeContactTracingHubViewController(exposureNotificationsEnabled: InterfaceProperty<Bool>, exposureNotificationsToggleAction: @escaping (Bool) -> Void, userNotificationsEnabled: InterfaceProperty<Bool>) -> UIViewController {
+        struct ContactTracingHubViewControllerInteractor: ContactTracingHubViewController.Interacting {
+            let flowInteractor: HomeFlowViewControllerInteracting
+            func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn) {
+                flowInteractor.scheduleReminderNotification(reminderIn: reminderIn)
+            }
+        }
+        let contactTracingInteractor = ContactTracingHubViewControllerInteractor(flowInteractor: self)
+        let viewController = ContactTracingHubViewController(
+            contactTracingInteractor,
+            exposureNotificationsEnabled: exposureNotificationsEnabled,
+            exposureNotificationsToggleAction: exposureNotificationsToggleAction,
+            userNotificationsEnabled: userNotificationsEnabled
+        )
+        return viewController
+    }
+    
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never> {
         context.exposureNotificationStateController.setEnabled(enabled)
     }
@@ -216,7 +233,8 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             
             return MyDataViewController.ViewModel.TestResultDetails(
                 result: Interface.TestResult(domainTestResult: $0.result),
-                date: $0.receivedOnDay.startDate(in: .current),
+                acknowledgementDate: $0.receivedOnDay.startDate(in: .current),
+                testEndDate: $0.testEndDay?.startDate(in: .current),
                 testKitType: $0.testKitType.map(Interface.TestKitType.init(domainTestKitType:)),
                 confirmationStatus: confirmationStatus
             )

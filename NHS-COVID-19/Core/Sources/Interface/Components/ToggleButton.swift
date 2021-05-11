@@ -9,10 +9,10 @@ import SwiftUI
 
 public struct ToggleButton: View {
     @Binding private var isToggledOn: Bool
-    var imageName: ImageName
+    var imageName: ImageName?
     var text: String
     
-    public init(isToggledOn: Binding<Bool>, imageName: ImageName, text: String) {
+    public init(isToggledOn: Binding<Bool>, imageName: ImageName? = nil, text: String) {
         self.imageName = imageName
         self.text = text
         _isToggledOn = isToggledOn
@@ -20,15 +20,18 @@ public struct ToggleButton: View {
     
     public var body: some View {
         HStack(spacing: .zero) {
-            ZStack {
-                Image(imageName)
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(Color(.primaryText))
-                    .frame(width: 30, height: 30)
-                    .accessibility(hidden: true)
-            }.frame(width: 60)
+            if let imageName = imageName {
+                ZStack {
+                    Image(imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(Color(.primaryText))
+                        .frame(width: 30, height: 30)
+                        .accessibility(hidden: true)
+                }.frame(width: 60)
+            }
             Toggle(text, isOn: $isToggledOn)
+                .accessibility(label: Text(text)) // fixes accessibility label when the switch is turned off and turned back on again
                 .font(.body)
                 .foregroundColor(Color(.primaryText))
                 .fixedSize(horizontal: false, vertical: true)

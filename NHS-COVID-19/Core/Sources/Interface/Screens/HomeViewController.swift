@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -18,6 +18,7 @@ public protocol HomeViewControllerInteracting {
     func didTapSettingsButton()
     func didTapAboutButton()
     func didTapLinkTestResultButton()
+    func didTapContactTracingHubButton()
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never>
     func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn)
     var shouldShowCheckIn: Bool { get }
@@ -32,40 +33,40 @@ public class HomeViewController: UIViewController {
     private let riskLevelBannerViewModel: InterfaceProperty<RiskLevelBanner.ViewModel?>
     private let isolationViewModel: RiskLevelIndicator.ViewModel
     
-    // Allows the UI to update immediately until a genuine value has been published by the model
-    private let optimisiticExposureNotificationsEnabled = CurrentValueSubject<Bool?, Never>(nil)
     private let exposureNotificationsEnabled: InterfaceProperty<Bool>
+    private let exposureNotificationsToggleAction: (Bool) -> Void
     private let userNotificationsEnabled: InterfaceProperty<Bool>
-    
+
     private let showOrderTestButton: InterfaceProperty<Bool>
     private let shouldShowSelfDiagnosis: InterfaceProperty<Bool>
     private let showFinancialSupportButton: InterfaceProperty<Bool>
     
     private let country: InterfaceProperty<Country>
     let showLanguageSelectionScreen: (() -> Void)?
+    let showContactTracingHub: (() -> Void)?
     private var didShowLanguageSelectionScreen = false
+    private var didShowContactTracingHub = false
     private var removeSnapshot: (() -> Void)?
-
+    
     public init(
         interactor: Interacting,
         riskLevelBannerViewModel: InterfaceProperty<RiskLevelBanner.ViewModel?>,
         isolationViewModel: RiskLevelIndicator.ViewModel,
-        exposureNotificationsEnabled: AnyPublisher<Bool, Never>,
+        exposureNotificationsEnabled: InterfaceProperty<Bool>,
+        exposureNotificationsToggleAction: @escaping (Bool) -> Void,
         showOrderTestButton: InterfaceProperty<Bool>,
         shouldShowSelfDiagnosis: InterfaceProperty<Bool>,
         userNotificationsEnabled: InterfaceProperty<Bool>,
         showFinancialSupportButton: InterfaceProperty<Bool>,
         country: InterfaceProperty<Country>,
-        showLanguageSelectionScreen: (() -> Void)?
+        showLanguageSelectionScreen: (() -> Void)?,
+        showContactTracingHub: (() -> Void)? = nil
     ) {
         self.interactor = interactor
         self.riskLevelBannerViewModel = riskLevelBannerViewModel
         self.isolationViewModel = isolationViewModel
-        
-        self.exposureNotificationsEnabled = optimisiticExposureNotificationsEnabled
-            .combineLatest(exposureNotificationsEnabled) { $0 ?? $1 }
-            .removeDuplicates()
-            .property(initialValue: false)
+        self.exposureNotificationsEnabled = exposureNotificationsEnabled
+        self.exposureNotificationsToggleAction = exposureNotificationsToggleAction
         
         self.userNotificationsEnabled = userNotificationsEnabled
         
@@ -75,6 +76,7 @@ public class HomeViewController: UIViewController {
         
         self.country = country
         self.showLanguageSelectionScreen = showLanguageSelectionScreen
+        self.showContactTracingHub = showContactTracingHub
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -93,8 +95,7 @@ public class HomeViewController: UIViewController {
             showOrderTestButton: showOrderTestButton,
             shouldShowSelfDiagnosis: shouldShowSelfDiagnosis,
             exposureNotificationsEnabled: exposureNotificationsEnabled,
-            exposureNotificationsToggleAction: exposureNotificationSwitchValueChanged,
-            userNotificationsEnabled: userNotificationsEnabled,
+            exposureNotificationsToggleAction: exposureNotificationsToggleAction,
             showFinancialSupportButton: showFinancialSupportButton,
             country: country
         )
@@ -124,7 +125,7 @@ public class HomeViewController: UIViewController {
             removeSnapshot = snapshot.removeFromSuperview
         }
     }
-        
+    
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
@@ -152,6 +153,10 @@ public class HomeViewController: UIViewController {
             showLanguageSelectionScreen()
             removeSnapshot?()
             removeSnapshot = nil
+        } else if let showContactTracingHub = self.showContactTracingHub,
+            !didShowContactTracingHub {
+            didShowContactTracingHub = true
+            showContactTracingHub()
         } else {
             #warning("Find a long term solution for this.")
             // Something goes wrong with the accessibility frame of elements on this screen after certain flows (for example
@@ -188,15 +193,5 @@ public class HomeViewController: UIViewController {
                 self.navigationController?.popViewController(animated: false)
             }
         }
-    }
-    
-    private func exposureNotificationSwitchValueChanged(_ isOn: Bool) {
-        optimisiticExposureNotificationsEnabled.send(isOn)
-        interactor.setExposureNotifcationEnabled(isOn)
-            .sink(receiveCompletion: { [weak self] _ in
-                // Reset ready for next time
-                self?.optimisiticExposureNotificationsEnabled.send(nil)
-            }, receiveValue: {})
-            .store(in: &cancellables)
     }
 }

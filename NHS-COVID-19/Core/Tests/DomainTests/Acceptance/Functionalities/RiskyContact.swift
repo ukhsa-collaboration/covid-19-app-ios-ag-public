@@ -1,10 +1,10 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
-import Foundation
 import Common
 import ExposureNotification
+import Foundation
 @testable import Domain
 @testable import Scenarios
 
@@ -18,13 +18,13 @@ struct RiskyContact {
     init(
         configuration: AcceptanceTestCase.Instance.Configuration
     ) {
-        self.apiClient = configuration.apiClient
-        self.distributeClient = configuration.distributeClient
-        self.currentDateProvider = configuration.currentDateProvider
-        self.windowsExposureNotificationManager = configuration.exposureNotificationManager as! MockWindowsExposureNotificationManager
+        apiClient = configuration.apiClient
+        distributeClient = configuration.distributeClient
+        currentDateProvider = configuration.currentDateProvider
+        windowsExposureNotificationManager = configuration.exposureNotificationManager as! MockWindowsExposureNotificationManager
     }
     
-    func trigger(exposureDate: Date, runBeforeTeardown: @escaping () -> Void) {
+    func trigger(exposureDate: Date, runBeforeTeardown: () -> Void) {
         setupMockAPIsForRiskyContact()
         setupMockExposureNotification(exposureDate)
         runBeforeTeardown()

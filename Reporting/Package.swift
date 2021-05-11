@@ -20,6 +20,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "0.0.4"),
+        .package(path: "../CodeAnalyzer"),
     ],
     targets: [
         .target(
@@ -31,6 +32,7 @@ let package = Package(
             name: "Reporting",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                "CodeAnalyzer",
             ]
         ),
         .target(

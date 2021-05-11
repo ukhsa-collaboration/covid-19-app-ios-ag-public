@@ -11,10 +11,6 @@ struct ContactCaseAcknowledgementScreen {
         app.staticTexts[localized: .exposure_acknowledgement_explaination]
     }
     
-    var faqslinkLabel: XCUIElement {
-        app.staticTexts[localized: .exposure_faqs_link_label]
-    }
-    
     var faqsLink: XCUIElement {
         app.links[localized: .exposure_faqs_link_button_title]
     }

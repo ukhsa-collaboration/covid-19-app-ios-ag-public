@@ -64,7 +64,10 @@ public enum Sandbox {
         
         @TestInjected("sandbox.exposureNotificationsAuthorized", defaultValue: false)
         public var exposureNotificationsAuthorized: Bool
-        
+
+        @TestInjected("sandbox.exposureNotificationsEnabled", defaultValue: true)
+        public var exposureNotificationsEnabled: Bool
+
         @TestInjected("sandbox.userNotificationsAuthorized", defaultValue: nil)
         public var userNotificationsAuthorized: Bool?
         

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -31,9 +31,11 @@ public struct RiskLevelIndicator: View {
     }
     
     @ObservedObject private var viewModel: ViewModel
+    private let turnContactTracingOnTapAction: () -> Void
     
-    public init(viewModel: ViewModel) {
+    public init(viewModel: ViewModel, turnContactTracingOnTapAction: @escaping () -> Void) {
         self.viewModel = viewModel
+        self.turnContactTracingOnTapAction = turnContactTracingOnTapAction
     }
     
     public var body: some View {
@@ -47,7 +49,7 @@ public struct RiskLevelIndicator: View {
         case (.notIsolating, false):
             return Self.makeNotIsolatingIndicator()
         case (.notIsolating, true):
-            return Self.makePausedIndicator()
+            return Self.makePausedIndicator(turnBackOnTapAction: turnContactTracingOnTapAction)
         }
     }
 }

@@ -12,7 +12,7 @@ public protocol SymptomsOnsetDateAndExposureDetailsProviding {
                                       notificationDate: Date)?
 }
 
-struct IsolationStateInfo: Codable, Equatable, DataConvertible {
+struct IsolationStateInfo: Equatable {
     var isolationInfo: IsolationInfo
     var configuration: IsolationConfiguration
 }
@@ -28,14 +28,14 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
         case overwriteAndConfirm
     }
     
-    @Encrypted private var isolationStateInfoStorage: IsolationStateInfo?
+    @Encrypted private var isolationStateStoredPayload: IsolationStatePayload?
     
     private let latestConfiguration: () -> IsolationConfiguration
     private let currentDateProvider: DateProviding
     
     @Published var isolationStateInfo: IsolationStateInfo? {
         didSet {
-            isolationStateInfoStorage = isolationStateInfo
+            isolationStateStoredPayload = isolationStateInfo.map(IsolationStatePayload.init)
         }
     }
     
@@ -50,8 +50,8 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
     init(store: EncryptedStoring, latestConfiguration: @escaping () -> IsolationConfiguration, currentDateProvider: DateProviding) {
         self.latestConfiguration = latestConfiguration
         self.currentDateProvider = currentDateProvider
-        _isolationStateInfoStorage = store.encrypted("isolation_state_info")
-        isolationStateInfo = _isolationStateInfoStorage.wrappedValue
+        _isolationStateStoredPayload = store.encrypted("isolation_state_info")
+        isolationStateInfo = _isolationStateStoredPayload.wrappedValue?.isolationStateInfo
     }
     
     @discardableResult
@@ -92,13 +92,12 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
                 return
             case .update:
                 if var indexCaseInfo = $0.indexCaseInfo {
-                    indexCaseInfo.set(testResult: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOn: receivedOn)
+                    indexCaseInfo.set(testResult: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOn: receivedOn, testEndDay: npexDay)
                     $0.indexCaseInfo = indexCaseInfo
                 } else {
                     $0.indexCaseInfo = IndexCaseInfo(
-                        isolationTrigger: .manualTestEntry(npexDay: npexDay),
-                        onsetDay: nil,
-                        testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOnDay: receivedOn)
+                        symptomaticInfo: nil,
+                        testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOnDay: receivedOn, testEndDay: npexDay)
                     )
                 }
             case .confirm:
@@ -108,23 +107,21 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
                 }
             case .overwrite:
                 $0.indexCaseInfo = IndexCaseInfo(
-                    isolationTrigger: .manualTestEntry(npexDay: npexDay),
-                    onsetDay: nil,
-                    testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOnDay: receivedOn)
+                    symptomaticInfo: nil,
+                    testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOnDay: receivedOn, testEndDay: npexDay)
                 )
             case .updateAndConfirm:
                 if let storedIndexCaseInfo = $0.indexCaseInfo {
                     var indexCaseInfo = storedIndexCaseInfo
-                    indexCaseInfo.set(testResult: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOn: receivedOn)
+                    indexCaseInfo.set(testResult: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOn: receivedOn, testEndDay: npexDay)
                     if let confirmedDay = storedIndexCaseInfo.testInfo?.confirmedOnDay ?? $0.indexCaseInfo?.assumedTestEndDay {
                         indexCaseInfo.confirmTest(confirmationDay: confirmedDay)
                     }
                     $0.indexCaseInfo = indexCaseInfo
                 } else {
                     var indexCaseInfo = IndexCaseInfo(
-                        isolationTrigger: .manualTestEntry(npexDay: npexDay),
-                        onsetDay: nil,
-                        testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOnDay: receivedOn)
+                        symptomaticInfo: nil,
+                        testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOnDay: receivedOn, testEndDay: npexDay)
                     )
                     if let confirmedDay = $0.indexCaseInfo?.testInfo?.confirmedOnDay ?? $0.indexCaseInfo?.assumedTestEndDay {
                         indexCaseInfo.confirmTest(confirmationDay: confirmedDay)
@@ -133,9 +130,8 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
                 }
             case .overwriteAndConfirm:
                 var indexCaseInfo = IndexCaseInfo(
-                    isolationTrigger: .manualTestEntry(npexDay: npexDay),
-                    onsetDay: nil,
-                    testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOnDay: receivedOn)
+                    symptomaticInfo: nil,
+                    testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, receivedOnDay: receivedOn, testEndDay: npexDay)
                 )
                 if let confirmedDay = $0.indexCaseInfo?.testInfo?.confirmedOnDay ?? $0.indexCaseInfo?.assumedTestEndDay {
                     indexCaseInfo.confirmTest(confirmationDay: confirmedDay)
@@ -191,7 +187,7 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
     }
     
     func provideSymptomsOnsetDate() -> Date? {
-        if let onsetDay = isolationInfo.indexCaseInfo?.onsetDay {
+        if let onsetDay = isolationInfo.indexCaseInfo?.symptomaticInfo?.onsetDay {
             return LocalDay(gregorianDay: onsetDay, timeZone: .current).startOfDay
         }
         

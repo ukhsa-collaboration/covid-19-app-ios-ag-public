@@ -44,9 +44,9 @@ public struct IsolationModel {
     }
     
     public struct State: Codable, Hashable, CaseIterable {
-        var contact: ContactCaseState
-        var symptomatic: SymptomaticCaseState
-        var positiveTest: PositiveTestCaseState
+        public var contact: ContactCaseState
+        public var symptomatic: SymptomaticCaseState
+        public var positiveTest: PositiveTestCaseState
     }
     
     public enum Event: String, Codable, Equatable, CaseIterable {

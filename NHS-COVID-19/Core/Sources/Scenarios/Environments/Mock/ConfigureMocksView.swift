@@ -12,11 +12,22 @@ struct ConfigureMocksView: View {
     var dataProvider: MockDataProvider
     @Binding
     var showDevView: Bool
+    var adjustableDateProvider: AdjustableDateProvider
     
     var body: some View {
         NavigationView {
             List {
                 Toggle("Assistive Dev View", isOn: $showDevView)
+                Section(header: Text(verbatim: "Date manipulation")) {
+                    TextFieldRow(
+                        label: """
+                        Number of days from now (negative values allowed)
+                        It just adds/subtracts 24 hours from the current date
+                        """,
+                        text: $dataProvider.numberOfDaysFromNowString
+                    )
+                    DateTextRow(date: adjustableDateProvider.currentDate)
+                }
                 Section(header: Text(verbatim: "Postcode Risk")) {
                     TextFieldRow(label: "Black Risk", text: $dataProvider.blackPostcodes)
                     TextFieldRow(label: "Maroon Risk", text: $dataProvider.maroonPostcodes)
@@ -99,6 +110,26 @@ private struct TextFieldRow: View {
             Text(verbatim: label)
                 .font(.caption)
             TextField("", text: text)
+        }
+    }
+    
+}
+
+private struct DateTextRow: View {
+    
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        return formatter
+    }()
+    
+    let date: Date
+    
+    var body: some View {
+        if #available(iOS 14.0, *) {
+            Text(date, style: .date)
+        } else {
+            Text("\(date, formatter: Self.dateFormatter)")
         }
     }
     

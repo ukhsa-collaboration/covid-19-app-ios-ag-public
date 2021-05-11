@@ -19,7 +19,8 @@ public class MyDataScreenScenario: Scenario {
     public static let testKitType = TestKitType.labResult
     public static let confirmationStatus = MyDataViewController.ViewModel.TestResultDetails.ConfirmationStatus.confirmed(onDay: GregorianDay(year: 2021, month: 1, day: 26))
     
-    public static let testResultDate = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 6, hour: 8))!
+    public static let testEndDate = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 6, hour: 8))!
+    public static let testAcknowledgmentDate = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 7, hour: 8))!
     public static let symptomsDate = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 7, hour: 8))!
     public static let encounterDate = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 8, hour: 8))!
     public static let notificationDate = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 11, hour: 8))!
@@ -33,7 +34,8 @@ public class MyDataScreenScenario: Scenario {
                 viewModel: .init(
                     testResultDetails: .init(
                         result: testResult,
-                        date: testResultDate,
+                        acknowledgementDate: testAcknowledgmentDate,
+                        testEndDate: testEndDate,
                         testKitType: testKitType,
                         confirmationStatus: confirmationStatus
                     ),

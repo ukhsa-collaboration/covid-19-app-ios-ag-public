@@ -19,7 +19,7 @@ public class VenueHistoryScreenScenario: Scenario {
     public static let checkinDate1 = UTCHour(year: 2020, month: 7, day: 9, hour: 19, minutes: 30).date
     public static let checkinDate2 = UTCHour(year: 2020, month: 7, day: 8, hour: 19, minutes: 30).date
     public static let venueNames: [String] = ["Testing Venue 1 with a very, very long name so that it wraps", "Testing Venue 2", "Testing Venue 3"]
-    public static let venuePostcodes: [String?] = ["SW11ABC", "SW2", nil]
+    public static let venuePostcodes: [String?] = ["SW11AA", "SE17EH", nil]
     
     fileprivate static var venueHistories = [
         VenueHistory(

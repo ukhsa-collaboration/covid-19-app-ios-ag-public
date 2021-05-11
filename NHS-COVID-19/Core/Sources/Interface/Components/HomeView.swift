@@ -6,67 +6,15 @@ import Combine
 import Common
 import Localization
 import SwiftUI
-import UIKit
-
-private class ExposureNotificationState: ObservableObject {
-    private let action: (Bool) -> Void
-    
-    @Published
-    private var _enabled: Bool
-    
-    var enabled: Bool {
-        get {
-            _enabled
-        }
-        set {
-            if newValue != _enabled {
-                _enabled = newValue
-                action(newValue)
-            }
-        }
-    }
-    
-    init(enabled: InterfaceProperty<Bool>, action: @escaping (Bool) -> Void) {
-        self.action = action
-        _enabled = enabled.wrappedValue
-        
-        enabled.sink { [weak self] value in
-            self?._enabled = value
-        }
-    }
-}
-
-private class ActionSheetState: ObservableObject {
-    private var cancellable: AnyCancellable?
-    private var previousExposureNotificationEnabled: Bool?
-    
-    @Published
-    var isPresented: Bool = false
-    
-    init(exposureNotificationsEnabled: InterfaceProperty<Bool>, userNotificationsEnabled: InterfaceProperty<Bool>) {
-        cancellable = exposureNotificationsEnabled.$wrappedValue
-            .combineLatest(userNotificationsEnabled.$wrappedValue)
-            .sink { [weak self] exposureNotificationsEnabled, authorized in
-                guard let self = self else { return }
-                let toggledOff = !exposureNotificationsEnabled && self.previousExposureNotificationEnabled == true
-                self.isPresented = authorized && toggledOff
-                self.previousExposureNotificationEnabled = exposureNotificationsEnabled
-            }
-    }
-}
 
 struct HomeView: View {
     @ObservedObject private var showOrderTestButton: InterfaceProperty<Bool>
     @ObservedObject private var showFinancialSupportButton: InterfaceProperty<Bool>
     private let interactor: HomeViewController.Interacting
-    @ObservedObject
-    private var riskLevelBannerViewModel: InterfaceProperty<RiskLevelBanner.ViewModel?>
+    @ObservedObject private var riskLevelBannerViewModel: InterfaceProperty<RiskLevelBanner.ViewModel?>
     private let isolationViewModel: RiskLevelIndicator.ViewModel
     @ObservedObject private var shouldShowSelfDiagnosis: InterfaceProperty<Bool>
-    @ObservedObject private var exposureNotifications: ExposureNotificationState
-    @ObservedObject private var actionSheetState: ActionSheetState
-    @State private var exposureNotificationReminderIn: ExposureNotificationReminderIn? = nil
-    @State private var showExposureNotificationReminderAlert: Bool = false
+    private let exposureNotificationState: ExposureNotificationState
     private let country: InterfaceProperty<Country>
     
     init(
@@ -77,7 +25,6 @@ struct HomeView: View {
         shouldShowSelfDiagnosis: InterfaceProperty<Bool>,
         exposureNotificationsEnabled: InterfaceProperty<Bool>,
         exposureNotificationsToggleAction: @escaping (Bool) -> Void,
-        userNotificationsEnabled: InterfaceProperty<Bool>,
         showFinancialSupportButton: InterfaceProperty<Bool>,
         country: InterfaceProperty<Country>
     ) {
@@ -89,14 +36,9 @@ struct HomeView: View {
         self.country = country
         self.showFinancialSupportButton = showFinancialSupportButton
         
-        exposureNotifications = ExposureNotificationState(
+        exposureNotificationState = ExposureNotificationState(
             enabled: exposureNotificationsEnabled,
             action: exposureNotificationsToggleAction
-        )
-        
-        actionSheetState = ActionSheetState(
-            exposureNotificationsEnabled: exposureNotificationsEnabled,
-            userNotificationsEnabled: userNotificationsEnabled
         )
     }
     
@@ -115,36 +57,21 @@ struct HomeView: View {
                     riskLevelbanner
                         .accessibility(sortPriority: 1)
                     
-                    RiskLevelIndicator(viewModel: isolationViewModel)
-                        .zIndex(-1)
+                    RiskLevelIndicator(
+                        viewModel: isolationViewModel,
+                        turnContactTracingOnTapAction: {
+                            exposureNotificationState.enabled = true
+                        }
+                    )
+                    .zIndex(-1)
                     buttons()
-                }.accessibilityElement(children: .contain)
+                }
+                .accessibilityElement(children: .contain)
                 
-                Spacer().frame(height: .standardSpacing)
-                
+                Spacer()
+                    .frame(height: .standardSpacing)
             }
             .padding(.standardSpacing)
-            .actionSheet(isPresented: $actionSheetState.isPresented) {
-                ActionSheet(
-                    title: Text(.exposure_notification_reminder_sheet_title),
-                    message: Text(.exposure_notification_reminder_sheet_description),
-                    buttons: ExposureNotificationReminderIn.allCases.map { reminderIn in
-                        ActionSheet.Button.default(Text(.exposure_notification_reminder_sheet_hours(hours: reminderIn.rawValue))) {
-                            self.exposureNotificationReminderIn = reminderIn
-                            self.showExposureNotificationReminderAlert = true
-                        }
-                    } + [ActionSheet.Button.cancel(Text(.exposure_notification_reminder_sheet_cancel))]
-                )
-            }.alert(isPresented: $showExposureNotificationReminderAlert) { () -> Alert in
-                Alert(
-                    title: Text(.exposure_notification_reminder_alert_title(hours: self.exposureNotificationReminderIn!.rawValue)),
-                    message: Text(.exposure_notification_reminder_alert_description),
-                    dismissButton: .default(Text(.exposure_notification_reminder_alert_button)) {
-                        self.interactor.scheduleReminderNotification(reminderIn: self.exposureNotificationReminderIn!)
-                    }
-                )
-            }
-            
         }
         .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }
@@ -237,10 +164,12 @@ struct HomeView: View {
                 action: interactor.didTapAboutButton
             )
             
-            ToggleButton(
-                isToggledOn: $exposureNotifications.enabled,
+            NavigationButton(
                 imageName: .bluetooth,
-                text: localize(.home_toggle_exposure_notification_title)
+                foregroundColor: Color(.background),
+                backgroundColor: Color(.contactTracingHubButton),
+                text: localize(.home_contact_tracing_hub_button_title),
+                action: interactor.didTapContactTracingHubButton
             )
         }
     }

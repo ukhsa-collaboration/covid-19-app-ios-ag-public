@@ -172,8 +172,7 @@ class IsolationContextTests: XCTestCase {
         let date = GregorianDay.today
         isolationContext.isolationStateStore.set(
             IndexCaseInfo(
-                isolationTrigger: .selfDiagnosis(date.advanced(by: -9)),
-                onsetDay: nil,
+                symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: date.advanced(by: -9), onsetDay: nil),
                 testInfo: nil
             )
         )
@@ -203,8 +202,7 @@ class IsolationContextTests: XCTestCase {
         let date = GregorianDay.today
         isolationContext.isolationStateStore.set(
             IndexCaseInfo(
-                isolationTrigger: .selfDiagnosis(date.advanced(by: -15)),
-                onsetDay: nil,
+                symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: date.advanced(by: -15), onsetDay: nil),
                 testInfo: nil
             )
         )
@@ -232,8 +230,7 @@ class IsolationContextTests: XCTestCase {
         let date = GregorianDay.today
         isolationContext.isolationStateStore.set(
             IndexCaseInfo(
-                isolationTrigger: .selfDiagnosis(date.advanced(by: -15)),
-                onsetDay: nil,
+                symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: date.advanced(by: -15), onsetDay: nil),
                 testInfo: nil
             )
         )
@@ -286,8 +283,7 @@ class IsolationContextTests: XCTestCase {
         let date = GregorianDay.today
         isolationContext.isolationStateStore.set(
             IndexCaseInfo(
-                isolationTrigger: .selfDiagnosis(date.advanced(by: -9)),
-                onsetDay: nil,
+                symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: date.advanced(by: -9), onsetDay: nil),
                 testInfo: nil
             )
         )

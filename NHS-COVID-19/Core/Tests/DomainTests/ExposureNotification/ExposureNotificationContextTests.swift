@@ -63,7 +63,7 @@ class ExposureNotificationContextTests: XCTestCase {
     // Revisit this test after changing the logic when to show the "isolate due to risky contact" screen
     func testDoNotSendReminderNotificationWhenNotOnlyContactCase() throws {
         isolationContext.isolationStateStore.set(ContactCaseInfo(exposureDay: .today, isolationFromStartOfDay: .today))
-        isolationContext.isolationStateStore.set(IndexCaseInfo(isolationTrigger: .selfDiagnosis(.today), onsetDay: .today, testInfo: nil))
+        isolationContext.isolationStateStore.set(IndexCaseInfo(symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: .today, onsetDay: .today), testInfo: nil))
         
         try context.resendExposureDetectionNotificationIfNeeded(isolationContext: isolationContext).await().get()
         

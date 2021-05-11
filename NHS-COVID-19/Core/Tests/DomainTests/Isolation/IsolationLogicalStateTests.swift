@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -255,9 +255,8 @@ class IsolationLogicalStateTests: XCTestCase {
     func testManualTestEntryTriggersIsolation() {
         let npexDay = LocalDay.today.advanced(by: -2)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: npexDay.gregorianDay),
-            onsetDay: nil,
-            testInfo: .init(result: .positive, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: .today)
+            symptomaticInfo: nil,
+            testInfo: .init(result: .positive, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
         )
         
         let endDay = npexDay.advanced(by: $state.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days).gregorianDay
@@ -267,9 +266,8 @@ class IsolationLogicalStateTests: XCTestCase {
     func testManualTestEntryWithVoidResultDoesNotTriggerIsolation() {
         let npexDay = LocalDay.today.advanced(by: -2)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: npexDay.gregorianDay),
-            onsetDay: nil,
-            testInfo: .init(result: .void, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: .today)
+            symptomaticInfo: nil,
+            testInfo: .init(result: .void, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
         )
         
         XCTAssertEqual(state, .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil))
@@ -278,9 +276,8 @@ class IsolationLogicalStateTests: XCTestCase {
     func testManualTestEntryWithOldTestDoesNotTriggerIsolation() {
         let npexDay = LocalDay.today.advanced(by: -12)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: npexDay.gregorianDay),
-            onsetDay: nil,
-            testInfo: .init(result: .positive, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: .today)
+            symptomaticInfo: nil,
+            testInfo: .init(result: .positive, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
         )
         
         let endDay = npexDay.advanced(by: $state.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days).gregorianDay
@@ -328,9 +325,8 @@ class IsolationLogicalStateTests: XCTestCase {
     func testManualEntryRequiresConfirmatoryTestWithOldTestDoesNotTriggerIsolation() {
         let npexDay = LocalDay.today.advanced(by: -12)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: npexDay.gregorianDay),
-            onsetDay: nil,
-            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: .today)
+            symptomaticInfo: nil,
+            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
         )
         
         let endDay = npexDay.advanced(by: $state.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days).gregorianDay
@@ -341,9 +337,8 @@ class IsolationLogicalStateTests: XCTestCase {
     func testManualTestEntryRequiresConfirmatoryTestTriggersIsolation() {
         let npexDay = LocalDay.today.advanced(by: -2)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: npexDay.gregorianDay),
-            onsetDay: nil,
-            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: .today)
+            symptomaticInfo: nil,
+            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
         )
         
         let endDay = npexDay.advanced(by: $state.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days).gregorianDay
@@ -357,9 +352,8 @@ class IsolationLogicalStateTests: XCTestCase {
         
         let npexDay = LocalDay.today.advanced(by: -3)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: npexDay.gregorianDay),
-            onsetDay: nil,
-            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: .today)
+            symptomaticInfo: nil,
+            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
         )
         
         let endDay = $state.selfDiagnosisDay.advanced(by: 12)
@@ -428,9 +422,8 @@ private extension IndexCaseInfo {
     
     init(selfDiagnosisDay: GregorianDay, onsetDay: GregorianDay?, testResult: TestResult?) {
         self.init(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: onsetDay,
-            testInfo: testResult.map { TestInfo(result: $0, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: .today) }
+            symptomaticInfo: SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: onsetDay),
+            testInfo: testResult.map { TestInfo(result: $0, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: .today, testEndDay: nil) }
         )
     }
     

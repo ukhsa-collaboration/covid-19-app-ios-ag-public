@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -40,10 +40,6 @@ struct HomeScreen {
         app.buttons[localized: .home_about_the_app_button_title]
     }
     
-    var exposureNotificationSwitch: XCUIElement {
-        app.switches[localized: .home_toggle_exposure_notification_title]
-    }
-    
     func isolatingIndicator(date: Date, days: Int) -> XCUIElement {
         app.staticTexts[localized: .isolation_indicator_accessiblity_label(date: date, days: days)]
     }
@@ -56,19 +52,15 @@ struct HomeScreen {
         app.staticTexts[localized: .risk_level_indicator_contact_tracing_not_active]
     }
     
-    var pauseContactTracingButton: XCUIElement {
-        app.buttons[localized: .exposure_notification_reminder_sheet_hours(hours: 8)]
-    }
-    
-    var reminderAlertTitle: XCUIElement {
-        app.staticTexts[localized: .exposure_notification_reminder_alert_title(hours: 8)]
-    }
-    
-    var reminderAlertButton: XCUIElement {
-        app.buttons[localized: .exposure_notification_reminder_alert_button]
+    var turnContactTracingBackOnButton: XCUIElement {
+        app.buttons[localized: .risk_level_indicator_contact_tracing_turn_back_on_button]
     }
     
     var enterTestResultButton: XCUIElement {
         app.buttons[localized: .home_link_test_result_button_title]
+    }
+    
+    var contactTracingHubButton: XCUIElement {
+        app.buttons[localized: .home_contact_tracing_hub_button_title]
     }
 }

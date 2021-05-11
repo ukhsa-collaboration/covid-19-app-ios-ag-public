@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -12,6 +12,7 @@ public class RiskLevelIndicatorComponentScenario: Scenario {
     
     public static let name = "Risk Level Indicator"
     public static let kind = ScenarioKind.component
+    public static let turnContactTracingOnTappedTitle = "Turn Contact Tracing On tapped"
     
     enum Showcases: CaseIterable {
         case isolatingThreeDays
@@ -41,6 +42,7 @@ public class RiskLevelIndicatorComponentScenario: Scenario {
 private struct RiskLevelIndicatorView: View {
     
     @State var preferredColourScheme: ColorScheme? = nil
+    @State private var turnContactTracingOnAlertIsPresented = false
     
     @SwiftUI.Environment(\.colorScheme) var colorScheme
     
@@ -49,12 +51,16 @@ private struct RiskLevelIndicatorView: View {
     var body: some View {
         NavigationView {
             List(RiskLevelIndicatorComponentScenario.Showcases.allCases, id: \.index) {
-                RiskLevelIndicator(viewModel: $0.content())
-                
+                RiskLevelIndicator(
+                    viewModel: $0.content(),
+                    turnContactTracingOnTapAction: { turnContactTracingOnAlertIsPresented = true }
+                )
             }
             .navigationBarItems(trailing: toggleColorSchemeButton)
             .navigationBarTitle("RiskLevelIndicator")
-            
+            .alert(isPresented: $turnContactTracingOnAlertIsPresented, content: {
+                Alert(title: Text(RiskLevelIndicatorComponentScenario.turnContactTracingOnTappedTitle))
+            })
         }
         .preferredColorScheme(preferredColourScheme)
         

@@ -29,6 +29,8 @@ class PostAcknowledgementViewController: UIViewController {
     private let context: RunningAppContext
     private let shouldShowLanguageSelectionScreen: Bool
     private let clearBookATest: () -> Void
+    private let clearContactTracingHub: () -> Void
+    private let showContactTracingHub: CurrentValueSubject<Bool, Never>
     
     private var diagnosisKeySharer: DiagnosisKeySharer? {
         didSet {
@@ -49,12 +51,15 @@ class PostAcknowledgementViewController: UIViewController {
     init(
         context: RunningAppContext,
         shouldShowLanguageSelectionScreen: Bool,
-        showBookATest: CurrentValueSubject<Bool, Never>
+        showBookATest: CurrentValueSubject<Bool, Never>,
+        showContactTracingHub: CurrentValueSubject<Bool, Never>
     ) {
         self.context = context
         self.shouldShowLanguageSelectionScreen = shouldShowLanguageSelectionScreen
+        self.showContactTracingHub = showContactTracingHub
         
         clearBookATest = { showBookATest.value = false }
+        clearContactTracingHub = { showContactTracingHub.value = false }
         
         super.init(nibName: nil, bundle: nil)
         
@@ -62,25 +67,16 @@ class PostAcknowledgementViewController: UIViewController {
             .removeDuplicates()
             .sink { [weak self] showBookATest in
                 guard self?.interfaceState != .thankYouCompleted else { return }
-                if Thread.isMainThread {
+                DispatchQueue.onMain {
                     self?.interfaceState = showBookATest ? .bookATest : .home
-                } else {
-                    DispatchQueue.main.async {
-                        self?.interfaceState = showBookATest ? .bookATest : .home
-                    }
                 }
             }.store(in: &cancellables)
         
         context.diagnosisKeySharer
             .sink(receiveValue: { [weak self] diagnosisKeySharer in
-                if Thread.isMainThread {
+                DispatchQueue.onMain {
                     self?.diagnosisKeySharer = diagnosisKeySharer
-                } else {
-                    DispatchQueue.main.async {
-                        self?.diagnosisKeySharer = diagnosisKeySharer
-                    }
                 }
-                
             })
             .store(in: &cancellables)
     }
@@ -99,7 +95,7 @@ class PostAcknowledgementViewController: UIViewController {
         updateIfNeeded()
     }
     
-    func setNeedsInterfaceUpdate() {
+    private func setNeedsInterfaceUpdate() {
         setNeedsUpdate = true
         if isViewLoaded {
             view.setNeedsLayout()
@@ -107,81 +103,58 @@ class PostAcknowledgementViewController: UIViewController {
     }
     
     private func updateIfNeeded() {
+        
         guard isViewLoaded, setNeedsUpdate else { return }
         setNeedsUpdate = false
+        
         switch interfaceState {
         case .home:
-            content = homeViewController()
+            content = homeOrSendKeysViewController()
         case .thankYouCompleted:
             content = ThankYouViewController.viewController(
                 for: .completed,
                 interactor: ThankYouViewControllerInteractor(viewController: self)
             )
         case .bookATest:
-            let navigationVC = BaseNavigationController()
-            
-            let virologyInteractor = VirologyTestingFlowInteractor(
-                virologyTestOrderInfoProvider: context.virologyTestingManager,
-                openURL: context.openURL,
-                acknowledge: { [weak self] in
-                    if Thread.isMainThread {
-                        self?.clearBookATest()
-                        self?.interfaceState = .home
-                    } else {
-                        DispatchQueue.main.async {
-                            self?.clearBookATest()
-                            self?.interfaceState = .home
-                        }
-                    }
-                }
-            )
-            
-            let bookATestInfoInteractor = BookATestInfoViewControllerInteractor(
-                didTapBookATest: {
-                    let virologyFlowVC = VirologyTestingFlowViewController(virologyInteractor)
-                    navigationVC.present(virologyFlowVC, animated: true)
-                },
-                openURL: context.openURL
-            )
-            
-            let bookATestInfoVC = BookATestInfoViewController(interactor: bookATestInfoInteractor, shouldHaveCancelButton: true)
-            bookATestInfoVC.didCancel = virologyInteractor.acknowledge
-            navigationVC.viewControllers = [bookATestInfoVC]
-            content = navigationVC
+            content = bookATestViewController()
         }
     }
     
-    private func homeViewController() -> UIViewController {
+    private func homeOrSendKeysViewController() -> UIViewController {
+        
         if let diagnosisKeySharer = diagnosisKeySharer,
             let shareFlowType = SendKeysFlowViewController.ShareFlowType(
                 hasFinishedInitialKeySharingFlow: diagnosisKeySharer.hasFinishedInitialKeySharingFlow,
                 hasTriggeredReminderNotification: diagnosisKeySharer.hasTriggeredReminderNotification
             ) {
-            let interactor = SendKeysFlowViewControllerInteractor(
-                diagnosisKeySharer: diagnosisKeySharer,
-                didReceiveResult: { [weak self] value in
-                    if Thread.isMainThread {
-                        if value == .sent {
-                            self?.interfaceState = .thankYouCompleted
-                        } else {
-                            self?.interfaceState = .home
-                        }
+            return sendKeysViewController(diagnosisKeySharer, shareFlowType: shareFlowType)
+        }
+        
+        return homeViewController()
+    }
+    
+    private func sendKeysViewController(_ diagnosisKeySharer: DiagnosisKeySharer, shareFlowType: SendKeysFlowViewController.ShareFlowType) -> UIViewController {
+        
+        let interactor = SendKeysFlowViewControllerInteractor(
+            diagnosisKeySharer: diagnosisKeySharer,
+            didReceiveResult: { [weak self] value in
+                DispatchQueue.onMain {
+                    if value == .sent {
+                        self?.interfaceState = .thankYouCompleted
                     } else {
-                        DispatchQueue.main.async {
-                            if value == .sent {
-                                self?.interfaceState = .thankYouCompleted
-                            } else {
-                                self?.interfaceState = .home
-                            }
-                        }
+                        self?.interfaceState = .home
                     }
                 }
-            )
-            return SendKeysFlowViewController(
-                interactor: interactor,
-                shareFlowType: shareFlowType
-            )
-        }
+            }
+        )
+        
+        return SendKeysFlowViewController(
+            interactor: interactor,
+            shareFlowType: shareFlowType
+        )
+    }
+    
+    private func homeViewController() -> UIViewController {
         
         let interactor = HomeFlowViewControllerInteractor(
             context: context,
@@ -259,8 +232,39 @@ class PostAcknowledgementViewController: UIViewController {
             showFinancialSupportButton: showFinancialSupportButton,
             recordSelectedIsolationPaymentsButton: { Metrics.signpost(.selectedIsolationPaymentsButton) },
             country: country,
-            shouldShowLanguageSelectionScreen: shouldShowLanguageSelectionScreen
+            shouldShowLanguageSelectionScreen: shouldShowLanguageSelectionScreen,
+            showContactTracingHub: showContactTracingHub,
+            clearContactTracingHub: clearContactTracingHub
         )
+    }
+    
+    private func bookATestViewController() -> UIViewController {
+        
+        let navigationVC = BaseNavigationController()
+        
+        let virologyInteractor = VirologyTestingFlowInteractor(
+            virologyTestOrderInfoProvider: context.virologyTestingManager,
+            openURL: context.openURL,
+            acknowledge: { [weak self] in
+                DispatchQueue.onMain {
+                    self?.clearBookATest()
+                    self?.interfaceState = .home
+                }
+            }
+        )
+        
+        let bookATestInfoInteractor = BookATestInfoViewControllerInteractor(
+            didTapBookATest: {
+                let virologyFlowVC = VirologyTestingFlowViewController(virologyInteractor)
+                navigationVC.present(virologyFlowVC, animated: true)
+            },
+            openURL: context.openURL
+        )
+        
+        let bookATestInfoVC = BookATestInfoViewController(interactor: bookATestInfoInteractor, shouldHaveCancelButton: true)
+        bookATestInfoVC.didCancel = virologyInteractor.acknowledge
+        navigationVC.viewControllers = [bookATestInfoVC]
+        return navigationVC
     }
 }
 

@@ -48,8 +48,9 @@ class SandboxExposureNotificationManager: ExposureNotificationManaging {
                 return
             }
             let allowed = self.host.initialState.exposureNotificationsAuthorized
+            let enabled = self.host.initialState.exposureNotificationsEnabled
             self.instanceAuthorizationStatus = allowed ? .authorized : .unknown
-            self.exposureNotificationEnabled = allowed
+            self.exposureNotificationEnabled = allowed && enabled
             self.hasPreviouslyAskedForPermission = allowed
             self.exposureNotificationStatus = .active
             completionHandler(nil)

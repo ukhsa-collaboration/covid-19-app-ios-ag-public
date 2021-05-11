@@ -53,7 +53,10 @@ extension HomeScreenScenario {
                 ),
                 riskLevelBannerViewModel: .constant(postcodeViewModel(parent: parent)),
                 isolationViewModel: RiskLevelIndicator.ViewModel(isolationState: .constant(.notIsolating), paused: .constant(false)),
-                exposureNotificationsEnabled: exposureNotificationsEnabled.removeDuplicates().eraseToAnyPublisher(),
+                exposureNotificationsEnabled: exposureNotificationsEnabled.property(initialValue: false),
+                exposureNotificationsToggleAction: { [weak parent] toggle in
+                    parent?.showAlert(title: "Toggle state changed to \(toggle)")
+                },
                 showOrderTestButton: .constant(showOrderTestButton),
                 shouldShowSelfDiagnosis: .constant(shouldShowSelfDiagnosis),
                 userNotificationsEnabled: .constant(false),
@@ -102,6 +105,7 @@ public class HomeScreenAlerts {
     public static let linkTestResultTitle = "Link test result tapped"
     public static let postcodeBannerAlertTitle = "Postcode banner tapped"
     public static let scheduleNotificationAlertTitle = "Notification scheduled"
+    public static let contactTracingHubAlertTitle = "Contact Tracing Hub tapped"
 }
 
 private class Interactor: HomeViewController.Interacting {
@@ -159,6 +163,10 @@ private class Interactor: HomeViewController.Interacting {
     
     func didTapLinkTestResultButton() {
         viewController?.showAlert(title: HomeScreenAlerts.linkTestResultTitle)
+    }
+    
+    func didTapContactTracingHubButton() {
+        viewController?.showAlert(title: HomeScreenAlerts.contactTracingHubAlertTitle)
     }
     
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never> {

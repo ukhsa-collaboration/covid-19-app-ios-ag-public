@@ -142,7 +142,10 @@ public class ApplicationCoordinator {
         let isolationContext = self.isolationContext
         
         selfDiagnosisManager = SelfDiagnosisManager(httpClient: distributeClient) { onsetDay in
-            let info = IndexCaseInfo(isolationTrigger: .selfDiagnosis(dateProvider.currentGregorianDay(timeZone: .current)), onsetDay: onsetDay, testInfo: nil)
+            let info = IndexCaseInfo(
+                symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: dateProvider.currentGregorianDay(timeZone: .current), onsetDay: onsetDay),
+                testInfo: nil
+            )
             return IsolationState(logicalState: isolationContext.isolationStateStore.set(info))
         }
         

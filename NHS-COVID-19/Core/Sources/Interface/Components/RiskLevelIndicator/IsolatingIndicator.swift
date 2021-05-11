@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -7,7 +7,6 @@ import SwiftUI
 
 public struct IsolatingIndicator: View {
     
-    @State private var animate = false
     @Environment(\.accessibilityReduceMotion) var reduceMotion
     
     private var isDetectionPaused: Bool
@@ -48,6 +47,20 @@ public struct IsolatingIndicator: View {
     
     private let badgeSize: CGFloat = 110
     
+    /// On iOS 14.0 and 14.1, a bug means returning to the home screen from
+    /// the Contact Tracing Hub after turning contact tracing back on causes the
+    /// app to crash. This doesn't happen if animation is turned off, so on these
+    /// versions, we act as if 'reduce motion' is turned on in Accessibility settings.
+    private var shouldDegradeAnimation: Bool {
+        if #available(iOS 14.2, *) {
+            return false
+        } else if #available(iOS 14.0, *) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     public var body: some View {
         VStack(alignment: .center, spacing: .standardSpacing) {
             Text(verbatim: localize(.isolation_until_date_title))
@@ -62,12 +75,10 @@ public struct IsolatingIndicator: View {
                 .fixedSize(horizontal: false, vertical: true)
             
             ZStack(alignment: .center) {
-                if self.reduceMotion || isDetectionPaused {
+                if self.reduceMotion || isDetectionPaused || shouldDegradeAnimation {
                     Circle()
                         .foregroundColor(Color(.errorRed))
-                        .opacity(0.05).onAppear {
-                            self.animate = false
-                        }
+                        .opacity(0.05)
                 } else {
                     PulsatingCircle(delay: 0, initialDiameter: badgeSize, color: Color(.errorRed))
                     PulsatingCircle(delay: 1, initialDiameter: badgeSize, color: Color(.errorRed))

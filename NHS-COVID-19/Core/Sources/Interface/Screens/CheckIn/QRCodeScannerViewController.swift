@@ -162,6 +162,10 @@ public class QRCodeScannerViewController: UIViewController {
         interactor.showHelp()
     }
     
+    func announceCameraIfRunning() {
+        scanView.cameraActiveAnnouncement()
+    }
+    
     @objc func closeButtonTapped() {
         dismiss(animated: true, completion: nil)
     }

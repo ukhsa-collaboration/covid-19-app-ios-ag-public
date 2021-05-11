@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -101,10 +101,11 @@ class HousekeeperTests: XCTestCase {
     }
     
     func testHousekeeperShouldClearManualTestEntryOfNegativeTestIfDeletionPeriodHasPassed() throws {
+        let testEndDay = GregorianDay(year: 2020, month: 7, day: 10)
         let housekeeper = createHouseKeeper(
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
-            isolationInfo: IsolationInfo(indexCaseInfo: IndexCaseInfo(isolationTrigger: .manualTestEntry(npexDay: GregorianDay(year: 2020, month: 7, day: 10)), onsetDay: GregorianDay(year: 2020, month: 7, day: 24), testInfo: IndexCaseInfo.TestInfo(result: .negative, requiresConfirmatoryTest: false, receivedOnDay: GregorianDay(year: 2020, month: 7, day: 24))), contactCaseInfo: nil),
+            isolationInfo: IsolationInfo(indexCaseInfo: IndexCaseInfo(symptomaticInfo: nil, testInfo: IndexCaseInfo.TestInfo(result: .negative, requiresConfirmatoryTest: false, receivedOnDay: GregorianDay(year: 2020, month: 7, day: 24), testEndDay: testEndDay)), contactCaseInfo: nil),
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet:
                 nil)
         )
@@ -114,10 +115,11 @@ class HousekeeperTests: XCTestCase {
     }
     
     func testHousekeeperShouldNotClearManualTestEntryOfNegativeTestIfDeletionPeriodHasNotPassed() throws {
+        let testEndDay = GregorianDay(year: 2020, month: 7, day: 11)
         let housekeeper = createHouseKeeper(
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
-            isolationInfo: IsolationInfo(indexCaseInfo: IndexCaseInfo(isolationTrigger: .manualTestEntry(npexDay: GregorianDay(year: 2020, month: 7, day: 11)), onsetDay: GregorianDay(year: 2020, month: 7, day: 24), testInfo: IndexCaseInfo.TestInfo(result: .negative, requiresConfirmatoryTest: false, receivedOnDay: GregorianDay(year: 2020, month: 7, day: 24))), contactCaseInfo: nil),
+            isolationInfo: IsolationInfo(indexCaseInfo: IndexCaseInfo(symptomaticInfo: nil, testInfo: IndexCaseInfo.TestInfo(result: .negative, requiresConfirmatoryTest: false, receivedOnDay: GregorianDay(year: 2020, month: 7, day: 24), testEndDay: testEndDay)), contactCaseInfo: nil),
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet:
                 nil)
         )

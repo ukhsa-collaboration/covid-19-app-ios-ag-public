@@ -17,6 +17,7 @@ public protocol HomeFlowViewControllerInteracting {
     func makeFinancialSupportViewController() -> UIViewController?
     func makeLinkTestResultViewController() -> UIViewController?
     func makeDailyConfirmationViewController(parentVC: UIViewController, with terminate: @escaping () -> Void) -> UIViewController?
+    func makeContactTracingHubViewController(exposureNotificationsEnabled: InterfaceProperty<Bool>, exposureNotificationsToggleAction: @escaping (Bool) -> Void, userNotificationsEnabled: InterfaceProperty<Bool>) -> UIViewController
     func getMyDataViewModel() -> MyDataViewController.ViewModel
     func getMyAreaViewModel() -> MyAreaTableViewController.ViewModel
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never>
@@ -48,6 +49,12 @@ public class HomeFlowViewController: BaseNavigationController {
     public typealias Interacting = HomeFlowViewControllerInteracting
     
     private let interactor: Interacting
+    private var cancellables = [AnyCancellable]()
+    
+    // Allows the UI to update immediately until a genuine value has been published by the model
+    private let optimisiticExposureNotificationsEnabled = CurrentValueSubject<Bool?, Never>(nil)
+    private let exposureNotificationsEnabled: InterfaceProperty<Bool>
+    private let clearContactTracingHub: () -> Void
     
     public init(
         interactor: Interacting,
@@ -60,9 +67,19 @@ public class HomeFlowViewController: BaseNavigationController {
         showFinancialSupportButton: InterfaceProperty<Bool>,
         recordSelectedIsolationPaymentsButton: @escaping () -> Void,
         country: InterfaceProperty<Country>,
-        shouldShowLanguageSelectionScreen: Bool
+        shouldShowLanguageSelectionScreen: Bool,
+        showContactTracingHub: CurrentValueSubject<Bool, Never>,
+        clearContactTracingHub: @escaping () -> Void
     ) {
         self.interactor = interactor
+        
+        self.exposureNotificationsEnabled = optimisiticExposureNotificationsEnabled
+            .combineLatest(exposureNotificationsEnabled) { $0 ?? $1 }
+            .removeDuplicates()
+            .property(initialValue: false)
+        
+        self.clearContactTracingHub = clearContactTracingHub
+        
         super.init()
         
         let aboutThisAppInteractor = AboutThisAppInteractor(flowController: self, interactor: interactor)
@@ -74,7 +91,10 @@ public class HomeFlowViewController: BaseNavigationController {
             riskLevelInteractor: riskLevelInteractor,
             aboutThisAppInteractor: aboutThisAppInteractor,
             settingsInteractor: settingsInteractor,
-            recordSelectedIsolationPaymentsButton: recordSelectedIsolationPaymentsButton
+            recordSelectedIsolationPaymentsButton: recordSelectedIsolationPaymentsButton,
+            userNotificationsEnabled: userNotificationsEnabled,
+            exposureNotificationsEnabled: exposureNotificationsEnabled.property(initialValue: false),
+            exposureNotificationsToggleAction: exposureNotificationSwitchValueChanged
         )
         
         let showLanguageSelectionScreen: () -> Void = {
@@ -89,22 +109,59 @@ public class HomeFlowViewController: BaseNavigationController {
             interactor: homeViewControllerInteractor,
             riskLevelBannerViewModel: riskLevelBannerViewModel,
             isolationViewModel: isolationViewModel,
-            exposureNotificationsEnabled: exposureNotificationsEnabled,
+            exposureNotificationsEnabled: self.exposureNotificationsEnabled,
+            exposureNotificationsToggleAction: exposureNotificationSwitchValueChanged,
             showOrderTestButton: showOrderTestButton,
             shouldShowSelfDiagnosis: shouldShowSelfDiagnosis,
             userNotificationsEnabled: userNotificationsEnabled,
             showFinancialSupportButton: showFinancialSupportButton,
             country: country,
-            showLanguageSelectionScreen: shouldShowLanguageSelectionScreen ? showLanguageSelectionScreen : nil
+            showLanguageSelectionScreen: shouldShowLanguageSelectionScreen ? showLanguageSelectionScreen : nil,
+            showContactTracingHub: {
+                if showContactTracingHub.value {
+                    self.checkStateAndShowContactTracingHub(exposureNotificationsEnabled: self.exposureNotificationsEnabled, exposureNotificationsToggleAction: self.exposureNotificationSwitchValueChanged, userNotificationsEnabled: userNotificationsEnabled)
+                }
+            }
         )
         
         viewControllers = [rootViewController]
+        
+        showContactTracingHub
+            .removeDuplicates()
+            .filter { $0 == true }
+            .sink(receiveValue: { [weak self] showContactTracingHub in
+                guard let self = self else { return }
+                DispatchQueue.onMain {
+                    self.checkStateAndShowContactTracingHub(exposureNotificationsEnabled: self.exposureNotificationsEnabled, exposureNotificationsToggleAction: self.exposureNotificationSwitchValueChanged, userNotificationsEnabled: userNotificationsEnabled)
+                    
+                }
+            }).store(in: &cancellables)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func exposureNotificationSwitchValueChanged(_ isOn: Bool) {
+        optimisiticExposureNotificationsEnabled.send(isOn)
+        interactor.setExposureNotifcationEnabled(isOn)
+            .sink(receiveCompletion: { [weak self] _ in
+                // Reset ready for next time
+                self?.optimisiticExposureNotificationsEnabled.send(nil)
+            }, receiveValue: {})
+            .store(in: &cancellables)
+    }
+    
+    private func checkStateAndShowContactTracingHub(exposureNotificationsEnabled: InterfaceProperty<Bool>, exposureNotificationsToggleAction: @escaping (Bool) -> Void, userNotificationsEnabled: InterfaceProperty<Bool>) {
+        
+        clearContactTracingHub()
+        
+        // Home screen is visible (there are no presented/pushed VC's
+        guard presentedViewController == nil, viewControllers.count == 1 else { return }
+        
+        let vc = interactor.makeContactTracingHubViewController(exposureNotificationsEnabled: exposureNotificationsEnabled, exposureNotificationsToggleAction: exposureNotificationsToggleAction, userNotificationsEnabled: userNotificationsEnabled)
+        pushViewController(vc, animated: true)
+    }
 }
 
 private struct HomeViewControllerInteractor: HomeViewController.Interacting {
@@ -114,6 +171,9 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     private let aboutThisAppInteractor: AboutThisAppViewController.Interacting
     private let settingsInteractor: SettingsViewController.Interacting
     private let recordSelectedIsolationPaymentsButton: () -> Void
+    private let userNotificationsEnabled: InterfaceProperty<Bool>
+    private let exposureNotificationsEnabled: InterfaceProperty<Bool>
+    private let exposureNotificationsToggleAction: (Bool) -> Void
     
     init(
         flowController: UINavigationController,
@@ -121,7 +181,10 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         riskLevelInteractor: RiskLevelInfoViewController.Interacting,
         aboutThisAppInteractor: AboutThisAppViewController.Interacting,
         settingsInteractor: SettingsViewController.Interacting,
-        recordSelectedIsolationPaymentsButton: @escaping () -> Void
+        recordSelectedIsolationPaymentsButton: @escaping () -> Void,
+        userNotificationsEnabled: InterfaceProperty<Bool>,
+        exposureNotificationsEnabled: InterfaceProperty<Bool>,
+        exposureNotificationsToggleAction: @escaping (Bool) -> Void
     ) {
         self.flowController = flowController
         self.flowInteractor = flowInteractor
@@ -129,6 +192,9 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         self.aboutThisAppInteractor = aboutThisAppInteractor
         self.settingsInteractor = settingsInteractor
         self.recordSelectedIsolationPaymentsButton = recordSelectedIsolationPaymentsButton
+        self.userNotificationsEnabled = userNotificationsEnabled
+        self.exposureNotificationsEnabled = exposureNotificationsEnabled
+        self.exposureNotificationsToggleAction = exposureNotificationsToggleAction
     }
     
     public func didTapRiskLevelBanner(viewModel: RiskLevelInfoViewController.ViewModel) {
@@ -201,6 +267,11 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         }
         
         flowController?.present(viewController, animated: true)
+    }
+    
+    public func didTapContactTracingHubButton() {
+        let viewController = flowInteractor.makeContactTracingHubViewController(exposureNotificationsEnabled: exposureNotificationsEnabled, exposureNotificationsToggleAction: exposureNotificationsToggleAction, userNotificationsEnabled: userNotificationsEnabled)
+        flowController?.pushViewController(viewController, animated: true)
     }
     
     public func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never> {

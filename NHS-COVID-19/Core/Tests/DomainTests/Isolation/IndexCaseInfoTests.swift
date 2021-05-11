@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -12,8 +12,7 @@ class IndexCaseInfoTests: XCTestCase {
         let selfDiagnosisDay = GregorianDay(dateComponents: DateComponents(year: 2020, month: 7, day: 7))
         
         let info = IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: onsetDay,
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: onsetDay),
             testInfo: nil
         )
         
@@ -25,8 +24,7 @@ class IndexCaseInfoTests: XCTestCase {
         let selfDiagnosisDay = GregorianDay(dateComponents: DateComponents(year: 2020, month: 7, day: 7))
         
         let info = IndexCaseInfo(
-            isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-            onsetDay: nil,
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
             testInfo: nil
         )
         
@@ -39,9 +37,8 @@ class IndexCaseInfoTests: XCTestCase {
         let manualTestEntryDay = GregorianDay(dateComponents: DateComponents(year: 2020, month: 7, day: 7))
         
         let info = IndexCaseInfo(
-            isolationTrigger: .manualTestEntry(npexDay: manualTestEntryDay),
-            onsetDay: nil,
-            testInfo: nil
+            symptomaticInfo: nil,
+            testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
         )
         
         let expectedOnsetDay = manualTestEntryDay.advanced(by: -3)

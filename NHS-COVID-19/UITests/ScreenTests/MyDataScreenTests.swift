@@ -16,7 +16,8 @@ class MyDataScreenTests: XCTestCase {
             XCTAssertTrue(screen.testResultSectionHeader.exists)
             XCTAssertTrue(screen.testResult(testResult: localize(.mydata_test_result_positive)).exists)
             XCTAssertTrue(screen.cellTestKitType(testKitType: localize(.mydata_test_result_lab_result)).exists)
-            XCTAssertTrue(screen.cellDate(date: runner.scenario.testResultDate).exists)
+            XCTAssertTrue(screen.cellDate(date: runner.scenario.testAcknowledgmentDate).exists)
+            XCTAssertTrue(screen.cellDate(date: runner.scenario.testEndDate).exists)
             XCTAssertTrue(screen.cellDate(date: runner.scenario.encounterDate).exists)
             XCTAssertTrue(screen.cellDate(date: runner.scenario.symptomsDate).exists)
         }

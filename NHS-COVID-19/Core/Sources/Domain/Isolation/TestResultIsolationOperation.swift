@@ -28,7 +28,7 @@ struct TestResultIsolationOperation {
                 }
             case .negative: return .nothing
             case .positive where indexCaseInfo.testInfo?.confirmationStatus == .pending:
-                if result.endDay < indexCaseInfo.isolationTrigger.startDay {
+                if result.endDay < indexCaseInfo.startDay {
                     return .nothing
                 } else {
                     return .overwrite

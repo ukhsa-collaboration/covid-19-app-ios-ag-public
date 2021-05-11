@@ -132,4 +132,14 @@ extension UILabel {
         }
         return self
     }
+    
+    @discardableResult
+    func formatAsPostcode() -> Self {
+        if let text = self.text,
+            text.count >= 5,
+            !text.contains(" ") {
+            self.text = "\(text.prefix(text.count - 3)) \(text.suffix(3))"
+        }
+        return self
+    }
 }

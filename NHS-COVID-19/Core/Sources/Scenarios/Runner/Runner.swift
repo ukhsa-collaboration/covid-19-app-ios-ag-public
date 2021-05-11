@@ -193,7 +193,8 @@ public class Runner {
                 showDevView: Binding(
                     get: { [weak self] in self?.showDevView ?? false },
                     set: { [weak self] value in self?.showDevView = value }
-                )
+                ),
+                adjustableDateProvider: AdjustableDateProvider()
             )
         )
         mocks.title = "Mocks"

@@ -84,9 +84,11 @@ public enum StringLocalizationKey: String, CaseIterable {
     case home_default_advice_button_title
     case home_isolation_advice_button_title
     case home_settings_button_title
+    case home_contact_tracing_hub_button_title
     
     case risk_level_indicator_contact_tracing_active
     case risk_level_indicator_contact_tracing_not_active
+    case risk_level_indicator_contact_tracing_turn_back_on_button
     case risk_level_high
     case risk_level_medium
     case risk_level_low
@@ -149,6 +151,8 @@ public enum StringLocalizationKey: String, CaseIterable {
     case qrcoder_scanner_status_processing
     case qrcoder_scanner_status_running
     case qrcoder_scanner_status_stopped
+    
+    case camera_active_accessibility_announcement
     
     case alert_postcode_risk_change_title
     case alert_postcode_risk_change_body
@@ -366,7 +370,8 @@ public enum StringLocalizationKey: String, CaseIterable {
     case mydata_venue_history_edit_button_accessibility_description
     case mydata_venue_history_done_button_title
     case mydata_venue_history_done_button_accessibility_description
-    case mydata_test_result_test_date
+    case mydata_test_result_test_acknowledgement_date
+    case mydata_test_result_test_end_date
     case mydata_test_result_test_result
     case mydata_test_result_test_kit_type
     case mydata_test_result_lab_result
@@ -450,16 +455,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     
     case checkin_confirmation_title
     
-    // MARK: Old 'share keys' screen
-    
-    case share_keys_confirmation_title
-    case share_keys_confirmation_heading
-    case share_keys_confirmation_privacy_notice
-    case share_keys_confirmation_info_title
-    case share_keys_confirmation_info_body
-    case share_keys_confirmation_i_understand
-    
-    // MARK: New 'share keys' screens
+    // MARK: 'share keys' screens
     
     case share_keys_and_venues_share_keys_title
     case share_keys_and_venues_your_privacy_is_protected
@@ -592,6 +588,17 @@ public enum StringLocalizationKey: String, CaseIterable {
     case share_keys_and_venues_reminder_screen_reconsider_sharing_body
     case share_keys_and_venues_reminder_screen_back_to_share_button_title
     case share_keys_and_venues_reminder_screen_do_not_share_button_title
+    
+    case ukca_compliance_announcement
+    
+    case contact_tracing_hub_title
+    case contact_tracing_toggle_title_on
+    case contact_tracing_toggle_title_off
+    case contact_tracing_hub_pause_tracing_header
+    case contact_tracing_hub_pause_tracing_bullet_points
+    case contact_tracing_hub_tracing_reminder
+    case contact_tracing_hub_dont_pause_tracing_header
+    case contact_tracing_hub_dont_pause_tracing_bullet_points
 }
 
 public enum ParameterisedStringLocalizable: Equatable {
