@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -19,7 +19,6 @@ public class ExposureAcknowledgementScreenNoDCTScenario: Scenario {
             return ContactCaseAcknowledgementViewController(
                 interactor: interactor,
                 isolationEndDate: Date(timeIntervalSinceNow: 14 * 86400),
-                type: .exposureDetection,
                 showDailyContactTesting: false
             )
         }
@@ -36,7 +35,6 @@ public class ExposureAcknowledgementScreenWithDCTScenario: Scenario {
             return ContactCaseAcknowledgementViewController(
                 interactor: interactor,
                 isolationEndDate: Date(timeIntervalSinceNow: 14 * 86400),
-                type: .exposureDetection,
                 showDailyContactTesting: true
             )
         }

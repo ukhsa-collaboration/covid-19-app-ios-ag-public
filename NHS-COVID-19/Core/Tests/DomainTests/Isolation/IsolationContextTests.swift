@@ -53,10 +53,7 @@ class IsolationContextTests: XCTestCase {
     }
     
     func testMakeBackgroundJobs() throws {
-        let backgroundJobs = isolationContext.makeBackgroundJobs(
-            metricsFrequency: 1.0,
-            housekeepingFrequency: 1.0
-        )
+        let backgroundJobs = isolationContext.makeBackgroundJobs()
         
         XCTAssertEqual(backgroundJobs.count, 3)
         
@@ -143,7 +140,7 @@ class IsolationContextTests: XCTestCase {
     private func makeResultAcknowledgementState(result: VirologyStateTestResult) -> AnyPublisher<TestResultAcknowledgementState, Never> {
         isolationContext.makeResultAcknowledgementState(
             result: result,
-            completionHandler: { _ in }
+            completionHandler: { _, _ in }
         )
     }
     
@@ -158,8 +155,7 @@ class IsolationContextTests: XCTestCase {
         
         let state = try makeResultAcknowledgementState(result: result).await().get()
         
-        if case TestResultAcknowledgementState.neededForPositiveResultStartToIsolate(let acknowledge, _, let requiresConfirmatory) = state {
-            XCTAssertFalse(requiresConfirmatory)
+        if case TestResultAcknowledgementState.neededForPositiveResultStartToIsolate(let acknowledge, _) = state {
             acknowledge()
             XCTAssertTrue(isolationContext.isolationStateManager.state.isIsolating)
         } else {
@@ -246,8 +242,7 @@ class IsolationContextTests: XCTestCase {
         
         let state = try makeResultAcknowledgementState(result: result).await().get()
         
-        if case TestResultAcknowledgementState.neededForPositiveResultStartToIsolate(let acknowledge, _, let requiresConfirmatory) = state {
-            XCTAssertTrue(requiresConfirmatory)
+        if case TestResultAcknowledgementState.neededForPositiveResultStartToIsolate(let acknowledge, _) = state {
             acknowledge()
             XCTAssertTrue(isolationContext.isolationStateManager.state.isIsolating)
         } else {
@@ -362,5 +357,169 @@ class IsolationContextTests: XCTestCase {
         // confirm that the optOutOfIsolationDay field is nil
         let contactCaseInfo = isolationContext.isolationStateStore.isolationInfo.contactCaseInfo
         XCTAssertNil(contactCaseInfo?.optOutOfIsolationDay)
+    }
+    
+    func testHandleSymptomsWithoutTest() {
+        let onsetDay = GregorianDay.today
+        let fromDay = LocalDay(gregorianDay: onsetDay, timeZone: .current)
+        let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.indexCaseSinceSelfDiagnosisOnset.days)
+        
+        let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay)
+        
+        let expectedIsolationState = IsolationState.isolate(
+            Isolation(
+                fromDay: fromDay,
+                untilStartOfDay: untilStartOfDay,
+                reason: .init(
+                    indexCaseInfo: .init(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false),
+                    contactCaseInfo: nil
+                )
+            )
+        )
+        XCTAssertEqual(state.0, expectedIsolationState)
+        XCTAssertNil(state.1)
+    }
+    
+    func testHandleSymptomsAfterTest() {
+        let onsetDay = GregorianDay.today
+        let receivedOnDay = GregorianDay.today
+        let testEndDay = GregorianDay.today.advanced(by: -2)
+        let fromDay = LocalDay(gregorianDay: onsetDay, timeZone: .current)
+        let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.indexCaseSinceSelfDiagnosisOnset.days)
+        
+        isolationContext.isolationStateStore.set(
+            IndexCaseInfo(
+                symptomaticInfo: nil,
+                testInfo: IndexCaseInfo.TestInfo(
+                    result: .positive,
+                    requiresConfirmatoryTest: false,
+                    receivedOnDay: receivedOnDay,
+                    testEndDay: testEndDay
+                )
+            )
+        )
+        
+        let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay)
+        let expectedIsolationState = IsolationState.isolate(
+            Isolation(
+                fromDay: fromDay,
+                untilStartOfDay: untilStartOfDay,
+                reason: .init(
+                    indexCaseInfo: .init(hasPositiveTestResult: true, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false),
+                    contactCaseInfo: nil
+                )
+            )
+        )
+        XCTAssertEqual(state.0, expectedIsolationState)
+        XCTAssertEqual(state.1, true)
+    }
+    
+    func testHandleSymptomsAfterExpiredTest() {
+        let onsetDay = GregorianDay.today
+        let receivedOnDay = GregorianDay.today
+        let testEndDay = GregorianDay.today.advanced(by: -11)
+        let fromDay = LocalDay(gregorianDay: onsetDay, timeZone: .current)
+        let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.indexCaseSinceSelfDiagnosisOnset.days)
+        
+        isolationContext.isolationStateStore.set(
+            IndexCaseInfo(
+                symptomaticInfo: nil,
+                testInfo: IndexCaseInfo.TestInfo(
+                    result: .positive,
+                    requiresConfirmatoryTest: false,
+                    receivedOnDay: receivedOnDay,
+                    testEndDay: testEndDay
+                )
+            )
+        )
+        
+        let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay)
+        let expectedIsolationState = IsolationState.isolate(
+            Isolation(
+                fromDay: fromDay,
+                untilStartOfDay: untilStartOfDay,
+                reason: .init(
+                    indexCaseInfo: .init(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false),
+                    contactCaseInfo: nil
+                )
+            )
+        )
+        XCTAssertEqual(state.0, expectedIsolationState)
+        XCTAssertEqual(state.1, nil)
+    }
+    
+    func testHandleSymptomsAfterExpiredTestButActiveContactCase() {
+        let onsetDay = GregorianDay.today
+        let receivedOnDay = GregorianDay.today
+        let testEndDay = GregorianDay.today.advanced(by: -11)
+        let fromDay = LocalDay(gregorianDay: onsetDay, timeZone: .current)
+        let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.contactCase.days)
+        
+        isolationContext.isolationStateStore.set(
+            IndexCaseInfo(
+                symptomaticInfo: nil,
+                testInfo: IndexCaseInfo.TestInfo(
+                    result: .positive,
+                    requiresConfirmatoryTest: false,
+                    receivedOnDay: receivedOnDay,
+                    testEndDay: testEndDay
+                )
+            )
+        )
+        
+        isolationContext.isolationStateStore.set(
+            ContactCaseInfo(
+                exposureDay: .today,
+                isolationFromStartOfDay: .today
+            )
+        )
+        
+        let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay)
+        let expectedIsolationState = IsolationState.isolate(
+            Isolation(
+                fromDay: fromDay,
+                untilStartOfDay: untilStartOfDay,
+                reason: .init(
+                    indexCaseInfo: .init(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false),
+                    contactCaseInfo: .init(optOutOfIsolationDay: nil)
+                )
+            )
+        )
+        XCTAssertEqual(state.0, expectedIsolationState)
+        XCTAssertEqual(state.1, nil)
+    }
+    
+    func testHandleSymptomsBeforeTest() {
+        let onsetDay = GregorianDay.today.advanced(by: -2)
+        let receivedOnDay = GregorianDay.today
+        let testEndDay = GregorianDay.today
+        let fromDay = LocalDay(gregorianDay: testEndDay, timeZone: .current)
+        let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.indexCaseSinceNPEXDayNoSelfDiagnosis.days)
+        
+        isolationContext.isolationStateStore.set(
+            IndexCaseInfo(
+                symptomaticInfo: nil,
+                testInfo: IndexCaseInfo.TestInfo(
+                    result: .positive,
+                    requiresConfirmatoryTest: false,
+                    receivedOnDay: receivedOnDay,
+                    testEndDay: testEndDay
+                )
+            )
+        )
+        
+        let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay)
+        let expectedIsolationState = IsolationState.isolate(
+            Isolation(
+                fromDay: fromDay,
+                untilStartOfDay: untilStartOfDay,
+                reason: .init(
+                    indexCaseInfo: .init(hasPositiveTestResult: true, testKitType: nil, isSelfDiagnosed: false, isPendingConfirmation: false),
+                    contactCaseInfo: nil
+                )
+            )
+        )
+        XCTAssertEqual(state.0, expectedIsolationState)
+        XCTAssertEqual(state.1, false)
     }
 }

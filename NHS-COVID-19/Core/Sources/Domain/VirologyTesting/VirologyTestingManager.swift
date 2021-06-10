@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -9,6 +9,10 @@ import Foundation
 public protocol VirologyTestingManaging {
     func provideTestOrderInfo() -> AnyPublisher<TestOrderInfo, NetworkRequestError>
     func linkExternalTestResult(with token: String) -> AnyPublisher<Void, LinkTestResultError>
+    var didReceiveUnknownTestResult: Bool { get }
+    func acknowledgeUnknownTestResult()
+    func isFollowUpTestRequired() -> AnyPublisher<Bool, Never>
+    func didClearBookFollowUpTest()
 }
 
 class VirologyTestingManager: VirologyTestingManaging {
@@ -16,6 +20,8 @@ class VirologyTestingManager: VirologyTestingManaging {
     private let virologyTestingStateCoordinator: VirologyTestingStateCoordinating
     private let ctaTokenValidator: CTATokenValidating
     private let country: () -> Country
+    
+    let followUpTestRequired = CurrentValueSubject<Bool, Never>(false)
     
     init(
         httpClient: HTTPClient,
@@ -37,6 +43,7 @@ class VirologyTestingManager: VirologyTestingManaging {
             }.eraseToAnyPublisher()
     }
     
+    // handle polling for outstanding test results
     func evaulateTestResults() -> AnyPublisher<Void, Never> {
         return Publishers.Sequence<[AnyPublisher<VirologyTestResponse, NetworkRequestError>], NetworkRequestError>(
             sequence: virologyTestingStateCoordinator.virologyTestTokens.map { tokens in
@@ -46,6 +53,11 @@ class VirologyTestingManager: VirologyTestingManaging {
                             response,
                             virologyTestTokens: tokens
                         )
+                    }, receiveCompletion: { completion in
+                        if case .failure(let error) = completion,
+                            LinkTestResultError(error) == .decodeFailed {
+                            self.virologyTestingStateCoordinator.handlePollingUnknownTestResult(tokens)
+                        }
                     })
                     .eraseToAnyPublisher()
             })
@@ -57,10 +69,19 @@ class VirologyTestingManager: VirologyTestingManaging {
             .eraseToAnyPublisher()
     }
     
+    // handle manual entry of a CTA token
     func linkExternalTestResult(with token: String) -> AnyPublisher<Void, LinkTestResultError> {
         if ctaTokenValidator.validate(token) {
             return httpClient.fetch(LinkVirologyTestResultEndpoint(), with: CTAToken(value: token, country: country()))
-                .handleEvents(receiveOutput: virologyTestingStateCoordinator.handleManualTestResult)
+                .handleEvents(
+                    receiveOutput: virologyTestingStateCoordinator.handleManualTestResult,
+                    receiveCompletion: { completion in
+                        if case .failure(let error) = completion,
+                            LinkTestResultError(error) == .decodeFailed {
+                            self.virologyTestingStateCoordinator.handleUnknownTestResult()
+                        }
+                    }
+                )
                 .mapError(LinkTestResultError.init)
                 .map { _ in
                     ()
@@ -69,8 +90,24 @@ class VirologyTestingManager: VirologyTestingManaging {
         } else {
             return Result.failure(LinkTestResultError.invalidCode).publisher.eraseToAnyPublisher()
         }
-        
     }
+    
+    var didReceiveUnknownTestResult: Bool {
+        virologyTestingStateCoordinator.didReceiveUnknownTestResult
+    }
+    
+    func acknowledgeUnknownTestResult() {
+        virologyTestingStateCoordinator.acknowledgeUnknownTestResult()
+    }
+    
+    func isFollowUpTestRequired() -> AnyPublisher<Bool, Never> {
+        followUpTestRequired.eraseToAnyPublisher()
+    }
+    
+    func didClearBookFollowUpTest() {
+        followUpTestRequired.send(false)
+    }
+    
 }
 
 public struct TestOrderInfo {

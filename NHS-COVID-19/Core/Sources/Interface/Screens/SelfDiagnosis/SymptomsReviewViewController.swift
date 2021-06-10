@@ -14,11 +14,14 @@ public protocol SymptomsReviewInteracting {
 
 public class SymptomsReviewViewController: UIViewController {
     public typealias Interacting = SymptomsReviewInteracting
+    
     private let symptomsQuestionnaire: InterfaceSymptomsQuestionnaire
+    private let currentDateProvider: DateProviding
     private let interactor: Interacting
     
-    public init(symptomsQuestionnaire: InterfaceSymptomsQuestionnaire, interactor: Interacting) {
+    public init(symptomsQuestionnaire: InterfaceSymptomsQuestionnaire, currentDateProvider: DateProviding, interactor: Interacting) {
         self.symptomsQuestionnaire = symptomsQuestionnaire
+        self.currentDateProvider = currentDateProvider
         self.interactor = interactor
         super.init(nibName: nil, bundle: nil)
         title = localize(.symptom_review_title)
@@ -135,7 +138,7 @@ public class SymptomsReviewViewController: UIViewController {
     
     private lazy var textField: UITextField = BaseTextField()
     
-    private var confirmButton: UIButton = {
+    private lazy var confirmButton: UIButton = {
         let confirmButton = UIButton()
         confirmButton.styleAsPrimary()
         confirmButton.setTitle(localize(.symptom_review_button_submit), for: .normal)
@@ -158,7 +161,7 @@ public class SymptomsReviewViewController: UIViewController {
     let noDateChecked = UIImageView(image: UIImage(systemName: "checkmark.square.fill"))
     let toolbar = UIToolbar()
     
-    lazy var earliestOnsetDate = GregorianDay.today - DayDuration(symptomsQuestionnaire.dateSelectionWindow - 1)
+    lazy var earliestOnsetDate = currentDateProvider.currentGregorianDay(timeZone: .current) - DayDuration(symptomsQuestionnaire.dateSelectionWindow - 1)
     
     func getDay(for row: Int) -> (GregorianDay, String) {
         let rowDate = earliestOnsetDate + DayDuration(row)

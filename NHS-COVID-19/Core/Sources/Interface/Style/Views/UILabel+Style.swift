@@ -108,6 +108,12 @@ extension UILabel {
         return self
     }
     
+    @discardableResult
+    public func leadingAligned() -> Self {
+        textAlignment = .leading
+        return self
+    }
+
     func setDynamicTextStyle(_ style: UIFont.TextStyle) {
         font = .preferredFont(forTextStyle: style)
         numberOfLines = 0

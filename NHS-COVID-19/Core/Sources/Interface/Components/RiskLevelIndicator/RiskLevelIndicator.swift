@@ -8,7 +8,7 @@ import SwiftUI
 
 public enum IsolationState: Equatable {
     case notIsolating
-    case isolating(days: Int, percentRemaining: Double, endDate: Date)
+    case isolating(days: Int, percentRemaining: Double, endDate: Date, hasPositiveTest: Bool)
 }
 
 public struct RiskLevelIndicator: View {
@@ -19,12 +19,22 @@ public struct RiskLevelIndicator: View {
         
         @InterfaceProperty var isolationState: IsolationState
         @InterfaceProperty var paused: Bool
+        @InterfaceProperty var animationDisabled: Bool
         
-        public init(isolationState: InterfaceProperty<IsolationState>, paused: InterfaceProperty<Bool>) {
+        public init(
+            isolationState: InterfaceProperty<IsolationState>,
+            paused: InterfaceProperty<Bool>,
+            animationDisabled: InterfaceProperty<Bool>
+        ) {
             _isolationState = isolationState
             _paused = paused
+            _animationDisabled = animationDisabled
             
-            anyCancellable = Publishers.CombineLatest(isolationState.$wrappedValue, paused.$wrappedValue).sink(receiveValue: { [weak self] _ in
+            anyCancellable = _animationDisabled.$wrappedValue.combineLatest(
+                isolationState.$wrappedValue,
+                paused.$wrappedValue
+            )
+            .sink(receiveValue: { [weak self] _ in
                 self?.objectWillChange.send()
             })
         }
@@ -44,10 +54,16 @@ public struct RiskLevelIndicator: View {
     
     private func containedView() -> AnyView {
         switch (viewModel.isolationState, viewModel.paused) {
-        case (let .isolating(days, percentRemaining, endDate), _):
-            return Self.makeIsolatingIndicator(days: days, percentRemaining: percentRemaining, date: endDate, isDetectionPaused: viewModel.paused)
+        case (let .isolating(days, percentRemaining, endDate, _), _):
+            return Self.makeIsolatingIndicator(
+                days: days,
+                percentRemaining: percentRemaining,
+                date: endDate,
+                isDetectionPaused: viewModel.paused,
+                animationDisabled: viewModel.animationDisabled
+            )
         case (.notIsolating, false):
-            return Self.makeNotIsolatingIndicator()
+            return Self.makeNotIsolatingIndicator(animationDisabled: viewModel.animationDisabled)
         case (.notIsolating, true):
             return Self.makePausedIndicator(turnBackOnTapAction: turnContactTracingOnTapAction)
         }

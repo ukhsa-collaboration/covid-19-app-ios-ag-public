@@ -26,6 +26,7 @@ class MockServer: HTTPClient {
             DiagnosisKeysHandler(),
             ExposureConfigurationHandler(),
             KeysDistributionHandler(),
+            LocalMessagesHandler(dataProvider: dataProvider),
             LookUpHandler(dataProvider: dataProvider),
             RiskyPostDistrictsHandler(dataProvider: dataProvider),
             RiskyVenueHandler(dataProvider: dataProvider),

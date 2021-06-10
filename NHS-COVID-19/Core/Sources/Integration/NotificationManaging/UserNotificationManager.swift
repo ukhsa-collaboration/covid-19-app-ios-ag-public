@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -23,7 +23,7 @@ class UserNotificationManager {
         let content = self.content(for: type)
         
         let request = UNNotificationRequest(
-            identifier: type.rawValue,
+            identifier: type.identifier,
             content: content,
             trigger: trigger
         )
@@ -41,11 +41,6 @@ class UserNotificationManager {
             return configuring(UNMutableNotificationContent()) {
                 $0.title = localize(.alert_venue_risk_change_title)
                 $0.body = localize(.alert_venue_risk_change_body)
-            }
-        case .venueIsolate:
-            return configuring(UNMutableNotificationContent()) {
-                $0.title = localize(.alert_venue_risk_isolate_title)
-                $0.body = localize(.alert_venue_risk_isolate_body)
             }
         case .isolationState:
             return configuring(UNMutableNotificationContent()) {
@@ -87,6 +82,11 @@ class UserNotificationManager {
                 $0.title = localize(.alert_share_keys_reminder_title)
                 $0.body = localize(.alert_share_keys_reminder_body)
             }
+        case .localMessage(let title, let body):
+            return configuring(UNMutableNotificationContent()) {
+                $0.title = title
+                $0.body = body
+            }
         }
     }
 }
@@ -104,14 +104,14 @@ extension UserNotificationManager: UserNotificationManaging {
     func add(type: UserNotificationType, at date: DateComponents?, withCompletionHandler completionHandler: ((Error?) -> Void)?) {
         
         let request = createRequest(for: type, at: date)
-        manager.add(request, withCompletionHandler: nil)
+        manager.add(request, withCompletionHandler: completionHandler)
     }
     
     func removePending(type: UserNotificationType) {
-        manager.removePendingNotificationRequests(withIdentifiers: [type.rawValue])
+        manager.removePendingNotificationRequests(withIdentifiers: [type.identifier])
     }
     
     func removeAllDelivered(for type: UserNotificationType) {
-        manager.removeDeliveredNotifications(withIdentifiers: [type.rawValue])
+        manager.removeDeliveredNotifications(withIdentifiers: [type.identifier])
     }
 }

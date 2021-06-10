@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -16,7 +16,6 @@ public class NavigationButtonComponentScenario: Scenario {
     
     enum Showcases: CaseIterable {
         case checkIn
-        case advice
         case isolationAdvice
         case symptoms
         
@@ -24,8 +23,6 @@ public class NavigationButtonComponentScenario: Scenario {
             switch self {
             case .checkIn:
                 return NavigationButton(imageName: .qrCode, foregroundColor: Color(.background), backgroundColor: Color(.stylePurple), text: localize(.home_checkin_button_title)) {}
-            case .advice:
-                return NavigationButton(imageName: .read, foregroundColor: Color(.background), backgroundColor: Color(.stylePink), text: localize(.home_default_advice_button_title)) {}
             case .isolationAdvice:
                 return NavigationButton(imageName: .read, foregroundColor: Color(.background), backgroundColor: Color(.stylePink), text: localize(.home_isolation_advice_button_title)) {}
             case .symptoms:
@@ -51,11 +48,9 @@ private struct NavigationButtonView: View {
         NavigationView {
             List(NavigationButtonComponentScenario.Showcases.allCases, id: \.index) {
                 $0.content()
-                
             }
             .navigationBarItems(trailing: toggleColorSchemeButton)
             .navigationBarTitle("NavigationButton")
-            
         }
         .preferredColorScheme(preferredColourScheme)
         

@@ -1,21 +1,24 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
 import SwiftUI
 
 public struct NotIsolatingIndicator: View {
-    @Environment(\.accessibilityReduceMotion) var reduceMotion
     
-    fileprivate init() {}
+    private var animationDisabled: Bool
+    
+    fileprivate init(animationDisabled: Bool) {
+        self.animationDisabled = animationDisabled
+    }
     
     private let badgeSize: CGFloat = 40
     
     public var body: some View {
         VStack(alignment: .center, spacing: .doubleSpacing) {
             ZStack {
-                if self.reduceMotion {
+                if self.animationDisabled {
                     Circle()
                         .foregroundColor(Color(.errorRed))
                         .opacity(0.05)
@@ -52,7 +55,7 @@ public struct NotIsolatingIndicator: View {
 }
 
 extension RiskLevelIndicator {
-    static func makeNotIsolatingIndicator() -> AnyView {
-        AnyView(NotIsolatingIndicator())
+    static func makeNotIsolatingIndicator(animationDisabled: Bool) -> AnyView {
+        AnyView(NotIsolatingIndicator(animationDisabled: animationDisabled))
     }
 }

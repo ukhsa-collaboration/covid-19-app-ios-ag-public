@@ -19,6 +19,7 @@ public class CoordinatedAppController: AppController {
     
     public let showBookATest = CurrentValueSubject<Bool, Never>(false)
     public let showContactTracingHub = CurrentValueSubject<Bool, Never>(false)
+    public let showLocalInfoScreen = CurrentValueSubject<Bool, Never>(false)
     
     private var content: UIViewController? {
         didSet {
@@ -67,8 +68,11 @@ public class CoordinatedAppController: AppController {
         if let action = UserNotificationAction(rawValue: response.actionIdentifier) {
             coordinator.handleUserNotificationAction(action, completion: completionHandler)
         } else {
-            if response.notification.request.identifier == UserNotificationType.exposureNotificationReminder.rawValue {
+            if response.notification.request.identifier == UserNotificationType.exposureNotificationReminder.identifier {
                 showContactTracingHub.send(true)
+            } else if response.notification.request.identifier == UserNotificationType.localMessage(title: "", body: "").identifier {
+                showLocalInfoScreen.send(true)
+                Metrics.signpost(.didAccessLocalInfoScreenViaNotification)
             }
             
             completionHandler()

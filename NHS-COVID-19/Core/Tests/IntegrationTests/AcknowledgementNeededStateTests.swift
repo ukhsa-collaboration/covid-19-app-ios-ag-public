@@ -183,6 +183,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
             postcodeInfo: .constant(nil),
             country: Just(.england).eraseToAnyPublisher().domainProperty(),
             openSettings: {},
+            openAppStore: {},
             openURL: { _ in },
             selfDiagnosisManager: MockSelfDiagnosisManager(),
             isolationState: Just(.noNeedToIsolate()).domainProperty(), testInfo: Just(nil).domainProperty(),
@@ -208,13 +209,26 @@ class AcknowledgementNeededStateTests: XCTestCase {
             isolationPaymentState: .constant(.disabled),
             currentLocaleConfiguration: Just(.systemPreferred).eraseToAnyPublisher().domainProperty(),
             storeNewLanguage: { _ in },
+            homeAnimationsStore: HomeAnimationsStore(store: MockEncryptedStore()),
             shouldShowDailyContactTestingInformFeature: { true },
             dailyContactTestingEarlyTerminationSupport: { .disabled },
-            diagnosisKeySharer: .constant(nil)
+            diagnosisKeySharer: .constant(nil),
+            localInformation: .constant(nil),
+            userNotificationManaging: MockUserNotificationsManager()
         )
     }
     
     private class MockVirologyTestingManager: VirologyTestingManaging {
+        func isFollowUpTestRequired() -> AnyPublisher<Bool, Never> {
+            Just(false).eraseToAnyPublisher()
+        }
+        
+        func didClearBookFollowUpTest() {}
+        
+        var didReceiveUnknownTestResult: Bool = false
+        
+        func acknowledgeUnknownTestResult() {}
+        
         func linkExternalTestResult(with token: String) -> AnyPublisher<Void, LinkTestResultError> {
             Empty().eraseToAnyPublisher()
         }
@@ -243,8 +257,8 @@ class AcknowledgementNeededStateTests: XCTestCase {
             }.eraseToAnyPublisher()
         }
         
-        public func evaluateSymptoms(symptoms: [(Symptom, Bool)], onsetDay: GregorianDay?, threshold: Double) -> IsolationState {
-            return .noNeedToIsolate()
+        public func evaluateSymptoms(symptoms: [(Symptom, Bool)], onsetDay: GregorianDay?, threshold: Double) -> (IsolationState, Bool?) {
+            return (.noNeedToIsolate(), nil)
         }
     }
     

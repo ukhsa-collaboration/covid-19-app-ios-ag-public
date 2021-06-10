@@ -16,7 +16,7 @@ class IndexCaseInfoTests: XCTestCase {
             testInfo: nil
         )
         
-        XCTAssertEqual(info.assumedOnsetDayForSelfDiagnosis, onsetDay)
+        XCTAssertEqual(info.symptomaticInfo?.assumedOnsetDay, onsetDay)
         XCTAssertEqual(info.assumedOnsetDayForExposureKeys, onsetDay)
     }
     
@@ -29,7 +29,7 @@ class IndexCaseInfoTests: XCTestCase {
         )
         
         let expectedOnsetDay = selfDiagnosisDay.advanced(by: -2)
-        XCTAssertEqual(info.assumedOnsetDayForSelfDiagnosis, expectedOnsetDay)
+        XCTAssertEqual(info.symptomaticInfo?.assumedOnsetDay, expectedOnsetDay)
         XCTAssertEqual(info.assumedOnsetDayForExposureKeys, expectedOnsetDay)
     }
     
@@ -42,7 +42,58 @@ class IndexCaseInfoTests: XCTestCase {
         )
         
         let expectedOnsetDay = manualTestEntryDay.advanced(by: -3)
-        XCTAssertNil(info.assumedOnsetDayForSelfDiagnosis)
+        XCTAssertNil(info.symptomaticInfo?.assumedOnsetDay)
+        XCTAssertEqual(info.assumedOnsetDayForExposureKeys, expectedOnsetDay)
+    }
+    
+    func testAssumedOnsetDayReturnsThreeDaysBeforeTestResultDayWhenOnsetDayIsNewer() {
+        let onsetDay = GregorianDay(dateComponents: DateComponents(year: 2020, month: 7, day: 9))
+        let manualTestEntryDay = GregorianDay(dateComponents: DateComponents(year: 2020, month: 7, day: 7))
+        
+        let info = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: onsetDay, onsetDay: onsetDay),
+            testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
+        )
+        
+        let expectedOnsetDay = manualTestEntryDay.advanced(by: -3)
+        XCTAssertEqual(info.assumedOnsetDayForExposureKeys, expectedOnsetDay)
+    }
+    
+    func testAssumedOnsetDayReturnsThreeDaysBeforeTestResultDayWhenTwoDaysBeforeSelfDiagnosisDayIsNewer() {
+        let selfDiagnosisDay = GregorianDay(dateComponents: DateComponents(year: 2020, month: 7, day: 10))
+        let manualTestEntryDay = GregorianDay(dateComponents: DateComponents(year: 2020, month: 7, day: 7))
+        
+        let info = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
+            testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
+        )
+        
+        let expectedOnsetDay = manualTestEntryDay.advanced(by: -3)
+        XCTAssertEqual(info.assumedOnsetDayForExposureKeys, expectedOnsetDay)
+    }
+    
+    func testAssumedOnsetDayReturnsOnsetDayWhenTestEndDayAndOnsetDayOnSameDay() {
+        let onsetDay = GregorianDay(dateComponents: DateComponents(year: 2020, month: 7, day: 9))
+        let manualTestEntryDay = GregorianDay(dateComponents: DateComponents(year: 2020, month: 7, day: 9))
+        
+        let info = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: onsetDay, onsetDay: onsetDay),
+            testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
+        )
+        
+        XCTAssertEqual(info.assumedOnsetDayForExposureKeys, onsetDay)
+    }
+    
+    func testAssumedOnsetDayReturnsTwoDaysBeforeSelfDiagnosisWhenTestEndDayAndTwoDaysBeforeSelfDiagnosisOnSameDay() {
+        let selfDiagnosisDay = GregorianDay(dateComponents: DateComponents(year: 2020, month: 7, day: 11))
+        let manualTestEntryDay = GregorianDay(dateComponents: DateComponents(year: 2020, month: 7, day: 9))
+        
+        let info = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
+            testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
+        )
+        
+        let expectedOnsetDay = selfDiagnosisDay.advanced(by: -2)
         XCTAssertEqual(info.assumedOnsetDayForExposureKeys, expectedOnsetDay)
     }
 }

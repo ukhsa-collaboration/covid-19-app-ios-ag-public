@@ -11,8 +11,23 @@ extension IsolationModelAdapter {
     func verify(_ context: RunningAppContext, isIn logicalState: IsolationModel.State) throws {
         let expected = try expectedState(for: logicalState)
         let actual = context.isolationState.currentValue
-        guard actual == expected else {
-            throw IsolationModelAcceptanceError("Expected isolation state to be in \(expected). Instead it is \(actual)")
+        switch (expected, actual) {
+        case (.noNeedToIsolate(let lhs), .noNeedToIsolate(let rhs)):
+            switch (lhs, rhs) {
+            case (.none, .some):
+                throw IsolationModelAcceptanceError("Expected no 'optOutOfIsolationDay' but found one")
+            case (.some, .none):
+                throw IsolationModelAcceptanceError("Expected 'optOutOfIsolationDay' but found none")
+            default: break
+            }
+        case (.isolate(let lhs), .isolate(let rhs)):
+            guard lhs.reason == rhs.reason else {
+                throw IsolationModelAcceptanceError("Expected isolation reason to be \(lhs.reason). Instead it is \(rhs.reason)")
+            }
+        case (.noNeedToIsolate, .isolate(let payload)):
+            throw IsolationModelAcceptanceError("Expected to not be in isolation but instead it is isolating with \(payload.reason)")
+        case (.isolate(let payload), .noNeedToIsolate):
+            throw IsolationModelAcceptanceError("Expected to be isolating with \(payload.reason) but instead it is not isolating")
         }
     }
     
@@ -55,7 +70,7 @@ extension IsolationModelAdapter {
         case (.noIsolation, .isolating, .isolatingWithConfirmedTest):
             return .isolate(indexCasePositiveTestIsolation(isSelfDiagnosed: true))
         case (.noIsolation, .isolating, .isolatingWithUnconfirmedTest):
-            throw IsolationModelAcceptanceError.forbidden
+            return .isolate(indexCasePositiveTestIsolation(isPendingConfirmation: true, isSelfDiagnosed: true))
         case (.noIsolation, .isolating, .notIsolatingAndHadConfirmedTestPreviously):
             throw IsolationModelAcceptanceError.forbidden
         case (.noIsolation, .isolating, .notIsolatingAndHadUnconfirmedTestPreviously):
@@ -70,7 +85,7 @@ extension IsolationModelAdapter {
         case (.noIsolation, .notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHadConfirmedTestPreviously):
             return .noNeedToIsolate(optOutOfIsolationDay: nil)
         case (.noIsolation, .notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHadUnconfirmedTestPreviously):
-            throw IsolationModelAcceptanceError.forbidden
+            return .noNeedToIsolate(optOutOfIsolationDay: nil)
         case (.noIsolation, .notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHasNegativeTest):
             return .noNeedToIsolate(optOutOfIsolationDay: nil)
         // 3 (*, .isolating, .noIsolation)
@@ -96,11 +111,11 @@ extension IsolationModelAdapter {
             return .isolate(indexCasePositiveTestIsolation(isSelfDiagnosed: true))
         // 3 (*, .isolating, .isolatingWithUnconfirmedTest)
         case (.isolating, .isolating, .isolatingWithUnconfirmedTest):
-            throw IsolationModelAcceptanceError.forbidden
+            return .isolate(bothCasesIsolation(hasPositiveTestResult: true, isPendingConfirmation: true, isSelfDiagnosed: true))
         case (.notIsolatingAndHadRiskyContactPreviously, .isolating, .isolatingWithUnconfirmedTest):
-            throw IsolationModelAcceptanceError.forbidden
+            return .isolate(indexCasePositiveTestIsolation(isPendingConfirmation: true, isSelfDiagnosed: true))
         case (.notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT, .isolating, .isolatingWithUnconfirmedTest):
-            throw IsolationModelAcceptanceError.forbidden
+            return .isolate(indexCasePositiveTestIsolation(isPendingConfirmation: true, isSelfDiagnosed: true))
         // 3 (*, .isolating, .notIsolatingAndHadConfirmedTestPreviously)
         case (.isolating, .isolating, .notIsolatingAndHadConfirmedTestPreviously):
             throw IsolationModelAcceptanceError.forbidden
@@ -145,11 +160,11 @@ extension IsolationModelAdapter {
             return .noNeedToIsolate(optOutOfIsolationDay: contactCase.optedOutForDCTDate)
         // 3 (*, .isolating, .notIsolatingAndHadUnconfirmedTestPreviously)
         case (.isolating, .notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHadUnconfirmedTestPreviously):
-            throw IsolationModelAcceptanceError.forbidden
+            return .isolate(contactCaseIsolation)
         case (.notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHadUnconfirmedTestPreviously):
-            throw IsolationModelAcceptanceError.forbidden
+            return .noNeedToIsolate(optOutOfIsolationDay: nil)
         case (.notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT, .notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHadUnconfirmedTestPreviously):
-            throw IsolationModelAcceptanceError.forbidden
+            return .noNeedToIsolate(optOutOfIsolationDay: contactCase.optedOutForDCTDate)
         // 3 (*, .notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHasNegativeTest)
         case (.isolating, .notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHasNegativeTest):
             return .isolate(contactCaseIsolation)

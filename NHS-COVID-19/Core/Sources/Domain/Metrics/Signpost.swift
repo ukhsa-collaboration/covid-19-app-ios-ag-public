@@ -68,6 +68,24 @@ public enum Metric: String, CaseIterable {
     case receivedRiskyVenueM1Warning
     case receivedRiskyVenueM2Warning
     case hasReceivedRiskyVenueM2WarningBackgroundTick
+    
+    // MARK: Key sharing invitations/completions
+    
+    case askedToShareExposureKeysInTheInitialFlow
+    case consentedToShareExposureKeysInTheInitialFlow
+    
+    case totalShareExposureKeysReminderNotifications
+    case consentedToShareExposureKeysInReminderScreen
+    
+    case successfullySharedExposureKeys
+    
+    // MARK: - Local Information / VOC
+    
+    case didSendLocalInfoNotification
+    case didAccessLocalInfoScreenViaNotification
+    case didAccessLocalInfoScreenViaBanner
+    case isDisplayingLocalInfoBackgroundTick
+    
 }
 
 public enum Metrics {
@@ -94,7 +112,10 @@ public enum Metrics {
             signpost(.receivedNegativeTestResult)
         case .void:
             signpost(.receivedVoidTestResult)
+        case .plod:
+            break
         }
+        
     }
     
     static func signpostReceivedFromManual(
@@ -114,12 +135,13 @@ public enum Metrics {
                 signpost(.receivedNegativeLFDTestResultEnteredManually)
             case .void:
                 signpost(.receivedVoidLFDTestResultEnteredManually)
+            case .plod: break
             }
         case .rapidSelfReported:
             switch testResult {
             case .positive:
                 signpost(.receivedPositiveSelfRapidTestResultEnteredManually)
-            case .negative, .void:
+            case .negative, .void, .plod:
                 break
             }
         case .labResult:
@@ -130,6 +152,7 @@ public enum Metrics {
                 signpost(.receivedNegativeTestResultEnteredManually)
             case .void:
                 signpost(.receivedVoidTestResultEnteredManually)
+            case .plod: break
             }
         }
         
@@ -152,6 +175,7 @@ public enum Metrics {
                 signpost(.receivedNegativeTestResultViaPolling)
             case .void:
                 signpost(.receivedVoidTestResultViaPolling)
+            case .plod: break
             }
         case .rapidResult:
             switch testResult {
@@ -161,6 +185,7 @@ public enum Metrics {
                 signpost(.receivedNegativeLFDTestResultViaPolling)
             case .void:
                 signpost(.receivedVoidLFDTestResultViaPolling)
+            case .plod: break
             }
         case .rapidSelfReported:
             break

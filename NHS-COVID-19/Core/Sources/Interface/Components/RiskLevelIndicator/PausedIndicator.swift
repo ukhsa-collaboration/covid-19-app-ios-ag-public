@@ -6,7 +6,6 @@ import Localization
 import SwiftUI
 
 public struct PausedIndicator: View {
-    @Environment(\.accessibilityReduceMotion) var reduceMotion
     private let turnBackOnTapAction: () -> Void
     
     fileprivate init(turnBackOnTapAction: @escaping () -> Void) {

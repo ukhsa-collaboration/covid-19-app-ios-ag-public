@@ -9,16 +9,16 @@ import SwiftUI
 
 public protocol HomeViewControllerInteracting {
     func didTapRiskLevelBanner(viewModel: RiskLevelInfoViewController.ViewModel)
+    func didTapLocalInfoBanner(viewModel: LocalInformationViewController.ViewModel)
     func didTapDiagnosisButton()
-    func didTapAdviceButton()
     func didTapIsolationAdviceButton()
     func didTapCheckInButton()
-    func didTapTestingInformationButton()
     func didTapFinancialSupportButton()
     func didTapSettingsButton()
     func didTapAboutButton()
     func didTapLinkTestResultButton()
     func didTapContactTracingHubButton()
+    func didTapTestingHubButton()
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never>
     func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn)
     var shouldShowCheckIn: Bool { get }
@@ -31,52 +31,57 @@ public class HomeViewController: UIViewController {
     private var cancellables = [AnyCancellable]()
     private let interactor: Interacting
     private let riskLevelBannerViewModel: InterfaceProperty<RiskLevelBanner.ViewModel?>
+    private let localInfoBannerViewModel: InterfaceProperty<LocalInformationBanner.ViewModel?>
     private let isolationViewModel: RiskLevelIndicator.ViewModel
     
     private let exposureNotificationsEnabled: InterfaceProperty<Bool>
     private let exposureNotificationsToggleAction: (Bool) -> Void
     private let userNotificationsEnabled: InterfaceProperty<Bool>
-
-    private let showOrderTestButton: InterfaceProperty<Bool>
+    
     private let shouldShowSelfDiagnosis: InterfaceProperty<Bool>
     private let showFinancialSupportButton: InterfaceProperty<Bool>
     
     private let country: InterfaceProperty<Country>
     let showLanguageSelectionScreen: (() -> Void)?
     let showContactTracingHub: (() -> Void)?
+    let showLocalInfoScreen: (() -> Void)?
     private var didShowLanguageSelectionScreen = false
     private var didShowContactTracingHub = false
+    private var didShowLocalInfoScreen = false
     private var removeSnapshot: (() -> Void)?
     
     public init(
         interactor: Interacting,
         riskLevelBannerViewModel: InterfaceProperty<RiskLevelBanner.ViewModel?>,
+        localInfoBannerViewModel: InterfaceProperty<LocalInformationBanner.ViewModel?>,
         isolationViewModel: RiskLevelIndicator.ViewModel,
         exposureNotificationsEnabled: InterfaceProperty<Bool>,
         exposureNotificationsToggleAction: @escaping (Bool) -> Void,
-        showOrderTestButton: InterfaceProperty<Bool>,
         shouldShowSelfDiagnosis: InterfaceProperty<Bool>,
         userNotificationsEnabled: InterfaceProperty<Bool>,
         showFinancialSupportButton: InterfaceProperty<Bool>,
         country: InterfaceProperty<Country>,
         showLanguageSelectionScreen: (() -> Void)?,
-        showContactTracingHub: (() -> Void)? = nil
+        showContactTracingHub: (() -> Void)? = nil,
+        showLocalInfoScreen: (() -> Void)? = nil
     ) {
         self.interactor = interactor
         self.riskLevelBannerViewModel = riskLevelBannerViewModel
+        self.localInfoBannerViewModel = localInfoBannerViewModel
         self.isolationViewModel = isolationViewModel
         self.exposureNotificationsEnabled = exposureNotificationsEnabled
         self.exposureNotificationsToggleAction = exposureNotificationsToggleAction
         
         self.userNotificationsEnabled = userNotificationsEnabled
         
-        self.showOrderTestButton = showOrderTestButton
         self.shouldShowSelfDiagnosis = shouldShowSelfDiagnosis
         self.showFinancialSupportButton = showFinancialSupportButton
         
         self.country = country
         self.showLanguageSelectionScreen = showLanguageSelectionScreen
         self.showContactTracingHub = showContactTracingHub
+        self.showLocalInfoScreen = showLocalInfoScreen
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -91,8 +96,8 @@ public class HomeViewController: UIViewController {
         let homeView = HomeView(
             interactor: interactor,
             riskLevelBannerViewModel: riskLevelBannerViewModel,
+            localInfoBannerViewModel: localInfoBannerViewModel,
             isolationViewModel: isolationViewModel,
-            showOrderTestButton: showOrderTestButton,
             shouldShowSelfDiagnosis: shouldShowSelfDiagnosis,
             exposureNotificationsEnabled: exposureNotificationsEnabled,
             exposureNotificationsToggleAction: exposureNotificationsToggleAction,
@@ -153,10 +158,17 @@ public class HomeViewController: UIViewController {
             showLanguageSelectionScreen()
             removeSnapshot?()
             removeSnapshot = nil
-        } else if let showContactTracingHub = self.showContactTracingHub,
-            !didShowContactTracingHub {
-            didShowContactTracingHub = true
-            showContactTracingHub()
+        } else if !didShowLocalInfoScreen, !didShowContactTracingHub {
+            #warning("Only one of the two is possible at any time, find a better solution than just calling both")
+            if let showContactTracingHub = self.showContactTracingHub {
+                didShowContactTracingHub = true
+                showContactTracingHub()
+            }
+            
+            if let showLocalInfoScreen = self.showLocalInfoScreen {
+                didShowLocalInfoScreen = true
+                showLocalInfoScreen()
+            }
         } else {
             #warning("Find a long term solution for this.")
             // Something goes wrong with the accessibility frame of elements on this screen after certain flows (for example

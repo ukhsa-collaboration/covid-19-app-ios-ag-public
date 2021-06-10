@@ -12,8 +12,8 @@ import UIKit
 internal protocol HomeScreenScenario: Scenario {
     static var riskyPostcodeEnabled: Bool { get }
     static var checkInEnabled: Bool { get }
-    static var showOrderTestButton: Bool { get }
     static var shouldShowSelfDiagnosis: Bool { get }
+    static var localInformationEnabled: Bool { get }
 }
 
 extension HomeScreenScenario {
@@ -38,6 +38,13 @@ extension HomeScreenScenario {
         }
     }
     
+    static var localInfoBannerViewModel: LocalInformationBanner.ViewModel? {
+        if Self.localInformationEnabled {
+            return .init(text: "A new variant of concern is in your area.", localInfoScreenViewModel: .init(header: "", body: []))
+        }
+        return nil
+    }
+    
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             
@@ -52,12 +59,12 @@ extension HomeScreenScenario {
                     }
                 ),
                 riskLevelBannerViewModel: .constant(postcodeViewModel(parent: parent)),
-                isolationViewModel: RiskLevelIndicator.ViewModel(isolationState: .constant(.notIsolating), paused: .constant(false)),
+                localInfoBannerViewModel: .constant(localInfoBannerViewModel),
+                isolationViewModel: RiskLevelIndicator.ViewModel(isolationState: .constant(.notIsolating), paused: .constant(false), animationDisabled: .constant(false)),
                 exposureNotificationsEnabled: exposureNotificationsEnabled.property(initialValue: false),
                 exposureNotificationsToggleAction: { [weak parent] toggle in
                     parent?.showAlert(title: "Toggle state changed to \(toggle)")
                 },
-                showOrderTestButton: .constant(showOrderTestButton),
                 shouldShowSelfDiagnosis: .constant(shouldShowSelfDiagnosis),
                 userNotificationsEnabled: .constant(false),
                 showFinancialSupportButton: .constant(true),
@@ -76,8 +83,8 @@ public class SuccessHomeScreenScenario: HomeScreenScenario {
     public static var riskyPostcodeEnabled = true
     public static var selfDiagnosisEnabled: Bool = true
     public static var checkInEnabled: Bool = true
-    public static var showOrderTestButton = true
     public static var shouldShowSelfDiagnosis = true
+    public static var localInformationEnabled = true
 }
 
 public class DisabledFeaturesHomeScreenScenario: HomeScreenScenario {
@@ -88,24 +95,24 @@ public class DisabledFeaturesHomeScreenScenario: HomeScreenScenario {
     public static var riskyPostcodeEnabled = false
     public static var selfDiagnosisEnabled = false
     public static var checkInEnabled: Bool = false
-    public static var showOrderTestButton = false
     public static var shouldShowSelfDiagnosis = false
+    public static var localInformationEnabled = false
 }
 
 public class HomeScreenAlerts {
     public static let diagnosisAlertTitle = "I don't feel well button tapped."
-    public static let adviceAlertTitle = "Read current advice button tapped."
     public static let isolationAdviceAlertTitle = "Read isolation advice button tapped."
     public static let checkInAlertTitle = "Check-in into a venue."
-    public static let testingInformationAlertTitle = "Testing information button tapped"
     public static let financeAlertTitle = "Financial Support button tapped"
     public static let settingsAlertTitle = "Settings button tapped"
     public static let exposureNotificationAlertTitle = "Exposure notifications toggled"
     public static let aboutAlertTitle = "About tapped"
     public static let linkTestResultTitle = "Link test result tapped"
     public static let postcodeBannerAlertTitle = "Postcode banner tapped"
+    public static let localInfoBannerAlertTitle = "Local Information banner tapped"
     public static let scheduleNotificationAlertTitle = "Notification scheduled"
     public static let contactTracingHubAlertTitle = "Contact Tracing Hub tapped"
+    public static let testingHubAlertTitle = "Testing Hub tapped"
 }
 
 private class Interactor: HomeViewController.Interacting {
@@ -129,12 +136,12 @@ private class Interactor: HomeViewController.Interacting {
         viewController?.showAlert(title: HomeScreenAlerts.postcodeBannerAlertTitle)
     }
     
-    func didTapDiagnosisButton() {
-        viewController?.showAlert(title: HomeScreenAlerts.diagnosisAlertTitle)
+    func didTapLocalInfoBanner(viewModel: LocalInformationViewController.ViewModel) {
+        viewController?.showAlert(title: HomeScreenAlerts.localInfoBannerAlertTitle)
     }
     
-    func didTapAdviceButton() {
-        viewController?.showAlert(title: HomeScreenAlerts.adviceAlertTitle)
+    func didTapDiagnosisButton() {
+        viewController?.showAlert(title: HomeScreenAlerts.diagnosisAlertTitle)
     }
     
     func didTapIsolationAdviceButton() {
@@ -143,10 +150,6 @@ private class Interactor: HomeViewController.Interacting {
     
     func didTapCheckInButton() {
         viewController?.showAlert(title: HomeScreenAlerts.checkInAlertTitle)
-    }
-    
-    func didTapTestingInformationButton() {
-        viewController?.showAlert(title: HomeScreenAlerts.testingInformationAlertTitle)
     }
     
     func didTapFinancialSupportButton() {
@@ -167,6 +170,10 @@ private class Interactor: HomeViewController.Interacting {
     
     func didTapContactTracingHubButton() {
         viewController?.showAlert(title: HomeScreenAlerts.contactTracingHubAlertTitle)
+    }
+    
+    func didTapTestingHubButton() {
+        viewController?.showAlert(title: HomeScreenAlerts.testingHubAlertTitle)
     }
     
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never> {

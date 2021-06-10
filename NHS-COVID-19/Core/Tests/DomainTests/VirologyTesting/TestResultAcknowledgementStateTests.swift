@@ -333,6 +333,30 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         }
     }
     
+    func testPlodTestResult() {
+        let result = VirologyStateTestResult(
+            testResult: .plod,
+            testKitType: .labResult,
+            endDate: Date(),
+            diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
+            requiresConfirmatoryTest: false
+        )
+        
+        let isolationState = IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil)
+        
+        let state = TestResultAcknowledgementState(
+            result: result,
+            newIsolationState: isolationState,
+            currentIsolationState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
+            indexCaseInfo: indexCaseInfo,
+            completionHandler: {}
+        )
+        
+        if case TestResultAcknowledgementState.neededForPlodResult = state {} else {
+            XCTFail()
+        }
+    }
+    
     func testVoidNotAcknowledgedEndOfIsolation() {
         let result = VirologyStateTestResult(
             testResult: .void,

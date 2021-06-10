@@ -16,12 +16,17 @@ private struct VirologyTestingInfo: Codable, DataConvertible {
     var unacknowledgedTestResults: [TestResultInfo]?
 }
 
+private struct UnknownTestResultInfo: Codable, DataConvertible {
+    // currently empty; we intentionally don't store anything about the unknown test result, only that we got one
+}
+
 private struct TestResultInfo: Codable, DataConvertible {
     var result: TestResult
     var testKitType: TestKitType?
     var endDate: Date // Date test result arrives at NPEx
     var diagnosisKeySubmissionToken: String?
     var requiresConfirmatoryTest: Bool
+    var confirmatoryDayLimit: Int?
 }
 
 public class VirologyTestingStateStore {
@@ -32,12 +37,25 @@ public class VirologyTestingStateStore {
         }
     }
     
+    @Encrypted
+    private var recievedUnknownTestResulInfo: UnknownTestResultInfo? {
+        didSet {
+            recievedUnknownTestResult = recievedUnknownTestResulInfo != nil
+        }
+    }
+    
     @Published
     private(set) var virologyTestResult: VirologyStateTestResult?
     
+    @Published
+    private(set) var recievedUnknownTestResult: Bool = false
+    
     init(store: EncryptedStoring) {
         _virologyTestingInfo = store.encrypted("virology_testing")
+        _recievedUnknownTestResulInfo = store.encrypted("unknown_test_result")
+        
         virologyTestResult = relevantUnacknowledgedTestResult
+        recievedUnknownTestResult = recievedUnknownTestResulInfo != nil
         
         migrate()
     }
@@ -50,6 +68,15 @@ public class VirologyTestingStateStore {
                 $0?.latestUnacknowledgedTestResult = nil
                 $0?.unacknowledgedTestResults = newList
             }
+        }
+    }
+    
+    var didReceiveUnknownTestResult: Bool {
+        get {
+            recievedUnknownTestResulInfo != nil
+        }
+        set {
+            recievedUnknownTestResulInfo = newValue ? UnknownTestResultInfo() : nil
         }
     }
     
@@ -80,7 +107,8 @@ public class VirologyTestingStateStore {
                 testKitType: unacknowledgedTestResult.testKitType,
                 endDate: unacknowledgedTestResult.endDate,
                 diagnosisKeySubmissionToken: diagnosisSubmissionToken,
-                requiresConfirmatoryTest: unacknowledgedTestResult.requiresConfirmatoryTest
+                requiresConfirmatoryTest: unacknowledgedTestResult.requiresConfirmatoryTest,
+                confirmatoryDayLimit: unacknowledgedTestResult.confirmatoryDayLimit
             )
         } else {
             return nil
@@ -104,13 +132,19 @@ public class VirologyTestingStateStore {
         )
     }
     
-    func saveResult(virologyTestResult: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?, requiresConfirmatoryTest: Bool) {
+    func saveResult(
+        virologyTestResult: VirologyTestResult,
+        diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?,
+        requiresConfirmatoryTest: Bool,
+        confirmatoryDayLimit: Int? = nil
+    ) {
         let testResultInfo = TestResultInfo(
             result: TestResult(virologyTestResult.testResult),
             testKitType: TestKitType(virologyTestResult.testKitType),
             endDate: virologyTestResult.endDate,
             diagnosisKeySubmissionToken: diagnosisKeySubmissionToken?.value,
-            requiresConfirmatoryTest: requiresConfirmatoryTest
+            requiresConfirmatoryTest: requiresConfirmatoryTest,
+            confirmatoryDayLimit: confirmatoryDayLimit
         )
         
         let newList: [TestResultInfo] = (virologyTestingInfo?.unacknowledgedTestResults ?? []) + [testResultInfo]
@@ -155,6 +189,7 @@ public class VirologyTestingStateStore {
     
     func delete() {
         virologyTestingInfo = nil
+        recievedUnknownTestResult = false
     }
     
     private func getRelevantTestResult() -> TestResultInfo? {
@@ -162,6 +197,8 @@ public class VirologyTestingStateStore {
             let unacknowledgedTestResults = virologyTestingInfo.unacknowledgedTestResults {
             if let positive = unacknowledgedTestResults.filter({ $0.result == .positive }).first {
                 return positive
+            } else if let plod = unacknowledgedTestResults.filter({ $0.result == .plod }).first {
+                return plod
             } else if let negative = unacknowledgedTestResults.filter({ $0.result == .negative }).first {
                 return negative
             } else if let void = unacknowledgedTestResults.filter({ $0.result == .void }).first {

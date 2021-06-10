@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -28,7 +28,7 @@ extension Interface.IsolationState {
             let duration = isolation.fromDay.gregorianDay.distance(to: isolation.untilStartOfDay.gregorianDay)
             let daysRemaining = today.daysRemaining(until: isolation.endDate)
             let percentRemaining = Self.percentRemaining(duration: duration, daysRemaining: daysRemaining)
-            self = .isolating(days: daysRemaining, percentRemaining: percentRemaining, endDate: isolation.endDate)
+            self = .isolating(days: daysRemaining, percentRemaining: percentRemaining, endDate: isolation.endDate, hasPositiveTest: isolation.hasPositiveTestResult)
         }
     }
     

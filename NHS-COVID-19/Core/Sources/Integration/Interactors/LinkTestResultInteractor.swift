@@ -4,7 +4,9 @@
 
 import Combine
 import Domain
+import Foundation
 import Interface
+import Localization
 
 struct LinkTestResultInteractor: LinkTestResultViewController.Interacting {
     
@@ -17,8 +19,13 @@ struct LinkTestResultInteractor: LinkTestResultViewController.Interacting {
     
     var dailyContactTestingEarlyTerminationSupport: DailyContactTestingEarlyIsolationTerminationSupport
     var showNextScreen: (@escaping () -> Void) -> Void
+    var openURL: (URL) -> Void
+    var onCancel: () -> Void
+    var onSubmit: (String) -> AnyPublisher<Void, LinkTestValidationError>
     
-    var _submit: (String) -> AnyPublisher<Void, DisplayableError>
+    func cancel() {
+        onCancel()
+    }
     
     #warning("Refactor this")
     func submit(testCode: String, isCheckBoxChecked: Bool?) -> AnyPublisher<Void, LinkTestValidationError> {
@@ -26,8 +33,8 @@ struct LinkTestResultInteractor: LinkTestResultViewController.Interacting {
         // With DCT
         switch dailyContactTestingEarlyTerminationSupport {
         case .disabled:
-            return _submit(testCode)
-                .mapError { LinkTestValidationError.testCode($0) }.eraseToAnyPublisher()
+            return onSubmit(testCode)
+                .eraseToAnyPublisher()
         case .enabled(let terminate):
             if isCheckBoxChecked == false, testCode.isEmpty {
                 // return an erorr "both are not selected
@@ -45,8 +52,12 @@ struct LinkTestResultInteractor: LinkTestResultViewController.Interacting {
                 return Result.success(()).publisher.eraseToAnyPublisher()
             }
             
-            return _submit(testCode)
-                .mapError { LinkTestValidationError.testCode($0) }.eraseToAnyPublisher()
+            return onSubmit(testCode)
+                .eraseToAnyPublisher()
         }
+    }
+    
+    func reportRapidTestResultsOnGovDotUKTapped() {
+        openURL(ExternalLink.reportLFDResultsOnGovDotUK.url)
     }
 }

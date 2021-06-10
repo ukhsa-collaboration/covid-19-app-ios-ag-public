@@ -47,6 +47,16 @@ public struct IsolationModel {
         public var contact: ContactCaseState
         public var symptomatic: SymptomaticCaseState
         public var positiveTest: PositiveTestCaseState
+        
+        public init(
+            contact: IsolationModel.ContactCaseState,
+            symptomatic: IsolationModel.SymptomaticCaseState,
+            positiveTest: IsolationModel.PositiveTestCaseState
+        ) {
+            self.contact = contact
+            self.symptomatic = symptomatic
+            self.positiveTest = positiveTest
+        }
     }
     
     public enum Event: String, Codable, Equatable, CaseIterable {
@@ -60,17 +70,42 @@ public struct IsolationModel {
         
         case receivedConfirmedPositiveTest
         case receivedConfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate
-        case receivedConfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate
         case receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedSymptomOnsetDate
         
         case receivedUnconfirmedPositiveTest
         case receivedUnconfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate
+        case receivedUnconfirmedPositiveTestWithEndDateNDaysOlderThanRememberedNegativeTestEndDate
         case receivedUnconfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate
         case receivedUnconfirmedPositiveTestWithIsolationPeriodOlderThanAssumedSymptomOnsetDate
         
+        // Note 1:
+        // Based on the current rule set, there’s an invariant when we have both an unconfirmed test and symptoms:
+        // The assumed symptom onset day > test end date.
+        // This assumption currently can’t be captured in the state yet, so we need to be careful in the definition of
+        // these events.
+        
+        // Note 2:
+        // If not explicitly constrained, it’s assumed received negative test not before and within N days of any
+        // unconfirmed test result
+        
+        // Note 3:
+        // If not explicitly constrained, it’s assumed received negative test is not older than assumed symptom onset
+        
         case receivedNegativeTest
-        case receivedNegativeTestWithEndDateOlderThanRememberedUnconfirmedTestEndDate
         case receivedNegativeTestWithEndDateOlderThanAssumedSymptomOnsetDate
+        
+        // This is addressing a very specific case:
+        // * User has confirmed positive test and symptoms
+        // * assumed symptoms > positive test end date
+        // * negative test end date > positive.
+        case receivedNegativeTestWithEndDateNewerThanAssumedSymptomOnsetDateAndAssumedSymptomOnsetDateNewerThanPositiveTestEndDate
+        
+        case receivedNegativeTestWithEndDateOlderThanRememberedUnconfirmedTestEndDateAndOlderThanAssumedSymptomOnsetDayIfAny
+        // Based on note 1, the following is not possible:
+        // case receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDate
+        
+        case receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDateButOlderThanAssumedSymptomOnsetDayIfAny
+        case receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDate
         
         case receivedVoidTest
         

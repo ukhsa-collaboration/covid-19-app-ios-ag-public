@@ -1,12 +1,12 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Domain
 import Interface
 
 extension Interface.TestResult {
-    init(domainTestResult: Domain.TestResult) {
+    init?(domainTestResult: Domain.TestResult) {
         switch domainTestResult {
         case .positive:
             self = .positive
@@ -14,6 +14,9 @@ extension Interface.TestResult {
             self = .negative
         case .void:
             self = .void
+        case .plod:
+            return nil
+            
         }
     }
 }

@@ -15,12 +15,16 @@ struct LinkTestResultWithDCTScreen {
         app.staticTexts[localized: .link_test_result_header]
     }
     
-    var description: XCUIElement {
-        app.staticTexts[localized: .link_test_result_description]
+    var yourTestResultShould: XCUIElement {
+        app.staticTexts[localized: .link_test_result_your_test_result_code_should]
     }
     
     var subheading: XCUIElement {
         app.staticTexts[localized: .link_test_result_enter_code_heading]
+    }
+    
+    var reportYourResultLink: XCUIElement {
+        app.links[localized: .link_test_result_report_on_gov_dot_uk]
     }
     
     var exampleLabel: XCUIElement {

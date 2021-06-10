@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -17,9 +17,7 @@ struct PositiveTestResultStartIsolationScreen {
         app.staticTexts[localized: .positive_test_result_start_to_isolate_info]
     }
     
-    var explanationLabel: XCUIElement {
-        #warning("This assertion is incorrect.")
-        // If explaination copy is multiple paragraphs, it’ll be broken down into multiple labels to improve accessibility.
+    var explanationLabels: [XCUIElement] {
         return app.staticTexts[localized: .positive_test_result_start_to_isolate_explaination]
     }
     

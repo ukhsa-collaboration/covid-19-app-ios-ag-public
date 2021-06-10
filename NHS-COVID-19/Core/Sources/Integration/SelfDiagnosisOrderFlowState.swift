@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -9,7 +9,7 @@ import Foundation
 import Interface
 
 enum SelfDiagnosisOrderFlowState {
-    case selfDiagnosis(SelfDiagnosisFlowViewController.Interacting, isolationState: Interface.IsolationState)
+    case selfDiagnosis(SelfDiagnosisFlowViewController.Interacting)
     case testOrdering(VirologyTestingFlowViewController.Interacting)
     
     static func makeState(context: RunningAppContext) -> AnyPublisher<SelfDiagnosisOrderFlowState, Never> {
@@ -28,8 +28,9 @@ enum SelfDiagnosisOrderFlowState {
                         orderTest: {
                             testOrdering.send(true)
                         },
-                        openURL: context.openURL
-                    ), isolationState: Interface.IsolationState(domainState: context.isolationState.currentValue, today: LocalDay.today))
+                        openURL: context.openURL,
+                        initialIsolationState: Interface.IsolationState(domainState: context.isolationState.currentValue, today: LocalDay.today)
+                    ))
                 }
             }.eraseToAnyPublisher()
     }

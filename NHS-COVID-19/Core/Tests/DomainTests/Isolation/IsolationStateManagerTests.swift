@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -46,7 +46,7 @@ class IsolationStateManagerTests: XCTestCase {
     }
     
     func testRespondingToInitialBatchOfInfosReceived() {
-        var info = IsolationStateInfo(isolationInfo: .empty, configuration: .default)
+        var info = IsolationStateInfo(isolationInfo: IsolationInfo(), configuration: .default)
         info.configuration.indexCaseSinceSelfDiagnosisOnset = 18
         stateInfoSubject.send(info)
         daySubject.send(day)
@@ -57,7 +57,7 @@ class IsolationStateManagerTests: XCTestCase {
     }
     
     func testRespondingToChangesInInfosReceived() {
-        var info = IsolationStateInfo(isolationInfo: .empty, configuration: .default)
+        var info = IsolationStateInfo(isolationInfo: IsolationInfo(), configuration: .default)
         let day2 = day.advanced(by: 1)
         info.configuration.indexCaseSinceSelfDiagnosisOnset = 18
         stateInfoSubject.send(info)

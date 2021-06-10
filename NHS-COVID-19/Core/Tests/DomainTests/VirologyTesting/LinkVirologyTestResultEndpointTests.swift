@@ -75,7 +75,23 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
         }
         """#))
         
-        XCTAssertThrowsError(try endpoint.parse(actualResponse))
+        let expectedResponse = LinkVirologyTestResultResponse(
+            virologyTestResult: .init(
+                testResult: .positive,
+                testKitType: .rapidResult,
+                endDate: DateComponents(
+                    calendar: .current,
+                    timeZone: .utc,
+                    year: 2021,
+                    month: 1,
+                    day: 10
+                ).date!
+            ),
+            diagnosisKeySubmissionSupport: .supported(diagnosisKeySubmissionToken: submissionToken),
+            requiresConfirmatoryTest: true
+        )
+        
+        TS.assert(try endpoint.parse(actualResponse), equals: expectedResponse)
     }
     
     func testDecodingUnconfirmedTestWithNegativeResult() throws {
@@ -96,6 +112,24 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
         XCTAssertThrowsError(try endpoint.parse(actualResponse))
     }
     
+    func testDecodingTestWithPLODResult() throws {
+        let date = "2021-01-10T00:00:00.0000000Z"
+        let submissionToken = DiagnosisKeySubmissionToken(value: .random())
+        
+        let actualResponse = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "\#(date)",
+            "testResult": "PLOD",
+            "testKit" : "LAB_RESULT",
+            "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
+            "diagnosisKeySubmissionSupported" : false,
+            "requiresConfirmatoryTest": false
+        }
+        """#))
+        
+        XCTAssertNoThrow(try endpoint.parse(actualResponse))
+    }
+    
     func testDecodingUnconfirmedTestWithVoidResult() throws {
         let date = "2021-01-10T00:00:00.0000000Z"
         let submissionToken = DiagnosisKeySubmissionToken(value: .random())
@@ -114,6 +148,31 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
         XCTAssertThrowsError(try endpoint.parse(actualResponse))
     }
     
+    func testDecodingTestWithUnknownResult() throws {
+        let date = "2021-01-10T00:00:00.0000000Z"
+        let submissionToken = DiagnosisKeySubmissionToken(value: .random())
+        
+        let actualResponse = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "\#(date)",
+            "testResult": "UNKNOWN_TEST_RESULT_TYPE",
+            "testKit" : "LAB_RESULT",
+            "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
+            "diagnosisKeySubmissionSupported" : false,
+            "requiresConfirmatoryTest": false
+        }
+        """#))
+
+        XCTAssertThrowsError(try endpoint.parse(actualResponse)) { (error) in
+            switch error {
+            case DecodingError.dataCorrupted(_):
+                break
+            default:
+                XCTFail()
+            }
+        }
+    }
+
     func testDecodingPositiveLfdDiagnosisKeySubmissionNotSupported() throws {
         let date = "2021-01-10T00:00:00.0000000Z"
         

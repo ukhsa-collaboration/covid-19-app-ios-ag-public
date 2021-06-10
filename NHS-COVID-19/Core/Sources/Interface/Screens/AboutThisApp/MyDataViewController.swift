@@ -59,16 +59,16 @@ public class MyDataViewController: UITableViewController {
             let testEndDate: Date?
             let testKitType: TestKitType?
             
-            public enum ConfirmationStatus: CustomStringConvertible {
+            public enum CompletionStatus: CustomStringConvertible {
                 case pending
-                case confirmed(onDay: GregorianDay)
+                case completed(onDay: GregorianDay)
                 case notRequired
                 
                 public var description: String {
                     switch self {
                     case .pending:
                         return localize(.mydata_test_result_follow_up_pending)
-                    case .confirmed:
+                    case .completed:
                         return localize(.mydata_test_result_follow_up_complete)
                     case .notRequired:
                         return localize(.mydata_test_result_follow_up_not_required)
@@ -76,21 +76,21 @@ public class MyDataViewController: UITableViewController {
                 }
                 
                 public var subtitle: String? {
-                    if case .confirmed(let confirmedOnDay) = self {
-                        return localize(.mydata_date_description(date: confirmedOnDay.startDate(in: .current)))
+                    if case .completed(let completedOnDay) = self {
+                        return localize(.mydata_date_description(date: completedOnDay.startDate(in: .current)))
                     }
                     return nil
                 }
             }
             
-            let confirmationStatus: ConfirmationStatus?
+            let completionStatus: CompletionStatus?
             
-            public init(result: TestResult, acknowledgementDate: Date, testEndDate: Date?, testKitType: TestKitType?, confirmationStatus: ConfirmationStatus?) {
+            public init(result: TestResult, acknowledgementDate: Date, testEndDate: Date?, testKitType: TestKitType?, completionStatus: CompletionStatus?) {
                 self.result = result
                 self.acknowledgementDate = acknowledgementDate
                 self.testEndDate = testEndDate
                 self.testKitType = testKitType
-                self.confirmationStatus = confirmationStatus
+                self.completionStatus = completionStatus
             }
         }
         
@@ -122,8 +122,8 @@ public class MyDataViewController: UITableViewController {
         case testEndDate(Date)
         case testResult(TestResult)
         case testKitType(TestKitType)
-        case confirmationDate(String)
-        case confirmationStatus(ViewModel.TestResultDetails.ConfirmationStatus)
+        case completionDate(String)
+        case completionStatus(ViewModel.TestResultDetails.CompletionStatus)
         case symptomsOnsetDate(Date)
         case encounterDate(Date)
         case notificationDate(Date)
@@ -152,10 +152,10 @@ public class MyDataViewController: UITableViewController {
                     $0.testKitType.map { kitType in
                         .testKitType(kitType)
                     },
-                    $0.confirmationStatus?.subtitle.map {
-                        .confirmationDate($0)
+                    $0.completionStatus?.subtitle.map {
+                        .completionDate($0)
                     },
-                    .confirmationStatus($0.confirmationStatus ?? .notRequired),
+                    .completionStatus($0.completionStatus ?? .notRequired),
                 ].compactMap { $0 }
             )
         }
@@ -234,19 +234,19 @@ public class MyDataViewController: UITableViewController {
         let cell: UITableViewCell
         switch content[indexPath.section].rows[indexPath.row] {
         case .testAcknowledgementDate(let date):
-            cell = DateCell.create(tableView: tableView, title: localize(.mydata_test_result_test_acknowledgement_date), date: date)
+            cell = TextCell.create(tableView: tableView, title: localize(.mydata_test_result_test_acknowledgement_date), date: date)
         case .testEndDate(let date):
-            cell = DateCell.create(tableView: tableView, title: localize(.mydata_test_result_test_end_date), date: date)
+            cell = TextCell.create(tableView: tableView, title: localize(.mydata_test_result_test_end_date), date: date)
         case .testResult(let result):
             cell = TextCell.create(tableView: tableView, title: localize(.mydata_test_result_test_result), value: result.description)
         case .testKitType(let testKitType):
             cell = TextCell.create(tableView: tableView, title: localize(.mydata_test_result_test_kit_type), value: testKitType.description)
-        case .confirmationDate(let date):
+        case .completionDate(let date):
             cell = TextCell.create(tableView: tableView, title: localize(.mydata_test_result_follow_up_test_date), value: date)
-        case .confirmationStatus(let confirmationStatus):
-            cell = TextCell.create(tableView: tableView, title: localize(.mydata_test_result_follow_up_test_status), value: confirmationStatus.description)
+        case .completionStatus(let completionStatus):
+            cell = TextCell.create(tableView: tableView, title: localize(.mydata_test_result_follow_up_test_status), value: completionStatus.description)
         case .symptomsOnsetDate(let date):
-            cell = DateCell.create(tableView: tableView, title: localize(.mydata_section_symptoms_date), date: date)
+            cell = TextCell.create(tableView: tableView, title: localize(.mydata_section_symptoms_date), date: date)
         case .lastDayOfSelfIsolation(let date):
             #warning("Find a safer day of doing this")
             // We should show the last day of isolation, not the first day after isolation, hence the going backward.
@@ -256,15 +256,15 @@ public class MyDataViewController: UITableViewController {
             // One possible solution is to send a `GregorianDay` to this field instead of a `Date` so we can specify
             // the actual "day isolation ends" instead of "moment isolation ends".
             let justBeforeEndOfIsolation = date.advanced(by: -1)
-            cell = DateCell.create(tableView: tableView, title: localize(.mydata_section_self_isolation_end_date), date: justBeforeEndOfIsolation)
+            cell = TextCell.create(tableView: tableView, title: localize(.mydata_section_self_isolation_end_date), date: justBeforeEndOfIsolation)
         case .dailyTestingOptIn(let date):
-            cell = DateCell.create(tableView: tableView, title: localize(.mydata_daily_testing_opt_in_date_description), date: date)
+            cell = TextCell.create(tableView: tableView, title: localize(.mydata_daily_testing_opt_in_date_description), date: date)
         case .venueOfRiskDate(let date):
-            cell = DateCell.create(tableView: tableView, title: localize(.mydata_section_venue_of_risk_date), date: date)
+            cell = TextCell.create(tableView: tableView, title: localize(.mydata_section_venue_of_risk_date), date: date)
         case .encounterDate(let date):
-            cell = DateCell.create(tableView: tableView, title: localize(.mydata_exposure_notification_details_exposure_date_description), date: date)
+            cell = TextCell.create(tableView: tableView, title: localize(.mydata_exposure_notification_details_exposure_date_description), date: date)
         case .notificationDate(let date):
-            cell = DateCell.create(tableView: tableView, title: localize(.mydata_exposure_notification_details_notification_date_description), date: date)
+            cell = TextCell.create(tableView: tableView, title: localize(.mydata_exposure_notification_details_notification_date_description), date: date)
         }
         
         // Trigger a layout pass to prevent incorrect cell content layout
@@ -284,7 +284,7 @@ public class MyDataViewController: UITableViewController {
         tableView.sectionFooterHeight = UITableView.automaticDimension
         
         tableView.register(SectionHeader.self, forHeaderFooterViewReuseIdentifier: SectionHeader.reuseIdentifier)
-        tableView.register(DateCell.self, forCellReuseIdentifier: DateCell.reuseIdentifier)
+        tableView.register(TextCell.self, forCellReuseIdentifier: TextCell.reuseIdentifier)
         
         if content.count == 0 {
             tableView.backgroundView = EmptySettingsView(

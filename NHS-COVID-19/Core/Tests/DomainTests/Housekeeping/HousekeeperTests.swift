@@ -34,7 +34,7 @@ class HousekeeperTests: XCTestCase {
         let housekeeper = createHouseKeeper(
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
-            isolationInfo: IsolationInfo.empty,
+            isolationInfo: IsolationInfo(),
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil)
         )
         _ = housekeeper.executeHousekeeping()
@@ -46,7 +46,7 @@ class HousekeeperTests: XCTestCase {
         let housekeeper = createHouseKeeper(
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
-            isolationInfo: IsolationInfo.empty,
+            isolationInfo: IsolationInfo(),
             isolationLogicalState: IsolationLogicalState.isolating(
                 Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 26, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)), endAcknowledged: false, startAcknowledged: false
             )
@@ -60,7 +60,7 @@ class HousekeeperTests: XCTestCase {
         let housekeeper = createHouseKeeper(
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
-            isolationInfo: IsolationInfo.empty,
+            isolationInfo: IsolationInfo(),
             isolationLogicalState: IsolationLogicalState.isolationFinishedButNotAcknowledged(
                 Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 23, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil))
             )
@@ -76,7 +76,7 @@ class HousekeeperTests: XCTestCase {
         let housekeeper = createHouseKeeper(
             deletionPeriod: 4,
             today: GregorianDay(year: 2020, month: 7, day: 24),
-            isolationInfo: IsolationInfo.empty,
+            isolationInfo: IsolationInfo(),
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet:
                 Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 20, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil))
             )
@@ -90,7 +90,7 @@ class HousekeeperTests: XCTestCase {
         let housekeeper = createHouseKeeper(
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
-            isolationInfo: IsolationInfo.empty,
+            isolationInfo: IsolationInfo(),
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet:
                 Isolation(fromDay: .today, untilStartOfDay: LocalDay(year: 2020, month: 7, day: 8, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil))
             )

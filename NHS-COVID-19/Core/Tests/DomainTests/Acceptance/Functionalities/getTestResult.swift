@@ -33,6 +33,8 @@ private extension String {
             self.init("POSITIVE")
         case .void:
             self.init("VOID")
+        case .plod:
+            self.init("PLOD")
         }
     }
 }

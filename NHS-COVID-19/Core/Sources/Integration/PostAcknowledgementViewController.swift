@@ -7,11 +7,16 @@ import Common
 import Domain
 import Foundation
 import Interface
+import Localization
 import UIKit
 
 class PostAcknowledgementViewController: UIViewController {
     fileprivate enum InterfaceState: Equatable {
-        case home
+        #warning("Refactor `homeOrPostTestResultAction` and separate into multiple states")
+        /// Either the 'home screen' or actions people need to do after receiving a test result, e.g.:
+        /// * booking a follow-up test (if they've had an unconfirmed test result)
+        /// * sharing their keys
+        case homeOrPostTestResultAction
         case thankYouCompleted
         case bookATest
     }
@@ -20,7 +25,7 @@ class PostAcknowledgementViewController: UIViewController {
     
     private var setNeedsUpdate: Bool = true
     
-    fileprivate var interfaceState: InterfaceState = .home {
+    fileprivate var interfaceState: InterfaceState = .homeOrPostTestResultAction {
         didSet {
             setNeedsInterfaceUpdate()
         }
@@ -30,9 +35,17 @@ class PostAcknowledgementViewController: UIViewController {
     private let shouldShowLanguageSelectionScreen: Bool
     private let clearBookATest: () -> Void
     private let clearContactTracingHub: () -> Void
+    private let clearLocalInfoScreen: () -> Void
     private let showContactTracingHub: CurrentValueSubject<Bool, Never>
+    private let showLocalInfoScreen: CurrentValueSubject<Bool, Never>
     
     private var diagnosisKeySharer: DiagnosisKeySharer? {
+        didSet {
+            setNeedsInterfaceUpdate()
+        }
+    }
+    
+    private var isFollowUpTestRequired: Bool = false {
         didSet {
             setNeedsInterfaceUpdate()
         }
@@ -52,31 +65,42 @@ class PostAcknowledgementViewController: UIViewController {
         context: RunningAppContext,
         shouldShowLanguageSelectionScreen: Bool,
         showBookATest: CurrentValueSubject<Bool, Never>,
-        showContactTracingHub: CurrentValueSubject<Bool, Never>
+        showContactTracingHub: CurrentValueSubject<Bool, Never>,
+        showLocalInfoScreen: CurrentValueSubject<Bool, Never>
     ) {
         self.context = context
         self.shouldShowLanguageSelectionScreen = shouldShowLanguageSelectionScreen
         self.showContactTracingHub = showContactTracingHub
-        
+        self.showLocalInfoScreen = showLocalInfoScreen
+
         clearBookATest = { showBookATest.value = false }
-        clearContactTracingHub = { showContactTracingHub.value = false }
         
+        // todo; we pass the subject down anyway - why do we need these?
+        clearContactTracingHub = { showContactTracingHub.value = false }
+        clearLocalInfoScreen = { showLocalInfoScreen.value = false }
+
         super.init(nibName: nil, bundle: nil)
         
         showBookATest
             .removeDuplicates()
+            .receive(on: UIScheduler.shared)
             .sink { [weak self] showBookATest in
                 guard self?.interfaceState != .thankYouCompleted else { return }
-                DispatchQueue.onMain {
-                    self?.interfaceState = showBookATest ? .bookATest : .home
-                }
+                self?.interfaceState = showBookATest ? .bookATest : .homeOrPostTestResultAction
             }.store(in: &cancellables)
         
         context.diagnosisKeySharer
+            .receive(on: UIScheduler.shared)
             .sink(receiveValue: { [weak self] diagnosisKeySharer in
-                DispatchQueue.onMain {
-                    self?.diagnosisKeySharer = diagnosisKeySharer
-                }
+                self?.diagnosisKeySharer = diagnosisKeySharer
+            })
+            .store(in: &cancellables)
+        
+        context.virologyTestingManager
+            .isFollowUpTestRequired()
+            .receive(on: UIScheduler.shared)
+            .sink(receiveValue: { [weak self] isFollowUpTestRequired in
+                self?.isFollowUpTestRequired = isFollowUpTestRequired
             })
             .store(in: &cancellables)
     }
@@ -108,19 +132,23 @@ class PostAcknowledgementViewController: UIViewController {
         setNeedsUpdate = false
         
         switch interfaceState {
-        case .home:
-            content = homeOrSendKeysViewController()
+        case .homeOrPostTestResultAction:
+            content = homeOrPostResultActionViewController()
+            
         case .thankYouCompleted:
             content = ThankYouViewController.viewController(
-                for: .completed,
-                interactor: ThankYouViewControllerInteractor(viewController: self)
+                for: isFollowUpTestRequired ? .stillNeedToBookATest : .completed,
+                interactor: ThankYouViewControllerInteractor { [weak self] in
+                    self?.interfaceState = .homeOrPostTestResultAction
+                }
             )
+            
         case .bookATest:
             content = bookATestViewController()
         }
     }
     
-    private func homeOrSendKeysViewController() -> UIViewController {
+    private func homeOrPostResultActionViewController() -> UIViewController {
         
         if let diagnosisKeySharer = diagnosisKeySharer,
             let shareFlowType = SendKeysFlowViewController.ShareFlowType(
@@ -128,6 +156,10 @@ class PostAcknowledgementViewController: UIViewController {
                 hasTriggeredReminderNotification: diagnosisKeySharer.hasTriggeredReminderNotification
             ) {
             return sendKeysViewController(diagnosisKeySharer, shareFlowType: shareFlowType)
+        }
+        
+        if isFollowUpTestRequired {
+            return bookAFollowUpTestController()
         }
         
         return homeViewController()
@@ -142,7 +174,7 @@ class PostAcknowledgementViewController: UIViewController {
                     if value == .sent {
                         self?.interfaceState = .thankYouCompleted
                     } else {
-                        self?.interfaceState = .home
+                        self?.interfaceState = .homeOrPostTestResultAction
                     }
                 }
             }
@@ -183,11 +215,52 @@ class PostAcknowledgementViewController: UIViewController {
             .switchToLatest()
             .property(initialValue: nil)
         
+        let localInfoBannerViewModel = context.localInformation
+            .combineLatest(context.postcodeInfo)
+            .map { (localInfo, postcodeInfo) -> LocalInformationBanner.ViewModel? in
+                guard let localInfo = localInfo,
+                    let message = localInfo.info?.translations(for: currentLocaleIdentifier())
+                else { return nil }
+                
+                guard let headingText = message.head,
+                    let renderableBlocks = message.renderable()
+                else { return nil }
+                
+                let postcode = postcodeInfo?.postcode.value ?? ""
+                let localAuthority = localInfo.localAuthority?.name ?? ""
+
+                let paragraphs = renderableBlocks.map { renderableBlock in
+                    LocalInformationViewController.ViewModel.Paragraph(
+                        text: renderableBlock.text?.stringByReplacing(postcode: postcode, localAuthority: localAuthority),
+                        link: renderableBlock.url
+                    )
+                }
+                
+                let replacementHeadingText = headingText.stringByReplacing(postcode: postcode, localAuthority: localAuthority)
+                
+                return LocalInformationBanner.ViewModel(
+                    text: replacementHeadingText,
+                    localInfoScreenViewModel: .init(header: replacementHeadingText, body: paragraphs)
+                )
+            }
+            .property(initialValue: nil)
+        
+        let animationDisabled = NotificationCenter.default.publisher(
+            for: UIAccessibility.reduceMotionStatusDidChangeNotification
+        ).map { _ in UIAccessibility.isReduceMotionEnabled }
+            .prepend(UIAccessibility.isReduceMotionEnabled)
+            .combineLatest(context.homeAnimationsStore.homeAnimationsEnabled) { reduceMotion, animationsEnabled -> Bool in
+                guard !reduceMotion else { return true }
+                return !animationsEnabled
+            }.receive(on: RunLoop.main)
+            .property(initialValue: UIAccessibility.isReduceMotionEnabled)
+        
         let isolationViewModel = RiskLevelIndicator.ViewModel(
             isolationState: context.isolationState
                 .mapToInterface(with: context.currentDateProvider)
                 .property(initialValue: .notIsolating),
-            paused: context.exposureNotificationStateController.isEnabledPublisher.map { !$0 }.property(initialValue: false)
+            paused: context.exposureNotificationStateController.isEnabledPublisher.map { !$0 }.property(initialValue: false),
+            animationDisabled: animationDisabled
         )
         
         let didRecentlyVisitSevereRiskyVenue = context.checkInContext?.recentlyVisitedSevereRiskyVenue ?? DomainProperty<GregorianDay?>.constant(nil)
@@ -224,6 +297,7 @@ class PostAcknowledgementViewController: UIViewController {
         return HomeFlowViewController(
             interactor: interactor,
             riskLevelBannerViewModel: riskLevelBannerViewModel,
+            localInfoBannerViewModel: localInfoBannerViewModel,
             isolationViewModel: isolationViewModel,
             exposureNotificationsEnabled: context.exposureNotificationStateController.isEnabledPublisher,
             showOrderTestButton: showOrderTestButton,
@@ -234,8 +308,28 @@ class PostAcknowledgementViewController: UIViewController {
             country: country,
             shouldShowLanguageSelectionScreen: shouldShowLanguageSelectionScreen,
             showContactTracingHub: showContactTracingHub,
-            clearContactTracingHub: clearContactTracingHub
+            clearContactTracingHub: clearContactTracingHub,
+            showLocalInfoScreen: showLocalInfoScreen,
+            clearLocalInfoScreen: clearLocalInfoScreen
         )
+    }
+    
+    private func bookAFollowUpTestController() -> UIViewController {
+        let interactor = BookAFollowUpTestInteractor(
+            didTapPrimaryButton: { [weak self] in
+                self?.context.virologyTestingManager.didClearBookFollowUpTest()
+                self?.interfaceState = .bookATest
+            },
+            didTapCancel: { [weak self] in
+                self?.context.virologyTestingManager.didClearBookFollowUpTest()
+                self?.interfaceState = .homeOrPostTestResultAction
+            },
+            openURL: context.openURL
+        )
+        
+        let bookAFollowUpTestViewController = BookAFollowUpTestViewController(interactor: interactor)
+        
+        return BaseNavigationController(rootViewController: bookAFollowUpTestViewController)
     }
     
     private func bookATestViewController() -> UIViewController {
@@ -248,7 +342,7 @@ class PostAcknowledgementViewController: UIViewController {
             acknowledge: { [weak self] in
                 DispatchQueue.onMain {
                     self?.clearBookATest()
-                    self?.interfaceState = .home
+                    self?.interfaceState = .homeOrPostTestResultAction
                 }
             }
         )
@@ -269,9 +363,9 @@ class PostAcknowledgementViewController: UIViewController {
 }
 
 private struct ThankYouViewControllerInteractor: ThankYouViewController.Interacting {
-    weak var viewController: PostAcknowledgementViewController?
+    var didTapButton: () -> Void
     
     func action() {
-        viewController?.interfaceState = .home
+        didTapButton()
     }
 }

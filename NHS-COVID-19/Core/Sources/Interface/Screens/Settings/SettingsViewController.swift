@@ -12,6 +12,7 @@ public protocol SettingsViewControllerInteracting {
     func didTapMyArea()
     func didTapDeleteAppData()
     func didTapVenueHistory()
+    func didTapAnimations()
 }
 
 public class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -38,6 +39,7 @@ public class SettingsViewController: UIViewController, UITableViewDelegate, UITa
         case manageMyData
         case myArea
         case venueHistory
+        case animations
     }
     
     private var content: [Section] {
@@ -45,7 +47,8 @@ public class SettingsViewController: UIViewController, UITableViewDelegate, UITa
         let manageMyDataRow = Row.manageMyData
         let venuHistoryRow = Row.venueHistory
         let myAreaRow: Row = .myArea
-        let section = Section(rows: [languageRow, myAreaRow, manageMyDataRow, venuHistoryRow])
+        let animations: Row = .animations
+        let section = Section(rows: [languageRow, myAreaRow, manageMyDataRow, venuHistoryRow, animations])
         return [section]
     }
     
@@ -106,6 +109,8 @@ public class SettingsViewController: UIViewController, UITableViewDelegate, UITa
             cell = TextCell.create(tableView: tableView, title: localize(.settings_venue_history))
         case .myArea:
             cell = TextCell.create(tableView: tableView, title: localize(.settings_row_my_area_title))
+        case .animations:
+            cell = TextCell.create(tableView: tableView, title: localize(.settings_row_animations_title))
         }
         return cell
     }
@@ -127,6 +132,7 @@ public class SettingsViewController: UIViewController, UITableViewDelegate, UITa
         case .manageMyData: interacting.didTapManageMyData()
         case .myArea: interacting.didTapMyArea()
         case .venueHistory: interacting.didTapVenueHistory()
+        case .animations: interacting.didTapAnimations()
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }

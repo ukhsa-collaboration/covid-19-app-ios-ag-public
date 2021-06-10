@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import UIKit
@@ -26,6 +26,7 @@ public class InformationBox: UIView {
             case turquoise
             case darkBlue
             case pink
+            case yellow
         }
     }
     
@@ -95,6 +96,8 @@ public class InformationBox: UIView {
             stripe.backgroundColor = UIColor(.nhsBlue)
         case .information(.pink):
             stripe.backgroundColor = UIColor(.stylePink)
+        case .information(.yellow):
+            stripe.backgroundColor = UIColor(.styleYellow)
         case .goodNews:
             stripe.backgroundColor = UIColor(.nhsButtonGreen)
         case .warning:

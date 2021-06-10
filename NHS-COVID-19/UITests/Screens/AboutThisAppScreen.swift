@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -8,20 +8,24 @@ import XCTest
 struct AboutThisAppScreen {
     var app: XCUIApplication
     
+    var vaccinationStatusDisclaimerHeadingLabel: XCUIElement {
+        app.staticTexts[localized: .about_this_app_vaccination_status_disclaimer_heading]
+    }
+    
+    var vaccinationStatusDisclaimerParagraphs: [XCUIElement] {
+        app.staticTexts[localized: .about_this_app_vaccination_status_disclaimer_description]
+    }
+    
+    var downloadNHSAppLink: XCUIElement {
+        app.links[localized: .about_this_app_vaccination_status_disclaimer_link]
+    }
+    
     var aboutThisAppHeadingLabel: XCUIElement {
         app.staticTexts[localized: .about_this_app_how_this_app_works_heading]
     }
     
-    var aboutThisAppParagraphOne: XCUIElement {
-        app.staticTexts[localized: .about_this_app_how_this_app_works_paragraph1]
-    }
-    
-    var aboutThisAppParagraphTwo: XCUIElement {
-        app.staticTexts[localized: .about_this_app_how_this_app_works_paragraph2]
-    }
-    
-    var aboutThisAppParagraphThree: XCUIElement {
-        app.staticTexts[localized: .about_this_app_how_this_app_works_paragraph3]
+    var aboutThisAppParagraphs: [XCUIElement] {
+        app.staticTexts[localized: .about_this_app_how_this_app_works_description]
     }
     
     var aboutThisAppInstructonForUse: XCUIElement {

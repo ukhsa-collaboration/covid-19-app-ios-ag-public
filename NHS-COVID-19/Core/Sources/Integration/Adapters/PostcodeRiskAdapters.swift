@@ -8,8 +8,6 @@ import Interface
 import Localization
 
 extension RiskLevelBanner.ViewModel {
-    private static let postcodePlaceholder = "[postcode]"
-    private static let localAuthorityPlaceholder = "[local authority]"
     
     public init(
         postcode: Postcode,
@@ -37,18 +35,17 @@ extension RiskLevelBanner.ViewModel {
                 if let localAuthority = localAuthority,
                     risk.type == .localAuthority {
                     return policyData.localAuthorityRiskTitle.localizedString()
-                        .replacingOccurrences(of: Self.postcodePlaceholder, with: postcode.value)
-                        .replacingOccurrences(of: Self.localAuthorityPlaceholder, with: localAuthority.name)
+                        .stringByReplacing(postcode: postcode.value, localAuthority: localAuthority.name)
                 } else {
                     return risk.style.name.localizedString()
-                        .replacingOccurrences(of: Self.postcodePlaceholder, with: postcode.value)
+                        .stringByReplacing(postcode: postcode.value)
                 }
             }()
             
             self.init(
                 postcode: postcode.value,
                 colorScheme: colorScheme,
-                title: risk.style.name.localizedString().replacingOccurrences(of: Self.postcodePlaceholder, with: postcode.value),
+                title: risk.style.name.localizedString().stringByReplacing(postcode: postcode.value),
                 infoTitle: localAuthorityTitle,
                 heading: policyData.heading.localizedString().split(separator: "\n").map(String.init).filter { !$0.isEmpty },
                 body: policyData.content.localizedString().split(separator: "\n").map(String.init).filter { !$0.isEmpty },
@@ -65,7 +62,7 @@ extension RiskLevelBanner.ViewModel {
                 shouldShowMassTestingLink: shouldShowMassTestingLink
             )
         } else {
-            let title = risk.style.name.localizedString().replacingOccurrences(of: Self.postcodePlaceholder, with: postcode.value)
+            let title = risk.style.name.localizedString().stringByReplacing(postcode: postcode.value)
             
             self.init(
                 postcode: postcode.value,

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -32,7 +32,7 @@ public class SymptomsListViewControllerScenario: Scenario {
                     SymptomInfo(isConfirmed: false, heading: symptom1Heading, content: symptom1Content),
                     SymptomInfo(isConfirmed: true, heading: symptom2Heading, content: symptom2Content),
                 ],
-                symptomIndex: nil,
+                scrollToSymptomAt: nil,
                 interactor: interactor
             )
         }

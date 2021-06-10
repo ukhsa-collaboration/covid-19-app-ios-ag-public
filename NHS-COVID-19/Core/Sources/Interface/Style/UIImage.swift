@@ -53,6 +53,9 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case isolationEndedWarning = "IsolationEndedWarning"
     case isolationEnded = "IsolationEnded"
     case policy = "Policy"
+    case softwareUpdate = "software-update"
+    case enterTestResult = "EnterTestResult"
+    case alert = "Alert"
     
     // MARK: Key sharing
     

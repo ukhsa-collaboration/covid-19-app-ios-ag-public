@@ -30,6 +30,7 @@ public enum ColorName: String, CaseIterable, Identifiable {
     case stylePurple = "Style/Purple"
     case styleRed = "Style/Red"
     case styleBlue = "Style/Blue"
+    case styleYellow = "Style/Yellow"
     
     case riskLevelBackgroundNeutral = "RiskLevel/Background/Neutral"
     case riskLevelBackgroundGreen = "RiskLevel/Background/Green"
@@ -52,7 +53,7 @@ public enum ColorName: String, CaseIterable, Identifiable {
     case contactTracingHubButton = "Contact Tracing Hub Button"
     
     case accessibleButtonOutline = "Accessible Button Outline"
-
+    
     public var id: ColorName {
         self
     }

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -15,6 +15,7 @@ class SuccessHomeScreenTests: XCTestCase {
             let screen = HomeScreen(app: app)
             XCTAssert(screen.riskLevelBanner(for: "SW12", title: "[postcode] is in Local Alert Level 1").exists)
             XCTAssert(screen.notIsolatingIndicator.exists)
+            XCTAssert(screen.localInfoBanner(text: "A new variant of concern is in your area.").exists)
         }
     }
     
@@ -27,6 +28,19 @@ class SuccessHomeScreenTests: XCTestCase {
             app.scrollTo(element: screen.riskLevelBanner(for: "SW12", title: "[postcode] is in Local Alert Level 1"))
             screen.riskLevelBanner(for: "SW12", title: "[postcode] is in Local Alert Level 1").tap()
             XCTAssert(moreInfoButtonAction.displayed)
+        }
+    }
+    
+    func testTapOnLocalInfoBanner() throws {
+        try runner.run { app in
+            let screen = HomeScreen(app: app)
+            
+            let localInfoBanner = screen.localInfoBanner(text: "A new variant of concern is in your area.")
+            app.scrollTo(element: localInfoBanner)
+            localInfoBanner.tap()
+            
+            let localInfoBannerAction = app.staticTexts[HomeScreenAlerts.localInfoBannerAlertTitle]
+            XCTAssert(localInfoBannerAction.displayed)
         }
     }
     
@@ -52,28 +66,6 @@ class SuccessHomeScreenTests: XCTestCase {
         }
     }
     
-    func testAdviceButton() throws {
-        try runner.run { app in
-            let screen = HomeScreen(app: app)
-            
-            let adviceButtonAction = app.staticTexts[HomeScreenAlerts.adviceAlertTitle]
-            app.scrollTo(element: screen.adviceButton)
-            screen.adviceButton.tap()
-            XCTAssert(adviceButtonAction.displayed)
-        }
-    }
-    
-    func testTestingInformationButton() throws {
-        try runner.run { app in
-            let screen = HomeScreen(app: app)
-            
-            let testingInformationButtonAction = app.staticTexts[HomeScreenAlerts.testingInformationAlertTitle]
-            app.scrollTo(element: screen.testingInformationButton)
-            screen.testingInformationButton.tap()
-            XCTAssert(testingInformationButtonAction.displayed)
-        }
-    }
-    
     func testFinanceButton() throws {
         try runner.run { app in
             let screen = HomeScreen(app: app)
@@ -95,7 +87,7 @@ class SuccessHomeScreenTests: XCTestCase {
             XCTAssert(settingsButtonAction.displayed)
         }
     }
-
+    
     func testContactTracingHubButton() throws {
         try runner.run { app in
             let screen = HomeScreen(app: app)
@@ -104,6 +96,17 @@ class SuccessHomeScreenTests: XCTestCase {
             app.scrollTo(element: screen.contactTracingHubButton)
             screen.contactTracingHubButton.tap()
             XCTAssert(contactTracingHubButtonAction.displayed)
+        }
+    }
+    
+    func testTestingHubButton() throws {
+        try runner.run { app in
+            let screen = HomeScreen(app: app)
+            
+            let testingHubButtonAction = app.staticTexts[HomeScreenAlerts.testingHubAlertTitle]
+            app.scrollTo(element: screen.testingHubButton)
+            screen.testingHubButton.tap()
+            XCTAssert(testingHubButtonAction.displayed)
         }
     }
 }
@@ -118,18 +121,8 @@ class DisabledFeaturesHomeScreenTests: XCTestCase {
             let screen = HomeScreen(app: app)
             XCTAssertFalse(screen.riskLevelBanner(for: "SW12", title: "[postcode] is in Local Alert Level 1").exists)
             XCTAssertFalse(screen.diagnoisButton.exists)
-            XCTAssertFalse(screen.testingInformationButton.exists)
+            XCTAssertFalse(screen.localInfoBanner(text: "A new variant of concern is in your area.").exists)
         }
     }
     
-    func testAdviceButton() throws {
-        try runner.run { app in
-            let screen = HomeScreen(app: app)
-            
-            let adviceButtonAction = app.staticTexts[HomeScreenAlerts.adviceAlertTitle]
-            app.scrollTo(element: screen.adviceButton)
-            screen.adviceButton.tap()
-            XCTAssert(adviceButtonAction.displayed)
-        }
-    }
 }

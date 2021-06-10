@@ -18,6 +18,7 @@ public class SettingsScreenScenario: Scenario {
     public static let didTapDeleteAppData = "Tapped delete app data"
     public static let didTapVenueHistory = "Tapped venue history"
     public static let didTapMyArea = "Tapped My area"
+    public static let didTapMyAnimations = "Tapped Animations"
     
     static var appController: AppController {
         NavigationAppController { parent in
@@ -33,6 +34,8 @@ public class SettingsScreenScenario: Scenario {
                     parent.showAlert(title: didTapDeleteAppData)
                 }, _didTapVenueHistory: {
                     parent.showAlert(title: didTapVenueHistory)
+                }, _didTapAnimations: {
+                    parent.showAlert(title: didTapMyAnimations)
                 })
             )
         }
@@ -40,11 +43,17 @@ public class SettingsScreenScenario: Scenario {
 }
 
 private struct Interactor: SettingsViewController.Interacting {
+    
     var _didTapLanguage: () -> Void
     var _didTapManageMyData: () -> Void
     var _didTapMyArea: () -> Void
     var _didTapDeleteAppData: () -> Void
     var _didTapVenueHistory: () -> Void
+    var _didTapAnimations: () -> Void
+    
+    func didTapAnimations() {
+        _didTapAnimations()
+    }
     
     func didTapLanguage() {
         _didTapLanguage()
@@ -65,4 +74,5 @@ private struct Interactor: SettingsViewController.Interacting {
     func didTapVenueHistory() {
         _didTapVenueHistory()
     }
+    
 }

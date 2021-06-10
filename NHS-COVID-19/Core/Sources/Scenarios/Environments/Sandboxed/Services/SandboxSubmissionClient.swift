@@ -7,7 +7,14 @@ import Common
 import Foundation
 
 class SandboxSubmissionClient: HTTPClient {
+    
+    private let initialState: Sandbox.InitialState
     private let queue = DispatchQueue(label: "sandbox-submission-client")
+    
+    init(initialState: Sandbox.InitialState) {
+        self.initialState = initialState
+    }
+    
     func perform(_ request: HTTPRequest) -> AnyPublisher<HTTPResponse, HTTPRequestError> {
         _perform(request).publisher
             .receive(on: queue)
@@ -34,14 +41,19 @@ class SandboxSubmissionClient: HTTPClient {
             let date = GregorianDay.today.startDate(in: .utc)
             let dateString = ISO8601DateFormatter().string(from: date)
             
+            let testResult = initialState.testResult?.uppercased() ?? "POSITIVE"
+            let keySubmissionSupported = initialState.supportsKeySubmission
+            let requiresConfirmatoryTest = initialState.requiresConfirmatoryTest
+            let testKitType = initialState.testKitType
+            
             let response = HTTPResponse.ok(with: .json(#"""
             {
             "testEndDate": "\#(dateString)",
-            "testResult": "POSITIVE",
-            "testKit":"LAB_RESULT",
+            "testResult": "\#(testResult)",
+            "testKit":"\#(testKitType)",
             "diagnosisKeySubmissionToken": "\#(UUID().uuidString)",
-            "diagnosisKeySubmissionSupported": true,
-            "requiresConfirmatoryTest": false
+            "diagnosisKeySubmissionSupported": \#(keySubmissionSupported),
+            "requiresConfirmatoryTest": \#(requiresConfirmatoryTest)
             }
             """#))
             return Result.success(response)

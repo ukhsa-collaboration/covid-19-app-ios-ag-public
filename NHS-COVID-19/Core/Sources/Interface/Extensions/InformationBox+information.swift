@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import UIKit
@@ -28,7 +28,8 @@ extension InformationBox {
         lightBlue: ([Content]) -> InformationBox,
         turquoise: ([Content]) -> InformationBox,
         darkBlue: ([Content]) -> InformationBox,
-        pink: ([Content]) -> InformationBox
+        pink: ([Content]) -> InformationBox,
+        yellow: ([Content]) -> InformationBox
     ) {
         (
             { .information(color: .purple, $0) },
@@ -36,7 +37,8 @@ extension InformationBox {
             { .information(color: .lightBlue, $0) },
             { .information(color: .turquoise, $0) },
             { .information(color: .darkBlue, $0) },
-            { .information(color: .pink, $0) }
+            { .information(color: .pink, $0) },
+            { .information(color: .yellow, $0) }
         )
         
     }

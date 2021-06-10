@@ -58,10 +58,7 @@ class CheckInContextTest: XCTestCase {
     }
     
     func testMakeBackgroundJobs() throws {
-        let backgroundJobs = checkInContext.makeBackgroundJobs(
-            metricsFrequency: 1.0,
-            housekeepingFrequency: 1.0
-        )
+        let backgroundJobs = checkInContext.makeBackgroundJobs()
         
         XCTAssertEqual(backgroundJobs.count, 2)
         

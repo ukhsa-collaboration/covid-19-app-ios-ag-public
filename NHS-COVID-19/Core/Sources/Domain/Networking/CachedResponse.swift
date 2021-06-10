@@ -15,6 +15,7 @@ class CachedResponse<Output> {
     private let httpClient: HTTPClient
     private let endpoint: ResponseEchoingEndpoint<Output>
     private let currentDateProvider: DateProviding?
+    private let updatedSubject: CurrentValueSubject<(old: Output?,new: Output?)?, Never>?
 
     @FileStored
     private var cachedData: Data?
@@ -30,7 +31,8 @@ class CachedResponse<Output> {
         storage: FileStoring,
         name: String,
         initialValue: Output,
-        currentDateProvider: DateProviding? = nil
+        currentDateProvider: DateProviding? = nil,
+        updatedSubject:  CurrentValueSubject<(old: Output?,new: Output?)?, Never>? = nil
     ) where Endpoint: HTTPEndpoint, Endpoint.Input == Void, Endpoint.Output == Output {
         self.httpClient = httpClient
         self.endpoint = ResponseEchoingEndpoint(endpoint)
@@ -39,6 +41,13 @@ class CachedResponse<Output> {
         let storedValue = _cachedData.response.flatMap { try? endpoint.parse($0) }
         value = storedValue ?? initialValue
         self.currentDateProvider = currentDateProvider
+        self.updatedSubject = updatedSubject
+    }
+    
+    func load() {
+        if let updatedSubject = self.updatedSubject {
+            updatedSubject.send((old: value, new: value))
+        }
     }
     
     /// Attempts to update the cache.
@@ -62,9 +71,11 @@ class CachedResponse<Output> {
         if let currentDateProvider = currentDateProvider {
             lastUpdated = currentDateProvider.currentDate
         }
+        let original = value
         cachedData = response.body.content
         value = output
         updating = false
+        updatedSubject?.send((old: original, new: value))
     }
     
 }

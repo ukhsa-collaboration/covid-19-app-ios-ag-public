@@ -64,7 +64,7 @@ struct IsolationContext {
     
     func makeResultAcknowledgementState(
         result: VirologyStateTestResult?,
-        completionHandler: @escaping (Bool) -> Void
+        completionHandler: @escaping (Bool, Bool) -> Void
     ) -> AnyPublisher<TestResultAcknowledgementState, Never> {
         isolationStateStore.$isolationStateInfo
             .combineLatest(currentDateProvider.today, shouldAskForSymptoms)
@@ -107,6 +107,7 @@ struct IsolationContext {
                     for: result.testResult,
                     testKitType: result.testKitType,
                     requiresConfirmatoryTest: result.requiresConfirmatoryTest,
+                    confirmatoryDayLimit: result.confirmatoryDayLimit,
                     receivedOn: self.currentDateProvider.currentGregorianDay(timeZone: .current),
                     npexDay: result.endDay,
                     operation: storeOperation
@@ -130,24 +131,30 @@ struct IsolationContext {
                         isolationStateStore.restartIsolationAcknowledgement()
                     }
                     
-                    completionHandler(storeOperation != .ignore)
+                    if case .isolating(let isolation, _, _) = currentIsolationState,
+                        result.requiresConfirmatoryTest,
+                        isolation.hasConfirmedPositiveTestResult {
+                        completionHandler(storeOperation != .ignore, false)
+                    } else if newIsolationState.isIsolating, result.requiresConfirmatoryTest {
+                        completionHandler(storeOperation != .ignore, true)
+                    } else {
+                        completionHandler(storeOperation != .ignore, false)
+                    }
+                    
                 }
             }
             .eraseToAnyPublisher()
     }
     
-    func makeBackgroundJobs(metricsFrequency: Double, housekeepingFrequency: Double) -> [BackgroundTaskAggregator.Job] {
+    func makeBackgroundJobs() -> [BackgroundTaskAggregator.Job] {
         [
             BackgroundTaskAggregator.Job(
-                preferredFrequency: metricsFrequency,
                 work: isolationStateStore.recordMetrics
             ),
             BackgroundTaskAggregator.Job(
-                preferredFrequency: metricsFrequency,
                 work: isolationStateManager.recordMetrics
             ),
             BackgroundTaskAggregator.Job(
-                preferredFrequency: housekeepingFrequency,
                 work: isolationConfiguration.update
             ),
         ]
@@ -168,13 +175,51 @@ struct IsolationContext {
             Metrics.signpost(.declaredNegativeResultFromDCT)
             
             let updatedContactCase = mutating(contactCaseInfo) {
-                $0.optOutOfIsolationDay = GregorianDay.today // date provider?
+                $0.optOutOfIsolationDay = self.currentDateProvider.currentGregorianDay(timeZone: .current)
             }
             self.isolationStateStore.set(updatedContactCase)
             self.isolationStateStore.acknowldegeEndOfIsolation()
         })
     }
     
+    #warning("Replace the return value with a more meaningful type")
+    func handleSymptomsIsolationState(onsetDay: GregorianDay?) -> (IsolationState, Bool?) {
+        let currentIsolationLogicalState = IsolationLogicalState(
+            stateInfo: isolationStateStore.isolationStateInfo,
+            day: currentDateProvider.currentLocalDay
+        )
+        let symptomaticInfo = IndexCaseInfo.SymptomaticInfo(
+            selfDiagnosisDay: currentDateProvider.currentGregorianDay(timeZone: .current),
+            onsetDay: onsetDay
+        )
+        let hasActivePositiveTestIsolation = currentIsolationLogicalState.activeIsolation?.hasPositiveTestResult ?? false
+        
+        if hasActivePositiveTestIsolation,
+            let currentTestInfo = isolationStateStore.isolationInfo.indexCaseInfo?.testInfo,
+            let testEndDay = isolationStateStore.isolationInfo.indexCaseInfo?.assumedTestEndDay {
+            let assumedOnsetDay = symptomaticInfo.assumedOnsetDay
+            if assumedOnsetDay > testEndDay {
+                let info = IndexCaseInfo(
+                    symptomaticInfo: symptomaticInfo,
+                    testInfo: currentTestInfo
+                )
+                let newIsolationLogicalState = isolationStateStore.set(info)
+                let isolationState = IsolationState(logicalState: newIsolationLogicalState)
+                return (isolationState, true)
+            } else {
+                let isolationState = IsolationState(logicalState: currentIsolationLogicalState)
+                return (isolationState, false)
+            }
+        } else {
+            let info = IndexCaseInfo(
+                symptomaticInfo: symptomaticInfo,
+                testInfo: nil
+            )
+            let newIsolationLogicalState = isolationStateStore.set(info)
+            let isolationState = IsolationState(logicalState: newIsolationLogicalState)
+            return (isolationState, nil)
+        }
+    }
 }
 
 private extension NotificationCenter {

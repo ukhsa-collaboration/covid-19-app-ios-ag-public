@@ -79,6 +79,8 @@ class KeySharingContext {
             }
             
             self.userNotificationManager.add(type: .shareKeysReminder, at: nil, withCompletionHandler: nil)
+            Metrics.signpost(.totalShareExposureKeysReminderNotifications)
+            
             self.keySharingStore.didTriggerReminderNotification()
             
             promise(.success(()))

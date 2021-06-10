@@ -72,7 +72,6 @@ public enum StringLocalizationKey: String, CaseIterable {
     case data_header
     
     case home_diagnosis_button_title
-    case home_testing_information_button_title
     case home_financial_support_button_title
     case home_checkin_button_title
     case home_about_button_title
@@ -81,10 +80,10 @@ public enum StringLocalizationKey: String, CaseIterable {
     case home_about_the_app_button_title
     case home_toggle_exposure_notification_on
     case home_toggle_exposure_notification_off
-    case home_default_advice_button_title
     case home_isolation_advice_button_title
     case home_settings_button_title
     case home_contact_tracing_hub_button_title
+    case home_testing_hub_button_title
     
     case risk_level_indicator_contact_tracing_active
     case risk_level_indicator_contact_tracing_not_active
@@ -105,6 +104,10 @@ public enum StringLocalizationKey: String, CaseIterable {
     case link_accessibility_hint
     
     case user_notification_explanation
+    
+    case local_information_banner_read_more
+    
+    case local_information_screen_primary_button
     
     case checkin_camera_permission_denial_title
     case checkin_camera_permission_denial_explanation
@@ -158,8 +161,6 @@ public enum StringLocalizationKey: String, CaseIterable {
     case alert_postcode_risk_change_body
     case alert_venue_risk_change_title
     case alert_venue_risk_change_body
-    case alert_venue_risk_isolate_title
-    case alert_venue_risk_isolate_body
     case alert_isolation_state_change_title
     case alert_isolation_state_change_body
     case alert_exposure_detection_title
@@ -253,6 +254,12 @@ public enum StringLocalizationKey: String, CaseIterable {
     case negative_test_result_no_isolation_link_label
     case negative_test_result_no_isolation_button_label
     
+    case plod_test_result_title
+    case plod_test_result_subtitle
+    case plod_test_result_warning
+    case plod_test_result_description
+    case plod_test_result_button_title
+    
     case no_symptoms_heading
     case no_symptoms_still_get_test_body
     case no_symptoms_getting_tested_link_label
@@ -283,6 +290,14 @@ public enum StringLocalizationKey: String, CaseIterable {
     case symptom_review_button_submit
     case symptom_review_button
     
+    case book_a_follow_up_test_header
+    case book_a_follow_up_test_info
+    case book_a_follow_up_test_body
+    case book_a_follow_up_test_advice_link_title
+    case book_a_follow_up_test_advice_link
+    case book_a_follow_up_test_button
+    case book_a_follow_up_test_close_button
+    
     case virology_testing_information_title
     
     case virology_book_a_test_title
@@ -311,9 +326,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     
     case about_this_app_title
     case about_this_app_how_this_app_works_heading
-    case about_this_app_how_this_app_works_paragraph1
-    case about_this_app_how_this_app_works_paragraph2
-    case about_this_app_how_this_app_works_paragraph3
+    case about_this_app_how_this_app_works_description
     case about_this_app_how_this_app_works_instruction_for_use
     case about_this_app_how_this_app_works_button
     case about_this_app_common_questions_heading
@@ -406,9 +419,12 @@ public enum StringLocalizationKey: String, CaseIterable {
     case link_cant_run_this_app_faq
     case link_find_test_center
     case link_nhs_get_tested
+    case link_download_nhs_app
     
     case cancel
     case back
+    case close
+    case ok
     
     case exposure_notification_reminder_button
     case exposure_notification_reminder_title
@@ -433,16 +449,22 @@ public enum StringLocalizationKey: String, CaseIterable {
     
     case link_test_result_title
     case link_test_result_header
-    case link_test_result_description
     case link_test_result_enter_code_heading
     case link_test_result_enter_code_example
     case link_test_result_enter_code_textfield_label
     case link_test_result_enter_code_invalid_error
     case link_test_result_button_title
     case link_test_result_symptom_information_title
+    case link_test_result_your_test_result_code_should
+    case link_test_result_your_test_result_code_bullets
+    case link_test_result_if_you_are_trying_to_enter_a_rapid_result_code
+    case link_test_result_report_on_gov_dot_uk
+    case link_test_result_gov_uk_rapid_result_report_url
+    case link_test_result_gov_uk_rapid_result_report_url_wls
     
     case link_test_result_thank_you_title
     case link_test_result_thank_you_back_home_button
+    case link_test_result_thank_you_continue_to_book_a_test_button
     
     case link_test_result_enter_code_daily_contact_testing_heading
     case link_test_result_enter_code_daily_contact_testing_paragraph
@@ -566,6 +588,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case settings_row_manage_my_data_subtitle
     case settings_row_my_area_title
     case settings_row_my_data_title
+    case settings_row_animations_title
     
     case risk_level_mass_testing_title
     case risk_level_mass_testing_description
@@ -599,6 +622,48 @@ public enum StringLocalizationKey: String, CaseIterable {
     case contact_tracing_hub_tracing_reminder
     case contact_tracing_hub_dont_pause_tracing_header
     case contact_tracing_hub_dont_pause_tracing_bullet_points
+    
+    case unknown_test_result_screen_header
+    case unknown_test_result_screen_description
+    case unknown_test_result_screen_button
+    
+    case testing_hub_title
+    case testing_hub_row_book_free_test_title
+    case testing_hub_row_book_free_test_description
+    case testing_hub_row_find_out_about_testing_title
+    case testing_hub_row_find_out_about_testing_description
+    case testing_hub_row_enter_test_result_title
+    case testing_hub_row_enter_test_result_description
+    
+    case home_animations_title
+    case home_animations_toggle_description_on
+    case home_animations_toggle_description_off
+    case home_animations_heading
+    case home_animations_description
+    case home_animations_alert_view_title
+    case home_animations_alert_view_description
+    
+    case self_diagnosis_symptoms_after_positive_info
+    case self_diagnosis_symtpoms_after_positive_body
+    case self_diagnosis_symptoms_after_positive_advice
+    case self_diagnosis_symptoms_after_positive_link
+    case self_diagnosis_symptoms_after_positive_button_title
+    case self_diagnosis_symptoms_after_positive_discarded_title
+    case self_diagnosis_symptoms_after_positive_discarded_info
+    case self_diagnosis_symptoms_after_positive_discarded_body
+    case self_diagnosis_symptoms_after_positive_discarded_advice
+    case self_diagnosis_symptoms_after_positive_discarded_link
+    case self_diagnosis_symptoms_after_positive_discarded_button_title
+    case self_diagnosis_no_symptoms_after_positive_title
+    case self_diagnosis_no_symptoms_after_positive_info
+    case self_diagnosis_no_symptoms_after_positive_body
+    case self_diagnosis_no_symptoms_after_positive_advice
+    case self_diagnosis_no_symptoms_after_positive_link
+    case self_diagnosis_no_symptoms_after_positive_button_title
+    
+    case about_this_app_vaccination_status_disclaimer_heading
+    case about_this_app_vaccination_status_disclaimer_description
+    case about_this_app_vaccination_status_disclaimer_link
 }
 
 public enum ParameterisedStringLocalizable: Equatable {

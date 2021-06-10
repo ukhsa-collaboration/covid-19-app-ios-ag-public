@@ -6,6 +6,7 @@ import Foundation
 
 public enum TestResult: String, Codable, Equatable {
     case positive
+    case plod
     case negative
     case void
     
@@ -13,6 +14,8 @@ public enum TestResult: String, Codable, Equatable {
         switch virologyTestResult {
         case .positive:
             self = .positive
+        case .plod:
+            self = .plod
         case .negative:
             self = .negative
         case .void:

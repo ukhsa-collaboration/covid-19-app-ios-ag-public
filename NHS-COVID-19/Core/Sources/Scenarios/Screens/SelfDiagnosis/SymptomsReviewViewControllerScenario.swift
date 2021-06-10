@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -28,6 +28,7 @@ public class SymptomsReviewViewControllerScenario: Scenario {
                     ],
                     dateSelectionWindow: 14
                 ),
+                currentDateProvider: DateProvider(),
                 interactor: Interactor(viewController: parent)
             )
         }

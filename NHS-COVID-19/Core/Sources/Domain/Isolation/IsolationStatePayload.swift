@@ -24,7 +24,7 @@ extension IsolationStatePayload: Codable {
         guard metadata.version >= Metadata.v2.version else {
             let payload = try PayloadV1(from: decoder)
             isolationStateInfo = IsolationStateInfo(
-                isolationInfo: payload.isolationInfo,
+                isolationInfo: IsolationInfo(payload.isolationInfo),
                 configuration: payload.configuration
             )
             return
@@ -70,19 +70,27 @@ private struct PayloadV2: Codable {
             case negative
         }
         
+        enum ConfirmatoryTestCompletionStatus: String, Codable {
+            case completed
+            case completedAndConfirmed
+        }
+        
         enum TestKitType: String, Codable {
             case labResult
             case rapidResult
             case rapidSelfReported
         }
         
-        public var testResult: TestResult
-        public var testKitType: TestKitType?
-        public var acknowledgedDay: GregorianDay
+        var testResult: TestResult
+        var testKitType: TestKitType?
+        var acknowledgedDay: GregorianDay
         
-        public var requiresConfirmatoryTest: Bool
-        public var confirmedDay: GregorianDay?
-        public var testEndDay: GregorianDay?
+        var requiresConfirmatoryTest: Bool
+        var confirmatoryDayLimit: Int?
+        // This is either `confirmedDay` or `completedDay`. Keeping the name because of codable store backwards compatibility.
+        var confirmedDay: GregorianDay?
+        var confirmatoryTestCompletionStatus: ConfirmatoryTestCompletionStatus?
+        var testEndDay: GregorianDay?
     }
     
     struct SymptomaticCaseInfo: Codable {
@@ -134,13 +142,19 @@ private extension IndexCaseInfo {
                 onsetDay: $0.onsetDay
             )
         }
+        
+        // Historically we will have always completed and confirm when there is a confirmedOnDay present.
+        let isCompletedAndConfirmed = test?.confirmatoryTestCompletionStatus != .completed
+        
         let testInfo = test.map {
             TestInfo(
                 result: TestResult($0.testResult),
                 testKitType: TestKitType($0.testKitType),
                 requiresConfirmatoryTest: $0.requiresConfirmatoryTest,
+                confirmatoryDayLimit: $0.confirmatoryDayLimit,
                 receivedOnDay: $0.acknowledgedDay,
-                confirmedOnDay: $0.confirmedDay,
+                confirmedOnDay: isCompletedAndConfirmed ? $0.confirmedDay : nil,
+                completedOnDay: $0.confirmedDay,
                 testEndDay: $0.testEndDay
             )
         }
@@ -215,12 +229,23 @@ private extension PayloadV2.TestCaseInfo {
             let testResult = TestResult(testInfo.result) else {
             return nil
         }
+        
+        let confirmatoryTestCompletionStatus: ConfirmatoryTestCompletionStatus? = {
+            switch (testInfo.completedOnDay, testInfo.confirmedOnDay) {
+            case (.none, _): return nil
+            case (.some, .none): return .completed
+            case (.some, .some): return .completedAndConfirmed
+            }
+        }()
+        
         self.init(
             testResult: testResult,
             testKitType: PayloadV2.TestCaseInfo.TestKitType(testInfo.testKitType),
             acknowledgedDay: testInfo.receivedOnDay,
             requiresConfirmatoryTest: testInfo.requiresConfirmatoryTest,
-            confirmedDay: testInfo.confirmedOnDay,
+            confirmatoryDayLimit: testInfo.confirmatoryDayLimit,
+            confirmedDay: testInfo.completedOnDay,
+            confirmatoryTestCompletionStatus: confirmatoryTestCompletionStatus,
             testEndDay: testInfo.testEndDay
         )
     }
@@ -235,7 +260,7 @@ private extension PayloadV2.TestCaseInfo.TestResult {
             self = .positive
         case .negative:
             self = .negative
-        case .void:
+        case .void, .plod:
             return nil
         }
     }
@@ -262,6 +287,44 @@ private extension PayloadV2.TestCaseInfo.TestKitType {
 
 /// Data format used on or before v4.9
 private struct PayloadV1: Decodable {
+    struct ContactCaseInfo: Decodable {
+        var exposureDay: GregorianDay
+        var isolationFromStartOfDay: GregorianDay
+        var optOutOfIsolationDay: GregorianDay?
+    }
+    
+    struct IsolationInfo: Decodable {
+        var hasAcknowledgedEndOfIsolation: Bool?
+        var hasAcknowledgedStartOfIsolation: Bool?
+        var indexCaseInfo: IndexCaseInfo?
+        var contactCaseInfo: ContactCaseInfo?
+    }
+    
     var isolationInfo: IsolationInfo
     var configuration: IsolationConfiguration
+}
+
+private extension IsolationInfo {
+    
+    init(_ payload: PayloadV1.IsolationInfo) {
+        self.init(
+            hasAcknowledgedEndOfIsolation: payload.hasAcknowledgedEndOfIsolation ?? false,
+            hasAcknowledgedStartOfIsolation: payload.hasAcknowledgedStartOfIsolation ?? false,
+            indexCaseInfo: payload.indexCaseInfo,
+            contactCaseInfo: payload.contactCaseInfo.map(ContactCaseInfo.init)
+        )
+    }
+    
+}
+
+private extension ContactCaseInfo {
+    
+    init(_ payload: PayloadV1.ContactCaseInfo) {
+        self.init(
+            exposureDay: payload.exposureDay,
+            isolationFromStartOfDay: payload.isolationFromStartOfDay,
+            optOutOfIsolationDay: payload.optOutOfIsolationDay
+        )
+    }
+    
 }

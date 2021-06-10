@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import BackgroundTasks
@@ -17,8 +17,7 @@ class BackgroundTaskAggregatorTests: XCTestCase {
             Empty().eraseToAnyPublisher()
         }
         
-        let frequency = 200.0
-        let job = BackgroundTaskAggregator.Job(preferredFrequency: frequency, work: work)
+        let job = BackgroundTaskAggregator.Job(work: work)
         
         let before = Date()
         _ = BackgroundTaskAggregator(manager: manager, jobs: [job])
@@ -26,26 +25,7 @@ class BackgroundTaskAggregatorTests: XCTestCase {
         let request = try XCTUnwrap(manager.request)
         XCTAssert(request.requiresNetworkConnectivity)
         let earliestBeginDate = try XCTUnwrap(request.earliestBeginDate)
-        XCTAssertEqual(earliestBeginDate.timeIntervalSinceNow, frequency, accuracy: max(1, -2 * before.timeIntervalSinceNow))
-    }
-    
-    func testBackgroundTaskEarliestBeginDateCorrectWithMultipleJobs() throws {
-        let manager = MockProcessingTaskRequestManager()
-        
-        let work: () -> AnyPublisher<Void, Never> = {
-            Empty().eraseToAnyPublisher()
-        }
-        
-        let relevantFrequency = 200.0
-        let laterJob = BackgroundTaskAggregator.Job(preferredFrequency: relevantFrequency + 300, work: work)
-        let earlierJob = BackgroundTaskAggregator.Job(preferredFrequency: relevantFrequency, work: work)
-        
-        let before = Date()
-        _ = BackgroundTaskAggregator(manager: manager, jobs: [laterJob, earlierJob])
-        
-        let request = try XCTUnwrap(manager.request)
-        let earliestBeginDate = try XCTUnwrap(request.earliestBeginDate)
-        XCTAssertEqual(earliestBeginDate.timeIntervalSinceNow, relevantFrequency, accuracy: max(1, -2 * before.timeIntervalSinceNow))
+        XCTAssertEqual(earliestBeginDate.timeIntervalSinceNow, 2.0 * 60 * 60, accuracy: max(1, -2 * before.timeIntervalSinceNow))
     }
     
     func testBackgroundTaskNotRequestedOnInitIfAlreadyRequestedAndTaskIsInFuture() throws {
@@ -53,8 +33,7 @@ class BackgroundTaskAggregatorTests: XCTestCase {
             Empty().eraseToAnyPublisher()
         }
         
-        let frequency = 200.0
-        let job = BackgroundTaskAggregator.Job(preferredFrequency: frequency, work: work)
+        let job = BackgroundTaskAggregator.Job(work: work)
         
         let manager = MockProcessingTaskRequestManager()
         manager.request = ProcessingTaskRequest()
@@ -70,8 +49,7 @@ class BackgroundTaskAggregatorTests: XCTestCase {
             Empty().eraseToAnyPublisher()
         }
         
-        let frequency = 200.0
-        let job = BackgroundTaskAggregator.Job(preferredFrequency: frequency, work: work)
+        let job = BackgroundTaskAggregator.Job(work: work)
         
         let manager = MockProcessingTaskRequestManager()
         manager.request = ProcessingTaskRequest()
@@ -87,8 +65,7 @@ class BackgroundTaskAggregatorTests: XCTestCase {
             Empty().eraseToAnyPublisher()
         }
         
-        let frequency = 200.0
-        let job = BackgroundTaskAggregator.Job(preferredFrequency: frequency, work: work)
+        let job = BackgroundTaskAggregator.Job(work: work)
         
         let manager = MockProcessingTaskRequestManager()
         manager.request = ProcessingTaskRequest()
@@ -113,7 +90,7 @@ class BackgroundTaskAggregatorTests: XCTestCase {
         let task = MockBackgroundTask()
         var taskCancelled = false
         
-        let job = BackgroundTaskAggregator.Job(preferredFrequency: 0) {
+        let job = BackgroundTaskAggregator.Job {
             PassthroughSubject<Void, Never>()
                 .handleEvents(receiveCancel: {
                     taskCancelled = true
@@ -139,7 +116,7 @@ class BackgroundTaskAggregatorTests: XCTestCase {
             return Empty().eraseToAnyPublisher()
         }
         
-        let job = BackgroundTaskAggregator.Job(preferredFrequency: 1, work: work)
+        let job = BackgroundTaskAggregator.Job(work: work)
         
         let backgroundTaskAggregator = BackgroundTaskAggregator(manager: manager, jobs: [job])
         
@@ -154,7 +131,7 @@ class BackgroundTaskAggregatorTests: XCTestCase {
             Empty().eraseToAnyPublisher()
         }
         
-        let job = BackgroundTaskAggregator.Job(preferredFrequency: 1, work: work)
+        let job = BackgroundTaskAggregator.Job(work: work)
         
         let backgroundTaskAggregator = BackgroundTaskAggregator(manager: manager, jobs: [job])
         

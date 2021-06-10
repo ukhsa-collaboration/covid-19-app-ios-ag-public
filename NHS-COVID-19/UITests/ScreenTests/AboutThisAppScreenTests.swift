@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -14,10 +14,12 @@ class AboutThisAppScreenTests: XCTestCase {
         try runner.run { app in
             let screen = AboutThisAppScreen(app: app)
             
+            XCTAssert(screen.vaccinationStatusDisclaimerHeadingLabel.exists)
+            XCTAssert(screen.vaccinationStatusDisclaimerParagraphs.allExist)
+            XCTAssert(screen.downloadNHSAppLink.exists)
+            
             XCTAssert(screen.aboutThisAppHeadingLabel.exists)
-            XCTAssert(screen.aboutThisAppParagraphOne.exists)
-            XCTAssert(screen.aboutThisAppParagraphTwo.exists)
-            XCTAssert(screen.aboutThisAppParagraphThree.exists)
+            XCTAssert(screen.aboutThisAppParagraphs.allExist)
             XCTAssert(screen.aboutThisAppInstructonForUse.exists)
             XCTAssert(screen.aboutThisAppButton.exists)
             
@@ -44,6 +46,14 @@ class AboutThisAppScreenTests: XCTestCase {
             XCTAssert(screen.feedbackInformationTitle.exists)
             XCTAssert(screen.feedbackInformationDescription.exists)
             XCTAssert(screen.feedbackInformationButton.exists)
+        }
+    }
+    
+    func testDownloadNHSAppAction() throws {
+        try runner.run { app in
+            let screen = AboutThisAppScreen(app: app)
+            screen.downloadNHSAppLink.tap()
+            XCTAssertTrue(app.staticTexts[runner.scenario.downloadNHSAppTapped].exists)
         }
     }
     
@@ -78,7 +88,7 @@ class AboutThisAppScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.accessibilityStatementTapped].exists)
         }
     }
-        
+    
     func testProvideFeedbackLinkAction() throws {
         try runner.run { app in
             let screen = AboutThisAppScreen(app: app)

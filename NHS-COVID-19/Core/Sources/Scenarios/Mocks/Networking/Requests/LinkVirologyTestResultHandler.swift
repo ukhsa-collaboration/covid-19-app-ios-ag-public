@@ -12,6 +12,7 @@ struct LinkVirologyTestResultHandler: RequestHandler {
     
     var response: Result<HTTPResponse, HTTPRequestError> {
         let daysAgo = dataProvider.testResultEndDateDaysAgo
+        let confirmatoryDayLimit = dataProvider.confirmatoryDayLimit
         let date = GregorianDay.today.advanced(by: -daysAgo).startDate(in: .utc)
         let dateString = ISO8601DateFormatter().string(from: date)
         let testResult = MockDataProvider.testResults[dataProvider.receivedTestResult]
@@ -25,11 +26,30 @@ struct LinkVirologyTestResultHandler: RequestHandler {
         "testEndDate": "\#(dateString)",
         "testResult": "\#(testResult)",
         "testKit":"\#(testType)",
-        "diagnosisKeySubmissionToken": "\#(diagnosisKeySubmissionToken != nil ? diagnosisKeySubmissionToken! : "null")",
+        \#(value(named: "diagnosisKeySubmissionToken", content: diagnosisKeySubmissionToken)),
         "diagnosisKeySubmissionSupported": \#(diagnosisKeySubmissionSupported),
-        "requiresConfirmatoryTest": \#(requiresConfirmatoryTest)
+        "requiresConfirmatoryTest": \#(requiresConfirmatoryTest),
+        \#(value(named: "confirmatoryDayLimit", content: confirmatoryDayLimit))
         }
         """#))
         return Result.success(response)
+    }
+}
+
+private func value<T>(named name: String, content: T?) -> String {
+    if let content = content {
+        if content is String {
+            return """
+            \"\(name)\": "\(content)"
+            """
+        } else {
+            return """
+            \"\(name)\": \(content)
+            """
+        }
+    } else {
+        return """
+        \"\(name)\": null
+        """
     }
 }

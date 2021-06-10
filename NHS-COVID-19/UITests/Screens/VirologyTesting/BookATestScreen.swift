@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -43,5 +43,9 @@ struct BookATestScreen {
     
     var button: XCUIElement {
         app.links[localized: .virology_book_a_test_button]
+    }
+    
+    var cancelButton: XCUIElement {
+        app.buttons[localized: .cancel]
     }
 }

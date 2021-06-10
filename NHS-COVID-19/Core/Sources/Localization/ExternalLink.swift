@@ -27,6 +27,8 @@ public enum ExternalLink {
     case cantRunThisAppFAQs
     case findTestCenter
     case getTested
+    case reportLFDResultsOnGovDotUK
+    case downloadNHSApp
     
     public var url: URL {
         switch self {
@@ -74,6 +76,10 @@ public enum ExternalLink {
             return localizeURL(.link_find_test_center)
         case .getTested:
             return localizeURL(.link_nhs_get_tested)
+        case .reportLFDResultsOnGovDotUK:
+            return localizeURL(.link_test_result_gov_uk_rapid_result_report_url)
+        case .downloadNHSApp:
+            return localizeURL(.link_download_nhs_app)
         }
     }
 }

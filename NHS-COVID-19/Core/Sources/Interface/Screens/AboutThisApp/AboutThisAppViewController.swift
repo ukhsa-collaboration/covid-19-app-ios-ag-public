@@ -14,6 +14,7 @@ public protocol AboutThisAppContentInteracting {
     func didTapSeeData()
     func didTapHowThisAppWorks()
     func didTapProvideFeedback()
+    func didTapDownloadNHSApp()
 }
 
 extension AboutThisAppViewController {
@@ -160,14 +161,25 @@ extension AboutThisAppViewController {
         }()
         
         let views = [
+            InformationBox.information.yellow([
+                [
+                    .heading(.about_this_app_vaccination_status_disclaimer_heading),
+                ],
+                localizeAndSplit(.about_this_app_vaccination_status_disclaimer_description).map { .body($0) },
+                [
+                    .linkButton(.about_this_app_vaccination_status_disclaimer_link, interactor.didTapDownloadNHSApp),
+                ],
+            ].flatMap { $0 }),
             InformationBox.information.purple([
-                .heading(.about_this_app_how_this_app_works_heading),
-                .body(.about_this_app_how_this_app_works_paragraph1),
-                .body(.about_this_app_how_this_app_works_paragraph2),
-                .body(.about_this_app_how_this_app_works_paragraph3),
-                .view(instructionForUseView),
-                .linkButton(.about_this_app_how_this_app_works_button, interactor.didTapHowThisAppWorks),
-            ]),
+                [
+                    .heading(.about_this_app_how_this_app_works_heading),
+                ],
+                localizeAndSplit(.about_this_app_how_this_app_works_description).map { .body($0) },
+                [
+                    .view(instructionForUseView),
+                    .linkButton(.about_this_app_how_this_app_works_button, interactor.didTapHowThisAppWorks),
+                ],
+            ].flatMap { $0 }),
             InformationBox.information.orange([
                 .heading(.about_this_app_my_data_heading),
                 .body(.about_this_app_my_data_description),

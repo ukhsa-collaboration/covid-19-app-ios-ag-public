@@ -64,10 +64,10 @@ public enum Sandbox {
         
         @TestInjected("sandbox.exposureNotificationsAuthorized", defaultValue: false)
         public var exposureNotificationsAuthorized: Bool
-
+        
         @TestInjected("sandbox.exposureNotificationsEnabled", defaultValue: true)
         public var exposureNotificationsEnabled: Bool
-
+        
         @TestInjected("sandbox.userNotificationsAuthorized", defaultValue: nil)
         public var userNotificationsAuthorized: Bool?
         
@@ -101,6 +101,12 @@ public enum Sandbox {
         
         @TestInjected("sandbox.requiresConfirmatoryTest", defaultValue: false)
         public var requiresConfirmatoryTest: Bool
+        
+        @TestInjected("sandbox.supportsKeySubmission", defaultValue: true)
+        public var supportsKeySubmission: Bool
+        
+        @TestInjected("sandbox.testKitType", defaultValue: "LAB_RESULT")
+        public var testKitType: String
         
         @TestInjected("sandbox.testResultEndDate")
         private(set) var testResultEndDateString: String?

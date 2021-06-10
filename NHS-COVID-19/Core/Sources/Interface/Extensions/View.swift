@@ -21,6 +21,10 @@ extension View {
     func linkify(_ key: StringLocalizationKey) -> some View {
         modifier(LinkButtonModifier(text: localize(key)))
     }
+    
+    func linkify(_ accessibilityLabelText: String) -> some View {
+        modifier(LinkButtonModifier(text: accessibilityLabelText))
+    }
 }
 
 struct ScaledFont: ViewModifier {

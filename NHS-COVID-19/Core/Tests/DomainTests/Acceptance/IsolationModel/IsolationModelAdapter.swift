@@ -10,8 +10,27 @@ import Foundation
 struct IsolationModelAdapter {
     var currentDate = UTCHour(year: 2020, month: 10, day: 15, hour: 9)
     var contactCase = ContactCase()
-    var indexCase = IndexCase()
+    var symptomaticCase = SymptomaticCase()
     var testCase = TestCase()
+    
+    init() {}
+    
+    init(anticipating event: IsolationModel.Event) {
+        if event == .contactIsolationEnded {
+            // bring contact case date earlier so we can end it without affecting status of any other isolation.
+            contactCase.exposureDay = GregorianDay(year: 2020, month: 10, day: 2)
+            contactCase.contactIsolationToStartOfDay = GregorianDay(year: 2020, month: 10, day: 16)
+            symptomaticCase.selfDiagnosisDay = GregorianDay(year: 2020, month: 10, day: 12)
+        } else if event == .receivedNegativeTestWithEndDateOlderThanAssumedSymptomOnsetDate {
+            // bring possible positive test end day before onsetDay to not have symptoms before unconfirmed positive
+            testCase.testEndDay = GregorianDay(year: 2020, month: 10, day: 8)
+            symptomaticCase.selfDiagnosisDay = GregorianDay(year: 2020, month: 10, day: 13)
+        } else if event == .receivedNegativeTestWithEndDateOlderThanRememberedUnconfirmedTestEndDateAndOlderThanAssumedSymptomOnsetDayIfAny {
+            // bring possible positive test end day before onsetDay to not have symptoms before unconfirmed positive
+            testCase.testEndDay = GregorianDay(year: 2020, month: 10, day: 8)
+            symptomaticCase.selfDiagnosisDay = GregorianDay(year: 2020, month: 10, day: 13)
+        }
+    }
     
     struct ContactCase {
         var exposureDay: GregorianDay
@@ -38,19 +57,19 @@ struct IsolationModelAdapter {
         }
     }
     
-    struct IndexCase {
+    struct SymptomaticCase {
         var selfDiagnosisDay: GregorianDay
         var onsetDay: GregorianDay
         
         var expiredSelfDiagnosisDay: GregorianDay
         
-        var indexIsolationUntilStartOfDay: GregorianDay
+        var symptomaticIsolationUntilStartOfDay: GregorianDay
         
         init() {
             selfDiagnosisDay = GregorianDay(year: 2020, month: 10, day: 11)
             expiredSelfDiagnosisDay = GregorianDay(year: 2020, month: 10, day: 4)
             onsetDay = GregorianDay(year: 2020, month: 10, day: 10)
-            indexIsolationUntilStartOfDay = GregorianDay(year: 2020, month: 10, day: 17)
+            symptomaticIsolationUntilStartOfDay = GregorianDay(year: 2020, month: 10, day: 17)
         }
     }
     
@@ -83,8 +102,8 @@ struct IsolationModelAdapter {
     
     var indexCaseIsolation: Isolation {
         Isolation(
-            fromDay: LocalDay(gregorianDay: indexCase.selfDiagnosisDay, timeZone: .current),
-            untilStartOfDay: LocalDay(gregorianDay: indexCase.indexIsolationUntilStartOfDay, timeZone: .current),
+            fromDay: LocalDay(gregorianDay: symptomaticCase.selfDiagnosisDay, timeZone: .current),
+            untilStartOfDay: LocalDay(gregorianDay: symptomaticCase.symptomaticIsolationUntilStartOfDay, timeZone: .current),
             reason: .init(
                 indexCaseInfo: IsolationIndexCaseInfo(
                     hasPositiveTestResult: false,
@@ -99,7 +118,7 @@ struct IsolationModelAdapter {
     
     private func bothCasesFromDay(isSelfDiagnosed: Bool) -> GregorianDay {
         if isSelfDiagnosed {
-            return min(contactCase.contactIsolationFromStartOfDay, indexCase.selfDiagnosisDay)
+            return min(contactCase.contactIsolationFromStartOfDay, symptomaticCase.selfDiagnosisDay)
         } else {
             return min(contactCase.contactIsolationFromStartOfDay, testCase.testEndDay)
         }
@@ -116,7 +135,7 @@ struct IsolationModelAdapter {
             reason: .init(
                 indexCaseInfo: IsolationIndexCaseInfo(
                     hasPositiveTestResult: hasPositiveTestResult,
-                    testKitType: nil,
+                    testKitType: hasPositiveTestResult ? .labResult : nil,
                     isSelfDiagnosed: isSelfDiagnosed,
                     isPendingConfirmation: isPendingConfirmation
                 ),
@@ -133,7 +152,7 @@ struct IsolationModelAdapter {
         let untilStartOfDay: LocalDay
         
         if isSelfDiagnosed {
-            fromDay = LocalDay(gregorianDay: indexCase.selfDiagnosisDay, timeZone: .current)
+            fromDay = LocalDay(gregorianDay: symptomaticCase.selfDiagnosisDay, timeZone: .current)
             untilStartOfDay = fromDay.advanced(by: 5)
         } else {
             fromDay = LocalDay(gregorianDay: testCase.testEndDay, timeZone: .current)
@@ -146,7 +165,7 @@ struct IsolationModelAdapter {
             reason: .init(
                 indexCaseInfo: IsolationIndexCaseInfo(
                     hasPositiveTestResult: true,
-                    testKitType: nil,
+                    testKitType: .labResult,
                     isSelfDiagnosed: isSelfDiagnosed,
                     isPendingConfirmation: isPendingConfirmation
                 ),

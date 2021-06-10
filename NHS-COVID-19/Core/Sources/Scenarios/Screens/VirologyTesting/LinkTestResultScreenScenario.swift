@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -19,6 +19,8 @@ public class LinkTestResultScreenScenario: Scenario {
     
     public static let continueConfirmationAlertTitle = "Entered test code"
     public static let cancelAlertTitle = "Did tap cancel"
+    public static let tapReportLFDOnGovUKMessage = "'Report result on GOV.UK' tapped"
+    public static let openAppStoreTitle = "Open app store"
     public static let invalidCodeError = "[MOCK] Invalid code"
     
     static var appController: AppController {
@@ -32,6 +34,8 @@ public class LinkTestResultScreenScenario: Scenario {
         
         var viewController: UIViewController
         
+        func cancel() {}
+        
         func submit(testCode: String, isCheckBoxChecked: Bool?) -> AnyPublisher<Void, LinkTestValidationError> {
             
             switch testCode.uppercased() {
@@ -44,6 +48,10 @@ public class LinkTestResultScreenScenario: Scenario {
                 viewController.showAlert(title: LinkTestResultScreenScenario.continueConfirmationAlertTitle, message: testCode)
                 return Result.success(()).publisher.eraseToAnyPublisher()
             }
+        }
+        
+        func reportRapidTestResultsOnGovDotUKTapped() {
+            viewController.showAlert(title: LinkTestResultScreenScenario.tapReportLFDOnGovUKMessage)
         }
         
         func didTapCancel() {
@@ -66,6 +74,7 @@ public class LinkTestResultWithDCTScreenScenario: Scenario {
     
     public static let continueConfirmationAlertTitle = "Entered test code"
     public static let cancelAlertTitle = "Did tap cancel"
+    public static let tapReportLFDOnGovUKMessage = "'Report result on GOV.UK' tapped"
     public static let invalidCodeError = "[MOCK] Invalid code"
     
     static var appController: AppController {
@@ -78,6 +87,8 @@ public class LinkTestResultWithDCTScreenScenario: Scenario {
         var shouldShowDCTInfoView = true
         
         var viewController: UIViewController
+        
+        func cancel() {}
         
         func submit(testCode: String, isCheckBoxChecked: Bool?) -> AnyPublisher<Void, LinkTestValidationError> {
             
@@ -109,6 +120,10 @@ public class LinkTestResultWithDCTScreenScenario: Scenario {
                 return Result.success(()).publisher.eraseToAnyPublisher()
             }
             
+        }
+        
+        func reportRapidTestResultsOnGovDotUKTapped() {
+            viewController.showAlert(title: LinkTestResultScreenScenario.tapReportLFDOnGovUKMessage)
         }
         
         func didTapCancel() {

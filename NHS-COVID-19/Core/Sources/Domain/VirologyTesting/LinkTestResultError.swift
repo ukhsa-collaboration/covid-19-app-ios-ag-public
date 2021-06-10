@@ -7,6 +7,7 @@ import Common
 public enum LinkTestResultError: Error {
     case invalidCode
     case noInternet
+    case decodeFailed // e.g. unknown test result
     case unknownError
     
     private static let codeNotValid = 404
@@ -25,6 +26,12 @@ public enum LinkTestResultError: Error {
                 self = .invalidCode
             } else {
                 self = .unknownError
+            }
+        case .badResponse(underlyingError: let underlyingError):
+            if case DecodingError.dataCorrupted(_) = underlyingError {
+                self = .decodeFailed
+            } else {
+                fallthrough
             }
         default:
             self = .unknownError

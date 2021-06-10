@@ -7,8 +7,8 @@ import Common
 import Foundation
 
 class MockDataProvider: ObservableObject {
-    static let testResults = ["POSITIVE", "NEGATIVE", "VOID"]
-    static let testKitType = ["LAB_RESULT", "RAPID_RESULT", "RAPID_SELF_REPORTED"]
+    static let testResults = ["POSITIVE", "NEGATIVE", "VOID", "PLOD", "UNKNOWN_TEST_RESULT_TYPE"]
+    static let testKitType = ["LAB_RESULT", "RAPID_RESULT", "RAPID_SELF_REPORTED", "UNKNOWN_TEST_KIT_TYPE"]
     
     private let _numberOfDaysFromNowDidChange = PassthroughSubject<Int, Never>()
     private let _objectWillChange = PassthroughSubject<Void, Never>()
@@ -16,6 +16,8 @@ class MockDataProvider: ObservableObject {
     var objectWillChange: AnyPublisher<Void, Never> {
         _objectWillChange.eraseToAnyPublisher()
     }
+    
+    // MARK: Time Manipulation
     
     @UserDefault("mocks.numberOfDaysFromNow", defaultValue: 0)
     var numberOfDaysFromNow: Int {
@@ -41,6 +43,8 @@ class MockDataProvider: ObservableObject {
     var numberOfDaysFromNowDidChange: AnyPublisher<Int, Never> {
         _numberOfDaysFromNowDidChange.eraseToAnyPublisher()
     }
+    
+    // MARK: Postcode risk
     
     @UserDefault("mocks.blackPostcodes", defaultValue: "")
     var blackPostcodes: String {
@@ -91,6 +95,62 @@ class MockDataProvider: ObservableObject {
         }
     }
     
+    // MARK: Variants of Concern / Local Messages
+    
+    @UserDefault("mocks.vocLocalAuthorities", defaultValue: "")
+    var vocLocalAuthorities: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.vocMessageId", defaultValue: "exampleMessage")
+    var vocMessageId: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault(
+        "mocks.vocMessageNotificationTitle",
+        defaultValue: "A new variant of concern is in [postcode]"
+    )
+    var vocMessageNotificationTitle: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault(
+        "mocks.vocMessageNotificationBody",
+        defaultValue: "There have been cases of a new variant in [local authority]. Tap for information to help you stay safe in [postcode]."
+    )
+    var vocMessageNotificationBody: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.vocContentVersion", defaultValue: 1)
+    var vocContentVersion: Int {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    var vocContentVersionString: String {
+        get {
+            String(vocContentVersion)
+        }
+        set {
+            if let intValue = Int(newValue) {
+                vocContentVersion = intValue
+            }
+        }
+    }
+    
+    // MARK: Local Authority Risk
+    
     @UserDefault("mocks.blackLocalAuthorities", defaultValue: "")
     var blackLocalAuthorities: String {
         didSet {
@@ -140,6 +200,8 @@ class MockDataProvider: ObservableObject {
         }
     }
     
+    // MARK: Risky Venues
+    
     @UserDefault("mocks.riskyVenueIDsWarnAndInform", defaultValue: "")
     var riskyVenueIDsWarnAndInform: String {
         didSet {
@@ -153,6 +215,8 @@ class MockDataProvider: ObservableObject {
             _objectWillChange.send()
         }
     }
+    
+    // MARK: Test Ordering Parameters
     
     @UserDefault("mocks.optionToBookATest", defaultValue: 11)
     var optionToBookATest: Int {
@@ -185,6 +249,8 @@ class MockDataProvider: ObservableObject {
             _objectWillChange.send()
         }
     }
+    
+    // MARK: Minimum Versions
     
     @UserDefault("mocks.minimumOSVersion", defaultValue: "13.5.0")
     var minimumOSVersion: String {
@@ -220,6 +286,8 @@ class MockDataProvider: ObservableObject {
             _objectWillChange.send()
         }
     }
+    
+    // MARK: Received Test Result Parameters
     
     @UserDefault("mocks.receivedTestResult", defaultValue: 0)
     var receivedTestResult: Int {
@@ -266,6 +334,34 @@ class MockDataProvider: ObservableObject {
             }
         }
     }
+    
+    // MARK: Isolation Configuration
+    
+    @UserDefault("mocks.confirmatoryDayLimit")
+    var confirmatoryDayLimit: Int? {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    var confirmatoryDayLimitString: String {
+        get {
+            if let confirmatoryDayLimit = confirmatoryDayLimit {
+                return String(confirmatoryDayLimit)
+            } else {
+                return ""
+            }
+        }
+        set {
+            if let value = Int(newValue) {
+                confirmatoryDayLimit = value
+            } else {
+                confirmatoryDayLimit = nil
+            }
+        }
+    }
+    
+    // MARK: Fake Exposure Notifications
     
     @UserDefault("mocks.useFakeENContacts", defaultValue: false)
     var useFakeENContacts: Bool {

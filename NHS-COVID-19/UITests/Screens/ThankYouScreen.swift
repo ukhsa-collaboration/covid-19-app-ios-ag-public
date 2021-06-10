@@ -19,4 +19,8 @@ struct ThankYouScreen {
     var backHomeButtonText: XCUIElement {
         app.buttons[localized: .link_test_result_thank_you_back_home_button]
     }
+    
+    var continueButtonText: XCUIElement {
+        app.buttons[localized: .link_test_result_thank_you_continue_to_book_a_test_button]
+    }
 }

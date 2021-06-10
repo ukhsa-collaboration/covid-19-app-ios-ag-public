@@ -6,7 +6,7 @@ import Combine
 import Common
 import Foundation
 
-struct IsolationInfo: Decodable, Equatable {
+struct IsolationInfo: Equatable {
     var hasAcknowledgedEndOfIsolation: Bool = false
     var hasAcknowledgedStartOfIsolation: Bool = false
     var indexCaseInfo: IndexCaseInfo?
@@ -20,20 +20,6 @@ struct IsolationInfo: Decodable, Equatable {
         case (.none, .some(let exposureDay)): return exposureDay
         }
     }
-    
-    init(
-        hasAcknowledgedEndOfIsolation: Bool = false,
-        hasAcknowledgedStartOfIsolation: Bool = false,
-        indexCaseInfo: IndexCaseInfo? = nil,
-        contactCaseInfo: ContactCaseInfo? = nil
-    ) {
-        self.hasAcknowledgedEndOfIsolation = hasAcknowledgedEndOfIsolation
-        self.hasAcknowledgedStartOfIsolation = hasAcknowledgedStartOfIsolation
-        self.indexCaseInfo = indexCaseInfo
-        self.contactCaseInfo = contactCaseInfo
-    }
-    
-    static let empty = IsolationInfo(indexCaseInfo: nil, contactCaseInfo: nil)
 }
 
 public struct IndexCaseInfo: Equatable {
@@ -59,17 +45,37 @@ public struct IndexCaseInfo: Equatable {
             case notRequired
         }
         
+        public enum CompletionStatus: Equatable {
+            case pending
+            case completed(onDay: GregorianDay)
+            case notRequired
+        }
+        
         public var result: TestResult
         public var testKitType: TestKitType?
         public var requiresConfirmatoryTest: Bool
+        public var confirmatoryDayLimit: Int?
         public var receivedOnDay: GregorianDay
         public var confirmedOnDay: GregorianDay?
+        #warning("completed on day would be same as confirmed on day when not nil. Refactor to make it comiler safe.")
+        public var completedOnDay: GregorianDay?
         public var testEndDay: GregorianDay?
         
         public var confirmationStatus: ConfirmationStatus {
             if requiresConfirmatoryTest {
                 if let confirmedOnDay = confirmedOnDay {
                     return .confirmed(onDay: confirmedOnDay)
+                }
+                return .pending
+            } else {
+                return .notRequired
+            }
+        }
+        
+        public var completionStatus: CompletionStatus {
+            if requiresConfirmatoryTest {
+                if let completedOnDay = completedOnDay {
+                    return .completed(onDay: completedOnDay)
                 }
                 return .pending
             } else {
@@ -84,28 +90,43 @@ public struct IndexCaseInfo: Equatable {
             requiresConfirmatoryTest = try container.decodeIfPresent(Bool.self, forKey: .requiresConfirmatoryTest) ?? false
             receivedOnDay = try container.decode(GregorianDay.self, forKey: .receivedOnDay)
             confirmedOnDay = try container.decodeIfPresent(GregorianDay.self, forKey: .confirmedOnDay)
+            completedOnDay = confirmedOnDay
         }
         
         public init(
             result: TestResult,
             testKitType: TestKitType? = nil,
             requiresConfirmatoryTest: Bool,
+            confirmatoryDayLimit: Int? = nil,
             receivedOnDay: GregorianDay,
             confirmedOnDay: GregorianDay? = nil,
+            completedOnDay: GregorianDay? = nil,
             testEndDay: GregorianDay?
         ) {
             self.result = result
             self.testKitType = testKitType
             self.requiresConfirmatoryTest = requiresConfirmatoryTest
+            self.confirmatoryDayLimit = confirmatoryDayLimit
             self.receivedOnDay = receivedOnDay
             self.confirmedOnDay = confirmedOnDay
+            self.completedOnDay = completedOnDay
             self.testEndDay = testEndDay
         }
     }
     
     public struct SymptomaticInfo: Equatable {
+        private static let assumedDaysFromOnsetToSelfDiagnosis = -2
+        
         var selfDiagnosisDay: GregorianDay
         var onsetDay: GregorianDay?
+        
+        var assumedOnsetDay: GregorianDay {
+            if let onsetDay = onsetDay {
+                return onsetDay
+            } else {
+                return selfDiagnosisDay.advanced(by: Self.assumedDaysFromOnsetToSelfDiagnosis)
+            }
+        }
     }
     
     var isolationTrigger: IsolationTrigger
@@ -171,32 +192,18 @@ extension IndexCaseInfo: Decodable {
 }
 
 extension IndexCaseInfo {
-    private static let assumedDaysFromOnsetToSelfDiagnosis = -2
     private static let assumedDaysFromOnsetToTestResult = -3
     
-    var assumedOnsetDayForSelfDiagnosis: GregorianDay? {
-        if let onsetDay = symptomaticInfo?.onsetDay {
-            return onsetDay
-        } else {
-            switch isolationTrigger {
-            case .selfDiagnosis(let selfDiagnosisDay):
-                return selfDiagnosisDay.advanced(by: Self.assumedDaysFromOnsetToSelfDiagnosis)
-            case .manualTestEntry:
-                return nil
-            }
-        }
-    }
-    
     var assumedOnsetDayForExposureKeys: GregorianDay {
-        if let onsetDay = symptomaticInfo?.onsetDay {
-            return onsetDay
-        } else {
-            switch isolationTrigger {
-            case .selfDiagnosis(let selfDiagnosisDay):
-                return selfDiagnosisDay.advanced(by: Self.assumedDaysFromOnsetToSelfDiagnosis)
-            case .manualTestEntry(let npexDay):
-                return npexDay.advanced(by: Self.assumedDaysFromOnsetToTestResult)
+        if let onsetDay = symptomaticInfo?.assumedOnsetDay {
+            if let testEndDay = testInfo?.testEndDay, testEndDay < onsetDay {
+                return testEndDay.advanced(by: Self.assumedDaysFromOnsetToTestResult)
+            } else {
+                return onsetDay
             }
+        } else {
+            #warning("This is very risky. There's no indication that from the two parameters passed one must be non-null")
+            return testInfo!.testEndDay!.advanced(by: Self.assumedDaysFromOnsetToTestResult)
         }
     }
     
@@ -217,6 +224,17 @@ extension IndexCaseInfo {
         }
     }
     
+    var hasBecomeSymptomaticAfterPositive: Bool {
+        if let assumedOnsetDay = symptomaticInfo?.assumedOnsetDay,
+            testInfo?.result == .positive,
+            let testEndDay = assumedTestEndDay,
+            assumedOnsetDay > testEndDay {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     var isInterestedInAskingForSymptomsOnsetDay: Bool {
         if isConsideredSymptomatic || testInfo?.result == .positive {
             return false
@@ -229,6 +247,7 @@ extension IndexCaseInfo {
         testResult: TestResult,
         testKitType: TestKitType?,
         requiresConfirmatoryTest: Bool,
+        confirmatoryDayLimit: Int?,
         receivedOn: GregorianDay,
         testEndDay: GregorianDay?
     ) {
@@ -236,6 +255,7 @@ extension IndexCaseInfo {
             result: testResult,
             testKitType: testKitType,
             requiresConfirmatoryTest: requiresConfirmatoryTest,
+            confirmatoryDayLimit: confirmatoryDayLimit,
             receivedOnDay: receivedOn,
             testEndDay: testEndDay
         )
@@ -243,34 +263,18 @@ extension IndexCaseInfo {
     
     mutating func confirmTest(confirmationDay: GregorianDay) {
         testInfo?.confirmedOnDay = confirmationDay
+        testInfo?.completedOnDay = confirmationDay
+    }
+    
+    mutating func completeTest(completedOnDay: GregorianDay) {
+        testInfo?.completedOnDay = completedOnDay
     }
 }
 
-struct ContactCaseInfo: Decodable, Equatable {
+struct ContactCaseInfo: Equatable {
     var exposureDay: GregorianDay
     var isolationFromStartOfDay: GregorianDay
     var optOutOfIsolationDay: GregorianDay?
-    
-    private enum CodingKeys: String, CodingKey {
-        case exposureDay
-        case isolationFromStartOfDay
-        case optOutOfIsolationDay
-    }
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        exposureDay = try container.decode(GregorianDay.self, forKey: .exposureDay)
-        isolationFromStartOfDay = try container.decode(GregorianDay.self, forKey: .isolationFromStartOfDay)
-        optOutOfIsolationDay = try container.decodeIfPresent(GregorianDay.self, forKey: .optOutOfIsolationDay)
-    }
-}
-
-extension ContactCaseInfo {
-    init(exposureDay: GregorianDay, isolationFromStartOfDay: GregorianDay, optOutOfIsolationDay: GregorianDay? = nil) {
-        self.exposureDay = exposureDay
-        self.isolationFromStartOfDay = isolationFromStartOfDay
-        self.optOutOfIsolationDay = optOutOfIsolationDay
-    }
 }
 
 // After experimenting with how best to deal with calendar related types, it feels like the right balance for this

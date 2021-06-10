@@ -17,9 +17,10 @@ class LinkTestResultWithDCTScreenTests: XCTestCase {
             
             XCTAssert(screen.title.exists)
             XCTAssert(screen.header.exists)
-            XCTAssert(screen.description.exists)
+            XCTAssert(screen.yourTestResultShould.exists)
             XCTAssert(screen.subheading.exists)
             XCTAssert(screen.exampleLabel.exists)
+            XCTAssert(screen.reportYourResultLink.exists)
             XCTAssert(screen.testCodeTextField.exists)
             XCTAssert(screen.cancelButton.exists)
             XCTAssert(screen.continueButton.exists)
@@ -97,7 +98,7 @@ class LinkTestResultWithDCTScreenTests: XCTestCase {
             
             screen.testCodeTextField.tap()
             screen.testCodeTextField.typeText(code)
-            screen.header
+            screen.reportYourResultLink
                 .press(forDuration: 0.1, thenDragTo: screen.testCodeTextField)
             
             XCTAssertFalse(screen.testCodeTextField.hasKeyboardFocus)

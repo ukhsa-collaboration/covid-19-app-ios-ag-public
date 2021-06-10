@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import XCTest
@@ -15,8 +15,8 @@ struct LinkTestResultScreen {
         app.staticTexts[localized: .link_test_result_header]
     }
     
-    var description: XCUIElement {
-        app.staticTexts[localized: .link_test_result_description]
+    var yourTestResultShould: XCUIElement {
+        app.staticTexts[localized: .link_test_result_your_test_result_code_should]
     }
     
     var subheading: XCUIElement {

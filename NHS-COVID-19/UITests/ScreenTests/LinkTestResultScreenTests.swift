@@ -16,7 +16,7 @@ class LinkTestResultScreenTests: XCTestCase {
             
             XCTAssert(screen.title.exists)
             XCTAssert(screen.header.exists)
-            XCTAssert(screen.description.exists)
+            XCTAssert(screen.yourTestResultShould.exists)
             XCTAssert(screen.subheading.exists)
             XCTAssert(screen.exampleLabel.exists)
             XCTAssert(screen.testCodeTextField.exists)

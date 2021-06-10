@@ -116,7 +116,8 @@ private struct ContactTracingHubContentView: View {
             Text(localize(.contact_tracing_hub_tracing_reminder))
                 .styleAsSecondaryHeading()
                 .padding()
-            
+                .layoutPriority(1)
+
             Group {
                 Text(localize(.contact_tracing_hub_dont_pause_tracing_header))
                     .styleAsHeading()
@@ -124,6 +125,7 @@ private struct ContactTracingHubContentView: View {
                 BulletItems(rows: localizeAndSplit(.contact_tracing_hub_dont_pause_tracing_bullet_points))
             }
             .padding([.leading, .trailing])
+            .layoutPriority(1)
         }
         .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }

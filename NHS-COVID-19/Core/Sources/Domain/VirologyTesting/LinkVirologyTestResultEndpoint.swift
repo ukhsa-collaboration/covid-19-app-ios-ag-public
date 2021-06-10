@@ -24,11 +24,6 @@ struct LinkVirologyTestResultEndpoint: HTTPEndpoint {
         decoder.dateDecodingStrategy = .appNetworking
         let payload = try decoder.decode(ResponseBody.self, from: response.body.content)
         
-        if payload.requiresConfirmatoryTest && payload.diagnosisKeySubmissionSupported {
-            signpostReceivedFromManual(payload)
-            throw VirologyTestResultResponseError.unconfirmedKeySharingNotSupported
-        }
-        
         if payload.requiresConfirmatoryTest && payload.testResult != .positive {
             signpostReceivedFromManual(payload)
             throw VirologyTestResultResponseError.unconfirmedNonPostiveNotSupported
@@ -39,6 +34,11 @@ struct LinkVirologyTestResultEndpoint: HTTPEndpoint {
             throw VirologyTestResultResponseError.lfdVoidOrNegative
         }
         
+        if !payload.requiresConfirmatoryTest, payload.confirmatoryDayLimit != nil {
+            signpostReceivedFromManual(payload)
+            throw VirologyTestResultResponseError.confirmatoryTimeLimitProvidedWhenNoConfirmatoryTestRequired
+        }
+        
         return LinkVirologyTestResultResponse(
             virologyTestResult: VirologyTestResult(
                 testResult: VirologyTestResult.TestResult(payload.testResult),
@@ -46,7 +46,8 @@ struct LinkVirologyTestResultEndpoint: HTTPEndpoint {
                 endDate: payload.testEndDate
             ),
             diagnosisKeySubmissionSupport: try DiagnosisKeySubmissionSupport(payload),
-            requiresConfirmatoryTest: payload.requiresConfirmatoryTest
+            requiresConfirmatoryTest: payload.requiresConfirmatoryTest,
+            confirmatoryDayLimit: payload.confirmatoryDayLimit
         )
     }
     
@@ -74,6 +75,7 @@ private struct ResponseBody: Codable {
         case positive = "POSITIVE"
         case negative = "NEGATIVE"
         case void = "VOID"
+        case plod = "PLOD"
     }
     
     enum TestKitType: String, Codable {
@@ -88,6 +90,7 @@ private struct ResponseBody: Codable {
     var diagnosisKeySubmissionToken: String?
     var diagnosisKeySubmissionSupported: Bool
     var requiresConfirmatoryTest: Bool
+    var confirmatoryDayLimit: Int?
 }
 
 private extension VirologyTestResult.TestKitType {
@@ -112,6 +115,8 @@ private extension VirologyTestResult.TestResult {
             self = .positive
         case .void:
             self = .void
+        case .plod:
+            self = .plod
         }
     }
 }
@@ -119,7 +124,7 @@ private extension VirologyTestResult.TestResult {
 enum VirologyTestResultResponseError: Error {
     case noToken
     case lfdVoidOrNegative
-    case unconfirmedKeySharingNotSupported
+    case confirmatoryTimeLimitProvidedWhenNoConfirmatoryTestRequired
     case unconfirmedNonPostiveNotSupported
 }
 

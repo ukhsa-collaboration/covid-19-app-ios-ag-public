@@ -1,14 +1,13 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
 import UserNotifications
 
-public enum UserNotificationType: String {
+public enum UserNotificationType: Equatable {
     case postcode
     case venue
-    case venueIsolate
     case isolationState
     case exposureDetection
     case testResultReceived
@@ -17,6 +16,37 @@ public enum UserNotificationType: String {
     case exposureNotificationReminder
     case exposureDontWorry
     case shareKeysReminder
+    case localMessage(
+        title: String,
+        body: String
+    )
+    
+    public var identifier: String {
+        switch self {
+        case .postcode:
+            return "postcode"
+        case .venue:
+            return "venue"
+        case .isolationState:
+            return "isolationState"
+        case .exposureDetection:
+            return "exposureDetection"
+        case .testResultReceived:
+            return "testResultReceived"
+        case .appAvailability:
+            return "appAvailability"
+        case .latestAppVersionAvailable:
+            return "latestAppVersionAvailable"
+        case .exposureNotificationReminder:
+            return "exposureNotificationReminder"
+        case .exposureDontWorry:
+            return "exposureDontWorry"
+        case .shareKeysReminder:
+            return "shareKeysReminder"
+        case .localMessage(_, _):
+            return "localMessageUpdate"
+        }
+    }
 }
 
 public enum UserNotificationCategory: String {

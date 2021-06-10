@@ -143,9 +143,11 @@ class VirologyTestResultEndpointTests: XCTestCase {
     
     func testDecodingUnconfirmedWithKeySubmissionSupported() throws {
         
+        let date = "2020-04-23T00:00:00Z"
+        
         let response = HTTPResponse.ok(with: .json(#"""
         {
-            "testEndDate": "2020-04-23T00:00:00Z",
+            "testEndDate": "\#(date)",
             "testResult": "POSITIVE",
             "testKit": "RAPID_RESULT",
             "diagnosisKeySubmissionSupported": true,
@@ -153,6 +155,21 @@ class VirologyTestResultEndpointTests: XCTestCase {
         }
         """#))
         
-        XCTAssertThrowsError(try endpoint.parse(response))
+        let formatter = ISO8601DateFormatter()
+        
+        let expectedResponse = VirologyTestResponse.receivedResult(
+            .init(
+                virologyTestResult:
+                VirologyTestResult(
+                    testResult: .positive,
+                    testKitType: .rapidResult,
+                    endDate:
+                    try XCTUnwrap(formatter.date(from: date))
+                ),
+                diagnosisKeySubmissionSupport: true,
+                requiresConfirmatoryTest: true
+            ))
+        
+        TS.assert(try endpoint.parse(response), equals: expectedResponse)
     }
 }

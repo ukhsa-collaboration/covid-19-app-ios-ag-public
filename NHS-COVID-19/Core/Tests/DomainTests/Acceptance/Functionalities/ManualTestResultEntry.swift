@@ -37,7 +37,8 @@ struct ManualTestResultEntry {
         let testResultAcknowledgementStateResult = try context.testResultAcknowledgementState.await()
         
         switch try testResultAcknowledgementStateResult.get() {
-        case .neededForPositiveResultStartToIsolate(let acknowledge, _, _),
+        case .neededForPositiveResultNotIsolating(let acknowledge),
+             .neededForPositiveResultStartToIsolate(let acknowledge, _),
              .neededForPositiveResultContinueToIsolate(let acknowledge, _, _):
             acknowledge()
         default:
@@ -45,20 +46,27 @@ struct ManualTestResultEntry {
         }
     }
     
-    func enterNegative() throws {
-        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .negative, testKitType: .labResult, requiresConfirmatoryTest: false, endDate: currentDateProvider.currentDate)
-        guard case .neededForNegativeResultNotIsolating(let negativeAcknowledgement) = testResultAcknowledgementState else {
+    func enterNegative(endDate: Date? = nil) throws {
+        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .negative, testKitType: .labResult, requiresConfirmatoryTest: false, endDate: endDate ?? currentDateProvider.currentDate)
+        switch testResultAcknowledgementState {
+        case .neededForNegativeResultNotIsolating(let acknowledge),
+             .neededForNegativeResultContinueToIsolate(let acknowledge, _),
+             .neededForNegativeAfterPositiveResultContinueToIsolate(let acknowledge, _):
+            acknowledge()
+        default:
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
-        negativeAcknowledgement()
     }
     
-    func enterVoid() throws {
-        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .void, testKitType: .labResult, requiresConfirmatoryTest: false, endDate: currentDateProvider.currentDate)
-        guard case .neededForVoidResultNotIsolating(let voidAcknowledgement) = testResultAcknowledgementState else {
+    func enterVoid(endDate: Date? = nil) throws {
+        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .void, testKitType: .labResult, requiresConfirmatoryTest: false, endDate: endDate ?? currentDateProvider.currentDate)
+        switch testResultAcknowledgementState {
+        case .neededForVoidResultNotIsolating(let acknowledge),
+             .neededForVoidResultContinueToIsolate(let acknowledge, _):
+            acknowledge()
+        default:
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
-        voidAcknowledgement()
     }
     
     private func getAcknowledgementState(resultType: VirologyTestResult.TestResult, testKitType: VirologyTestResult.TestKitType, requiresConfirmatoryTest: Bool, endDate: Date) throws -> TestResultAcknowledgementState {

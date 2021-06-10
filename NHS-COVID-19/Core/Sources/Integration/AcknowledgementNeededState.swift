@@ -9,7 +9,7 @@ import Foundation
 
 enum AcknowledgementNeededState {
     case askForSymptomsOnsetDay(testEndDay: GregorianDay, didFinishAskForSymptomsOnsetDay: () -> Void, didConfirmSymptoms: () -> Void, setOnsetDay: (GregorianDay) -> Void)
-    case neededForPositiveResultStartToIsolate(acknowledge: () -> Void, isolationEndDate: Date, requiresConfirmatoryTest: Bool)
+    case neededForPositiveResultStartToIsolate(acknowledge: () -> Void, isolationEndDate: Date)
     case neededForPositiveResultContinueToIsolate(acknowledge: () -> Void, isolationEndDate: Date, requiresConfirmatoryTest: Bool)
     case neededForPositiveResultNotIsolating(acknowledge: () -> Void)
     case neededForNegativeResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
@@ -21,6 +21,8 @@ enum AcknowledgementNeededState {
     case neededForRiskyVenueWarnAndBookATest(acknowledge: () -> Void, venueName: String, checkInDate: Date)
     case neededForVoidResultContinueToIsolate(interactor: VoidTestResultFlowInteracting, isolationEndDate: Date)
     case neededForVoidResultNotIsolating(interactor: VoidTestResultFlowInteracting)
+    case neededForPlodResult(interactor: PlodTestResultInteractor)
+    case neededForUnknownResult(interactor: UnknownTestResultInteractor)
     
     static func makeAcknowledgementState(context: RunningAppContext) -> AnyPublisher<AcknowledgementNeededState?, Never> {
         context.testResultAcknowledgementState
@@ -45,11 +47,10 @@ enum AcknowledgementNeededState {
                         ),
                         isolationEndDate: isolationEndDate
                     )
-                case .neededForPositiveResultStartToIsolate(let acknowledge, let isolationEndDate, let requiresConfirmatoryTest):
+                case .neededForPositiveResultStartToIsolate(let acknowledge, let isolationEndDate):
                     return .neededForPositiveResultStartToIsolate(
                         acknowledge: acknowledge,
-                        isolationEndDate: isolationEndDate,
-                        requiresConfirmatoryTest: requiresConfirmatoryTest
+                        isolationEndDate: isolationEndDate
                     )
                 case .neededForPositiveResultContinueToIsolate(let acknowledge, let isolationEndDate, let requiresConfirmatoryTest):
                     return .neededForPositiveResultContinueToIsolate(
@@ -97,6 +98,19 @@ enum AcknowledgementNeededState {
                     return .neededForVoidResultNotIsolating(interactor: interactor)
                 case .askForSymptomsOnsetDay(let testEndDay, let didFinishAskForSymptomsOnsetDay, let didConfirmSymptoms, let setOnsetDay):
                     return .askForSymptomsOnsetDay(testEndDay: testEndDay, didFinishAskForSymptomsOnsetDay: didFinishAskForSymptomsOnsetDay, didConfirmSymptoms: didConfirmSymptoms, setOnsetDay: setOnsetDay)
+                    
+                case .neededForPlodResult(acknowledge: let acknowledge):
+                    let interactor = PlodTestResultInteractor(
+                        acknowledge: acknowledge
+                    )
+                    return .neededForPlodResult(interactor: interactor)
+                    
+                case .neededForUnknownResult(acknowledge: let acknowledge, openAppStore: let openAppStore):
+                    let interactor = UnknownTestResultInteractor(
+                        acknowledge: acknowledge,
+                        openAppStore: openAppStore
+                    )
+                    return .neededForUnknownResult(interactor: interactor)
                 }
             }
             .eraseToAnyPublisher()

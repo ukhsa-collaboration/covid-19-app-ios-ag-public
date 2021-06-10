@@ -319,7 +319,7 @@ class TestResultIsolationOperationTests: XCTestCase {
         // When
         let operation = TestResultIsolationOperation(
             currentIsolationState: isolationState,
-            storedIsolationInfo: IsolationInfo.empty,
+            storedIsolationInfo: IsolationInfo(),
             result: VirologyStateTestResult(
                 testResult: .void,
                 testKitType: .labResult,
@@ -436,7 +436,7 @@ class TestResultIsolationOperationTests: XCTestCase {
         // When
         let operation = TestResultIsolationOperation(
             currentIsolationState: isolationState,
-            storedIsolationInfo: IsolationInfo.empty,
+            storedIsolationInfo: IsolationInfo(),
             result: VirologyStateTestResult(
                 testResult: .positive,
                 testKitType: .labResult,
@@ -526,7 +526,7 @@ class TestResultIsolationOperationTests: XCTestCase {
         // When
         let operation = TestResultIsolationOperation(
             currentIsolationState: isolationState,
-            storedIsolationInfo: IsolationInfo.empty,
+            storedIsolationInfo: IsolationInfo(),
             result: VirologyStateTestResult(
                 testResult: .negative,
                 testKitType: .labResult,
@@ -576,7 +576,7 @@ class TestResultIsolationOperationTests: XCTestCase {
         )
         
         // THEN
-        XCTAssertEqual(operation.storeOperation(), .overwrite)
+        XCTAssertEqual(operation.storeOperation(), .update)
     }
     
     func testNewTestNegativeResultShouldDoNothingWhenUnconfirmedEndDateIsNewer() throws {
@@ -733,10 +733,10 @@ class TestResultIsolationOperationTests: XCTestCase {
         )
         
         // THEN
-        XCTAssertEqual(operation.storeOperation(), .overwrite)
+        XCTAssertEqual(operation.storeOperation(), .update)
     }
     
-    func testNewPositiveResultOverwriteIfSelfDiagnosisOnsetDayIsNewerThanTheTest() {
+    func testNewPositiveResultUpdatePositiveIfSelfDiagnosisOnsetDayIsNewerThanTheTest() {
         let selfDiagnosisDay = LocalDay.today.gregorianDay
         let testDay = LocalDay.today.gregorianDay
         let endDay = LocalDay.today.gregorianDay.advanced(by: -1)
@@ -771,10 +771,10 @@ class TestResultIsolationOperationTests: XCTestCase {
         )
         
         // THEN
-        XCTAssertEqual(operation.storeOperation(), .overwrite)
+        XCTAssertEqual(operation.storeOperation(), .update)
     }
     
-    func testNewPositiveResultOverwriteAndConfirmedIfSelfDiagnosisOnsetDayIsNewerThanTheTest() {
+    func testNewPositiveResultUpdateAndConfirmPositiveIfSelfDiagnosisOnsetDayIsNewerThanTheTest() {
         let selfDiagnosisDay = LocalDay.today.gregorianDay
         let testDay = LocalDay.today.gregorianDay
         let endDay = LocalDay.today.gregorianDay.advanced(by: -1)
@@ -809,7 +809,7 @@ class TestResultIsolationOperationTests: XCTestCase {
         )
         
         // THEN
-        XCTAssertEqual(operation.storeOperation(), .overwriteAndConfirm)
+        XCTAssertEqual(operation.storeOperation(), .updateAndConfirm)
     }
     
     func testNewPositiveResultOverwriteIfManualTestEntryDayIsNewerThanTheTest() {
@@ -1076,6 +1076,596 @@ class TestResultIsolationOperationTests: XCTestCase {
         
         // THEN
         XCTAssertEqual(operation.storeOperation(), .ignore)
+    }
+    
+    func testNewNegativeResultCompletedIfExistingUnconfirmedPositiveInsideConfirmatoryDayLimit() {
+        let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let testEndDay = LocalDay.today.gregorianDay.advanced(by: -1)
+        let newEndDay = LocalDay.today.gregorianDay
+        
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: nil,
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .rapidResult,
+                requiresConfirmatoryTest: true,
+                confirmatoryDayLimit: 1,
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
+            )
+        )
+        
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+        
+        // When
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .negative,
+                testKitType: .labResult,
+                endDate: newEndDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false
+            ),
+            configuration: configuration
+        )
+        
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .update)
+    }
+    
+    func testNewNegativeResultCompletedIfExistingUnconfirmedPositiveSameDayConfirmatoryDayLimit() {
+        let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let testEndDay = LocalDay.today.gregorianDay
+        let newEndDay = LocalDay.today.gregorianDay
+        
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: nil,
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .rapidResult,
+                requiresConfirmatoryTest: true,
+                confirmatoryDayLimit: 0,
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
+            )
+        )
+        
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+        
+        // When
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .negative,
+                testKitType: .labResult,
+                endDate: newEndDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false
+            ),
+            configuration: configuration
+        )
+        
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .update)
+    }
+    
+    func testNewNegativeResultCompletedIfExistingUnconfirmedPositiveOutsideConfirmatoryDayLimit() {
+        let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let testEndDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let newEndDay = LocalDay.today.gregorianDay
+        
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: nil,
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .rapidResult,
+                requiresConfirmatoryTest: true,
+                confirmatoryDayLimit: 2,
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
+            )
+        )
+        
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+        
+        // When
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .negative,
+                testKitType: .labResult,
+                endDate: newEndDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false
+            ),
+            configuration: configuration
+        )
+        
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .complete)
+    }
+    
+    func testSymptomsAfterPositiveNewNegativeResultCompletedAndDeleteSymptomsIfExistingUnconfirmedPositiveOutsideConfirmatoryDayLimit() {
+        let selfDiagnosisDay = LocalDay.today.gregorianDay.advanced(by: -2)
+        let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let testEndDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let newEndDay = LocalDay.today.gregorianDay
+        
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .rapidResult,
+                requiresConfirmatoryTest: true,
+                confirmatoryDayLimit: 2,
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
+            )
+        )
+        
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+        
+        // When
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .negative,
+                testKitType: .labResult,
+                endDate: newEndDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false
+            ),
+            configuration: configuration
+        )
+        
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .completeAndDeleteSymptoms)
+    }
+    
+    func testSymptomsAfterPositiveNewNegativeResultCompletedIfExistingUnconfirmedPositiveOutsideConfirmatoryDayLimit() {
+        let selfDiagnosisDay = LocalDay.today.gregorianDay.advanced(by: -2)
+        let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let testEndDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let newEndDay = LocalDay.today.gregorianDay.advanced(by: -3)
+        
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .rapidResult,
+                requiresConfirmatoryTest: true,
+                confirmatoryDayLimit: 0,
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
+            )
+        )
+        
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+        
+        // When
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .negative,
+                testKitType: .labResult,
+                endDate: newEndDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false
+            ),
+            configuration: configuration
+        )
+        
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .complete)
+    }
+    
+    func testSymptomsAfterPositiveNewNegativeResultNothingIfExistingUnconfirmedPositiveEndDateIsNewer() {
+        let selfDiagnosisDay = LocalDay.today.gregorianDay.advanced(by: -2)
+        let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let testEndDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let newEndDay = LocalDay.today.gregorianDay.advanced(by: -5)
+        
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .rapidResult,
+                requiresConfirmatoryTest: true,
+                confirmatoryDayLimit: 2,
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
+            )
+        )
+        
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+        
+        // When
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .negative,
+                testKitType: .labResult,
+                endDate: newEndDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false
+            ),
+            configuration: configuration
+        )
+        
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .nothing)
+    }
+    
+    func testSymptomsAfterPositiveNewNegativeResultNothingIfExistingSelfDiagnosisDayIsNewer() {
+        let selfDiagnosisDay = LocalDay.today.gregorianDay.advanced(by: -2)
+        let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let testEndDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let newEndDay = LocalDay.today.gregorianDay.advanced(by: -3)
+        
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .labResult,
+                requiresConfirmatoryTest: false,
+                confirmatoryDayLimit: nil,
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
+            )
+        )
+        
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+        
+        // When
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .negative,
+                testKitType: .labResult,
+                endDate: newEndDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false
+            ),
+            configuration: configuration
+        )
+        
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .nothing)
+    }
+    
+    func testSymptomsAfterPositiveNewNegativeResultDeleteSymptomsIfExistingConfirmedPositiveEndDateIsOlder() {
+        let selfDiagnosisDay = LocalDay.today.gregorianDay.advanced(by: -2)
+        let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let testEndDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let newEndDay = LocalDay.today.gregorianDay
+        
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .labResult,
+                requiresConfirmatoryTest: false,
+                confirmatoryDayLimit: nil,
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
+            )
+        )
+        
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+        
+        // When
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .negative,
+                testKitType: .labResult,
+                endDate: newEndDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false
+            ),
+            configuration: configuration
+        )
+        
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .deleteSymptoms)
+    }
+    
+    func testSymptomsAfterPositiveNewPositiveResultUpdateAndConfirmedIfIfExistingConfirmedEndDayIsNewer() {
+        let selfDiagnosisDay = LocalDay.today.gregorianDay.advanced(by: -2)
+        let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let testEndDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let newEndDay = LocalDay.today.gregorianDay.advanced(by: -6)
+        
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .labResult,
+                requiresConfirmatoryTest: false,
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
+            )
+        )
+        
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+        
+        // When
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .rapidResult,
+                endDate: newEndDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: true
+            ),
+            configuration: configuration
+        )
+        
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .updateAndConfirm)
+    }
+    
+    func testSymptomsAfterPositiveNewPositiveResultUpdateIfExistingUnconfirmedEndDayIsNewer() {
+        let selfDiagnosisDay = LocalDay.today.gregorianDay.advanced(by: -2)
+        let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let testEndDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let newEndDay = LocalDay.today.gregorianDay.advanced(by: -6)
+        
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .rapidResult,
+                requiresConfirmatoryTest: true,
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
+            )
+        )
+        
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+        
+        // When
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .labResult,
+                endDate: newEndDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false
+            ),
+            configuration: configuration
+        )
+        
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .update)
+    }
+    
+    func testSymptomsAfterPositiveNewPositiveResultConfirmedIfExistingUnconfirmedEndDayIsOlderSymptomsNewer() {
+        let selfDiagnosisDay = LocalDay.today.gregorianDay.advanced(by: -2)
+        let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let testEndDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let newEndDay = LocalDay.today.gregorianDay.advanced(by: -3)
+        
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .rapidResult,
+                requiresConfirmatoryTest: true,
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
+            )
+        )
+        
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+        
+        // When
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .labResult,
+                endDate: newEndDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false
+            ),
+            configuration: configuration
+        )
+        
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .confirm)
+    }
+    
+    func testSymptomsAfterPositiveNewPositiveResultUpdateIfExistingConfirmedEndDayIsOlderSymptomsNewer() {
+        let selfDiagnosisDay = LocalDay.today.gregorianDay.advanced(by: -2)
+        let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let testEndDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let newEndDay = LocalDay.today.gregorianDay.advanced(by: -3)
+        
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .labResult,
+                requiresConfirmatoryTest: false,
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
+            )
+        )
+        
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+        
+        // When
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .labResult,
+                endDate: newEndDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false
+            ),
+            configuration: configuration
+        )
+        
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .nothing)
+    }
+    
+    func testSymptomsAfterPositiveNewPositiveResultNothingIfExistingUnconfirmedEndDayIsOlderSymptomsOlder() {
+        let selfDiagnosisDay = LocalDay.today.gregorianDay.advanced(by: -2)
+        let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let testEndDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let newEndDay = LocalDay.today.gregorianDay
+        
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .rapidResult,
+                requiresConfirmatoryTest: true,
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
+            )
+        )
+        
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+        
+        // When
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .rapidResult,
+                endDate: newEndDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: true
+            ),
+            configuration: configuration
+        )
+        
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .nothing)
+    }
+    
+    func testSymptomsAfterPositiveNewPositiveResultUpdateIfExistingConfirmedEndDayIsOlderSymptomsOlder() {
+        let selfDiagnosisDay = LocalDay.today.gregorianDay.advanced(by: -2)
+        let testDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let testEndDay = LocalDay.today.gregorianDay.advanced(by: -4)
+        let newEndDay = LocalDay.today.gregorianDay
+        
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .labResult,
+                requiresConfirmatoryTest: false,
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
+            )
+        )
+        
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+        
+        // When
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .labResult,
+                endDate: newEndDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false
+            ),
+            configuration: configuration
+        )
+        
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .update)
+    }
+    
+    func testSymptomsAfterPositiveNewPositiveResultOvewriteIfIndexcaseOutOfIslation() {
+        let selfDiagnosisDay = LocalDay.today.gregorianDay.advanced(by: -12)
+        let testDay = LocalDay.today.gregorianDay.advanced(by: -14)
+        let testEndDay = LocalDay.today.gregorianDay.advanced(by: -14)
+        let newEndDay = LocalDay.today.gregorianDay
+        
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .rapidResult,
+                requiresConfirmatoryTest: true,
+                receivedOnDay: testDay,
+                testEndDay: testEndDay
+            )
+        )
+        
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+        
+        // When
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .rapidResult,
+                endDate: newEndDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: true
+            ),
+            configuration: configuration
+        )
+        
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .overwrite)
     }
 }
 

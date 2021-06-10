@@ -6,10 +6,14 @@ import Common
 
 protocol VirologyTestingStateCoordinating {
     var virologyTestTokens: [VirologyTestTokens] { get }
+    var didReceiveUnknownTestResult: Bool { get }
     
     func saveOrderTestKitResponse(_ orderTestKitResponse: OrderTestkitResponse)
     func handlePollingTestResult(_ testResult: VirologyTestResponse, virologyTestTokens: VirologyTestTokens)
+    func handlePollingUnknownTestResult(_ virologyTestTokens: VirologyTestTokens)
     func handleManualTestResult(_ testResult: LinkVirologyTestResultResponse)
+    func handleUnknownTestResult()
+    func acknowledgeUnknownTestResult()
 }
 
 class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
@@ -17,6 +21,15 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         virologyTestingStateStore.virologyTestTokens ?? []
     }
     
+    var didReceiveUnknownTestResult: Bool {
+        get {
+            virologyTestingStateStore.didReceiveUnknownTestResult
+        }
+        set {
+            virologyTestingStateStore.didReceiveUnknownTestResult = newValue
+        }
+    }
+
     private let virologyTestingStateStore: VirologyTestingStateStore
     private let userNotificationsManager: UserNotificationManaging
     private let isInterestedInAskingForSymptomsOnsetDay: () -> Bool
@@ -58,6 +71,15 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         }
     }
     
+    func handlePollingUnknownTestResult(
+        _ virologyTestTokens: VirologyTestTokens
+    ) {
+        virologyTestingStateStore.removeTestTokens(virologyTestTokens)
+        // metrics tbd
+        sendNotification()
+        handleUnknownTestResult()
+    }
+    
     func handleManualTestResult(_ response: LinkVirologyTestResultResponse) {
         Metrics.signpostReceivedFromManual(
             testResult: response.virologyTestResult.testResult,
@@ -69,15 +91,25 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
             handle(
                 response.virologyTestResult,
                 diagnosisKeySubmissionToken: token,
-                requiresConfirmatoryTest: response.requiresConfirmatoryTest
+                requiresConfirmatoryTest: response.requiresConfirmatoryTest,
+                confirmatoryDayLimit: response.confirmatoryDayLimit
             )
         case .notSupported:
             handle(
                 response.virologyTestResult,
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: response.requiresConfirmatoryTest
+                requiresConfirmatoryTest: response.requiresConfirmatoryTest,
+                confirmatoryDayLimit: response.confirmatoryDayLimit
             )
         }
+    }
+    
+    func handleUnknownTestResult() {
+        virologyTestingStateStore.didReceiveUnknownTestResult = true
+    }
+    
+    func acknowledgeUnknownTestResult() {
+        virologyTestingStateStore.didReceiveUnknownTestResult = false
     }
     
     func requiresOnsetDay(_ result: VirologyTestResult, requiresConfirmatoryTest: Bool) -> Bool {
@@ -90,14 +122,20 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
     
     private func handleWithNotification(_ result: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?, requiresConfirmatoryTest: Bool) {
         sendNotification()
-        handle(result, diagnosisKeySubmissionToken: diagnosisKeySubmissionToken, requiresConfirmatoryTest: requiresConfirmatoryTest)
+        handle(result, diagnosisKeySubmissionToken: diagnosisKeySubmissionToken, requiresConfirmatoryTest: requiresConfirmatoryTest, confirmatoryDayLimit: nil)
     }
     
-    private func handle(_ result: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?, requiresConfirmatoryTest: Bool) {
+    private func handle(
+        _ result: VirologyTestResult,
+        diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?,
+        requiresConfirmatoryTest: Bool,
+        confirmatoryDayLimit: Int?
+    ) {
         virologyTestingStateStore.saveResult(
             virologyTestResult: result,
             diagnosisKeySubmissionToken: result.testResult == .positive ? diagnosisKeySubmissionToken : nil,
-            requiresConfirmatoryTest: requiresConfirmatoryTest
+            requiresConfirmatoryTest: requiresConfirmatoryTest,
+            confirmatoryDayLimit: confirmatoryDayLimit
         )
         if requiresOnsetDay(result, requiresConfirmatoryTest: requiresConfirmatoryTest) {
             setRequiresOnsetDay()

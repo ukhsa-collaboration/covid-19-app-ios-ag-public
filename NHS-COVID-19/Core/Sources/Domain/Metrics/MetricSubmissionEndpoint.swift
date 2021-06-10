@@ -143,6 +143,21 @@ private struct SubmissionPayload: Codable {
         var receivedRiskyVenueM1Warning = 0
         var receivedRiskyVenueM2Warning = 0
         var hasReceivedRiskyVenueM2WarningBackgroundTick = 0
+        
+        // MARK: Key Sharing
+        
+        var askedToShareExposureKeysInTheInitialFlow = 0
+        var consentedToShareExposureKeysInTheInitialFlow = 0
+        var totalShareExposureKeysReminderNotifications = 0
+        var consentedToShareExposureKeysInReminderScreen = 0
+        var successfullySharedExposureKeys = 0
+        
+        // MARK: - Local Information / VOC
+        
+        var didSendLocalInfoNotification = 0
+        var didAccessLocalInfoScreenViaNotification = 0
+        var didAccessLocalInfoScreenViaBanner = 0
+        var isDisplayingLocalInfoBackgroundTick = 0
     }
     
     var includesMultipleApplicationVersions: Bool
@@ -259,6 +274,24 @@ private extension Metric {
             return \.receivedRiskyVenueM2Warning
         case .hasReceivedRiskyVenueM2WarningBackgroundTick:
             return \.hasReceivedRiskyVenueM2WarningBackgroundTick
+        case .askedToShareExposureKeysInTheInitialFlow:
+            return \.askedToShareExposureKeysInTheInitialFlow
+        case .consentedToShareExposureKeysInTheInitialFlow:
+            return \.consentedToShareExposureKeysInTheInitialFlow
+        case .totalShareExposureKeysReminderNotifications:
+            return \.totalShareExposureKeysReminderNotifications
+        case .consentedToShareExposureKeysInReminderScreen:
+            return \.consentedToShareExposureKeysInReminderScreen
+        case .successfullySharedExposureKeys:
+            return \.successfullySharedExposureKeys
+        case .didSendLocalInfoNotification:
+            return \.didSendLocalInfoNotification
+        case .didAccessLocalInfoScreenViaNotification:
+            return \.didAccessLocalInfoScreenViaNotification
+        case .didAccessLocalInfoScreenViaBanner:
+            return \.didAccessLocalInfoScreenViaBanner
+        case .isDisplayingLocalInfoBackgroundTick:
+            return \.isDisplayingLocalInfoBackgroundTick
         }
     }
     

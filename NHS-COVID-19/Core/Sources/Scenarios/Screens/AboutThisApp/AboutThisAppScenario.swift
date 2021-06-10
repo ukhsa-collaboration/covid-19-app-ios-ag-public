@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Integration
@@ -17,6 +17,7 @@ public class AboutThisAppScreenScenario: Scenario {
     public static let seeDataTapped = "See data tapped"
     public static let howThisAppWorksTapped = "How this app works tapped"
     public static let provideFeedbackTapped = "Provide feedback tapped"
+    public static let downloadNHSAppTapped = "Download NHS App tapped"
     
     public static let appName = "NHS-COVID-19"
     public static let version = "1.0"
@@ -63,5 +64,9 @@ private class Interactor: AboutThisAppViewController.Interacting {
     
     func didTapProvideFeedback() {
         viewController?.showAlert(title: AboutThisAppScreenScenario.provideFeedbackTapped)
+    }
+    
+    func didTapDownloadNHSApp() {
+        viewController?.showAlert(title: AboutThisAppScreenScenario.downloadNHSAppTapped)
     }
 }

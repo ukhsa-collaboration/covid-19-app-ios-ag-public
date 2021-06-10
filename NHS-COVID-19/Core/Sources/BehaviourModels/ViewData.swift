@@ -24,9 +24,7 @@ public struct StateCollection: Hashable, Identifiable {
     var positiveTest: Condition
     var counter: Int = 1
     
-    public var id: StateCollection {
-        self
-    }
+    public var id = UUID()
 }
 
 struct Transition: Hashable, Identifiable {
@@ -34,9 +32,7 @@ struct Transition: Hashable, Identifiable {
     var label: String
     var to: StateCollection
     
-    var id: Transition {
-        self
-    }
+    var id = UUID()
 }
 
 extension IsolationRuleSet {

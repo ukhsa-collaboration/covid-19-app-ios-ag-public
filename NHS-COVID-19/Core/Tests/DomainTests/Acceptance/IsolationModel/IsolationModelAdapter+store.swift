@@ -124,51 +124,51 @@ extension IsolationModelAdapter {
             ]
         case (.isolating, .noIsolation):
             return [
-                symptomaticCaseRepresentation(selfDiagnosisDay: indexCase.selfDiagnosisDay, onsetDay: indexCase.onsetDay),
+                symptomaticCaseRepresentation(selfDiagnosisDay: symptomaticCase.selfDiagnosisDay, onsetDay: symptomaticCase.onsetDay),
             ]
         case (.isolating, .isolatingWithConfirmedTest):
             return [
-                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: indexCase.selfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay),
+                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.selfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay),
             ]
         case (.isolating, .isolatingWithUnconfirmedTest):
             return [
-                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: indexCase.selfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay, isPendingConfirmation: true),
+                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.selfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay, isPendingConfirmation: true),
             ]
         case (.isolating, .notIsolatingAndHadConfirmedTestPreviously):
             return [
-                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: indexCase.selfDiagnosisDay, testEndDay: testCase.expiredTestEndDay, receivedOnDay: testCase.expiredReceivedOnDay),
+                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.selfDiagnosisDay, testEndDay: testCase.expiredTestEndDay, receivedOnDay: testCase.expiredReceivedOnDay),
             ]
         case (.isolating, .notIsolatingAndHadUnconfirmedTestPreviously):
             return [
-                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: indexCase.selfDiagnosisDay, testEndDay: testCase.expiredTestEndDay, receivedOnDay: testCase.expiredReceivedOnDay, isPendingConfirmation: true),
+                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.selfDiagnosisDay, testEndDay: testCase.expiredTestEndDay, receivedOnDay: testCase.expiredReceivedOnDay, isPendingConfirmation: true),
             ]
         case (.isolating, .notIsolatingAndHasNegativeTest):
             return [
-                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: indexCase.selfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay, result: "negative"),
+                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.selfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay, result: "negative"),
             ]
         case (.notIsolatingAndHadSymptomsPreviously, .noIsolation):
             return [
-                symptomaticCaseRepresentation(selfDiagnosisDay: indexCase.expiredSelfDiagnosisDay),
+                symptomaticCaseRepresentation(selfDiagnosisDay: symptomaticCase.expiredSelfDiagnosisDay),
             ]
         case (.notIsolatingAndHadSymptomsPreviously, .isolatingWithConfirmedTest):
             return [
-                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: indexCase.expiredSelfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay),
+                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.expiredSelfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay),
             ]
         case (.notIsolatingAndHadSymptomsPreviously, .isolatingWithUnconfirmedTest):
             return [
-                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: indexCase.expiredSelfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay, isPendingConfirmation: true),
+                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.expiredSelfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay, isPendingConfirmation: true),
             ]
         case (.notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHadConfirmedTestPreviously):
             return [
-                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: indexCase.expiredSelfDiagnosisDay, testEndDay: testCase.expiredTestEndDay, receivedOnDay: testCase.expiredReceivedOnDay),
+                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.expiredSelfDiagnosisDay, testEndDay: testCase.expiredTestEndDay, receivedOnDay: testCase.expiredReceivedOnDay),
             ]
         case (.notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHadUnconfirmedTestPreviously):
             return [
-                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: indexCase.expiredSelfDiagnosisDay, testEndDay: testCase.expiredTestEndDay, receivedOnDay: testCase.expiredReceivedOnDay, isPendingConfirmation: true),
+                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.expiredSelfDiagnosisDay, testEndDay: testCase.expiredTestEndDay, receivedOnDay: testCase.expiredReceivedOnDay, isPendingConfirmation: true),
             ]
         case (.notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHasNegativeTest):
             return [
-                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: indexCase.expiredSelfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay, result: "negative"),
+                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.selfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay, result: "negative"),
             ]
         }
     }
@@ -210,6 +210,7 @@ extension IsolationModelAdapter {
             },
             "testInfo": {
                 "result" : "\(result)",
+                "testKitType": "labResult",
                 "requiresConfirmatoryTest": \(isPendingConfirmation),
                 "receivedOnDay" : {
                     "day" : \(receivedOnDay.day),
@@ -250,7 +251,8 @@ extension IsolationModelAdapter {
              (.notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT, .notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHasNegativeTest),
              (.notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT, .noIsolation, .notIsolatingAndHadConfirmedTestPreviously),
              (.notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT, .noIsolation, .notIsolatingAndHadUnconfirmedTestPreviously),
-             (.notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT, .noIsolation, .notIsolatingAndHasNegativeTest):
+             (.notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT, .noIsolation, .notIsolatingAndHasNegativeTest),
+             (.notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT, .notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHadUnconfirmedTestPreviously):
             return "true"
         default:
             return "false"

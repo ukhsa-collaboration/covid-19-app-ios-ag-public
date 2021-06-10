@@ -28,6 +28,13 @@ struct ConfigureMocksView: View {
                     )
                     DateTextRow(date: adjustableDateProvider.currentDate)
                 }
+                Section(header: Text(verbatim: "Variants of Concern / Local Messages")) {
+                    TextFieldRow(label: "Local Authority IDs (comma separated)", text: $dataProvider.vocLocalAuthorities)
+                    TextFieldRow(label: "Message ID", text: $dataProvider.vocMessageId)
+                    TextFieldRow(label: "Content Version", text: $dataProvider.vocContentVersionString)
+                    TextFieldRow(label: "Notification Title", text: $dataProvider.vocMessageNotificationTitle)
+                    TextFieldRow(label: "Notification Body", text: $dataProvider.vocMessageNotificationBody)
+                }
                 Section(header: Text(verbatim: "Postcode Risk")) {
                     TextFieldRow(label: "Black Risk", text: $dataProvider.blackPostcodes)
                     TextFieldRow(label: "Maroon Risk", text: $dataProvider.maroonPostcodes)
@@ -62,6 +69,7 @@ struct ConfigureMocksView: View {
                     TextFieldRow(label: "Website", text: $dataProvider.orderTestWebsite)
                     TextFieldRow(label: "Reference Code", text: $dataProvider.testReferenceCode)
                     TextFieldRow(label: "Days since test result end date", text: $dataProvider.testResultEndDateDaysAgoString)
+                    TextFieldRow(label: "Confirmatory day limit", text: $dataProvider.confirmatoryDayLimitString)
                     Picker(selection: $dataProvider.receivedTestResult, label: Text("Result")) {
                         ForEach(0 ..< MockDataProvider.testResults.count) {
                             Text(verbatim: MockDataProvider.testResults[$0])
@@ -96,6 +104,12 @@ struct ConfigureMocksView: View {
             .navigationBarTitle("Mocks")
         }
         .navigationViewStyle(StackNavigationViewStyle())
+    }
+}
+
+struct ConfigureMocksViewPreview: PreviewProvider {
+    static var previews: some View {
+        ConfigureMocksView(dataProvider: MockDataProvider(), showDevView: .constant(false), adjustableDateProvider: AdjustableDateProvider())
     }
     
 }

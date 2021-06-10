@@ -8,10 +8,10 @@ import Localization
 import SwiftUI
 
 struct HomeView: View {
-    @ObservedObject private var showOrderTestButton: InterfaceProperty<Bool>
     @ObservedObject private var showFinancialSupportButton: InterfaceProperty<Bool>
     private let interactor: HomeViewController.Interacting
     @ObservedObject private var riskLevelBannerViewModel: InterfaceProperty<RiskLevelBanner.ViewModel?>
+    @ObservedObject private var localInfoBannerViewModel: InterfaceProperty<LocalInformationBanner.ViewModel?>
     private let isolationViewModel: RiskLevelIndicator.ViewModel
     @ObservedObject private var shouldShowSelfDiagnosis: InterfaceProperty<Bool>
     private let exposureNotificationState: ExposureNotificationState
@@ -20,8 +20,8 @@ struct HomeView: View {
     init(
         interactor: HomeViewController.Interacting,
         riskLevelBannerViewModel: InterfaceProperty<RiskLevelBanner.ViewModel?>,
+        localInfoBannerViewModel: InterfaceProperty<LocalInformationBanner.ViewModel?>,
         isolationViewModel: RiskLevelIndicator.ViewModel,
-        showOrderTestButton: InterfaceProperty<Bool>,
         shouldShowSelfDiagnosis: InterfaceProperty<Bool>,
         exposureNotificationsEnabled: InterfaceProperty<Bool>,
         exposureNotificationsToggleAction: @escaping (Bool) -> Void,
@@ -30,8 +30,8 @@ struct HomeView: View {
     ) {
         self.interactor = interactor
         self.riskLevelBannerViewModel = riskLevelBannerViewModel
+        self.localInfoBannerViewModel = localInfoBannerViewModel
         self.isolationViewModel = isolationViewModel
-        self.showOrderTestButton = showOrderTestButton
         self.shouldShowSelfDiagnosis = shouldShowSelfDiagnosis
         self.country = country
         self.showFinancialSupportButton = showFinancialSupportButton
@@ -64,6 +64,15 @@ struct HomeView: View {
                         }
                     )
                     .zIndex(-1)
+                    
+                    if let localInfoViewModel = localInfoBannerViewModel.wrappedValue {
+                        LocalInformationBanner(
+                            viewModel: localInfoViewModel,
+                            tapAction: interactor.didTapLocalInfoBanner(viewModel:)
+                        )
+                        .padding([.leading, .trailing], -.standardSpacing)
+                    }
+                    
                     buttons()
                 }
                 .accessibilityElement(children: .contain)
@@ -78,16 +87,6 @@ struct HomeView: View {
     
     private func buttons() -> some View {
         Group {
-            if showOrderTestButton.wrappedValue {
-                NavigationButton(
-                    imageName: .swab,
-                    foregroundColor: Color(.background),
-                    backgroundColor: Color(.bookFreeTest),
-                    text: localize(.home_testing_information_button_title),
-                    action: interactor.didTapTestingInformationButton
-                )
-            }
-            
             if interactor.shouldShowCheckIn {
                 NavigationButton(
                     imageName: .qrCode,
@@ -108,17 +107,7 @@ struct HomeView: View {
                 )
             }
             
-            if isolationViewModel.isolationState == .notIsolating {
-                NavigationButton(
-                    imageName: .read,
-                    iconName: .externalLink,
-                    foregroundColor: Color(.background),
-                    backgroundColor: Color(.stylePink),
-                    text: localize(.home_default_advice_button_title),
-                    action: interactor.didTapAdviceButton
-                )
-                .linkify(.home_default_advice_button_title)
-            } else {
+            if isolationViewModel.isolationState != .notIsolating {
                 NavigationButton(
                     imageName: .read,
                     iconName: .externalLink,
@@ -130,6 +119,22 @@ struct HomeView: View {
                 .linkify(.home_isolation_advice_button_title)
             }
             
+            NavigationButton(
+                imageName: .swab,
+                foregroundColor: Color(.background),
+                backgroundColor: Color(.bookFreeTest),
+                text: localize(.home_testing_hub_button_title),
+                action: interactor.didTapTestingHubButton
+            )
+            
+            NavigationButton(
+                imageName: .enterTestResult,
+                foregroundColor: Color(.background),
+                backgroundColor: Color(.nhsLightBlue),
+                text: localize(.home_link_test_result_button_title),
+                action: interactor.didTapLinkTestResultButton
+            )
+            
             if showFinancialSupportButton.wrappedValue {
                 NavigationButton(
                     imageName: .finance,
@@ -139,14 +144,6 @@ struct HomeView: View {
                     action: interactor.didTapFinancialSupportButton
                 )
             }
-            
-            NavigationButton(
-                imageName: .chain,
-                foregroundColor: Color(.background),
-                backgroundColor: Color(.nhsLightBlue),
-                text: localize(.home_link_test_result_button_title),
-                action: interactor.didTapLinkTestResultButton
-            )
             
             NavigationButton(
                 imageName: .settings,

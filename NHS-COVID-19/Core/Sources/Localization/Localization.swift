@@ -150,7 +150,9 @@ public func localize(_ key: StringLocalizationKey, localeConfiguration: LocaleCo
 }
 
 public func localizeAndSplit(_ key: StringLocalizationKey) -> [String] {
-    Localization.current.localize(key).split(separator: "\n").map(String.init)
+    Localization.current.localize(key)
+        .split(separator: "\n", omittingEmptySubsequences: true)
+        .map(String.init)
 }
 
 func localizeURL(_ key: StringLocalizationKey) -> URL {
@@ -198,7 +200,9 @@ public func localizeForCountry(_ localizable: ParameterisedStringLocalizable) ->
 }
 
 public func localizeForCountryAndSplit(_ key: StringLocalizationKey) -> [String] {
-    localizeForCountry(key).split(separator: "\n").map(String.init)
+    localizeForCountry(key)
+        .split(separator: "\n", omittingEmptySubsequences: true)
+        .map(String.init)
 }
 
 public func localize(_ localizable: ParameterisedStringLocalizable) -> String {

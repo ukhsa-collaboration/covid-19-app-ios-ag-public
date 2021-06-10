@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import BackgroundTasks
@@ -33,6 +33,10 @@ class BaseAppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCen
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         LoggingSystem.bootstrap(makeLogHandler(label:))
+        
+        #if targetEnvironment(simulator)
+        print("Documents: \(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))")
+        #endif
         
         backgroundTaskScheduler.register(forTaskWithIdentifier: Self.identifier, using: .main) { [weak self] task in
             self?.appController?.performBackgroundTask(task: task)

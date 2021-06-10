@@ -31,6 +31,7 @@ public struct RunningAppContext {
     public var postcodeInfo: DomainProperty<(postcode: Postcode, localAuthority: LocalAuthority?, risk: DomainProperty<RiskyPostcodeEndpointManager.PostcodeRisk?>)?>
     public var country: DomainProperty<Country>
     public var openSettings: () -> Void
+    public var openAppStore: () -> Void
     public var openURL: (URL) -> Void
     public var selfDiagnosisManager: SelfDiagnosisManaging
     public var isolationState: DomainProperty<IsolationState>
@@ -52,9 +53,12 @@ public struct RunningAppContext {
     public var isolationPaymentState: DomainProperty<IsolationPaymentState>
     public var currentLocaleConfiguration: DomainProperty<LocaleConfiguration>
     public var storeNewLanguage: (_ localeConfiguration: LocaleConfiguration) -> Void
+    public var homeAnimationsStore: HomeAnimationsEnabledProtocol
     public var shouldShowDailyContactTestingInformFeature: () -> Bool
     public var dailyContactTestingEarlyTerminationSupport: () -> DailyContactTestingEarlyIsolationTerminationSupport
     public var diagnosisKeySharer: DomainProperty<DiagnosisKeySharer?>
+    public var localInformation: DomainProperty<LocalInformationEndpointManager.LocalInfo?>
+    public var userNotificationManaging: UserNotificationManaging
 }
 
 // FIXME: Move to a more suitable place

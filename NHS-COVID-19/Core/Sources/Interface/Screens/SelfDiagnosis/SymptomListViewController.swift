@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -20,12 +20,12 @@ public class SymptomListViewController: UIViewController {
     private let interactor: Interacting
     
     private let symptoms: [SymptomInfo]
-    private let symptomIndex: Int?
+    private let indexOfSymptomToScrollToOnAppearance: Int?
     
-    public init(symptoms: [SymptomInfo], symptomIndex: Int?, interactor: Interacting) {
+    public init(symptoms: [SymptomInfo], scrollToSymptomAt symptomIndex: Int?, interactor: Interacting) {
         self.symptoms = symptoms
         self.interactor = interactor
-        self.symptomIndex = symptomIndex
+        indexOfSymptomToScrollToOnAppearance = symptomIndex
         super.init(nibName: nil, bundle: nil)
         
         title = localize(.diagnosis_questionnaire_title)
@@ -52,7 +52,7 @@ public class SymptomListViewController: UIViewController {
     }()
     
     override public func viewDidAppear(_ animated: Bool) {
-        if let symptomIndex = self.symptomIndex {
+        if let symptomIndex = indexOfSymptomToScrollToOnAppearance {
             DispatchQueue.main.async {
                 let yPos = self.symptomStack.frame.origin.y + self.symptomStack.arrangedSubviews[symptomIndex].frame.origin.y - .standardSpacing
                 self.scrollView.setContentOffset(CGPoint(x: 0, y: yPos), animated: true)

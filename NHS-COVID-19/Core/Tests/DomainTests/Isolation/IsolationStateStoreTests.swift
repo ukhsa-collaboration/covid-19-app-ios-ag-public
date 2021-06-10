@@ -233,6 +233,236 @@ class IsolationStateStoreTests: XCTestCase {
         TS.assert(store.isolationInfo, equals: expectedIsolationInfo)
     }
     
+    func testLoadingConfirmedOnDayFromTestInfoPayloadV1() throws {
+        $instance.encryptedStore.stored["isolation_state_info"] = #"""
+        {
+            "configuration" : {
+                "indexCaseSinceSelfDiagnosisOnset" : 7,
+                "maxIsolation" : 21,
+                "contactCase" : 14,
+                "indexCaseSinceSelfDiagnosisUnknownOnset" : 5,
+                "housekeepingDeletionPeriod" : 14
+            },
+            "isolationInfo" : {
+                "hasAcknowledgedEndOfIsolation": true,
+                "hasAcknowledgedStartOfIsolation": false,
+                "contactCaseInfo" : {
+                    "exposureDay" : {
+                        "day" : 11,
+                        "month" : 7,
+                        "year" : 2020
+                    },
+                    "isolationFromStartOfDay":{
+                        "year": 2020,
+                        "month": 7,
+                        "day": 13
+                    }
+                },
+                "indexCaseInfo" : {
+                    "npexDay" : {
+                        "day" : 12,
+                        "month" : 7,
+                        "year" : 2020
+                    },
+                    "testInfo": {
+                        "result" : "positive",
+                        "requiresConfirmatoryTest" : true,
+                        "receivedOnDay" : {
+                            "day" : 14,
+                            "month" : 7,
+                            "year" : 2020
+                        },
+                        "confirmedOnDay" : {
+                            "day" : 17,
+                            "month" : 7,
+                            "year" : 2020
+                        }
+                    }
+                }
+            }
+        }
+        """# .data(using: .utf8)!
+        
+        let exposureDay = GregorianDay(year: 2020, month: 7, day: 11)
+        let npexDay = GregorianDay(year: 2020, month: 7, day: 12)
+        let isolationFromStartOfDay = GregorianDay(year: 2020, month: 7, day: 13)
+        let testReceivedDay = GregorianDay(year: 2020, month: 7, day: 14)
+        let completedOnDay = GregorianDay(year: 2020, month: 7, day: 17)
+        
+        let expectedIsolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: true,
+            indexCaseInfo: IndexCaseInfo(
+                symptomaticInfo: nil,
+                testInfo: IndexCaseInfo.TestInfo(
+                    result: .positive,
+                    requiresConfirmatoryTest: true,
+                    receivedOnDay: testReceivedDay,
+                    confirmedOnDay: completedOnDay,
+                    completedOnDay: completedOnDay,
+                    testEndDay: npexDay
+                )
+            ),
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: isolationFromStartOfDay
+            )
+        )
+        
+        TS.assert(store.isolationInfo, equals: expectedIsolationInfo)
+    }
+    
+    func testLoadingConfirmedOnDayFromTestInfoPayloadV2() throws {
+        $instance.encryptedStore.stored["isolation_state_info"] = #"""
+        {
+            "version" : 2,
+            "configuration" : {
+                "indexCaseSinceSelfDiagnosisOnset" : 7,
+                "maxIsolation" : 21,
+                "contactCase" : 14,
+                "indexCaseSinceSelfDiagnosisUnknownOnset" : 5,
+                "housekeepingDeletionPeriod" : 14
+            },
+            "hasAcknowledgedEndOfIsolation": true,
+            "contact" : {
+                "hasAcknowledgedStartOfIsolation": false,
+                "exposureDay" : {
+                    "day" : 11,
+                    "month" : 7,
+                    "year" : 2020
+                },
+                "notificationDay":{
+                    "year": 2020,
+                    "month": 7,
+                    "day": 13
+                }
+            },
+            "test" : {
+                "testResult" : "positive",
+                "requiresConfirmatoryTest" : true,
+                "testEndDay" : {
+                    "day" : 12,
+                    "month" : 7,
+                    "year" : 2020
+                },
+                "acknowledgedDay" : {
+                    "day" : 14,
+                    "month" : 7,
+                    "year" : 2020
+                },
+                "confirmedDay" : {
+                    "day" : 17,
+                    "month" : 7,
+                    "year" : 2020
+                },
+                "confirmatoryTestCompletionStatus": "completedAndConfirmed"
+            }
+        }
+        """# .data(using: .utf8)!
+        
+        let exposureDay = GregorianDay(year: 2020, month: 7, day: 11)
+        let npexDay = GregorianDay(year: 2020, month: 7, day: 12)
+        let isolationFromStartOfDay = GregorianDay(year: 2020, month: 7, day: 13)
+        let testReceivedDay = GregorianDay(year: 2020, month: 7, day: 14)
+        let completedOnDay = GregorianDay(year: 2020, month: 7, day: 17)
+        
+        let expectedIsolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: true,
+            indexCaseInfo: IndexCaseInfo(
+                symptomaticInfo: nil,
+                testInfo: IndexCaseInfo.TestInfo(
+                    result: .positive,
+                    requiresConfirmatoryTest: true,
+                    receivedOnDay: testReceivedDay,
+                    confirmedOnDay: completedOnDay,
+                    completedOnDay: completedOnDay,
+                    testEndDay: npexDay
+                )
+            ),
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: isolationFromStartOfDay
+            )
+        )
+        
+        TS.assert(store.isolationInfo, equals: expectedIsolationInfo)
+    }
+    
+    func testLoadingCompletedOnDayFromTestInfoPayloadV2() throws {
+        $instance.encryptedStore.stored["isolation_state_info"] = #"""
+        {
+            "version" : 2,
+            "configuration" : {
+                "indexCaseSinceSelfDiagnosisOnset" : 7,
+                "maxIsolation" : 21,
+                "contactCase" : 14,
+                "indexCaseSinceSelfDiagnosisUnknownOnset" : 5,
+                "housekeepingDeletionPeriod" : 14
+            },
+            "hasAcknowledgedEndOfIsolation": true,
+            "contact" : {
+                "hasAcknowledgedStartOfIsolation": false,
+                "exposureDay" : {
+                    "day" : 11,
+                    "month" : 7,
+                    "year" : 2020
+                },
+                "notificationDay":{
+                    "year": 2020,
+                    "month": 7,
+                    "day": 13
+                }
+            },
+            "test" : {
+                "testResult" : "positive",
+                "requiresConfirmatoryTest" : true,
+                "testEndDay" : {
+                    "day" : 12,
+                    "month" : 7,
+                    "year" : 2020
+                },
+                "acknowledgedDay" : {
+                    "day" : 14,
+                    "month" : 7,
+                    "year" : 2020
+                },
+                "confirmedDay" : {
+                    "day" : 17,
+                    "month" : 7,
+                    "year" : 2020
+                },
+                "confirmatoryTestCompletionStatus": "completed"
+            }
+        }
+        """# .data(using: .utf8)!
+        
+        let exposureDay = GregorianDay(year: 2020, month: 7, day: 11)
+        let npexDay = GregorianDay(year: 2020, month: 7, day: 12)
+        let isolationFromStartOfDay = GregorianDay(year: 2020, month: 7, day: 13)
+        let testReceivedDay = GregorianDay(year: 2020, month: 7, day: 14)
+        let completedOnDay = GregorianDay(year: 2020, month: 7, day: 17)
+        
+        let expectedIsolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: true,
+            indexCaseInfo: IndexCaseInfo(
+                symptomaticInfo: nil,
+                testInfo: IndexCaseInfo.TestInfo(
+                    result: .positive,
+                    requiresConfirmatoryTest: true,
+                    receivedOnDay: testReceivedDay,
+                    confirmedOnDay: nil,
+                    completedOnDay: completedOnDay,
+                    testEndDay: npexDay
+                )
+            ),
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: isolationFromStartOfDay
+            )
+        )
+        
+        TS.assert(store.isolationInfo, equals: expectedIsolationInfo)
+    }
+    
     func testLoadingConfigurationDefaultsTo10DaysNPEXIfValueMissingV1() {
         $instance.encryptedStore.stored["isolation_state_info"] = #"""
         {
@@ -770,6 +1000,45 @@ class IsolationStateStoreTests: XCTestCase {
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.receivedOnDay, testDay.advanced(by: -4))
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.requiresConfirmatoryTest, true)
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.confirmedOnDay, npexDayConfirmed)
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.completedOnDay, npexDayConfirmed)
+    }
+    
+    func testCompleteTestResultOperation() {
+        let exposureDay = GregorianDay(year: 2020, month: 7, day: 11)
+        let testDay = GregorianDay(year: 2020, month: 7, day: 16)
+        let npexDayCompleted = GregorianDay(year: 2020, month: 7, day: 20)
+        
+        // Given
+        let isolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfIsolation: false,
+            indexCaseInfo: IndexCaseInfo(
+                symptomaticInfo: nil,
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: testDay.advanced(by: -4), testEndDay: testDay)
+            ),
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: .today
+            )
+        )
+        
+        // When
+        store.isolationStateInfo = store.newIsolationStateInfo(
+            from: isolationInfo,
+            for: .negative,
+            testKitType: .labResult,
+            requiresConfirmatoryTest: false,
+            receivedOn: testDay,
+            npexDay: npexDayCompleted,
+            operation: .complete
+        )
+        
+        // THEN
+        XCTAssertNotNil(store.isolationStateInfo?.isolationInfo.contactCaseInfo)
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.receivedOnDay, testDay.advanced(by: -4))
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.requiresConfirmatoryTest, true)
+        XCTAssertNil(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.confirmedOnDay)
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.completedOnDay, npexDayCompleted)
     }
     
     func testIgnoreTestResultOperation() {
@@ -879,5 +1148,117 @@ class IsolationStateStoreTests: XCTestCase {
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.isolationTrigger, .selfDiagnosis(selfDiagnosisDay))
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.receivedOnDay, testDay)
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.requiresConfirmatoryTest, false)
+    }
+    
+    func testDeleteSymptomsTestResultOperation() {
+        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
+        let exposureDay = GregorianDay(year: 2020, month: 7, day: 11)
+        let testDay = GregorianDay(year: 2020, month: 7, day: 13)
+        let npexDay = GregorianDay(year: 2020, month: 7, day: 16)
+        
+        // Given
+        let isolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfIsolation: false,
+            indexCaseInfo: IndexCaseInfo(
+                symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+                testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: npexDay, testEndDay: npexDay)
+            ),
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: .today
+            )
+        )
+        
+        // When
+        store.isolationStateInfo = store.newIsolationStateInfo(
+            from: isolationInfo,
+            for: .positive,
+            testKitType: .labResult,
+            requiresConfirmatoryTest: false,
+            receivedOn: testDay,
+            npexDay: npexDay,
+            operation: .deleteSymptoms
+        )
+        
+        // Then
+        XCTAssertNil(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.symptomaticInfo)
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.isolationTrigger, .manualTestEntry(npexDay: npexDay))
+    }
+    
+    func testDeleteTestTestResultOperation() {
+        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
+        let exposureDay = GregorianDay(year: 2020, month: 7, day: 11)
+        let testDay = GregorianDay(year: 2020, month: 7, day: 13)
+        let npexDay = GregorianDay(year: 2020, month: 7, day: 16)
+        
+        // Given
+        let isolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfIsolation: false,
+            indexCaseInfo: IndexCaseInfo(
+                symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+                testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: npexDay, testEndDay: npexDay)
+            ),
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: .today
+            )
+        )
+        
+        // When
+        store.isolationStateInfo = store.newIsolationStateInfo(
+            from: isolationInfo,
+            for: .positive,
+            testKitType: .labResult,
+            requiresConfirmatoryTest: false,
+            receivedOn: testDay,
+            npexDay: npexDay,
+            operation: .deleteTest
+        )
+        
+        // Then
+        XCTAssertNil(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo)
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.isolationTrigger, .selfDiagnosis(selfDiagnosisDay))
+    }
+    
+    func testCompleteAndDeleteSymptomsTestResultOperation() {
+        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
+        let exposureDay = GregorianDay(year: 2020, month: 7, day: 11)
+        let testDay = GregorianDay(year: 2020, month: 7, day: 16)
+        let npexDayCompleted = GregorianDay(year: 2020, month: 7, day: 20)
+        
+        // Given
+        let isolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfIsolation: false,
+            indexCaseInfo: IndexCaseInfo(
+                symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: testDay.advanced(by: -4), testEndDay: testDay)
+            ),
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: .today
+            )
+        )
+        
+        // When
+        store.isolationStateInfo = store.newIsolationStateInfo(
+            from: isolationInfo,
+            for: .negative,
+            testKitType: .labResult,
+            requiresConfirmatoryTest: false,
+            receivedOn: testDay,
+            npexDay: npexDayCompleted,
+            operation: .completeAndDeleteSymptoms
+        )
+        
+        // THEN
+        XCTAssertNotNil(store.isolationStateInfo?.isolationInfo.contactCaseInfo)
+        XCTAssertNil(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.symptomaticInfo)
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.receivedOnDay, testDay.advanced(by: -4))
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.requiresConfirmatoryTest, true)
+        XCTAssertNil(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.confirmedOnDay)
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.completedOnDay, npexDayCompleted)
     }
 }

@@ -22,13 +22,23 @@ private class ContactCaseAcknowledgementContent: PrimaryButtonStickyFooterScroll
     
     public init(interactor: Interacting,
                 isolationEndDate: Date,
-                type: ContactCaseAcknowledgementViewController.ContactCaseType,
                 showDailyContactTesting: Bool) {
         self.interactor = interactor
         duration = LocalDay.today.daysRemaining(until: isolationEndDate)
         
-        let pleaseIsolateStack = type.pleaseIsolateStack(duration: duration)
-        pleaseIsolateStack.accessibilityLabel = type.pleaseIsolateAccessibilityLabel(duration: duration)
+        let pleaseIsolateStack =
+            UIStackView(arrangedSubviews: [
+                BaseLabel()
+                    .styleAsHeading()
+                    .set(text: localize(.exposure_acknowledgement_self_isolate_for))
+                    .centralized(),
+                BaseLabel()
+                    .styleAsPageHeader()
+                    .set(text: localize(.exposure_acknowledgement_days(days: duration)))
+                    .centralized(),
+            ])
+        
+        pleaseIsolateStack.accessibilityLabel = localize(.exposure_acknowledgement_please_isolate_accessibility_label(days: duration))
         pleaseIsolateStack.axis = .vertical
         pleaseIsolateStack.isAccessibilityElement = true
         pleaseIsolateStack.accessibilityTraits = [.header, .staticText]
@@ -37,8 +47,9 @@ private class ContactCaseAcknowledgementContent: PrimaryButtonStickyFooterScroll
             UIImageView(.isolationStartContact)
                 .styleAsDecoration(),
             pleaseIsolateStack,
-            InformationBox.indication.warning(type.warning),
-            type.content,
+            InformationBox.indication.warning(localize(.exposure_acknowledgement_warning)),
+            localizeAndSplit(.exposure_acknowledgement_explaination)
+                .map { BaseLabel().styleAsBody().set(text: String($0)) },
             LinkButton(
                 title: localize(.exposure_faqs_link_button_title),
                 action: interactor.exposureFAQsLinkTapped
@@ -69,25 +80,19 @@ private class ContactCaseAcknowledgementContent: PrimaryButtonStickyFooterScroll
             action: interactor.acknowledge
         ))
     }
+    
 }
 
 public class ContactCaseAcknowledgementViewController: StickyFooterScrollingContentViewController {
     public typealias Interacting = ContactCaseAcknowledgementViewControllerInteracting
     
-    public enum ContactCaseType {
-        case exposureDetection
-        case riskyVenue
-    }
-    
     public init(interactor: Interacting,
                 isolationEndDate: Date,
-                type: ContactCaseType,
                 showDailyContactTesting: Bool) {
         super.init(
             content: ContactCaseAcknowledgementContent(
                 interactor: interactor,
                 isolationEndDate: isolationEndDate,
-                type: type,
                 showDailyContactTesting: showDailyContactTesting
             ))
     }
@@ -99,68 +104,5 @@ public class ContactCaseAcknowledgementViewController: StickyFooterScrollingCont
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: false)
-    }
-}
-
-extension ContactCaseAcknowledgementViewController.ContactCaseType {
-    
-    func pleaseIsolateStack(duration: Int) -> UIStackView {
-        switch self {
-        case .exposureDetection:
-            return UIStackView(arrangedSubviews: [
-                BaseLabel()
-                    .styleAsHeading()
-                    .set(text: localize(.exposure_acknowledgement_self_isolate_for))
-                    .centralized(),
-                BaseLabel()
-                    .styleAsPageHeader()
-                    .set(text: localize(.exposure_acknowledgement_days(days: duration)))
-                    .centralized(),
-            ])
-        case .riskyVenue:
-            return UIStackView(arrangedSubviews: [
-                BaseLabel()
-                    .styleAsHeading()
-                    .set(text: localize(.exposure_acknowledgement_self_isolate_for))
-                    .centralized(),
-                BaseLabel()
-                    .styleAsPageHeader()
-                    .set(text: localize(.exposure_acknowledgement_days(days: duration)))
-                    .centralized(),
-                BaseLabel()
-                    .styleAsHeading()
-                    .set(text: localize(.risky_venue_isolation_report_symptoms))
-                    .centralized(),
-            ])
-        }
-    }
-    
-    func pleaseIsolateAccessibilityLabel(duration: Int) -> String {
-        switch self {
-        case .exposureDetection:
-            return localize(.exposure_acknowledgement_please_isolate_accessibility_label(days: duration))
-        case .riskyVenue:
-            return localize(.risky_venue_isolation_title_accessibility(days: duration))
-        }
-    }
-    
-    var warning: String {
-        switch self {
-        case .exposureDetection:
-            return localize(.exposure_acknowledgement_warning)
-        case .riskyVenue:
-            return localize(.risky_venue_isolation_warning)
-        }
-    }
-    
-    var content: [UIView] {
-        switch self {
-        case .exposureDetection:
-            return localizeAndSplit(.exposure_acknowledgement_explaination)
-                .map { BaseLabel().styleAsBody().set(text: String($0)) }
-        case .riskyVenue:
-            return localizeAndSplit(.risky_venue_isolation_description)
-                .map { BaseLabel().styleAsBody().set(text: String($0)) }
-        }
     }
 }

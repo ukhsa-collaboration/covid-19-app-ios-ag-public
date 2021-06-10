@@ -20,14 +20,14 @@ public struct Isolation: Equatable {
         var optOutOfIsolationDay: GregorianDay?
     }
     
-    struct Reason: Equatable {
+    public struct Reason: Equatable {
         var indexCaseInfo: IsolationIndexCaseInfo?
         var contactCaseInfo: Isolation.ContactCaseInfo?
     }
     
     public var fromDay: LocalDay
     public var untilStartOfDay: LocalDay
-    var reason: Isolation.Reason
+    public var reason: Isolation.Reason
     
     init(fromDay: LocalDay, untilStartOfDay: LocalDay, reason: Isolation.Reason) {
         self.fromDay = fromDay
@@ -44,7 +44,7 @@ extension Isolation {
 
 extension Isolation {
     public var canFillQuestionnaire: Bool {
-        !isIndexCase
+        !isSelfDiagnosed
     }
     
     public var hasConfirmedPositiveTestResult: Bool {
@@ -64,7 +64,7 @@ extension Isolation {
         return isContactCase && !isIndexCase
     }
     
-    var hasPositiveTestResult: Bool {
+    public var hasPositiveTestResult: Bool {
         return reason.indexCaseInfo?.hasPositiveTestResult ?? false
     }
     

@@ -12,11 +12,13 @@ public enum TestResultAcknowledgementState {
     case neededForNegativeResultContinueToIsolate(acknowledge: () -> Void, isolationEndDate: Date)
     case neededForNegativeResultNotIsolating(acknowledge: () -> Void)
     case neededForNegativeAfterPositiveResultContinueToIsolate(acknowledge: () -> Void, isolationEndDate: Date)
-    case neededForPositiveResultStartToIsolate(acknowledge: () -> Void, isolationEndDate: Date, requiresConfirmatoryTest: Bool)
+    case neededForPositiveResultStartToIsolate(acknowledge: () -> Void, isolationEndDate: Date)
     case neededForPositiveResultContinueToIsolate(acknowledge: () -> Void, isolationEndDate: Date, requiresConfirmatoryTest: Bool)
     case neededForPositiveResultNotIsolating(acknowledge: () -> Void)
     case neededForVoidResultContinueToIsolate(acknowledge: () -> Void, isolationEndDate: Date)
     case neededForVoidResultNotIsolating(acknowledge: () -> Void)
+    case neededForPlodResult(acknowledge: () -> Void)
+    case neededForUnknownResult(acknowledge: () -> Void, openAppStore: () -> Void)
     
     init(
         result: VirologyStateTestResult,
@@ -35,8 +37,7 @@ public enum TestResultAcknowledgementState {
         case (.positive, .isolating(let isolation, _, _)):
             self = TestResultAcknowledgementState.neededForPositiveResultStartToIsolate(
                 acknowledge: completionHandler,
-                isolationEndDate: isolation.endDate,
-                requiresConfirmatoryTest: result.requiresConfirmatoryTest
+                isolationEndDate: isolation.endDate
             )
         case (.positive, _):
             self = TestResultAcknowledgementState.neededForPositiveResultNotIsolating(
@@ -68,6 +69,10 @@ public enum TestResultAcknowledgementState {
             )
         case (.void, _):
             self = TestResultAcknowledgementState.neededForVoidResultNotIsolating(
+                acknowledge: completionHandler
+            )
+        case (.plod, _):
+            self = TestResultAcknowledgementState.neededForPlodResult(
                 acknowledge: completionHandler
             )
         }

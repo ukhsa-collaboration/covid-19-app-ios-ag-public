@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -25,6 +25,11 @@ extension XCUIElementQuery {
     
     subscript<T: RawRepresentable>(key key: T) -> XCUIElement where T.RawValue == String {
         elementWithText(key.rawValue)
+    }
+    
+    func element(containing string: String) -> XCUIElement {
+        let text = string.utf16.count < 128 ? string : String(string.prefix(80))
+        return element(matching: NSPredicate(format: "label CONTAINS %@", text))
     }
     
     private func elementWithText(_ string: String) -> XCUIElement {

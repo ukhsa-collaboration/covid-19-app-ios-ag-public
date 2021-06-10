@@ -6,6 +6,7 @@ import Common
 import Scenarios
 import TestSupport
 import XCTest
+import Combine
 @testable import Domain
 
 class CachedResponseTests: XCTestCase {
@@ -19,6 +20,7 @@ class CachedResponseTests: XCTestCase {
             var stored: FileStored<Data>
             var name = String.random()
             var initialValue = HTTPResponse.ok(with: .untyped(.random()))
+            var updatedSubject = CurrentValueSubject<(old: HTTPResponse?,new: HTTPResponse?)?, Never>(nil)
             
             public init() {
                 let fileManager = FileManager()
@@ -30,21 +32,25 @@ class CachedResponseTests: XCTestCase {
             }
         }
         
-        var cached: CachedResponse<HTTPResponse>
-        
+        let cached: CachedResponse<HTTPResponse>
+        let configuration: Configuration
+
         init(configuration: Configuration) {
-            cached = CachedResponse(
+            self.configuration = configuration
+            self.cached = CachedResponse(
                 httpClient: configuration.httpClient,
                 endpoint: configuration.endpoint,
                 storage: configuration.storage,
                 name: configuration.name,
-                initialValue: configuration.initialValue
+                initialValue: configuration.initialValue,
+                updatedSubject: configuration.updatedSubject
             )
         }
     }
     
     @Propped
     private var instance: Instance
+    private var cancellable: AnyCancellable?
     
     private var cached: CachedResponse<HTTPResponse> {
         instance.cached
@@ -64,7 +70,17 @@ class CachedResponseTests: XCTestCase {
     func testUpdating() throws {
         let response = HTTPResponse.ok(with: .untyped(.random()))
         $instance.httpClient.response = .success(response)
+        
+        var changed = false
+        cancellable = instance.configuration.updatedSubject.sink(receiveValue: { (update: (old: HTTPResponse?, new: HTTPResponse?)?) in
+            if update?.old != nil, update?.new != nil {
+                changed = true
+            }
+        })
+
         _ = try cached.update().await()
+        
+        TS.assert(changed, equals: true)
         
         TS.assert($instance.httpClient.lastRequest, equals: $instance.endpoint._request)
         TS.assert(cached.value, equals: response)

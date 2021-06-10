@@ -1,23 +1,27 @@
 //
-// Copyright © 2021 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import SwiftUI
 
 public extension Text {
     func styleAsBody() -> Text {
-        self
-            .font(.body)
+        font(.body)
             .foregroundColor(Color(.primaryText))
     }
+    
+    func styleAsSecondaryBody() -> Text {
+        font(.body)
+            .foregroundColor(Color(.secondaryText))
+    }
+    
     func styleAsHeading() -> Text {
-        self
-            .font(.headline)
+        font(.headline)
             .foregroundColor(Color(.primaryText))
     }
+    
     func styleAsSecondaryHeading() -> Text {
-        self
-            .font(.headline)
+        font(.headline)
             .foregroundColor(Color(.secondaryText))
     }
 }

@@ -27,11 +27,6 @@ struct VirologyTestResultEndpoint: HTTPEndpoint {
             decoder.dateDecodingStrategy = .appNetworking
             let payload = try decoder.decode(ResponseBody.self, from: response.body.content)
             
-            if payload.requiresConfirmatoryTest && payload.diagnosisKeySubmissionSupported {
-                signpostReceivedViaPolling(payload)
-                throw VirologyTestResultResponseError.unconfirmedKeySharingNotSupported
-            }
-            
             if payload.requiresConfirmatoryTest && payload.testResult != .positive {
                 signpostReceivedViaPolling(payload)
                 throw VirologyTestResultResponseError.unconfirmedNonPostiveNotSupported
@@ -82,6 +77,7 @@ private struct ResponseBody: Codable {
         case positive = "POSITIVE"
         case negative = "NEGATIVE"
         case void = "VOID"
+        case plod = "PLOD"
     }
     
     enum TestKitType: String, Codable {
@@ -106,6 +102,8 @@ private extension VirologyTestResult.TestResult {
             self = .positive
         case .void:
             self = .void
+        case .plod:
+            self = .plod
         }
     }
 }

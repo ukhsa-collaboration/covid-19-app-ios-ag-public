@@ -20,6 +20,7 @@ struct VirologyTestResult: Equatable {
         case positive
         case negative
         case void
+        case plod
     }
     
     enum TestKitType: Equatable {
@@ -42,4 +43,5 @@ struct LinkVirologyTestResultResponse: Equatable {
     var virologyTestResult: VirologyTestResult
     var diagnosisKeySubmissionSupport: DiagnosisKeySubmissionSupport
     var requiresConfirmatoryTest: Bool
+    var confirmatoryDayLimit: Int?
 }

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -14,7 +14,7 @@ struct PositiveTestResultContinueIsolationScreen {
     }
     
     var indicationLabel: XCUIElement {
-        app.staticTexts[localized: .positive_test_result_info]
+        app.staticTexts[localized: .positive_test_result_start_to_isolate_info]
     }
     
     var explanationLabel: XCUIElement {

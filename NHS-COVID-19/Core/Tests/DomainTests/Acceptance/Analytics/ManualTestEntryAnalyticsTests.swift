@@ -201,8 +201,6 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             XCTFail("Expected .enabled to be returned from dailyContactTestingEarlyTerminationSupport")
         }
         assertOnFields { assertField in
-            assertField.isPresent(\.isIsolatingBackgroundTick)
-            assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
             assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
             assertField.equals(expected: 1, \.declaredNegativeResultFromDCT)
         }

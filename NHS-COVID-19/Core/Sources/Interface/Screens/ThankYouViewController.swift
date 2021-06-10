@@ -13,6 +13,7 @@ public protocol ThankYouViewControllerInteracting {
 public class ThankYouViewController: UIViewController {
     public enum ViewType {
         case completed
+        case stillNeedToBookATest
     }
     
     public static func viewController(for type: ViewType, interactor: Interacting) -> ThankYouViewController {
@@ -21,6 +22,12 @@ public class ThankYouViewController: UIViewController {
             return ThankYouViewController(
                 headingText: localize(.link_test_result_thank_you_title),
                 buttonText: localize(.link_test_result_thank_you_back_home_button),
+                interactor: interactor
+            )
+        case .stillNeedToBookATest:
+            return ThankYouViewController(
+                headingText: localize(.link_test_result_thank_you_title),
+                buttonText: localize(.link_test_result_thank_you_continue_to_book_a_test_button),
                 interactor: interactor
             )
         }

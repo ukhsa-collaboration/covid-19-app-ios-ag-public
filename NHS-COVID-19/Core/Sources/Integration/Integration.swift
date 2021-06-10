@@ -118,32 +118,6 @@ extension CoordinatedAppController {
         }
     }
     
-    private func createBookFollowUpTestFlow(
-        acknowledge: @escaping () -> Void,
-        context: RunningAppContext,
-        isolation: NonNegativeTestResultWithIsolationViewController.TestResultType.Isolation,
-        isolationEndDate: Date
-    ) -> UIViewController {
-        let navigationVC = BaseNavigationController()
-        
-        let positiveTestInteractor = PositiveTestResultWithIsolationInteractor(
-            openURL: context.openURL,
-            didTapPrimaryButton: { [showBookATest] in
-                showBookATest.value = true
-                acknowledge()
-            },
-            didTapCancel: acknowledge
-        )
-        
-        let nonNegativeVC = NonNegativeTestResultWithIsolationViewController(
-            interactor: positiveTestInteractor,
-            isolationEndDate: isolationEndDate,
-            testResultType: .positive(isolation: isolation, requiresConfirmatoryTest: true)
-        )
-        navigationVC.viewControllers = [nonNegativeVC]
-        return navigationVC
-    }
-    
     private func createNonNegativeTestResultWithIsolationAcknowledgement(
         acknowledge: @escaping () -> Void,
         context: RunningAppContext,
@@ -190,23 +164,13 @@ extension CoordinatedAppController {
         context: RunningAppContext
     ) -> UIViewController {
         switch state {
-            
-        case .neededForPositiveResultStartToIsolate(let acknowledge, let isolationEndDate, let requiresConfirmatoryTest):
-            if requiresConfirmatoryTest {
-                return createBookFollowUpTestFlow(
-                    acknowledge: acknowledge,
-                    context: context,
-                    isolation: .start,
-                    isolationEndDate: isolationEndDate
-                )
-            } else {
-                return createNonNegativeTestResultWithIsolationAcknowledgement(
-                    acknowledge: acknowledge,
-                    context: context,
-                    isolation: .start,
-                    isolationEndDate: isolationEndDate
-                )
-            }
+        case .neededForPositiveResultStartToIsolate(let acknowledge, let isolationEndDate):
+            return createNonNegativeTestResultWithIsolationAcknowledgement(
+                acknowledge: acknowledge,
+                context: context,
+                isolation: .start,
+                isolationEndDate: isolationEndDate
+            )
             
         case .neededForPositiveResultContinueToIsolate(let acknowledge, let isolationEndDate, let requiresConfirmatoryTest):
             if case .isolate(let isolation) = context.isolationState.currentValue,
@@ -222,20 +186,11 @@ extension CoordinatedAppController {
                 )
             }
             
-            if requiresConfirmatoryTest {
-                return createBookFollowUpTestFlow(
-                    acknowledge: acknowledge,
-                    context: context,
-                    isolation: .continue,
-                    isolationEndDate: isolationEndDate
-                )
-            } else {
-                return createNonNegativeTestResultWithIsolationAcknowledgement(
-                    acknowledge: acknowledge,
-                    context: context, isolation: .continue,
-                    isolationEndDate: isolationEndDate
-                )
-            }
+            return createNonNegativeTestResultWithIsolationAcknowledgement(
+                acknowledge: acknowledge,
+                context: context, isolation: .continue,
+                isolationEndDate: isolationEndDate
+            )
             
         case .neededForPositiveResultNotIsolating(let acknowledge):
             let interactor = PositiveTestResultNoIsolationInteractor(
@@ -271,7 +226,6 @@ extension CoordinatedAppController {
             return ContactCaseAcknowledgementViewController(
                 interactor: interactor,
                 isolationEndDate: isolationEndDate,
-                type: .exposureDetection,
                 showDailyContactTesting: showDailyContactTesting
             )
             
@@ -362,13 +316,21 @@ extension CoordinatedAppController {
                 setOnsetDay: setOnsetDay,
                 recordDidHaveSymptoms: didConfirmSymptoms
             )
+            
+        case .neededForPlodResult(interactor: let interactor):
+            let plodTestResultVC = PlodTestResultViewController(interactor: interactor)
+            return plodTestResultVC
+            
+        case .neededForUnknownResult(interactor: let interactor):
+            let unknownTestResultVC = UnknownTestResultsViewController(interactor: interactor)
+            return BaseNavigationController(rootViewController: unknownTestResultVC)
         }
     }
     
     private func postAcknowledgementViewController(
         with context: RunningAppContext
     ) -> UIViewController {
-        WrappingViewController { [showBookATest, showContactTracingHub] in
+        WrappingViewController { [showBookATest, showContactTracingHub, showLocalInfoScreen] in
             Localization.configurationChangePublisher
                 .map { _ in true }
                 .prepend(false)
@@ -377,7 +339,8 @@ extension CoordinatedAppController {
                         context: context,
                         shouldShowLanguageSelectionScreen: value,
                         showBookATest: showBookATest,
-                        showContactTracingHub: showContactTracingHub
+                        showContactTracingHub: showContactTracingHub,
+                        showLocalInfoScreen: showLocalInfoScreen
                     )
                 }
         }
@@ -537,17 +500,5 @@ private struct UnrecoverableErrorViewControllerInteractor: UnrecoverableErrorVie
     
     func faqLinkTapped() {
         openURL(ExternalLink.cantRunThisAppFAQs.url)
-    }
-}
-
-private struct ThankYouInteractor: ThankYouViewController.Interacting {
-    private let _action: () -> Void
-    
-    init(action: @escaping () -> Void) {
-        _action = action
-    }
-    
-    func action() {
-        _action()
     }
 }

@@ -37,14 +37,12 @@ public struct CheckInContext {
         .domainProperty()
     }
     
-    func makeBackgroundJobs(metricsFrequency: Double, housekeepingFrequency: Double) -> [BackgroundTaskAggregator.Job] {
+    func makeBackgroundJobs() -> [BackgroundTaskAggregator.Job] {
         [
             BackgroundTaskAggregator.Job(
-                preferredFrequency: metricsFrequency,
                 work: recordMetrics
             ),
             BackgroundTaskAggregator.Job(
-                preferredFrequency: housekeepingFrequency,
                 work: riskyVenueConfiguration.update
             ),
         ]

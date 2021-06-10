@@ -70,7 +70,7 @@ class ExposureKeysManagerTests: XCTestCase {
             currentDateProvider: MockDateProvider(getDate: { today.startDate(in: .current) })
         )
         
-        _ = try manager.sendKeys(for: onsetDay, token: DiagnosisKeySubmissionToken(value: String.random()), acknowledgementDay: today).await()
+        _ = try manager.sendKeys(for: onsetDay, token: DiagnosisKeySubmissionToken(value: String.random()), acknowledgementDay: today, flowType: .initial).await()
         
         let requestBody = try XCTUnwrap(client.lastRequest?.body)
         let decoder = JSONDecoder()
@@ -104,7 +104,7 @@ class ExposureKeysManagerTests: XCTestCase {
             currentDateProvider: MockDateProvider(getDate: { today.startDate(in: .current) })
         )
         
-        _ = try manager.sendKeys(for: onsetDay, token: DiagnosisKeySubmissionToken(value: String.random()), acknowledgementDay: acknowledgementDay).await()
+        _ = try manager.sendKeys(for: onsetDay, token: DiagnosisKeySubmissionToken(value: String.random()), acknowledgementDay: acknowledgementDay, flowType: .initial).await()
         
         let requestBody = try XCTUnwrap(client.lastRequest?.body)
         let decoder = JSONDecoder()
@@ -143,7 +143,7 @@ class ExposureKeysManagerTests: XCTestCase {
             currentDateProvider: MockDateProvider(getDate: { today.startDate(in: .current) })
         )
         
-        _ = try manager.sendKeys(for: onsetDay, token: DiagnosisKeySubmissionToken(value: String.random()), acknowledgementDay: acknowledgementDay).await()
+        _ = try manager.sendKeys(for: onsetDay, token: DiagnosisKeySubmissionToken(value: String.random()), acknowledgementDay: acknowledgementDay, flowType: .initial).await()
         
         let requestBody = try XCTUnwrap(client.lastRequest?.body)
         let decoder = JSONDecoder()

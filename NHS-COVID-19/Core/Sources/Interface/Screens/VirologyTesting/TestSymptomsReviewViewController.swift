@@ -112,7 +112,7 @@ public class TestSymptomsReviewViewController: UIViewController {
     
     private lazy var textField: UITextField = BaseTextField()
     
-    private var confirmButton: UIButton = {
+    private lazy var confirmButton: UIButton = {
         let confirmButton = UIButton()
         confirmButton.styleAsPrimary()
         confirmButton.setTitle(localize(.test_symptoms_date_continue), for: .normal)

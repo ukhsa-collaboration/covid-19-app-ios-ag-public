@@ -60,7 +60,6 @@ class IsolationModelAcceptanceTests: AcceptanceTestCase {
     
     /// Tests that after storing each reachable state, and triggering each possible event for that state, the app reaches the correct state.
     func testAppHasCorrectTransitions() throws {
-        let adapter = IsolationModelAdapter()
         
         let validTransitions = IsolationModelCurrentRuleSet.validTransitions
         
@@ -68,6 +67,7 @@ class IsolationModelAcceptanceTests: AcceptanceTestCase {
         
         for transition in validTransitions {
             do {
+                let adapter = IsolationModelAdapter(anticipating: transition.event)
                 let storeRepresentations = try adapter.storeRepresentations(for: transition.initialState)
                 guard !storeRepresentations.isEmpty else {
                     throw TestError("`storeRepresentations` must not be empty. Throw an appropriate error to indicate why this is empty.")
@@ -82,11 +82,24 @@ class IsolationModelAcceptanceTests: AcceptanceTestCase {
                     $instance.encryptedStore.stored["isolation_state_info"] = Data(storeRepresentation.utf8)
                     
                     try completeRunning()
-                    try trigger(transition.event, adapter: &caseAdapter)
-                    print(transition.initialState)
-                    print(transition.event)
-                    print(transition.finalState)
                     let context = try self.context()
+                    
+                    // Even though there’s a dedicated test for this, let’s verify initial state again.
+                    // It adds clarity, but also could catch potential issues arising from the adapter init being
+                    // dependent on `transition.event`.
+                    try caseAdapter.verify(context, isIn: transition.initialState)
+                    
+                    print("-------------------------------------------")
+                    print(String(data: $instance.encryptedStore.stored["isolation_state_info"]!, encoding: .utf8)!)
+                    print(transition.initialState)
+                    
+                    print(transition.event)
+                    try trigger(transition.event, adapter: &caseAdapter, initialState: transition.initialState)
+                    
+                    print(transition.finalState)
+                    print(String(data: $instance.encryptedStore.stored["isolation_state_info"] ?? Data(), encoding: .utf8)!)
+                    print("-------------------------------------------")
+                    
                     try caseAdapter.verify(context, isIn: transition.finalState)
                 }
             } catch is IsolationModelUndefinedMappingError {

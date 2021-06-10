@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import XCTest
@@ -15,7 +15,7 @@ class PositiveTestResultStartIsolationScreenTests: XCTestCase {
             let screen = PositiveTestResultStartIsolationScreen(app: app)
             XCTAssert(screen.daysIsolateLabel(daysRemaining: runner.scenario.daysToIsolate).exists)
             XCTAssert(screen.indicationLabel.exists)
-            XCTAssert(screen.explanationLabel.exists)
+            XCTAssert(screen.explanationLabels.allExist)
             XCTAssert(screen.onlineServicesLink.exists)
             XCTAssert(screen.exposureFAQLink.exists)
             XCTAssert(screen.continueButton.exists)

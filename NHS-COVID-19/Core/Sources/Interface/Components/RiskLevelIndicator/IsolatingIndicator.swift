@@ -7,18 +7,24 @@ import SwiftUI
 
 public struct IsolatingIndicator: View {
     
-    @Environment(\.accessibilityReduceMotion) var reduceMotion
-    
+    private var animationDisabled: Bool
     private var isDetectionPaused: Bool
     private let remainingDays: Int
     private let date: Date
     private let percentRemaining: Double
     
-    fileprivate init(remainingDays: Int, percentRemaining: Double, date: Date, isDetectionPaused: Bool) {
+    fileprivate init(
+        remainingDays: Int,
+        percentRemaining: Double,
+        date: Date,
+        isDetectionPaused: Bool,
+        animationDisabled: Bool
+    ) {
         self.remainingDays = remainingDays
         self.date = date
         self.isDetectionPaused = isDetectionPaused
         self.percentRemaining = percentRemaining
+        self.animationDisabled = animationDisabled
     }
     
     struct Arc: Shape {
@@ -75,7 +81,7 @@ public struct IsolatingIndicator: View {
                 .fixedSize(horizontal: false, vertical: true)
             
             ZStack(alignment: .center) {
-                if self.reduceMotion || isDetectionPaused || shouldDegradeAnimation {
+                if animationDisabled || isDetectionPaused || shouldDegradeAnimation {
                     Circle()
                         .foregroundColor(Color(.errorRed))
                         .opacity(0.05)
@@ -119,7 +125,21 @@ public struct IsolatingIndicator: View {
 }
 
 extension RiskLevelIndicator {
-    static func makeIsolatingIndicator(days: Int, percentRemaining: Double, date: Date, isDetectionPaused: Bool) -> AnyView {
-        AnyView(IsolatingIndicator(remainingDays: days, percentRemaining: percentRemaining, date: date, isDetectionPaused: isDetectionPaused))
+    static func makeIsolatingIndicator(
+        days: Int,
+        percentRemaining: Double,
+        date: Date,
+        isDetectionPaused: Bool,
+        animationDisabled: Bool
+    ) -> AnyView {
+        AnyView(
+            IsolatingIndicator(
+                remainingDays: days,
+                percentRemaining: percentRemaining,
+                date: date,
+                isDetectionPaused: isDetectionPaused,
+                animationDisabled: animationDisabled
+            )
+        )
     }
 }

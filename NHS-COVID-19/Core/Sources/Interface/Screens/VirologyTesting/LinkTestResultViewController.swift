@@ -7,7 +7,9 @@ import Localization
 import SwiftUI
 
 public protocol LinkTestResultViewControllerInteracting {
+    func cancel()
     func submit(testCode: String, isCheckBoxChecked: Bool?) -> AnyPublisher<Void, LinkTestValidationError>
+    func reportRapidTestResultsOnGovDotUKTapped()
     var shouldShowDCTInfoView: Bool { get }
 }
 
@@ -15,6 +17,7 @@ public enum LinkTestValidationError: Error {
     case testCode(DisplayableError)
     case testCodeEnteredAndCheckBoxChecked
     case noneEntered
+    case decodeFailed
 }
 
 public class LinkTestResultViewController: UIViewController {
@@ -31,11 +34,34 @@ public class LinkTestResultViewController: UIViewController {
         return label
     }()
     
-    private lazy var descriptionLabel: UILabel = {
+    private lazy var yourTestResultShouldLabel: UILabel = {
         let label = BaseLabel()
         label.styleAsBody()
-        label.text = localize(.link_test_result_description)
+        label.text = localize(.link_test_result_your_test_result_code_should)
         return label
+    }()
+    
+    private lazy var yourTestResultShouldList: BulletedList = {
+        let rows = localizeAndSplit(.link_test_result_your_test_result_code_bullets)
+        let bulletedList = BulletedList(symbolProperties: SymbolProperties(type: .fullCircle, size: .halfSpacing, color: .nhsBlue), rows: rows)
+        return bulletedList
+    }()
+    
+    private lazy var ifYouAreTryingToEnterARapidTestCodeLabel: UILabel = {
+        let label = BaseLabel()
+        label.styleAsBody()
+        label.text = localize(.link_test_result_if_you_are_trying_to_enter_a_rapid_result_code)
+        return label
+    }()
+    
+    private lazy var reportYourResultOnGovDotUKLink: LinkButton = {
+        let linkButton = LinkButton(
+            title: localize(.link_test_result_report_on_gov_dot_uk),
+            accessoryImage: UIImage(.externalLink),
+            externalLink: true,
+            action: interactor.reportRapidTestResultsOnGovDotUKTapped
+        )
+        return linkButton
     }()
     
     private lazy var headingLabel: UILabel = {
@@ -137,6 +163,8 @@ public class LinkTestResultViewController: UIViewController {
             case .none:
                 topErrorBoxView = nil
                 hideCodeEntryError()
+            case .decodeFailed:
+                break
             }
         }
     }
@@ -163,10 +191,10 @@ public class LinkTestResultViewController: UIViewController {
         topErrorBoxView?.backgroundColor = .clear
     }
     
-    func stack(for labels: [UILabel]) -> UIStackView {
-        let stackView = UIStackView(arrangedSubviews: labels)
+    func stack(for views: [UIView]) -> UIStackView {
+        let stackView = UIStackView(arrangedSubviews: views)
         stackView.axis = .vertical
-        stackView.spacing = .standardSpacing
+        stackView.spacing = .halfSpacing
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.layoutMargins = .inner
         return stackView
@@ -221,7 +249,11 @@ public class LinkTestResultViewController: UIViewController {
         view.styleAsScreenBackground(with: traitCollection)
         
         var content = [
-            stack(for: [titleLabel, descriptionLabel]),
+            stack(for: [titleLabel]),
+            stack(for: [yourTestResultShouldLabel,
+                        yourTestResultShouldList]),
+            stack(for: [ifYouAreTryingToEnterARapidTestCodeLabel,
+                        reportYourResultOnGovDotUKLink]),
             informationBox,
         ]
         
@@ -327,7 +359,7 @@ public class LinkTestResultViewController: UIViewController {
     }
     
     @objc private func didTapCancel() {
-        dismiss(animated: true)
+        interactor.cancel()
     }
 }
 

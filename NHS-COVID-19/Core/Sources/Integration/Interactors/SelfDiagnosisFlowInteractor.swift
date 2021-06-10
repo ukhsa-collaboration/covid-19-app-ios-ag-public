@@ -14,6 +14,9 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
     let orderTest: () -> Void
     let symptomMapper = SymptomMapping()
     let openURL: (URL) -> Void
+    #warning("Use domain model")
+    // We directly import `Domain` here. There's no need to go via an `Interface` type.
+    let initialIsolationState: Interface.IsolationState
     
     func fetchQuestionnaire() -> AnyPublisher<InterfaceSymptomsQuestionnaire, Error> {
         selfDiagnosisManager.fetchQuestionnaire()
@@ -31,16 +34,39 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
             .eraseToAnyPublisher()
     }
     
-    func evaluateSymptoms(riskThreshold: Double, symptoms: [SymptomInfo], onsetDay: GregorianDay?) -> Date? {
-        switch _evaluateSymptoms(riskThreshold: riskThreshold, symptoms: symptoms, onsetDay: onsetDay) {
-        case .isolate(let isolation):
-            return isolation.endDate
-        case .noNeedToIsolate:
-            return nil
+    func advice(basedOn symptoms: [SymptomInfo], onsetDay: GregorianDay?, riskThreshold: Double) -> SelfDiagnosisAdvice {
+        #warning("Simplify this.")
+        // Start pushing down use of the unstructured `(Date?, Bool?)` type and eventually remove it.
+        let state = evaluateSymptoms(riskThreshold: riskThreshold, symptoms: symptoms, onsetDay: onsetDay)
+        if let isolationEndDate = state.0 {
+            switch state.1 {
+            case .none:
+                return .hasSymptoms(.isolate(.hasNoTests, endDate: isolationEndDate))
+            case .some(true):
+                return .hasSymptoms(.isolate(.hasTestsButShouldUseSymptoms, endDate: isolationEndDate))
+            case .some(false):
+                return .hasSymptoms(.followAdviceForExistingPositiveTest)
+            }
+        } else {
+            return .noSymptoms(.init(initialIsolationState))
         }
     }
     
-    private func _evaluateSymptoms(riskThreshold: Double, symptoms: [SymptomInfo], onsetDay: GregorianDay?) -> Domain.IsolationState {
+    var adviceWhenNoSymptomsAreReported: SelfDiagnosisAdvice {
+        .noSymptoms(.init(initialIsolationState))
+    }
+    
+    private func evaluateSymptoms(riskThreshold: Double, symptoms: [SymptomInfo], onsetDay: GregorianDay?) -> (Date?, Bool?) {
+        let isolationState = _evaluateSymptoms(riskThreshold: riskThreshold, symptoms: symptoms, onsetDay: onsetDay)
+        switch isolationState.0 {
+        case .isolate(let isolation):
+            return (isolation.endDate, isolationState.1)
+        case .noNeedToIsolate:
+            return (nil, isolationState.1)
+        }
+    }
+    
+    private func _evaluateSymptoms(riskThreshold: Double, symptoms: [SymptomInfo], onsetDay: GregorianDay?) -> (Domain.IsolationState, Bool?) {
         let domainSymptoms = symptoms.map { interfaceSymptom in
             (symptomMapper.domainSymptomFrom(interfaceSymptom: interfaceSymptom), interfaceSymptom.isConfirmed)
         }
@@ -87,4 +113,19 @@ extension SelfDiagnosisFlowInteractor: BookATestInfoViewControllerInteracting {
     public func didTapBookATestForSomeoneElse() {
         openURL(ExternalLink.bookATestForSomeoneElse.url)
     }
+}
+
+private extension SelfDiagnosisAdvice.NoSymptomsAdviceDetails {
+    
+    init(_ isolationState: Interface.IsolationState) {
+        switch isolationState {
+        case .notIsolating:
+            self = .noNeedToIsolate
+        case .isolating(_, _, _, hasPositiveTest: true):
+            self = .isolateForExistingPositiveTest
+        case .isolating(_, _, let endDate, hasPositiveTest: false):
+            self = .isolateForUnspecifiedReason(endDate: endDate)
+        }
+    }
+    
 }

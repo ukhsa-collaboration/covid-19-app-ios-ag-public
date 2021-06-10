@@ -185,6 +185,66 @@ class VirologyTestingManagerTests: XCTestCase {
         XCTAssertEqual(storedTokens.count, 0)
     }
     
+    func testEvaluateTestResultsUnknown() throws {
+        let pollingToken = PollingToken(value: .random())
+        let submissionToken = DiagnosisKeySubmissionToken(value: .random())
+        
+        virologyStore.saveTest(pollingToken: pollingToken, diagnosisKeySubmissionToken: submissionToken)
+        
+        mockServer.response = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "2020-04-23T00:00:00.0000000Z",
+            "testResult": "UNKNOWN_TEST_RESULT_TYPE",
+            "testKit": "LAB_RESULT",
+            "diagnosisKeySubmissionSupported": true,
+            "requiresConfirmatoryTest": false
+        }
+        """#))
+        
+        _ = try manager.evaulateTestResults().await().get()
+        
+        // expecting a notification but no change in test results
+        XCTAssertEqual(notificationManager.notificationType, UserNotificationType.testResultReceived)
+        XCTAssertNil(virologyStore.relevantUnacknowledgedTestResult)
+        
+        // expecting this to be set as the result couldn't be parsed
+        XCTAssertTrue(virologyStore.didReceiveUnknownTestResult)
+        
+        // expect the tokens to be removed
+        XCTAssertTrue((virologyStore.virologyTestTokens ?? []).isEmpty)
+    }
+    
+    func testEvaluateLinkTestResultsUnknown() throws {
+        let submissionToken = DiagnosisKeySubmissionToken(value: .random())
+        let ctaToken = String.random()
+        
+        mockServer.response = HTTPResponse.ok(with: .json(#"""
+        {
+            "testEndDate": "2020-04-23T00:00:00.0000000Z",
+            "diagnosisKeySubmissionSupported": true,
+            "requiresConfirmatoryTest": false,
+            "testKit": "LAB_RESULT",
+            "testResult": "UNKNOWN_TEST_RESULT_TYPE",
+            "diagnosisKeySubmissionToken": "\#(submissionToken.value)"
+        }
+        """#))
+        
+        // decoding should fail since test result is unkown
+        XCTAssertThrowsError(try manager.linkExternalTestResult(with: ctaToken).await().get(), "Decoding error") { error in
+            XCTAssertEqual(error as? LinkTestResultError, LinkTestResultError.decodeFailed)
+        }
+        
+        // notification should not be triggered and there should be no change in test results
+        XCTAssertNil(notificationManager.notificationType)
+        XCTAssertNil(virologyStore.relevantUnacknowledgedTestResult)
+        
+        // expecting this to be set as the result couldn't be parsed
+        XCTAssertTrue(virologyStore.didReceiveUnknownTestResult)
+        
+        // expect the tokens to be removed
+        XCTAssertTrue((virologyStore.virologyTestTokens ?? []).isEmpty)
+    }
+    
     func testEvaluateLinkTestResultsPositive() throws {
         let submissionToken = DiagnosisKeySubmissionToken(value: .random())
         let ctaToken = String.random()

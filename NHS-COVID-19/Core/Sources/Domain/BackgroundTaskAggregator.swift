@@ -8,8 +8,9 @@ import Foundation
 import Logging
 
 class BackgroundTaskAggregator {
+    private static let taskFrequency = 2.0 * 60 * 60 // 2h
+    
     struct Job {
-        var preferredFrequency: TimeInterval
         var work: () -> AnyPublisher<Void, Never>
     }
     
@@ -61,8 +62,7 @@ class BackgroundTaskAggregator {
         var request = ProcessingTaskRequest()
         request.requiresNetworkConnectivity = true
         
-        let minimumFrequency = jobs.lazy.map { $0.preferredFrequency }.reduce(.infinity, min)
-        request.earliestBeginDate = Date(timeIntervalSinceNow: minimumFrequency)
+        request.earliestBeginDate = Date(timeIntervalSinceNow: Self.taskFrequency)
         
         Self.logger.info("scheduling background task", metadata: .describing(request))
         try? manager.submit(request)

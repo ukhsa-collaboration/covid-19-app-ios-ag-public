@@ -12,16 +12,12 @@ struct HomeScreen {
         return app.buttons[verbatim: title.replacingOccurrences(of: "[postcode]", with: postcode).apply(direction: currentLanguageDirection())]
     }
     
+    func localInfoBanner(text: String) -> XCUIElement {
+        app.buttons.element(containing: text)
+    }
+    
     var diagnoisButton: XCUIElement {
         app.buttons[localized: .home_diagnosis_button_title]
-    }
-    
-    var adviceButton: XCUIElement {
-        app.links[localized: .home_default_advice_button_title]
-    }
-    
-    var testingInformationButton: XCUIElement {
-        app.buttons[localized: .home_testing_information_button_title]
     }
     
     var financeButton: XCUIElement {
@@ -62,5 +58,9 @@ struct HomeScreen {
     
     var contactTracingHubButton: XCUIElement {
         app.buttons[localized: .home_contact_tracing_hub_button_title]
+    }
+    
+    var testingHubButton: XCUIElement {
+        app.buttons[localized: .home_testing_hub_button_title]
     }
 }

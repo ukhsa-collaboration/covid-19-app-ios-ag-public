@@ -17,18 +17,6 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             positiveTest: [.notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
         ),
         
-        // A symptomatic and unconfirmed positive test isolation will not happen at the same time.
-        StatePredicate(
-            symptomatic: [.isolating],
-            positiveTest: [.isolatingWithUnconfirmedTest]
-        ),
-        
-        // As a result of the above, finished symptomatic and unconfirmed positive test isolation will not happen at the same time.
-        StatePredicate(
-            symptomatic: [.notIsolatingAndHadSymptomsPreviously],
-            positiveTest: [.notIsolatingAndHadUnconfirmedTestPreviously]
-        ),
-        
         // A contact case and unconfirmed positive test isolation will not happen at the same time.
         StatePredicate(
             contact: [.isolating],
@@ -72,9 +60,12 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         Rule(
             """
             A risky contact isolation will be terminated for users directed to do so as part of DCT.
+            Option to terminate risky contact is provided only if the contact is the only reason for the isolation.
             """,
             predicate: StatePredicate(
-                contact: [.isolating]
+                contact: [.isolating],
+                symptomatic: .all(except: .isolating),
+                positiveTest: .all(except: .isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest)
             ),
             event: .terminateRiskyContactDueToDCT,
             update: .init(contact: .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT)
@@ -83,7 +74,12 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         Rule(
             """
             A symptomatic isolation will start on a symptomatic self-diagnosis.
-            Symptom entry is only allowed if not already isolating as symptomatic or positive.
+            Symptom entry is only allowed if not already isolating as symptomatic.
+            
+            We allow new self-diagnosis during an active positive test isolation,
+            but only ever store it if assumed symptom onset date is newer than test end date.
+            
+            Delete any tests remembered if it is not causing an active isolation.
             """,
             predicate: StatePredicate(
                 symptomatic: .all(except: .isolating),
@@ -93,6 +89,26 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             update: .init(
                 symptomatic: .isolating,
                 positiveTest: .noIsolation
+            )
+        ),
+        
+        Rule(
+            """
+            A symptomatic isolation will start on a symptomatic self-diagnosis.
+            Symptom entry is only allowed if not already isolating as symptomatic.
+            
+            We allow new self-diagnosis during an active positive test isolation,
+            but only ever store it if assumed symptom onset date is newer than test end date.
+            
+            Keep any remembered tests if they are causing an active isolation.
+            """,
+            predicate: StatePredicate(
+                symptomatic: .all(except: .isolating),
+                positiveTest: [.isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest]
+            ),
+            event: .selfDiagnosedSymptomatic,
+            update: .init(
+                symptomatic: .isolating
             )
         ),
         
@@ -196,29 +212,11 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             """,
             predicate: StatePredicate(
                 symptomatic: [.notIsolatingAndHadSymptomsPreviously],
-                positiveTest: [.notIsolatingAndHadConfirmedTestPreviously, .noIsolation]
+                positiveTest: [.notIsolatingAndHadConfirmedTestPreviously, .noIsolation, .notIsolatingAndHadUnconfirmedTestPreviously]
             ),
             event: .receivedConfirmedPositiveTest,
             update: .init(
                 contact: .noIsolation,
-                positiveTest: .notIsolatingAndHadConfirmedTestPreviously
-            )
-        ),
-        
-        Rule(
-            """
-            Exception: A positive test will override symptomatic isolation if its end date is before symptom onset.
-            Any contact case isolation will be cleared.
-            See below for exceptions related to the test being even older.
-            """,
-            predicate: StatePredicate(
-                symptomatic: [.notIsolatingAndHadSymptomsPreviously],
-                positiveTest: [.notIsolatingAndHadConfirmedTestPreviously, .noIsolation]
-            ),
-            event: .receivedConfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate,
-            update: .init(
-                contact: .noIsolation,
-                symptomatic: .noIsolation,
                 positiveTest: .notIsolatingAndHadConfirmedTestPreviously
             )
         ),
@@ -265,26 +263,6 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         
         Rule(
             """
-            Exception: A positive test will replace a newer symptomatic isolation and negative test result.
-            Any contact case isolation will be cleared.
-            See below for exceptions related to the test being even older.
-            """,
-            predicates: [
-                StatePredicate(
-                    symptomatic: [.notIsolatingAndHadSymptomsPreviously],
-                    positiveTest: [.notIsolatingAndHasNegativeTest]
-                ),
-            ],
-            event: .receivedConfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate,
-            update: .init(
-                contact: .noIsolation,
-                symptomatic: .noIsolation,
-                positiveTest: .isolatingWithConfirmedTest
-            )
-        ),
-        
-        Rule(
-            """
             A symptomatic test isolation will continue on a new positive test.
             The positive test will be stored if there is not one.
             Any contact case isolation will be cleared.
@@ -293,32 +271,12 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             predicates: [
                 StatePredicate(
                     symptomatic: [.isolating],
-                    positiveTest: [.noIsolation, .isolatingWithConfirmedTest]
+                    positiveTest: [.noIsolation, .isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest]
                 ),
             ],
             event: .receivedConfirmedPositiveTest,
             update: .init(
                 contact: .noIsolation,
-                positiveTest: .isolatingWithConfirmedTest
-            )
-        ),
-        
-        Rule(
-            """
-            Exception: A symptomatic test isolation will be replaced with a new isolation if the test is older.
-            Any contact case isolation will be cleared.
-            See below for exceptions related to the test being even older.
-            """,
-            predicates: [
-                StatePredicate(
-                    symptomatic: [.isolating],
-                    positiveTest: [.noIsolation, .isolatingWithConfirmedTest]
-                ),
-            ],
-            event: .receivedConfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate,
-            update: .init(
-                contact: .noIsolation,
-                symptomatic: .noIsolation,
                 positiveTest: .isolatingWithConfirmedTest
             )
         ),
@@ -384,6 +342,24 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         
         Rule(
             """
+            Exception: An unconfirmed positive test will override a negative test if it’s more than N days older.
+            See below for exceptions related to the test being even older.
+            """,
+            predicates: [
+                StatePredicate(
+                    symptomatic: [.noIsolation, .notIsolatingAndHadSymptomsPreviously],
+                    positiveTest: [.notIsolatingAndHasNegativeTest]
+                ),
+            ],
+            event: .receivedUnconfirmedPositiveTestWithEndDateNDaysOlderThanRememberedNegativeTestEndDate,
+            update: .init(
+                symptomatic: .noIsolation,
+                positiveTest: .isolatingWithUnconfirmedTest
+            )
+        ),
+        
+        Rule(
+            """
             Affirmation: An unconfirmed positive test will not override a negative test if it’s even older.
             See below for exceptions related to the test being even older.
             """,
@@ -399,18 +375,17 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         
         Rule(
             """
-            Exception: An unconfirmed positive test will override a symptomatic isolation if its end date is older.
+            Exception: An unconfirmed positive test will not modify a symptomatic isolation if its end date is older.
             See below for exceptions related to the test being even older.
             """,
             predicates: [
                 StatePredicate(
                     symptomatic: [.notIsolatingAndHadSymptomsPreviously],
-                    positiveTest: [.noIsolation]
+                    positiveTest: [.noIsolation, .notIsolatingAndHadUnconfirmedTestPreviously]
                 ),
             ],
             event: .receivedUnconfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate,
             update: .init(
-                symptomatic: .noIsolation,
                 positiveTest: .notIsolatingAndHadUnconfirmedTestPreviously
             )
         ),
@@ -428,10 +403,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 ),
             ],
             event: .receivedUnconfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate,
-            update: .init(
-                symptomatic: .noIsolation,
-                positiveTest: .notIsolatingAndHadConfirmedTestPreviously
-            )
+            update: .init()
         ),
         
         Rule(
@@ -442,7 +414,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             predicates: [
                 StatePredicate(
                     symptomatic: [.isolating],
-                    positiveTest: [.noIsolation, .isolatingWithConfirmedTest]
+                    positiveTest: [.noIsolation, .isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest]
                 ),
             ],
             event: .receivedUnconfirmedPositiveTest,
@@ -451,18 +423,17 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         
         Rule(
             """
-            Exception: An unconfirmed positive test will override a symptomatic isolation if its end date is older.
+            Exception: An unconfirmed positive test will not modify a symptomatic isolation if its end date is older.
             See below for exceptions related to the test being even older.
             """,
             predicates: [
                 StatePredicate(
                     symptomatic: [.isolating],
-                    positiveTest: [.noIsolation]
+                    positiveTest: [.noIsolation, .isolatingWithUnconfirmedTest]
                 ),
             ],
             event: .receivedUnconfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate,
             update: .init(
-                symptomatic: .noIsolation,
                 positiveTest: .isolatingWithUnconfirmedTest
             )
         ),
@@ -480,10 +451,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 ),
             ],
             event: .receivedUnconfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate,
-            update: .init(
-                symptomatic: .noIsolation,
-                positiveTest: .isolatingWithConfirmedTest
-            )
+            update: .init()
         ),
         
         Rule(
@@ -509,6 +477,27 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ),
             event: .receivedNegativeTest,
             update: .init()
+        ),
+        
+        Rule(
+            """
+            A negative test will not override a confirmed test.
+            If there are symptoms after the positive test but before the negative test, remove them.
+            """,
+            predicates: [
+                StatePredicate(
+                    symptomatic: [.isolating],
+                    positiveTest: [.isolatingWithConfirmedTest, .notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
+                ),
+                StatePredicate(
+                    symptomatic: [.notIsolatingAndHadSymptomsPreviously],
+                    positiveTest: [.notIsolatingAndHadConfirmedTestPreviously]
+                ),
+            ],
+            event: .receivedNegativeTestWithEndDateNewerThanAssumedSymptomOnsetDateAndAssumedSymptomOnsetDateNewerThanPositiveTestEndDate,
+            update: .init(
+                symptomatic: .noIsolation
+            )
         ),
         
         Rule(
@@ -541,10 +530,10 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             Exception: A negative test will not override an unconfirmed positive if the negative test is older.
             """,
             predicate: StatePredicate(
-                symptomatic: [.noIsolation],
+                symptomatic: [.noIsolation, .isolating, .notIsolatingAndHadSymptomsPreviously],
                 positiveTest: [.isolatingWithUnconfirmedTest, .notIsolatingAndHadUnconfirmedTestPreviously]
             ),
-            event: .receivedNegativeTestWithEndDateOlderThanRememberedUnconfirmedTestEndDate,
+            event: .receivedNegativeTestWithEndDateOlderThanRememberedUnconfirmedTestEndDateAndOlderThanAssumedSymptomOnsetDayIfAny,
             update: .init()
         ),
         
@@ -555,7 +544,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             """,
             predicate: StatePredicate(
                 symptomatic: [.isolating, .notIsolatingAndHadSymptomsPreviously],
-                positiveTest: [.noIsolation]
+                positiveTest: [.noIsolation, .isolatingWithUnconfirmedTest, .notIsolatingAndHadUnconfirmedTestPreviously]
             ),
             event: .receivedNegativeTest,
             update: .init(
@@ -567,13 +556,16 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         Rule(
             """
             Exception: A negative test will not override a symptomatic iolation if the negative test is older.
+            Unconfirmed tests will be cleared.
             """,
             predicate: StatePredicate(
                 symptomatic: [.isolating, .notIsolatingAndHadSymptomsPreviously],
-                positiveTest: [.noIsolation]
+                positiveTest: [.noIsolation, .notIsolatingAndHadUnconfirmedTestPreviously, .isolatingWithUnconfirmedTest]
             ),
             event: .receivedNegativeTestWithEndDateOlderThanAssumedSymptomOnsetDate,
-            update: .init()
+            update: .init(
+                positiveTest: .noIsolation
+            )
         ),
         
         Rule(
@@ -586,6 +578,34 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ),
             event: .receivedNegativeTestWithEndDateOlderThanAssumedSymptomOnsetDate,
             update: .init()
+        ),
+        
+        Rule(
+            """
+            A negative test with a test end date n days newer than the remembered unconfirmed test end date will not
+            change the isolation state.
+            """,
+            predicate: StatePredicate(
+                positiveTest: [.isolatingWithUnconfirmedTest, .notIsolatingAndHadUnconfirmedTestPreviously]
+            ),
+            event: .receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDateButOlderThanAssumedSymptomOnsetDayIfAny,
+            update: .init()
+        ),
+        
+        Rule(
+            """
+            A negative test with a test end date n days newer than the remembered unconfirmed test end date will not
+            override the test.
+            Symptoms will be deleted.
+            """,
+            predicate: StatePredicate(
+                symptomatic: [.isolating, .notIsolatingAndHadSymptomsPreviously],
+                positiveTest: [.isolatingWithUnconfirmedTest, .notIsolatingAndHadUnconfirmedTestPreviously]
+            ),
+            event: .receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDate,
+            update: .init(
+                symptomatic: .noIsolation
+            )
         ),
         
         Rule(
@@ -657,6 +677,21 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             update: .init(
                 symptomatic: .notIsolatingAndHadSymptomsPreviously,
                 positiveTest: .notIsolatingAndHadConfirmedTestPreviously
+            )
+        ),
+        
+        Rule(
+            """
+            A combined symptomatic and unconfirmed positive test isolation will end together.
+            """,
+            predicate: StatePredicate(
+                symptomatic: [.isolating],
+                positiveTest: [.isolatingWithUnconfirmedTest]
+            ),
+            event: .indexIsolationEnded,
+            update: .init(
+                symptomatic: .notIsolatingAndHadSymptomsPreviously,
+                positiveTest: .notIsolatingAndHadUnconfirmedTestPreviously
             )
         ),
         
@@ -749,20 +784,35 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         
         Rule(
             filler: """
-            We do not allow new self-diagnosis during an active symptomatic or positive isolation.
+            If isolating for reasons other than a contact, then terminating it due to DCT is disabled.
             """,
             predicates: [
                 StatePredicate(
+                    contact: [.isolating],
                     symptomatic: [.isolating],
-                    positiveTest: [.noIsolation]
-                ),
-                StatePredicate(
-                    symptomatic: [.noIsolation],
                     positiveTest: [.isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest]
                 ),
                 StatePredicate(
+                    contact: [.isolating],
                     symptomatic: [.isolating],
-                    positiveTest: [.isolatingWithConfirmedTest]
+                    positiveTest: .all(except: .isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest)
+                ),
+                StatePredicate(
+                    contact: [.isolating],
+                    symptomatic: .all(except: .isolating),
+                    positiveTest: [.isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest]
+                ),
+            ],
+            event: .terminateRiskyContactDueToDCT
+        ),
+        
+        Rule(
+            filler: """
+            We do not allow new self-diagnosis during an active symptomatic isolation.
+            """,
+            predicates: [
+                StatePredicate(
+                    symptomatic: [.isolating]
                 ),
             ],
             event: .selfDiagnosedSymptomatic
@@ -842,17 +892,49 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             predicate: StatePredicate(
                 positiveTest: .all(except: .isolatingWithUnconfirmedTest, .notIsolatingAndHadUnconfirmedTestPreviously)
             ),
-            event: .receivedNegativeTestWithEndDateOlderThanRememberedUnconfirmedTestEndDate
+            event: .receivedNegativeTestWithEndDateOlderThanRememberedUnconfirmedTestEndDateAndOlderThanAssumedSymptomOnsetDayIfAny
         ),
         
         Rule(
             filler: """
-            This event is not possible if we do not have symptoms.
+            This event is not possible if we do not have symptoms, or have an unconfirmed test.
             """,
-            predicate: StatePredicate(
-                symptomatic: [.noIsolation]
-            ),
+            predicates: [
+                StatePredicate(
+                    symptomatic: [.noIsolation]
+                ),
+            ],
             event: .receivedNegativeTestWithEndDateOlderThanAssumedSymptomOnsetDate
+        ),
+        
+        Rule(
+            filler: """
+            This event is not possible if we do not have symptoms and an unconfirmed test.
+            """,
+            predicates: [
+                StatePredicate(
+                    symptomatic: [.noIsolation]
+                ),
+                StatePredicate(
+                    positiveTest: .all(except: .isolatingWithUnconfirmedTest, .notIsolatingAndHadUnconfirmedTestPreviously)
+                ),
+            ],
+            event: .receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDate
+        ),
+        
+        Rule(
+            filler: """
+            This event is not possible if we do not have symptoms and a confirmed test.
+            """,
+            predicates: [
+                StatePredicate(
+                    symptomatic: [.noIsolation]
+                ),
+                StatePredicate(
+                    positiveTest: .all(except: .isolatingWithConfirmedTest, .notIsolatingAndHadConfirmedTestPreviously)
+                ),
+            ],
+            event: .receivedNegativeTestWithEndDateNewerThanAssumedSymptomOnsetDateAndAssumedSymptomOnsetDateNewerThanPositiveTestEndDate
         ),
         
         Rule(
@@ -863,16 +945,6 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .all(except: .notIsolatingAndHasNegativeTest)
             ),
             event: .receivedConfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate
-        ),
-        
-        Rule(
-            filler: """
-            This event is not possible if we do not have symptoms.
-            """,
-            predicate: StatePredicate(
-                symptomatic: [.noIsolation]
-            ),
-            event: .receivedConfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate
         ),
         
         Rule(
@@ -897,6 +969,16 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         
         Rule(
             filler: """
+            This event is not possible if we do not have negative tests.
+            """,
+            predicate: StatePredicate(
+                positiveTest: .all(except: .notIsolatingAndHasNegativeTest)
+            ),
+            event: .receivedUnconfirmedPositiveTestWithEndDateNDaysOlderThanRememberedNegativeTestEndDate
+        ),
+        
+        Rule(
+            filler: """
             This event is not possible if we do not have symptoms.
             """,
             predicate: StatePredicate(
@@ -916,14 +998,22 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         ),
         
         Rule(
-            """
+            filler: """
             This event is not possible if isolation wasn't terminated due to DCT.
             """,
             predicate: StatePredicate(
                 contact: .all(except: .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT)
             ),
-            event: .riskyContactWithExposureDayOlderThanIsolationTerminationDueToDCT,
-            update: .init()
+            event: .riskyContactWithExposureDayOlderThanIsolationTerminationDueToDCT
+        ),
+        Rule(
+            filler: """
+            This event is not possible if we don't have an unconfirmed test
+            """,
+            predicate: StatePredicate(
+                positiveTest: .all(except: .isolatingWithUnconfirmedTest, .notIsolatingAndHadUnconfirmedTestPreviously)
+            ),
+            event: .receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDateButOlderThanAssumedSymptomOnsetDayIfAny
         ),
     ]
     

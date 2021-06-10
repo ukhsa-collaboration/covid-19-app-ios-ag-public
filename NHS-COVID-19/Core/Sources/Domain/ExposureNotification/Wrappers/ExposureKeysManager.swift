@@ -58,7 +58,8 @@ struct ExposureKeysManager {
     
     func sendKeys(for onsetDay: GregorianDay,
                   token: DiagnosisKeySubmissionToken,
-                  acknowledgementDay: GregorianDay) -> AnyPublisher<Void, Error> {
+                  acknowledgementDay: GregorianDay,
+                  flowType: DiagnosisKeySharer.ShareFlowType) -> AnyPublisher<Void, Error> {
         let interestedDateRange = TemporaryExposureKey.dateRangeConsideredForUploadIgnoringInfectiousness(
             acknowledgmentDay: acknowledgementDay,
             isolationDuration: contactCaseIsolationDuration,
@@ -66,7 +67,14 @@ struct ExposureKeysManager {
         )
         return controller.getDiagnosisKeys()
             .map { keys in
-                keys.map { TemporaryExposureKey(exposureKey: $0, onsetDay: onsetDay) }
+                switch flowType {
+                case .initial:
+                    Metrics.signpost(.consentedToShareExposureKeysInTheInitialFlow)
+                case .reminder:
+                    Metrics.signpost(.consentedToShareExposureKeysInReminderScreen)
+                }
+                
+                return keys.map { TemporaryExposureKey(exposureKey: $0, onsetDay: onsetDay) }
                     .filter { $0.transmissionRiskLevel > 0 }
                     .filter {
                         interestedDateRange.contains($0.gregorianDay)
@@ -94,30 +102,38 @@ struct ExposureKeysManager {
                     hasFinishedInitialKeySharingFlow: info.hasFinishedInitialKeySharingFlow,
                     hasTriggeredReminderNotification: info.hasTriggeredReminderNotification,
                     shareKeys: { flowType in
-                        self.sendKeys(for: assumedOnsetDay, token: info.diagnosisKeySubmissionToken, acknowledgementDay: info.testResultAcknowledgmentTime.day)
-                            .map { DiagnosisKeySharer.ShareResult.sent }
-                            .replaceEmpty(with: DiagnosisKeySharer.ShareResult.sent)
-                            .catch { error -> AnyPublisher<DiagnosisKeySharer.ShareResult, Error> in
-                                if (error as NSError).domain == ENErrorDomain {
-                                    return Result.success(.notSent).publisher.eraseToAnyPublisher()
-                                } else {
-                                    return Fail(error: error).eraseToAnyPublisher()
-                                }
+                        self.sendKeys(
+                            for: assumedOnsetDay,
+                            token: info.diagnosisKeySubmissionToken,
+                            acknowledgementDay: info.testResultAcknowledgmentTime.day,
+                            flowType: flowType
+                        )
+                        .map { DiagnosisKeySharer.ShareResult.sent }
+                        .replaceEmpty(with: DiagnosisKeySharer.ShareResult.sent)
+                        .catch { error -> AnyPublisher<DiagnosisKeySharer.ShareResult, Error> in
+                            if (error as NSError).domain == ENErrorDomain {
+                                return Result.success(.notSent).publisher.eraseToAnyPublisher()
+                            } else {
+                                return Fail(error: error).eraseToAnyPublisher()
                             }
-                            .handleEvents(receiveOutput: { result in
-                                if case .notSent = result {
-                                    self.trafficObfuscationClient.sendSingleTraffic(for: TrafficObfuscator.keySubmission)
-                                }
-                                
-                                let keySharerResult = KeySharerResult(
-                                    result: result,
-                                    flowType: flowType,
-                                    acknowledgementTime: info.testResultAcknowledgmentTime.date,
-                                    currentDateProvider: currentDateProvider
-                                )
-                                completionHandler(keySharerResult)
-                            })
-                            .eraseToAnyPublisher()
+                        }
+                        .handleEvents(receiveOutput: { result in
+                            if case .notSent = result {
+                                self.trafficObfuscationClient.sendSingleTraffic(for: TrafficObfuscator.keySubmission)
+                            } else if case .sent = result {
+                                Metrics.signpost(.successfullySharedExposureKeys)
+                            }
+                            
+                            let keySharerResult = KeySharerResult(
+                                result: result,
+                                flowType: flowType,
+                                acknowledgementTime: info.testResultAcknowledgmentTime.date,
+                                currentDateProvider: currentDateProvider
+                            )
+                            
+                            completionHandler(keySharerResult)
+                        })
+                        .eraseToAnyPublisher()
                     },
                     doNotShareKeys: { flowType in
                         self.trafficObfuscationClient.sendSingleTraffic(for: TrafficObfuscator.keySubmission)

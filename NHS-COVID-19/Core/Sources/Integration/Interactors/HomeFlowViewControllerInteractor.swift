@@ -9,7 +9,40 @@ import Interface
 import Localization
 import UIKit
 
+extension LinkTestValidationError {
+    init(_ linkTestResultError: LinkTestResultError) {
+        switch linkTestResultError {
+        case .invalidCode:
+            self = LinkTestValidationError.testCode(DisplayableError(.link_test_result_enter_code_invalid_error))
+        case .noInternet:
+            self = LinkTestValidationError.testCode(DisplayableError(.network_error_no_internet_connection))
+        case .decodeFailed:
+            self = LinkTestValidationError.decodeFailed
+        case .unknownError:
+            self = LinkTestValidationError.testCode(DisplayableError(.network_error_general))
+        }
+    }
+}
+
 struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
+    
+    func getHomeAnimationsViewModel() -> HomeAnimationsViewModel {
+        
+        let reduceMotionPublisher = NotificationCenter.default.publisher(
+            for: UIAccessibility.reduceMotionStatusDidChangeNotification
+        )
+        .receive(on: RunLoop.main)
+        .map { _ in UIAccessibility.isReduceMotionEnabled }
+        .prepend(UIAccessibility.isReduceMotionEnabled)
+        .eraseToAnyPublisher()
+        
+        return HomeAnimationsViewModel(
+            homeAnimationEnabled: context.homeAnimationsStore.homeAnimationsEnabled.interfaceProperty,
+            homeAnimationEnabledAction: { enabled in
+                self.context.homeAnimationsStore.save(enabled: enabled)
+            }, reduceMotionPublisher: reduceMotionPublisher
+        )
+    }
     
     func getCurrentLocaleConfiguration() -> InterfaceProperty<LocaleConfiguration> {
         context.currentLocaleConfiguration.interfaceProperty
@@ -35,8 +68,8 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             SelfDiagnosisOrderFlowState.makeState(context: context)
                 .map { state in
                     switch state {
-                    case .selfDiagnosis(let interactor, let isolationState):
-                        return SelfDiagnosisFlowViewController(interactor, initialIsolationState: isolationState)
+                    case .selfDiagnosis(let interactor):
+                        return SelfDiagnosisFlowViewController(interactor, currentDateProvider: currentDateProvider)
                     case .testOrdering(let interactor):
                         return VirologyTestingFlowViewController(interactor)
                     }
@@ -138,12 +171,15 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                     baseNavigationController.pushViewController(dailyConfirmationVC, animated: true)
                 }
             },
-            _submit: { testCode in
+            openURL: context.openURL,
+            onCancel: {
+                baseNavigationController.dismiss(animated: true, completion: nil)
+            },
+            onSubmit: { testCode in
                 self.context.virologyTestingManager.linkExternalTestResult(with: testCode)
-                    .mapError(DisplayableError.init)
+                    .mapError(LinkTestValidationError.init)
                     .eraseToAnyPublisher()
             }
-            
         )
         baseNavigationController.pushViewController(LinkTestResultViewController(interactor: interactor), animated: false)
         
@@ -196,6 +232,71 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         return viewController
     }
     
+    func makeLocalInfoScreenViewController(
+        viewModel: LocalInformationViewController.ViewModel,
+        interactor: LocalInformationViewController.Interacting
+    ) -> UIViewController {
+        let viewController = LocalInformationViewController(viewModel: viewModel, interactor: interactor)
+        return viewController
+    }
+    
+    func removeDeliveredLocalInfoNotifications() {
+        context.userNotificationManaging.removeAllDelivered(for: UserNotificationType.localMessage(title: "", body: ""))
+    }
+    
+    func makeTestingHubViewController(
+        flowController: UINavigationController?,
+        showOrderTestButton: InterfaceProperty<Bool>,
+        showFindOutAboutTestingButton: InterfaceProperty<Bool>
+    ) -> UIViewController {
+        
+        final class TestingHubViewControllerInteractor: TestingHubViewController.Interacting {
+            
+            private weak var flowController: UINavigationController?
+            private let flowInteractor: HomeFlowViewControllerInteracting
+            private var didEnterBackgroundCancellable: Cancellable?
+            
+            init(flowController: UINavigationController?, flowInteractor: HomeFlowViewControllerInteracting) {
+                self.flowController = flowController
+                self.flowInteractor = flowInteractor
+            }
+            
+            func didTapBookFreeTestButton() {
+                guard let viewController = flowInteractor.makeTestingInformationViewController() else { return }
+                viewController.modalPresentationStyle = .overFullScreen
+                flowController?.present(viewController, animated: true)
+            }
+            
+            func didTapFindOutAboutTestingButton() {
+                didEnterBackgroundCancellable = NotificationCenter.default
+                    .publisher(for: UIApplication.didEnterBackgroundNotification)
+                    .first()
+                    .sink { [weak flowController] _ in
+                        flowController?.popViewController(animated: false)
+                    }
+                
+                flowInteractor.openAdvice()
+            }
+            
+            func didTapEnterTestResultButton() {
+                guard let viewController = flowInteractor.makeLinkTestResultViewController() else { return }
+                flowController?.present(viewController, animated: true)
+            }
+        }
+        
+        let interactor = TestingHubViewControllerInteractor(flowController: flowController, flowInteractor: self)
+        
+        return TestingHubViewController(
+            interactor: interactor,
+            showOrderTestButton: showOrderTestButton,
+            showFindOutAboutTestingButton: showFindOutAboutTestingButton
+        )
+    }
+    
+    func recordDidTapLocalInfoBannerMetric() {
+        Metrics.signpost(.didAccessLocalInfoScreenViaBanner)
+    }
+    
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never> {
         context.exposureNotificationStateController.setEnabled(enabled)
     }
@@ -216,27 +317,27 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     }
     
     func getMyDataViewModel() -> MyDataViewController.ViewModel {
-        let venueHistories = loadVenueHistory()
         
-        let testResultDetails: MyDataViewController.ViewModel.TestResultDetails? = context.testInfo.currentValue.map {
-            // map from the Domain level ConfirmationStatus to the Interface level ConfirmationStatus
-            let confirmationStatus: MyDataViewController.ViewModel.TestResultDetails.ConfirmationStatus = { testInfo in
-                switch testInfo.confirmationStatus {
+        // map from the Domain level ConfirmationStatus to the Interface level ConfirmationStatus
+        let testResultDetails: MyDataViewController.ViewModel.TestResultDetails? = context.testInfo.currentValue.flatMap {
+            guard let interfaceTestResult = Interface.TestResult(domainTestResult: $0.result) else { return nil }
+            let completionStatus: MyDataViewController.ViewModel.TestResultDetails.CompletionStatus = { testInfo in
+                switch testInfo.completionStatus {
                 case .pending:
-                    return MyDataViewController.ViewModel.TestResultDetails.ConfirmationStatus.pending
+                    return MyDataViewController.ViewModel.TestResultDetails.CompletionStatus.pending
                 case .notRequired:
-                    return MyDataViewController.ViewModel.TestResultDetails.ConfirmationStatus.notRequired
-                case .confirmed(let confirmedOnDay):
-                    return MyDataViewController.ViewModel.TestResultDetails.ConfirmationStatus.confirmed(onDay: confirmedOnDay)
+                    return MyDataViewController.ViewModel.TestResultDetails.CompletionStatus.notRequired
+                case .completed(let completedOnDay):
+                    return MyDataViewController.ViewModel.TestResultDetails.CompletionStatus.completed(onDay: completedOnDay)
                 }
             }($0)
             
             return MyDataViewController.ViewModel.TestResultDetails(
-                result: Interface.TestResult(domainTestResult: $0.result),
+                result: interfaceTestResult,
                 acknowledgementDate: $0.receivedOnDay.startDate(in: .current),
                 testEndDate: $0.testEndDay?.startDate(in: .current),
                 testKitType: $0.testKitType.map(Interface.TestKitType.init(domainTestKitType:)),
-                confirmationStatus: confirmationStatus
+                completionStatus: completionStatus
             )
         }
         
@@ -343,8 +444,15 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         context.openURL(url)
     }
     
+    func openWebsiteLinkfromLocalInfoScreen(url: URL) {
+        context.openURL(url)
+    }
+    
     func openProvideFeedbackLink() {
         context.openURL(ExternalLink.provideFeedback.url)
     }
     
+    func openDownloadNHSAppLink() {
+        context.openURL(ExternalLink.downloadNHSApp.url)
+    }
 }
