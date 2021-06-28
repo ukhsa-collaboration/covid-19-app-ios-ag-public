@@ -22,4 +22,20 @@ struct App {
         .bundle("Core_Localization"),
         .content(name: "PostalDistricts", suffix: "json"),
     ]
+    
+    static let corePackageSourcesPathComponent = "NHS-COVID-19/Core/Sources"
+    
+    static let localizableStringsResourcePath = "Localization/Resources/en.lproj/Localizable.strings"
+    
+    static let localizableStringsDictResourcePath = "Localization/Resources/en.lproj/Localizable.stringsdict"
+    
+    static let stringLocalizationKeyResourcePath = "Localization/StringLocalizationKey.swift"
+    
+    static let localizedPackages = [
+        "Integration",
+        "Interface",
+        "Localization",
+        "Scenarios",
+    ]
+    
 }

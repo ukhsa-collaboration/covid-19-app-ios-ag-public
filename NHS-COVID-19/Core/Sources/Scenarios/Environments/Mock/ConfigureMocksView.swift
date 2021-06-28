@@ -52,6 +52,7 @@ struct ConfigureMocksView: View {
                     TextFieldRow(label: "Yellow Risk", text: $dataProvider.yellowLocalAuthorities)
                     TextFieldRow(label: "Green Risk", text: $dataProvider.greenLocalAuthorities)
                     TextFieldRow(label: "Neutral Risk", text: $dataProvider.neutralLocalAuthorities)
+                    TextFieldRow(label: "Minimum Background Task Update Interval (in sec)", text: $dataProvider.riskyLocalAuthorityMinimumBackgroundTaskUpdateIntervalString)
                 }
                 Section(header: Text(verbatim: "Check In")) {
                     TextFieldRow(label: "Risky Venue IDs (warn and inform)", text: $dataProvider.riskyVenueIDsWarnAndInform)

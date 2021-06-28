@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -26,7 +26,7 @@ public struct Strapline: View {
         }
         .overlay(LargeContentViewer(country: country.wrappedValue))
         .accessibilityElement()
-        .accessibility(label: Text(country.wrappedValue.accessiblityText))
+        .accessibility(label: Text(localizeForCountry(.home_strapline_accessiblity_label)))
         .accessibility(addTraits: .isHeader)
         .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }
@@ -52,7 +52,7 @@ extension Strapline {
         
         func updateUIView(_ uiView: UIView, context: Context) {
             uiView.largeContentImage = UIImage(country.imageName)
-            uiView.largeContentTitle = country.text.map(localize)
+            uiView.largeContentTitle = country.text.map { localize($0) }
         }
     }
 }
@@ -82,15 +82,6 @@ private extension Country {
             return .home_strapline_title
         case .wales:
             return nil
-        }
-    }
-    
-    var accessiblityText: StringLocalizationKey {
-        switch self {
-        case .england:
-            return .home_strapline_accessiblity_label
-        case .wales:
-            return .home_strapline_accessiblity_label_wls
         }
     }
 }

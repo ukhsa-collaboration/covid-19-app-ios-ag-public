@@ -20,7 +20,6 @@ class VirologyTestingStateStoreTests: XCTestCase {
     func testCanLoadVirologyTestingInfo() throws {
         let pollingToken = String.random()
         let submissionToken = String.random()
-        let result = TestResult.positive
         let endDate = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 7, hour: 8))
         
         encryptedStore.stored["virology_testing"] = #"""
@@ -33,7 +32,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
             ],
             "unacknowledgedTestResults":[
                 {
-                    "result":"\#(result.rawValue)",
+                    "result":"positive",
                     "endDate":610531200,
                     "diagnosisKeySubmissionToken":"\#(submissionToken)",
                     "requiresConfirmatoryTest":false
@@ -50,14 +49,13 @@ class VirologyTestingStateStoreTests: XCTestCase {
         let testResult = try XCTUnwrap(virologyTestingStateStore.relevantUnacknowledgedTestResult)
         let diagnosisSubmissionToken = try XCTUnwrap(testResult.diagnosisKeySubmissionToken)
         XCTAssertEqual(testResult.endDate, endDate)
-        XCTAssertEqual(testResult.testResult, result)
+        XCTAssertEqual(testResult.testResult, .positive)
         XCTAssertEqual(diagnosisSubmissionToken.value, submissionToken)
     }
     
     func testCanLoadOldVirologyTestingInfo() throws {
         let pollingToken = String.random()
         let submissionToken = String.random()
-        let result = TestResult.positive
         let endDate = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 7, hour: 8))
         
         encryptedStore.stored["virology_testing"] = #"""
@@ -69,7 +67,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
                 }
             ],
             "latestUnacknowledgedTestResult":{
-                "result":"\#(result.rawValue)",
+                "result":"positive",
                 "endDate":610531200,
                 "diagnosisKeySubmissionToken":"\#(submissionToken)",
                 "requiresConfirmatoryTest":false
@@ -87,7 +85,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         let testResult = try XCTUnwrap(virologyTestingStateStore.relevantUnacknowledgedTestResult)
         let diagnosisSubmissionToken = try XCTUnwrap(testResult.diagnosisKeySubmissionToken)
         XCTAssertEqual(testResult.endDate, endDate)
-        XCTAssertEqual(testResult.testResult, result)
+        XCTAssertEqual(testResult.testResult, .positive)
         XCTAssertEqual(diagnosisSubmissionToken.value, submissionToken)
     }
     
@@ -213,7 +211,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         )
         
         let firstResult = try XCTUnwrap(virologyTestingStateStore.relevantUnacknowledgedTestResult)
-        XCTAssertEqual(firstResult.testResult, TestResult(positiveTestResult.testResult))
+        XCTAssertEqual(firstResult.testResult, positiveTestResult.testResult)
         XCTAssertEqual(firstResult.endDate, positiveTestResult.endDate)
         XCTAssertEqual(firstResult.testKitType, .labResult)
         XCTAssertEqual(firstResult.diagnosisKeySubmissionToken, positiveSubmissionToken)
@@ -221,7 +219,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         virologyTestingStateStore.remove(testResult: firstResult)
         
         let secondResult = try XCTUnwrap(virologyTestingStateStore.relevantUnacknowledgedTestResult)
-        XCTAssertEqual(secondResult.testResult, TestResult(negativeTestResult.testResult))
+        XCTAssertEqual(secondResult.testResult, negativeTestResult.testResult)
         XCTAssertEqual(secondResult.endDate, negativeTestResult.endDate)
         XCTAssertEqual(secondResult.testKitType, .labResult)
         XCTAssertEqual(secondResult.diagnosisKeySubmissionToken, negativeSubmissionToken)
@@ -229,7 +227,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         virologyTestingStateStore.remove(testResult: secondResult)
         
         let thirdResult = try XCTUnwrap(virologyTestingStateStore.relevantUnacknowledgedTestResult)
-        XCTAssertEqual(thirdResult.testResult, TestResult(voidTestResult.testResult))
+        XCTAssertEqual(thirdResult.testResult, voidTestResult.testResult)
         XCTAssertEqual(thirdResult.endDate, voidTestResult.endDate)
         XCTAssertEqual(thirdResult.testKitType, .labResult)
         XCTAssertEqual(thirdResult.diagnosisKeySubmissionToken, voidSubmissionToken)
@@ -359,8 +357,8 @@ class VirologyTestingStateStoreTests: XCTestCase {
         )
         
         let result = VirologyStateTestResult(
-            testResult: TestResult(virologyTestResult.testResult),
-            testKitType: TestKitType(virologyTestResult.testKitType),
+            testResult: virologyTestResult.testResult,
+            testKitType: virologyTestResult.testKitType,
             endDate: virologyTestResult.endDate,
             diagnosisKeySubmissionToken: submissionToken,
             requiresConfirmatoryTest: false
@@ -375,7 +373,6 @@ class VirologyTestingStateStoreTests: XCTestCase {
     func testCanDeleteVirologyTestingInfo() throws {
         let pollingToken = String.random()
         let submissionToken = String.random()
-        let result = TestResult.positive
         
         encryptedStore.stored["virology_testing"] = #"""
         {
@@ -386,7 +383,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
                 }
             ],
             "latestUnacknowledgedTestResult":{
-                "result":"\#(result.rawValue)",
+                "result":"positive",
                 "endDate":610531200,
                 "diagnosisKeySubmissionToken":"\#(submissionToken)"
             }

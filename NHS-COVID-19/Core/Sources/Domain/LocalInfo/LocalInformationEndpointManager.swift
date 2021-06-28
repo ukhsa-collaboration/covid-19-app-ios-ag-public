@@ -71,6 +71,7 @@ public class LocalInformationEndpointManager {
         self.cachedResponse = cachedResponse
         self.currentDateProvider = currentDateProvider
         
+        #warning("this can be removed after release as no end users will have the old file")
         if let currentClearLocalInfo = FileStored<CurrentLocalInfo>(storage: cachesStorage, name: "current_local_information").wrappedValue {
             currentLocalInfo = currentClearLocalInfo
             cachesStorage.delete("current_local_information")

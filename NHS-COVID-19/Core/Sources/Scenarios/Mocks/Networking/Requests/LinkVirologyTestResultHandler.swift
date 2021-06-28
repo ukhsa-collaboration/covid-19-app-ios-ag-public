@@ -35,21 +35,3 @@ struct LinkVirologyTestResultHandler: RequestHandler {
         return Result.success(response)
     }
 }
-
-private func value<T>(named name: String, content: T?) -> String {
-    if let content = content {
-        if content is String {
-            return """
-            \"\(name)\": "\(content)"
-            """
-        } else {
-            return """
-            \"\(name)\": \(content)
-            """
-        }
-    } else {
-        return """
-        \"\(name)\": null
-        """
-    }
-}

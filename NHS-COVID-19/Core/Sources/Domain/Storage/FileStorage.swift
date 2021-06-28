@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -68,16 +68,15 @@ public extension FileStorage {
         self.init(directory: folder)
     }
     
-    convenience init(forOldCachesOf service: String) {
+    convenience init(forCachesOf service: String) {
         let fileManager = FileManager()
-        let folder = try! fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-            .appendingPathComponent(service)
-        try? fileManager.createDirectory(at: folder, withIntermediateDirectories: true, attributes: nil)
-        self.init(directory: folder)
-    }
-    
-    convenience init(forNewCachesOf service: String) {
-        let fileManager = FileManager()
+        
+        // We intentionally use `.documentDirectory` and not `.cachesDirectory`.
+        //
+        // This is storing cached files that we _can_ reload when needed, but based on our experience `.cachesDirectory`
+        // was being wiped out too often by the OS.
+        //
+        // Any large (beyond some json) file that we store, we do clean up ourselves as good platform citizens.
         let folder = try! fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
             .appendingPathComponent(service)
             .appendingPathComponent("Caches")

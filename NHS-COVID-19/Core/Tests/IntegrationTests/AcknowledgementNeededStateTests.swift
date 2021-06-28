@@ -249,17 +249,18 @@ class AcknowledgementNeededStateTests: XCTestCase {
     }
     
     private class MockSelfDiagnosisManager: SelfDiagnosisManaging {
-        public var threshold: Double?
+        var threshold: Double?
         
-        public func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError> {
+        func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError> {
             return Future<SymptomsQuestionnaire, NetworkRequestError> { promise in
                 promise(.success(SymptomsQuestionnaire(symptoms: [], riskThreshold: 0.0, dateSelectionWindow: 0)))
             }.eraseToAnyPublisher()
         }
         
-        public func evaluateSymptoms(symptoms: [(Symptom, Bool)], onsetDay: GregorianDay?, threshold: Double) -> (IsolationState, Bool?) {
-            return (.noNeedToIsolate(), nil)
+        func evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double) -> SelfDiagnosisEvaluation {
+            .noSymptoms
         }
+        
     }
     
     private class MockAppReviewPresenter: AppReviewPresenting {

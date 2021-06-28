@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -15,4 +15,23 @@ extension RequestHandler {
     func hasResponse(for path: String) -> Bool {
         return paths.contains { path.hasPrefix($0) }
     }
+    
+    func value<T>(named name: String, content: T?) -> String {
+        if let content = content {
+            if content is String {
+                return """
+                \"\(name)\": "\(content)"
+                """
+            } else {
+                return """
+                \"\(name)\": \(content)
+                """
+            }
+        } else {
+            return """
+            \"\(name)\": null
+            """
+        }
+    }
+    
 }

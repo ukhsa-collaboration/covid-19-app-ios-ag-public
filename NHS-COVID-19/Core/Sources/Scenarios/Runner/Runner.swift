@@ -203,6 +203,7 @@ public class Runner {
         var viewControllers = [
             mocks,
             UINavigationController(rootViewController: LogsViewController(loggingManager: loggingManager)),
+            UINavigationController(rootViewController: FilesViewController())
         ]
         
         if showFeatureGuard {

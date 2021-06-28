@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Interface
@@ -12,38 +12,6 @@ class RecoverableErrorComponentTests: XCTestCase {
     private var runner: ApplicationRunner<RecoverableErrorScreenTemplateScenario>
     
     func testBasics() throws {
-        runner.inspect { viewController in
-            XCTAssertAccessibility(viewController, [
-                .element {
-                    $0.label = runner.scenario.straplineTitle
-                    $0.traits = [.header, .staticText]
-                },
-                .element {
-                    $0.label = runner.scenario.errorTitle
-                    $0.traits = .header
-                },
-                .element {
-                    $0.label = runner.scenario.customViewContent
-                    $0.traits = .staticText
-                },
-                .element {
-                    $0.label = runner.scenario.customViewContent2
-                    $0.traits = .staticText
-                },
-                .element {
-                    $0.label = runner.scenario.customViewContent3
-                    $0.traits = .staticText
-                },
-                .element {
-                    $0.label = runner.scenario.actionTitle
-                    $0.traits = .button
-                },
-                .element {
-                    $0.label = runner.scenario.secondaryActionTitle
-                    $0.traits = .button
-                },
-            ])
-        }
         try runner.run { app in
             XCTAssert(app.stepTitle.exists)
             XCTAssert(app.customContent.exists)

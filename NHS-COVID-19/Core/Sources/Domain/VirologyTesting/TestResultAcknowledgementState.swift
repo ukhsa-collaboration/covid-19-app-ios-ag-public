@@ -44,7 +44,7 @@ public enum TestResultAcknowledgementState {
                 acknowledge: completionHandler
             )
         case (.negative, .isolating(let isolation, _, _))
-            where isolation.hasPositiveTestResult || isolation.isSelfDiagnosed:
+            where isolation.hasConfirmedPositiveTestResult || isolation.isSelfDiagnosed:
             self = TestResultAcknowledgementState.neededForNegativeAfterPositiveResultContinueToIsolate(
                 acknowledge: completionHandler,
                 isolationEndDate: isolation.endDate

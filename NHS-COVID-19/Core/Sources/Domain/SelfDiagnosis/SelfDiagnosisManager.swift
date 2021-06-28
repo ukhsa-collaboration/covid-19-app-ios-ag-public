@@ -6,12 +6,23 @@ import Combine
 import Common
 import Foundation
 
-public protocol SelfDiagnosisManaging {
-    func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError>
-    func evaluateSymptoms(symptoms: [(Symptom, Bool)], onsetDay: GregorianDay?, threshold: Double) -> (IsolationState, Bool?)
+public enum SelfDiagnosisEvaluation: Equatable {
+    public enum ExistingPositiveTestState: Equatable {
+        case hasNoTest
+        case hasTest(shouldChangeAdviceDueToSymptoms: Bool)
+    }
+    
+    case noSymptoms
+    case hasSymptoms(Isolation, ExistingPositiveTestState)
 }
 
-public class SelfDiagnosisManager: SelfDiagnosisManaging {
+public protocol SelfDiagnosisManaging {
+    func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError>
+    
+    func evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double) -> SelfDiagnosisEvaluation
+}
+
+class SelfDiagnosisManager: SelfDiagnosisManaging {
     private let httpClient: HTTPClient
     private let calculateIsolationState: (GregorianDay?) -> (IsolationState, Bool?)
     
@@ -20,12 +31,28 @@ public class SelfDiagnosisManager: SelfDiagnosisManaging {
         self.calculateIsolationState = calculateIsolationState
     }
     
-    public func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError> {
+    func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError> {
         httpClient.fetch(SymptomsQuestionnaireEndpoint())
     }
     
-    public func evaluateSymptoms(symptoms: [(Symptom, Bool)], onsetDay: GregorianDay?, threshold: Double) -> (IsolationState, Bool?) {
-        let result = _evaluateSymptoms(symptoms: symptoms, onsetDay: onsetDay, threshold: threshold)
+    func evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double) -> SelfDiagnosisEvaluation {
+        #warning("Simplify this")
+        // Should be changed alongside `IsolationContext.handleSymptomsIsolationState`.
+        let state = evaluateSymptoms(selectedSymptoms: selectedSymptoms, onsetDay: onsetDay, threshold: threshold)
+        switch state.0 {
+        case .noNeedToIsolate:
+            return .noSymptoms
+        case .isolate(let isolation):
+            if let shouldChangeAdviceDueToSymptoms = state.1 {
+                return .hasSymptoms(isolation, .hasTest(shouldChangeAdviceDueToSymptoms: shouldChangeAdviceDueToSymptoms))
+            } else {
+                return .hasSymptoms(isolation, .hasNoTest)
+            }
+        }
+    }
+    
+    private func evaluateSymptoms(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double) -> (IsolationState, Bool?) {
+        let result = _evaluate(selectedSymptoms: selectedSymptoms, onsetDay: onsetDay, threshold: threshold)
         switch result.0 {
         case .noNeedToIsolate:
             Metrics.signpost(.completedQuestionnaireButDidNotStartIsolation)
@@ -37,10 +64,9 @@ public class SelfDiagnosisManager: SelfDiagnosisManaging {
         return result
     }
     
-    public func _evaluateSymptoms(symptoms: [(Symptom, Bool)], onsetDay: GregorianDay?, threshold: Double) -> (IsolationState, Bool?) {
-        let sum = symptoms.lazy
-            .filter { _, isConfirmed in isConfirmed }
-            .map { symptom, _ in symptom.riskWeight }
+    private func _evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double) -> (IsolationState, Bool?) {
+        let sum = selectedSymptoms
+            .map { $0.riskWeight }
             .reduce(0, +)
         
         guard sum >= threshold else {

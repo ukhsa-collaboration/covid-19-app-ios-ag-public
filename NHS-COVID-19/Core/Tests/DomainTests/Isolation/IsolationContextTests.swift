@@ -23,7 +23,7 @@ class IsolationContextTests: XCTestCase {
             isolationConfiguration: CachedResponse(
                 httpClient: client,
                 endpoint: IsolationConfigurationEndpoint(),
-                storage: FileStorage(forNewCachesOf: .random()),
+                storage: FileStorage(forCachesOf: .random()),
                 name: "isolation_configuration",
                 initialValue: IsolationConfiguration(
                     maxIsolation: 21,

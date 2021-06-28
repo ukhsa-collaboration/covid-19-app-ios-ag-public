@@ -1,22 +1,21 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Integration
 import Interface
 import UIKit
 
-public class LinkButtonComponentScenario: Scenario, UITestInspectable {
-    public static var viewControllerForInspecting: UIViewController = LinkButtonViewController()
-    
+public class LinkButtonComponentScenario: Scenario {
     public static let name = "LinkButton"
     public static let kind = ScenarioKind.component
+    
     public static let linkTitle = "This is a link"
     public static let linkTappedTitle = "Link tapped"
     
     static var appController: AppController {
         let navigation = UINavigationController()
-        navigation.pushViewController(viewControllerForInspecting, animated: false)
+        navigation.pushViewController(LinkButtonViewController(), animated: false)
         return BasicAppController(rootViewController: navigation)
     }
 }

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import XCTest
@@ -29,5 +29,10 @@ class CTATokenValidatorTests: XCTestCase {
     func testValidateIncorrectCode() {
         XCTAssertFalse(validator.validate("f3dzcfdx"))
         XCTAssertFalse(validator.validate("8vb7xehb"))
+    }
+    
+    func testValidateShortCode() {
+        XCTAssertFalse(validator.validate("12"))
+        XCTAssertFalse(validator.validate("abv"))
     }
 }

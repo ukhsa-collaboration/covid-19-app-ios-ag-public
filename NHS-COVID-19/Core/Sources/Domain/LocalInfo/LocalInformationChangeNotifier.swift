@@ -66,7 +66,10 @@ struct LocalInformationChangeNotifier {
                     }()
                     
                     let notificationBody: String = {
-                        (message.body ?? "")
+                        guard let message = message.body else {
+                            return ""
+                        }
+                        return message
                             .replacingOccurrences(of: Self.postcodePlaceholder, with: postcode.value)
                             .replacingOccurrences(of: Self.localAuthorityPlaceholder, with: localAuthorityName)
                     }()

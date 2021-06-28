@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Interface
@@ -17,6 +17,7 @@ class StraplineComponentTests: XCTestCase {
             let strapline = StraplineComponent(app: app)
             XCTAssert(strapline.englishAccessbilityLabel.exists)
             XCTAssert(strapline.welshAccessbilityLabel.exists)
+            XCTAssertNotEqual(strapline.englishAccessbilityLabel, strapline.welshAccessbilityLabel)
         }
     }
     
@@ -30,6 +31,6 @@ struct StraplineComponent {
     }
     
     var welshAccessbilityLabel: XCUIElement {
-        app.staticTexts[localized: .home_strapline_accessiblity_label_wls]
+        app.staticTexts[localized: .home_strapline_accessiblity_label]
     }
 }

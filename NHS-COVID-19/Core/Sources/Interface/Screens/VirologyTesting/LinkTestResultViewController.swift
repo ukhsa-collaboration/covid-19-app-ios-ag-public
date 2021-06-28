@@ -111,7 +111,6 @@ public class LinkTestResultViewController: UIViewController {
         textField.adjustsFontForContentSizeCategory = true
         textField.autocorrectionType = .no
         textField.enablesReturnKeyAutomatically = true
-        textField.addTarget(self, action: #selector(valueChanged), for: .editingChanged)
         textField.rightView = spinner
         textField.autocapitalizationType = .none
         NSLayoutConstraint.activate([textField.heightAnchor.constraint(greaterThanOrEqualToConstant: .hitAreaMinHeight)])
@@ -191,7 +190,7 @@ public class LinkTestResultViewController: UIViewController {
         topErrorBoxView?.backgroundColor = .clear
     }
     
-    func stack(for views: [UIView]) -> UIStackView {
+    private func stack(for views: [UIView]) -> UIStackView {
         let stackView = UIStackView(arrangedSubviews: views)
         stackView.axis = .vertical
         stackView.spacing = .halfSpacing
@@ -306,19 +305,6 @@ public class LinkTestResultViewController: UIViewController {
         
     }
     
-    @objc private func valueChanged() {
-        if let textFieldContent = testCodeTextField.text {
-            let formattedActivationCode = LinkTestResultCodeFormatter.format(textFieldContent)
-            testCodeTextField.text = formattedActivationCode
-            if textFieldContent.count != formattedActivationCode.count {
-                DispatchQueue.main.async {
-                    let endPosition = self.testCodeTextField.endOfDocument
-                    self.testCodeTextField.selectedTextRange = self.testCodeTextField.textRange(from: endPosition, to: endPosition)
-                }
-            }
-        }
-    }
-    
     private func submit() {
         CATransaction.disableActions {
             submitButton.isEnabled = false
@@ -346,14 +332,6 @@ public class LinkTestResultViewController: UIViewController {
             )
     }
     
-    private func showError(_ error: String) {
-        errorTitle.isHidden = false
-        errorTitle.text = error
-        informationBox.error()
-        testCodeTextField.layer.borderColor = UIColor(.errorRed).cgColor
-        UIAccessibility.post(notification: .layoutChanged, argument: errorTitle)
-    }
-    
     @objc private func didSelectAction() {
         submit()
     }
@@ -367,25 +345,6 @@ extension LinkTestResultViewController: UITextFieldDelegate {
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         submit()
         return false
-    }
-}
-
-public struct LinkTestResultCodeFormatter {
-    public static func format(_ code: String) -> String {
-        let allowedChars = CharacterSet.crockfordDamm
-        let formattedCode = code
-            .lowercased()
-            .components(separatedBy: allowedChars.inverted)
-            .joined()
-        return String(formattedCode.prefix(8))
-    }
-}
-
-private extension CharacterSet {
-    static var crockfordDamm: CharacterSet {
-        var allowedChars = CharacterSet()
-        allowedChars.insert(charactersIn: "0123456789abcdefghjkmnpqrstvwxyz")
-        return allowedChars
     }
 }
 

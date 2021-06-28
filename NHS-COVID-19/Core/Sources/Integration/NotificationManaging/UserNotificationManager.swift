@@ -84,8 +84,8 @@ class UserNotificationManager {
             }
         case .localMessage(let title, let body):
             return configuring(UNMutableNotificationContent()) {
-                $0.title = title
-                $0.body = body
+                $0.title = title.applyCurrentLanguageDirection()
+                $0.body = body.applyCurrentLanguageDirection()
             }
         }
     }

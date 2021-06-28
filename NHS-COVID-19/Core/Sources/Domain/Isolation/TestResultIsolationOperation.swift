@@ -95,12 +95,20 @@ struct TestResultIsolationOperation {
             case .plod: return .nothing
             case .positive where indexCaseInfo.testInfo?.confirmationStatus == .pending:
                 if result.endDay < indexCaseInfo.startDay {
+                    // The test result we received is from before the start of
+                    // the current isolation
                     return .nothing
                 } else if let dayLimit = indexCaseInfo.testInfo?.confirmatoryDayLimit,
                     let existingEndDate = indexCaseInfo.assumedTestEndDay,
                     existingEndDate.advanced(by: dayLimit) < result.endDay {
+                    // The negative test result we got is too late, and outside
+                    // the `confirmatoryDayLimit` to store the negative result.
+                    
                     return .complete
                 } else {
+                    // The test result was within the time limit, so we store
+                    // the negative test.
+                    
                     return .update
                 }
             case .positive: return .nothing
@@ -120,7 +128,9 @@ struct TestResultIsolationOperation {
             }
             
             // The new test is before symptoms and before stored test
-            if let onsetDay = indexCaseInfo.symptomaticInfo?.assumedOnsetDay, result.endDay < onsetDay {
+            if let onsetDay = indexCaseInfo.symptomaticInfo?.assumedOnsetDay,
+                result.endDay < onsetDay,
+                indexCaseInfo.testInfo?.result != .negative {
                 if result.requiresConfirmatoryTest, let testInfo = indexCaseInfo.testInfo, testInfo.confirmationStatus != .pending {
                     return .updateAndConfirm
                 } else {
@@ -151,7 +161,14 @@ struct TestResultIsolationOperation {
                 indexCaseInfo.testInfo?.result == .negative,
                 result.endDay < endDay {
                 if result.requiresConfirmatoryTest {
-                    return .ignore
+                    if let onsetDay = indexCaseInfo.symptomaticInfo?.assumedOnsetDay, result.endDay > onsetDay {
+                        return .ignore
+                    } else if let confirmatoryDayLimit = result.confirmatoryDayLimit,
+                        result.endDay.advanced(by: confirmatoryDayLimit) < endDay {
+                        return .overwriteAndComplete
+                    } else {
+                        return .ignore
+                    }
                 } else {
                     switch indexCaseInfo.isolationTrigger {
                     case .manualTestEntry:

@@ -43,7 +43,7 @@ class LogsViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         
         title = "Logs"
-        tabBarItem.image = UIImage(systemName: "doc.text")
+        tabBarItem.image = UIImage(systemName: "note.text")
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "square.and.arrow.up"),
             style: .plain,

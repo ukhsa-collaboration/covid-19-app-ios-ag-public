@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Interface
@@ -12,31 +12,6 @@ class CheckInStatusComponentTests: XCTestCase {
     private var runner: ApplicationRunner<CheckInStatusScreenTemplateScenario>
     
     func testBasics() throws {
-        runner.inspect { viewController in
-            XCTAssertAccessibility(viewController, [
-                .element {
-                    $0.label = runner.scenario.statusTitle
-                    $0.traits = [.header]
-                },
-                .element {
-                    $0.label = runner.scenario.explanationTitle
-                    $0.traits = .staticText
-                },
-                .element {
-                    $0.label = runner.scenario.helpLinkTitle
-                    $0.traits = .link
-                },
-                .element {
-                    $0.label = runner.scenario.moreExplanationTitle
-                    $0.traits = .staticText
-                },
-                .element {
-                    $0.label = runner.scenario.actionTitle
-                    $0.traits = .button
-                },
-            ])
-        }
-        
         try runner.run { app in
             XCTAssert(app.statusTitle.exists)
             XCTAssert(app.explanationTitle.exists)

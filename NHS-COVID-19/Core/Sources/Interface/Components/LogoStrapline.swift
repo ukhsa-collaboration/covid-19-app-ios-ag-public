@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -31,13 +31,8 @@ public class LogoStrapline: UIView {
         
         var accessibilityLabel: String {
             switch self {
-            case .home(let country):
-                switch country {
-                case .england:
-                    return localize(.home_strapline_accessiblity_label)
-                case .wales:
-                    return localize(.home_strapline_accessiblity_label_wls)
-                }
+            case .home:
+                return localizeForCountry(.home_strapline_accessiblity_label)
             case .onboarding:
                 return localize(.onboarding_strapline_accessiblity_label)
             }

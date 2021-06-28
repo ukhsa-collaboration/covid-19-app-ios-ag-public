@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -13,7 +13,7 @@ public struct Environment {
     var distributionClient: HTTPClient
     var apiClient: HTTPClient
     var iTunesClient: HTTPClient
-    var venueDecoder: QRCode
+    var venueDecoder: VenueDecoder
     var backgroundTaskIdentifier: String
     var identifier: String
     var appInfo: AppInfo
@@ -29,7 +29,7 @@ public extension Environment {
             distributionClient: AppHTTPClient(for: configuration.distributionRemote, kind: .distribution),
             apiClient: AppHTTPClient(for: configuration.submissionRemote, kind: .submission(userAgentHeaderValue: userAgentHeaderValue)),
             iTunesClient: URLSessionHTTPClient(remote: HTTPRemote.iTunes),
-            venueDecoder: QRCode(for: .qrCodes),
+            venueDecoder: VenueDecoder(for: .qrCodes),
             backgroundTaskIdentifier: BackgroundTaskIdentifiers(in: .main).exposureNotification!,
             identifier: configuration.identifier,
             appInfo: appInfo
@@ -41,7 +41,7 @@ public extension Environment {
             distributionClient: client,
             apiClient: client,
             iTunesClient: client,
-            venueDecoder: QRCode(for: .qrCodes),
+            venueDecoder: VenueDecoder(for: .qrCodes),
             backgroundTaskIdentifier: BackgroundTaskIdentifiers(in: .main).exposureNotification!,
             identifier: "mock",
             appInfo: AppInfo(for: .main)
@@ -56,7 +56,7 @@ private extension HTTPRemote {
     
 }
 
-private extension QRCode {
+private extension VenueDecoder {
     
     init(for signatureKey: SigningKeyInfo) {
         self.init(

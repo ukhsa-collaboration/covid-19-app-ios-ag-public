@@ -1,20 +1,18 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Integration
 import Interface
 import UIKit
 
-public class LogoStraplineComponentScenario: Scenario, UITestInspectable {
-    public static var viewControllerForInspecting: UIViewController = LogoStraplineViewController()
-    
+public class LogoStraplineComponentScenario: Scenario {
     public static let name = "LogoStrapline"
     public static let kind = ScenarioKind.component
     
     static var appController: AppController {
         let navigation = UINavigationController()
-        navigation.pushViewController(viewControllerForInspecting, animated: false)
+        navigation.pushViewController(LogoStraplineViewController(), animated: false)
         return BasicAppController(rootViewController: navigation)
     }
 }

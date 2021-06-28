@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -155,15 +155,6 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
         }
         
         try work(app)
-    }
-    
-}
-
-extension ApplicationRunner where Scenario: UITestInspectable {
-    
-    func inspect(work: (UIViewController) throws -> Void) rethrows {
-        testBundle.becomeCurrentForTesting()
-        try work(Scenario.viewControllerForInspecting)
     }
     
 }

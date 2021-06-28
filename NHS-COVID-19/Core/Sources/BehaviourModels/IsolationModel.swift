@@ -65,6 +65,7 @@ public struct IsolationModel {
         case riskyContactWithExposureDayOlderThanIsolationTerminationDueToDCT
         
         case selfDiagnosedSymptomatic
+        case selfDiagnosedSymptomaticWithAssumedOnsetDateOlderThanPositiveTestEndDate
         
         case terminateRiskyContactDueToDCT
         
@@ -73,8 +74,9 @@ public struct IsolationModel {
         case receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedSymptomOnsetDate
         
         case receivedUnconfirmedPositiveTest
+        // In this case it's assumed that the unconfirmed positive is newer than any assumed symptom onset
         case receivedUnconfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate
-        case receivedUnconfirmedPositiveTestWithEndDateNDaysOlderThanRememberedNegativeTestEndDate
+        case receivedUnconfirmedPositiveTestWithEndDateNDaysOlderThanRememberedNegativeTestEndDateAndOlderThanAssumedSymptomOnsetDayIfAny
         case receivedUnconfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate
         case receivedUnconfirmedPositiveTestWithIsolationPeriodOlderThanAssumedSymptomOnsetDate
         
@@ -116,7 +118,15 @@ public struct IsolationModel {
         case retentionPeriodEnded
     }
     
+    public struct Reference: Codable {
+        public static let basePath = "NHS-COVID-19/Core/Sources"
+        
+        public var file: String
+        public var line: Int
+    }
+    
     public struct Transition: Codable {
+        public var reference: Reference
         public var initialState: State
         public var event: Event
         public var finalState: State
@@ -135,6 +145,8 @@ public struct IsolationModel {
     }
     
     public struct Rule {
+        public var reference: Reference
+        
         public var description: String
         
         var predicates: [StatePredicate]
@@ -186,6 +198,7 @@ extension IsolationRuleSet {
             IsolationModel.Event.allCases.compactMap { event in
                 guard let rule = rules(matching: state, for: event, includeFiller: false).first else { return nil }
                 return IsolationModel.Transition(
+                    reference: rule.reference,
                     initialState: state,
                     event: event,
                     finalState: rule.apply(to: state)
@@ -269,6 +282,8 @@ extension IsolationModel.Rule {
 extension IsolationModel.Rule {
     
     init(
+        file: String = #fileID,
+        line: Int = #line,
         filler description: String,
         predicate: IsolationModel.StatePredicate,
         event: IsolationModel.Event
@@ -281,11 +296,13 @@ extension IsolationModel.Rule {
     }
     
     init(
+        file: String = #fileID, line: Int = #line,
         filler description: String,
         predicates: [IsolationModel.StatePredicate],
         event: IsolationModel.Event
     ) {
         self.init(
+            reference: .init(file: file, line: line),
             description: "Filler Rule: \(description)",
             predicates: predicates,
             event: event,
@@ -294,12 +311,14 @@ extension IsolationModel.Rule {
     }
     
     init(
+        file: String = #fileID, line: Int = #line,
         _ description: String,
         predicate: IsolationModel.StatePredicate,
         event: IsolationModel.Event,
         update: IsolationModel.StateMutations
     ) {
         self.init(
+            reference: .init(file: file, line: line),
             description: description,
             predicates: [predicate],
             event: event,
@@ -308,12 +327,14 @@ extension IsolationModel.Rule {
     }
     
     init(
+        file: String = #fileID, line: Int = #line,
         _ description: String,
         predicates: [IsolationModel.StatePredicate],
         event: IsolationModel.Event,
         update: IsolationModel.StateMutations
     ) {
         self.init(
+            reference: .init(file: file, line: line),
             description: description,
             predicates: predicates,
             event: event,

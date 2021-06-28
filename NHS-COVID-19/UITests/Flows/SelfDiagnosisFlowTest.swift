@@ -49,7 +49,7 @@ class SelfDiagnosisFlowTest: XCTestCase {
             let symptomsListScreen = SymptomsListScreen(app: app)
             
             symptomsListScreen.symptomCard(
-                value: localize(.symptom_card_unchecked),
+                value: localize(.symptom_card_unchecked, applyCurrentLanguageDirection: false),
                 heading: Sandbox.Text.SymptomsList.cardHeading.rawValue.apply(direction: currentLanguageDirection()),
                 content: Sandbox.Text.SymptomsList.cardContent.rawValue.apply(direction: currentLanguageDirection())
             ).tap()

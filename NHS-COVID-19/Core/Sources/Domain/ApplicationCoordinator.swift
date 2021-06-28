@@ -104,7 +104,8 @@ public class ApplicationCoordinator {
             storage: services.cacheStorage,
             postcode: postcodeStore.$postcode.eraseToAnyPublisher(),
             localAuthority: localAuthority.eraseToAnyPublisher(),
-            currentDateProvider: currentDateProvider
+            currentDateProvider: currentDateProvider,
+            minimumUpdateIntervalProvider: services.riskyPostcodeUpdateIntervalProvider
         )
         
         postcodeInfo = riskyPostcodeEndpointManager.postcodeInfo

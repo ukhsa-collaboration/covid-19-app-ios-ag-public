@@ -29,6 +29,9 @@ struct IsolationModelAdapter {
             // bring possible positive test end day before onsetDay to not have symptoms before unconfirmed positive
             testCase.testEndDay = GregorianDay(year: 2020, month: 10, day: 8)
             symptomaticCase.selfDiagnosisDay = GregorianDay(year: 2020, month: 10, day: 13)
+        } else if event == .selfDiagnosedSymptomatic {
+            symptomaticCase.selfDiagnosisDay = GregorianDay(year: 2020, month: 10, day: 14)
+            symptomaticCase.onsetDay = GregorianDay(year: 2020, month: 10, day: 13)
         }
     }
     

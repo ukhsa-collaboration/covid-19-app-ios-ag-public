@@ -26,7 +26,7 @@ class AcceptanceTestCase: XCTestCase {
             var iTunesClient = MockHTTPClient()
             var cameraManager = MockCameraManager()
             var encryptedStore = MockEncryptedStore()
-            var cacheStorage = FileStorage(forNewCachesOf: .random())
+            var cacheStorage = FileStorage(forCachesOf: .random())
             var postcodeValidator = mutating(MockPostcodeValidator()) {
                 $0.validPostcodes = [Postcode("B44")]
             }
@@ -61,11 +61,12 @@ class AcceptanceTestCase: XCTestCase {
                 cameraManager: configuration.cameraManager,
                 encryptedStore: configuration.encryptedStore,
                 cacheStorage: configuration.cacheStorage,
-                venueDecoder: QRCode.forTests,
+                venueDecoder: VenueDecoder.forTests,
                 appInfo: configuration.appInfo,
                 postcodeValidator: configuration.postcodeValidator,
                 currentDateProvider: configuration.currentDateProvider,
-                storeReviewController: MockStoreReviewController()
+                storeReviewController: MockStoreReviewController(),
+                riskyPostcodeUpdateIntervalProvider: DefaultMinimumUpdateIntervalProvider()
             )
             
             exposureNotificationContext = ExposureNotificationContext(services: services, isolationLength: DayDuration(9), interestedInExposureNotifications: { false }, getPostcode: { postcode }, getLocalAuthority: { localAuthority.id })

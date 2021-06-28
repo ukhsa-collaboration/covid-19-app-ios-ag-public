@@ -158,6 +158,16 @@ private struct SubmissionPayload: Codable {
         var didAccessLocalInfoScreenViaNotification = 0
         var didAccessLocalInfoScreenViaBanner = 0
         var isDisplayingLocalInfoBackgroundTick = 0
+        
+        // MARK: - Lab test result after rapid result
+        
+        var positiveLabResultAfterPositiveLFD = 0
+        var negativeLabResultAfterPositiveLFDWithinTimeLimit = 0
+        var negativeLabResultAfterPositiveLFDOutsideTimeLimit = 0
+        var positiveLabResultAfterPositiveSelfRapidTest = 0
+        var negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit = 0
+        var negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit = 0
+        
     }
     
     var includesMultipleApplicationVersions: Bool
@@ -292,6 +302,18 @@ private extension Metric {
             return \.didAccessLocalInfoScreenViaBanner
         case .isDisplayingLocalInfoBackgroundTick:
             return \.isDisplayingLocalInfoBackgroundTick
+        case .positiveLabResultAfterPositiveLFD:
+            return \.positiveLabResultAfterPositiveLFD
+        case .negativeLabResultAfterPositiveLFDWithinTimeLimit:
+            return \.negativeLabResultAfterPositiveLFDWithinTimeLimit
+        case .negativeLabResultAfterPositiveLFDOutsideTimeLimit:
+            return \.negativeLabResultAfterPositiveLFDOutsideTimeLimit
+        case .positiveLabResultAfterPositiveSelfRapidTest:
+            return \.positiveLabResultAfterPositiveSelfRapidTest
+        case .negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit:
+            return \.negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit
+        case .negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit:
+            return \.negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit
         }
     }
     

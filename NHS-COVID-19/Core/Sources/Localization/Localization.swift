@@ -73,14 +73,16 @@ public struct Localization {
         return instance
     }
     
-    func localize<Key: RawRepresentable>(_ key: Key, default value: String = "") -> String where Key.RawValue == String {
+    func localize<Key: RawRepresentable>(_ key: Key, default value: String = "", applyCurrentLanguageDirection: Bool = true) -> String where Key.RawValue == String {
         let string = NSLocalizedString(key.rawValue, tableName: nil, bundle: bundle, value: value, comment: "")
-        return string.isEmpty ? key.rawValue : string
+        return string.isEmpty ?
+            key.rawValue :
+            applyCurrentLanguageDirection ? string.applyCurrentLanguageDirection() : string
     }
     
     func localize<Key: RawRepresentable>(_ key: Key, arguments: [CVarArg]) -> String where Key.RawValue == String {
         
-        let format = localize(key)
+        let format = localize(key, applyCurrentLanguageDirection: false)
         let string = String(
             format: format,
             locale: locale,
@@ -94,7 +96,7 @@ public struct Localization {
                 arguments: arguments
             ) : string
         
-        return actualString.apply(direction: currentLanguageDirection())
+        return actualString.applyCurrentLanguageDirection()
     }
 }
 
@@ -141,8 +143,8 @@ public func currentLocaleIdentifier(
     }
 }
 
-public func localize(_ key: StringLocalizationKey) -> String {
-    Localization.current.localize(key)
+public func localize(_ key: StringLocalizationKey, applyCurrentLanguageDirection: Bool = true) -> String {
+    Localization.current.localize(key, applyCurrentLanguageDirection: applyCurrentLanguageDirection)
 }
 
 public func localize(_ key: StringLocalizationKey, localeConfiguration: LocaleConfiguration) -> String {
@@ -164,9 +166,9 @@ func localizeURL(_ key: StringLocalizationKey) -> URL {
     
     let localizedString = NSLocalizedString(rawValue, tableName: nil, bundle: Localization.current.bundle, value: "", comment: "")
     
-    guard localizedString != rawValue else { return URL(string: localize(key))! }
+    guard localizedString != rawValue else { return URL(string: localize(key, applyCurrentLanguageDirection: false))! }
     
-    return URL(string: localizedString) ?? URL(string: localize(key))!
+    return URL(string: localizedString) ?? URL(string: localize(key, applyCurrentLanguageDirection: false))!
 }
 
 public func localizeForCountry(_ key: StringLocalizationKey) -> String {
@@ -177,6 +179,7 @@ public func localizeForCountry(_ key: StringLocalizationKey) -> String {
     }
     
     return NSLocalizedString(rawValue, tableName: nil, bundle: Localization.current.bundle, value: "", comment: "")
+        .applyCurrentLanguageDirection()
 }
 
 public func localizeForCountry(_ localizable: ParameterisedStringLocalizable) -> String {
@@ -195,7 +198,7 @@ public func localizeForCountry(_ localizable: ParameterisedStringLocalizable) ->
             format: localizable.key.rawValue,
             locale: Localization.current.locale,
             arguments: localizable.arguments
-        ) : string
+        ) : string.applyCurrentLanguageDirection()
     
 }
 
@@ -252,7 +255,7 @@ extension LocaleString {
         case .url:
             return string
         case .text:
-            return string.apply(direction: currentLanguageDirection())
+            return string.applyCurrentLanguageDirection()
         }
     }
 }
@@ -267,5 +270,9 @@ public extension String {
         case .unknown:
             return self
         }
+    }
+    
+    func applyCurrentLanguageDirection() -> String {
+        apply(direction: currentLanguageDirection())
     }
 }

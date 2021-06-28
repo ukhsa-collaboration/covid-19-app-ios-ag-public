@@ -34,6 +34,7 @@ private extension ApplicationServices {
         self.init(
             standardServicesFor: environment,
             dateProvider: dateProvider,
+            riskyPostcodeUpdateIntervalProvider: RiskyPostcodeAdjustableMinimumUpdateIntervalProvider(),
             exposureNotificationManager: SimulatedExposureNotificationManager(dateProvider: dateProvider)
         )
     }
@@ -45,7 +46,11 @@ private extension ApplicationServices {
         if MockScenario.mockDataProvider.useFakeENContacts {
             self.init(simulatedENServicesFor: environment)
         } else {
-            self.init(standardServicesFor: environment, dateProvider: AdjustableDateProvider())
+            self.init(
+                standardServicesFor: environment,
+                dateProvider: AdjustableDateProvider(),
+                riskyPostcodeUpdateIntervalProvider: RiskyPostcodeAdjustableMinimumUpdateIntervalProvider()
+            )
         }
         #endif
     }

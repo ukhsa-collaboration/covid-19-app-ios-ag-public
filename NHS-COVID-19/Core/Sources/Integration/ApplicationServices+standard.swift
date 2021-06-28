@@ -17,6 +17,7 @@ extension ApplicationServices {
     public convenience init(
         standardServicesFor environment: Environment,
         dateProvider: DateProviding = DateProvider(),
+        riskyPostcodeUpdateIntervalProvider: MinimumUpdateIntervalProviding = DefaultMinimumUpdateIntervalProvider(),
         exposureNotificationManager: ExposureNotificationManaging = ENManager()
     ) {
         Self.logger.debug("initialising", metadata: .describing(environment.identifier))
@@ -34,15 +35,13 @@ extension ApplicationServices {
             iTunesClient: environment.iTunesClient,
             cameraManager: CameraManager(),
             encryptedStore: EncryptedStore(service: environment.identifier),
-            cacheStorage: MigratoryFileStorage(
-                newStorage: FileStorage(forNewCachesOf: environment.identifier),
-                oldStorage: FileStorage(forOldCachesOf: environment.identifier)
-            ),
+            cacheStorage: FileStorage(forCachesOf: environment.identifier),
             venueDecoder: environment.venueDecoder,
             appInfo: environment.appInfo,
             postcodeValidator: PostcodeValidator(),
             currentDateProvider: dateProvider,
-            storeReviewController: StoreReviewController()
+            storeReviewController: StoreReviewController(),
+            riskyPostcodeUpdateIntervalProvider: riskyPostcodeUpdateIntervalProvider
         )
     }
     

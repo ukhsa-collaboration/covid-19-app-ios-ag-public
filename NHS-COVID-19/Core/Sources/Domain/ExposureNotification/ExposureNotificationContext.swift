@@ -161,7 +161,7 @@ struct ExposureNotificationContext {
         exposureWindowStore.deleteWindows(includingAndPriorTo: expiredWindowsDay)
     }
     
-    func postExposureWindows(result: TestResult, testKitType: TestKitType?, requiresConfirmatoryTest: Bool) {
+    func postExposureWindows(result: UnacknowledgedTestResult, testKitType: TestKitType?, requiresConfirmatoryTest: Bool) {
         guard #available(iOS 13.7, *),
             let exposureWindowStore = exposureWindowStore,
             let exposureWindowAnalyticsHandler = exposureWindowAnalyticsHandler else { return }

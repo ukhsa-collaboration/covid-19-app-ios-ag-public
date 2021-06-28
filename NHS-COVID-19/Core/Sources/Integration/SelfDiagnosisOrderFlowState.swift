@@ -29,7 +29,7 @@ enum SelfDiagnosisOrderFlowState {
                             testOrdering.send(true)
                         },
                         openURL: context.openURL,
-                        initialIsolationState: Interface.IsolationState(domainState: context.isolationState.currentValue, today: LocalDay.today)
+                        initialIsolationState: context.isolationState.currentValue
                     ))
                 }
             }.eraseToAnyPublisher()

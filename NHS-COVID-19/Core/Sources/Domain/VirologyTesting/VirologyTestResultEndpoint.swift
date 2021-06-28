@@ -45,7 +45,8 @@ struct VirologyTestResultEndpoint: HTTPEndpoint {
                         endDate: payload.testEndDate
                     ),
                     diagnosisKeySubmissionSupport: payload.diagnosisKeySubmissionSupported,
-                    requiresConfirmatoryTest: payload.requiresConfirmatoryTest
+                    requiresConfirmatoryTest: payload.requiresConfirmatoryTest,
+                    confirmatoryDayLimit: payload.confirmatoryDayLimit
                 )
             )
         default:
@@ -91,6 +92,7 @@ private struct ResponseBody: Codable {
     var testKit: TestKitType
     var diagnosisKeySubmissionSupported: Bool
     var requiresConfirmatoryTest: Bool
+    var confirmatoryDayLimit: Int?
 }
 
 private extension VirologyTestResult.TestResult {

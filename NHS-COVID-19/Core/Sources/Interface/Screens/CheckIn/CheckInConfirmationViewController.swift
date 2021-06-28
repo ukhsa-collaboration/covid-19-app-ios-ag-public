@@ -78,7 +78,6 @@ public class CheckInConfirmationViewController: UIViewController {
             DispatchQueue.global(qos: .userInitiated).async {
                 
                 self.checkImages.append(contentsOf: imageIndexRange.compactMap {
-                    #warning("Only play half the frames - todo; remove the surplus frames from the app bundle")
                     if ($0 % 2) == 0 {
                         return nil
                     }

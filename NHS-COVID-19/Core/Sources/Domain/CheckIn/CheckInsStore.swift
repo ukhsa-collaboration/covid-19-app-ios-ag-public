@@ -27,7 +27,7 @@ private struct CheckInsWrapper: Codable, DataConvertible {
 
 public class CheckInsStore {
     
-    private let venueDecoder: QRCode
+    private let venueDecoder: VenueDecoder
     
     @Encrypted<CheckInsWrapper> private var checkInsInfo: CheckInsWrapper? {
         didSet {
@@ -85,7 +85,7 @@ public class CheckInsStore {
     private let getCachedRiskyVenueConfiguration: () -> RiskyVenueConfiguration
     
     required init(store: EncryptedStoring,
-                  venueDecoder: QRCode,
+                  venueDecoder: VenueDecoder,
                   getCachedRiskyVenueConfiguration: @escaping () -> RiskyVenueConfiguration) {
         self.venueDecoder = venueDecoder
         _checkInsInfo = store.encrypted("checkins")
@@ -255,7 +255,7 @@ public class CheckInsStore {
     }
     
     public func checkIn(with payload: String, currentDate: Date) throws -> (String, () -> Void) {
-        let venue = try venueDecoder.parse(payload)
+        let venue = try venueDecoder.decode(payload)
         let checkIn = CheckIn(venue: venue, checkedInDate: currentDate)
         save(checkIn)
         return (venue.organisation, deleteLatest)

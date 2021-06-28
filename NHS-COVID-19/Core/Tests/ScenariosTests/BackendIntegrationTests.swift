@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -83,7 +83,7 @@ extension BackendIntegrationTests {
     func _testDailyKeysDownload() throws {
         let detectionClient = ExposureDetectionEndpointManager(
             distributionClient: distributionClient,
-            fileStorage: FileStorage(forNewCachesOf: .random())
+            fileStorage: FileStorage(forCachesOf: .random())
         )
         
         let zipManager = try detectionClient.getExposureKeys(for: .daily(.today)).await(timeout: 5).get()
@@ -100,7 +100,7 @@ extension BackendIntegrationTests {
     func _testHourlyKeysDownload() throws {
         let detectionClient = ExposureDetectionEndpointManager(
             distributionClient: distributionClient,
-            fileStorage: FileStorage(forNewCachesOf: .random())
+            fileStorage: FileStorage(forCachesOf: .random())
         )
         let zipManager = try detectionClient.getExposureKeys(for: .twoHourly(.today, .init(value: 0))).await(timeout: 5).get()
         let fileManager = FileManager()

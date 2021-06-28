@@ -24,7 +24,7 @@ extension IsolationStatePayload: Codable {
         guard metadata.version >= Metadata.v2.version else {
             let payload = try PayloadV1(from: decoder)
             isolationStateInfo = IsolationStateInfo(
-                isolationInfo: IsolationInfo(payload.isolationInfo),
+                isolationInfo: try IsolationInfo(payload.isolationInfo),
                 configuration: payload.configuration
             )
             return
@@ -293,6 +293,33 @@ private struct PayloadV1: Decodable {
         var optOutOfIsolationDay: GregorianDay?
     }
     
+    struct IndexCaseInfo: Decodable {
+        enum TestResult: String, Codable {
+            case positive
+            case negative
+            case void
+        }
+        
+        enum TestKitType: String, Codable {
+            case labResult
+            case rapidResult
+            case rapidSelfReported
+        }
+        
+        struct TestInfo: Decodable {
+            var result: TestResult
+            var testKitType: TestKitType?
+            var requiresConfirmatoryTest: Bool?
+            var receivedOnDay: GregorianDay
+            var confirmedOnDay: GregorianDay?
+        }
+        
+        var selfDiagnosisDay: GregorianDay?
+        var onsetDay: GregorianDay?
+        var npexDay: GregorianDay?
+        var testInfo: TestInfo?
+    }
+    
     struct IsolationInfo: Decodable {
         var hasAcknowledgedEndOfIsolation: Bool?
         var hasAcknowledgedStartOfIsolation: Bool?
@@ -306,11 +333,11 @@ private struct PayloadV1: Decodable {
 
 private extension IsolationInfo {
     
-    init(_ payload: PayloadV1.IsolationInfo) {
+    init(_ payload: PayloadV1.IsolationInfo) throws {
         self.init(
             hasAcknowledgedEndOfIsolation: payload.hasAcknowledgedEndOfIsolation ?? false,
             hasAcknowledgedStartOfIsolation: payload.hasAcknowledgedStartOfIsolation ?? false,
-            indexCaseInfo: payload.indexCaseInfo,
+            indexCaseInfo: try payload.indexCaseInfo.map(IndexCaseInfo.init),
             contactCaseInfo: payload.contactCaseInfo.map(ContactCaseInfo.init)
         )
     }
@@ -325,6 +352,77 @@ private extension ContactCaseInfo {
             isolationFromStartOfDay: payload.isolationFromStartOfDay,
             optOutOfIsolationDay: payload.optOutOfIsolationDay
         )
+    }
+    
+}
+
+private extension IndexCaseInfo {
+    
+    init(_ payload: PayloadV1.IndexCaseInfo) throws {
+        if let selfDiagnosisDay = payload.selfDiagnosisDay {
+            let symptomaticInfo = SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: payload.onsetDay)
+            self.init(
+                isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
+                symptomaticInfo: symptomaticInfo,
+                testInfo: payload.testInfo.map { IndexCaseInfo.TestInfo($0, testEndDay: payload.npexDay) }
+            )
+        } else if let testInfo = payload.testInfo, let testEndDay = payload.npexDay {
+            self.init(
+                isolationTrigger: .manualTestEntry(npexDay: testEndDay),
+                symptomaticInfo: nil,
+                testInfo: IndexCaseInfo.TestInfo(testInfo, testEndDay: testEndDay)
+            )
+        } else {
+            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: [], debugDescription: "Could not find self diagnosis day or npex day"))
+        }
+    }
+    
+}
+
+private extension IndexCaseInfo.TestInfo {
+    
+    init(_ testInfo: PayloadV1.IndexCaseInfo.TestInfo, testEndDay: GregorianDay?) {
+        self.init(
+            result: TestResult(testInfo.result),
+            testKitType: TestKitType(testInfo.testKitType),
+            requiresConfirmatoryTest: testInfo.requiresConfirmatoryTest ?? false,
+            confirmatoryDayLimit: nil,
+            receivedOnDay: testInfo.receivedOnDay,
+            confirmedOnDay: testInfo.confirmedOnDay,
+            completedOnDay: testInfo.confirmedOnDay,
+            testEndDay: testEndDay
+        )
+    }
+    
+}
+
+private extension TestResult {
+    
+    init(_ result: PayloadV1.IndexCaseInfo.TestResult) {
+        switch result {
+        case .positive:
+            self = .positive
+        case .negative:
+            self = .negative
+        case .void:
+            self = .void
+        }
+    }
+    
+}
+
+private extension TestKitType {
+    
+    init?(_ result: PayloadV1.IndexCaseInfo.TestKitType?) {
+        guard let result = result else { return nil }
+        switch result {
+        case .labResult:
+            self = .labResult
+        case .rapidResult:
+            self = .rapidResult
+        case .rapidSelfReported:
+            self = .rapidSelfReported
+        }
     }
     
 }

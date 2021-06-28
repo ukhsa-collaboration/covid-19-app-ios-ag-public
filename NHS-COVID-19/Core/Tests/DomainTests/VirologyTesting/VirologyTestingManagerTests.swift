@@ -129,7 +129,7 @@ class VirologyTestingManagerTests: XCTestCase {
         _ = try manager.evaulateTestResults().await().get()
         XCTAssertEqual(notificationManager.notificationType, UserNotificationType.testResultReceived)
         let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
-        XCTAssertEqual(storedResult.testResult, TestResult.positive)
+        XCTAssertEqual(storedResult.testResult, .positive)
         XCTAssertEqual(storedResult.diagnosisKeySubmissionToken, submissionToken)
         let storedTokens = try XCTUnwrap(virologyStore.virologyTestTokens)
         XCTAssertEqual(storedTokens.count, 0)
@@ -154,7 +154,7 @@ class VirologyTestingManagerTests: XCTestCase {
         _ = try manager.evaulateTestResults().await().get()
         XCTAssertEqual(notificationManager.notificationType, UserNotificationType.testResultReceived)
         let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
-        XCTAssertEqual(storedResult.testResult, TestResult.negative)
+        XCTAssertEqual(storedResult.testResult, .negative)
         XCTAssertNil(storedResult.diagnosisKeySubmissionToken)
         let storedTokens = try XCTUnwrap(virologyStore.virologyTestTokens)
         XCTAssertEqual(storedTokens.count, 0)
@@ -179,7 +179,7 @@ class VirologyTestingManagerTests: XCTestCase {
         _ = try manager.evaulateTestResults().await().get()
         XCTAssertEqual(notificationManager.notificationType, UserNotificationType.testResultReceived)
         let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
-        XCTAssertEqual(storedResult.testResult, TestResult.void)
+        XCTAssertEqual(storedResult.testResult, .void)
         XCTAssertNil(storedResult.diagnosisKeySubmissionToken)
         let storedTokens = try XCTUnwrap(virologyStore.virologyTestTokens)
         XCTAssertEqual(storedTokens.count, 0)
@@ -263,7 +263,7 @@ class VirologyTestingManagerTests: XCTestCase {
         _ = try manager.linkExternalTestResult(with: ctaToken).await().get()
         XCTAssertNil(notificationManager.notificationType)
         let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
-        XCTAssertEqual(storedResult.testResult, TestResult.positive)
+        XCTAssertEqual(storedResult.testResult, .positive)
         XCTAssertEqual(storedResult.diagnosisKeySubmissionToken, submissionToken)
     }
     
@@ -285,7 +285,7 @@ class VirologyTestingManagerTests: XCTestCase {
         _ = try manager.linkExternalTestResult(with: ctaToken).await().get()
         XCTAssertNil(notificationManager.notificationType)
         let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
-        XCTAssertEqual(storedResult.testResult, TestResult.negative)
+        XCTAssertEqual(storedResult.testResult, .negative)
         XCTAssertNil(storedResult.diagnosisKeySubmissionToken)
     }
     
@@ -307,7 +307,7 @@ class VirologyTestingManagerTests: XCTestCase {
         _ = try manager.linkExternalTestResult(with: ctaToken).await().get()
         XCTAssertNil(notificationManager.notificationType)
         let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
-        XCTAssertEqual(storedResult.testResult, TestResult.void)
+        XCTAssertEqual(storedResult.testResult, .void)
         XCTAssertNil(storedResult.diagnosisKeySubmissionToken)
     }
     

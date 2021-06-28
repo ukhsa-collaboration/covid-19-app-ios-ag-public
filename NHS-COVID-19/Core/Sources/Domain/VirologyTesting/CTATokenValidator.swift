@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -12,9 +12,12 @@ struct CTATokenValidator: CTATokenValidating {
     private static let crockfordBase32Alphabet = "0123456789abcdefghjkmnpqrstvwxyz"
     private static let dammModulus = 32
     private static let dammMask = 5
+    private static let tokenLength = 8
     
     func validate(_ token: String) -> Bool {
-        if !matchesAllowedCharacters(token: token) { return false }
+        guard token.count == Self.tokenLength,
+            matchesAllowedCharacters(token: token)
+        else { return false }
         
         let checksum = token.lowercased().reduce(0) { checksum, character in
             let digit = Array(Self.crockfordBase32Alphabet).firstIndex(of: character)!

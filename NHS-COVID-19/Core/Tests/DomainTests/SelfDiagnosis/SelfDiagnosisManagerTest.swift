@@ -15,10 +15,9 @@ class SelfDiagnosisManagerTests: XCTestCase {
     private let timeZone = TimeZone.utc
     
     fileprivate let symptoms = [
-        (Symptom(title: [Locale(identifier: ""): ""], description: [Locale(identifier: ""): ""], riskWeight: 1), false),
-        (Symptom(title: [Locale(identifier: ""): ""], description: [Locale(identifier: ""): ""], riskWeight: 1), true),
-        (Symptom(title: [Locale(identifier: ""): ""], description: [Locale(identifier: ""): ""], riskWeight: 1), true),
-        (Symptom(title: [Locale(identifier: ""): ""], description: [Locale(identifier: ""): ""], riskWeight: 0), true),
+        Symptom(title: [Locale(identifier: ""): ""], description: [Locale(identifier: ""): ""], riskWeight: 1),
+        Symptom(title: [Locale(identifier: ""): ""], description: [Locale(identifier: ""): ""], riskWeight: 1),
+        Symptom(title: [Locale(identifier: ""): ""], description: [Locale(identifier: ""): ""], riskWeight: 0),
     ]
     
     override func setUp() {
@@ -31,30 +30,28 @@ class SelfDiagnosisManagerTests: XCTestCase {
     
     func testNoNeedToIsolateIfThresholdNotReached() {
         isolationState = .noNeedToIsolate()
-        let state = selfDiagnosisManager.evaluateSymptoms(symptoms: symptoms, onsetDay: nil, threshold: 3)
-        XCTAssertEqual(state.0, isolationState)
-        XCTAssertNil(state.1)
+        let evaluation = selfDiagnosisManager.evaluate(selectedSymptoms: symptoms, onsetDay: nil, threshold: 3)
+        XCTAssertEqual(evaluation, .noSymptoms)
     }
     
     func testIsolateIfExactlyReachedThreshold() {
-        isolationState = .isolate(Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)))
-        let state = selfDiagnosisManager.evaluateSymptoms(symptoms: symptoms, onsetDay: nil, threshold: 2)
-        XCTAssertEqual(state.0, isolationState)
-        XCTAssertNil(state.1)
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil))
+        isolationState = .isolate(isolation)
+        let evaluation = selfDiagnosisManager.evaluate(selectedSymptoms: symptoms, onsetDay: nil, threshold: 2)
+        XCTAssertEqual(evaluation, .hasSymptoms(isolation, .hasNoTest))
     }
     
     func testIsolateIfExactlyAboveThreshold() {
-        isolationState = .isolate(Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)))
-        let state = selfDiagnosisManager.evaluateSymptoms(symptoms: symptoms, onsetDay: nil, threshold: 1)
-        XCTAssertEqual(state.0, isolationState)
-        XCTAssertNil(state.1)
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil))
+        isolationState = .isolate(isolation)
+        let evaluation = selfDiagnosisManager.evaluate(selectedSymptoms: symptoms, onsetDay: nil, threshold: 1)
+        XCTAssertEqual(evaluation, .hasSymptoms(isolation, .hasNoTest))
     }
     
     func testNoNeedToIsolateIfAboveThresholdButIsolationNotRequired() {
         isolationState = .noNeedToIsolate()
-        let state = selfDiagnosisManager.evaluateSymptoms(symptoms: symptoms, onsetDay: nil, threshold: 1)
-        XCTAssertEqual(state.0, isolationState)
-        XCTAssertNil(state.1)
+        let evaluation = selfDiagnosisManager.evaluate(selectedSymptoms: symptoms, onsetDay: nil, threshold: 1)
+        XCTAssertEqual(evaluation, .noSymptoms)
     }
     
 }

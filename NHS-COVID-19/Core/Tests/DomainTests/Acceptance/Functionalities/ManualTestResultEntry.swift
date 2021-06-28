@@ -24,8 +24,8 @@ struct ManualTestResultEntry {
     
     private let validToken = "f3dzcfdt"
     
-    func enterPositive(requiresConfirmatoryTest: Bool = false, symptomsOnsetDay: GregorianDay? = nil, endDate: Date? = nil, testKitType: VirologyTestResult.TestKitType = .labResult) throws {
-        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .positive, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, endDate: endDate ?? currentDateProvider.currentDate)
+    func enterPositive(requiresConfirmatoryTest: Bool = false, symptomsOnsetDay: GregorianDay? = nil, endDate: Date? = nil, testKitType: VirologyTestResult.TestKitType = .labResult, confirmatoryDayLimit: Int? = nil) throws {
+        let testResultAcknowledgementState = try getAcknowledgementState(resultType: .positive, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, confirmatoryDayLimit: confirmatoryDayLimit, endDate: endDate ?? currentDateProvider.currentDate)
         if case .askForSymptomsOnsetDay(_, let didFinishAskForSymptomsOnsetDay, let didConfirmSymptoms, let onsetDay) = testResultAcknowledgementState {
             if let symptomsOnsetDay = symptomsOnsetDay {
                 didConfirmSymptoms()
@@ -69,8 +69,8 @@ struct ManualTestResultEntry {
         }
     }
     
-    private func getAcknowledgementState(resultType: VirologyTestResult.TestResult, testKitType: VirologyTestResult.TestKitType, requiresConfirmatoryTest: Bool, endDate: Date) throws -> TestResultAcknowledgementState {
-        let result = getTestResult(result: resultType, testKitType: testKitType, endDate: endDate, diagnosisKeySubmissionSupported: !requiresConfirmatoryTest, requiresConfirmatoryTest: requiresConfirmatoryTest)
+    private func getAcknowledgementState(resultType: VirologyTestResult.TestResult, testKitType: VirologyTestResult.TestKitType, requiresConfirmatoryTest: Bool, confirmatoryDayLimit: Int? = nil, endDate: Date) throws -> TestResultAcknowledgementState {
+        let result = getTestResult(result: resultType, testKitType: testKitType, endDate: endDate, diagnosisKeySubmissionSupported: !requiresConfirmatoryTest, requiresConfirmatoryTest: requiresConfirmatoryTest, confirmatoryDayLimit: confirmatoryDayLimit)
         apiClient.response(for: "/virology-test/v2/cta-exchange", response: .success(.ok(with: .json(result))))
         let manager = context.virologyTestingManager
         _ = try manager.linkExternalTestResult(with: validToken).await()

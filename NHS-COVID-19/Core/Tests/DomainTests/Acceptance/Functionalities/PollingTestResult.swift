@@ -54,8 +54,8 @@ struct PollingTestResult {
         return try getTestResultAcknowledgementState()
     }
     
-    private func stubResultsEndpoint(resultType: VirologyTestResult.TestResult, testKitType: VirologyTestResult.TestKitType, diagnosisKeySubmissionSupported: Bool, requiresConfirmatoryTest: Bool) {
-        let testResult = getTestResult(result: resultType, testKitType: testKitType, endDate: currentDateProvider.currentDate, diagnosisKeySubmissionSupported: diagnosisKeySubmissionSupported, requiresConfirmatoryTest: requiresConfirmatoryTest)
+    private func stubResultsEndpoint(resultType: VirologyTestResult.TestResult, testKitType: VirologyTestResult.TestKitType, diagnosisKeySubmissionSupported: Bool, requiresConfirmatoryTest: Bool, confirmatoryDayLimit: Int? = nil) {
+        let testResult = getTestResult(result: resultType, testKitType: testKitType, endDate: currentDateProvider.currentDate, diagnosisKeySubmissionSupported: diagnosisKeySubmissionSupported, requiresConfirmatoryTest: requiresConfirmatoryTest, confirmatoryDayLimit: confirmatoryDayLimit)
         apiClient.response(for: "/virology-test/v2/results", response: .success(.ok(with: .json(testResult))))
     }
     

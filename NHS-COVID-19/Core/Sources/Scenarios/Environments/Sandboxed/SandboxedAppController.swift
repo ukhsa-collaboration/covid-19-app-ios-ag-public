@@ -51,12 +51,13 @@ private extension ApplicationServices {
             iTunesClient: MockHTTPClient(),
             cameraManager: SandboxCameraManager(host: host),
             encryptedStore: SandboxEncryptedStore(host: host),
-            cacheStorage: FileStorage(forNewCachesOf: UUID().uuidString),
-            venueDecoder: QRCode.fake,
+            cacheStorage: FileStorage(forCachesOf: UUID().uuidString),
+            venueDecoder: VenueDecoder.fake,
             appInfo: AppInfo(bundleId: UUID().uuidString, version: "3.10", buildNumber: "1"),
             postcodeValidator: SandboxPostcodeValidator(),
             currentDateProvider: DateProvider(notificationCenter: notificationCenter),
-            storeReviewController: StoreReviewController()
+            storeReviewController: StoreReviewController(),
+            riskyPostcodeUpdateIntervalProvider: DefaultMinimumUpdateIntervalProvider()
         )
     }
     
@@ -73,8 +74,8 @@ private extension P256.Signing.PublicKey {
     
 }
 
-private extension QRCode {
+private extension VenueDecoder {
     
-    static let fake = QRCode(keyId: "3", key: .testKey)
+    static let fake = VenueDecoder(keyId: "3", key: .testKey)
     
 }

@@ -131,8 +131,6 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
         
         assertAnalyticsPacketIsNormal()
         
-        // When the user provides a symptomsOnsetDay after entering test results, an indexCaseInfo will be created with IsolationTrigger = .selfDiagnosis (where the onset day will be saved)
-        // After that the testInfo of the created indexCaseInfo will be updated with the given test result.
         try manualTestResultEntry.enterPositive(
             symptomsOnsetDay: LocalDay.today.gregorianDay.advanced(by: -1),
             endDate: LocalDay.today.gregorianDay.startDate(in: .utc)

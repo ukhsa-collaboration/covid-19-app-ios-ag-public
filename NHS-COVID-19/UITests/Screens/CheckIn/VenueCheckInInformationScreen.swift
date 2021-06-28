@@ -47,11 +47,11 @@ struct VenueCheckInInformationScreen {
     }
     
     var qrCodePosterWalesDescription: XCUIElement {
-        app.staticTexts[localized: .qr_code_poster_description_wls]
+        app.staticTexts[localized: .qr_code_poster_wales_description]
     }
     
     var qrCodePosterWalesImage: XCUIElement {
-        app.images[localized: .qr_code_poster_accessibility_label_wls]
+        app.images[localized: .qr_code_poster_wales_accessibility_label]
     }
     
     var howItWorksTitle: XCUIElement {

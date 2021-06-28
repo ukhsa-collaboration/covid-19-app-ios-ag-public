@@ -29,6 +29,7 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
         case complete
         case completeAndDeleteSymptoms
         case updateAndConfirm
+        case overwriteAndComplete
         case overwriteAndConfirm
     }
     
@@ -84,7 +85,8 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
         return save(isolationInfo)
     }
     
-    func newIsolationStateInfo(from currentIsolationInfo: IsolationInfo?, for testResult: TestResult, testKitType: TestKitType?, requiresConfirmatoryTest: Bool, confirmatoryDayLimit: Int? = nil, receivedOn: GregorianDay, npexDay: GregorianDay, operation: IsolationStateStore.Operation) -> IsolationStateInfo {
+    func newIsolationStateInfo(from currentIsolationInfo: IsolationInfo?, for unacknowledgedTestResult: UnacknowledgedTestResult, testKitType: TestKitType?, requiresConfirmatoryTest: Bool, confirmatoryDayLimit: Int? = nil, receivedOn: GregorianDay, npexDay: GregorianDay, operation: IsolationStateStore.Operation) -> IsolationStateInfo {
+        let testResult = TestResult(unacknowledgedTestResult)
         
         let isolationInfo = mutating(currentIsolationInfo ?? IsolationInfo()) {
             if requiresConfirmatoryTest == false, testResult == .positive, operation != .ignore {
@@ -162,6 +164,18 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
                     }
                     $0.indexCaseInfo = indexCaseInfo
                 }
+            case .overwriteAndComplete:
+                var indexCaseInfo = IndexCaseInfo(
+                    symptomaticInfo: nil,
+                    testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, confirmatoryDayLimit: confirmatoryDayLimit, receivedOnDay: receivedOn, testEndDay: npexDay)
+                )
+                
+                if let completedOnDay = $0.indexCaseInfo?.testInfo?.completedOnDay ?? $0.indexCaseInfo?.assumedTestEndDay {
+                    indexCaseInfo.completeTest(completedOnDay: completedOnDay)
+                }
+                
+                $0.indexCaseInfo = indexCaseInfo
+                
             case .overwriteAndConfirm:
                 var indexCaseInfo = IndexCaseInfo(
                     symptomaticInfo: nil,
@@ -221,17 +235,11 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
     }
     
     func provideSymptomsOnsetDate() -> Date? {
-        if let onsetDay = isolationInfo.indexCaseInfo?.symptomaticInfo?.onsetDay {
-            return LocalDay(gregorianDay: onsetDay, timeZone: .current).startOfDay
+        guard let symptomaticInfo = isolationInfo.indexCaseInfo?.symptomaticInfo else {
+            return nil
         }
         
-        if case .selfDiagnosis(let selfDiagnosisDay) = isolationInfo.indexCaseInfo?.isolationTrigger {
-            // onsetDay = selfDiagnosisDay - 2
-            let selfDiagnosisDate = LocalDay(gregorianDay: selfDiagnosisDay, timeZone: .current).startOfDay
-            return Calendar.current.date(byAdding: DateComponents(day: -2), to: selfDiagnosisDate)!
-        }
-        
-        return nil
+        return LocalDay(gregorianDay: symptomaticInfo.assumedOnsetDay, timeZone: .current).startOfDay
     }
     
     func recordMetrics() -> AnyPublisher<Void, Never> {
@@ -254,7 +262,7 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
                     Metrics.signpost(.testedPositiveBackgroundTick)
                 }
             }
-            if case .selfDiagnosis = indexCaseInfo.isolationTrigger {
+            if indexCaseInfo.symptomaticInfo != nil {
                 Metrics.signpost(.selfDiagnosedBackgroundTick)
             }
         }

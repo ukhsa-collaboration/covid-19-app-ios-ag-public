@@ -1261,4 +1261,39 @@ class IsolationStateStoreTests: XCTestCase {
         XCTAssertNil(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.confirmedOnDay)
         XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.completedOnDay, npexDayCompleted)
     }
+    
+    func testOverwriteAndCompleteTestResultOperation() {
+        let negativeTestEndDay = GregorianDay(year: 2020, month: 7, day: 13)
+        let positiveTestEndDay = GregorianDay(year: 2020, month: 7, day: 10)
+        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 9)
+        
+        // Given
+        let isolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfIsolation: false,
+            indexCaseInfo: IndexCaseInfo(
+                symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+                testInfo: IndexCaseInfo.TestInfo(result: .negative, requiresConfirmatoryTest: false, receivedOnDay: negativeTestEndDay, testEndDay: negativeTestEndDay)
+            ),
+            contactCaseInfo: nil
+        )
+        
+        // When
+        store.isolationStateInfo = store.newIsolationStateInfo(
+            from: isolationInfo,
+            for: .positive,
+            testKitType: .rapidResult,
+            requiresConfirmatoryTest: true,
+            receivedOn: negativeTestEndDay,
+            npexDay: positiveTestEndDay,
+            operation: .overwriteAndComplete
+        )
+        
+        // Then
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.receivedOnDay, negativeTestEndDay)
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.requiresConfirmatoryTest, true)
+        XCTAssertNil(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.confirmedOnDay)
+        XCTAssertNil(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.symptomaticInfo)
+        XCTAssertEqual(store.isolationStateInfo?.isolationInfo.indexCaseInfo?.testInfo?.completedOnDay, negativeTestEndDay)
+    }
 }

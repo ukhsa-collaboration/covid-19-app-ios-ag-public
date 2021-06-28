@@ -5,11 +5,14 @@
 import Common
 import Foundation
 
-private struct VirologyTokensInfo: Codable, DataConvertible, Equatable {
+private struct VirologyTokensInfo: Codable, Equatable {
     var pollingToken: String
     var diagnosisKeySubmissionToken: String
 }
 
+#warning("Extract these types")
+// Currently we have decoding interleaved with actual logic. Would be good to separate these, following the pattern from
+// `IsolationStatePayload`.
 private struct VirologyTestingInfo: Codable, DataConvertible {
     var tokensInfo: [VirologyTokensInfo]?
     var latestUnacknowledgedTestResult: TestResultInfo?
@@ -21,6 +24,46 @@ private struct UnknownTestResultInfo: Codable, DataConvertible {
 }
 
 private struct TestResultInfo: Codable, DataConvertible {
+    
+    enum TestResult: String, Codable, Equatable {
+        case positive
+        case plod
+        case negative
+        case void
+        
+        init(_ virologyTestResult: VirologyTestResult.TestResult) {
+            switch virologyTestResult {
+            case .positive:
+                self = .positive
+            case .plod:
+                self = .plod
+            case .negative:
+                self = .negative
+            case .void:
+                self = .void
+            }
+        }
+        
+    }
+    
+    enum TestKitType: String, Codable {
+        case labResult
+        case rapidResult
+        case rapidSelfReported
+        
+        init?(_ result: Domain.TestKitType?) {
+            guard let result = result else { return nil }
+            switch result {
+            case .labResult:
+                self = .labResult
+            case .rapidResult:
+                self = .rapidResult
+            case .rapidSelfReported:
+                self = .rapidSelfReported
+            }
+        }
+    }
+    
     var result: TestResult
     var testKitType: TestKitType?
     var endDate: Date // Date test result arrives at NPEx
@@ -103,8 +146,8 @@ public class VirologyTestingStateStore {
                 diagnosisSubmissionToken = nil
             }
             return VirologyStateTestResult(
-                testResult: unacknowledgedTestResult.result,
-                testKitType: unacknowledgedTestResult.testKitType,
+                testResult: UnacknowledgedTestResult(unacknowledgedTestResult.result),
+                testKitType: TestKitType(unacknowledgedTestResult.testKitType),
                 endDate: unacknowledgedTestResult.endDate,
                 diagnosisKeySubmissionToken: diagnosisSubmissionToken,
                 requiresConfirmatoryTest: unacknowledgedTestResult.requiresConfirmatoryTest,
@@ -139,8 +182,8 @@ public class VirologyTestingStateStore {
         confirmatoryDayLimit: Int? = nil
     ) {
         let testResultInfo = TestResultInfo(
-            result: TestResult(virologyTestResult.testResult),
-            testKitType: TestKitType(virologyTestResult.testKitType),
+            result: TestResultInfo.TestResult(virologyTestResult.testResult),
+            testKitType: TestResultInfo.TestKitType(virologyTestResult.testKitType),
             endDate: virologyTestResult.endDate,
             diagnosisKeySubmissionToken: diagnosisKeySubmissionToken?.value,
             requiresConfirmatoryTest: requiresConfirmatoryTest,
@@ -182,7 +225,7 @@ public class VirologyTestingStateStore {
     }
     
     private func testEquality(savedResult: TestResultInfo, testResult: VirologyStateTestResult) -> Bool {
-        return savedResult.result == testResult.testResult &&
+        return UnacknowledgedTestResult(savedResult.result) == testResult.testResult &&
             savedResult.endDate == testResult.endDate &&
             savedResult.diagnosisKeySubmissionToken == testResult.diagnosisKeySubmissionToken?.value
     }
@@ -210,4 +253,37 @@ public class VirologyTestingStateStore {
             return nil
         }
     }
+}
+
+private extension UnacknowledgedTestResult {
+    
+    init(_ testResult: TestResultInfo.TestResult) {
+        switch testResult {
+        case .positive:
+            self = .positive
+        case .plod:
+            self = .plod
+        case .negative:
+            self = .negative
+        case .void:
+            self = .void
+        }
+    }
+    
+}
+
+private extension TestKitType {
+    
+    init?(_ result: TestResultInfo.TestKitType?) {
+        guard let result = result else { return nil }
+        switch result {
+        case .labResult:
+            self = .labResult
+        case .rapidResult:
+            self = .rapidResult
+        case .rapidSelfReported:
+            self = .rapidSelfReported
+        }
+    }
+    
 }

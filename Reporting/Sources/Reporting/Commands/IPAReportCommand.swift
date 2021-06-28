@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import ArgumentParser
@@ -27,7 +27,7 @@ struct IPAReportCommand: ParsableCommand {
         let ipa = IPA(url: ipaUrl)
         try ipa.withApplication { application in
             try fileManager.createDirectory(at: reportFolder, withIntermediateDirectories: true, attributes: nil)
-            let reporter = ArtefactReporter(appURL: application.url, reportFolder: reportFolder)
+            let reporter = ExtendedReporter(appURL: application.url, reportFolder: reportFolder)
             try reporter.run()
         }
     }

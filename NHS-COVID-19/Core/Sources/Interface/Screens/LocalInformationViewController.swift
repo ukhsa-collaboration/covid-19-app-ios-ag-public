@@ -16,7 +16,7 @@ extension LocalInformationViewController {
         let body: [LocalInformationScreenBodyElement]
         
         public init(header: String, body: [LocalInformationScreenBodyElement]) {
-            self.header = header
+            self.header = header.applyCurrentLanguageDirection()
             self.body = body
         }
     }
@@ -28,8 +28,12 @@ extension LocalInformationViewController.ViewModel {
         let link: (url: URL, title: String)?
         
         public init(text: String?, link: (url: URL, title: String)?) {
-            self.text = text
-            self.link = link
+            self.text = text?.applyCurrentLanguageDirection()
+            if let link = link {
+                self.link = (url: link.url, title: link.title.applyCurrentLanguageDirection())
+            } else {
+                self.link = nil
+            }
         }
     }
 }

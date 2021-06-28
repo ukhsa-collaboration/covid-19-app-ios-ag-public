@@ -21,11 +21,9 @@ struct ReportCommand: ParsableCommand {
             ValidateCommand.self,
             UploadCommand.self,
             VersioningCommand.self,
-            DeployLatestCommand.self,
             GetCommand.self,
             GitTagForNewVersion.self,
             TestResultsSummaryCommand.self,
-            UnusedLocalizableKeysSummaryCommand.self,
         ]
     )
     

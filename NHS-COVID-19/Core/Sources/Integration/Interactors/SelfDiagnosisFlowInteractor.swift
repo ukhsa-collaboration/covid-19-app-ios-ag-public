@@ -14,9 +14,7 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
     let orderTest: () -> Void
     let symptomMapper = SymptomMapping()
     let openURL: (URL) -> Void
-    #warning("Use domain model")
-    // We directly import `Domain` here. There's no need to go via an `Interface` type.
-    let initialIsolationState: Interface.IsolationState
+    let initialIsolationState: Domain.IsolationState
     
     func fetchQuestionnaire() -> AnyPublisher<InterfaceSymptomsQuestionnaire, Error> {
         selfDiagnosisManager.fetchQuestionnaire()
@@ -35,43 +33,21 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
     }
     
     func advice(basedOn symptoms: [SymptomInfo], onsetDay: GregorianDay?, riskThreshold: Double) -> SelfDiagnosisAdvice {
-        #warning("Simplify this.")
-        // Start pushing down use of the unstructured `(Date?, Bool?)` type and eventually remove it.
-        let state = evaluateSymptoms(riskThreshold: riskThreshold, symptoms: symptoms, onsetDay: onsetDay)
-        if let isolationEndDate = state.0 {
-            switch state.1 {
-            case .none:
-                return .hasSymptoms(.isolate(.hasNoTests, endDate: isolationEndDate))
-            case .some(true):
-                return .hasSymptoms(.isolate(.hasTestsButShouldUseSymptoms, endDate: isolationEndDate))
-            case .some(false):
-                return .hasSymptoms(.followAdviceForExistingPositiveTest)
-            }
-        } else {
+        let selectedSymptoms = symptoms
+            .filter(\.isConfirmed)
+            .map(symptomMapper.domainSymptomFrom)
+        
+        let evaluation = selfDiagnosisManager.evaluate(selectedSymptoms: selectedSymptoms, onsetDay: onsetDay, threshold: riskThreshold)
+        switch evaluation {
+        case .noSymptoms:
             return .noSymptoms(.init(initialIsolationState))
+        case .hasSymptoms(let isolation, let testState):
+            return .hasSymptoms(.init(isolation: isolation, testState: testState))
         }
     }
     
     var adviceWhenNoSymptomsAreReported: SelfDiagnosisAdvice {
         .noSymptoms(.init(initialIsolationState))
-    }
-    
-    private func evaluateSymptoms(riskThreshold: Double, symptoms: [SymptomInfo], onsetDay: GregorianDay?) -> (Date?, Bool?) {
-        let isolationState = _evaluateSymptoms(riskThreshold: riskThreshold, symptoms: symptoms, onsetDay: onsetDay)
-        switch isolationState.0 {
-        case .isolate(let isolation):
-            return (isolation.endDate, isolationState.1)
-        case .noNeedToIsolate:
-            return (nil, isolationState.1)
-        }
-    }
-    
-    private func _evaluateSymptoms(riskThreshold: Double, symptoms: [SymptomInfo], onsetDay: GregorianDay?) -> (Domain.IsolationState, Bool?) {
-        let domainSymptoms = symptoms.map { interfaceSymptom in
-            (symptomMapper.domainSymptomFrom(interfaceSymptom: interfaceSymptom), interfaceSymptom.isConfirmed)
-        }
-        
-        return selfDiagnosisManager.evaluateSymptoms(symptoms: domainSymptoms, onsetDay: onsetDay, threshold: riskThreshold)
     }
     
     func openTestkitOrder() {
@@ -117,14 +93,29 @@ extension SelfDiagnosisFlowInteractor: BookATestInfoViewControllerInteracting {
 
 private extension SelfDiagnosisAdvice.NoSymptomsAdviceDetails {
     
-    init(_ isolationState: Interface.IsolationState) {
+    init(_ isolationState: Domain.IsolationState) {
         switch isolationState {
-        case .notIsolating:
+        case .noNeedToIsolate:
             self = .noNeedToIsolate
-        case .isolating(_, _, _, hasPositiveTest: true):
+        case .isolate(let isolation) where isolation.hasPositiveTestResult:
             self = .isolateForExistingPositiveTest
-        case .isolating(_, _, let endDate, hasPositiveTest: false):
-            self = .isolateForUnspecifiedReason(endDate: endDate)
+        case .isolate(let isolation):
+            self = .isolateForUnspecifiedReason(endDate: isolation.endDate)
+        }
+    }
+    
+}
+
+private extension SelfDiagnosisAdvice.HasSymptomsAdviceDetails {
+    
+    init(isolation: Isolation, testState: SelfDiagnosisEvaluation.ExistingPositiveTestState) {
+        switch testState {
+        case .hasNoTest:
+            self = .isolate(.hasNoTests, endDate: isolation.endDate)
+        case .hasTest(shouldChangeAdviceDueToSymptoms: true):
+            self = .isolate(.hasTestsButShouldUseSymptoms, endDate: isolation.endDate)
+        case .hasTest(shouldChangeAdviceDueToSymptoms: false):
+            self = .followAdviceForExistingPositiveTest
         }
     }
     

@@ -13,7 +13,7 @@ public struct LocalInformationBanner: View {
         let localInfoScreenViewModel: LocalInformationViewController.ViewModel
         
         public init(text: String, localInfoScreenViewModel: LocalInformationViewController.ViewModel) {
-            self.text = text
+            self.text = text.applyCurrentLanguageDirection()
             self.localInfoScreenViewModel = localInfoScreenViewModel
         }
     }

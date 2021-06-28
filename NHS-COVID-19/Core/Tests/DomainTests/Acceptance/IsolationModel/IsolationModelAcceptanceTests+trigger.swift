@@ -20,8 +20,6 @@ extension IsolationModelAcceptanceTests {
             throw IsolationModelUndefinedMappingError()
             try riskyContactWithExposureDayOlderThanIsolationTerminationDueToDCT(adapter: &adapter)
         case .selfDiagnosedSymptomatic:
-            // We don't support the new transitions made possible by new symptoms being entered after test.
-            throw IsolationModelUndefinedMappingError()
             let questionare = Questionnaire(context: try! context())
             try questionare.selfDiagnosePositive(onsetDay: adapter.symptomaticCase.onsetDay)
         case .receivedVoidTest:
@@ -82,6 +80,10 @@ extension IsolationModelAcceptanceTests {
             }
             let testEntry = ManualTestResultEntry(configuration: $instance, context: try! context())
             try testEntry.enterPositive(requiresConfirmatoryTest: true, endDate: endDay.startDate(in: .utc))
+        case .receivedUnconfirmedPositiveTestWithEndDateNDaysOlderThanRememberedNegativeTestEndDateAndOlderThanAssumedSymptomOnsetDayIfAny:
+            let endDay = adapter.testCase.testEndDay.advanced(by: -3)
+            let testEntry = ManualTestResultEntry(configuration: $instance, context: try! context())
+            try testEntry.enterPositive(requiresConfirmatoryTest: true, endDate: endDay.startDate(in: .utc), confirmatoryDayLimit: 2)
         default:
             throw IsolationModelUndefinedMappingError()
         }

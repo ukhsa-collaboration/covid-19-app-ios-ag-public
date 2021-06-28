@@ -13,21 +13,12 @@ struct PollVirologyTestResultResponse: Equatable {
     var virologyTestResult: VirologyTestResult
     var diagnosisKeySubmissionSupport: Bool
     var requiresConfirmatoryTest: Bool
+    var confirmatoryDayLimit: Int?
 }
 
 struct VirologyTestResult: Equatable {
-    enum TestResult: Equatable {
-        case positive
-        case negative
-        case void
-        case plod
-    }
-    
-    enum TestKitType: Equatable {
-        case labResult
-        case rapidResult
-        case rapidSelfReported
-    }
+    typealias TestResult = UnacknowledgedTestResult
+    typealias TestKitType = Domain.TestKitType
     
     var testResult: TestResult
     var testKitType: TestKitType

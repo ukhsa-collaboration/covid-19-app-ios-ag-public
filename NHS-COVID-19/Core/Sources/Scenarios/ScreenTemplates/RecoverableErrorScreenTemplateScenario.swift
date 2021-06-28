@@ -1,12 +1,12 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Integration
 import Interface
 import UIKit
 
-public class RecoverableErrorScreenTemplateScenario: Scenario, UITestInspectable {
+public class RecoverableErrorScreenTemplateScenario: Scenario {
     public static let name = "Recoverable Error"
     public static let kind = ScenarioKind.screenTemplate
     
@@ -32,10 +32,6 @@ public class RecoverableErrorScreenTemplateScenario: Scenario, UITestInspectable
         }, isPrimaryButtonLink: false)
         navigation.pushViewController(content, animated: false)
         return BasicAppController(rootViewController: navigation)
-    }
-    
-    public static var viewControllerForInspecting: UIViewController {
-        viewController(act: {}, secondaryAct: {}, isPrimaryButtonLink: false)
     }
     
     private static func viewController(act: @escaping () -> Void, secondaryAct: @escaping () -> Void, isPrimaryButtonLink: Bool) -> UIViewController {

@@ -11,6 +11,7 @@ class MockDataProvider: ObservableObject {
     static let testKitType = ["LAB_RESULT", "RAPID_RESULT", "RAPID_SELF_REPORTED", "UNKNOWN_TEST_KIT_TYPE"]
     
     private let _numberOfDaysFromNowDidChange = PassthroughSubject<Int, Never>()
+    private let _riskyLocalAuthorityMinimumBackgroundTaskUpdateIntervalDidChange = PassthroughSubject<Int, Never>()
     private let _objectWillChange = PassthroughSubject<Void, Never>()
     
     var objectWillChange: AnyPublisher<Void, Never> {
@@ -198,6 +199,34 @@ class MockDataProvider: ObservableObject {
         didSet {
             _objectWillChange.send()
         }
+    }
+    
+    // MARK: Local Authority Risk - Minimum Update Interval
+    
+    @UserDefault(
+        "mocks.riskyLocalAuthorityMinimumBackgroundTaskUpdateInterval",
+        defaultValue: 600
+    )
+    var riskyLocalAuthorityMinimumBackgroundTaskUpdateInterval: Int {
+        didSet {
+            _riskyLocalAuthorityMinimumBackgroundTaskUpdateIntervalDidChange.send(riskyLocalAuthorityMinimumBackgroundTaskUpdateInterval)
+            _objectWillChange.send()
+        }
+    }
+    
+    var riskyLocalAuthorityMinimumBackgroundTaskUpdateIntervalString: String {
+        get {
+            String(riskyLocalAuthorityMinimumBackgroundTaskUpdateInterval)
+        }
+        set {
+            if let intValue = Int(newValue) {
+                riskyLocalAuthorityMinimumBackgroundTaskUpdateInterval = intValue
+            }
+        }
+    }
+    
+    var riskyLocalAuthorityMinimumBackgroundTaskUpdateIntervalDidChange: AnyPublisher<Int, Never> {
+        _riskyLocalAuthorityMinimumBackgroundTaskUpdateIntervalDidChange.eraseToAnyPublisher()
     }
     
     // MARK: Risky Venues

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -18,11 +18,12 @@ public class ApplicationServices {
     let cameraManager: CameraManaging
     let encryptedStore: EncryptedStoring
     let cacheStorage: FileStoring
-    let venueDecoder: QRCode
+    let venueDecoder: VenueDecoder
     let appInfo: AppInfo
     let postcodeValidator: PostcodeValidating
     let currentDateProvider: DateProviding
     let storeReviewController: StoreReviewControlling
+    let riskyPostcodeUpdateIntervalProvider: MinimumUpdateIntervalProviding
     
     public init(
         application: Application,
@@ -36,11 +37,12 @@ public class ApplicationServices {
         cameraManager: CameraManaging,
         encryptedStore: EncryptedStoring,
         cacheStorage: FileStoring,
-        venueDecoder: QRCode,
+        venueDecoder: VenueDecoder,
         appInfo: AppInfo,
         postcodeValidator: PostcodeValidating,
         currentDateProvider: DateProviding,
-        storeReviewController: StoreReviewControlling
+        storeReviewController: StoreReviewControlling,
+        riskyPostcodeUpdateIntervalProvider: MinimumUpdateIntervalProviding
     ) {
         self.application = application
         self.exposureNotificationManager = exposureNotificationManager
@@ -58,6 +60,7 @@ public class ApplicationServices {
         self.postcodeValidator = postcodeValidator
         self.currentDateProvider = currentDateProvider
         self.storeReviewController = storeReviewController
+        self.riskyPostcodeUpdateIntervalProvider = riskyPostcodeUpdateIntervalProvider
     }
     
 }

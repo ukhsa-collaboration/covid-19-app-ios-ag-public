@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -14,7 +14,7 @@ class ExposureDetectionEndpointManagerTests: XCTestCase {
     
     override func setUp() {
         httpClient = MockHTTPClient()
-        fileStorage = FileStorage(forNewCachesOf: .random())
+        fileStorage = FileStorage(forCachesOf: .random())
         manager = ExposureDetectionEndpointManager(distributionClient: httpClient, fileStorage: fileStorage)
     }
     

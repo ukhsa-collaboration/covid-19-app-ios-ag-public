@@ -13,7 +13,7 @@ class DynamicRiskLevelScreenTests: XCTestCase {
     
     func testBasics() throws {
         try runner.run { app in
-            let screen = RiskLevelHighInfoScreen(app: app)
+            let screen = DynamicRiskLevelInfoScreen(app: app)
             
             XCTAssert(screen.screenTitle.exists)
             screen.heading.forEach { XCTAssert($0.exists) }
@@ -28,7 +28,7 @@ class DynamicRiskLevelScreenTests: XCTestCase {
     
     func testTapLinkToWebsite() throws {
         try runner.run { app in
-            let screen = RiskLevelHighInfoScreen(app: app)
+            let screen = DynamicRiskLevelInfoScreen(app: app)
             
             screen.linkToWebsiteLinkButton.tap()
             XCTAssert(screen.linktoWebsiteAlertTitle.exists)
@@ -37,7 +37,7 @@ class DynamicRiskLevelScreenTests: XCTestCase {
     
     func testTapFindTestCenterLink() throws {
         try runner.run { app in
-            let screen = RiskLevelHighInfoScreen(app: app)
+            let screen = DynamicRiskLevelInfoScreen(app: app)
             
             app.scrollTo(element: screen.linkFindTestCenter)
             screen.linkFindTestCenter.tap()
@@ -46,7 +46,14 @@ class DynamicRiskLevelScreenTests: XCTestCase {
     }
 }
 
-private extension RiskLevelHighInfoScreen {
+private struct DynamicRiskLevelInfoScreen {
+    
+    var app: XCUIApplication
+    
+    var screenTitle: XCUIElement {
+        app.staticTexts[localized: .risk_level_screen_title]
+    }
+    
     var linktoWebsiteAlertTitle: XCUIElement {
         app.staticTexts[DynamicRiskLevelScreenScenario.linkButtonTapped]
     }
@@ -60,7 +67,7 @@ private extension RiskLevelHighInfoScreen {
     }
     
     var linkFindTestCenter: XCUIElement {
-        app.links[verbatim: DynamicRiskLevelScreenScenario.findTestCenterLinkTitle]
+        app.links[verbatim: DynamicRiskLevelScreenScenario.findTestCenterLinkTitle.applyCurrentLanguageDirection()]
     }
     
     var heading: [XCUIElement] {

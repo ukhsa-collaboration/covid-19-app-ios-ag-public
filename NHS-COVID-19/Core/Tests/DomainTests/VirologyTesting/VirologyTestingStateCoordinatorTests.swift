@@ -50,7 +50,7 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
         
         XCTAssertEqual(userNotificationManager.notificationType, UserNotificationType.testResultReceived)
         let savedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
-        XCTAssertEqual(savedResult.testResult, TestResult(result.testResult))
+        XCTAssertEqual(savedResult.testResult, result.testResult)
     }
     
     func testHandleManualTestResult() throws {
@@ -67,7 +67,7 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
         
         XCTAssertNil(userNotificationManager.notificationType)
         let savedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
-        XCTAssertEqual(savedResult.testResult, TestResult(response.virologyTestResult.testResult))
+        XCTAssertEqual(savedResult.testResult, response.virologyTestResult.testResult)
     }
     
     func testDoesNotRequireToAskForSymptomsOnsetDayTestResultRequiresConfirmatoryTest() {

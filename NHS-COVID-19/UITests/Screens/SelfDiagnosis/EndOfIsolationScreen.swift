@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -15,10 +15,6 @@ struct EndOfIsolationScreen {
     
     var indicationLabel: XCUIElement {
         app.staticTexts[localized: .end_of_isolation_isolate_if_have_symptom_warning]
-    }
-    
-    var explanation1Label: XCUIElement {
-        app.staticTexts[localized: .end_of_isolation_explanation_1]
     }
     
     var onlineServicesLink: XCUIElement {

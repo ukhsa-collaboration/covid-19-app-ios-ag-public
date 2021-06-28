@@ -16,3 +16,9 @@ custom_rules:
       - identifier
     message: "Use prefix `Base` instead of `UI` for this type" # violation message. optional.
     severity: error # violation severity. optional.
+  localization_key_with_wls_suffix_is_forbidden:
+    included: "Core/Sources/Localization/StringLocalizationKey.swift"
+    name: "Case identifier with _wls suffix is forbidden"
+    regex: "^ *case [^ ]+_wls"
+    message: "Keys with a _wls suffix are dynamically created when using a localizeForCountry method with the same existing key, without the suffix, as an argument."
+    severity: error

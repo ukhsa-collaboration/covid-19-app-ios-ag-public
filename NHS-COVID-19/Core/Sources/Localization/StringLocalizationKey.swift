@@ -10,7 +10,6 @@ public enum StringLocalizationKey: String, CaseIterable {
     
     case home_strapline_title
     case home_strapline_accessiblity_label
-    case home_strapline_accessiblity_label_wls
     
     case unrecoverable_error_page_title
     case unrecoverable_error_heading_1
@@ -74,12 +73,8 @@ public enum StringLocalizationKey: String, CaseIterable {
     case home_diagnosis_button_title
     case home_financial_support_button_title
     case home_checkin_button_title
-    case home_about_button_title
-    case home_about_button_title_accessibility_label
     case home_toggle_exposure_notification_title
     case home_about_the_app_button_title
-    case home_toggle_exposure_notification_on
-    case home_toggle_exposure_notification_off
     case home_isolation_advice_button_title
     case home_settings_button_title
     case home_contact_tracing_hub_button_title
@@ -88,16 +83,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case risk_level_indicator_contact_tracing_active
     case risk_level_indicator_contact_tracing_not_active
     case risk_level_indicator_contact_tracing_turn_back_on_button
-    case risk_level_high
-    case risk_level_medium
-    case risk_level_low
-    case risk_level_more_info
-    case risk_level_more_info_accessibility_label
     
-    case risk_level_screen_low_body
-    case risk_level_screen_medium_body
-    case risk_level_screen_high_body
-    case risk_level_screen_button
     case risk_level_screen_title
     case risk_level_screen_close_button
     
@@ -116,7 +102,6 @@ public enum StringLocalizationKey: String, CaseIterable {
     case checkin_camera_failure_title
     case checkin_camera_failure_description
     case checkin_camera_failure_button_title
-    case checkin_camera_qrcode_scanner_help_button_accessibility_label
     case checkin_scanning_failure_title
     case checkin_scanning_failure_description
     case checkin_scanning_failure_help_link_text
@@ -126,10 +111,8 @@ public enum StringLocalizationKey: String, CaseIterable {
     case checkin_camera_qrcode_scanner_status_label
     case checkin_camera_qrcode_scanner_description_label
     case checkin_camera_qrcode_scanner_help_button_title
-    case checkin_confirmation_explanation
     case checkin_confirmation_simplified_explanation
     case checkin_confirmation_button_title
-    case checkin_wrong_button_title
     case checkin_cancel_checkin_button_title
     case checkin_qrcode_scanner_close_button_title
     case checkin_information_title_new
@@ -143,8 +126,6 @@ public enum StringLocalizationKey: String, CaseIterable {
     case checkin_information_official_nhs_qr_codes_title
     case checkin_information_how_it_works_section_title
     case checkin_information_how_it_works_section_description
-    case checkin_information_how_it_helps_section_title
-    case checkin_information_how_it_helps_section_description
     case checkin_risky_venue_information_description
     case checkin_risky_venue_information_button_title
     
@@ -212,20 +193,15 @@ public enum StringLocalizationKey: String, CaseIterable {
     case exposure_acknowledgement_dct_link
     
     case end_of_isolation_isolate_title
-    case end_of_isolation_finished_description
     case end_of_isolation_positive_text_no_isolation_title
     case end_of_isolation_positive_text_no_isolation_header
     case end_of_isolation_isolate_if_have_symptom_warning
-    case end_of_isolation_negative_test_result
-    case end_of_isolation_explanation_1
-    case end_of_isolation_explanation_negative_test_result
     case end_of_isolation_online_services_link
     case end_of_isolation_corona_back_to_home_button
     case end_of_isolation_further_advice_visit
     case end_of_isolation_link_label
     
     case positive_test_result_title
-    case positive_test_result_info
     case positive_test_result_explanation
     case positive_test_results_continue
     case positive_test_result_already_confirmed_positive_title
@@ -238,7 +214,6 @@ public enum StringLocalizationKey: String, CaseIterable {
     case void_test_result_explanation
     case void_test_results_continue
     
-    case negative_test_result_with_isolation_title
     case negative_test_result_with_isolation_info
     case negative_test_result_with_isolation_explanation
     case negative_test_result_with_isolation_advice
@@ -339,7 +314,6 @@ public enum StringLocalizationKey: String, CaseIterable {
     case about_this_app_common_questions_button
     case about_this_app_my_data_heading
     case about_this_app_my_data_description
-    case about_this_app_my_data_button
     case about_this_app_my_data_app_settings
     case about_this_app_software_information_heading
     case about_this_app_software_information_app_name
@@ -354,15 +328,9 @@ public enum StringLocalizationKey: String, CaseIterable {
     case about_this_app_footer_text
     
     case mydata_screen_title
-    case mydata_section_postcode_description
-    case mydata_section_LocalAuthority_description
-    case mydata_section_LocalAuthority_edit_button_accessibility_description
     case mydata_section_test_result_description
-    case mydata_section_venue_history_description
     case mydata_section_symptoms_heading
     case mydata_section_symptoms_date
-    case mydata_section_encounter_description
-    case mydata_section_date_description
     case mydata_section_exposure_notification_description
     case mydata_section_daily_testing_description
     case mydata_section_self_isolation_heading
@@ -380,9 +348,7 @@ public enum StringLocalizationKey: String, CaseIterable {
     case mydata_delete_data_alert_description
     case mydata_delete_data_alert_button_title
     case mydata_venue_history_edit_button_title
-    case mydata_venue_history_edit_button_accessibility_description
     case mydata_venue_history_done_button_title
-    case mydata_venue_history_done_button_accessibility_description
     case mydata_test_result_test_acknowledgement_date
     case mydata_test_result_test_end_date
     case mydata_test_result_test_result
@@ -460,7 +426,6 @@ public enum StringLocalizationKey: String, CaseIterable {
     case link_test_result_if_you_are_trying_to_enter_a_rapid_result_code
     case link_test_result_report_on_gov_dot_uk
     case link_test_result_gov_uk_rapid_result_report_url
-    case link_test_result_gov_uk_rapid_result_report_url_wls
     
     case link_test_result_thank_you_title
     case link_test_result_thank_you_back_home_button
@@ -475,12 +440,9 @@ public enum StringLocalizationKey: String, CaseIterable {
     case link_test_result_enter_code_daily_contact_testing_top_erorr_box_text_both_entered
     case link_test_result_enter_code_daily_contact_testing_top_erorr_box_text_none_entered
     
-    case checkin_confirmation_title
-    
     // MARK: 'share keys' screens
     
     case share_keys_and_venues_share_keys_title
-    case share_keys_and_venues_your_privacy_is_protected
     case share_keys_and_venues_share_keys_heading
     case share_keys_and_venues_share_keys_privacy_notice
     case share_keys_and_venues_share_keys_how_it_helps_heading
@@ -498,10 +460,12 @@ public enum StringLocalizationKey: String, CaseIterable {
     
     case qr_code_poster_description
     case qr_code_poster_description_hospitality
-    case qr_code_poster_description_wls
+    case qr_code_poster_wales_description_hospitality
+    case qr_code_poster_wales_accessibility_label_hospitality
+    case qr_code_poster_wales_description
     case qr_code_poster_accessibility_label
     case qr_code_poster_accessibility_label_hospitality
-    case qr_code_poster_accessibility_label_wls
+    case qr_code_poster_wales_accessibility_label
     
     case positive_test_result_start_to_isolate_title
     case positive_test_result_start_to_isolate_info
@@ -509,10 +473,6 @@ public enum StringLocalizationKey: String, CaseIterable {
     
     case dont_worry_notification_title
     case dont_worry_notification_body
-    
-    case risky_venue_isolation_report_symptoms
-    case risky_venue_isolation_warning
-    case risky_venue_isolation_description
     
     case ask_me_later_button_title
     
@@ -584,8 +544,6 @@ public enum StringLocalizationKey: String, CaseIterable {
     case test_symptoms_date_continue
     case test_check_symptoms_points
     
-    case settings_row_manage_my_data_title
-    case settings_row_manage_my_data_subtitle
     case settings_row_my_area_title
     case settings_row_my_data_title
     case settings_row_animations_title
@@ -669,9 +627,6 @@ public enum StringLocalizationKey: String, CaseIterable {
 public enum ParameterisedStringLocalizable: Equatable {
     
     enum Key: String, CaseIterable {
-        case numbered_list_item = "numbered_list_item %ld %@"
-        case risk_level_banner_text = "risk_level_banner_text %@ %@"
-        
         case checkin_confirmation_date = "checkin_confirmation_date %@"
         case checkin_risky_venue_information_title = "checkin_risky_venue_information_title %@ %@"
         case checkin_confirmation_thankyou = "checkin_confirmation_thankyou %1$@"
@@ -682,7 +637,6 @@ public enum ParameterisedStringLocalizable: Equatable {
         case step_accessibility_label = "step_accessibility_label %ld %ld"
         case step_label = "step_label %ld %ld"
         case isolation_days_subtitle = "isolation_days_subtitle %ld"
-        case isolation_days_accessibility_label = "isolation_days_accessibility_label %ld"
         case isolation_until_date = "isolation_until_date %@ %@"
         case positive_symptoms_days = "positive_symptoms_days %ld"
         case positive_symptoms_please_isolate_accessibility_label = "positive_symptoms_please_isolate_accessibility_label %ld"
@@ -705,8 +659,6 @@ public enum ParameterisedStringLocalizable: Equatable {
         
         case positive_test_start_to_isolate_accessibility_label = "positive_test_start_to_isolate_accessibility_label %ld"
         
-        case risky_venue_isolation_title_accessibility = "risky_venue_isolation_title_accessibility %ld"
-        
         case local_authority_confirmation_heading = "local_authority_confirmation_heading %@ %@"
         
         case local_authority_card_checkbox_accessibility_label = "local_authority_card_checkbox_accessibility_label %@ %@"
@@ -715,16 +667,11 @@ public enum ParameterisedStringLocalizable: Equatable {
         case venue_history_heading_accessibility_label = "venue_history_heading_accessibility_label %@"
     }
     
-    case numbered_list_item(index: Int, text: String)
-    
     case checkin_confirmation_date(date: Date)
     case checkin_risky_venue_information_title(venue: String, date: Date)
     case checkin_confirmation_thankyou(venue: String)
     
-    case risk_level_banner_text(postcode: String, risk: String)
-    
     case isolation_days_subtitle(days: Int)
-    case isolation_days_accessibility_label(days: Int)
     
     case isolation_until_date(date: Date)
     
@@ -757,8 +704,6 @@ public enum ParameterisedStringLocalizable: Equatable {
     
     case positive_test_start_to_isolate_accessibility_label(days: Int)
     
-    case risky_venue_isolation_title_accessibility(days: Int)
-    
     case local_authority_confirmation_heading(postcode: String, localAuthority: String)
     
     case local_authority_card_checkbox_accessibility_label(value: String, content: String)
@@ -768,8 +713,6 @@ public enum ParameterisedStringLocalizable: Equatable {
     
     var key: Key {
         switch self {
-        case .numbered_list_item: return .numbered_list_item
-        case .risk_level_banner_text: return .risk_level_banner_text
         case .checkin_confirmation_date: return .checkin_confirmation_date
         case .checkin_risky_venue_information_title: return .checkin_risky_venue_information_title
         case .checkin_confirmation_thankyou: return .checkin_confirmation_thankyou
@@ -779,7 +722,6 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .step_accessibility_label: return .step_accessibility_label
         case .step_label: return .step_label
         case .isolation_days_subtitle: return .isolation_days_subtitle
-        case .isolation_days_accessibility_label: return .isolation_days_accessibility_label
         case .isolation_until_date: return .isolation_until_date
         case .positive_symptoms_days: return .positive_symptoms_days
         case .positive_symptoms_please_isolate_accessibility_label: return .positive_symptoms_please_isolate_accessibility_label
@@ -799,7 +741,6 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .exposure_notification_reminder_sheet_hours: return .exposure_notification_reminder_sheet_hours
         case .exposure_notification_reminder_alert_title: return .exposure_notification_reminder_alert_title
         case .positive_test_start_to_isolate_accessibility_label: return .positive_test_start_to_isolate_accessibility_label
-        case .risky_venue_isolation_title_accessibility: return .risky_venue_isolation_title_accessibility
             
         case .local_authority_confirmation_heading: return .local_authority_confirmation_heading
         case .local_authority_card_checkbox_accessibility_label: return .local_authority_card_checkbox_accessibility_label
@@ -811,10 +752,6 @@ public enum ParameterisedStringLocalizable: Equatable {
     
     var arguments: [CVarArg] {
         switch self {
-        case .numbered_list_item(let index, let text):
-            return [index, text]
-        case .risk_level_banner_text(let postcode, let risk):
-            return [postcode, risk]
         case .checkin_confirmation_date(let date):
             return [
                 DateFormatter.mediumDateShortTime.string(from: date),
@@ -839,8 +776,6 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .step_label(let index, let count):
             return [index, count]
         case .isolation_days_subtitle(let days):
-            return [days]
-        case .isolation_days_accessibility_label(let days):
             return [days]
         case .isolation_until_date(let date):
             return [
@@ -884,8 +819,6 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .exposure_notification_reminder_alert_title(let hours):
             return [hours]
         case .positive_test_start_to_isolate_accessibility_label(days: let days):
-            return [days]
-        case .risky_venue_isolation_title_accessibility(days: let days):
             return [days]
         case .local_authority_confirmation_heading(let postcode, let localAuthority):
             return [postcode, localAuthority]

@@ -29,15 +29,7 @@ public struct IndexCaseInfo: Equatable {
         case manualTestEntry(npexDay: GregorianDay)
     }
     
-    public struct TestInfo: Decodable, Equatable {
-        private enum CodingKeys: CodingKey {
-            case result
-            case testKitType
-            case requiresConfirmatoryTest
-            case receivedOnDay
-            case confirmedOnDay
-            case testEndDay
-        }
+    public struct TestInfo: Equatable {
         
         public enum ConfirmationStatus: Equatable {
             case pending
@@ -83,16 +75,6 @@ public struct IndexCaseInfo: Equatable {
             }
         }
         
-        public init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            result = try container.decode(TestResult.self, forKey: .result)
-            testKitType = try container.decodeIfPresent(TestKitType.self, forKey: .testKitType)
-            requiresConfirmatoryTest = try container.decodeIfPresent(Bool.self, forKey: .requiresConfirmatoryTest) ?? false
-            receivedOnDay = try container.decode(GregorianDay.self, forKey: .receivedOnDay)
-            confirmedOnDay = try container.decodeIfPresent(GregorianDay.self, forKey: .confirmedOnDay)
-            completedOnDay = confirmedOnDay
-        }
-        
         public init(
             result: TestResult,
             testKitType: TestKitType? = nil,
@@ -132,6 +114,9 @@ public struct IndexCaseInfo: Equatable {
     var isolationTrigger: IsolationTrigger
     var symptomaticInfo: SymptomaticInfo?
     var testInfo: TestInfo?
+}
+
+extension IndexCaseInfo {
     
     init(
         symptomaticInfo: SymptomaticInfo?,
@@ -155,40 +140,6 @@ public struct IndexCaseInfo: Equatable {
             return npexDay
         }
     }
-}
-
-extension IndexCaseInfo: Decodable {
-    enum CodingKeys: String, CodingKey {
-        case npexDay
-        case selfDiagnosisDay
-        case onsetDay
-        case testInfo
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        let onsetDay = try container.decodeIfPresent(GregorianDay.self, forKey: .onsetDay)
-        var testInfo = try container.decodeIfPresent(TestInfo.self, forKey: .testInfo)
-        let selfDiagnosisDay = try container.decodeIfPresent(GregorianDay.self, forKey: .selfDiagnosisDay)
-        
-        if testInfo?.testEndDay == nil, let npexDay = try container.decodeIfPresent(GregorianDay.self, forKey: .npexDay) {
-            testInfo?.testEndDay = npexDay
-        }
-        
-        if let selfDiagnosisDay = selfDiagnosisDay {
-            let symptomaticInfo = SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: onsetDay)
-            self.init(symptomaticInfo: symptomaticInfo, testInfo: testInfo)
-        } else if let testInfo = testInfo {
-            self.init(symptomaticInfo: nil, testInfo: testInfo)
-        } else {
-            throw DecodingError.keyNotFound(
-                CodingKeys.selfDiagnosisDay,
-                DecodingError.Context(codingPath: container.codingPath, debugDescription: "Could not find self diagnosis day or npex day")
-            )
-        }
-    }
-    
 }
 
 extension IndexCaseInfo {

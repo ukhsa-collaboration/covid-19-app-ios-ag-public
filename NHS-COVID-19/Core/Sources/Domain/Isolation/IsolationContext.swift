@@ -115,12 +115,21 @@ struct IsolationContext {
                 
                 let newIsolationState = IsolationLogicalState(stateInfo: newIsolationStateInfo, day: self.currentDateProvider.currentLocalDay)
                 
+                let testResultMetricsHandler = TestResultMetricsHandler(
+                    currentIsolationState: currentIsolationState,
+                    storedIsolationInfo: isolationStateInfo?.isolationInfo,
+                    receivedResult: result,
+                    configuration: isolationStateStore.configuration
+                )
+                
                 return TestResultAcknowledgementState(
                     result: result,
                     newIsolationState: newIsolationState,
                     currentIsolationState: currentIsolationState,
                     indexCaseInfo: newIsolationStateInfo.isolationInfo.indexCaseInfo
                 ) {
+                    testResultMetricsHandler.trackMetrics()
+                    
                     isolationStateStore.isolationStateInfo = newIsolationStateInfo
                     
                     if !newIsolationState.isIsolating {
@@ -136,11 +145,10 @@ struct IsolationContext {
                         isolation.hasConfirmedPositiveTestResult {
                         completionHandler(storeOperation != .ignore, false)
                     } else if newIsolationState.isIsolating, result.requiresConfirmatoryTest {
-                        completionHandler(storeOperation != .ignore, true)
+                        completionHandler(storeOperation != .ignore, storeOperation != .overwriteAndComplete)
                     } else {
                         completionHandler(storeOperation != .ignore, false)
                     }
-                    
                 }
             }
             .eraseToAnyPublisher()

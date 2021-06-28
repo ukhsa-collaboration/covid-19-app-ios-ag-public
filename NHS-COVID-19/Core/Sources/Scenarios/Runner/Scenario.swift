@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Integration
@@ -53,10 +53,6 @@ public extension TestScenario {
     static var nameForSorting: String {
         name
     }
-}
-
-public protocol UITestInspectable: IdentifiableType {
-    static var viewControllerForInspecting: UIViewController { get }
 }
 
 protocol Scenario: TestScenario {

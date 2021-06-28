@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import ArgumentParser
@@ -47,7 +47,7 @@ struct WorkspaceReportCommand: ParsableCommand {
                 
                 try fileManager.createDirectory(at: reportFolder, withIntermediateDirectories: true, attributes: nil)
                 
-                let reporter = ArtefactReporter(appURL: appURL, reportFolder: reportFolder)
+                let reporter = ExtendedReporter(appURL: appURL, reportFolder: reportFolder)
                 try reporter.run()
             }
         }

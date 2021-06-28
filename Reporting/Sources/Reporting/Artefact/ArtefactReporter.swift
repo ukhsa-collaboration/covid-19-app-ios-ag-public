@@ -1,21 +1,12 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
 
 struct ArtefactReporter {
     
-    var appURL: URL
-    
-    var reportFolder: URL
-    
-    func run() throws {
-        let report = try self.report(for: appURL)
-        try report.save(to: reportFolder)
-    }
-    
-    private func report(for appURL: URL) throws -> Report {
+    func report(for appURL: URL) throws -> Report {
         
         let application = try Application(url: appURL)
         let appInfo = application.appInfo

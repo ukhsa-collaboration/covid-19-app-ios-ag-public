@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -54,7 +54,7 @@ class ExposureDetectionManagerTests: XCTestCase {
         let manager = ExposureDetectionManager(
             controller: controller,
             distributionClient: client,
-            fileStorage: FileStorage(forNewCachesOf: .random()),
+            fileStorage: FileStorage(forCachesOf: .random()),
             encryptedStore: store,
             interestedInExposureNotifications: { true },
             exposureRiskManager: MockExposureRiskManager()
@@ -74,7 +74,7 @@ class ExposureDetectionManagerTests: XCTestCase {
         let manager = ExposureDetectionManager(
             controller: controller,
             distributionClient: client,
-            fileStorage: FileStorage(forNewCachesOf: .random()),
+            fileStorage: FileStorage(forCachesOf: .random()),
             encryptedStore: store,
             interestedInExposureNotifications: { false },
             exposureRiskManager: mockExposureRiskManager
@@ -100,7 +100,7 @@ class ExposureDetectionManagerTests: XCTestCase {
         let manager = ExposureDetectionManager(
             controller: controller,
             distributionClient: client,
-            fileStorage: FileStorage(forNewCachesOf: .random()),
+            fileStorage: FileStorage(forCachesOf: .random()),
             encryptedStore: store,
             interestedInExposureNotifications: { true },
             exposureRiskManager: MockExposureRiskManager()
@@ -118,7 +118,7 @@ class ExposureDetectionManagerTests: XCTestCase {
         let manager = ExposureDetectionManager(
             controller: controller,
             distributionClient: client,
-            fileStorage: FileStorage(forNewCachesOf: .random()),
+            fileStorage: FileStorage(forCachesOf: .random()),
             encryptedStore: store,
             interestedInExposureNotifications: { true },
             exposureRiskManager: riskManager
@@ -137,7 +137,7 @@ class ExposureDetectionManagerTests: XCTestCase {
         let manager = ExposureDetectionManager(
             controller: controller,
             distributionClient: client,
-            fileStorage: FileStorage(forNewCachesOf: .random()),
+            fileStorage: FileStorage(forCachesOf: .random()),
             encryptedStore: store,
             interestedInExposureNotifications: { true },
             exposureRiskManager: riskManager
@@ -152,7 +152,7 @@ class ExposureDetectionManagerTests: XCTestCase {
         let manager = ExposureDetectionManager(
             controller: controller,
             distributionClient: client,
-            fileStorage: FileStorage(forNewCachesOf: .random()),
+            fileStorage: FileStorage(forCachesOf: .random()),
             encryptedStore: store,
             interestedInExposureNotifications: { true },
             exposureRiskManager: MockExposureRiskManager()
@@ -172,7 +172,7 @@ class ExposureDetectionManagerTests: XCTestCase {
         let manager = ExposureDetectionManager(
             controller: controller,
             distributionClient: client,
-            fileStorage: FileStorage(forNewCachesOf: .random()),
+            fileStorage: FileStorage(forCachesOf: .random()),
             encryptedStore: store,
             interestedInExposureNotifications: { true },
             exposureRiskManager: mockExposureRiskManager
@@ -194,7 +194,7 @@ class ExposureDetectionManagerTests: XCTestCase {
         let manager = ExposureDetectionManager(
             controller: controller,
             distributionClient: client,
-            fileStorage: FileStorage(forNewCachesOf: .random()),
+            fileStorage: FileStorage(forCachesOf: .random()),
             encryptedStore: store,
             interestedInExposureNotifications: { true },
             exposureRiskManager: exposureRiskManager
@@ -213,7 +213,7 @@ class ExposureDetectionManagerTests: XCTestCase {
         let manager = ExposureDetectionManager(
             controller: controller,
             distributionClient: client,
-            fileStorage: FileStorage(forNewCachesOf: .random()),
+            fileStorage: FileStorage(forCachesOf: .random()),
             encryptedStore: store,
             interestedInExposureNotifications: { true },
             exposureRiskManager: riskManager

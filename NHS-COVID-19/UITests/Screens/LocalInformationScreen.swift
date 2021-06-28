@@ -26,22 +26,22 @@ final class ParagraphsOnlyLocalInformationScreen: BasicLocalInformationScreen {
     private typealias Content = LocalInformationScreenParagraphsOnlyScenario.Content
     
     var header: XCUIElement {
-        app.staticTexts[verbatim: Content.header]
+        app.staticTexts[verbatim: Content.header.applyCurrentLanguageDirection()]
     }
     
     var paragraph1: XCUIElement {
-        app.staticTexts[verbatim: Content.Body.paragraph1]
+        app.staticTexts[verbatim: Content.Body.paragraph1.applyCurrentLanguageDirection()]
     }
     
     var linkButton1: XCUIElement {
-        app.links[verbatim: Content.Body.link1.title]
+        app.links[verbatim: Content.Body.link1.title.applyCurrentLanguageDirection()]
     }
     
     var paragraph2: XCUIElement {
-        app.staticTexts[verbatim: Content.Body.paragraph2]
+        app.staticTexts[verbatim: Content.Body.paragraph2.applyCurrentLanguageDirection()]
     }
     
     var linkButton2: XCUIElement {
-        app.links[verbatim: Content.Body.link2.title]
+        app.links[verbatim: Content.Body.link2.title.applyCurrentLanguageDirection()]
     }
 }

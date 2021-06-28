@@ -1,12 +1,12 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Integration
 import Interface
 import UIKit
 
-public class OnboardingStepScreenTemplateScenario: Scenario, UITestInspectable {
+public class OnboardingStepScreenTemplateScenario: Scenario {
     public static let name = "Onboarding Step"
     public static let kind = ScenarioKind.screenTemplate
     
@@ -28,10 +28,6 @@ public class OnboardingStepScreenTemplateScenario: Scenario, UITestInspectable {
         }
         navigation.pushViewController(content, animated: false)
         return BasicAppController(rootViewController: navigation)
-    }
-    
-    public static var viewControllerForInspecting: UIViewController {
-        viewController(act: {})
     }
     
     private static func viewController(act: @escaping () -> Void) -> UIViewController {

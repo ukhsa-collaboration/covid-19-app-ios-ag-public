@@ -70,14 +70,19 @@ public class VenueCheckInInformationViewController: UIViewController {
                     accessibilityLabel: localize(.qr_code_poster_accessibility_label_hospitality)
                 ),
                 createPosterStack(
+                    posterImage: UIImage(.qrCodePosterHospitalityWales),
+                    labelText: localize(.qr_code_poster_wales_description_hospitality),
+                    accessibilityLabel: localize(.qr_code_poster_wales_accessibility_label_hospitality)
+                ),
+                createPosterStack(
                     posterImage: UIImage(.qrCodePoster),
                     labelText: localize(.qr_code_poster_description),
                     accessibilityLabel: localize(.qr_code_poster_accessibility_label)
                 ),
                 createPosterStack(
                     posterImage: UIImage(.qrCodePosterWales),
-                    labelText: localize(.qr_code_poster_description_wls),
-                    accessibilityLabel: localize(.qr_code_poster_accessibility_label_wls)
+                    labelText: localize(.qr_code_poster_wales_description),
+                    accessibilityLabel: localize(.qr_code_poster_wales_accessibility_label)
                 ),
             ])
         stackView.axis = .vertical

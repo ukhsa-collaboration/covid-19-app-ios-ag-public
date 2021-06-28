@@ -29,7 +29,7 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
             virologyTestingStateStore.didReceiveUnknownTestResult = newValue
         }
     }
-
+    
     private let virologyTestingStateStore: VirologyTestingStateStore
     private let userNotificationsManager: UserNotificationManaging
     private let isInterestedInAskingForSymptomsOnsetDay: () -> Bool
@@ -64,7 +64,8 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
             handleWithNotification(
                 response.virologyTestResult,
                 diagnosisKeySubmissionToken: response.diagnosisKeySubmissionSupport ? virologyTestTokens.diagnosisKeySubmissionToken : nil,
-                requiresConfirmatoryTest: response.requiresConfirmatoryTest
+                requiresConfirmatoryTest: response.requiresConfirmatoryTest,
+                confirmatoryDayLimit: response.confirmatoryDayLimit
             )
         case .noResultYet:
             return
@@ -120,9 +121,19 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         return isInterestedInAskingForSymptomsOnsetDay()
     }
     
-    private func handleWithNotification(_ result: VirologyTestResult, diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?, requiresConfirmatoryTest: Bool) {
+    private func handleWithNotification(
+        _ result: VirologyTestResult,
+        diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?,
+        requiresConfirmatoryTest: Bool,
+        confirmatoryDayLimit: Int?
+    ) {
         sendNotification()
-        handle(result, diagnosisKeySubmissionToken: diagnosisKeySubmissionToken, requiresConfirmatoryTest: requiresConfirmatoryTest, confirmatoryDayLimit: nil)
+        handle(
+            result,
+            diagnosisKeySubmissionToken: diagnosisKeySubmissionToken,
+            requiresConfirmatoryTest: requiresConfirmatoryTest,
+            confirmatoryDayLimit: confirmatoryDayLimit
+        )
     }
     
     private func handle(

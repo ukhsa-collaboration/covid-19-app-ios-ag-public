@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Interface
@@ -12,34 +12,6 @@ class OnboardingStepComponentTests: XCTestCase {
     private var runner: ApplicationRunner<OnboardingStepScreenTemplateScenario>
     
     func testBasics() throws {
-        runner.inspect { viewController in
-            XCTAssertAccessibility(viewController, [
-                .element {
-                    $0.label = runner.scenario.straplineTitle
-                    $0.traits = [.staticText, .header]
-                },
-                .element {
-                    $0.label = runner.scenario.stepTitle
-                    $0.traits = .staticText
-                },
-                .element {
-                    $0.label = runner.scenario.customViewContent
-                    $0.traits = .staticText
-                },
-                .element {
-                    $0.label = runner.scenario.customViewContent2
-                    $0.traits = .staticText
-                },
-                .element {
-                    $0.label = runner.scenario.customViewContent3
-                    $0.traits = .staticText
-                },
-                .element {
-                    $0.label = runner.scenario.actionTitle
-                    $0.traits = .button
-                },
-            ])
-        }
         try runner.run { app in
             XCTAssert(app.stepTitle.exists)
             XCTAssert(app.customContent.exists)

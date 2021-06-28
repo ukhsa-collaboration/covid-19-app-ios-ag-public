@@ -86,6 +86,15 @@ public enum Metric: String, CaseIterable {
     case didAccessLocalInfoScreenViaBanner
     case isDisplayingLocalInfoBackgroundTick
     
+    // MARK: - Lab test result after rapid result
+    
+    case positiveLabResultAfterPositiveLFD
+    case negativeLabResultAfterPositiveLFDWithinTimeLimit
+    case negativeLabResultAfterPositiveLFDOutsideTimeLimit
+    case positiveLabResultAfterPositiveSelfRapidTest
+    case negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit
+    case negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit
+    
 }
 
 public enum Metrics {
@@ -193,4 +202,33 @@ public enum Metrics {
         
     }
     
+    static func signpostNegativeLabResultAfterRapidResult(
+        testKitType: TestKitType?,
+        withinTime: Bool
+    ) {
+        switch (testKitType, withinTime) {
+        case (.rapidResult, false):
+            signpost(.negativeLabResultAfterPositiveLFDOutsideTimeLimit)
+        case (.rapidResult, true):
+            signpost(.negativeLabResultAfterPositiveLFDWithinTimeLimit)
+        case (.rapidSelfReported, false):
+            signpost(.negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit)
+        case (.rapidSelfReported, true):
+            signpost(.negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit)
+        case (.labResult, _), (.none, _):
+            break
+        }
+        
+    }
+    
+    static func signpostPositiveLabAfterPositiveRapidResult(testKitType: TestKitType?) {
+        switch testKitType {
+        case .rapidResult:
+            Metrics.signpost(.positiveLabResultAfterPositiveLFD)
+        case .rapidSelfReported:
+            Metrics.signpost(.positiveLabResultAfterPositiveSelfRapidTest)
+        case .labResult, .none:
+            break
+        }
+    }
 }

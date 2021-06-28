@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -14,8 +14,8 @@ struct Questionnaire {
     }
     
     func selfDiagnosePositive(onsetDay: GregorianDay) throws {
-        _ = manager.evaluateSymptoms(symptoms: riskySymptoms, onsetDay: onsetDay, threshold: 0.5)
+        _ = manager.evaluate(selectedSymptoms: riskySymptoms, onsetDay: onsetDay, threshold: 0.5)
     }
 }
 
-private let riskySymptoms = [(Symptom(title: [:], description: [:], riskWeight: 1.0), true)]
+private let riskySymptoms = [Symptom(title: [:], description: [:], riskWeight: 1.0)]

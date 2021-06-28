@@ -1,12 +1,12 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Integration
 import Interface
 import UIKit
 
-public class NoActionRecoverableErrorScreenTemplateScenario: Scenario, UITestInspectable {
+public class NoActionRecoverableErrorScreenTemplateScenario: Scenario {
     public static let name = "Recoverable Error - No action"
     public static let kind = ScenarioKind.screenTemplate
     
@@ -23,10 +23,6 @@ public class NoActionRecoverableErrorScreenTemplateScenario: Scenario, UITestIns
         navigation.isNavigationBarHidden = true
         navigation.pushViewController(viewController(), animated: false)
         return BasicAppController(rootViewController: navigation)
-    }
-    
-    public static var viewControllerForInspecting: UIViewController {
-        viewController()
     }
     
     private static func viewController() -> UIViewController {

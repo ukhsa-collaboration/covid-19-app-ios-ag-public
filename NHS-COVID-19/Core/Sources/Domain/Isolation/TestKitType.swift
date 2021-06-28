@@ -4,19 +4,8 @@
 
 import Foundation
 
-public enum TestKitType: String, Codable, Equatable {
+public enum TestKitType: Equatable {
     case labResult
     case rapidResult
     case rapidSelfReported
-    
-    init(_ virologyTestKit: VirologyTestResult.TestKitType) {
-        switch virologyTestKit {
-        case .labResult:
-            self = .labResult
-        case .rapidResult:
-            self = .rapidResult
-        case .rapidSelfReported:
-            self = .rapidSelfReported
-        }
-    }
 }

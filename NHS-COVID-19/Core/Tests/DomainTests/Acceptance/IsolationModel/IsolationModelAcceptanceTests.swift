@@ -104,6 +104,15 @@ class IsolationModelAcceptanceTests: AcceptanceTestCase {
                 }
             } catch is IsolationModelUndefinedMappingError {
                 skippedTransitions.append(transition)
+            } catch {
+                continueAfterFailure = false
+                XCTFail(
+                    """
+                    Transition: Rule defined at line \(transition.reference.line)
+                    \(TS.description(for: transition))
+                    Reason: \(error)
+                    """
+                )
             }
         }
         

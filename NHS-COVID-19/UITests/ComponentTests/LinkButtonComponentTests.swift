@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Interface
@@ -12,14 +12,6 @@ class LinkButtonComponentsTests: XCTestCase {
     private var runner: ApplicationRunner<LinkButtonComponentScenario>
     
     func testBasics() throws {
-        runner.inspect { viewController in
-            XCTAssertAccessibility(viewController, [
-                .element {
-                    $0.label = runner.scenario.linkTitle
-                    $0.traits = .link
-                },
-            ])
-        }
         try runner.run { app in
             XCTAssert(app.link.exists)
         }

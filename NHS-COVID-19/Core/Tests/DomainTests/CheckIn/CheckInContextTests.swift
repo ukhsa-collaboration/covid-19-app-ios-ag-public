@@ -43,7 +43,7 @@ class CheckInContextTest: XCTestCase {
         let configuration = CachedResponse(
             httpClient: client,
             endpoint: RiskyVenuesConfigurationEndpoint(),
-            storage: FileStorage(forNewCachesOf: .random()),
+            storage: FileStorage(forCachesOf: .random()),
             name: "risky_venue_configuration",
             initialValue: RiskyVenueConfiguration(optionToBookATest: DayDuration(optionToBookATestDuration))
         )

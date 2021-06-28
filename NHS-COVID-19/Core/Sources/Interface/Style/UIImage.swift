@@ -46,6 +46,7 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case logoWales = "Logo Wales"
     case qrCodePoster = "QRCodePoster"
     case qrCodePosterHospitality = "QRCodePosterHospitality"
+    case qrCodePosterHospitalityWales = "QRCodePosterHospitalityWales"
     case qrCodePosterWales = "QRCodePosterWales"
     case isolationStartIndex = "IsolationStartIndex"
     case isolationStartContact = "IsolationStartContact"

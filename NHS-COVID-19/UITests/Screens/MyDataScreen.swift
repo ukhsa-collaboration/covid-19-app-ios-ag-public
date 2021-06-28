@@ -14,14 +14,6 @@ struct MyDataScreen {
         app.staticTexts[localized: .mydata_screen_title]
     }
     
-    var postcodeSectionHeader: XCUIElement {
-        app.staticTexts[localized: .mydata_section_postcode_description]
-    }
-    
-    var localAuthoritySectionHeader: XCUIElement {
-        app.staticTexts[localized: .mydata_section_LocalAuthority_description]
-    }
-    
     var testResultSectionHeader: XCUIElement {
         app.staticTexts[localized: .mydata_section_test_result_description]
     }

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -57,7 +57,7 @@ public struct SymptomCard: View {
             label: Text(
                 verbatim: localize(
                     .symptom_card_checkbox_accessibility_label(
-                        value: viewModel.isConfirmed ? localize(.symptom_card_checked) : localize(.symptom_card_unchecked),
+                        value: viewModel.isConfirmed ? localize(.symptom_card_checked, applyCurrentLanguageDirection: false) : localize(.symptom_card_unchecked, applyCurrentLanguageDirection: false),
                         heading: viewModel.heading,
                         content: viewModel.content
                     )

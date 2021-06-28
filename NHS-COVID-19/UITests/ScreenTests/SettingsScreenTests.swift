@@ -15,7 +15,7 @@ class SettingsScreenTests: XCTestCase {
             let screen = SettingsScreen(app: app)
             XCTAssertTrue(screen.title.exists)
             XCTAssertTrue(screen.languageRow.exists)
-            XCTAssertEqual(screen.languageRow.stringValue, runner.scenario.language)
+            XCTAssertEqual(screen.languageRow.stringValue, runner.scenario.language.applyCurrentLanguageDirection())
             XCTAssertTrue(screen.deleteDataButton.exists)
             XCTAssertTrue(screen.myAreaRow.exists)
             XCTAssertTrue(screen.myDataRow.exists)

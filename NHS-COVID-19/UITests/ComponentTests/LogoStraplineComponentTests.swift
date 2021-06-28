@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Interface
@@ -13,14 +13,6 @@ class LogoStraplineComponentTests: XCTestCase {
     private var runner: ApplicationRunner<LogoStraplineComponentScenario>
     
     func testBasics() throws {
-        runner.inspect { viewController in
-            XCTAssertAccessibility(viewController, [
-                .element {
-                    $0.label = localize(.onboarding_strapline_accessiblity_label)
-                    $0.traits = [.header, .staticText]
-                },
-            ])
-        }
         try runner.run { app in
             XCTAssert(app.logoStrapline.exists)
         }

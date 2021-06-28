@@ -72,13 +72,13 @@ class PostAcknowledgementViewController: UIViewController {
         self.shouldShowLanguageSelectionScreen = shouldShowLanguageSelectionScreen
         self.showContactTracingHub = showContactTracingHub
         self.showLocalInfoScreen = showLocalInfoScreen
-
+        
         clearBookATest = { showBookATest.value = false }
         
         // todo; we pass the subject down anyway - why do we need these?
         clearContactTracingHub = { showContactTracingHub.value = false }
         clearLocalInfoScreen = { showLocalInfoScreen.value = false }
-
+        
         super.init(nibName: nil, bundle: nil)
         
         showBookATest
@@ -228,7 +228,8 @@ class PostAcknowledgementViewController: UIViewController {
                 
                 let postcode = postcodeInfo?.postcode.value ?? ""
                 let localAuthority = localInfo.localAuthority?.name ?? ""
-
+                
+                #warning("Postcode and local authority placeholder replacement should be done in the model layer")
                 let paragraphs = renderableBlocks.map { renderableBlock in
                     LocalInformationViewController.ViewModel.Paragraph(
                         text: renderableBlock.text?.stringByReplacing(postcode: postcode, localAuthority: localAuthority),

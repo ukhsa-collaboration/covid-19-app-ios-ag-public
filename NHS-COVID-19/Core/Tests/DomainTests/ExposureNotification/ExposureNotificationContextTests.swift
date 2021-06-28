@@ -101,12 +101,13 @@ class ExposureNotificationContextTests: XCTestCase {
                 iTunesClient: MockHTTPClient(),
                 cameraManager: MockCameraManager(),
                 encryptedStore: MockEncryptedStore(),
-                cacheStorage: FileStorage(forNewCachesOf: UUID().uuidString),
-                venueDecoder: QRCode.forTests,
+                cacheStorage: FileStorage(forCachesOf: UUID().uuidString),
+                venueDecoder: VenueDecoder.forTests,
                 appInfo: AppInfo(bundleId: .random(), version: "3.10", buildNumber: "1"),
                 postcodeValidator: MockPostcodeValidator(),
                 currentDateProvider: MockDateProvider(),
-                storeReviewController: MockStoreReviewController()
+                storeReviewController: MockStoreReviewController(),
+                riskyPostcodeUpdateIntervalProvider: DefaultMinimumUpdateIntervalProvider()
             )
             
         }

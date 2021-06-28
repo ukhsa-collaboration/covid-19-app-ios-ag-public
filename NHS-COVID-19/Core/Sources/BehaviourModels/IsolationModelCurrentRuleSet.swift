@@ -76,9 +76,6 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             A symptomatic isolation will start on a symptomatic self-diagnosis.
             Symptom entry is only allowed if not already isolating as symptomatic.
             
-            We allow new self-diagnosis during an active positive test isolation,
-            but only ever store it if assumed symptom onset date is newer than test end date.
-            
             Delete any tests remembered if it is not causing an active isolation.
             """,
             predicate: StatePredicate(
@@ -97,9 +94,6 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             A symptomatic isolation will start on a symptomatic self-diagnosis.
             Symptom entry is only allowed if not already isolating as symptomatic.
             
-            We allow new self-diagnosis during an active positive test isolation,
-            but only ever store it if assumed symptom onset date is newer than test end date.
-            
             Keep any remembered tests if they are causing an active isolation.
             """,
             predicate: StatePredicate(
@@ -110,6 +104,19 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             update: .init(
                 symptomatic: .isolating
             )
+        ),
+        
+        Rule(
+            """
+            Exception: We allow new self-diagnosis during an active positive test isolation,
+            but do not store it if assumed symptom onset date is newer than test end date.
+            """,
+            predicate: StatePredicate(
+                symptomatic: .all(except: .isolating),
+                positiveTest: [.isolatingWithUnconfirmedTest, .isolatingWithConfirmedTest]
+            ),
+            event: .selfDiagnosedSymptomaticWithAssumedOnsetDateOlderThanPositiveTestEndDate,
+            update: .init()
         ),
         
         Rule(
@@ -351,7 +358,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                     positiveTest: [.notIsolatingAndHasNegativeTest]
                 ),
             ],
-            event: .receivedUnconfirmedPositiveTestWithEndDateNDaysOlderThanRememberedNegativeTestEndDate,
+            event: .receivedUnconfirmedPositiveTestWithEndDateNDaysOlderThanRememberedNegativeTestEndDateAndOlderThanAssumedSymptomOnsetDayIfAny,
             update: .init(
                 symptomatic: .noIsolation,
                 positiveTest: .isolatingWithUnconfirmedTest
@@ -820,6 +827,32 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         
         Rule(
             filler: """
+            We do not allow new self-diagnosis during an active symptomatic isolation.
+            """,
+            predicates: [
+                StatePredicate(
+                    symptomatic: [.isolating]
+                ),
+            ],
+            event: .selfDiagnosedSymptomaticWithAssumedOnsetDateOlderThanPositiveTestEndDate
+        ),
+        
+        Rule(
+            filler: """
+            This event can not happen without an active positive result isolation and if there is already
+            a symptomatic isolation
+            """,
+            predicates: [
+                StatePredicate(
+                    symptomatic: .all(except: .isolating),
+                    positiveTest: .all(except: .isolatingWithUnconfirmedTest, .isolatingWithConfirmedTest)
+                ),
+            ],
+            event: .selfDiagnosedSymptomaticWithAssumedOnsetDateOlderThanPositiveTestEndDate
+        ),
+        
+        Rule(
+            filler: """
             If not in symptomatic or positive test isolation, then the event to finish it is meaningless.
             """,
             predicate: StatePredicate(
@@ -974,7 +1007,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             predicate: StatePredicate(
                 positiveTest: .all(except: .notIsolatingAndHasNegativeTest)
             ),
-            event: .receivedUnconfirmedPositiveTestWithEndDateNDaysOlderThanRememberedNegativeTestEndDate
+            event: .receivedUnconfirmedPositiveTestWithEndDateNDaysOlderThanRememberedNegativeTestEndDateAndOlderThanAssumedSymptomOnsetDayIfAny
         ),
         
         Rule(

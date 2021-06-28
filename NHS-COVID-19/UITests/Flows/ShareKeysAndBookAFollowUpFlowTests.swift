@@ -212,7 +212,7 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
                 The person sees the Thank You screen with the 'back home' button
                 """
             }
-            XCTAssertTrue(thankYouScreen.headingText.exists)
+            XCTAssertTrue(thankYouScreen.headingText.waitForExistence(timeout: 0.1))
             thankYouScreen.backHomeButtonText.tap()
             
             runner.step("Home screen - after second test result") {

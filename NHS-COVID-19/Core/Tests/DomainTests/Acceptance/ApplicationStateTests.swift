@@ -202,7 +202,6 @@ class ApplicationStateTests: AcceptanceTestCase {
         
         let pollingToken = String.random()
         let submissionToken = String.random()
-        let result = TestResult.negative
         
         let endDay = now.advanced(by: -2)
         
@@ -215,7 +214,7 @@ class ApplicationStateTests: AcceptanceTestCase {
                 }
             ],
             "latestUnacknowledgedTestResult":{
-                "result":"\#(result.rawValue)",
+                "result":"negative",
                 "endDate":\#(endDay.startOfDay.timeIntervalSinceReferenceDate),
                 "diagnosisKeySubmissionToken":"\#(submissionToken)",
                 "requiresConfirmatoryTest":false
@@ -238,15 +237,15 @@ class ApplicationStateTests: AcceptanceTestCase {
     }
     
     func testNegativeTestResultInBothCasesGoesToNeededForNegativeResult() throws {
-        #warning("Need to make sure we eventually inject date everywhere")
-        let now = LocalDay.today
+        let now = LocalDay(gregorianDay: GregorianDay(year: 2021, month: 5, day: 1), timeZone: .current)
+        currentDateProvider.setDate(now.startOfDay)
+        
         let contactExposureDay = now.advanced(by: -5)
         let contactIsolationStart = now.advanced(by: -4)
         let onsetDay = now.advanced(by: -2)
         
         let pollingToken = String.random()
         let submissionToken = String.random()
-        let result = TestResult.negative
         
         encryptedStore.stored["isolation_state_info"] = #"""
         {
@@ -299,7 +298,7 @@ class ApplicationStateTests: AcceptanceTestCase {
                 }
             ],
             "latestUnacknowledgedTestResult":{
-                "result":"\#(result.rawValue)",
+                "result":"negative",
                 "endDate":\#(endDay.startOfDay.timeIntervalSinceReferenceDate),
                 "diagnosisKeySubmissionToken":"\#(submissionToken)",
                 "requiresConfirmatoryTest":false

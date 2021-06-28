@@ -382,4 +382,32 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             XCTFail()
         }
     }
+    
+    func testNegativeAfterUnconfirmedPositive() {
+        let result = VirologyStateTestResult(
+            testResult: .negative,
+            testKitType: .labResult,
+            endDate: Date(),
+            diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
+            requiresConfirmatoryTest: false
+        )
+        
+        let isolationState = IsolationLogicalState.isolating(
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: true, testKitType: nil, isSelfDiagnosed: false, isPendingConfirmation: true), contactCaseInfo: nil)),
+            endAcknowledged: false,
+            startAcknowledged: true
+        )
+        
+        let state = TestResultAcknowledgementState(
+            result: result,
+            newIsolationState: isolationState,
+            currentIsolationState: isolationState,
+            indexCaseInfo: indexCaseInfo,
+            completionHandler: {}
+        )
+        
+        if case TestResultAcknowledgementState.neededForNegativeResultContinueToIsolate = state {} else {
+            XCTFail()
+        }
+    }
 }
