@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import UIKit
@@ -17,6 +17,7 @@ extension UIApplication: Application {
     public var instanceOpenSettingsURLString: String {
         Self.openSettingsURLString
     }
+    
     public var instanceOpenAppStoreURLString: String {
         "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663"
     }

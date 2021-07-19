@@ -61,18 +61,17 @@ public class CheckInConfirmationViewController: UIViewController {
         navigationController?.setNavigationBarHidden(true, animated: true)
         
         // show different assets depending on whether we're in dark mode or not
-        let isDarkMode = self.traitCollection.userInterfaceStyle == .dark
+        let isDarkMode = traitCollection.userInterfaceStyle == .dark
         let imageIndexRange = {
-            isDarkMode ? (004...083) : (2004...2083)
+            isDarkMode ? (004 ... 083) : (2004 ... 2083)
         }()
         let imageNameFormat = {
             isDarkMode ? "tick_final_dark-mode%03d" : "tick-final_%d"
         }()
         
         if UIAccessibility.isReduceMotionEnabled {
-            self.checkImageView.image = UIImage(named: String(format: imageNameFormat, imageIndexRange.upperBound)) // just show the final frame
-        }
-        else if checkImages.isEmpty {
+            checkImageView.image = UIImage(named: String(format: imageNameFormat, imageIndexRange.upperBound)) // just show the final frame
+        } else if checkImages.isEmpty {
             
             // load images on a background queue
             DispatchQueue.global(qos: .userInitiated).async {
@@ -107,7 +106,7 @@ public class CheckInConfirmationViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             checkImageView.widthAnchor.constraint(equalToConstant: 300),
-            checkImageView.heightAnchor.constraint(equalTo: checkImageView.widthAnchor)
+            checkImageView.heightAnchor.constraint(equalTo: checkImageView.widthAnchor),
         ])
         checkImageView.contentMode = .scaleAspectFit
         checkImageView.tintColor = UIColor(.surface)

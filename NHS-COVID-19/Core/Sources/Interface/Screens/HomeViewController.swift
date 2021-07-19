@@ -19,8 +19,6 @@ public protocol HomeViewControllerInteracting {
     func didTapLinkTestResultButton()
     func didTapContactTracingHubButton()
     func didTapTestingHubButton()
-    func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never>
-    func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn)
     var shouldShowCheckIn: Bool { get }
 }
 

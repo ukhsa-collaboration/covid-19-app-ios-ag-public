@@ -96,7 +96,8 @@ extension IsolationModelAdapter {
                 testCaseRepresentation(
                     testEndDay: testCase.testEndDay,
                     receivedOnDay: testCase.receivedOnDay,
-                    isPendingConfirmation: true
+                    isPendingConfirmation: true,
+                    confirmatoryDayLimit: 2
                 ),
             ]
         case (.noIsolation, .notIsolatingAndHadConfirmedTestPreviously):
@@ -111,7 +112,8 @@ extension IsolationModelAdapter {
                 testCaseRepresentation(
                     testEndDay: testCase.expiredTestEndDay,
                     receivedOnDay: testCase.expiredReceivedOnDay,
-                    isPendingConfirmation: true
+                    isPendingConfirmation: true,
+                    confirmatoryDayLimit: 2
                 ),
             ]
         case (.noIsolation, .notIsolatingAndHasNegativeTest):
@@ -132,7 +134,7 @@ extension IsolationModelAdapter {
             ]
         case (.isolating, .isolatingWithUnconfirmedTest):
             return [
-                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.selfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay, isPendingConfirmation: true),
+                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.selfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay, isPendingConfirmation: true, confirmatoryDayLimit: 2),
             ]
         case (.isolating, .notIsolatingAndHadConfirmedTestPreviously):
             return [
@@ -140,7 +142,7 @@ extension IsolationModelAdapter {
             ]
         case (.isolating, .notIsolatingAndHadUnconfirmedTestPreviously):
             return [
-                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.selfDiagnosisDay, testEndDay: testCase.expiredTestEndDay, receivedOnDay: testCase.expiredReceivedOnDay, isPendingConfirmation: true),
+                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.selfDiagnosisDay, testEndDay: testCase.expiredTestEndDay, receivedOnDay: testCase.expiredReceivedOnDay, isPendingConfirmation: true, confirmatoryDayLimit: 2),
             ]
         case (.isolating, .notIsolatingAndHasNegativeTest):
             return [
@@ -156,7 +158,7 @@ extension IsolationModelAdapter {
             ]
         case (.notIsolatingAndHadSymptomsPreviously, .isolatingWithUnconfirmedTest):
             return [
-                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.expiredSelfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay, isPendingConfirmation: true),
+                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.expiredSelfDiagnosisDay, testEndDay: testCase.testEndDay, receivedOnDay: testCase.receivedOnDay, isPendingConfirmation: true, confirmatoryDayLimit: 2),
             ]
         case (.notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHadConfirmedTestPreviously):
             return [
@@ -164,7 +166,7 @@ extension IsolationModelAdapter {
             ]
         case (.notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHadUnconfirmedTestPreviously):
             return [
-                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.expiredSelfDiagnosisDay, testEndDay: testCase.expiredTestEndDay, receivedOnDay: testCase.expiredReceivedOnDay, isPendingConfirmation: true),
+                symptomaticAndTestCaseRepresentation(selfDiagnosisDay: symptomaticCase.expiredSelfDiagnosisDay, testEndDay: testCase.expiredTestEndDay, receivedOnDay: testCase.expiredReceivedOnDay, isPendingConfirmation: true, confirmatoryDayLimit: 2),
             ]
         case (.notIsolatingAndHadSymptomsPreviously, .notIsolatingAndHasNegativeTest):
             return [
@@ -200,7 +202,8 @@ extension IsolationModelAdapter {
         testEndDay: GregorianDay,
         receivedOnDay: GregorianDay,
         result: String = "positive",
-        isPendingConfirmation: Bool = false
+        isPendingConfirmation: Bool = false,
+        confirmatoryDayLimit: Int? = nil
     ) -> String {
         return """
             "npexDay" : {
@@ -216,7 +219,8 @@ extension IsolationModelAdapter {
                     "day" : \(receivedOnDay.day),
                     "month" : \(receivedOnDay.month),
                     "year" : \(receivedOnDay.year)
-                }
+                },
+                \(value(named: "confirmatoryDayLimit", content: confirmatoryDayLimit))
             }
         """
     }
@@ -227,7 +231,8 @@ extension IsolationModelAdapter {
         testEndDay: GregorianDay,
         receivedOnDay: GregorianDay,
         result: String = "positive",
-        isPendingConfirmation: Bool = false
+        isPendingConfirmation: Bool = false,
+        confirmatoryDayLimit: Int? = nil
     ) -> String {
         return [
             symptomaticCaseRepresentation(
@@ -238,7 +243,8 @@ extension IsolationModelAdapter {
                 testEndDay: testEndDay,
                 receivedOnDay: receivedOnDay,
                 result: result,
-                isPendingConfirmation: isPendingConfirmation
+                isPendingConfirmation: isPendingConfirmation,
+                confirmatoryDayLimit: confirmatoryDayLimit
             ),
         ].joined(separator: ",")
     }
@@ -282,6 +288,18 @@ extension IsolationModelAdapter {
         \"\(name)\": {
         \(content)
         }
+        """
+    }
+    
+    private func value(named name: String, content: Int?) -> String {
+        guard let content = content else {
+            return """
+                \"\(name)\": null
+            """
+        }
+        
+        return """
+        \"\(name)\": \(String(describing: content))
         """
     }
     

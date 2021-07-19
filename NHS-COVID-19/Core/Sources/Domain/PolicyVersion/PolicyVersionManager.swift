@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -20,11 +20,11 @@ class PolicyVersionManager {
         self.neededVersion = neededVersion
         
         needsAcceptNewVersion = Self.acceptanceNeeded(
-            acceptedVersion: policyVersionStore.lastAcceptedWithAppVersion,
+            acceptedVersion: policyVersionStore.lastAcceptedWithAppVersion.currentValue,
             neededVersion: neededVersion
         )
         
-        cancellable = policyVersionStore.$lastAcceptedWithAppVersion.sink { acceptedVersion in
+        cancellable = policyVersionStore.lastAcceptedWithAppVersion.sink { acceptedVersion in
             self.needsAcceptNewVersion = Self.acceptanceNeeded(
                 acceptedVersion: acceptedVersion,
                 neededVersion: neededVersion

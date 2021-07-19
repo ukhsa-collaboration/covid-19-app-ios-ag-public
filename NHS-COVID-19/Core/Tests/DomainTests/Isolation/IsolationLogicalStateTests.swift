@@ -4,6 +4,7 @@
 
 import Common
 import Foundation
+import Scenarios
 import TestSupport
 import XCTest
 @testable import Domain
@@ -263,16 +264,6 @@ class IsolationLogicalStateTests: XCTestCase {
         XCTAssertEqual(state.isolation, Isolation(fromDay: npexDay, untilStartOfDay: LocalDay(gregorianDay: endDay, timeZone: $state.today.timeZone), reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: true, testKitType: .labResult, isSelfDiagnosed: false, isPendingConfirmation: false), contactCaseInfo: nil)))
     }
     
-    func testManualTestEntryWithVoidResultDoesNotTriggerIsolation() {
-        let npexDay = LocalDay.today.advanced(by: -2)
-        $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
-            symptomaticInfo: nil,
-            testInfo: .init(result: .void, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
-        )
-        
-        XCTAssertEqual(state, .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil))
-    }
-    
     func testManualTestEntryWithOldTestDoesNotTriggerIsolation() {
         let npexDay = LocalDay.today.advanced(by: -12)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
@@ -383,19 +374,39 @@ class IsolationLogicalStateTests: XCTestCase {
     
     func testExposureNotificationProcessingBehaviourSaysShouldHandleExposureWhenBehaviourIsAll() {
         let behaviour = ExposureNotificationProcessingBehaviour.allExposures
-        XCTAssertTrue(behaviour.shouldNotifyForExposure(on: .today))
+        XCTAssertTrue(behaviour.shouldNotifyForExposure(
+            on: .today,
+            currentDateProvider: MockDateProvider(),
+            isolationLength: DayDuration(11)
+        ))
     }
     
     func testExposureNotificationProcessingBehaviourSaysShouldHandleExposuresOnOrAfterDateWeOptedIntoDCT() {
         let behaviour = ExposureNotificationProcessingBehaviour.onlyProcessExposuresOnOrAfter(.today)
-        XCTAssertFalse(behaviour.shouldNotifyForExposure(on: GregorianDay.today.advanced(by: -1)))
-        XCTAssertTrue(behaviour.shouldNotifyForExposure(on: .today))
-        XCTAssertTrue(behaviour.shouldNotifyForExposure(on: GregorianDay.today.advanced(by: 1)))
+        XCTAssertFalse(behaviour.shouldNotifyForExposure(
+            on: GregorianDay.today.advanced(by: -1),
+            currentDateProvider: MockDateProvider(),
+            isolationLength: DayDuration(11)
+        ))
+        XCTAssertTrue(behaviour.shouldNotifyForExposure(
+            on: .today,
+            currentDateProvider: MockDateProvider(),
+            isolationLength: DayDuration(11)
+        ))
+        XCTAssertTrue(behaviour.shouldNotifyForExposure(
+            on: GregorianDay.today.advanced(by: 1),
+            currentDateProvider: MockDateProvider(),
+            isolationLength: DayDuration(11)
+        ))
     }
     
     func testExposureNotificationProcessingBehaviourSaysShouldNotHandleExposuresIfNotInterested() {
         let behaviour = ExposureNotificationProcessingBehaviour.doNotProcessExposures
-        XCTAssertFalse(behaviour.shouldNotifyForExposure(on: .today))
+        XCTAssertFalse(behaviour.shouldNotifyForExposure(
+            on: .today,
+            currentDateProvider: MockDateProvider(),
+            isolationLength: DayDuration(11)
+        ))
     }
     
     // MARK: Early release from isolation when person opts into daily contact testing

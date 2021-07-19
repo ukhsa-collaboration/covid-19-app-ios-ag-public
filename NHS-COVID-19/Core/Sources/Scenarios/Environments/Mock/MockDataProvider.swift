@@ -435,4 +435,24 @@ class MockDataProvider: ObservableObject {
         }
     }
     
+    @UserDefault("mocks.lokaliseLastUpdate")
+    var lokaliseLastUpdate: Date? {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.lokaliseShowDownloadedStrings", defaultValue: true)
+    var lokaliseShowDownloadedStrings: Bool {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.lokaliseShowKeysOnly", defaultValue: false)
+    var lokaliseShowKeysOnly: Bool {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
 }

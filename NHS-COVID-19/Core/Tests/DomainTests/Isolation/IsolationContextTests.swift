@@ -140,7 +140,7 @@ class IsolationContextTests: XCTestCase {
     private func makeResultAcknowledgementState(result: VirologyStateTestResult) -> AnyPublisher<TestResultAcknowledgementState, Never> {
         isolationContext.makeResultAcknowledgementState(
             result: result,
-            completionHandler: { _, _ in }
+            completionHandler: { _ in }
         )
     }
     
@@ -377,7 +377,7 @@ class IsolationContextTests: XCTestCase {
             )
         )
         XCTAssertEqual(state.0, expectedIsolationState)
-        XCTAssertNil(state.1)
+        XCTAssertEqual(state.1, .hasNoTest)
     }
     
     func testHandleSymptomsAfterTest() {
@@ -411,7 +411,7 @@ class IsolationContextTests: XCTestCase {
             )
         )
         XCTAssertEqual(state.0, expectedIsolationState)
-        XCTAssertEqual(state.1, true)
+        XCTAssertEqual(state.1, .hasTest(shouldChangeAdviceDueToSymptoms: true))
     }
     
     func testHandleSymptomsAfterExpiredTest() {
@@ -445,7 +445,7 @@ class IsolationContextTests: XCTestCase {
             )
         )
         XCTAssertEqual(state.0, expectedIsolationState)
-        XCTAssertEqual(state.1, nil)
+        XCTAssertEqual(state.1, .hasNoTest)
     }
     
     func testHandleSymptomsAfterExpiredTestButActiveContactCase() {
@@ -486,7 +486,7 @@ class IsolationContextTests: XCTestCase {
             )
         )
         XCTAssertEqual(state.0, expectedIsolationState)
-        XCTAssertEqual(state.1, nil)
+        XCTAssertEqual(state.1, .hasNoTest)
     }
     
     func testHandleSymptomsBeforeTest() {
@@ -520,6 +520,6 @@ class IsolationContextTests: XCTestCase {
             )
         )
         XCTAssertEqual(state.0, expectedIsolationState)
-        XCTAssertEqual(state.1, false)
+        XCTAssertEqual(state.1, .hasTest(shouldChangeAdviceDueToSymptoms: false))
     }
 }

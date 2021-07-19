@@ -77,7 +77,6 @@ private struct HomeAnimationStateContentView: View {
             
             Text(localize(.home_animations_heading))
                 .styleAsHeading()
-                .accessibility(addTraits: .isHeader)
                 .padding()
             
             Text(localize(.home_animations_description))

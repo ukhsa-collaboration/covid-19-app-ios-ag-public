@@ -9,12 +9,6 @@ import Foundation
 public enum TestResult: Equatable {
     case positive
     case negative
-    
-    #warning("These cases should be removed")
-    // These types are not stored / used in isolation logic.
-    // After properly adopting `UnacknowledgedTestResult`, we should be able to remove these cases.
-    case plod
-    case void
 }
 
 /// Result of a test that is received but is not yet acknowledged to be used as part of isolation logic.
@@ -30,16 +24,14 @@ public enum UnacknowledgedTestResult: Equatable {
 
 extension TestResult {
     
-    init(_ testResult: UnacknowledgedTestResult) {
+    init?(_ testResult: UnacknowledgedTestResult) {
         switch testResult {
         case .positive:
             self = .positive
-        case .plod:
-            self = .plod
         case .negative:
             self = .negative
-        case .void:
-            self = .void
+        case .plod, .void:
+            return nil
         }
     }
     

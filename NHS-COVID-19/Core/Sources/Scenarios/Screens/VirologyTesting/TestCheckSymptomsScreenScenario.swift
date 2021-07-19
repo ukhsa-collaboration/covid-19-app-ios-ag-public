@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -18,7 +18,7 @@ public class TestCheckSymptomsScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return TestCheckSymptomsViewController(interactor: interactor)
+            return TestCheckSymptomsViewController.viewController(for: .enterTestResult, interactor: interactor)
         }
     }
 }

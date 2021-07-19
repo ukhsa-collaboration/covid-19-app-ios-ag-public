@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -33,29 +33,22 @@ enum PostcodeStoreState {
 
 public class PostcodeStore {
     
-    @Encrypted private var postcodeInfo: PostcodeInfo? {
-        didSet {
-            state = PostcodeStoreState(hasPostcode: postcodeInfo?.postcode != nil, hasLocalAuthority: postcodeInfo?.localAuthorityId != nil)
-            postcode = postcodeInfo?.postcode
-            localAuthorityId = postcodeInfo?.localAuthorityId
-        }
-    }
+    @PublishedEncrypted private var postcodeInfo: PostcodeInfo?
     
-    @Published
-    private(set) var state: PostcodeStoreState
+    private(set) lazy var state: DomainProperty<PostcodeStoreState> = {
+        $postcodeInfo.map { PostcodeStoreState(hasPostcode: $0?.postcode != nil, hasLocalAuthority: $0?.localAuthorityId != nil) }
+    }()
     
-    @Published
-    private(set) var postcode: Postcode?
+    private(set) lazy var postcode: DomainProperty<Postcode?> = {
+        $postcodeInfo.map { $0?.postcode }
+    }()
     
-    @Published
-    private(set) var localAuthorityId: LocalAuthorityId?
+    private(set) lazy var localAuthorityId: DomainProperty<LocalAuthorityId?> = {
+        $postcodeInfo.map { $0?.localAuthorityId }
+    }()
     
     init(store: EncryptedStoring) {
         _postcodeInfo = store.encrypted("postcode")
-        let info = _postcodeInfo.wrappedValue
-        postcode = info?.postcode
-        localAuthorityId = info?.localAuthorityId
-        state = PostcodeStoreState(hasPostcode: info?.postcode != nil, hasLocalAuthority: info?.localAuthorityId != nil)
     }
     
     func save(postcode: Postcode) {

@@ -24,7 +24,7 @@ extension IsolationStatePayload: Codable {
         guard metadata.version >= Metadata.v2.version else {
             let payload = try PayloadV1(from: decoder)
             isolationStateInfo = IsolationStateInfo(
-                isolationInfo: try IsolationInfo(payload.isolationInfo),
+                isolationInfo: IsolationInfo(payload.isolationInfo),
                 configuration: payload.configuration
             )
             return
@@ -260,8 +260,6 @@ private extension PayloadV2.TestCaseInfo.TestResult {
             self = .positive
         case .negative:
             self = .negative
-        case .void, .plod:
-            return nil
         }
     }
     
@@ -333,11 +331,11 @@ private struct PayloadV1: Decodable {
 
 private extension IsolationInfo {
     
-    init(_ payload: PayloadV1.IsolationInfo) throws {
+    init(_ payload: PayloadV1.IsolationInfo) {
         self.init(
             hasAcknowledgedEndOfIsolation: payload.hasAcknowledgedEndOfIsolation ?? false,
             hasAcknowledgedStartOfIsolation: payload.hasAcknowledgedStartOfIsolation ?? false,
-            indexCaseInfo: try payload.indexCaseInfo.map(IndexCaseInfo.init),
+            indexCaseInfo: payload.indexCaseInfo.flatMap(IndexCaseInfo.init),
             contactCaseInfo: payload.contactCaseInfo.map(ContactCaseInfo.init)
         )
     }
@@ -358,32 +356,21 @@ private extension ContactCaseInfo {
 
 private extension IndexCaseInfo {
     
-    init(_ payload: PayloadV1.IndexCaseInfo) throws {
-        if let selfDiagnosisDay = payload.selfDiagnosisDay {
-            let symptomaticInfo = SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: payload.onsetDay)
-            self.init(
-                isolationTrigger: .selfDiagnosis(selfDiagnosisDay),
-                symptomaticInfo: symptomaticInfo,
-                testInfo: payload.testInfo.map { IndexCaseInfo.TestInfo($0, testEndDay: payload.npexDay) }
-            )
-        } else if let testInfo = payload.testInfo, let testEndDay = payload.npexDay {
-            self.init(
-                isolationTrigger: .manualTestEntry(npexDay: testEndDay),
-                symptomaticInfo: nil,
-                testInfo: IndexCaseInfo.TestInfo(testInfo, testEndDay: testEndDay)
-            )
-        } else {
-            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: [], debugDescription: "Could not find self diagnosis day or npex day"))
-        }
+    init?(_ payload: PayloadV1.IndexCaseInfo) {
+        self.init(
+            symptomaticInfo: payload.selfDiagnosisDay.map { SymptomaticInfo(selfDiagnosisDay: $0, onsetDay: payload.onsetDay) },
+            testInfo: payload.testInfo.flatMap { IndexCaseInfo.TestInfo($0, testEndDay: payload.npexDay) }
+        )
     }
     
 }
 
 private extension IndexCaseInfo.TestInfo {
     
-    init(_ testInfo: PayloadV1.IndexCaseInfo.TestInfo, testEndDay: GregorianDay?) {
+    init?(_ testInfo: PayloadV1.IndexCaseInfo.TestInfo, testEndDay: GregorianDay?) {
+        guard let result = TestResult(testInfo.result) else { return nil }
         self.init(
-            result: TestResult(testInfo.result),
+            result: result,
             testKitType: TestKitType(testInfo.testKitType),
             requiresConfirmatoryTest: testInfo.requiresConfirmatoryTest ?? false,
             confirmatoryDayLimit: nil,
@@ -398,14 +385,18 @@ private extension IndexCaseInfo.TestInfo {
 
 private extension TestResult {
     
-    init(_ result: PayloadV1.IndexCaseInfo.TestResult) {
+    init?(_ result: PayloadV1.IndexCaseInfo.TestResult) {
         switch result {
         case .positive:
             self = .positive
         case .negative:
             self = .negative
         case .void:
-            self = .void
+            // `void` was only stored in very early versions of the app.
+            // We keep the `enum` "just in case"; for the edge cases that this is stored somewhere and we don’t want
+            // decoding of the whole object to fail for this.
+            // but if somehow it does exist, it does not affect isolation logic, so we don’t need to pass it up.
+            return nil
         }
     }
     

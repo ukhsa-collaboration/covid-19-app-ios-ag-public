@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -14,19 +14,14 @@ private struct PolicyVersionInfo: Codable, DataConvertible {
 
 public class PolicyVersionStore {
     
-    @Encrypted private var policyInfo: PolicyVersionInfo? {
-        didSet {
-            lastAcceptedWithAppVersion = policyInfo?.lastAcceptedWithAppVersion
-        }
-    }
+    @PublishedEncrypted private var policyInfo: PolicyVersionInfo?
     
-    @Published
-    private(set) var lastAcceptedWithAppVersion: String?
+    private(set) lazy var lastAcceptedWithAppVersion: DomainProperty<String?> = {
+        $policyInfo.map { $0?.lastAcceptedWithAppVersion }
+    }()
     
     init(store: EncryptedStoring) {
         _policyInfo = store.encrypted("policy_version")
-        let info = _policyInfo.wrappedValue
-        lastAcceptedWithAppVersion = info?.lastAcceptedWithAppVersion
     }
     
     func save(currentAppVersion: String) {

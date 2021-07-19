@@ -76,7 +76,9 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
     )
     
     private let currentDateProvider: DateProviding
-
+    public var didCancel: (() -> Void)?
+    public var finishFlow: (() -> Void)?
+    
     private var cancellables = [AnyCancellable]()
     
     public init(_ interactor: Interacting, currentDateProvider: DateProviding) {
@@ -182,20 +184,22 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
 }
 
 private struct NoSymptomsIsolatingViewControllerInteractor: NoSymptomsIsolatingViewController.Interacting {
-    private weak var navigationController: UINavigationController?
+    private weak var navigationController: SelfDiagnosisFlowViewController?
     
     private var _didTapOnlineServicesLink: () -> Void
     
-    init(navigationController: UINavigationController?, didTapOnlineServicesLink: @escaping () -> Void) {
+    init(navigationController: SelfDiagnosisFlowViewController?, didTapOnlineServicesLink: @escaping () -> Void) {
         self.navigationController = navigationController
         _didTapOnlineServicesLink = didTapOnlineServicesLink
     }
     
     func didTapReturnHome() {
+        navigationController?.finishFlow?()
         navigationController?.dismiss(animated: true, completion: nil)
     }
     
     func didTapCancel() {
+        navigationController?.finishFlow?()
         navigationController?.dismiss(animated: true, completion: nil)
     }
     
@@ -206,13 +210,14 @@ private struct NoSymptomsIsolatingViewControllerInteractor: NoSymptomsIsolatingV
 }
 
 private class LoadingViewControllerInteractor: LoadingViewController.Interacting {
-    private weak var navigationController: UINavigationController?
+    private weak var navigationController: SelfDiagnosisFlowViewController?
     
-    init(navigationController: UINavigationController?) {
+    init(navigationController: SelfDiagnosisFlowViewController?) {
         self.navigationController = navigationController
     }
     
     func didTapCancel() {
+        navigationController?.didCancel?()
         navigationController?.dismiss(animated: true, completion: nil)
     }
 }
@@ -225,6 +230,7 @@ private struct LoadingErrorControllerInteractor: LoadingErrorViewController.Inte
     }
     
     func didTapCancel() {
+        controller?.didCancel?()
         controller?.dismiss(animated: true, completion: nil)
     }
     
@@ -242,6 +248,7 @@ private struct SymptomListViewControllerInteractor: SymptomListViewController.In
     }
     
     public func didTapCancel() {
+        controller?.didCancel?()
         controller?.dismiss(animated: true, completion: nil)
     }
     
@@ -281,6 +288,7 @@ private struct NoSymptomsViewControllerInteractor: NoSymptomsViewController.Inte
     }
     
     public func didTapReturnHome() {
+        controller?.finishFlow?()
         controller?.dismiss(animated: true, completion: nil)
     }
 }
@@ -294,6 +302,7 @@ private struct PositiveSymptomsViewControllerInteractor: PositiveSymptomsViewCon
     }
     
     public func didTapCancel() {
+        controller?.finishFlow?()
         controller?.dismiss(animated: true, completion: nil)
     }
     
@@ -342,16 +351,17 @@ private struct SymptomsReviewViewControllerInteractor: SymptomsReviewViewControl
 
 private struct SelfDiagnosisAfterPositiveTestIsolatingViewControllerInteractor: SelfDiagnosisAfterPositiveTestIsolatingViewController.Interacting {
     
-    private weak var navigationController: UINavigationController?
+    private weak var navigationController: SelfDiagnosisFlowViewController?
     
     private var _didTapOnlineServicesLink: () -> Void
     
-    init(navigationController: UINavigationController?, didTapOnlineServicesLink: @escaping () -> Void) {
+    init(navigationController: SelfDiagnosisFlowViewController?, didTapOnlineServicesLink: @escaping () -> Void) {
         self.navigationController = navigationController
         _didTapOnlineServicesLink = didTapOnlineServicesLink
     }
     
     func didTapReturnHome() {
+        navigationController?.finishFlow?()
         navigationController?.dismiss(animated: true, completion: nil)
     }
     
@@ -363,16 +373,17 @@ private struct SelfDiagnosisAfterPositiveTestIsolatingViewControllerInteractor: 
 
 private struct SymptomsAfterPositiveTestViewControllerInteractor: SymptomsAfterPositiveTestViewController.Interacting {
     
-    private weak var navigationController: UINavigationController?
+    private weak var navigationController: SelfDiagnosisFlowViewController?
     
     private var _didTapOnlineServicesLink: () -> Void
     
-    init(navigationController: UINavigationController?, didTapOnlineServicesLink: @escaping () -> Void) {
+    init(navigationController: SelfDiagnosisFlowViewController?, didTapOnlineServicesLink: @escaping () -> Void) {
         self.navigationController = navigationController
         _didTapOnlineServicesLink = didTapOnlineServicesLink
     }
     
     func didTapReturnHome() {
+        navigationController?.finishFlow?()
         navigationController?.dismiss(animated: true, completion: nil)
     }
     

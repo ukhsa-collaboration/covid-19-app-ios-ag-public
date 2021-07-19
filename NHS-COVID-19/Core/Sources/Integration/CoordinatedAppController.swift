@@ -18,6 +18,7 @@ public class CoordinatedAppController: AppController {
     public var rootViewController: UIViewController = RootViewController()
     
     public let showBookATest = CurrentValueSubject<Bool, Never>(false)
+    public let showWarnAndBookATest = CurrentValueSubject<Bool, Never>(false)
     public let showContactTracingHub = CurrentValueSubject<Bool, Never>(false)
     public let showLocalInfoScreen = CurrentValueSubject<Bool, Never>(false)
     
@@ -68,11 +69,24 @@ public class CoordinatedAppController: AppController {
         if let action = UserNotificationAction(rawValue: response.actionIdentifier) {
             coordinator.handleUserNotificationAction(action, completion: completionHandler)
         } else {
-            if response.notification.request.identifier == UserNotificationType.exposureNotificationReminder.identifier {
+            switch response.notification.request.identifier {
+            case UserNotificationType.exposureNotificationReminder.identifier,
+                 UserNotificationType.exposureNotificationSecondReminder.identifier:
                 showContactTracingHub.send(true)
-            } else if response.notification.request.identifier == UserNotificationType.localMessage(title: "", body: "").identifier {
+                
+            case UserNotificationType.localMessage(title: "", body: "").identifier:
                 showLocalInfoScreen.send(true)
                 Metrics.signpost(.didAccessLocalInfoScreenViaNotification)
+                
+            case UserNotificationType.venue(.warnAndBookATest).identifier:
+                guard let messageType = response.notification.request.content.userInfo[UserNotificationUserInfoKeys.VenueMessageType] as? String,
+                      messageType == UserNotificationType.VenueMessageType.warnAndBookATest.rawValue else {
+                    return
+                }
+                Metrics.signpost(.didAccessRiskyVenueM2Notification)
+                
+            default:
+                break
             }
             
             completionHandler()

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -20,7 +20,7 @@ class LocalAuthorityManager {
         self.localAuthoritiesValidator = localAuthoritiesValidator
         self.postcodeStore = postcodeStore
         
-        cancellable = postcodeStore.$localAuthorityId.sink { [weak self] localAuthorityId in
+        cancellable = postcodeStore.localAuthorityId.sink { [weak self] localAuthorityId in
             guard let self = self else { return }
             if let localAuthorityId = localAuthorityId {
                 self.country = localAuthoritiesValidator.localAuthority(with: localAuthorityId)?.country ?? .england

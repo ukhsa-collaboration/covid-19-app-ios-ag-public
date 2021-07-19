@@ -111,26 +111,57 @@ public struct IndexCaseInfo: Equatable {
         }
     }
     
-    var isolationTrigger: IsolationTrigger
-    var symptomaticInfo: SymptomaticInfo?
-    var testInfo: TestInfo?
-}
-
-extension IndexCaseInfo {
+    // **Important**: These properties must be `let` to preserve invariants.
+    // Any changes should go through `init`.
+    let isolationTrigger: IsolationTrigger
+    let symptomaticInfo: SymptomaticInfo?
+    let testInfo: TestInfo?
     
-    init(
+    #warning("Refine this collection of init methods")
+    // When creating `IndexCaseInfo`, at least one of `symptomaticInfo` or `testInfo` must not be nil.
+    // Instead of considering that a precondition, we enforce this by requiring at least one of these no be non-optional.
+    // Otherwise, we’ll return an optional response.
+    //
+    // This improves type-safety for now whilst we refactor other parts of the app. We should revisit this when we
+    // change this type, e.g. to remove `IsolationTrigger` or even the whole `IndexCaseInfo` type.
+    init?(
         symptomaticInfo: SymptomaticInfo?,
         testInfo: IndexCaseInfo.TestInfo?
     ) {
         if let symptomaticInfo = symptomaticInfo {
             isolationTrigger = .selfDiagnosis(symptomaticInfo.selfDiagnosisDay)
+        } else if let testEndDay = testInfo?.testEndDay {
+            isolationTrigger = .manualTestEntry(npexDay: testEndDay)
         } else {
-            #warning("This is very risky. There's no indication that from the two parameters passed one must be non-null")
-            isolationTrigger = .manualTestEntry(npexDay: testInfo!.testEndDay!)
+            return nil
         }
         self.symptomaticInfo = symptomaticInfo
         self.testInfo = testInfo
     }
+    
+    init(
+        symptomaticInfo: SymptomaticInfo,
+        testInfo: IndexCaseInfo.TestInfo?
+    ) {
+        self.init(symptomaticInfo: symptomaticInfo as SymptomaticInfo?, testInfo: testInfo as IndexCaseInfo.TestInfo?)!
+    }
+    
+    init(
+        symptomaticInfo: SymptomaticInfo?,
+        testInfo: IndexCaseInfo.TestInfo
+    ) {
+        self.init(symptomaticInfo: symptomaticInfo as SymptomaticInfo?, testInfo: testInfo as IndexCaseInfo.TestInfo?)!
+    }
+    
+    init(
+        symptomaticInfo: SymptomaticInfo,
+        testInfo: IndexCaseInfo.TestInfo
+    ) {
+        self.init(symptomaticInfo: symptomaticInfo as SymptomaticInfo?, testInfo: testInfo as IndexCaseInfo.TestInfo?)!
+    }
+}
+
+extension IndexCaseInfo {
     
     var startDay: GregorianDay {
         switch isolationTrigger {
@@ -194,31 +225,25 @@ extension IndexCaseInfo {
         }
     }
     
-    mutating func set(
-        testResult: TestResult,
-        testKitType: TestKitType?,
-        requiresConfirmatoryTest: Bool,
-        confirmatoryDayLimit: Int?,
-        receivedOn: GregorianDay,
-        testEndDay: GregorianDay?
-    ) {
-        testInfo = TestInfo(
-            result: testResult,
-            testKitType: testKitType,
-            requiresConfirmatoryTest: requiresConfirmatoryTest,
-            confirmatoryDayLimit: confirmatoryDayLimit,
-            receivedOnDay: receivedOn,
-            testEndDay: testEndDay
-        )
-    }
-    
     mutating func confirmTest(confirmationDay: GregorianDay) {
-        testInfo?.confirmedOnDay = confirmationDay
-        testInfo?.completedOnDay = confirmationDay
+        updateExistingTestInfo {
+            $0.confirmedOnDay = confirmationDay
+            $0.completedOnDay = confirmationDay
+        }
     }
     
     mutating func completeTest(completedOnDay: GregorianDay) {
-        testInfo?.completedOnDay = completedOnDay
+        updateExistingTestInfo {
+            $0.completedOnDay = completedOnDay
+        }
+    }
+    
+    private mutating func updateExistingTestInfo(with mutator: (inout TestInfo) -> Void) {
+        guard let testInfo = testInfo else { return }
+        self = IndexCaseInfo(
+            symptomaticInfo: symptomaticInfo,
+            testInfo: mutating(testInfo, with: mutator)
+        )
     }
 }
 
@@ -400,7 +425,15 @@ public enum ExposureNotificationProcessingBehaviour: Equatable {
     case onlyProcessExposuresOnOrAfter(GregorianDay)
     case doNotProcessExposures
     
-    func shouldNotifyForExposure(on exposureDay: GregorianDay) -> Bool {
+    func shouldNotifyForExposure(on exposureDay: GregorianDay,
+                                 currentDateProvider: DateProviding,
+                                 isolationLength: DayDuration) -> Bool {
+        // Don't notify for exposures where the resultant isolation is already finished.
+        let today = currentDateProvider.currentGregorianDay(timeZone: .utc)
+        guard today - isolationLength < exposureDay else {
+            return false
+        }
+        
         switch self {
         case .allExposures:
             return true
@@ -425,8 +458,6 @@ extension _Isolation {
         let isPendingConfirmation = indexCaseInfo.testInfo?.confirmationStatus == .pending
         switch (indexCaseInfo.symptomaticInfo?.onsetDay, indexCaseInfo.testInfo?.result, indexCaseInfo.isolationTrigger) {
         case (_, .negative, .manualTestEntry):
-            return nil
-        case (_, .void, .manualTestEntry):
             return nil
         case (_, .negative, .selfDiagnosis(_)):
             self.init(

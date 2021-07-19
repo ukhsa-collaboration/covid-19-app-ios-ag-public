@@ -12,7 +12,7 @@ enum SelfDiagnosisOrderFlowState {
     case selfDiagnosis(SelfDiagnosisFlowViewController.Interacting)
     case testOrdering(VirologyTestingFlowViewController.Interacting)
     
-    static func makeState(context: RunningAppContext) -> AnyPublisher<SelfDiagnosisOrderFlowState, Never> {
+    static func makeState(context: RunningAppContext, acknowledge: (() -> Void)? = nil) -> AnyPublisher<SelfDiagnosisOrderFlowState, Never> {
         let testOrdering = CurrentValueSubject<Bool, Never>(false)
         return testOrdering
             .map { value in
@@ -20,7 +20,7 @@ enum SelfDiagnosisOrderFlowState {
                     return .testOrdering(VirologyTestingFlowInteractor(
                         virologyTestOrderInfoProvider: context.virologyTestingManager,
                         openURL: context.openURL,
-                        acknowledge: nil
+                        acknowledge: acknowledge
                     ))
                 } else {
                     return .selfDiagnosis(SelfDiagnosisFlowInteractor(

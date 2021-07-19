@@ -915,7 +915,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedStartOfIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: nil,
-                testInfo: IndexCaseInfo.TestInfo(result: .void, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: testDay.advanced(by: -4), testEndDay: testEndDay)
+                testInfo: IndexCaseInfo.TestInfo(result: .negative, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: testDay.advanced(by: -4), testEndDay: testEndDay)
             ),
             contactCaseInfo: nil
         )

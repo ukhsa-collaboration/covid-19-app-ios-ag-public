@@ -16,14 +16,14 @@ class ContactTracingHubFlowTests: XCTestCase {
     }
     
     func testContactTracingOffReminder() throws {
-
+        
         // !TEMP! This currently fails in ar and bn
         if let languageCode = Locale.current.languageCode {
             if languageCode == "ar" || languageCode == "bn" {
                 return
             }
         }
-
+        
         $runner.report(scenario: "ContactTracingHub", "Contact Tracing Off - Reminder") {
             """
             Users see the contact tracing hub, toggles off contact tracing and chooses a reminder time

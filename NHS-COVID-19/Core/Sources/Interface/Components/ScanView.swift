@@ -27,7 +27,7 @@ class ScanView: UIView {
     
     private var cameraState: AnyPublisher<QRScanner.State, Never>
     private var announceable: Bool = false
-
+    
     private lazy var titleLabel: UIView = {
         let titleLabel = BaseLabel()
         titleLabel.text = localize(.checkin_camera_qrcode_scanner_title)

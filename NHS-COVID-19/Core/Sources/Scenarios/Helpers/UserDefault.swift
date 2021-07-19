@@ -72,7 +72,12 @@ private extension UserDefaults {
             value(forKey: key) as? Value
         }
         set {
-            setValue(newValue, forKey: key)
+            switch newValue {
+            case .some(let value):
+                setValue(value, forKey: key)
+            case .none:
+                removeObject(forKey: key)
+            }
         }
     }
     

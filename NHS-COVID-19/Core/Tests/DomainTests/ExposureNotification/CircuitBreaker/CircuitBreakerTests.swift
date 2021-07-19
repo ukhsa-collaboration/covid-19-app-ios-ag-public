@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -36,6 +36,8 @@ class CircuitBreakerTests: XCTestCase {
                 client: configuration.client,
                 exposureInfoProvider: configuration.store,
                 riskyCheckinsProvider: configuration.checkInsStore,
+                currentDateProvider: MockDateProvider { DateComponents(calendar: .gregorian, timeZone: .utc, year: 2020, month: 5, day: 8).date! },
+                contactCaseIsolationDuration: DayDuration(11),
                 handleContactCase: configuration.handleContactCase,
                 handleDontWorryNotification: configuration.handleDontWorryNotification,
                 exposureNotificationProcessingBehaviour: configuration.exposureNotificationProcessingBehaviour
@@ -303,6 +305,31 @@ class CircuitBreakerTests: XCTestCase {
         try processPendingApprovals()
         
         XCTAssertFalse(handledDontWorryNotification)
+    }
+    
+    func testNotifiesForNonExpiredIsolation() throws {
+        let handledContactCaseExpectation = expectation(description: "contact case passed off for handling")
+        handleContactCase = { _ in handledContactCaseExpectation.fulfill() }
+        
+        store.save(riskInfo: RiskInfo(riskScore: 7.5, riskScoreVersion: 2, day: .init(year: 2020, month: 4, day: 28)))
+        let approvalTokenString = CircuitBreakerApprovalToken(.random())
+        
+        client.approvalResponse = .init(approvalToken: approvalTokenString, approval: .yes)
+        try processPendingApprovals()
+        
+        waitForExpectations(timeout: 1)
+    }
+    
+    func testDoesNotNotifyForExpiredIsolation() throws {
+        var handledContactCase = false
+        handleContactCase = { _ in handledContactCase = true }
+        
+        store.save(riskInfo: RiskInfo(riskScore: 7.5, riskScoreVersion: 2, day: .init(year: 2020, month: 4, day: 27)))
+        let approvalTokenString = CircuitBreakerApprovalToken(.random())
+        
+        client.approvalResponse = .init(approvalToken: approvalTokenString, approval: .yes)
+        try processPendingApprovals()
+        XCTAssertFalse(handledContactCase)
     }
 }
 

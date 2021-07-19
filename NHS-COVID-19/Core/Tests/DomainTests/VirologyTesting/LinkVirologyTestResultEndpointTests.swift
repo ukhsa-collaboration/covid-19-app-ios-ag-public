@@ -162,17 +162,17 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "requiresConfirmatoryTest": false
         }
         """#))
-
-        XCTAssertThrowsError(try endpoint.parse(actualResponse)) { (error) in
+        
+        XCTAssertThrowsError(try endpoint.parse(actualResponse)) { error in
             switch error {
-            case DecodingError.dataCorrupted(_):
+            case DecodingError.dataCorrupted:
                 break
             default:
                 XCTFail()
             }
         }
     }
-
+    
     func testDecodingPositiveLfdDiagnosisKeySubmissionNotSupported() throws {
         let date = "2021-01-10T00:00:00.0000000Z"
         

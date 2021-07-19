@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -29,8 +29,8 @@ class PostcodeStoreTests: XCTestCase {
         
         postcodeStore = PostcodeStore(store: encryptedStore)
         
-        XCTAssertTrue(postcodeStore.state == .onlyPostcode)
-        XCTAssertEqual("P1", postcodeStore.postcode?.value)
+        XCTAssertTrue(postcodeStore.state.currentValue == .onlyPostcode)
+        XCTAssertEqual("P1", postcodeStore.postcode.currentValue?.value)
     }
     
     func testLoadingPostcodeDataWithMediumRiskV1() {
@@ -43,8 +43,8 @@ class PostcodeStoreTests: XCTestCase {
         
         postcodeStore = PostcodeStore(store: encryptedStore)
         
-        XCTAssertTrue(postcodeStore.state == .onlyPostcode)
-        XCTAssertEqual("P1", postcodeStore.postcode?.value)
+        XCTAssertTrue(postcodeStore.state.currentValue == .onlyPostcode)
+        XCTAssertEqual("P1", postcodeStore.postcode.currentValue?.value)
     }
     
     func testLoadingPostcodeDataWithHighRiskV1() {
@@ -57,8 +57,8 @@ class PostcodeStoreTests: XCTestCase {
         
         postcodeStore = PostcodeStore(store: encryptedStore)
         
-        XCTAssertTrue(postcodeStore.state == .onlyPostcode)
-        XCTAssertEqual("P1", postcodeStore.postcode?.value)
+        XCTAssertTrue(postcodeStore.state.currentValue == .onlyPostcode)
+        XCTAssertEqual("P1", postcodeStore.postcode.currentValue?.value)
     }
     
     func testLoadingPostcodeDataWithoutLocalAuthority() {
@@ -70,9 +70,9 @@ class PostcodeStoreTests: XCTestCase {
         
         postcodeStore = PostcodeStore(store: encryptedStore)
         
-        XCTAssertTrue(postcodeStore.state == .onlyPostcode)
-        XCTAssertEqual("P1", postcodeStore.postcode?.value)
-        XCTAssertNil(postcodeStore.localAuthorityId)
+        XCTAssertTrue(postcodeStore.state.currentValue == .onlyPostcode)
+        XCTAssertEqual("P1", postcodeStore.postcode.currentValue?.value)
+        XCTAssertNil(postcodeStore.localAuthorityId.currentValue)
     }
     
     func testLoadingPostcodeDataWithLocalAuthority() {
@@ -85,27 +85,27 @@ class PostcodeStoreTests: XCTestCase {
         
         postcodeStore = PostcodeStore(store: encryptedStore)
         
-        XCTAssertTrue(postcodeStore.state == .postcodeAndLocalAuthority)
-        XCTAssertEqual("P1", postcodeStore.postcode?.value)
-        XCTAssertEqual("LA1", postcodeStore.localAuthorityId?.value)
+        XCTAssertTrue(postcodeStore.state.currentValue == .postcodeAndLocalAuthority)
+        XCTAssertEqual("P1", postcodeStore.postcode.currentValue?.value)
+        XCTAssertEqual("LA1", postcodeStore.localAuthorityId.currentValue?.value)
     }
     
     func testSavePostcodeSucess() throws {
         postcodeStore.save(postcode: Postcode("B44"))
-        XCTAssertEqual(postcodeStore.postcode?.value, "B44")
+        XCTAssertEqual(postcodeStore.postcode.currentValue?.value, "B44")
     }
     
     func testSavePostcodeWithLocalAuthoritySuccess() throws {
         let postcode = Postcode("B44")
         let localAuthority = LocalAuthorityId("LA44")
         postcodeStore.save(postcode: postcode, localAuthorityId: localAuthority)
-        XCTAssertEqual(postcodeStore.postcode, postcode)
-        XCTAssertEqual(postcodeStore.localAuthorityId, localAuthority)
+        XCTAssertEqual(postcodeStore.postcode.currentValue, postcode)
+        XCTAssertEqual(postcodeStore.localAuthorityId.currentValue, localAuthority)
     }
     
     func testDeletePostcode() throws {
         postcodeStore.save(postcode: Postcode("B44"))
         postcodeStore.delete()
-        XCTAssertNil(postcodeStore.postcode)
+        XCTAssertNil(postcodeStore.postcode.currentValue)
     }
 }

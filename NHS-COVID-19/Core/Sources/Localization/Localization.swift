@@ -23,12 +23,28 @@ private extension LocaleConsumer {
     
 }
 
+public protocol LocalizationOverrider {
+    func localize(_ key: String, languageCode: String, tableName: String?, bundle: Bundle, value: String, comment: String) -> String?
+}
+
 public struct Localization {
     private static var localeConsumers = [LocaleConsumer]()
     
     let localeConfiguration: LocaleConfiguration
     var bundle: Bundle
     var locale: Locale
+    
+    public var overrider: LocalizationOverrider?
+    
+    private func _localize(_ key: String, tableName: String? = nil, bundle: Bundle = Localization.current.bundle, value: String = "", comment: String) -> String {
+        
+        // overrider is only ever set in the Scenarios app so this does not affect production code
+        if let override = overrider?.localize(key, languageCode: locale.languageCode ?? "en", tableName: tableName, bundle: bundle, value: value, comment: comment) {
+            return override
+        }
+        
+        return NSLocalizedString(key, tableName: tableName, bundle: bundle, value: value, comment: comment)
+    }
     
     init(bundle: Bundle, locale: Locale) {
         localeConfiguration = .systemPreferred
@@ -49,7 +65,7 @@ public struct Localization {
     }
     
     #warning("LocalConsures.applyLocale will not have effect on Localization instance")
-    static var current = Localization(configuration: .systemPreferred) {
+    public static var current = Localization(configuration: .systemPreferred) {
         didSet {
             localeConsumers.forEach {
                 $0.applyLocale(for: Localization.current.locale)
@@ -73,8 +89,16 @@ public struct Localization {
         return instance
     }
     
+    // todo; could combine these two functions as they are essentially the same; this is only used in localizeURL and localizeForCountry
+    func localize(_ key: String, default value: String = "", applyCurrentLanguageDirection: Bool = true) -> String {
+        let string = _localize(key, tableName: nil, bundle: bundle, value: value, comment: "")
+        return string.isEmpty ?
+            key :
+            applyCurrentLanguageDirection ? string.applyCurrentLanguageDirection() : string
+    }
+    
     func localize<Key: RawRepresentable>(_ key: Key, default value: String = "", applyCurrentLanguageDirection: Bool = true) -> String where Key.RawValue == String {
-        let string = NSLocalizedString(key.rawValue, tableName: nil, bundle: bundle, value: value, comment: "")
+        let string = _localize(key.rawValue, tableName: nil, bundle: bundle, value: value, comment: "")
         return string.isEmpty ?
             key.rawValue :
             applyCurrentLanguageDirection ? string.applyCurrentLanguageDirection() : string
@@ -164,7 +188,7 @@ func localizeURL(_ key: StringLocalizationKey) -> URL {
         rawValue.append(suffix)
     }
     
-    let localizedString = NSLocalizedString(rawValue, tableName: nil, bundle: Localization.current.bundle, value: "", comment: "")
+    let localizedString = Localization.current.localize(rawValue, applyCurrentLanguageDirection: false)
     
     guard localizedString != rawValue else { return URL(string: localize(key, applyCurrentLanguageDirection: false))! }
     
@@ -178,10 +202,10 @@ public func localizeForCountry(_ key: StringLocalizationKey) -> String {
         rawValue.append(suffix)
     }
     
-    return NSLocalizedString(rawValue, tableName: nil, bundle: Localization.current.bundle, value: "", comment: "")
-        .applyCurrentLanguageDirection()
+    return Localization.current.localize(rawValue)
 }
 
+@available(*, deprecated, message: "Not currently used, probably remove")
 public func localizeForCountry(_ localizable: ParameterisedStringLocalizable) -> String {
     var rawValue = localizable.key.rawValue
     
@@ -189,7 +213,7 @@ public func localizeForCountry(_ localizable: ParameterisedStringLocalizable) ->
         rawValue.append(suffix)
     }
     
-    let format = NSLocalizedString(rawValue, tableName: nil, bundle: Localization.current.bundle, value: "", comment: "")
+    let format = Localization.current.localize(rawValue)
     
     let string = String(format: format, locale: Localization.current.locale, arguments: localizable.arguments)
     
@@ -202,6 +226,7 @@ public func localizeForCountry(_ localizable: ParameterisedStringLocalizable) ->
     
 }
 
+@available(*, deprecated, message: "Not currently used, probably remove")
 public func localizeForCountryAndSplit(_ key: StringLocalizationKey) -> [String] {
     localizeForCountry(key)
         .split(separator: "\n", omittingEmptySubsequences: true)
@@ -226,11 +251,13 @@ private extension Country {
 
 extension LocaleConfiguration {
     public func becomeCurrent() {
+        let overrider = Localization.current.overrider
         Localization.current = Localization(configuration: self)
+        Localization.current.overrider = overrider
     }
 }
 
-extension Bundle {
+public extension Bundle {
     func localizedBundle(for language: String) -> Bundle? {
         url(forResource: language, withExtension: "lproj").flatMap {
             Bundle(url: $0)

@@ -15,13 +15,15 @@ public extension Text {
             .foregroundColor(Color(.secondaryText))
     }
     
-    func styleAsHeading() -> Text {
+    func styleAsHeading() -> some View {
         font(.headline)
             .foregroundColor(Color(.primaryText))
+            .accessibility(addTraits: .isHeader)
     }
     
-    func styleAsSecondaryHeading() -> Text {
+    func styleAsSecondaryHeading() -> some View {
         font(.headline)
             .foregroundColor(Color(.secondaryText))
+            .accessibility(addTraits: .isHeader)
     }
 }

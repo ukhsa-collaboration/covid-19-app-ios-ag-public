@@ -32,6 +32,20 @@ struct IsolationModelAdapter {
         } else if event == .selfDiagnosedSymptomatic {
             symptomaticCase.selfDiagnosisDay = GregorianDay(year: 2020, month: 10, day: 14)
             symptomaticCase.onsetDay = GregorianDay(year: 2020, month: 10, day: 13)
+        } else if event == .receivedNegativeTestWithEndDateNewerThanAssumedSymptomOnsetDateAndAssumedSymptomOnsetDateNewerThanPositiveTestEndDate {
+            // bring assumed symptoms onset one day after positive test
+            testCase.testEndDay = GregorianDay(year: 2020, month: 10, day: 12)
+            symptomaticCase.onsetDay = GregorianDay(year: 2020, month: 10, day: 13)
+            symptomaticCase.selfDiagnosisDay = GregorianDay(year: 2020, month: 10, day: 15)
+        } else if event == .receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDateButOlderThanAssumedSymptomOnsetDayIfAny {
+            testCase.testEndDay = GregorianDay(year: 2020, month: 10, day: 11)
+            symptomaticCase.onsetDay = GregorianDay(year: 2020, month: 10, day: 15)
+            symptomaticCase.selfDiagnosisDay = GregorianDay(year: 2020, month: 10, day: 17)
+        } else if event == .receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDate {
+            // bring assumed symptoms onset one day after positive test
+            testCase.testEndDay = GregorianDay(year: 2020, month: 10, day: 12)
+            symptomaticCase.onsetDay = GregorianDay(year: 2020, month: 10, day: 13)
+            symptomaticCase.selfDiagnosisDay = GregorianDay(year: 2020, month: 10, day: 15)
         }
     }
     

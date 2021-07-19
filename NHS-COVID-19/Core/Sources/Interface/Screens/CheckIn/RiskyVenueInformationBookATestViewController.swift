@@ -16,14 +16,21 @@ extension RiskyVenueInformationBookATestViewController {
         init(interactor: Interacting) {
             let title = localize(.checkin_risky_venue_information_warn_and_book_a_test_title)
             
-            var scrollingViews: [UIView] = [
+            let scrollingViews: [UIView] = [
                 UIImageView(.coronaVirus).styleAsDecoration(),
-                BaseLabel().set(text: title).styleAsPageHeader(),
+                BaseLabel().set(text: title).styleAsPageHeader().centralized(),
+                BaseLabel().set(
+                    text: localize(.checkin_risky_venue_information_warn_and_book_a_test_info)
+                )
+                .styleAsBody(),
+                BulletedList(
+                    rows: localizeAndSplit(.checkin_risky_venue_information_warn_and_book_a_test_bulleted_list)
+                ),
+                BaseLabel().set(
+                    text: localize(.checkin_risky_venue_information_warn_and_book_a_test_additional_info)
+                )
+                .styleAsBody(),
             ]
-            
-            scrollingViews += localizeAndSplit(.checkin_risky_venue_information_warn_and_book_a_test_description).map {
-                BaseLabel().set(text: $0).styleAsBody()
-            }
             
             super.init(
                 scrollingViews: scrollingViews,
@@ -66,6 +73,10 @@ public class RiskyVenueInformationBookATestViewController: StickyFooterScrolling
     
     private func setupNavigationBar() {
         navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.tintColor = UIColor(.nhsBlue)
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: localize(.checkin_risky_venue_information_warn_and_book_a_test_close_button), style: .done, target: self, action: #selector(didTapClose))
     }
 }

@@ -22,7 +22,7 @@ class SelfDiagnosisManagerTests: XCTestCase {
     
     override func setUp() {
         isolationState = .noNeedToIsolate()
-        selfDiagnosisManager = SelfDiagnosisManager(httpClient: MockHTTPClient()) { _ in (self.isolationState, nil) }
+        selfDiagnosisManager = SelfDiagnosisManager(httpClient: MockHTTPClient()) { _ in (self.isolationState, .hasNoTest) }
         addTeardownBlock {
             self.selfDiagnosisManager = nil
         }
@@ -46,12 +46,6 @@ class SelfDiagnosisManagerTests: XCTestCase {
         isolationState = .isolate(isolation)
         let evaluation = selfDiagnosisManager.evaluate(selectedSymptoms: symptoms, onsetDay: nil, threshold: 1)
         XCTAssertEqual(evaluation, .hasSymptoms(isolation, .hasNoTest))
-    }
-    
-    func testNoNeedToIsolateIfAboveThresholdButIsolationNotRequired() {
-        isolationState = .noNeedToIsolate()
-        let evaluation = selfDiagnosisManager.evaluate(selectedSymptoms: symptoms, onsetDay: nil, threshold: 1)
-        XCTAssertEqual(evaluation, .noSymptoms)
     }
     
 }

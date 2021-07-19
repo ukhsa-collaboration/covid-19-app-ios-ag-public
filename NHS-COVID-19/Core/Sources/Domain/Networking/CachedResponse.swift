@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -15,8 +15,8 @@ class CachedResponse<Output> {
     private let httpClient: HTTPClient
     private let endpoint: ResponseEchoingEndpoint<Output>
     private let currentDateProvider: DateProviding?
-    private let updatedSubject: CurrentValueSubject<(old: Output?,new: Output?)?, Never>?
-
+    private let updatedSubject: CurrentValueSubject<(old: Output?, new: Output?)?, Never>?
+    
     @FileStored
     private var cachedData: Data?
     
@@ -32,7 +32,7 @@ class CachedResponse<Output> {
         name: String,
         initialValue: Output,
         currentDateProvider: DateProviding? = nil,
-        updatedSubject:  CurrentValueSubject<(old: Output?,new: Output?)?, Never>? = nil
+        updatedSubject: CurrentValueSubject<(old: Output?, new: Output?)?, Never>? = nil
     ) where Endpoint: HTTPEndpoint, Endpoint.Input == Void, Endpoint.Output == Output {
         self.httpClient = httpClient
         self.endpoint = ResponseEchoingEndpoint(endpoint)

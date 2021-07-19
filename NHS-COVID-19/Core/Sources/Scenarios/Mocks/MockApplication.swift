@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Domain
@@ -9,7 +9,7 @@ public class MockApplication: Application {
     
     public var instanceOpenSettingsURLString = "settings://\(UUID().uuidString)"
     public var instanceOpenAppStoreURLString = "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663"
-
+    
     public var openedURL: URL?
     
     public init() {}

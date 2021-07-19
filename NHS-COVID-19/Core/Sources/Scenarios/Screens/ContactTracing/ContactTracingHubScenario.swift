@@ -1,15 +1,17 @@
 //
-// Copyright © 2021 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
+import Combine
 import Integration
 import Interface
 import UIKit
-import Combine
 
 public class ContactTracingHubScenario: Scenario {
     public static let name = "Contact Tracing Hub"
     public static let kind = ScenarioKind.screen
+    
+    public static let adviceWhenDoNotPauseCTAlertTitle = "Advice when should not pause CT tapped"
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
@@ -31,9 +33,14 @@ public class ContactTracingHubScenario: Scenario {
 private class Interactor: ContactTracingHubViewController.Interacting {
     
     private weak var viewController: UIViewController?
+    private var cancellable: AnyCancellable?
     
     func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn) {
-        viewController?.showAlert(title: "Schedule reminder in \(reminderIn.rawValue)hrs")
+        print("Schedule reminder in \(reminderIn.rawValue)hrs")
+    }
+    
+    func didTapAdviceWhenDoNotPauseCTButton() {
+        viewController?.showAlert(title: ContactTracingHubScenario.adviceWhenDoNotPauseCTAlertTitle)
     }
     
     init(viewController: UIViewController) {

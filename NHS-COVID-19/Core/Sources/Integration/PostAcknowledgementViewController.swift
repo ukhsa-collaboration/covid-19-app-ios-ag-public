@@ -19,6 +19,7 @@ class PostAcknowledgementViewController: UIViewController {
         case homeOrPostTestResultAction
         case thankYouCompleted
         case bookATest
+        case warnAndBookATest
     }
     
     private var cancellables: Set<AnyCancellable> = []
@@ -34,6 +35,7 @@ class PostAcknowledgementViewController: UIViewController {
     private let context: RunningAppContext
     private let shouldShowLanguageSelectionScreen: Bool
     private let clearBookATest: () -> Void
+    fileprivate let clearWarnAndBookATest: () -> Void
     private let clearContactTracingHub: () -> Void
     private let clearLocalInfoScreen: () -> Void
     private let showContactTracingHub: CurrentValueSubject<Bool, Never>
@@ -65,6 +67,7 @@ class PostAcknowledgementViewController: UIViewController {
         context: RunningAppContext,
         shouldShowLanguageSelectionScreen: Bool,
         showBookATest: CurrentValueSubject<Bool, Never>,
+        showWarnAndBookATest: CurrentValueSubject<Bool, Never>,
         showContactTracingHub: CurrentValueSubject<Bool, Never>,
         showLocalInfoScreen: CurrentValueSubject<Bool, Never>
     ) {
@@ -74,6 +77,7 @@ class PostAcknowledgementViewController: UIViewController {
         self.showLocalInfoScreen = showLocalInfoScreen
         
         clearBookATest = { showBookATest.value = false }
+        clearWarnAndBookATest = { showWarnAndBookATest.value = false }
         
         // todo; we pass the subject down anyway - why do we need these?
         clearContactTracingHub = { showContactTracingHub.value = false }
@@ -85,13 +89,28 @@ class PostAcknowledgementViewController: UIViewController {
             .removeDuplicates()
             .receive(on: UIScheduler.shared)
             .sink { [weak self] showBookATest in
+                #warning("Avoid publishing values and find a better way to do this.")
                 guard self?.interfaceState != .thankYouCompleted else { return }
+                guard self?.interfaceState != .warnAndBookATest else { return }
                 self?.interfaceState = showBookATest ? .bookATest : .homeOrPostTestResultAction
+            }.store(in: &cancellables)
+        
+        showWarnAndBookATest
+            .removeDuplicates()
+            .receive(on: UIScheduler.shared)
+            .sink { [weak self] showWarnAndBookATest in
+                #warning("Avoid this pattern and find a better way to do this.")
+                guard self?.interfaceState != .thankYouCompleted else { return }
+                guard self?.interfaceState != .bookATest else { return }
+                self?.interfaceState = showWarnAndBookATest ? .warnAndBookATest : .homeOrPostTestResultAction
             }.store(in: &cancellables)
         
         context.diagnosisKeySharer
             .receive(on: UIScheduler.shared)
             .sink(receiveValue: { [weak self] diagnosisKeySharer in
+                #warning("Avoid this pattern and find a better way to do this.")
+                guard self?.interfaceState != .warnAndBookATest else { return }
+                guard self?.interfaceState != .bookATest else { return }
                 self?.diagnosisKeySharer = diagnosisKeySharer
             })
             .store(in: &cancellables)
@@ -145,11 +164,13 @@ class PostAcknowledgementViewController: UIViewController {
             
         case .bookATest:
             content = bookATestViewController()
+            
+        case .warnAndBookATest:
+            content = warnAndBookATestViewController()
         }
     }
     
     private func homeOrPostResultActionViewController() -> UIViewController {
-        
         if let diagnosisKeySharer = diagnosisKeySharer,
             let shareFlowType = SendKeysFlowViewController.ShareFlowType(
                 hasFinishedInitialKeySharingFlow: diagnosisKeySharer.hasFinishedInitialKeySharingFlow,
@@ -278,6 +299,18 @@ class PostAcknowledgementViewController: UIViewController {
         }
         .property(initialValue: false)
         
+        let showWarnAndBookATestFlow = context.isolationState.combineLatest(didRecentlyVisitSevereRiskyVenue) { state, didRecentlyVisitSevereRiskyVenue in
+            var showWarnAndBookATestFlow: Bool = false
+            switch state {
+            case .isolate(let isolation) where isolation.isIndexCase:
+                showWarnAndBookATestFlow = false
+            default:
+                showWarnAndBookATestFlow = true
+            }
+            return showWarnAndBookATestFlow && didRecentlyVisitSevereRiskyVenue != nil
+        }
+        .property(initialValue: false)
+        
         let shouldShowSelfDiagnosis = context.isolationState.map { state in
             if case .isolate(let isolation) = state { return isolation.canFillQuestionnaire }
             return true
@@ -302,6 +335,7 @@ class PostAcknowledgementViewController: UIViewController {
             isolationViewModel: isolationViewModel,
             exposureNotificationsEnabled: context.exposureNotificationStateController.isEnabledPublisher,
             showOrderTestButton: showOrderTestButton,
+            showWarnAndBookATestFlow: showWarnAndBookATestFlow,
             shouldShowSelfDiagnosis: shouldShowSelfDiagnosis,
             userNotificationsEnabled: userNotificationEnabled,
             showFinancialSupportButton: showFinancialSupportButton,
@@ -361,6 +395,56 @@ class PostAcknowledgementViewController: UIViewController {
         navigationVC.viewControllers = [bookATestInfoVC]
         return navigationVC
     }
+    
+    private func warnAndBookATestViewController() -> UIViewController {
+        let navigationVC = BaseNavigationController()
+        let checkSymptomsInteractor = TestCheckSymptomsInteractor(
+            didTapYes: { [weak self] in
+                guard let self = self else { return }
+                Metrics.signpost(.selectedHasSymptomsM2Journey)
+                let vc = WrappingViewController {
+                    SelfDiagnosisOrderFlowState.makeState(
+                        context: self.context,
+                        acknowledge: { [weak self] in
+                            self?.clearWarnAndBookATest()
+                        }
+                    )
+                    .map { state in
+                        switch state {
+                        case .selfDiagnosis(let interactor):
+                            let selfDiagnosisFlowVC = SelfDiagnosisFlowViewController(interactor, currentDateProvider: self.context.currentDateProvider)
+                            selfDiagnosisFlowVC.finishFlow = { [weak self] in
+                                self?.clearWarnAndBookATest()
+                            }
+                            return selfDiagnosisFlowVC
+                        case .testOrdering(let interactor):
+                            return VirologyTestingFlowViewController(interactor)
+                        }
+                    }
+                }
+                vc.modalPresentationStyle = .overFullScreen
+                navigationVC.present(vc, animated: true, completion: nil)
+            },
+            didTapNo: { [weak self] in
+                guard let self = self else { return }
+                Metrics.signpost(.selectedHasNoSymptomsM2Journey)
+                let interactor = BookARapidTestInfoInteractor(viewController: self, openURL: self.context.openURL)
+                let vc = BookARapidTestInfoViewController(interactor: interactor)
+                navigationVC.pushViewController(vc, animated: true)
+            }
+        )
+        let checkSymptomsVC = TestCheckSymptomsViewController.viewController(
+            for: .warnAndBookATest,
+            interactor: checkSymptomsInteractor,
+            shouldHaveCancelButton: true,
+            shouldConfirmCancel: true
+        )
+        checkSymptomsVC.didCancel = { [weak self] in
+            self?.clearWarnAndBookATest()
+        }
+        navigationVC.viewControllers = [checkSymptomsVC]
+        return navigationVC
+    }
 }
 
 private struct ThankYouViewControllerInteractor: ThankYouViewController.Interacting {
@@ -368,5 +452,31 @@ private struct ThankYouViewControllerInteractor: ThankYouViewController.Interact
     
     func action() {
         didTapButton()
+    }
+}
+
+private struct TestCheckSymptomsInteractor: TestCheckSymptomsViewController.Interacting {
+    var didTapYes: () -> Void
+    var didTapNo: () -> Void
+}
+
+private struct BookARapidTestInfoInteractor: BookARapidTestInfoViewController.Interacting {
+    private weak var viewController: PostAcknowledgementViewController?
+    public let openURL: (URL) -> Void
+    
+    init(viewController: PostAcknowledgementViewController?, openURL: @escaping (URL) -> Void) {
+        self.viewController = viewController
+        self.openURL = openURL
+    }
+    
+    func didTapAlreadyHaveATest() {
+        Metrics.signpost(.selectedHasLFDTestM2Journey)
+        viewController?.clearWarnAndBookATest()
+    }
+    
+    func didTapBookATest() {
+        Metrics.signpost(.selectedLFDTestOrderingM2Journey)
+        openURL(ExternalLink.getTested.url)
+        viewController?.clearWarnAndBookATest()
     }
 }

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -24,6 +24,8 @@ class CircuitBreaker {
     private let client: CircuitBreakingClient
     private let exposureInfoProvider: ExposureInfoProvider
     private let riskyCheckinsProvider: RiskyCheckinsProvider
+    private let currentDateProvider: DateProviding
+    private let contactCaseIsolationDuration: DayDuration
     private let handleContactCase: (RiskInfo) -> Void
     private let handleDontWorryNotification: () -> Void
     private let exposureNotificationProcessingBehaviour: () -> ExposureNotificationProcessingBehaviour
@@ -38,6 +40,8 @@ class CircuitBreaker {
         client: CircuitBreakingClient,
         exposureInfoProvider: ExposureInfoProvider,
         riskyCheckinsProvider: RiskyCheckinsProvider,
+        currentDateProvider: DateProviding,
+        contactCaseIsolationDuration: DayDuration,
         handleContactCase: @escaping (RiskInfo) -> Void,
         handleDontWorryNotification: @escaping () -> Void,
         exposureNotificationProcessingBehaviour: @escaping () -> ExposureNotificationProcessingBehaviour
@@ -45,6 +49,8 @@ class CircuitBreaker {
         self.client = client
         self.exposureInfoProvider = exposureInfoProvider
         self.riskyCheckinsProvider = riskyCheckinsProvider
+        self.currentDateProvider = currentDateProvider
+        self.contactCaseIsolationDuration = contactCaseIsolationDuration
         self.handleContactCase = handleContactCase
         self.handleDontWorryNotification = handleDontWorryNotification
         self.exposureNotificationProcessingBehaviour = exposureNotificationProcessingBehaviour
@@ -64,7 +70,11 @@ class CircuitBreaker {
         }
         
         guard exposureNotificationProcessingBehaviour()
-            .shouldNotifyForExposure(on: riskInfo.day) else {
+            .shouldNotifyForExposure(
+                on: riskInfo.day,
+                currentDateProvider: currentDateProvider,
+                isolationLength: contactCaseIsolationDuration
+            ) else {
             if showDontWorryNotificationIfNeeded {
                 handleDontWorryNotification()
                 showDontWorryNotificationIfNeeded = false

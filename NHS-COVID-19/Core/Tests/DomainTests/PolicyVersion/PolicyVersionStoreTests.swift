@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -20,7 +20,7 @@ class PolicyVersionStoreTests: XCTestCase {
     }
     
     func testLoadingNoSavedValue() {
-        XCTAssertNil(store.lastAcceptedWithAppVersion)
+        XCTAssertNil(store.lastAcceptedWithAppVersion.currentValue)
     }
     
     func testLoadingAcceptedVersion() {
@@ -32,11 +32,11 @@ class PolicyVersionStoreTests: XCTestCase {
         
         store = PolicyVersionStore(store: encryptedStore)
         
-        XCTAssertEqual("3.10", store.lastAcceptedWithAppVersion)
+        XCTAssertEqual("3.10", store.lastAcceptedWithAppVersion.currentValue)
     }
     
     func testSaveAcceptedVersion() throws {
         store.save(currentAppVersion: "3.10")
-        XCTAssertEqual("3.10", store.lastAcceptedWithAppVersion)
+        XCTAssertEqual("3.10", store.lastAcceptedWithAppVersion.currentValue)
     }
 }

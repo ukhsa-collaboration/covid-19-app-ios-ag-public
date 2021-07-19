@@ -290,13 +290,48 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         
         Rule(
             """
-            Exception: A positive test will be ignored if the isolation resulting from it would end before symptom onset.
+            Exception: A positive test will be ignored if the isolation resulting from it would end before any active
+            or expired isolation
             No EN keys should be shared as a result of this test entry.
             """,
-            predicate: StatePredicate(
-                symptomatic: [.isolating, .notIsolatingAndHadSymptomsPreviously]
-            ),
-            event: .receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedSymptomOnsetDate,
+            predicates: [
+                StatePredicate(
+                    contact: .all(except: .noIsolation),
+                    symptomatic: .all(except: .noIsolation),
+                    positiveTest: .all(except: .noIsolation)
+                ),
+                StatePredicate(
+                    contact: [.noIsolation],
+                    symptomatic: .all(except: .noIsolation),
+                    positiveTest: .all(except: .noIsolation)
+                ),
+                StatePredicate(
+                    contact: .all(except: .noIsolation),
+                    symptomatic: [.noIsolation],
+                    positiveTest: .all(except: .noIsolation)
+                ),
+                StatePredicate(
+                    contact: .all(except: .noIsolation),
+                    symptomatic: .all(except: .noIsolation),
+                    positiveTest: [.noIsolation]
+                ),
+                StatePredicate(
+                    contact: [.noIsolation],
+                    symptomatic: [.noIsolation],
+                    positiveTest: .all(except: .noIsolation)
+                ),
+                StatePredicate(
+                    contact: .all(except: .noIsolation),
+                    symptomatic: [.noIsolation],
+                    positiveTest: [.noIsolation]
+                ),
+                StatePredicate(
+                    contact: [.noIsolation],
+                    symptomatic: .all(except: .noIsolation),
+                    positiveTest: [.noIsolation]
+                ),
+            ],
+            event: .receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate,
             update: .init()
         ),
         
@@ -463,15 +498,49 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         
         Rule(
             """
-            Exception: A unconfirmed positive test will be ignored if the isolation from it would end before symptom onset.
+            Exception: A positive test will be ignored if the isolation resulting from it would end before any active
+            or expired isolation
             No EN keys should be shared as a result of this test entry.
             """,
             predicates: [
                 StatePredicate(
-                    symptomatic: [.notIsolatingAndHadSymptomsPreviously, .isolating]
+                    contact: .all(except: .noIsolation),
+                    symptomatic: .all(except: .noIsolation),
+                    positiveTest: .all(except: .noIsolation)
                 ),
+                StatePredicate(
+                    contact: [.noIsolation],
+                    symptomatic: .all(except: .noIsolation),
+                    positiveTest: .all(except: .noIsolation)
+                ),
+                StatePredicate(
+                    contact: .all(except: .noIsolation),
+                    symptomatic: [.noIsolation],
+                    positiveTest: .all(except: .noIsolation)
+                ),
+                StatePredicate(
+                    contact: .all(except: .noIsolation),
+                    symptomatic: .all(except: .noIsolation),
+                    positiveTest: [.noIsolation]
+                ),
+                StatePredicate(
+                    contact: [.noIsolation],
+                    symptomatic: [.noIsolation],
+                    positiveTest: .all(except: .noIsolation)
+                ),
+                StatePredicate(
+                    contact: .all(except: .noIsolation),
+                    symptomatic: [.noIsolation],
+                    positiveTest: [.noIsolation]
+                ),
+                StatePredicate(
+                    contact: [.noIsolation],
+                    symptomatic: .all(except: .noIsolation),
+                    positiveTest: [.noIsolation]
+                ),
+                
             ],
-            event: .receivedUnconfirmedPositiveTestWithIsolationPeriodOlderThanAssumedSymptomOnsetDate,
+            event: .receivedUnconfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate,
             update: .init()
         ),
         
@@ -982,12 +1051,14 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         
         Rule(
             filler: """
-            This event is not possible if we do not have symptoms.
+            This event is not possible if we do not have any isolation
             """,
             predicate: StatePredicate(
-                symptomatic: [.noIsolation]
+                contact: [.noIsolation],
+                symptomatic: [.noIsolation],
+                positiveTest: [.noIsolation]
             ),
-            event: .receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedSymptomOnsetDate
+            event: .receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate
         ),
         
         Rule(
@@ -1022,12 +1093,14 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         
         Rule(
             filler: """
-            This event is not possible if we do not have symptoms.
+            This event is not possible if we do not have any isolation
             """,
             predicate: StatePredicate(
-                symptomatic: [.noIsolation]
+                contact: [.noIsolation],
+                symptomatic: [.noIsolation],
+                positiveTest: [.noIsolation]
             ),
-            event: .receivedUnconfirmedPositiveTestWithIsolationPeriodOlderThanAssumedSymptomOnsetDate
+            event: .receivedUnconfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate
         ),
         
         Rule(

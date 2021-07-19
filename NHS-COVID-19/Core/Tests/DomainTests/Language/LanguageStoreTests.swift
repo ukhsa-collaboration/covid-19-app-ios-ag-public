@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -20,7 +20,7 @@ class LanguageStoreTests: XCTestCase {
     
     func testInitialConfigurationValue() {
         languageStore = LanguageStore(store: encryptedStore)
-        XCTAssertEqual(languageStore.languageCode, nil)
+        XCTAssertEqual(languageStore.languageInfo.currentValue.configuration(supportedLocalizations: LocaleBundle().supportedLocalizations), .systemPreferred)
     }
     
     func testLoadingLanguageData() {
@@ -30,12 +30,12 @@ class LanguageStoreTests: XCTestCase {
         }
         """# .data(using: .utf8)!
         languageStore = LanguageStore(store: encryptedStore)
-        XCTAssertEqual(languageStore.languageCode, "en")
+        XCTAssertEqual(languageStore.languageInfo.currentValue.configuration(supportedLocalizations: LocaleBundle().supportedLocalizations), .custom(localeIdentifier: "en"))
     }
     
     func testSaveLanguageSucess() throws {
         languageStore.save(localeConfiguration: .custom(localeIdentifier: "en"))
-        XCTAssertEqual(languageStore.languageCode, "en")
+        XCTAssertEqual(languageStore.languageInfo.currentValue.configuration(supportedLocalizations: LocaleBundle().supportedLocalizations), .custom(localeIdentifier: "en"))
     }
     
     func testDeleteLanguage() throws {
@@ -45,8 +45,14 @@ class LanguageStoreTests: XCTestCase {
         }
         """# .data(using: .utf8)!
         languageStore = LanguageStore(store: encryptedStore)
-        XCTAssertEqual(languageStore.languageCode, "en")
+        XCTAssertEqual(languageStore.languageInfo.currentValue.configuration(supportedLocalizations: LocaleBundle().supportedLocalizations), .custom(localeIdentifier: "en"))
         languageStore.delete()
-        XCTAssertNil(languageStore.languageCode)
+        XCTAssertEqual(languageStore.languageInfo.currentValue.configuration(supportedLocalizations: LocaleBundle().supportedLocalizations), .systemPreferred)
+    }
+}
+
+private class LocaleBundle: Bundle {
+    override var localizations: [String] {
+        return ["Base", "en"]
     }
 }

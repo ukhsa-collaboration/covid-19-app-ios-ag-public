@@ -93,14 +93,16 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
                 response.virologyTestResult,
                 diagnosisKeySubmissionToken: token,
                 requiresConfirmatoryTest: response.requiresConfirmatoryTest,
-                confirmatoryDayLimit: response.confirmatoryDayLimit
+                confirmatoryDayLimit: response.confirmatoryDayLimit,
+                askForOnsetDay: true
             )
         case .notSupported:
             handle(
                 response.virologyTestResult,
                 diagnosisKeySubmissionToken: nil,
                 requiresConfirmatoryTest: response.requiresConfirmatoryTest,
-                confirmatoryDayLimit: response.confirmatoryDayLimit
+                confirmatoryDayLimit: response.confirmatoryDayLimit,
+                askForOnsetDay: true
             )
         }
     }
@@ -132,7 +134,8 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
             result,
             diagnosisKeySubmissionToken: diagnosisKeySubmissionToken,
             requiresConfirmatoryTest: requiresConfirmatoryTest,
-            confirmatoryDayLimit: confirmatoryDayLimit
+            confirmatoryDayLimit: confirmatoryDayLimit,
+            askForOnsetDay: false
         )
     }
     
@@ -140,7 +143,8 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         _ result: VirologyTestResult,
         diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?,
         requiresConfirmatoryTest: Bool,
-        confirmatoryDayLimit: Int?
+        confirmatoryDayLimit: Int?,
+        askForOnsetDay: Bool
     ) {
         virologyTestingStateStore.saveResult(
             virologyTestResult: result,
@@ -148,7 +152,7 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
             requiresConfirmatoryTest: requiresConfirmatoryTest,
             confirmatoryDayLimit: confirmatoryDayLimit
         )
-        if requiresOnsetDay(result, requiresConfirmatoryTest: requiresConfirmatoryTest) {
+        if askForOnsetDay, requiresOnsetDay(result, requiresConfirmatoryTest: requiresConfirmatoryTest) {
             setRequiresOnsetDay()
         }
     }

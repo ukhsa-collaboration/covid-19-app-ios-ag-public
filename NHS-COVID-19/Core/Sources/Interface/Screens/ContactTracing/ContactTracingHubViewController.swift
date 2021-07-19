@@ -84,9 +84,11 @@ private class ContactTracingState: ObservableObject {
 
 private struct ContactTracingHubContentView: View {
     @ObservedObject private var contactTracingState: ContactTracingState
+    private let interactor: ContactTracingHubViewController.Interacting
     
-    init(contactTracingState: ContactTracingState) {
+    init(contactTracingState: ContactTracingState, interactor: ContactTracingHubViewController.Interacting) {
         self.contactTracingState = contactTracingState
+        self.interactor = interactor
     }
     
     private var toggleTitle: String {
@@ -105,34 +107,90 @@ private struct ContactTracingHubContentView: View {
             .padding(.bottom)
             
             Group {
-                Text(localize(.contact_tracing_hub_pause_tracing_header))
-                    .styleAsHeading()
-                    .accessibility(addTraits: .isHeader)
-                BulletItems(rows: localizeAndSplit(.contact_tracing_hub_pause_tracing_bullet_points))
+                IconItemView(
+                    icon: .contactTracingNoTracking,
+                    title: localize(.contact_tracing_hub_no_tracking_heading),
+                    description: localize(.contact_tracing_hub_no_tracking_description)
+                )
+                IconItemView(
+                    icon: .contactTracingPrivacy,
+                    title: localize(.contact_tracing_hub_privacy_heading),
+                    description: localize(.contact_tracing_hub_privacy_description)
+                )
+                IconItemView(
+                    icon: .contactTracingBatteryLife,
+                    title: localize(.contact_tracing_hub_battery_heading),
+                    description: localize(.contact_tracing_hub_battery_description)
+                )
             }
-            .padding([.leading, .trailing])
+            .padding([.leading, .trailing], .halfSpacing)
             .layoutPriority(1)
             
-            Text(localize(.contact_tracing_hub_tracing_reminder))
-                .styleAsSecondaryHeading()
-                .padding()
-                .layoutPriority(1)
-
+            Spacer(minLength: .tripleSpacing)
+            
             Group {
-                Text(localize(.contact_tracing_hub_dont_pause_tracing_header))
-                    .styleAsHeading()
-                    .accessibility(addTraits: .isHeader)
-                BulletItems(rows: localizeAndSplit(.contact_tracing_hub_dont_pause_tracing_bullet_points))
+                Text(localize(.contact_tracing_hub_find_out_more))
+                    .styleAsSecondaryHeading()
+                
+                VStack(alignment: .center, spacing: 2) {
+                    ListRow(
+                        text: localize(.contact_tracing_hub_should_not_pause),
+                        tapAction: interactor.didTapAdviceWhenDoNotPauseCTButton
+                    )
+                }
+                .padding([.leading, .trailing], -(.halfSpacing + 16))
             }
-            .padding([.leading, .trailing])
+            .padding([.leading, .trailing], .halfSpacing)
             .layoutPriority(1)
         }
         .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }
 }
 
+private struct IconItemView: View {
+    let icon: ImageName
+    let title: String
+    let description: String
+    
+    var body: some View {
+        HStack(alignment: .top, spacing: .standardSpacing) {
+            Image(icon)
+                .frame(width: .bulletPointSize, height: .bulletPointSize, alignment: .center)
+                .foregroundColor(Color(.secondaryText))
+                .accessibility(hidden: true)
+            VStack(alignment: .leading) {
+                Text(title)
+                    .styleAsHeading()
+                Text(description)
+                    .styleAsSecondaryBody()
+            }
+        }
+    }
+}
+
+private struct ListRow: View {
+    let text: String
+    let tapAction: () -> Void
+    
+    var body: some View {
+        Button(action: tapAction) {
+            HStack(spacing: .halfSpacing) {
+                Text(text)
+                    .styleAsBody()
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Image(.menuChevron)
+                    .foregroundColor(Color(.secondaryText))
+            }
+            .contentShape(Rectangle())
+            .padding(24)
+        }
+        .background(Color(.surface))
+    }
+}
+
 private struct ContactTracingHubView: View {
-    private var interactor: ContactTracingHubViewController.Interacting
+    private let interactor: ContactTracingHubViewController.Interacting
     @ObservedObject private var contactTracingState: ContactTracingState
     
     init(
@@ -145,7 +203,7 @@ private struct ContactTracingHubView: View {
     
     var body: some View {
         ScrollView(.vertical) {
-            ContactTracingHubContentView(contactTracingState: contactTracingState)
+            ContactTracingHubContentView(contactTracingState: contactTracingState, interactor: interactor)
                 .padding()
         }
         .background(Color(.background))
@@ -159,6 +217,7 @@ private struct ContactTracingHubView: View {
                         self.contactTracingState.exposureNotifications.enabled = false // only now actually switch off exposure notifications
                         self.contactTracingState.exposureNotificationReminderIn = reminderIn
                         self.contactTracingState.showExposureNotificationReminderAlert = true
+                        self.interactor.scheduleReminderNotification(reminderIn: reminderIn)
                     }
                 } + [ActionSheet.Button.cancel(Text(.exposure_notification_reminder_sheet_cancel), action: {
                     self.contactTracingState.toggleState = true // flip the toggle back on as we didn't actually change the underlying state
@@ -169,9 +228,7 @@ private struct ContactTracingHubView: View {
             Alert(
                 title: Text(.exposure_notification_reminder_alert_title(hours: contactTracingState.exposureNotificationReminderIn!.rawValue)),
                 message: Text(.exposure_notification_reminder_alert_description),
-                dismissButton: .default(Text(.exposure_notification_reminder_alert_button)) {
-                    self.interactor.scheduleReminderNotification(reminderIn: contactTracingState.exposureNotificationReminderIn!)
-                }
+                dismissButton: .default(Text(.exposure_notification_reminder_alert_button))
             )
         }
     }
@@ -179,6 +236,7 @@ private struct ContactTracingHubView: View {
 
 public protocol ContactTracingHubViewControllerInteracting {
     func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn)
+    func didTapAdviceWhenDoNotPauseCTButton()
 }
 
 public class ContactTracingHubViewController: RootViewController {

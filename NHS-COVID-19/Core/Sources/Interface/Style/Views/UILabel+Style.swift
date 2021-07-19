@@ -113,7 +113,7 @@ extension UILabel {
         textAlignment = .leading
         return self
     }
-
+    
     func setDynamicTextStyle(_ style: UIFont.TextStyle) {
         font = .preferredFont(forTextStyle: style)
         numberOfLines = 0

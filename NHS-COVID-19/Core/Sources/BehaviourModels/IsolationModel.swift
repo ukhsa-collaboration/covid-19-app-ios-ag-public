@@ -71,14 +71,14 @@ public struct IsolationModel {
         
         case receivedConfirmedPositiveTest
         case receivedConfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate
-        case receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedSymptomOnsetDate
+        case receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate
         
         case receivedUnconfirmedPositiveTest
         // In this case it's assumed that the unconfirmed positive is newer than any assumed symptom onset
         case receivedUnconfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate
         case receivedUnconfirmedPositiveTestWithEndDateNDaysOlderThanRememberedNegativeTestEndDateAndOlderThanAssumedSymptomOnsetDayIfAny
         case receivedUnconfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate
-        case receivedUnconfirmedPositiveTestWithIsolationPeriodOlderThanAssumedSymptomOnsetDate
+        case receivedUnconfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate
         
         // Note 1:
         // Based on the current rule set, there’s an invariant when we have both an unconfirmed test and symptoms:

@@ -12,16 +12,16 @@ extension MyDataViewController {
         let titleLabel: UILabel
         let valueLabel: UILabel
         let headerStack: UIStackView
-
+        
         override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
             titleLabel = BaseLabel().styleAsBody()
             valueLabel = BaseLabel().styleAsSecondaryBody()
-
+            
             valueLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
             valueLabel.setContentHuggingPriority(.required, for: .horizontal)
             
             headerStack = UIStackView.horizontal(with: [titleLabel, valueLabel])
-
+            
             super.init(style: style, reuseIdentifier: reuseIdentifier)
             
             backgroundColor = UIColor(.surface)
@@ -50,7 +50,7 @@ extension MyDataViewController {
             let dequeued = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as? TextCell
             return (dequeued ?? TextCell()).setting(date: date, title: title)
         }
-
+        
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }

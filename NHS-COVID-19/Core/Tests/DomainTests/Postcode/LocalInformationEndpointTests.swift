@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -31,7 +31,7 @@ class LocalInformationEndpointTests: XCTestCase {
         
         XCTAssert(localMessages.isEmpty)
     }
-
+    
     func testDecodingSingleMessage() throws {
         let response = HTTPResponse.ok(with: .json(#"""
         {
@@ -61,13 +61,13 @@ class LocalInformationEndpointTests: XCTestCase {
         """#))
         
         let localMessages = try endpoint.parse(response)
-
+        
         XCTAssertFalse(localMessages.isEmpty)
         
         let message = localMessages.message(for: LocalAuthorityId("ABCD1234"))
         XCTAssert(message?.message.contentVersion == 1)
         // todo; check payload
-
+        
         XCTAssertNil(localMessages.message(for: LocalAuthorityId("ABCD9876")))
     }
     
@@ -121,13 +121,13 @@ class LocalInformationEndpointTests: XCTestCase {
         """#))
         
         let localMessages = try endpoint.parse(response)
-
+        
         XCTAssertFalse(localMessages.isEmpty)
         
         let message1 = localMessages.message(for: LocalAuthorityId("ABCD1234"))?.message
         XCTAssertEqual(message1?.translations(for: "en")?.blocks()?.first?.text, "There have been reported cases of a new variant in {postcode}. Here are some key pieces of information to help you stay safe")
         XCTAssertNotNil(message1?.translations(for: "en")?.blocks()?.first?.url)
-
+        
         let message2 = localMessages.message(for: LocalAuthorityId("ABCD19876"))?.message
         XCTAssertEqual(message2?.translations(for: "en")?.blocks()?.first?.text, "This is the second additional info")
         XCTAssertNil(message2?.translations(for: "en")?.blocks()?.first?.url)
@@ -201,26 +201,26 @@ class LocalInformationEndpointTests: XCTestCase {
         """#))
         
         let localMessages = try endpoint.parse(response)
-
+        
         XCTAssertFalse(localMessages.isEmpty)
         
         let message1 = localMessages.message(for: LocalAuthorityId("ABCD1234"))?.message
         XCTAssertEqual(message1?.translations(for: "en")?.blocks()?.first?.text, "There have been reported cases of a new variant in {postcode}. Here are some key pieces of information to help you stay safe")
         XCTAssertNotNil(message1?.translations(for: "en")?.blocks()?.first?.url)
-
+        
         let message2 = localMessages.message(for: LocalAuthorityId("ABCD19876"))?.message
         XCTAssertEqual(message2?.translations(for: "en")?.blocks()?.first?.text, "This is the second additional info")
         XCTAssertNil(message2?.translations(for: "en")?.blocks()?.first?.url)
-
+        
         let message3 = localMessages.message(for: LocalAuthorityId("E0001239"))?.message
         XCTAssertEqual(message3?.translations(for: "en")?.blocks()?.first?.text, "This is the wildcard additional info")
         XCTAssertNil(message3?.translations(for: "en")?.blocks()?.first?.url)
-
+        
         let message3v2 = localMessages.message(for: LocalAuthorityId("LA123456"))?.message
         XCTAssertEqual(message3v2?.translations(for: "en")?.blocks()?.first?.text, "This is the wildcard additional info")
         XCTAssertNil(message3v2?.translations(for: "en")?.blocks()?.first?.url)
     }
-
+    
     func testDecodingMessageWithUnknownBlocks() throws {
         let response = HTTPResponse.ok(with: .json(#"""
         {
@@ -256,14 +256,14 @@ class LocalInformationEndpointTests: XCTestCase {
         """#))
         
         let localMessages = try endpoint.parse(response)
-
+        
         XCTAssertFalse(localMessages.isEmpty)
         
         let message1 = localMessages.message(for: LocalAuthorityId("ABCD1234"))?.message
         let messageBlocks = message1?.translations(for: "en")?.blocks()
         XCTAssertTrue(messageBlocks?.count == 1)
         XCTAssertEqual(messageBlocks?.first?.text, "There have been reported cases of a new variant in {postcode}. Here are some key pieces of information to help you stay safe")
-
+        
         XCTAssertNil(localMessages.message(for: LocalAuthorityId("ABCD9876")))
     }
     
@@ -296,13 +296,13 @@ class LocalInformationEndpointTests: XCTestCase {
         """#))
         
         let localMessages = try endpoint.parse(response)
-
+        
         XCTAssertFalse(localMessages.isEmpty) // hmm
         
         let message1 = localMessages.message(for: LocalAuthorityId("ABCD1234"))
         XCTAssertNil(message1)
     }
-
+    
     func testDecodingMessageWithMultipleLanguages() throws {
         let response = HTTPResponse.ok(with: .json(#"""
         {
@@ -342,9 +342,9 @@ class LocalInformationEndpointTests: XCTestCase {
             }
         }
         """#))
-                
+        
         let localMessages = try endpoint.parse(response)
-
+        
         XCTAssertFalse(localMessages.isEmpty)
         
         let message1 = localMessages.message(for: LocalAuthorityId("ABCD1234"))?.message
@@ -354,7 +354,7 @@ class LocalInformationEndpointTests: XCTestCase {
         XCTAssertTrue(enMessageBlocks?.count == 1)
         XCTAssertEqual(enMessageBlocks?.first?.text, "There have been reported cases of a new variant in {postcode}. Here are some key pieces of information to help you stay safe")
         XCTAssertNotNil(enMessageBlocks?.first?.url)
-
+        
         // picks up the ar version
         let arMessageBlocks = message1?.translations(for: "ar")?.blocks()
         XCTAssertTrue(arMessageBlocks?.count == 1)
@@ -397,7 +397,7 @@ class LocalInformationEndpointTests: XCTestCase {
         """#))
         
         let localMessages = try endpoint.parse(response)
-
+        
         XCTAssertFalse(localMessages.isEmpty) // hmm
         
         let message1 = localMessages.message(for: LocalAuthorityId("ABCD1234"))

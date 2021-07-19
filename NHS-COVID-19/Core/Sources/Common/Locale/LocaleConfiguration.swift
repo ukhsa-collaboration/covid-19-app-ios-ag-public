@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -11,7 +11,7 @@ public enum LocaleConfiguration: Equatable {
     
     public init(
         localeIdentifier: String?,
-        supportedLocalizations: [String] = Bundle.main.supportedLocalizations
+        supportedLocalizations: [String]
     ) {
         if let localeIdentifier = localeIdentifier, supportedLocalizations.contains(localeIdentifier) {
             self = .custom(localeIdentifier: localeIdentifier)

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -48,8 +48,8 @@ class LocalAuthoritiesManagerTests: XCTestCase {
         if case .success = result {} else {
             XCTFail()
         }
-        XCTAssertEqual(postcodeStore.postcode, postcode)
-        XCTAssertEqual(postcodeStore.localAuthorityId, localAuthority.id)
+        XCTAssertEqual(postcodeStore.postcode.currentValue, postcode)
+        XCTAssertEqual(postcodeStore.localAuthorityId.currentValue, localAuthority.id)
     }
     
     func testStoreInvalidCountryLocalAuthority() {

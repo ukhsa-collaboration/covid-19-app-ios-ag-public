@@ -10,6 +10,8 @@
 		0805240525CAEFCF001E0FF6 /* TestSymptomsReviewScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0805240425CAEFCF001E0FF6 /* TestSymptomsReviewScreen.swift */; };
 		0805240B25CAF06B001E0FF6 /* TestSymptomsReviewScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0805240A25CAF06B001E0FF6 /* TestSymptomsReviewScreenTests.swift */; };
 		0806134A2552D12100E6E504 /* RiskLevelExplanationFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080613492552D12100E6E504 /* RiskLevelExplanationFlowTests.swift */; };
+		0808A5BA26777218004EB81A /* BookARapidTestScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0808A5B926777218004EB81A /* BookARapidTestScreenTests.swift */; };
+		0808A5BC26777235004EB81A /* BookARapidTestScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0808A5BB26777235004EB81A /* BookARapidTestScreen.swift */; };
 		0851DE5825CAC4C200B87078 /* TestCheckSymptomsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0851DE5725CAC4C200B87078 /* TestCheckSymptomsScreen.swift */; };
 		0851DE5E25CAC56A00B87078 /* TestCheckSymptomsScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0851DE5D25CAC56A00B87078 /* TestCheckSymptomsScreenTests.swift */; };
 		086C999E2600D64D00BC6B92 /* ThankYouScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086C999D2600D64D00BC6B92 /* ThankYouScreen.swift */; };
@@ -29,6 +31,7 @@
 		13DC05EF24C605AF00E4D5BC /* CheckInConfirmationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13DC05EE24C605AF00E4D5BC /* CheckInConfirmationScreen.swift */; };
 		220EFA3B25CABBC40017D144 /* LinkTestResultWithDCTScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220EFA3A25CABBC40017D144 /* LinkTestResultWithDCTScreenTests.swift */; };
 		220EFA4125CABC4E0017D144 /* LinkTestResultWithDCTScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220EFA4025CABC4E0017D144 /* LinkTestResultWithDCTScreen.swift */; };
+		2219074B2681E1E500E556C0 /* RiskyVenueInformationBookATestScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2219074A2681E1E400E556C0 /* RiskyVenueInformationBookATestScreenTests.swift */; };
 		221ACFC12645485D004BA2B9 /* PlodTestResultScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221ACFC02645485D004BA2B9 /* PlodTestResultScreenTests.swift */; };
 		221ACFC8264548A1004BA2B9 /* PlodTestResultScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221ACFC7264548A1004BA2B9 /* PlodTestResultScreen.swift */; };
 		222C188B24F016B8002C6CF6 /* VoidTestResultNoIsolationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222C188A24F016B8002C6CF6 /* VoidTestResultNoIsolationScreen.swift */; };
@@ -51,6 +54,8 @@
 		22A6FCF4264C1C91004B51C3 /* UnkownTestResultFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A6FCF3264C1C91004B51C3 /* UnkownTestResultFlowTests.swift */; };
 		22B2D35424D1E28B00814CEC /* NoSymptomsIsolatingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B2D35324D1E28B00814CEC /* NoSymptomsIsolatingScreen.swift */; };
 		22B2D35624D1E47100814CEC /* NoSymptomsIsolatingScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B2D35524D1E47100814CEC /* NoSymptomsIsolatingScreenTests.swift */; };
+		22B78E7C2678C71D0026A71C /* WarnAndTestCheckSymptomsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B78E7B2678C71D0026A71C /* WarnAndTestCheckSymptomsScreen.swift */; };
+		22B78E7E2678C8010026A71C /* WarnAndTestCheckSymptomsScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B78E7D2678C8010026A71C /* WarnAndTestCheckSymptomsScreenTests.swift */; };
 		22CDCECC24CAE3810047B203 /* AboutThisAppScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CDCECB24CAE3810047B203 /* AboutThisAppScreen.swift */; };
 		22CDCECE24CAE9070047B203 /* AboutThisAppScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CDCECD24CAE9070047B203 /* AboutThisAppScreenTests.swift */; };
 		5F2E86C125C9C068000D8DD3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2E86C025C9C068000D8DD3 /* AppDelegate.swift */; };
@@ -198,6 +203,8 @@
 		DDF8A86C24EBD3740064A6FC /* BelowRequiredAgeErrorScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF8A86B24EBD3740064A6FC /* BelowRequiredAgeErrorScreenTests.swift */; };
 		DDF8A86E24EBD3A30064A6FC /* BelowRequiredAgeErrorScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF8A86D24EBD3A30064A6FC /* BelowRequiredAgeErrorScreen.swift */; };
 		DDFC2A5425275B080069C662 /* XCUIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDFC2A5325275B070069C662 /* XCUIApplication.swift */; };
+		ED32D6A8267908960002DC38 /* ContactTracingAdviceScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED32D6A7267908960002DC38 /* ContactTracingAdviceScreenTests.swift */; };
+		ED32D6AF2679096A0002DC38 /* ContactTracingAdviceScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED32D6AE2679096A0002DC38 /* ContactTracingAdviceScreen.swift */; };
 		EDDE871E265FA052002C9073 /* LocalInformationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDE871D265FA052002C9073 /* LocalInformationScreen.swift */; };
 		EDDE8725265FA714002C9073 /* LocalInformationScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDE8724265FA714002C9073 /* LocalInformationScreenTests.swift */; };
 		EDE0CB92264583760047321E /* TestingHubScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE0CB91264583760047321E /* TestingHubScreen.swift */; };
@@ -249,6 +256,8 @@
 		0805240425CAEFCF001E0FF6 /* TestSymptomsReviewScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSymptomsReviewScreen.swift; sourceTree = "<group>"; };
 		0805240A25CAF06B001E0FF6 /* TestSymptomsReviewScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSymptomsReviewScreenTests.swift; sourceTree = "<group>"; };
 		080613492552D12100E6E504 /* RiskLevelExplanationFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskLevelExplanationFlowTests.swift; sourceTree = "<group>"; };
+		0808A5B926777218004EB81A /* BookARapidTestScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookARapidTestScreenTests.swift; sourceTree = "<group>"; };
+		0808A5BB26777235004EB81A /* BookARapidTestScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookARapidTestScreen.swift; sourceTree = "<group>"; };
 		0851DE5725CAC4C200B87078 /* TestCheckSymptomsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCheckSymptomsScreen.swift; sourceTree = "<group>"; };
 		0851DE5D25CAC56A00B87078 /* TestCheckSymptomsScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCheckSymptomsScreenTests.swift; sourceTree = "<group>"; };
 		086C999D2600D64D00BC6B92 /* ThankYouScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThankYouScreen.swift; sourceTree = "<group>"; };
@@ -269,6 +278,7 @@
 		13DC05EE24C605AF00E4D5BC /* CheckInConfirmationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInConfirmationScreen.swift; sourceTree = "<group>"; };
 		220EFA3A25CABBC40017D144 /* LinkTestResultWithDCTScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkTestResultWithDCTScreenTests.swift; sourceTree = "<group>"; };
 		220EFA4025CABC4E0017D144 /* LinkTestResultWithDCTScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkTestResultWithDCTScreen.swift; sourceTree = "<group>"; };
+		2219074A2681E1E400E556C0 /* RiskyVenueInformationBookATestScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskyVenueInformationBookATestScreenTests.swift; sourceTree = "<group>"; };
 		221ACFC02645485D004BA2B9 /* PlodTestResultScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlodTestResultScreenTests.swift; sourceTree = "<group>"; };
 		221ACFC7264548A1004BA2B9 /* PlodTestResultScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlodTestResultScreen.swift; sourceTree = "<group>"; };
 		222C188A24F016B8002C6CF6 /* VoidTestResultNoIsolationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoidTestResultNoIsolationScreen.swift; sourceTree = "<group>"; };
@@ -290,6 +300,8 @@
 		22A6FCF3264C1C91004B51C3 /* UnkownTestResultFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnkownTestResultFlowTests.swift; sourceTree = "<group>"; };
 		22B2D35324D1E28B00814CEC /* NoSymptomsIsolatingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoSymptomsIsolatingScreen.swift; sourceTree = "<group>"; };
 		22B2D35524D1E47100814CEC /* NoSymptomsIsolatingScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoSymptomsIsolatingScreenTests.swift; sourceTree = "<group>"; };
+		22B78E7B2678C71D0026A71C /* WarnAndTestCheckSymptomsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarnAndTestCheckSymptomsScreen.swift; sourceTree = "<group>"; };
+		22B78E7D2678C8010026A71C /* WarnAndTestCheckSymptomsScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarnAndTestCheckSymptomsScreenTests.swift; sourceTree = "<group>"; };
 		22CDCECB24CAE3810047B203 /* AboutThisAppScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutThisAppScreen.swift; sourceTree = "<group>"; };
 		22CDCECD24CAE9070047B203 /* AboutThisAppScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutThisAppScreenTests.swift; sourceTree = "<group>"; };
 		5F2E86BE25C9C068000D8DD3 /* IsolationModelPreviews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IsolationModelPreviews.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -461,6 +473,8 @@
 		DDF8A86B24EBD3740064A6FC /* BelowRequiredAgeErrorScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BelowRequiredAgeErrorScreenTests.swift; sourceTree = "<group>"; };
 		DDF8A86D24EBD3A30064A6FC /* BelowRequiredAgeErrorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BelowRequiredAgeErrorScreen.swift; sourceTree = "<group>"; };
 		DDFC2A5325275B070069C662 /* XCUIApplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCUIApplication.swift; sourceTree = "<group>"; };
+		ED32D6A7267908960002DC38 /* ContactTracingAdviceScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTracingAdviceScreenTests.swift; sourceTree = "<group>"; };
+		ED32D6AE2679096A0002DC38 /* ContactTracingAdviceScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTracingAdviceScreen.swift; sourceTree = "<group>"; };
 		EDDE871D265FA052002C9073 /* LocalInformationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalInformationScreen.swift; sourceTree = "<group>"; };
 		EDDE8724265FA714002C9073 /* LocalInformationScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalInformationScreenTests.swift; sourceTree = "<group>"; };
 		EDE0CB91264583760047321E /* TestingHubScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingHubScreen.swift; sourceTree = "<group>"; };
@@ -657,6 +671,7 @@
 			isa = PBXGroup;
 			children = (
 				229F8E3625C2CD75004AEC8D /* DailyContactTesting */,
+				22B78E7D2678C8010026A71C /* WarnAndTestCheckSymptomsScreenTests.swift */,
 				89AB940C2462AAE3004E405C /* EnterPostcodeScreenTests.swift */,
 				DD56AD31248928610038D00C /* PermissionsScreenTests.swift */,
 				8924879624687C9C001CA0F4 /* StartOnboardingScreenTests.swift */,
@@ -713,6 +728,9 @@
 				95486427265E81DE00C50E59 /* DiscardedSymptomsAfterPositiveTestScreenTests.swift */,
 				95486429265E838200C50E59 /* NoSymptomsAfterPositiveTestScreenTests.swift */,
 				EDDE8724265FA714002C9073 /* LocalInformationScreenTests.swift */,
+				0808A5B926777218004EB81A /* BookARapidTestScreenTests.swift */,
+				ED32D6A7267908960002DC38 /* ContactTracingAdviceScreenTests.swift */,
+				2219074A2681E1E400E556C0 /* RiskyVenueInformationBookATestScreenTests.swift */,
 			);
 			path = ScreenTests;
 			sourceTree = "<group>";
@@ -999,6 +1017,8 @@
 				22916AF0265D512900574E00 /* HomeAnimationsScreen.swift */,
 				EDE0CB91264583760047321E /* TestingHubScreen.swift */,
 				EDDE871D265FA052002C9073 /* LocalInformationScreen.swift */,
+				22B78E7B2678C71D0026A71C /* WarnAndTestCheckSymptomsScreen.swift */,
+				ED32D6AE2679096A0002DC38 /* ContactTracingAdviceScreen.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -1029,6 +1049,7 @@
 				5F67467C2645A7A500D58F66 /* UnknownTestResultsScreen.swift */,
 				221ACFC7264548A1004BA2B9 /* PlodTestResultScreen.swift */,
 				EDE91706264E7390001E1C98 /* BookAFollowUpTestScreen.swift */,
+				0808A5BB26777235004EB81A /* BookARapidTestScreen.swift */,
 			);
 			path = VirologyTesting;
 			sourceTree = "<group>";
@@ -1452,6 +1473,7 @@
 				8B82B3B82600C73700A87955 /* ShareKeysScreen.swift in Sources */,
 				222C188B24F016B8002C6CF6 /* VoidTestResultNoIsolationScreen.swift in Sources */,
 				221ACFC8264548A1004BA2B9 /* PlodTestResultScreen.swift in Sources */,
+				22B78E7E2678C8010026A71C /* WarnAndTestCheckSymptomsScreenTests.swift in Sources */,
 				FD70E2A126132CA500D55220 /* ShareKeysReminderScreenTests.swift in Sources */,
 				DD1FE2BE24DAC84700AD88B7 /* SimulatedUserNotificationAuthorizationScreen.swift in Sources */,
 				9540BB0924F64B60004EF339 /* LinkTestResultScreen.swift in Sources */,
@@ -1506,6 +1528,7 @@
 				22A6FCF4264C1C91004B51C3 /* UnkownTestResultFlowTests.swift in Sources */,
 				DDF8A86E24EBD3A30064A6FC /* BelowRequiredAgeErrorScreen.swift in Sources */,
 				89AB940D2462AAE3004E405C /* EnterPostcodeScreenTests.swift in Sources */,
+				ED32D6AF2679096A0002DC38 /* ContactTracingAdviceScreen.swift in Sources */,
 				95C555D02548104100E81624 /* LocalAuthorityConfirmationScreen.swift in Sources */,
 				953A954424A1D7AE00725940 /* AuthorizationDeniedScreenTests.swift in Sources */,
 				DD56AD30248926FB0038D00C /* PermissionsScreen.swift in Sources */,
@@ -1520,6 +1543,8 @@
 				95B52FFD2490B7530076580F /* PrivacyScreenTests.swift in Sources */,
 				8955AA462463058800D5EB3F /* HomeScreen.swift in Sources */,
 				229573F926493D620012F100 /* PlodTestResultFlowTests.swift in Sources */,
+				2219074B2681E1E500E556C0 /* RiskyVenueInformationBookATestScreenTests.swift in Sources */,
+				0808A5BC26777235004EB81A /* BookARapidTestScreen.swift in Sources */,
 				9540BB0724F64B3F004EF339 /* LinkTestResultScreenTests.swift in Sources */,
 				9450BC2424BDC3D20025E215 /* NoSymptomsScreenTests.swift in Sources */,
 				7F95D6C624D02D5B009C3B70 /* RiskyVenueInformationScreenTests.swift in Sources */,
@@ -1529,6 +1554,7 @@
 				8924879924687CB1001CA0F4 /* StartOnboardingScreen.swift in Sources */,
 				893E46F5247017C300F9AAF6 /* UseCase.swift in Sources */,
 				9428217924BE039400C42D24 /* PositiveSymptomsScreen.swift in Sources */,
+				ED32D6A8267908960002DC38 /* ContactTracingAdviceScreenTests.swift in Sources */,
 				133E8D4F24CCA55E002828DB /* BookATestScreen.swift in Sources */,
 				EDDE8725265FA714002C9073 /* LocalInformationScreenTests.swift in Sources */,
 				89C3DC842462BA1E001338E3 /* XCUIElementQuery.swift in Sources */,
@@ -1554,6 +1580,7 @@
 				13DC05ED24C6055500E4D5BC /* CheckInConfirmationScreenTests.swift in Sources */,
 				9450BC2124BDC3690025E215 /* NoSymptomsScreen.swift in Sources */,
 				95A95E6524A0CAC100BCF307 /* UnrecoverableErrorScreen.swift in Sources */,
+				22B78E7C2678C71D0026A71C /* WarnAndTestCheckSymptomsScreen.swift in Sources */,
 				DDF8A86C24EBD3740064A6FC /* BelowRequiredAgeErrorScreenTests.swift in Sources */,
 				223A9BB324D19EF00055582E /* NegativeTestResultWithIsolationScreen.swift in Sources */,
 				0851DE5E25CAC56A00B87078 /* TestCheckSymptomsScreenTests.swift in Sources */,
@@ -1589,6 +1616,7 @@
 				229F8E4325C2CE04004AEC8D /* DailyContactTestingConfirmationScreen.swift in Sources */,
 				2273581E25EEA2DA003C86DE /* MyAreaScreenTests.swift in Sources */,
 				89C3DC832462BA1E001338E3 /* XCUIElement.swift in Sources */,
+				0808A5BA26777218004EB81A /* BookARapidTestScreenTests.swift in Sources */,
 				22CDCECE24CAE9070047B203 /* AboutThisAppScreenTests.swift in Sources */,
 				FD3BB7D625EE941A003ADF9B /* VenueHistoryScreen.swift in Sources */,
 				EDE0CB9926458ED30047321E /* TestingHubScreenTests.swift in Sources */,

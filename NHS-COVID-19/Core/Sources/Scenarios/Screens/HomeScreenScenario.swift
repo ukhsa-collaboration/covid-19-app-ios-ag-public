@@ -53,10 +53,7 @@ extension HomeScreenScenario {
             return HomeViewController(
                 interactor: Interactor(
                     viewController: parent,
-                    checkInEnabled: checkInEnabled,
-                    setExposureNotifcationEnabled: { enabled in
-                        exposureNotificationsEnabled.send(enabled)
-                    }
+                    checkInEnabled: checkInEnabled
                 ),
                 riskLevelBannerViewModel: .constant(postcodeViewModel(parent: parent)),
                 localInfoBannerViewModel: .constant(localInfoBannerViewModel),
@@ -105,12 +102,10 @@ public class HomeScreenAlerts {
     public static let checkInAlertTitle = "Check-in into a venue."
     public static let financeAlertTitle = "Financial Support button tapped"
     public static let settingsAlertTitle = "Settings button tapped"
-    public static let exposureNotificationAlertTitle = "Exposure notifications toggled"
     public static let aboutAlertTitle = "About tapped"
     public static let linkTestResultTitle = "Link test result tapped"
     public static let postcodeBannerAlertTitle = "Postcode banner tapped"
     public static let localInfoBannerAlertTitle = "Local Information banner tapped"
-    public static let scheduleNotificationAlertTitle = "Notification scheduled"
     public static let contactTracingHubAlertTitle = "Contact Tracing Hub tapped"
     public static let testingHubAlertTitle = "Testing Hub tapped"
 }
@@ -118,18 +113,15 @@ public class HomeScreenAlerts {
 private class Interactor: HomeViewController.Interacting {
     
     var checkInEnabled: Bool
-    var _setExposureNotifcationEnabled: (Bool) -> Void
     
     private weak var viewController: UIViewController?
     
     init(
         viewController: UIViewController,
-        checkInEnabled: Bool,
-        setExposureNotifcationEnabled: @escaping (Bool) -> Void
+        checkInEnabled: Bool
     ) {
         self.viewController = viewController
         self.checkInEnabled = checkInEnabled
-        _setExposureNotifcationEnabled = setExposureNotifcationEnabled
     }
     
     func didTapRiskLevelBanner(viewModel: RiskLevelInfoViewController.ViewModel) {
@@ -174,16 +166,6 @@ private class Interactor: HomeViewController.Interacting {
     
     func didTapTestingHubButton() {
         viewController?.showAlert(title: HomeScreenAlerts.testingHubAlertTitle)
-    }
-    
-    func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never> {
-        viewController?.showAlert(title: HomeScreenAlerts.exposureNotificationAlertTitle)
-        _setExposureNotifcationEnabled(enabled)
-        return Result.success(()).publisher.eraseToAnyPublisher()
-    }
-    
-    public func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn) {
-        viewController?.showAlert(title: HomeScreenAlerts.scheduleNotificationAlertTitle)
     }
     
     var shouldShowCheckIn: Bool {

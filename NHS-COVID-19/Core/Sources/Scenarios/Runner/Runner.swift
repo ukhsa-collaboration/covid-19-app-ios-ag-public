@@ -190,6 +190,7 @@ public class Runner {
         let mocks = UIHostingController(
             rootView: ConfigureMocksView(
                 dataProvider: MockScenario.mockDataProvider,
+                lokaliseState: LokaliseState(dataProvider: MockScenario.mockDataProvider),
                 showDevView: Binding(
                     get: { [weak self] in self?.showDevView ?? false },
                     set: { [weak self] value in self?.showDevView = value }
@@ -203,7 +204,7 @@ public class Runner {
         var viewControllers = [
             mocks,
             UINavigationController(rootViewController: LogsViewController(loggingManager: loggingManager)),
-            UINavigationController(rootViewController: FilesViewController())
+            UINavigationController(rootViewController: FilesViewController()),
         ]
         
         if showFeatureGuard {

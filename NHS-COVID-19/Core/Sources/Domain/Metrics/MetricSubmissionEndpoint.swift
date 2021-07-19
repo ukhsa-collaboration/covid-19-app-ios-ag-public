@@ -139,10 +139,18 @@ private struct SubmissionPayload: Codable {
         
         var declaredNegativeResultFromDCT = 0
         
-        // Warn & Inform/Book a Test
+        // MARK: - Risky venue warning
+        
         var receivedRiskyVenueM1Warning = 0
         var receivedRiskyVenueM2Warning = 0
         var hasReceivedRiskyVenueM2WarningBackgroundTick = 0
+        var didAccessRiskyVenueM2Notification = 0
+        var selectedTakeTestM2Journey = 0
+        var selectedTakeTestLaterM2Journey = 0
+        var selectedHasSymptomsM2Journey = 0
+        var selectedHasNoSymptomsM2Journey = 0
+        var selectedLFDTestOrderingM2Journey = 0
+        var selectedHasLFDTestM2Journey = 0
         
         // MARK: Key Sharing
         
@@ -272,48 +280,34 @@ private extension Metric {
         case .didHaveSymptomsBeforeReceivedTestResult: return \.didHaveSymptomsBeforeReceivedTestResult
         case .didRememberOnsetSymptomsDateBeforeReceivedTestResult: return \.didRememberOnsetSymptomsDateBeforeReceivedTestResult
         case .declaredNegativeResultFromDCT: return \.declaredNegativeResultFromDCT
-        case .receivedPositiveSelfRapidTestResultEnteredManually:
-            return \.receivedPositiveSelfRapidTestResultEnteredManually
-        case .isIsolatingForTestedSelfRapidPositiveBackgroundTick:
-            return \.isIsolatingForTestedSelfRapidPositiveBackgroundTick
-        case .hasTestedSelfRapidPositiveBackgroundTick:
-            return \.hasTestedSelfRapidPositiveBackgroundTick
-        case .receivedRiskyVenueM1Warning:
-            return \.receivedRiskyVenueM1Warning
-        case .receivedRiskyVenueM2Warning:
-            return \.receivedRiskyVenueM2Warning
-        case .hasReceivedRiskyVenueM2WarningBackgroundTick:
-            return \.hasReceivedRiskyVenueM2WarningBackgroundTick
-        case .askedToShareExposureKeysInTheInitialFlow:
-            return \.askedToShareExposureKeysInTheInitialFlow
-        case .consentedToShareExposureKeysInTheInitialFlow:
-            return \.consentedToShareExposureKeysInTheInitialFlow
-        case .totalShareExposureKeysReminderNotifications:
-            return \.totalShareExposureKeysReminderNotifications
-        case .consentedToShareExposureKeysInReminderScreen:
-            return \.consentedToShareExposureKeysInReminderScreen
-        case .successfullySharedExposureKeys:
-            return \.successfullySharedExposureKeys
-        case .didSendLocalInfoNotification:
-            return \.didSendLocalInfoNotification
-        case .didAccessLocalInfoScreenViaNotification:
-            return \.didAccessLocalInfoScreenViaNotification
-        case .didAccessLocalInfoScreenViaBanner:
-            return \.didAccessLocalInfoScreenViaBanner
-        case .isDisplayingLocalInfoBackgroundTick:
-            return \.isDisplayingLocalInfoBackgroundTick
-        case .positiveLabResultAfterPositiveLFD:
-            return \.positiveLabResultAfterPositiveLFD
-        case .negativeLabResultAfterPositiveLFDWithinTimeLimit:
-            return \.negativeLabResultAfterPositiveLFDWithinTimeLimit
-        case .negativeLabResultAfterPositiveLFDOutsideTimeLimit:
-            return \.negativeLabResultAfterPositiveLFDOutsideTimeLimit
-        case .positiveLabResultAfterPositiveSelfRapidTest:
-            return \.positiveLabResultAfterPositiveSelfRapidTest
-        case .negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit:
-            return \.negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit
-        case .negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit:
-            return \.negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit
+        case .receivedPositiveSelfRapidTestResultEnteredManually: return \.receivedPositiveSelfRapidTestResultEnteredManually
+        case .isIsolatingForTestedSelfRapidPositiveBackgroundTick: return \.isIsolatingForTestedSelfRapidPositiveBackgroundTick
+        case .hasTestedSelfRapidPositiveBackgroundTick: return \.hasTestedSelfRapidPositiveBackgroundTick
+        case .receivedRiskyVenueM1Warning: return \.receivedRiskyVenueM1Warning
+        case .receivedRiskyVenueM2Warning: return \.receivedRiskyVenueM2Warning
+        case .hasReceivedRiskyVenueM2WarningBackgroundTick: return \.hasReceivedRiskyVenueM2WarningBackgroundTick
+        case .askedToShareExposureKeysInTheInitialFlow: return \.askedToShareExposureKeysInTheInitialFlow
+        case .consentedToShareExposureKeysInTheInitialFlow: return \.consentedToShareExposureKeysInTheInitialFlow
+        case .totalShareExposureKeysReminderNotifications: return \.totalShareExposureKeysReminderNotifications
+        case .consentedToShareExposureKeysInReminderScreen: return \.consentedToShareExposureKeysInReminderScreen
+        case .successfullySharedExposureKeys: return \.successfullySharedExposureKeys
+        case .didSendLocalInfoNotification: return \.didSendLocalInfoNotification
+        case .didAccessLocalInfoScreenViaNotification: return \.didAccessLocalInfoScreenViaNotification
+        case .didAccessLocalInfoScreenViaBanner: return \.didAccessLocalInfoScreenViaBanner
+        case .isDisplayingLocalInfoBackgroundTick: return \.isDisplayingLocalInfoBackgroundTick
+        case .positiveLabResultAfterPositiveLFD: return \.positiveLabResultAfterPositiveLFD
+        case .negativeLabResultAfterPositiveLFDWithinTimeLimit: return \.negativeLabResultAfterPositiveLFDWithinTimeLimit
+        case .negativeLabResultAfterPositiveLFDOutsideTimeLimit: return \.negativeLabResultAfterPositiveLFDOutsideTimeLimit
+        case .positiveLabResultAfterPositiveSelfRapidTest: return \.positiveLabResultAfterPositiveSelfRapidTest
+        case .negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit: return \.negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit
+        case .negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit: return \.negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit
+        case .didAccessRiskyVenueM2Notification: return \.didAccessRiskyVenueM2Notification
+        case .selectedTakeTestM2Journey: return \.selectedTakeTestM2Journey
+        case .selectedTakeTestLaterM2Journey: return \.selectedTakeTestLaterM2Journey
+        case .selectedHasSymptomsM2Journey: return \.selectedHasSymptomsM2Journey
+        case .selectedHasNoSymptomsM2Journey: return \.selectedHasNoSymptomsM2Journey
+        case .selectedLFDTestOrderingM2Journey: return \.selectedLFDTestOrderingM2Journey
+        case .selectedHasLFDTestM2Journey: return \.selectedHasLFDTestM2Journey
         }
     }
     

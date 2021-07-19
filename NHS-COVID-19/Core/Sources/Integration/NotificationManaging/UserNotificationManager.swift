@@ -37,10 +37,11 @@ class UserNotificationManager {
                 $0.title = localize(.alert_postcode_risk_change_title)
                 $0.body = localize(.alert_postcode_risk_change_body)
             }
-        case .venue:
+        case .venue(let messageType):
             return configuring(UNMutableNotificationContent()) {
                 $0.title = localize(.alert_venue_risk_change_title)
                 $0.body = localize(.alert_venue_risk_change_body)
+                $0.userInfo = [UserNotificationUserInfoKeys.VenueMessageType: messageType.rawValue]
             }
         case .isolationState:
             return configuring(UNMutableNotificationContent()) {
@@ -67,7 +68,8 @@ class UserNotificationManager {
                 $0.title = localize(.alert_latest_app_version_update_title)
                 $0.body = localize(.alert_latest_app_version_update_body)
             }
-        case .exposureNotificationReminder:
+        case .exposureNotificationReminder,
+             .exposureNotificationSecondReminder:
             return configuring(UNMutableNotificationContent()) {
                 $0.title = localize(.exposure_notification_reminder_title)
                 $0.categoryIdentifier = UserNotificationCategory.exposureNotification.rawValue

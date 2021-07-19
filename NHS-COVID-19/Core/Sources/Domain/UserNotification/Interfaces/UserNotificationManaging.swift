@@ -6,14 +6,21 @@ import Foundation
 import UserNotifications
 
 public enum UserNotificationType: Equatable {
+    
+    public enum VenueMessageType: String {
+        case warnAndInform
+        case warnAndBookATest
+    }
+    
     case postcode
-    case venue
+    case venue(VenueMessageType)
     case isolationState
     case exposureDetection
     case testResultReceived
     case appAvailability
     case latestAppVersionAvailable
     case exposureNotificationReminder
+    case exposureNotificationSecondReminder
     case exposureDontWorry
     case shareKeysReminder
     case localMessage(
@@ -39,14 +46,20 @@ public enum UserNotificationType: Equatable {
             return "latestAppVersionAvailable"
         case .exposureNotificationReminder:
             return "exposureNotificationReminder"
+        case .exposureNotificationSecondReminder:
+            return "exposureNotificationSecondReminder"
         case .exposureDontWorry:
             return "exposureDontWorry"
         case .shareKeysReminder:
             return "shareKeysReminder"
-        case .localMessage(_, _):
+        case .localMessage:
             return "localMessageUpdate"
         }
     }
+}
+
+public struct UserNotificationUserInfoKeys {
+    public static let VenueMessageType = "VenueMessageType"
 }
 
 public enum UserNotificationCategory: String {

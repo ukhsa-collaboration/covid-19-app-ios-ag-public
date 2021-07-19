@@ -106,6 +106,12 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case privacyIcon = "PrivacyIcon"
     case shareKeysReview = "ShareKeysReview"
     
+    // MARK: Contact Tracing
+    
+    case contactTracingBatteryLife = "ContactTracing/BatteryLife"
+    case contactTracingNoTracking = "ContactTracing/NoTracking"
+    case contactTracingPrivacy = "ContactTracing/Privacy"
+    
     public var id: ImageName {
         self
     }

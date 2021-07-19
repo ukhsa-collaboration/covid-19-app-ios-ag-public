@@ -6,6 +6,8 @@ import Common
 import Domain
 import Foundation
 import Integration
+import Localization
+import Lokalise
 
 public class MockScenario: Scenario {
     public static let name = "Mock"
@@ -63,6 +65,12 @@ extension CoordinatedAppController {
         let enabledFeatures = FeatureToggleStorage.getEnabledFeatures()
         let services = ApplicationServices(developmentServicesFor: environment)
         self.init(services: services, enabledFeatures: enabledFeatures)
+        
+        if let copyServices = environment.copyServices {
+            Lokalise.shared.setProjectID(copyServices.project, token: copyServices.token)
+            Lokalise.shared.localizationType = .prerelease
+            Localization.current.overrider = LokaliseOverrider()
+        }
     }
     
 }

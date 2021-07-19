@@ -239,27 +239,22 @@ extension CoordinatedAppController {
             
             let navigationVC = BaseNavigationController()
             
+            let isIndexCaseIsolation: Bool = {
+                if case .isolate(let isolation) = context.isolationState.currentValue {
+                    return isolation.isIndexCase
+                } else {
+                    return false
+                }
+            }()
+            
             let interactor = RiskyVenueInformationBookATestInteractor(
-                bookATestTapped: {
-                    let virologyInteractor = VirologyTestingFlowInteractor(
-                        virologyTestOrderInfoProvider: context.virologyTestingManager,
-                        openURL: context.openURL,
-                        acknowledge: acknowledge
-                    )
-                    
-                    let bookATestInfoInteractor = BookATestInfoViewControllerInteractor(
-                        didTapBookATest: {
-                            let virologyFlowVC = VirologyTestingFlowViewController(virologyInteractor)
-                            navigationVC.present(virologyFlowVC, animated: true)
-                        },
-                        openURL: context.openURL
-                    )
-                    
-                    let bookATestInfoVC = BookATestInfoViewController(
-                        interactor: bookATestInfoInteractor,
-                        shouldHaveCancelButton: false
-                    )
-                    navigationVC.pushViewController(bookATestInfoVC, animated: true)
+                bookATestTapped: { [showBookATest, showWarnAndBookATest] in
+                    if isIndexCaseIsolation {
+                        showBookATest.value = true
+                    } else {
+                        showWarnAndBookATest.value = true
+                    }
+                    acknowledge()
                 }, goHomeTapped: {
                     acknowledge()
                 }
@@ -330,7 +325,7 @@ extension CoordinatedAppController {
     private func postAcknowledgementViewController(
         with context: RunningAppContext
     ) -> UIViewController {
-        WrappingViewController { [showBookATest, showContactTracingHub, showLocalInfoScreen] in
+        WrappingViewController { [showBookATest, showWarnAndBookATest, showContactTracingHub, showLocalInfoScreen] in
             Localization.configurationChangePublisher
                 .map { _ in true }
                 .prepend(false)
@@ -339,6 +334,7 @@ extension CoordinatedAppController {
                         context: context,
                         shouldShowLanguageSelectionScreen: value,
                         showBookATest: showBookATest,
+                        showWarnAndBookATest: showWarnAndBookATest,
                         showContactTracingHub: showContactTracingHub,
                         showLocalInfoScreen: showLocalInfoScreen
                     )

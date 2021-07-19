@@ -65,9 +65,18 @@ public enum Metric: String, CaseIterable {
     case didRememberOnsetSymptomsDateBeforeReceivedTestResult
     case declaredNegativeResultFromDCT
     
+    // MARK: - Risky venue warning
+    
     case receivedRiskyVenueM1Warning
     case receivedRiskyVenueM2Warning
     case hasReceivedRiskyVenueM2WarningBackgroundTick
+    case didAccessRiskyVenueM2Notification
+    case selectedTakeTestM2Journey
+    case selectedTakeTestLaterM2Journey
+    case selectedHasSymptomsM2Journey
+    case selectedHasNoSymptomsM2Journey
+    case selectedLFDTestOrderingM2Journey
+    case selectedHasLFDTestM2Journey
     
     // MARK: Key sharing invitations/completions
     
@@ -125,6 +134,17 @@ public enum Metrics {
             break
         }
         
+    }
+    
+    static func signpost(_ evaluation: SelfDiagnosisEvaluation) {
+        switch evaluation {
+        case .noSymptoms:
+            signpost(.completedQuestionnaireButDidNotStartIsolation)
+        case .hasSymptoms(_, .hasNoTest):
+            signpost(.completedQuestionnaireAndStartedIsolation)
+        default:
+            break
+        }
     }
     
     static func signpostReceivedFromManual(

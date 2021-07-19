@@ -80,7 +80,7 @@ public class ApplicationCoordinator {
         Self.logger.debug("Initialising")
         
         languageStore = LanguageStore(store: services.encryptedStore)
-        localeConfiguration = languageStore.$configuration.domainProperty()
+        localeConfiguration = languageStore.languageInfo.map { $0.configuration() }
         homeAnimationsStore = HomeAnimationsStore(store: services.encryptedStore)
         
         appAvailabilityManager = AppAvailabilityManager(
@@ -94,7 +94,7 @@ public class ApplicationCoordinator {
         
         let localAuthorityValidator = LocalAuthoritiesValidator()
         
-        let localAuthority = postcodeStore.$localAuthorityId.map { localAuthorityId -> LocalAuthority? in
+        let localAuthority = postcodeStore.localAuthorityId.map { localAuthorityId -> LocalAuthority? in
             guard let localAuthorityId = localAuthorityId else { return nil }
             return localAuthorityValidator.localAuthority(with: localAuthorityId)
         }
@@ -102,7 +102,7 @@ public class ApplicationCoordinator {
         let riskyPostcodeEndpointManager = RiskyPostcodeEndpointManager(
             distributeClient: distributeClient,
             storage: services.cacheStorage,
-            postcode: postcodeStore.$postcode.eraseToAnyPublisher(),
+            postcode: postcodeStore.postcode.eraseToAnyPublisher(),
             localAuthority: localAuthority.eraseToAnyPublisher(),
             currentDateProvider: currentDateProvider,
             minimumUpdateIntervalProvider: services.riskyPostcodeUpdateIntervalProvider
@@ -220,8 +220,8 @@ public class ApplicationCoordinator {
             services: services,
             isolationLength: isolationContext.isolationConfiguration.value.contactCase,
             interestedInExposureNotifications: interestedInExposureNotifications,
-            getPostcode: { postcodeStore.postcode },
-            getLocalAuthority: { postcodeStore.localAuthorityId }
+            getPostcode: { postcodeStore.postcode.currentValue },
+            getLocalAuthority: { postcodeStore.localAuthorityId.currentValue }
         )
         
         diagnosisKeySharer = isolationContext.isolationStateStore.$isolationStateInfo
@@ -255,19 +255,21 @@ public class ApplicationCoordinator {
             encryptedStore: services.encryptedStore,
             currentDateProvider: currentDateProvider,
             appInfo: services.appInfo,
-            getPostcode: { postcodeStore.postcode?.value },
-            getLocalAuthority: { postcodeStore.localAuthorityId?.value }
+            getPostcode: { postcodeStore.postcode.currentValue?.value },
+            getLocalAuthority: { postcodeStore.localAuthorityId.currentValue?.value }
         )
         
         circuitBreaker = CircuitBreaker(
             client: CircuitBreakerClient(httpClient: services.apiClient, rateLimiter: ObfuscationRateLimiter()),
             exposureInfoProvider: exposureNotificationContext.exposureDetectionStore,
             riskyCheckinsProvider: checkInContext.checkInsStore,
+            currentDateProvider: dateProvider,
+            contactCaseIsolationDuration: isolationContext.isolationConfiguration.value.contactCase,
             handleContactCase: { riskInfo in
-                let contactCaseInfo = ContactCaseInfo(exposureDay: riskInfo.day, isolationFromStartOfDay: dateProvider.currentGregorianDay(timeZone: .current))
-                isolationContext.isolationStateStore.set(contactCaseInfo)
-                services.userNotificationsManager.removePending(type: .exposureDontWorry)
-                services.userNotificationsManager.add(type: .exposureDetection, at: nil, withCompletionHandler: nil)
+                isolationContext.handleContactCase(riskInfo: riskInfo, sendContactCaseIsolationNotification: {
+                    services.userNotificationsManager.removePending(type: .exposureDontWorry)
+                    services.userNotificationsManager.add(type: .exposureDetection, at: nil, withCompletionHandler: nil)
+                })
             },
             handleDontWorryNotification: exposureNotificationContext.handleDontWorryNotification,
             exposureNotificationProcessingBehaviour: exposureNotificationProcessingBehaviour
@@ -329,8 +331,8 @@ public class ApplicationCoordinator {
         setupChangeNotifiers(
             using: services.userNotificationsManager,
             localAuthority: localAuthority.eraseToAnyPublisher(),
-            languageCode: languageStore.$languageCode.eraseToAnyPublisher(),
-            postcode: postcodeStore.$postcode.eraseToAnyPublisher(),
+            languageCode: languageStore.languageInfo.map { $0.languageCode }.eraseToAnyPublisher(),
+            postcode: postcodeStore.postcode.eraseToAnyPublisher(),
             localAuthorityValidator: localAuthorityValidator
         )
         
@@ -380,7 +382,7 @@ public class ApplicationCoordinator {
         case .postcodeAndLocalAuthorityRequired:
             return .postcodeAndLocalAuthorityRequired(openURL: application.open, getLocalAuthorities: localAuthorityManager.localAuthorities, storeLocalAuthority: localAuthorityManager.store)
         case .localAuthorityRequired:
-            if let postcode = postcodeStore.postcode {
+            if let postcode = postcodeStore.postcode.currentValue {
                 let result = localAuthorityManager.localAuthorities(for: postcode)
                 if case .success(let localAuthorities) = result {
                     return .localAuthorityRequired(postcode: postcode, localAuthorities: localAuthorities, openURL: application.open, storeLocalAuthority: localAuthorityManager.store)
@@ -430,7 +432,7 @@ public class ApplicationCoordinator {
                         return result
                     },
                     isolationPaymentState: isolationPaymentContext.isolationPaymentState,
-                    currentLocaleConfiguration: languageStore.$configuration.domainProperty(),
+                    currentLocaleConfiguration: languageStore.languageInfo.map { $0.configuration() },
                     storeNewLanguage: languageStore.save,
                     homeAnimationsStore: homeAnimationsStore,
                     shouldShowDailyContactTestingInformFeature: { [weak self] in
@@ -518,16 +520,16 @@ public class ApplicationCoordinator {
                 
                 return self.isolationContext.makeResultAcknowledgementState(
                     result: virologyTestResult
-                ) { [weak self] keySubmissionAllowed, requiresFollowUpTest in
+                ) { [weak self] completionActions in
                     guard let self = self else { return }
                     
-                    if requiresFollowUpTest {
+                    if completionActions.shouldSuggestBookingFollowUpTest {
                         self.virologyTestingManager
                             .followUpTestRequired
                             .send(true)
                     }
                     
-                    if keySubmissionAllowed, let diagnosisKeySubmissionToken = virologyTestResult.diagnosisKeySubmissionToken {
+                    if completionActions.shouldAllowKeySubmission, let diagnosisKeySubmissionToken = virologyTestResult.diagnosisKeySubmissionToken {
                         self.keySharingStore.save(
                             token: diagnosisKeySubmissionToken,
                             acknowledgmentTime: UTCHour(containing: self.currentDateProvider.currentDate)
@@ -562,7 +564,7 @@ public class ApplicationCoordinator {
     private var rawState: AnyPublisher<RawState, Never> {
         return appAvailabilityManager.$metadata
             .combineLatest(completedOnboardingForCurrentSession, shouldRecommendUpdate, policyManager.$needsAcceptNewVersion)
-            .combineLatest(exposureNotificationContext.exposureNotificationStateController.combinedState, userNotificationsStateController.$authorizationStatus, postcodeStore.$state)
+            .combineLatest(exposureNotificationContext.exposureNotificationStateController.combinedState, userNotificationsStateController.$authorizationStatus, postcodeStore.state)
             .map { f in
                 RawState(
                     appAvailability: f.0.0,

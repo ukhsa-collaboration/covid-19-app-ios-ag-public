@@ -13,14 +13,14 @@ public protocol HomeFlowViewControllerInteracting {
     func openAdvice()
     func openIsolationAdvice()
     func makeCheckInViewController() -> UIViewController?
-    func makeTestingInformationViewController() -> UIViewController?
+    func makeTestingInformationViewController(flowController: UINavigationController?, showWarnAndBookATestFlow: InterfaceProperty<Bool>) -> UIViewController?
     func makeFinancialSupportViewController() -> UIViewController?
     func makeLinkTestResultViewController() -> UIViewController?
     func makeDailyConfirmationViewController(parentVC: UIViewController, with terminate: @escaping () -> Void) -> UIViewController?
-    func makeContactTracingHubViewController(exposureNotificationsEnabled: InterfaceProperty<Bool>, exposureNotificationsToggleAction: @escaping (Bool) -> Void, userNotificationsEnabled: InterfaceProperty<Bool>) -> UIViewController
+    func makeContactTracingHubViewController(flowController: UINavigationController?, exposureNotificationsEnabled: InterfaceProperty<Bool>, exposureNotificationsToggleAction: @escaping (Bool) -> Void, userNotificationsEnabled: InterfaceProperty<Bool>) -> UIViewController
     func makeLocalInfoScreenViewController(viewModel: LocalInformationViewController.ViewModel, interactor: LocalInformationViewController.Interacting) -> UIViewController
     func removeDeliveredLocalInfoNotifications()
-    func makeTestingHubViewController(flowController: UINavigationController?, showOrderTestButton: InterfaceProperty<Bool>, showFindOutAboutTestingButton: InterfaceProperty<Bool>) -> UIViewController
+    func makeTestingHubViewController(flowController: UINavigationController?, showOrderTestButton: InterfaceProperty<Bool>, showFindOutAboutTestingButton: InterfaceProperty<Bool>, showWarnAndBookATestFlow: InterfaceProperty<Bool>) -> UIViewController
     func getMyDataViewModel() -> MyDataViewController.ViewModel
     func getMyAreaViewModel() -> MyAreaTableViewController.ViewModel
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never>
@@ -76,6 +76,7 @@ public class HomeFlowViewController: BaseNavigationController {
         isolationViewModel: RiskLevelIndicator.ViewModel,
         exposureNotificationsEnabled: AnyPublisher<Bool, Never>,
         showOrderTestButton: InterfaceProperty<Bool>,
+        showWarnAndBookATestFlow: InterfaceProperty<Bool>,
         shouldShowSelfDiagnosis: InterfaceProperty<Bool>,
         userNotificationsEnabled: InterfaceProperty<Bool>,
         showFinancialSupportButton: InterfaceProperty<Bool>,
@@ -127,7 +128,8 @@ public class HomeFlowViewController: BaseNavigationController {
             exposureNotificationsEnabled: exposureNotificationsEnabled.property(initialValue: false),
             exposureNotificationsToggleAction: exposureNotificationSwitchValueChanged,
             showOrderTestButton: showOrderTestButton,
-            showFindOutAboutTestingButton: showFindOutAboutTestingButton
+            showFindOutAboutTestingButton: showFindOutAboutTestingButton,
+            showWarnAndBookATestFlow: showWarnAndBookATestFlow
         )
         
         let showLanguageSelectionScreen: () -> Void = {
@@ -203,6 +205,7 @@ public class HomeFlowViewController: BaseNavigationController {
         guard presentedViewController == nil, viewControllers.count == 1 else { return }
         
         let vc = interactor.makeContactTracingHubViewController(
+            flowController: self,
             exposureNotificationsEnabled: exposureNotificationsEnabled,
             exposureNotificationsToggleAction: exposureNotificationSwitchValueChanged,
             userNotificationsEnabled: userNotificationsEnabled
@@ -253,6 +256,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     private let exposureNotificationsToggleAction: (Bool) -> Void
     private let showOrderTestButton: InterfaceProperty<Bool>
     private let showFindOutAboutTestingButton: InterfaceProperty<Bool>
+    private let showWarnAndBookATestFlow: InterfaceProperty<Bool>
     
     init(
         flowController: UINavigationController,
@@ -266,7 +270,8 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         exposureNotificationsEnabled: InterfaceProperty<Bool>,
         exposureNotificationsToggleAction: @escaping (Bool) -> Void,
         showOrderTestButton: InterfaceProperty<Bool>,
-        showFindOutAboutTestingButton: InterfaceProperty<Bool>
+        showFindOutAboutTestingButton: InterfaceProperty<Bool>,
+        showWarnAndBookATestFlow: InterfaceProperty<Bool>
     ) {
         self.flowController = flowController
         self.flowInteractor = flowInteractor
@@ -280,6 +285,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         self.exposureNotificationsToggleAction = exposureNotificationsToggleAction
         self.showOrderTestButton = showOrderTestButton
         self.showFindOutAboutTestingButton = showFindOutAboutTestingButton
+        self.showWarnAndBookATestFlow = showWarnAndBookATestFlow
     }
     
     public func didTapRiskLevelBanner(viewModel: RiskLevelInfoViewController.ViewModel) {
@@ -301,7 +307,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         navigationController.modalPresentationStyle = .overFullScreen
         
         flowInteractor.removeDeliveredLocalInfoNotifications()
-
+        
         flowController?.present(navigationController, animated: true)
         flowInteractor.recordDidTapLocalInfoBannerMetric()
     }
@@ -359,7 +365,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     }
     
     public func didTapContactTracingHubButton() {
-        let viewController = flowInteractor.makeContactTracingHubViewController(exposureNotificationsEnabled: exposureNotificationsEnabled, exposureNotificationsToggleAction: exposureNotificationsToggleAction, userNotificationsEnabled: userNotificationsEnabled)
+        let viewController = flowInteractor.makeContactTracingHubViewController(flowController: flowController, exposureNotificationsEnabled: exposureNotificationsEnabled, exposureNotificationsToggleAction: exposureNotificationsToggleAction, userNotificationsEnabled: userNotificationsEnabled)
         flowController?.pushViewController(viewController, animated: true)
     }
     
@@ -367,17 +373,10 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         let testingHubViewController = flowInteractor.makeTestingHubViewController(
             flowController: flowController,
             showOrderTestButton: showOrderTestButton,
-            showFindOutAboutTestingButton: showFindOutAboutTestingButton
+            showFindOutAboutTestingButton: showFindOutAboutTestingButton,
+            showWarnAndBookATestFlow: showWarnAndBookATestFlow
         )
         flowController?.pushViewController(testingHubViewController, animated: true)
-    }
-    
-    public func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never> {
-        flowInteractor.setExposureNotifcationEnabled(enabled)
-    }
-    
-    public func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn) {
-        flowInteractor.scheduleReminderNotification(reminderIn: reminderIn)
     }
     
     public var shouldShowCheckIn: Bool {

@@ -84,15 +84,13 @@ struct TestResultIsolationOperation {
             }
             
             switch indexCaseInfo.testInfo?.result {
-            case .none, .void:
+            case .none:
                 if let onsetDay = indexCaseInfo.symptomaticInfo?.assumedOnsetDay, result.endDay < onsetDay {
                     return .nothing
                 } else {
                     return .update
                 }
             case .negative: return .nothing
-            // This should never happen, it's there so compiler won't complain
-            case .plod: return .nothing
             case .positive where indexCaseInfo.testInfo?.confirmationStatus == .pending:
                 if result.endDay < indexCaseInfo.startDay {
                     // The test result we received is from before the start of
@@ -187,13 +185,10 @@ struct TestResultIsolationOperation {
                 }
             } else {
                 switch indexCaseInfo.testInfo?.result {
-                // .void is only here for backward compatibility
-                case .none, .void: return .update
+                case .none: return .update
                 case .negative: return .overwrite
                 case .positive where indexCaseInfo.testInfo?.confirmationStatus == .pending: return .confirm
                 case .positive: return .nothing
-                // This should never happen, it's there so compiler won't complain
-                case .plod: return .nothing
                 }
             }
         }

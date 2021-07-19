@@ -1,45 +1,43 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
 import Foundation
 
-private struct LanguageInfo: Codable, DataConvertible {
+struct LanguageInfo {
+    let languageCode: String?
+    
+    func configuration(supportedLocalizations: [String] = Bundle.main.supportedLocalizations) -> LocaleConfiguration {
+        return LocaleConfiguration(localeIdentifier: languageCode, supportedLocalizations: supportedLocalizations)
+    }
+}
+
+private struct LanguagePayload: Codable, DataConvertible {
     var languageCode: String
 }
 
 class LanguageStore {
-    @Encrypted private var languageInfo: LanguageInfo? {
-        didSet {
-            languageCode = languageInfo?.languageCode
-            configuration = LocaleConfiguration(localeIdentifier: languageInfo?.languageCode)
-        }
-    }
+    @PublishedEncrypted private var languagePayload: LanguagePayload?
     
-    @Published
-    private(set) var configuration: LocaleConfiguration
-    
-    @Published
-    private(set) var languageCode: String?
+    private(set) lazy var languageInfo: DomainProperty<LanguageInfo> = {
+        $languagePayload.map { $0?.languageCode }.map(LanguageInfo.init)
+    }()
     
     init(store: EncryptedStoring) {
-        _languageInfo = store.encrypted("language")
-        let languageInfo = _languageInfo.wrappedValue
-        languageCode = languageInfo?.languageCode
-        configuration = LocaleConfiguration(localeIdentifier: languageInfo?.languageCode)
+        _languagePayload = store.encrypted("language")
     }
     
     func save(localeConfiguration: LocaleConfiguration) {
         switch localeConfiguration {
         case .systemPreferred:
-            languageInfo = nil
+            languagePayload = nil
         case .custom(let localeIdentifier):
-            languageInfo = LanguageInfo(languageCode: localeIdentifier)
+            languagePayload = LanguagePayload(languageCode: localeIdentifier)
         }
     }
     
     func delete() {
-        languageInfo = nil
+        languagePayload = nil
     }
 }

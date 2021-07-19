@@ -1,12 +1,12 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
+import Combine
 import Common
 import Scenarios
 import TestSupport
 import XCTest
-import Combine
 @testable import Domain
 
 class CachedResponseTests: XCTestCase {
@@ -20,7 +20,7 @@ class CachedResponseTests: XCTestCase {
             var stored: FileStored<Data>
             var name = String.random()
             var initialValue = HTTPResponse.ok(with: .untyped(.random()))
-            var updatedSubject = CurrentValueSubject<(old: HTTPResponse?,new: HTTPResponse?)?, Never>(nil)
+            var updatedSubject = CurrentValueSubject<(old: HTTPResponse?, new: HTTPResponse?)?, Never>(nil)
             
             public init() {
                 let fileManager = FileManager()
@@ -34,10 +34,10 @@ class CachedResponseTests: XCTestCase {
         
         let cached: CachedResponse<HTTPResponse>
         let configuration: Configuration
-
+        
         init(configuration: Configuration) {
             self.configuration = configuration
-            self.cached = CachedResponse(
+            cached = CachedResponse(
                 httpClient: configuration.httpClient,
                 endpoint: configuration.endpoint,
                 storage: configuration.storage,
@@ -77,7 +77,7 @@ class CachedResponseTests: XCTestCase {
                 changed = true
             }
         })
-
+        
         _ = try cached.update().await()
         
         TS.assert(changed, equals: true)

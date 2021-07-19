@@ -50,10 +50,16 @@ extension IsolationModelAcceptanceTests {
             let endDay = adapter.symptomaticCase.onsetDay.advanced(by: -1)
             let testEntry = ManualTestResultEntry(configuration: $instance, context: try! context())
             try testEntry.enterNegative(endDate: endDay.startDate(in: .utc))
-        case .receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedSymptomOnsetDate:
-            let endDay = adapter.symptomaticCase.selfDiagnosisDay.advanced(by: -30)
+        case .receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate:
+            // oldest possible isolation start date - 10 days for test result isolation period - 1 day to not overlap
+            let endDay = adapter.contactCase.expiredIsolationFromStartOfDay.advanced(by: -11)
             let testEntry = ManualTestResultEntry(configuration: $instance, context: try! context())
             try testEntry.enterPositive(endDate: endDay.startDate(in: .utc))
+        case .receivedUnconfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate:
+            // oldest possible isolation start date - 10 days for test result isolation period - 1 day to not overlap
+            let endDay = adapter.contactCase.expiredIsolationFromStartOfDay.advanced(by: -11)
+            let testEntry = ManualTestResultEntry(configuration: $instance, context: try! context())
+            try testEntry.enterPositive(requiresConfirmatoryTest: true, endDate: endDay.startDate(in: .utc))
         case .contactIsolationEnded:
             currentDateProvider.setDate(adapter.contactCase.contactIsolationToStartOfDay.startDate(in: .current))
         case .indexIsolationEnded:
@@ -84,8 +90,24 @@ extension IsolationModelAcceptanceTests {
             let endDay = adapter.testCase.testEndDay.advanced(by: -3)
             let testEntry = ManualTestResultEntry(configuration: $instance, context: try! context())
             try testEntry.enterPositive(requiresConfirmatoryTest: true, endDate: endDay.startDate(in: .utc), confirmatoryDayLimit: 2)
-        default:
-            throw IsolationModelUndefinedMappingError()
+        case .selfDiagnosedSymptomaticWithAssumedOnsetDateOlderThanPositiveTestEndDate:
+            let questionare = Questionnaire(context: try! context())
+            let onsetDay = adapter.testCase.testEndDay.advanced(by: -2)
+            try questionare.selfDiagnosePositive(onsetDay: onsetDay)
+        case .receivedNegativeTestWithEndDateNewerThanAssumedSymptomOnsetDateAndAssumedSymptomOnsetDateNewerThanPositiveTestEndDate:
+            let endDay = adapter.symptomaticCase.onsetDay.advanced(by: 1)
+            let testEntry = ManualTestResultEntry(configuration: $instance, context: try! context())
+            try testEntry.enterNegative(endDate: endDay.startDate(in: .utc))
+        case .receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDateButOlderThanAssumedSymptomOnsetDayIfAny:
+            throw IsolationModelUndefinedMappingError() // We currently use v1 payload for the store which does not support `confirmatoryDayLimit`, therefore it's always nil
+            let endDay = adapter.testCase.testEndDay.advanced(by: 3)
+            let testEntry = ManualTestResultEntry(configuration: $instance, context: try! context())
+            try testEntry.enterNegative(endDate: endDay.startDate(in: .utc))
+        case .receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDate:
+            throw IsolationModelUndefinedMappingError() // We currently use v1 payload for the store which does not support `confirmatoryDayLimit`, therefore it's always nil
+            let endDay = adapter.testCase.testEndDay.advanced(by: 3)
+            let testEntry = ManualTestResultEntry(configuration: $instance, context: try! context())
+            try testEntry.enterNegative(endDate: endDay.startDate(in: .utc))
         }
     }
     

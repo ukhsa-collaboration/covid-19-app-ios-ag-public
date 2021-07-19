@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -28,7 +28,7 @@ public enum LinkTestResultError: Error {
                 self = .unknownError
             }
         case .badResponse(underlyingError: let underlyingError):
-            if case DecodingError.dataCorrupted(_) = underlyingError {
+            if case DecodingError.dataCorrupted = underlyingError {
                 self = .decodeFailed
             } else {
                 fallthrough

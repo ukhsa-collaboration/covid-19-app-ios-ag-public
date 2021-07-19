@@ -395,43 +395,6 @@ class TestResultIsolationOperationTests: XCTestCase {
         XCTAssertEqual(operation.storeOperation(), .nothing)
     }
     
-    func testNewTestResultShouldBeSavedWhenNewTestResultIsPositiveAndPreviousTestResultIsVoid() throws {
-        let testDay = LocalDay.today.gregorianDay
-        let testEndDay = testDay.advanced(by: -6)
-        
-        let indexCaseInfo = IndexCaseInfo(
-            symptomaticInfo: nil,
-            testInfo: IndexCaseInfo.TestInfo(
-                result: .void,
-                testKitType: .labResult,
-                requiresConfirmatoryTest: false,
-                receivedOnDay: testDay.advanced(by: -4),
-                testEndDay: testEndDay
-            )
-        )
-        
-        // GIVEN
-        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
-        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
-        
-        // When
-        let operation = TestResultIsolationOperation(
-            currentIsolationState: isolationState,
-            storedIsolationInfo: isolationInfo,
-            result: VirologyStateTestResult(
-                testResult: .positive,
-                testKitType: .labResult,
-                endDate: LocalDay.today.startOfDay,
-                diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
-            ),
-            configuration: configuration
-        )
-        
-        // THEN
-        XCTAssertEqual(operation.storeOperation(), .update)
-    }
-    
     func testNewTestResultShouldBeSavedWhenNewTestResultIsPositiveAndPreviousTestResultIsNil() throws {
         // When
         let operation = TestResultIsolationOperation(
@@ -486,40 +449,6 @@ class TestResultIsolationOperationTests: XCTestCase {
         
         // THEN
         XCTAssertEqual(operation.storeOperation(), .nothing)
-    }
-    
-    func testNewTestResultShouldBeSavedWhenNewTestResultIsNegativeAndPreviousTestResultIsVoid() {
-        let testDay = LocalDay.today.gregorianDay
-        let testEndDay = testDay.advanced(by: -6)
-        
-        // Given
-        let isolationInfo = IsolationInfo(indexCaseInfo: IndexCaseInfo(
-            symptomaticInfo: nil,
-            testInfo: IndexCaseInfo.TestInfo(
-                result: .void,
-                testKitType: .labResult,
-                requiresConfirmatoryTest: false,
-                receivedOnDay: testDay.advanced(by: -4),
-                testEndDay: testEndDay
-            )
-        ), contactCaseInfo: nil)
-        
-        // When
-        let operation = TestResultIsolationOperation(
-            currentIsolationState: isolationState,
-            storedIsolationInfo: isolationInfo,
-            result: VirologyStateTestResult(
-                testResult: .negative,
-                testKitType: .labResult,
-                endDate: LocalDay.today.startOfDay,
-                diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
-            ),
-            configuration: configuration
-        )
-        
-        // THEN
-        XCTAssertEqual(operation.storeOperation(), .update)
     }
     
     func testNewTestResultShouldBeSavedWhenNewTestResultIsNegativeAndPreviousTestResultIsNil() throws {

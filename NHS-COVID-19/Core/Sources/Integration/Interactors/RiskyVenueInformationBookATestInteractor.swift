@@ -2,6 +2,7 @@
 // Copyright © 2021 DHSC. All rights reserved.
 //
 
+import Domain
 import Foundation
 import Interface
 import UIKit
@@ -16,10 +17,12 @@ struct RiskyVenueInformationBookATestInteractor: RiskyVenueInformationBookATestV
     }
     
     func bookATestLaterTapped() {
+        Metrics.signpost(.selectedTakeTestLaterM2Journey)
         _goHomeTapped()
     }
     
     func bookATestTapped() {
+        Metrics.signpost(.selectedTakeTestM2Journey)
         _bookATestTapped()
     }
     

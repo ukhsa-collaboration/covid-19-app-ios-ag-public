@@ -285,6 +285,12 @@ public enum StringLocalizationKey: String, CaseIterable {
     case virology_book_a_test_book_a_test_for_someone_else
     case virology_book_a_test_button
     
+    case virology_book_a_rapid_test_title
+    case virology_book_a_rapid_test_heading
+    case virology_book_a_rapid_test_description
+    case virology_book_a_rapid_test_submit_button
+    case virology_book_a_rapid_test_cancel_button
+    
     case settings_title
     case settings_row_language
     
@@ -542,7 +548,9 @@ public enum StringLocalizationKey: String, CaseIterable {
     case test_check_symptoms_no
     case test_symptoms_date_heading
     case test_symptoms_date_continue
+    case test_check_symptoms_subheading
     case test_check_symptoms_points
+    case test_check_symptoms_footer
     
     case settings_row_my_area_title
     case settings_row_my_data_title
@@ -557,6 +565,9 @@ public enum StringLocalizationKey: String, CaseIterable {
     case checkin_risky_venue_information_warn_and_book_a_test_description
     case checkin_risky_venue_information_book_a_test_button_title
     case checkin_risky_venue_information_will_book_a_test_later_button_title
+    case checkin_risky_venue_information_warn_and_book_a_test_info
+    case checkin_risky_venue_information_warn_and_book_a_test_bulleted_list
+    case checkin_risky_venue_information_warn_and_book_a_test_additional_info
     
     case settings_no_records
     case settings_venue_history
@@ -575,11 +586,24 @@ public enum StringLocalizationKey: String, CaseIterable {
     case contact_tracing_hub_title
     case contact_tracing_toggle_title_on
     case contact_tracing_toggle_title_off
-    case contact_tracing_hub_pause_tracing_header
-    case contact_tracing_hub_pause_tracing_bullet_points
-    case contact_tracing_hub_tracing_reminder
-    case contact_tracing_hub_dont_pause_tracing_header
-    case contact_tracing_hub_dont_pause_tracing_bullet_points
+    case contact_tracing_hub_no_tracking_heading
+    case contact_tracing_hub_no_tracking_description
+    case contact_tracing_hub_privacy_heading
+    case contact_tracing_hub_privacy_description
+    case contact_tracing_hub_battery_heading
+    case contact_tracing_hub_battery_description
+    case contact_tracing_hub_find_out_more
+    case contact_tracing_hub_should_pause
+    case contact_tracing_hub_should_not_pause
+    
+    case contact_tracing_should_pause_title
+    case contact_tracing_should_not_pause_title
+    case contact_tracing_should_pause_heading
+    case contact_tracing_should_not_pause_heading
+    case contact_tracing_should_pause_bullet_points
+    case contact_tracing_should_not_pause_bullet_points
+    case contact_tracing_should_pause_footnote
+    case contact_tracing_should_not_pause_footnote
     
     case unknown_test_result_screen_header
     case unknown_test_result_screen_description
@@ -622,6 +646,19 @@ public enum StringLocalizationKey: String, CaseIterable {
     case about_this_app_vaccination_status_disclaimer_heading
     case about_this_app_vaccination_status_disclaimer_description
     case about_this_app_vaccination_status_disclaimer_link
+    
+    case warn_and_test_check_symptoms_title
+    case warn_and_test_check_symptoms_heading
+    case warn_and_test_check_symptoms_submit_button_title
+    case warn_and_test_check_symptoms_cancel_button_title
+    
+    case warn_and_test_check_symptoms_confirm_alert_title
+    case warn_and_test_check_symptoms_confirm_alert_body
+    case warn_and_test_check_symptoms_confirm_alert_leave
+    case warn_and_test_check_symptoms_confirm_alert_stay
+    
+    // this is only used to check remote localisation updates in the Scenarios app
+    case this_is_just_a_test_message
 }
 
 public enum ParameterisedStringLocalizable: Equatable {

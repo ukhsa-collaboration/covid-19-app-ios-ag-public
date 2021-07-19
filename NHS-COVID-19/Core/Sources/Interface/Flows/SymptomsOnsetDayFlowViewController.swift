@@ -46,7 +46,7 @@ public class SymptomsOnsetDayFlowViewController: BaseNavigationController {
                     self.didFinishAskForSymptomsOnsetDay()
                 }
             )
-            return TestCheckSymptomsViewController(interactor: interactor)
+            return TestCheckSymptomsViewController.viewController(for: .enterTestResult, interactor: interactor)
         case .symptomsReview:
             let interactor = TestSymptomsReviewInteractor(_confirmSymptomsDate: { selectedDay, hasCheckedNoDate in
                 if selectedDay == nil, !hasCheckedNoDate {

@@ -86,9 +86,20 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
     }
     
     func newIsolationStateInfo(from currentIsolationInfo: IsolationInfo?, for unacknowledgedTestResult: UnacknowledgedTestResult, testKitType: TestKitType?, requiresConfirmatoryTest: Bool, confirmatoryDayLimit: Int? = nil, receivedOn: GregorianDay, npexDay: GregorianDay, operation: IsolationStateStore.Operation) -> IsolationStateInfo {
-        let testResult = TestResult(unacknowledgedTestResult)
         
         let isolationInfo = mutating(currentIsolationInfo ?? IsolationInfo()) {
+            #warning("Improve type-safety here.")
+            // If we can not create a `TestResult` here, that means the test is not relevant to isolation, therefore
+            // the operation *must* be `.nothing`.
+            // This is currently aligned with how `TestResultIsolationOperation` works, but this can’t be conveyed to
+            // the type system.
+            //
+            // Consider refactoring how these methods are called so we can better capture what should happen.
+            guard let testResult = TestResult(unacknowledgedTestResult) else {
+                assert(operation == .nothing)
+                return
+            }
+            
             if requiresConfirmatoryTest == false, testResult == .positive, operation != .ignore {
                 $0.contactCaseInfo = nil
             }
@@ -97,45 +108,32 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
             case .nothing, .ignore:
                 return
             case .deleteSymptoms:
-                if var indexCaseInfo = $0.indexCaseInfo {
-                    indexCaseInfo = IndexCaseInfo(
-                        symptomaticInfo: nil,
-                        testInfo: $0.indexCaseInfo?.testInfo
-                    )
-                    $0.indexCaseInfo = indexCaseInfo
-                }
+                $0.indexCaseInfo = IndexCaseInfo(
+                    symptomaticInfo: nil,
+                    testInfo: $0.indexCaseInfo?.testInfo
+                )
             case .deleteTest:
-                if var indexCaseInfo = $0.indexCaseInfo {
-                    indexCaseInfo = IndexCaseInfo(
-                        symptomaticInfo: $0.indexCaseInfo?.symptomaticInfo,
-                        testInfo: nil
-                    )
-                    $0.indexCaseInfo = indexCaseInfo
-                }
+                $0.indexCaseInfo = IndexCaseInfo(
+                    symptomaticInfo: $0.indexCaseInfo?.symptomaticInfo,
+                    testInfo: nil
+                )
             case .update:
-                if var indexCaseInfo = $0.indexCaseInfo {
-                    indexCaseInfo.set(testResult: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, confirmatoryDayLimit: confirmatoryDayLimit, receivedOn: receivedOn, testEndDay: npexDay)
-                    $0.indexCaseInfo = indexCaseInfo
-                } else {
-                    $0.indexCaseInfo = IndexCaseInfo(
-                        symptomaticInfo: nil,
-                        testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, confirmatoryDayLimit: confirmatoryDayLimit, receivedOnDay: receivedOn, testEndDay: npexDay)
-                    )
-                }
+                $0.indexCaseInfo = IndexCaseInfo(
+                    symptomaticInfo: $0.indexCaseInfo?.symptomaticInfo,
+                    testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, confirmatoryDayLimit: confirmatoryDayLimit, receivedOnDay: receivedOn, testEndDay: npexDay)
+                )
             case .complete:
                 if var indexCaseInfo = $0.indexCaseInfo {
                     indexCaseInfo.completeTest(completedOnDay: npexDay)
                     $0.indexCaseInfo = indexCaseInfo
                 }
             case .completeAndDeleteSymptoms:
-                if var indexCaseInfo = $0.indexCaseInfo {
-                    indexCaseInfo = IndexCaseInfo(
-                        symptomaticInfo: nil,
-                        testInfo: $0.indexCaseInfo?.testInfo
-                    )
-                    indexCaseInfo.completeTest(completedOnDay: npexDay)
-                    $0.indexCaseInfo = indexCaseInfo
-                }
+                var newIndexCaseInfo = IndexCaseInfo(
+                    symptomaticInfo: nil,
+                    testInfo: $0.indexCaseInfo?.testInfo
+                )
+                newIndexCaseInfo?.completeTest(completedOnDay: npexDay)
+                $0.indexCaseInfo = newIndexCaseInfo
             case .confirm:
                 if var indexCaseInfo = $0.indexCaseInfo {
                     indexCaseInfo.confirmTest(confirmationDay: npexDay)
@@ -148,8 +146,10 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
                 )
             case .updateAndConfirm:
                 if let storedIndexCaseInfo = $0.indexCaseInfo {
-                    var indexCaseInfo = storedIndexCaseInfo
-                    indexCaseInfo.set(testResult: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, confirmatoryDayLimit: confirmatoryDayLimit, receivedOn: receivedOn, testEndDay: npexDay)
+                    var indexCaseInfo = IndexCaseInfo(
+                        symptomaticInfo: storedIndexCaseInfo.symptomaticInfo,
+                        testInfo: IndexCaseInfo.TestInfo(result: testResult, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, confirmatoryDayLimit: confirmatoryDayLimit, receivedOnDay: receivedOn, testEndDay: npexDay)
+                    )
                     if let confirmedDay = storedIndexCaseInfo.testInfo?.confirmedOnDay ?? $0.indexCaseInfo?.assumedTestEndDay {
                         indexCaseInfo.confirmTest(confirmationDay: confirmedDay)
                     }

@@ -13,9 +13,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Setting reminder to turn contact tracing back on in %ld hour</string>
+				<string>The app will remind you to turn on contact tracing in %ld hour</string>
 				<key>other</key>
-				<string>Setting reminder to turn contact tracing back on in %ld hours</string>
+				<string>The app will remind you to turn on contact tracing in %ld hours</string>
 			</dict>
 		</dict>
 		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>

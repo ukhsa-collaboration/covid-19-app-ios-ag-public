@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -18,6 +18,8 @@ class ExposureNotificationReminderTests: XCTestCase {
             notificationCenter: NotificationCenter()
         )
     }
+    
+    // MARK: - Authorization State
     
     func testAuthorizationStateAuthorized() throws {
         notificationManager.authorizationStatus = .authorized
@@ -66,6 +68,8 @@ class ExposureNotificationReminderTests: XCTestCase {
         
         XCTAssertFalse(isEnabled)
     }
+    
+    // MARK: - First Reminder Notification
     
     func testScheduleNotificationLessThanOneDay() throws {
         let currentDate = Calendar.current.date(from: DateComponents(year: 2020, month: 5, day: 7, hour: 8))!
@@ -177,8 +181,186 @@ class ExposureNotificationReminderTests: XCTestCase {
         
         XCTAssertNil(notificationManager.notificationType)
         XCTAssertNil(notificationManager.triggerAt)
-        
     }
+    
+    // MARK: - Second Reminder Notification
+    
+    func testScheduleSecondNotificationForTheNextDay() throws {
+        let currentDate = Calendar.current.date(from: DateComponents(year: 2021, month: 6, day: 10, hour: 8))!
+        
+        let reminder = ExposureNotificationReminder(
+            userNotificationManager: notificationManager,
+            userNotificationStateController: notificationStateController,
+            currentDateProvider: MockDateProvider { currentDate },
+            exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
+        )
+        
+        let firstReminderHours = 2
+        let firstReminderDate = Calendar.current.date(byAdding: .hour, value: firstReminderHours, to: currentDate)!
+        reminder.scheduleSecondUserNotification(afterFirstReminderDate: firstReminderDate)
+        
+        let newDate = Calendar.current.date(from: DateComponents(year: 2021, month: 6, day: 11, hour: 16))!
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)
+        
+        XCTAssertEqual(notificationManager.notificationType, .exposureNotificationSecondReminder)
+        XCTAssertEqual(notificationManager.triggerAt, dateComponents)
+    }
+    
+    func testScheduleSecondNotificationAfterTheNextDay() throws {
+        let currentDate = Calendar.current.date(from: DateComponents(year: 2021, month: 6, day: 10, hour: 16))!
+        
+        let reminder = ExposureNotificationReminder(
+            userNotificationManager: notificationManager,
+            userNotificationStateController: notificationStateController,
+            currentDateProvider: MockDateProvider { currentDate },
+            exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
+        )
+        
+        let firstReminderHours = 12
+        let firstReminderDate = Calendar.current.date(byAdding: .hour, value: firstReminderHours, to: currentDate)!
+        reminder.scheduleSecondUserNotification(afterFirstReminderDate: firstReminderDate)
+        
+        let newDate = Calendar.current.date(from: DateComponents(year: 2021, month: 6, day: 12, hour: 16))!
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)
+        
+        XCTAssertEqual(notificationManager.notificationType, .exposureNotificationSecondReminder)
+        XCTAssertEqual(notificationManager.triggerAt, dateComponents)
+    }
+    
+    func testScheduleSecondNotificationWithFirstReminderAroundMidnight() throws {
+        let currentDate = Calendar.current.date(from: DateComponents(year: 2021, month: 6, day: 10, hour: 19))!
+        
+        let reminder = ExposureNotificationReminder(
+            userNotificationManager: notificationManager,
+            userNotificationStateController: notificationStateController,
+            currentDateProvider: MockDateProvider { currentDate },
+            exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
+        )
+        
+        let firstReminderHours = 4
+        let firstReminderDate = Calendar.current.date(byAdding: .hour, value: firstReminderHours, to: currentDate)!
+        reminder.scheduleSecondUserNotification(afterFirstReminderDate: firstReminderDate)
+        
+        let newDate = Calendar.current.date(from: DateComponents(year: 2021, month: 6, day: 11, hour: 16))!
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)
+        
+        XCTAssertEqual(notificationManager.notificationType, .exposureNotificationSecondReminder)
+        XCTAssertEqual(notificationManager.triggerAt, dateComponents)
+    }
+    
+    func testScheduleSecondNotificationWithFirstReminderAtMidnight() throws {
+        let currentDate = Calendar.current.date(from: DateComponents(year: 2021, month: 6, day: 10, hour: 20))!
+        
+        let reminder = ExposureNotificationReminder(
+            userNotificationManager: notificationManager,
+            userNotificationStateController: notificationStateController,
+            currentDateProvider: MockDateProvider { currentDate },
+            exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
+        )
+        
+        let firstReminderHours = 4
+        let firstReminderDate = Calendar.current.date(byAdding: .hour, value: firstReminderHours, to: currentDate)!
+        reminder.scheduleSecondUserNotification(afterFirstReminderDate: firstReminderDate)
+        
+        let newDate = Calendar.current.date(from: DateComponents(year: 2021, month: 6, day: 12, hour: 16))!
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)
+        
+        XCTAssertEqual(notificationManager.notificationType, .exposureNotificationSecondReminder)
+        XCTAssertEqual(notificationManager.triggerAt, dateComponents)
+    }
+    
+    func testScheduleSecondNotificationWithFirstReminderAfterMidnight() throws {
+        let currentDate = Calendar.current.date(from: DateComponents(year: 2021, month: 6, day: 10, hour: 20))!
+        
+        let reminder = ExposureNotificationReminder(
+            userNotificationManager: notificationManager,
+            userNotificationStateController: notificationStateController,
+            currentDateProvider: MockDateProvider { currentDate },
+            exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
+        )
+        
+        let firstReminderHours = 12
+        let firstReminderDate = Calendar.current.date(byAdding: .hour, value: firstReminderHours, to: currentDate)!
+        reminder.scheduleSecondUserNotification(afterFirstReminderDate: firstReminderDate)
+        
+        let newDate = Calendar.current.date(from: DateComponents(year: 2021, month: 6, day: 12, hour: 16))!
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)
+        
+        XCTAssertEqual(notificationManager.notificationType, .exposureNotificationSecondReminder)
+        XCTAssertEqual(notificationManager.triggerAt, dateComponents)
+    }
+    
+    func testScheduleSecondNotificationMonthChange() throws {
+        let currentDate = Calendar.current.date(from: DateComponents(year: 2021, month: 6, day: 30, hour: 22))!
+        
+        let reminder = ExposureNotificationReminder(
+            userNotificationManager: notificationManager,
+            userNotificationStateController: notificationStateController,
+            currentDateProvider: MockDateProvider { currentDate },
+            exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
+        )
+        
+        let firstReminderHours = 4
+        let firstReminderDate = Calendar.current.date(byAdding: .hour, value: firstReminderHours, to: currentDate)!
+        reminder.scheduleSecondUserNotification(afterFirstReminderDate: firstReminderDate)
+        
+        let newDate = Calendar.current.date(from: DateComponents(year: 2021, month: 7, day: 2, hour: 16))!
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)
+        
+        XCTAssertEqual(notificationManager.notificationType, .exposureNotificationSecondReminder)
+        XCTAssertEqual(notificationManager.triggerAt, dateComponents)
+    }
+    
+    func testScheduleSecondNotificationYearChange() throws {
+        let currentDate = Calendar.current.date(from: DateComponents(year: 2021, month: 12, day: 31, hour: 22))!
+        
+        let reminder = ExposureNotificationReminder(
+            userNotificationManager: notificationManager,
+            userNotificationStateController: notificationStateController,
+            currentDateProvider: MockDateProvider { currentDate },
+            exposureNotificationEnabled: Just(true).eraseToAnyPublisher()
+        )
+        
+        let firstReminderHours = 5
+        let firstReminderDate = Calendar.current.date(byAdding: .hour, value: firstReminderHours, to: currentDate)!
+        reminder.scheduleSecondUserNotification(afterFirstReminderDate: firstReminderDate)
+        
+        let newDate = Calendar.current.date(from: DateComponents(year: 2022, month: 1, day: 2, hour: 16))!
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)
+        
+        XCTAssertEqual(notificationManager.notificationType, .exposureNotificationSecondReminder)
+        XCTAssertEqual(notificationManager.triggerAt, dateComponents)
+    }
+    
+    func testScheduleAndRemoveSecondNotification() throws {
+        let currentDate = Calendar.current.date(from: DateComponents(year: 2021, month: 12, day: 31, hour: 22))!
+        
+        let exposureNotificationEnabled = CurrentValueSubject<Bool, Never>(false)
+        
+        let reminder = ExposureNotificationReminder(
+            userNotificationManager: notificationManager,
+            userNotificationStateController: notificationStateController,
+            currentDateProvider: MockDateProvider { currentDate },
+            exposureNotificationEnabled: exposureNotificationEnabled.eraseToAnyPublisher()
+        )
+        
+        let firstReminderHours = 5
+        let firstReminderDate = Calendar.current.date(byAdding: .hour, value: firstReminderHours, to: currentDate)!
+        reminder.scheduleSecondUserNotification(afterFirstReminderDate: firstReminderDate)
+        
+        let newDate = Calendar.current.date(from: DateComponents(year: 2022, month: 1, day: 2, hour: 16))!
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: newDate)
+        
+        XCTAssertEqual(notificationManager.notificationType, .exposureNotificationSecondReminder)
+        XCTAssertEqual(notificationManager.triggerAt, dateComponents)
+        
+        exposureNotificationEnabled.send(true)
+        
+        XCTAssertNil(notificationManager.notificationType)
+        XCTAssertNil(notificationManager.triggerAt)
+    }
+    
+    // MARK: - Mocks
     
     private class MockUserNotificationManager: UserNotificationManaging {
         public var triggerAt: DateComponents?
