@@ -49,7 +49,7 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
         coordinator.handlePollingTestResult(response, virologyTestTokens: tokens)
         
         XCTAssertEqual(userNotificationManager.notificationType, UserNotificationType.testResultReceived)
-        let savedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
+        let savedResult = try XCTUnwrap(virologyStore.virologyTestResult.currentValue)
         XCTAssertEqual(savedResult.testResult, result.testResult)
     }
     
@@ -66,7 +66,7 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
         coordinator.handleManualTestResult(response)
         
         XCTAssertNil(userNotificationManager.notificationType)
-        let savedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
+        let savedResult = try XCTUnwrap(virologyStore.virologyTestResult.currentValue)
         XCTAssertEqual(savedResult.testResult, response.virologyTestResult.testResult)
     }
     

@@ -15,7 +15,7 @@ class IsolationStateManagerTests: XCTestCase {
         var requestedStateInfo: IsolationStateInfo?
         var requestedCalendarInfo: LocalDay?
         var callbackCount = 0
-        var isolationState = IsolationLogicalState.isolating(Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)), endAcknowledged: false, startAcknowledged: false)
+        var isolationState = IsolationLogicalState.isolating(Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)), endAcknowledged: false, startOfContactIsolationAcknowledged: false)
     }
     
     private let day = LocalDay(

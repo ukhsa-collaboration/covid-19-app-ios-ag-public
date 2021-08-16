@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -15,7 +15,7 @@ class PrivacyScreenTests: XCTestCase {
             let screen = PrivacyScreen(app: app)
             
             XCTAssertTrue(screen.title.exists)
-            XCTAssertTrue(screen.privacyDespcription.exists)
+            XCTAssertTrue(screen.privacyDespcription.allExist)
             XCTAssertTrue(screen.dataDespcription1.exists)
             XCTAssertTrue(screen.dataDespcription2.exists)
             XCTAssertTrue(screen.privacyNotice.exists)

@@ -43,6 +43,11 @@ class UserNotificationManager {
                 $0.body = localize(.alert_venue_risk_change_body)
                 $0.userInfo = [UserNotificationUserInfoKeys.VenueMessageType: messageType.rawValue]
             }
+        case .selfIsolation:
+            return configuring(UNMutableNotificationContent()) {
+                $0.title = localize(.alert_self_isolation_change_title)
+                $0.body = localize(.alert_self_isolation_change_body)
+            }
         case .isolationState:
             return configuring(UNMutableNotificationContent()) {
                 $0.title = localize(.alert_isolation_state_change_title)

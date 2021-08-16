@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import UIKit
@@ -12,6 +12,7 @@ extension CGFloat {
     public static let tripleSpacing: CGFloat = 48
     public static let halfSpacing: CGFloat = 8
     public static let hairSpacing: CGFloat = 4
+    public static let halfHairSpacing: CGFloat = 2
     
     public static let buttonCornerRadius: CGFloat = 8
     public static let menuButtonCornerRadius: CGFloat = 15

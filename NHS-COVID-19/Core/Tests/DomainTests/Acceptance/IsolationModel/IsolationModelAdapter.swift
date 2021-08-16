@@ -46,14 +46,25 @@ struct IsolationModelAdapter {
             testCase.testEndDay = GregorianDay(year: 2020, month: 10, day: 12)
             symptomaticCase.onsetDay = GregorianDay(year: 2020, month: 10, day: 13)
             symptomaticCase.selfDiagnosisDay = GregorianDay(year: 2020, month: 10, day: 15)
+        } else if event == .receivedConfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate {
+            // this event has `.notIsolatingAndHadSymptomsPreviously` but only because of a negative, so the date of this
+            // expired symptomatic case should still isolate them when the negative gets replaced with a positive
+            symptomaticCase.expiredSelfDiagnosisDay = symptomaticCase.selfDiagnosisDay
+        } else if event == .receivedUnconfirmedPositiveTestWithEndDateNDaysOlderThanRememberedNegativeTestEndDateAndOlderThanAssumedSymptomOnsetDayIfAny {
+            // bring assumed symptom onset for `.notIsolatingAndHadSymptomsPreviously` (but only because of a negative)
+            // to a date that is newer than the new unconfirmed positive test
+            symptomaticCase.expiredSelfDiagnosisDay = symptomaticCase.selfDiagnosisDay
         }
     }
     
     struct ContactCase {
         var exposureDay: GregorianDay
         var contactIsolationFromStartOfDay: GregorianDay
-        var optedOutForDCTDay: GregorianDay
-        var optedOutForDCTDate: Date
+        var optedOutIsolation: GregorianDay
+        
+        var optedOutIsolationDate: Date {
+            optedOutIsolation.startDate(in: .current)
+        }
         
         var expiredExposureDay: GregorianDay
         var expiredIsolationFromStartOfDay: GregorianDay
@@ -66,8 +77,7 @@ struct IsolationModelAdapter {
             contactIsolationFromStartOfDay = GregorianDay(year: 2020, month: 10, day: 11)
             contactIsolationToStartOfDay = GregorianDay(year: 2020, month: 10, day: 24)
             
-            optedOutForDCTDay = GregorianDay(year: 2020, month: 10, day: 12)
-            optedOutForDCTDate = optedOutForDCTDay.startDate(in: .current)
+            optedOutIsolation = GregorianDay(year: 2020, month: 10, day: 12)
             
             expiredExposureDay = GregorianDay(year: 2020, month: 9, day: 26)
             expiredIsolationFromStartOfDay = GregorianDay(year: 2020, month: 9, day: 27)
@@ -112,12 +122,12 @@ struct IsolationModelAdapter {
             untilStartOfDay: LocalDay(gregorianDay: contactCase.contactIsolationToStartOfDay, timeZone: .current),
             reason: .init(
                 indexCaseInfo: nil,
-                contactCaseInfo: Isolation.ContactCaseInfo()
+                contactCaseInfo: Isolation.ContactCaseInfo(exposureDay: contactCase.exposureDay)
             )
         )
     }
     
-    var indexCaseIsolation: Isolation {
+    func indexCaseIsolation(optOutOfIsolationDate: Date? = nil) -> Isolation {
         Isolation(
             fromDay: LocalDay(gregorianDay: symptomaticCase.selfDiagnosisDay, timeZone: .current),
             untilStartOfDay: LocalDay(gregorianDay: symptomaticCase.symptomaticIsolationUntilStartOfDay, timeZone: .current),
@@ -129,7 +139,8 @@ struct IsolationModelAdapter {
                     isPendingConfirmation: false
                 ),
                 contactCaseInfo: nil
-            )
+            ),
+            optOutOfIsolationDay: optOutOfIsolationDate.map { GregorianDay(date: $0, timeZone: .current) }
         )
     }
     
@@ -156,12 +167,13 @@ struct IsolationModelAdapter {
                     isSelfDiagnosed: isSelfDiagnosed,
                     isPendingConfirmation: isPendingConfirmation
                 ),
-                contactCaseInfo: Isolation.ContactCaseInfo()
+                contactCaseInfo: Isolation.ContactCaseInfo(exposureDay: contactCase.exposureDay)
             )
         )
     }
     
     func indexCasePositiveTestIsolation(
+        optOutOfIsolationDate: Date? = nil,
         isPendingConfirmation: Bool = false,
         isSelfDiagnosed: Bool = false
     ) -> Isolation {
@@ -187,7 +199,8 @@ struct IsolationModelAdapter {
                     isPendingConfirmation: isPendingConfirmation
                 ),
                 contactCaseInfo: nil
-            )
+            ),
+            optOutOfIsolationDay: optOutOfIsolationDate.map { GregorianDay(date: $0, timeZone: .current) }
         )
     }
 }

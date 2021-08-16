@@ -14,15 +14,19 @@ extension ApplicationServices {
     
     private static let logger = Logger(label: "ApplicationServices")
     
+    @available(iOSApplicationExtension, unavailable)
     public convenience init(
         standardServicesFor environment: Environment,
         dateProvider: DateProviding = DateProvider(),
         riskyPostcodeUpdateIntervalProvider: MinimumUpdateIntervalProviding = DefaultMinimumUpdateIntervalProvider(),
-        exposureNotificationManager: ExposureNotificationManaging = ENManager()
+        exposureNotificationManager: ExposureNotificationManaging = ENManager(),
+        cameraManager: CameraManaging? = nil,
+        venueDecoder: VenueDecoding? = nil,
+        application: Application = SystemApplication()
     ) {
         Self.logger.debug("initialising", metadata: .describing(environment.identifier))
         self.init(
-            application: UIApplication.shared,
+            application: application,
             exposureNotificationManager: exposureNotificationManager,
             userNotificationsManager: UserNotificationManager(),
             processingTaskRequestManager: ProcessingTaskRequestManager(
@@ -33,10 +37,10 @@ extension ApplicationServices {
             distributeClient: environment.distributionClient,
             apiClient: environment.apiClient,
             iTunesClient: environment.iTunesClient,
-            cameraManager: CameraManager(),
+            cameraManager: cameraManager ?? CameraManager(),
             encryptedStore: EncryptedStore(service: environment.identifier),
             cacheStorage: FileStorage(forCachesOf: environment.identifier),
-            venueDecoder: environment.venueDecoder,
+            venueDecoder: venueDecoder ?? environment.venueDecoder,
             appInfo: environment.appInfo,
             postcodeValidator: PostcodeValidator(),
             currentDateProvider: dateProvider,

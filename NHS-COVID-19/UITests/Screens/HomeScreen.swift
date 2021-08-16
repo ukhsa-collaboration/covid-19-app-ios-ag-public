@@ -20,10 +20,6 @@ struct HomeScreen {
         app.buttons[localized: .home_diagnosis_button_title]
     }
     
-    var financeButton: XCUIElement {
-        app.buttons[localized: .home_financial_support_button_title]
-    }
-    
     var settingsButton: XCUIElement {
         app.buttons[localized: .home_settings_button_title]
     }
@@ -62,5 +58,9 @@ struct HomeScreen {
     
     var testingHubButton: XCUIElement {
         app.buttons[localized: .home_testing_hub_button_title]
+    }
+    
+    var selfIsolationHubButton: XCUIElement {
+        app.buttons[localized: .home_self_isolation_button_title]
     }
 }

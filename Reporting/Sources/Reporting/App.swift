@@ -29,7 +29,7 @@ struct App {
     
     static let localizableStringsDictResourcePath = "Localization/Resources/en.lproj/Localizable.stringsdict"
     
-    static let stringLocalizationKeyResourcePath = "Localization/StringLocalizationKey.swift"
+    static let StringLocalizableKeyResourcePath = "Localization/StringLocalizableKey.swift"
     
     static let localizedPackages = [
         "Integration",

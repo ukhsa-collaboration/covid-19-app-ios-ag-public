@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -25,8 +25,8 @@ struct NegativeTestResultWithIsolationScreen {
         app.staticTexts[localized: .negative_test_result_with_isolation_advice]
     }
     
-    var onlineServicesLink: XCUIElement {
-        app.links[localized: .negative_test_result_with_isolation_service_link]
+    var nhsGuidanceLink: XCUIElement {
+        app.links[localized: .negative_test_result_with_isolation_nhs_guidance_link]
     }
     
     var returnHomeButton: XCUIElement {

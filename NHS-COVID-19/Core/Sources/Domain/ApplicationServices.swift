@@ -18,7 +18,7 @@ public class ApplicationServices {
     let cameraManager: CameraManaging
     let encryptedStore: EncryptedStoring
     let cacheStorage: FileStoring
-    let venueDecoder: VenueDecoder
+    let venueDecoder: VenueDecoding
     let appInfo: AppInfo
     let postcodeValidator: PostcodeValidating
     let currentDateProvider: DateProviding
@@ -37,7 +37,7 @@ public class ApplicationServices {
         cameraManager: CameraManaging,
         encryptedStore: EncryptedStoring,
         cacheStorage: FileStoring,
-        venueDecoder: VenueDecoder,
+        venueDecoder: VenueDecoding,
         appInfo: AppInfo,
         postcodeValidator: PostcodeValidating,
         currentDateProvider: DateProviding,

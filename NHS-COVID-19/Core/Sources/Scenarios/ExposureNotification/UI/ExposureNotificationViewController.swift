@@ -1,8 +1,9 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
+import Domain
 import Interface
 import UIKit
 
@@ -21,6 +22,7 @@ class ExposureNotificationViewController: UITableViewController {
         var rows: [Row]
     }
     
+    private let application: Application
     private let manager: ExposureManager
     private let device = DeviceManager.shared
     private var cancellables = [AnyCancellable]()
@@ -33,8 +35,10 @@ class ExposureNotificationViewController: UITableViewController {
         }
     }
     
+    @available(iOSApplicationExtension, unavailable)
     init(manager: ExposureManager) {
         self.manager = manager
+        application = SystemApplication()
         super.init(style: .grouped)
         title = "Exposure Notification"
         
@@ -147,13 +151,8 @@ class ExposureNotificationViewController: UITableViewController {
         case .notAuthorized(isRestricted: true):
             return []
         case .notAuthorized(isRestricted: false):
-            let openSettings = {
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                }
-            }
             return [
-                Row(title: "Open Settings", value: "", action: openSettings),
+                Row(title: "Open Settings", value: "", action: application.openSettings),
             ]
         case .authorized(let manager):
             let actions = LocalExperimentActions(manager: manager, device: device, host: self)

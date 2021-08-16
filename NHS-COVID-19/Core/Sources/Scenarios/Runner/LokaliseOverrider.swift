@@ -47,12 +47,12 @@ class LokaliseOverrider: LocalizationOverrider {
     func localize(_ key: String, languageCode: String, tableName: String?, bundle: Bundle, value: String, comment: String) -> String? {
         
         // if this flag is set we just return the key
-        if UserDefaults.standard.bool(forKey: "mocks.lokaliseShowKeysOnly") {
+        if MockDataProvider.shared.lokaliseShowKeysOnly {
             return key
         }
         
         // if there is a downloaded Lokalise bundle, use that
-        if UserDefaults.standard.bool(forKey: "mocks.lokaliseShowDownloadedStrings"), let lokaliseBundle = lokaliseBundle {
+        if MockDataProvider.shared.lokaliseShowDownloadedStrings, let lokaliseBundle = lokaliseBundle {
             
             // if we have a non-en language code, point at the specific language bundle
             let actualBundle: Bundle = {

@@ -13,14 +13,27 @@ public protocol Application {
     
 }
 
-extension UIApplication: Application {
-    public var instanceOpenSettingsURLString: String {
-        Self.openSettingsURLString
+@available(iOSApplicationExtension, unavailable)
+public struct SystemApplication: Application {
+    
+    private var application: UIApplication
+    
+    public init(wrapping application: UIApplication = .shared) {
+        self.application = application
     }
     
     public var instanceOpenAppStoreURLString: String {
         "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663"
     }
+    
+    public var instanceOpenSettingsURLString: String {
+        UIApplication.openSettingsURLString
+    }
+    
+    public func open(_ url: URL, options: [OpenExternalURLOptionsKey: Any], completionHandler completion: ((Bool) -> Void)?) {
+        application.open(url, options: options, completionHandler: completion)
+    }
+    
 }
 
 extension Application {
@@ -29,7 +42,7 @@ extension Application {
         open(url, options: [:], completionHandler: nil)
     }
     
-    func openSettings() {
+    public func openSettings() {
         if let url = URL(string: instanceOpenSettingsURLString) {
             open(url)
         }

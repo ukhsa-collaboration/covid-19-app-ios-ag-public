@@ -80,7 +80,7 @@ class ExposureWindowRiskCalculator {
     }
     
     private func isRecentDate(exposureRiskInfo: ExposureRiskInfo) -> Bool {
-        let today = dateProvider.currentGregorianDay(timeZone: .utc)
+        let today = dateProvider.currentGregorianDay(timeZone: .current)
         return today - isolationLength < exposureRiskInfo.day
     }
 }

@@ -38,7 +38,7 @@ class TestLocalization: XCTestCase {
         allLanguages.forEach { language in
             var missingCopy: String = ""
             LocaleConfiguration.custom(localeIdentifier: language).becomeCurrent()
-            missingCopy.append(contentsOf: LocalizationHelper.lookupMissingCopy(for: StringLocalizationKey.allCases, prefix: "Found missing copy:\n\n"))
+            missingCopy.append(contentsOf: LocalizationHelper.lookupMissingCopy(for: StringLocalizableKey.allCases, prefix: "Found missing copy:\n\n"))
             missingCopy.append(contentsOf: LocalizationHelper.lookupMissingCopy(for: ParameterisedStringLocalizable.Key.allCases))
             checks.append(Report.Check(check: language, notes: missingCopy, passed: missingCopy.isEmpty))
         }

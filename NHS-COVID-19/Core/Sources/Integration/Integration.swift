@@ -7,6 +7,7 @@ import Interface
 import Localization
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 extension CoordinatedAppController {
     
     func makeContent(
@@ -222,12 +223,30 @@ extension CoordinatedAppController {
                 currentDateProvider: context.currentDateProvider
             )
             
-        case .neededForStartOfIsolationExposureDetection(let interactor, let isolationEndDate, let showDailyContactTesting):
-            return ContactCaseAcknowledgementViewController(
-                interactor: interactor,
-                isolationEndDate: isolationEndDate,
-                showDailyContactTesting: showDailyContactTesting
+        case .neededForStartOfIsolationExposureDetection(let acknowledge, let vaccineThresholdDate, let isolationEndDate, let isIndexCase):
+            let interactor = ContactCaseMultipleResolutionsFlowViewControllerInteractor(
+                openURL: context.openURL,
+                didDeclareUnderAgeLimit: { [showContactCaseResult] in
+                    acknowledge(true)
+                    if isIndexCase {
+                        showContactCaseResult.value = .continueIsolation(isolationEndDate.currentValue)
+                    } else {
+                        showContactCaseResult.value = .underAgeLimit
+                    }
+                },
+                didDeclareVaccinationStatus: { [showContactCaseResult] isFullyVaccinated in
+                    acknowledge(isFullyVaccinated)
+                    if isIndexCase {
+                        showContactCaseResult.value = .continueIsolation(isolationEndDate.currentValue)
+                    } else if isFullyVaccinated {
+                        showContactCaseResult.value = .fullyVaccinated
+                    } else {
+                        showContactCaseResult.value = .startIsolation(isolationEndDate.currentValue)
+                    }
+                }
             )
+            
+            return ContactCaseMultipleResolutionsFlowViewController(interactor: interactor, vaccineThresholdDate: vaccineThresholdDate)
             
         case .neededForRiskyVenue(let interactor, let venueName, let checkInDate):
             return RiskyVenueInformationViewController(
@@ -325,7 +344,7 @@ extension CoordinatedAppController {
     private func postAcknowledgementViewController(
         with context: RunningAppContext
     ) -> UIViewController {
-        WrappingViewController { [showBookATest, showWarnAndBookATest, showContactTracingHub, showLocalInfoScreen] in
+        WrappingViewController { [showBookATest, showWarnAndBookATest, showContactCaseResult, showNotificationScreen] in
             Localization.configurationChangePublisher
                 .map { _ in true }
                 .prepend(false)
@@ -335,8 +354,8 @@ extension CoordinatedAppController {
                         shouldShowLanguageSelectionScreen: value,
                         showBookATest: showBookATest,
                         showWarnAndBookATest: showWarnAndBookATest,
-                        showContactTracingHub: showContactTracingHub,
-                        showLocalInfoScreen: showLocalInfoScreen
+                        showContactCaseResult: showContactCaseResult,
+                        showNotificationScreen: showNotificationScreen
                     )
                 }
         }

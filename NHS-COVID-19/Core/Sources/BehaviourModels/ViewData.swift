@@ -185,8 +185,8 @@ extension IsolationModel.ContactCaseState: StateCollectionCollectionConvertible 
     
     var caption: String {
         switch self {
-        case .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT:
-            return "DCT"
+        case .notIsolatingAndHadRiskyContactIsolationTerminatedEarly:
+            return "Opt-out"
         default:
             return ""
         }
@@ -200,7 +200,7 @@ extension IsolationModel.ContactCaseState: StateCollectionCollectionConvertible 
             return .isolationActive
         case .notIsolatingAndHadRiskyContactPreviously:
             return .isolationFinished
-        case .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT:
+        case .notIsolatingAndHadRiskyContactIsolationTerminatedEarly:
             return .isolationFinishedAndHasNegativeTest
         }
     }

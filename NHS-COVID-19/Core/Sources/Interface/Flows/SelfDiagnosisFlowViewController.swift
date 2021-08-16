@@ -42,11 +42,14 @@ public protocol SelfDiagnosisFlowViewControllerInteracting: BookATestInfoViewCon
     // `riskThreshold` should be removed as the interactor should already know these (these aren’t UI state)
     func advice(basedOn symptoms: [SymptomInfo], onsetDay: GregorianDay?, riskThreshold: Double) -> SelfDiagnosisAdvice
     
+    var shouldShowNewNoSymptomsScreen: Bool { get }
+    
     var adviceWhenNoSymptomsAreReported: SelfDiagnosisAdvice { get }
     
     func openTestkitOrder()
     func furtherAdviceLinkTapped()
     func nhs111LinkTapped()
+    func nhsGuidanceLinkTapped()
     func gettingTestedLinkTapped()
     func exposureFAQsLinkTapped()
 }
@@ -115,7 +118,9 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
             let interactor = LoadingViewControllerInteractor(navigationController: self)
             return LoadingViewController(interactor: interactor, title: localize(.diagnosis_questionnaire_title))
         case .loaded(let symptomIndex):
-            let interactor = SymptomListViewControllerInteractor(controller: self)
+            let interactor = SymptomListViewControllerInteractor(
+                controller: self
+            )
             return SymptomListViewController(symptoms: symptomsQuestionnaire.symptoms, scrollToSymptomAt: symptomIndex, interactor: interactor)
         case .failedToLoad:
             let interactor = LoadingErrorControllerInteractor(controller: self)
@@ -133,8 +138,13 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
     private func viewController(for advice: SelfDiagnosisAdvice) -> UIViewController {
         switch advice {
         case .noSymptoms(.noNeedToIsolate):
-            let interactor = NoSymptomsViewControllerInteractor(controller: self)
-            return NoSymptomsViewController(interactor: interactor)
+            if interactor.shouldShowNewNoSymptomsScreen {
+                let interactor = NewNoSymptomsViewControllerInteractor(controller: self)
+                return NewNoSymptomsViewController(interactor: interactor)
+            } else {
+                let interactor = NoSymptomsViewControllerInteractor(controller: self)
+                return NoSymptomsViewController(interactor: interactor)
+            }
         case .noSymptoms(.isolateForExistingPositiveTest):
             let interactor = SelfDiagnosisAfterPositiveTestIsolatingViewControllerInteractor(
                 navigationController: self,
@@ -240,7 +250,6 @@ private struct LoadingErrorControllerInteractor: LoadingErrorViewController.Inte
 }
 
 private struct SymptomListViewControllerInteractor: SymptomListViewController.Interacting {
-    
     private weak var controller: SelfDiagnosisFlowViewController?
     
     init(controller: SelfDiagnosisFlowViewController?) {
@@ -269,6 +278,7 @@ private struct SymptomListViewControllerInteractor: SymptomListViewController.In
         guard let controller = controller else { return }
         controller.state = .advice(controller.interactor.adviceWhenNoSymptomsAreReported)
     }
+    
 }
 
 private struct NoSymptomsViewControllerInteractor: NoSymptomsViewController.Interacting {
@@ -290,6 +300,28 @@ private struct NoSymptomsViewControllerInteractor: NoSymptomsViewController.Inte
     public func didTapReturnHome() {
         controller?.finishFlow?()
         controller?.dismiss(animated: true, completion: nil)
+    }
+}
+
+private struct NewNoSymptomsViewControllerInteractor: NewNoSymptomsViewController.Interacting {
+    func didTapReturnHome() {
+        controller?.finishFlow?()
+        controller?.dismiss(animated: true, completion: nil)
+    }
+    
+    func didTapNHSGuidanceLink() {
+        controller?.interactor.nhsGuidanceLinkTapped()
+    }
+    
+    func didTapBookAPCRTestLink() {
+        controller?.interactor.didTapBookAPCRTest()
+        
+    }
+    
+    private weak var controller: SelfDiagnosisFlowViewController?
+    
+    init(controller: SelfDiagnosisFlowViewController?) {
+        self.controller = controller
     }
 }
 

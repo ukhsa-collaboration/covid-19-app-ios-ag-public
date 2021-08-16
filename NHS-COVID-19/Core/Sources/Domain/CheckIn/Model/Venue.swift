@@ -4,7 +4,7 @@
 
 import Foundation
 
-struct Venue: Codable, Equatable, Hashable {
+public struct Venue: Codable, Equatable, Hashable {
     private enum CodingKeys: String, CodingKey {
         case id
         case organisation = "opn"
@@ -15,7 +15,7 @@ struct Venue: Codable, Equatable, Hashable {
     var organisation: String
     var postcode: String?
     
-    init(
+    public init(
         id: String,
         organisation: String,
         postcode: String? = nil

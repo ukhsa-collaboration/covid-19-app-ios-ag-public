@@ -22,7 +22,7 @@ final class IsolationStateAdapterTests: XCTestCase {
         let today = LocalDay(gregorianDay: GregorianDay(year: 2020, month: 3, day: 13), timeZone: timeZone)
         let tomorrow = LocalDay(gregorianDay: GregorianDay(year: 2020, month: 3, day: 14), timeZone: timeZone)
         
-        let isolation = Isolation(fromDay: today, untilStartOfDay: tomorrow, reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(optOutOfIsolationDay: nil)))
+        let isolation = Isolation(fromDay: today, untilStartOfDay: tomorrow, reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(exposureDay: .today)))
         let state = Interface.IsolationState(
             domainState: .isolate(isolation),
             today: today
@@ -39,7 +39,7 @@ final class IsolationStateAdapterTests: XCTestCase {
         let today = LocalDay(gregorianDay: GregorianDay(year: 2020, month: 3, day: 13), timeZone: timeZone)
         let tomorrow = LocalDay(gregorianDay: GregorianDay(year: 2020, month: 3, day: 14), timeZone: timeZone)
         
-        let isolation = Isolation(fromDay: today, untilStartOfDay: tomorrow, reason: Isolation.Reason(indexCaseInfo: .init(hasPositiveTestResult: true, isSelfDiagnosed: false, isPendingConfirmation: false), contactCaseInfo: .init(optOutOfIsolationDay: nil)))
+        let isolation = Isolation(fromDay: today, untilStartOfDay: tomorrow, reason: Isolation.Reason(indexCaseInfo: .init(hasPositiveTestResult: true, isSelfDiagnosed: false, isPendingConfirmation: false), contactCaseInfo: .init(exposureDay: .today)))
         let state = Interface.IsolationState(
             domainState: .isolate(isolation),
             today: today

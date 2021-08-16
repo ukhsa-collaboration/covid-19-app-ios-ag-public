@@ -41,7 +41,7 @@ class VenueDecoderTests: XCTestCase {
             id: "4WT59M5Y",
             organisation: "Government Office Of Human Resources"
         )
-        TS.assert(try decoder.decode(payload), equals: venue)
+        TS.assert(try decoder.decode(payload), equals: [venue])
     }
     
     func testValidQRCodeWithPostcode() throws {
@@ -51,7 +51,7 @@ class VenueDecoderTests: XCTestCase {
             organisation: "Government Office Of Human Resources",
             postcode: "CM1"
         )
-        TS.assert(try decoder.decode(payload), equals: venue)
+        TS.assert(try decoder.decode(payload), equals: [venue])
     }
     
     func testFutureVersionsAreAllowed() {

@@ -4,7 +4,7 @@
 
 import Foundation
 
-public enum ExternalLink {
+public enum ExternalLink: CaseIterable {
     case privacy
     case ourPolicies
     case faq
@@ -16,8 +16,8 @@ public enum ExternalLink {
     case bookATestForSomeoneElse
     case testingPrivacyNotice
     case nhs111Online
+    case nhsGuidance
     case exposureFAQs
-    case dailyContactTestingInformation
     case howThisAppWorks
     case provideFeedback
     case visitUKgov
@@ -29,6 +29,10 @@ public enum ExternalLink {
     case getTested
     case reportLFDResultsOnGovDotUK
     case downloadNHSApp
+    case governmentGuidance
+    case findLocalAuthority
+    case bookPCRTest
+    case approvedVaccinesInfo
     
     public var url: URL {
         switch self {
@@ -54,14 +58,14 @@ public enum ExternalLink {
             return localizeURL(.link_testing_privacy_notice)
         case .nhs111Online:
             return localizeURL(.link_nhs111_online)
+        case .nhsGuidance:
+            return localizeURL(.link_nhs_guidance)
         case .howThisAppWorks:
             return localizeURL(.link_how_this_app_works)
         case .provideFeedback:
             return localizeURL(.link_provide_feedback)
         case .exposureFAQs:
             return localizeURL(.link_exposure_faq)
-        case .dailyContactTestingInformation:
-            return localizeURL(.link_daily_contact_testing)
         case .visitUKgov:
             return localizeURL(.link_visit_uk_gov)
         case .financialSupportEngland:
@@ -80,6 +84,14 @@ public enum ExternalLink {
             return localizeURL(.link_test_result_gov_uk_rapid_result_report_url)
         case .downloadNHSApp:
             return localizeURL(.link_download_nhs_app)
+        case .governmentGuidance:
+            return localizeURL(.link_government_guidance)
+        case .findLocalAuthority:
+            return localizeURL(.link_find_local_authority)
+        case .bookPCRTest:
+            return localizeURL(.new_no_symptoms_screen_pcr_testing_link_url)
+        case .approvedVaccinesInfo:
+            return localizeURL(.link_approved_vaccines_info)
         }
     }
 }

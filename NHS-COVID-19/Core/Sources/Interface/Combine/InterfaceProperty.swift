@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -10,6 +10,7 @@ import Foundation
 /// This type is suitable for containing published values that are used to drive UI.
 @propertyWrapper
 public class InterfaceProperty<Value>: ObservableObject {
+    private let publisher: AnyPublisher<Value, Never>
     
     @Published
     public private(set) var wrappedValue: Value
@@ -21,7 +22,9 @@ public class InterfaceProperty<Value>: ObservableObject {
     private var cancellables = [AnyCancellable]()
     
     fileprivate init<P: Publisher>(_ upstream: P, initialValue: Value) where P.Output == Value, P.Failure == Never {
+        publisher = upstream.eraseToAnyPublisher()
         wrappedValue = initialValue
+        
         upstream.sink { [weak self] value in
             self?.wrappedValue = value
         }.store(in: &cancellables)
@@ -48,4 +51,10 @@ extension InterfaceProperty {
         InterfaceProperty(Empty(), initialValue: value)
     }
     
+}
+
+extension InterfaceProperty {
+    public func map<T>(_ transform: @escaping (Value) -> T) -> InterfaceProperty<T> {
+        return publisher.map(transform).property(initialValue: transform(wrappedValue))
+    }
 }

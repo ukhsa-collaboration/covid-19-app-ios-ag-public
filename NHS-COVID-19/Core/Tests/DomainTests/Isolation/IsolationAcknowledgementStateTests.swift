@@ -14,7 +14,7 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         let state = IsolationAcknowledgementState(
             logicalState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             now: Date(),
-            acknowledgeStart: {},
+            acknowledgeStart: { _ in },
             acknowledgeEnd: {}
         )
         
@@ -27,11 +27,11 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         let day = LocalDay.today
         
         var callbackCount = 0
-        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(optOutOfIsolationDay: nil)))
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(exposureDay: .today)))
         let state = IsolationAcknowledgementState(
             logicalState: .isolationFinishedButNotAcknowledged(isolation),
             now: Date(),
-            acknowledgeStart: {}
+            acknowledgeStart: { _ in }
         ) {
             callbackCount += 1
         }
@@ -51,24 +51,62 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         let day = LocalDay.today
         
         var callbackCount = 0
-        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(optOutOfIsolationDay: nil)))
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(exposureDay: .today)))
         let state = IsolationAcknowledgementState(
-            logicalState: .isolating(isolation, endAcknowledged: false, startAcknowledged: false),
+            logicalState: .isolating(isolation, endAcknowledged: false, startOfContactIsolationAcknowledged: false),
             now: Date(),
-            acknowledgeStart: {
+            acknowledgeStart: { _ in
                 callbackCount += 1
             },
             acknowledgeEnd: {}
         )
         
-        guard case .neededForStart(let actual, let acknowledge) = state else {
+        guard case .neededForStartContactIsolation(let actual, let acknowledge) = state else {
             throw TestError("Unexpected state \(state)")
         }
         
         TS.assert(actual, equals: isolation)
         
         TS.assert(callbackCount, equals: 0)
-        acknowledge()
+        acknowledge(false)
+        TS.assert(callbackCount, equals: 1)
+    }
+    
+    func testAcknowledgementNeededAtStartOfIsolationWhenContactCaseFollowingIndexCase() throws {
+        let day = LocalDay.today
+        
+        var callbackCount = 0
+        let isolation = Isolation(
+            fromDay: .today,
+            untilStartOfDay: day,
+            reason: Isolation.Reason(
+                indexCaseInfo: .init(
+                    hasPositiveTestResult: true,
+                    testKitType: .labResult,
+                    isSelfDiagnosed: false,
+                    isPendingConfirmation: false
+                ),
+                contactCaseInfo: .init(exposureDay: .today)
+            )
+        )
+        
+        let state = IsolationAcknowledgementState(
+            logicalState: .isolating(isolation, endAcknowledged: false, startOfContactIsolationAcknowledged: false),
+            now: Date(),
+            acknowledgeStart: { _ in
+                callbackCount += 1
+            },
+            acknowledgeEnd: {}
+        )
+        
+        guard case .neededForStartContactIsolation(let actual, let acknowledge) = state else {
+            throw TestError("Unexpected state \(state)")
+        }
+        
+        TS.assert(actual, equals: isolation)
+        
+        TS.assert(callbackCount, equals: 0)
+        acknowledge(true)
         TS.assert(callbackCount, equals: 1)
     }
     
@@ -76,11 +114,11 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         let day = LocalDay.today
         
         var callbackCount = 0
-        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(optOutOfIsolationDay: nil)))
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(exposureDay: .today)))
         let state = IsolationAcknowledgementState(
-            logicalState: .isolating(isolation, endAcknowledged: false, startAcknowledged: true),
+            logicalState: .isolating(isolation, endAcknowledged: false, startOfContactIsolationAcknowledged: true),
             now: Date(),
-            acknowledgeStart: {}
+            acknowledgeStart: { _ in }
         ) {
             callbackCount += 1
         }
@@ -99,11 +137,27 @@ class IsolationAcknowledgementStateTests: XCTestCase {
     func testAcknowledgementNotNeededWhenAcknowledgedStartAndEnd() throws {
         let day = LocalDay.today
         
-        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(optOutOfIsolationDay: nil)))
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(exposureDay: .today)))
         let state = IsolationAcknowledgementState(
-            logicalState: .isolating(isolation, endAcknowledged: true, startAcknowledged: true),
+            logicalState: .isolating(isolation, endAcknowledged: true, startOfContactIsolationAcknowledged: true),
             now: Date(),
-            acknowledgeStart: {},
+            acknowledgeStart: { _ in },
+            acknowledgeEnd: {}
+        )
+        
+        guard case .notNeeded = state else {
+            throw TestError("Unexpected state \(state)")
+        }
+    }
+    
+    func testAcknowledgementNotNeededWhenAcknowledgedOnlyEnd() throws {
+        let day = LocalDay.today
+        
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: day, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil))
+        let state = IsolationAcknowledgementState(
+            logicalState: .isolating(isolation, endAcknowledged: true, startOfContactIsolationAcknowledged: false),
+            now: Date(),
+            acknowledgeStart: { _ in },
             acknowledgeEnd: {}
         )
         
@@ -117,9 +171,9 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         let endDay = LocalDay(year: 2020, month: 3, day: 17, timeZone: .current)
         
         let state = IsolationAcknowledgementState(
-            logicalState: .isolating(Isolation(fromDay: .today, untilStartOfDay: endDay, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)), endAcknowledged: false, startAcknowledged: true),
+            logicalState: .isolating(Isolation(fromDay: .today, untilStartOfDay: endDay, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)), endAcknowledged: false, startOfContactIsolationAcknowledged: false),
             now: today.startOfDay,
-            acknowledgeStart: {},
+            acknowledgeStart: { _ in },
             acknowledgeEnd: {}
         )
         
@@ -133,9 +187,9 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         let now = endDay.startOfDay.advanced(by: -(3.1 * 3600)) // slightly more than 3 hrs.
         
         let state = IsolationAcknowledgementState(
-            logicalState: .isolating(Isolation(fromDay: .today, untilStartOfDay: endDay, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)), endAcknowledged: false, startAcknowledged: true),
+            logicalState: .isolating(Isolation(fromDay: .today, untilStartOfDay: endDay, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)), endAcknowledged: false, startOfContactIsolationAcknowledged: true),
             now: now,
-            acknowledgeStart: {},
+            acknowledgeStart: { _ in },
             acknowledgeEnd: {}
         )
         
@@ -151,9 +205,9 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         let isolation = Isolation(fromDay: .today, untilStartOfDay: endDay, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil))
         var callbackCount = 0
         let state = IsolationAcknowledgementState(
-            logicalState: .isolating(isolation, endAcknowledged: false, startAcknowledged: true),
+            logicalState: .isolating(isolation, endAcknowledged: false, startOfContactIsolationAcknowledged: false),
             now: now,
-            acknowledgeStart: {}
+            acknowledgeStart: { _ in }
         ) {
             callbackCount += 1
         }
@@ -174,9 +228,9 @@ class IsolationAcknowledgementStateTests: XCTestCase {
         let now = endDay.startOfDay.advanced(by: -(2.8 * 3600)) // slightly less than 3 hrs.
         
         let state = IsolationAcknowledgementState(
-            logicalState: .isolating(Isolation(fromDay: .today, untilStartOfDay: endDay, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)), endAcknowledged: true, startAcknowledged: true),
+            logicalState: .isolating(Isolation(fromDay: .today, untilStartOfDay: endDay, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)), endAcknowledged: true, startOfContactIsolationAcknowledged: false),
             now: now,
-            acknowledgeStart: {},
+            acknowledgeStart: { _ in },
             acknowledgeEnd: {}
         )
         

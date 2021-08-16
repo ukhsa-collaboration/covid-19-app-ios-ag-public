@@ -11,7 +11,7 @@ final class RiskyPostcodeAdjustableMinimumUpdateIntervalProvider: MinimumUpdateI
     private(set) var interval: TimeInterval
     private var cancellable: AnyCancellable?
     
-    init(dataProvider: MockDataProvider = MockScenario.mockDataProvider) {
+    init(dataProvider: MockDataProvider = .shared) {
         interval = TimeInterval(dataProvider.riskyLocalAuthorityMinimumBackgroundTaskUpdateInterval)
         
         cancellable = dataProvider.riskyLocalAuthorityMinimumBackgroundTaskUpdateIntervalDidChange

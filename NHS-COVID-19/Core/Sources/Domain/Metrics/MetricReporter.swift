@@ -1,11 +1,12 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
 import Common
 import Foundation
 import Logging
+import UIKit
 
 class MetricReporter: NSObject {
     
@@ -18,6 +19,8 @@ class MetricReporter: NSObject {
     private let getLocalAuthority: () -> String?
     private let chunkCreator: MetricUploadChunkCreator
     private var cancellables = [AnyCancellable]()
+    private let currentDateProvider: DateProviding
+    private let getHouseKeepingDayDuration: () -> DayDuration
     
     init(
         client: HTTPClient,
@@ -26,12 +29,15 @@ class MetricReporter: NSObject {
         appInfo: AppInfo,
         getPostcode: @escaping () -> String?,
         getLocalAuthority: @escaping () -> String?,
+        getHouseKeepingDayDuration: @escaping () -> DayDuration,
         metricCollector: MetricCollector? = nil,
         metricChunkCreator: MetricUploadChunkCreator? = nil
     ) {
         self.client = client
         self.getPostcode = getPostcode
         self.getLocalAuthority = getLocalAuthority
+        self.currentDateProvider = currentDateProvider
+        self.getHouseKeepingDayDuration = getHouseKeepingDayDuration
         
         let enabled = MetricsState()
         
@@ -85,7 +91,45 @@ class MetricReporter: NSObject {
         client.fetch(MetricSubmissionEndpoint(), with: info).replaceError(with: ()).sink { _ in }.store(in: &cancellables)
     }
     
+    private func executeHousekeeping() {
+        Self.logger.debug("execute housekeeping; deleting expired metric entries")
+        let today = currentDateProvider.currentGregorianDay(timeZone: .utc)
+        let housekeepingDuration = getHouseKeepingDayDuration().days
+        let keepAfterDate = today.advanced(by: -housekeepingDuration).startDate(in: .utc)
+        collector.consumeMetricsNotOnOrAfter(date: keepAfterDate)
+    }
+    
+    func createHouskeepingPublisher() -> AnyPublisher<Void, Never> {
+        Future<Void, Never> { [weak self] promise in
+            guard let self = self else {
+                promise(.success(()))
+                return
+            }
+            self.executeHousekeeping()
+            promise(.success(()))
+        }.eraseToAnyPublisher()
+    }
+    
     func delete() {
         collector.delete()
+    }
+}
+
+extension MetricReporter {
+    
+    func monitorHousekeeping() {
+        
+        // assuming this is called shortly after the app launches, execute housekeeping now
+        executeHousekeeping()
+        
+        // now listen for foreground events and check again when they happen
+        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
+            .sink { [weak self] _ in
+                guard let self = self else {
+                    return
+                }
+                self.executeHousekeeping()
+            }
+            .store(in: &cancellables)
     }
 }

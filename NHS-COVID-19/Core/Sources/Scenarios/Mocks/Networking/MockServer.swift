@@ -17,7 +17,7 @@ class MockServer: HTTPClient {
     
     private var handlers: [RequestHandler]
     
-    init(dataProvider: MockDataProvider = MockScenario.mockDataProvider) {
+    init(dataProvider: MockDataProvider = .shared) {
         handlers = [
             ActivationHandler(),
             AppAvailabilityHandler(dataProvider: dataProvider),

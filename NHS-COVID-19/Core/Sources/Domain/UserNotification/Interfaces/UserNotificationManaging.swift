@@ -14,6 +14,7 @@ public enum UserNotificationType: Equatable {
     
     case postcode
     case venue(VenueMessageType)
+    case selfIsolation
     case isolationState
     case exposureDetection
     case testResultReceived
@@ -34,6 +35,8 @@ public enum UserNotificationType: Equatable {
             return "postcode"
         case .venue:
             return "venue"
+        case .selfIsolation:
+            return "selfIsolation"
         case .isolationState:
             return "isolationState"
         case .exposureDetection:

@@ -13,7 +13,7 @@ public struct IsolationModel {
         
         case notIsolatingAndHadRiskyContactPreviously
         
-        case notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT
+        case notIsolatingAndHadRiskyContactIsolationTerminatedEarly
     }
     
     public enum SymptomaticCaseState: String, Codable, Equatable, CaseIterable {
@@ -62,12 +62,12 @@ public struct IsolationModel {
     public enum Event: String, Codable, Equatable, CaseIterable {
         // External:
         case riskyContact
-        case riskyContactWithExposureDayOlderThanIsolationTerminationDueToDCT
+        case riskyContactWithExposureDayOlderThanEarlyIsolationTermination
         
         case selfDiagnosedSymptomatic
         case selfDiagnosedSymptomaticWithAssumedOnsetDateOlderThanPositiveTestEndDate
         
-        case terminateRiskyContactDueToDCT
+        case terminatedRiskyContactEarly
         
         case receivedConfirmedPositiveTest
         case receivedConfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate

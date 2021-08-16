@@ -167,21 +167,21 @@ public func currentLocaleIdentifier(
     }
 }
 
-public func localize(_ key: StringLocalizationKey, applyCurrentLanguageDirection: Bool = true) -> String {
+public func localize(_ key: StringLocalizableKey, applyCurrentLanguageDirection: Bool = true) -> String {
     Localization.current.localize(key, applyCurrentLanguageDirection: applyCurrentLanguageDirection)
 }
 
-public func localize(_ key: StringLocalizationKey, localeConfiguration: LocaleConfiguration) -> String {
+public func localize(_ key: StringLocalizableKey, localeConfiguration: LocaleConfiguration) -> String {
     Localization(configuration: localeConfiguration).localize(key)
 }
 
-public func localizeAndSplit(_ key: StringLocalizationKey) -> [String] {
+public func localizeAndSplit(_ key: StringLocalizableKey) -> [String] {
     Localization.current.localize(key)
         .split(separator: "\n", omittingEmptySubsequences: true)
         .map(String.init)
 }
 
-func localizeURL(_ key: StringLocalizationKey) -> URL {
+func localizeURL(_ key: StringLocalizableKey) -> URL {
     var rawValue = key.rawValue
     
     if let suffix = Localization.country.localizationSuffix {
@@ -195,7 +195,7 @@ func localizeURL(_ key: StringLocalizationKey) -> URL {
     return URL(string: localizedString) ?? URL(string: localize(key, applyCurrentLanguageDirection: false))!
 }
 
-public func localizeForCountry(_ key: StringLocalizationKey) -> String {
+public func localizeForCountry(_ key: StringLocalizableKey) -> String {
     var rawValue = key.rawValue
     
     if let suffix = Localization.country.localizationSuffix {
@@ -227,7 +227,7 @@ public func localizeForCountry(_ localizable: ParameterisedStringLocalizable) ->
 }
 
 @available(*, deprecated, message: "Not currently used, probably remove")
-public func localizeForCountryAndSplit(_ key: StringLocalizationKey) -> [String] {
+public func localizeForCountryAndSplit(_ key: StringLocalizableKey) -> [String] {
     localizeForCountry(key)
         .split(separator: "\n", omittingEmptySubsequences: true)
         .map(String.init)

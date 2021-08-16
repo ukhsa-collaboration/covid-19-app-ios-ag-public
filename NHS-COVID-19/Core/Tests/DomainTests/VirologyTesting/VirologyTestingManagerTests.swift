@@ -128,7 +128,7 @@ class VirologyTestingManagerTests: XCTestCase {
         
         _ = try manager.evaulateTestResults().await().get()
         XCTAssertEqual(notificationManager.notificationType, UserNotificationType.testResultReceived)
-        let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
+        let storedResult = try XCTUnwrap(virologyStore.virologyTestResult.currentValue)
         XCTAssertEqual(storedResult.testResult, .positive)
         XCTAssertEqual(storedResult.diagnosisKeySubmissionToken, submissionToken)
         let storedTokens = try XCTUnwrap(virologyStore.virologyTestTokens)
@@ -153,7 +153,7 @@ class VirologyTestingManagerTests: XCTestCase {
         
         _ = try manager.evaulateTestResults().await().get()
         XCTAssertEqual(notificationManager.notificationType, UserNotificationType.testResultReceived)
-        let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
+        let storedResult = try XCTUnwrap(virologyStore.virologyTestResult.currentValue)
         XCTAssertEqual(storedResult.testResult, .negative)
         XCTAssertNil(storedResult.diagnosisKeySubmissionToken)
         let storedTokens = try XCTUnwrap(virologyStore.virologyTestTokens)
@@ -178,7 +178,7 @@ class VirologyTestingManagerTests: XCTestCase {
         
         _ = try manager.evaulateTestResults().await().get()
         XCTAssertEqual(notificationManager.notificationType, UserNotificationType.testResultReceived)
-        let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
+        let storedResult = try XCTUnwrap(virologyStore.virologyTestResult.currentValue)
         XCTAssertEqual(storedResult.testResult, .void)
         XCTAssertNil(storedResult.diagnosisKeySubmissionToken)
         let storedTokens = try XCTUnwrap(virologyStore.virologyTestTokens)
@@ -205,7 +205,7 @@ class VirologyTestingManagerTests: XCTestCase {
         
         // expecting a notification but no change in test results
         XCTAssertEqual(notificationManager.notificationType, UserNotificationType.testResultReceived)
-        XCTAssertNil(virologyStore.relevantUnacknowledgedTestResult)
+        XCTAssertNil(virologyStore.virologyTestResult.currentValue)
         
         // expecting this to be set as the result couldn't be parsed
         XCTAssertTrue(virologyStore.didReceiveUnknownTestResult)
@@ -236,7 +236,7 @@ class VirologyTestingManagerTests: XCTestCase {
         
         // notification should not be triggered and there should be no change in test results
         XCTAssertNil(notificationManager.notificationType)
-        XCTAssertNil(virologyStore.relevantUnacknowledgedTestResult)
+        XCTAssertNil(virologyStore.virologyTestResult.currentValue)
         
         // expecting this to be set as the result couldn't be parsed
         XCTAssertTrue(virologyStore.didReceiveUnknownTestResult)
@@ -262,7 +262,7 @@ class VirologyTestingManagerTests: XCTestCase {
         
         _ = try manager.linkExternalTestResult(with: ctaToken).await().get()
         XCTAssertNil(notificationManager.notificationType)
-        let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
+        let storedResult = try XCTUnwrap(virologyStore.virologyTestResult.currentValue)
         XCTAssertEqual(storedResult.testResult, .positive)
         XCTAssertEqual(storedResult.diagnosisKeySubmissionToken, submissionToken)
     }
@@ -284,7 +284,7 @@ class VirologyTestingManagerTests: XCTestCase {
         
         _ = try manager.linkExternalTestResult(with: ctaToken).await().get()
         XCTAssertNil(notificationManager.notificationType)
-        let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
+        let storedResult = try XCTUnwrap(virologyStore.virologyTestResult.currentValue)
         XCTAssertEqual(storedResult.testResult, .negative)
         XCTAssertNil(storedResult.diagnosisKeySubmissionToken)
     }
@@ -306,7 +306,7 @@ class VirologyTestingManagerTests: XCTestCase {
         
         _ = try manager.linkExternalTestResult(with: ctaToken).await().get()
         XCTAssertNil(notificationManager.notificationType)
-        let storedResult = try XCTUnwrap(virologyStore.relevantUnacknowledgedTestResult)
+        let storedResult = try XCTUnwrap(virologyStore.virologyTestResult.currentValue)
         XCTAssertEqual(storedResult.testResult, .void)
         XCTAssertNil(storedResult.diagnosisKeySubmissionToken)
     }

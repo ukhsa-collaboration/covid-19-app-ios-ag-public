@@ -1,15 +1,15 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
 import UIKit
 
 public struct OnboardingStepAlert {
-    var title: StringLocalizationKey
-    var body: StringLocalizationKey
-    var accept: StringLocalizationKey
-    var reject: StringLocalizationKey
+    var title: StringLocalizableKey
+    var body: StringLocalizableKey
+    var accept: StringLocalizableKey
+    var reject: StringLocalizableKey
     var rejectAction: () -> Void
 }
 

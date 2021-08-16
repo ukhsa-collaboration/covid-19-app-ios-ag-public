@@ -9,6 +9,7 @@ import Foundation
 import Integration
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 class SandboxedAppController: AppController {
     
     private let content: CoordinatedAppController
@@ -26,6 +27,7 @@ class SandboxedAppController: AppController {
     
 }
 
+@available(iOSApplicationExtension, unavailable)
 private extension CoordinatedAppController {
     
     convenience init(sandboxedIn host: SandboxHost) {
@@ -53,7 +55,7 @@ private extension ApplicationServices {
             encryptedStore: SandboxEncryptedStore(host: host),
             cacheStorage: FileStorage(forCachesOf: UUID().uuidString),
             venueDecoder: VenueDecoder.fake,
-            appInfo: AppInfo(bundleId: UUID().uuidString, version: "3.10", buildNumber: "1"),
+            appInfo: AppInfo(bundleId: UUID().uuidString, version: "4.16", buildNumber: "1"),
             postcodeValidator: SandboxPostcodeValidator(),
             currentDateProvider: DateProvider(notificationCenter: notificationCenter),
             storeReviewController: StoreReviewController(),

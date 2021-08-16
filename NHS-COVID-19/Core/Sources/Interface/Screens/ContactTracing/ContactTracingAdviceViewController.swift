@@ -15,7 +15,6 @@ private struct ContactTracingAdviceView: View {
                 BulletItems(
                     rows: localizeAndSplit(.contact_tracing_should_not_pause_bullet_points)
                 )
-                .padding(.leading, .halfSpacing)
                 Text(.contact_tracing_should_not_pause_footnote).styleAsBody()
             }
             .padding(.all, .bigSpacing)

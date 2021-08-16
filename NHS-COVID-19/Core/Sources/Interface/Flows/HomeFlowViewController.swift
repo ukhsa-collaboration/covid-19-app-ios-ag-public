@@ -8,15 +8,27 @@ import Localization
 import SwiftUI
 import UIKit
 
+public enum NotificationInterfaceState {
+    case contactTracingHub
+    case localInfo
+    case selfIsolationHub
+}
+
 public protocol HomeFlowViewControllerInteracting {
     func makeDiagnosisViewController() -> UIViewController?
     func openAdvice()
-    func openIsolationAdvice()
+    func openOrderAFreeTestingKit()
     func makeCheckInViewController() -> UIViewController?
+    func makeSelfIsolationHubViewController(
+        flowController: UINavigationController?,
+        showOrderTestButton: InterfaceProperty<Bool>,
+        showFinancialSupportButton: InterfaceProperty<Bool>,
+        showWarnAndBookATestFlow: InterfaceProperty<Bool>,
+        recordSelectedIsolationPaymentsButton: @escaping () -> Void
+    ) -> UIViewController?
     func makeTestingInformationViewController(flowController: UINavigationController?, showWarnAndBookATestFlow: InterfaceProperty<Bool>) -> UIViewController?
-    func makeFinancialSupportViewController() -> UIViewController?
+    func makeFinancialSupportViewController(flowController: UINavigationController?) -> UIViewController?
     func makeLinkTestResultViewController() -> UIViewController?
-    func makeDailyConfirmationViewController(parentVC: UIViewController, with terminate: @escaping () -> Void) -> UIViewController?
     func makeContactTracingHubViewController(flowController: UINavigationController?, exposureNotificationsEnabled: InterfaceProperty<Bool>, exposureNotificationsToggleAction: @escaping (Bool) -> Void, userNotificationsEnabled: InterfaceProperty<Bool>) -> UIViewController
     func makeLocalInfoScreenViewController(viewModel: LocalInformationViewController.ViewModel, interactor: LocalInformationViewController.Interacting) -> UIViewController
     func removeDeliveredLocalInfoNotifications()
@@ -43,6 +55,8 @@ public protocol HomeFlowViewControllerInteracting {
     func getVenueHistoryViewModel() -> VenueHistoryViewController.ViewModel
     func getHomeAnimationsViewModel() -> HomeAnimationsViewModel
     func recordDidTapLocalInfoBannerMetric()
+    func openReadLatestGovernmentGuidanceLink()
+    func openFindYourLocalAuthorityLink()
 }
 
 public enum ExposureNotificationReminderIn: Int, CaseIterable {
@@ -62,10 +76,7 @@ public class HomeFlowViewController: BaseNavigationController {
     private let optimisiticExposureNotificationsEnabled = CurrentValueSubject<Bool?, Never>(nil)
     private let exposureNotificationsEnabled: InterfaceProperty<Bool>
     private let userNotificationsEnabled: InterfaceProperty<Bool>
-    
-    private let clearContactTracingHub: () -> Void
-    private let clearLocalInfoScreen: () -> Void
-    
+    private let showNotificationScreen: CurrentValueSubject<NotificationInterfaceState?, Never>
     private var localInformationInteractor: LocalInformationInteractor?
     private var localInfoBannerViewModel: InterfaceProperty<LocalInformationBanner.ViewModel?>?
     
@@ -80,13 +91,11 @@ public class HomeFlowViewController: BaseNavigationController {
         shouldShowSelfDiagnosis: InterfaceProperty<Bool>,
         userNotificationsEnabled: InterfaceProperty<Bool>,
         showFinancialSupportButton: InterfaceProperty<Bool>,
+        didOpenSelfIsolationHub: @escaping () -> Void,
         recordSelectedIsolationPaymentsButton: @escaping () -> Void,
         country: InterfaceProperty<Country>,
         shouldShowLanguageSelectionScreen: Bool,
-        showContactTracingHub: CurrentValueSubject<Bool, Never>,
-        clearContactTracingHub: @escaping () -> Void,
-        showLocalInfoScreen: CurrentValueSubject<Bool, Never>,
-        clearLocalInfoScreen: @escaping () -> Void
+        showNotificationScreen: CurrentValueSubject<NotificationInterfaceState?, Never>
     ) {
         self.interactor = interactor
         
@@ -96,9 +105,7 @@ public class HomeFlowViewController: BaseNavigationController {
             .property(initialValue: false)
         
         self.userNotificationsEnabled = userNotificationsEnabled
-        
-        self.clearContactTracingHub = clearContactTracingHub
-        self.clearLocalInfoScreen = clearLocalInfoScreen
+        self.showNotificationScreen = showNotificationScreen
         
         super.init()
         
@@ -110,11 +117,7 @@ public class HomeFlowViewController: BaseNavigationController {
         self.localInformationInteractor = localInformationInteractor
         self.localInfoBannerViewModel = localInfoBannerViewModel
         
-        let showFindOutAboutTestingButton: InterfaceProperty<Bool> = isolationViewModel
-            .$isolationState
-            .$wrappedValue
-            .map { $0 == .notIsolating }
-            .property(initialValue: isolationViewModel.isolationState == .notIsolating)
+        let showFindOutAboutTestingButton = showOrderTestButton.map { !$0 }
         
         let homeViewControllerInteractor = HomeViewControllerInteractor(
             flowController: self,
@@ -123,13 +126,15 @@ public class HomeFlowViewController: BaseNavigationController {
             localInformationInteractor: localInformationInteractor,
             aboutThisAppInteractor: aboutThisAppInteractor,
             settingsInteractor: settingsInteractor,
+            didOpenSelfIsolationHub: didOpenSelfIsolationHub,
             recordSelectedIsolationPaymentsButton: recordSelectedIsolationPaymentsButton,
             userNotificationsEnabled: userNotificationsEnabled,
             exposureNotificationsEnabled: exposureNotificationsEnabled.property(initialValue: false),
             exposureNotificationsToggleAction: exposureNotificationSwitchValueChanged,
             showOrderTestButton: showOrderTestButton,
             showFindOutAboutTestingButton: showFindOutAboutTestingButton,
-            showWarnAndBookATestFlow: showWarnAndBookATestFlow
+            showWarnAndBookATestFlow: showWarnAndBookATestFlow,
+            showFinancialSupportButton: showFinancialSupportButton
         )
         
         let showLanguageSelectionScreen: () -> Void = {
@@ -138,6 +143,13 @@ public class HomeFlowViewController: BaseNavigationController {
             if let languageViewController = settingsInteractor.makeLanguageSelectionViewController() {
                 self.pushViewController(languageViewController, animated: false)
             }
+        }
+        
+        let showSelfIsolationHubScreen: () -> Void = { [weak self] in
+            guard let self = self else { return }
+            showNotificationScreen.send(nil)
+            guard self.presentedViewController == nil, self.viewControllers.count == 1 else { return }
+            homeViewControllerInteractor.didTapSelfIsolationButton()
         }
         
         let rootViewController = HomeViewController(
@@ -152,35 +164,29 @@ public class HomeFlowViewController: BaseNavigationController {
             showFinancialSupportButton: showFinancialSupportButton,
             country: country,
             showLanguageSelectionScreen: shouldShowLanguageSelectionScreen ? showLanguageSelectionScreen : nil,
-            showContactTracingHub: {
-                if showContactTracingHub.value {
-                    self.checkAndShowContactTracingHub()
-                }
-            },
-            showLocalInfoScreen: {
-                if showLocalInfoScreen.value {
-                    self.checkAndShowLocalInfoScreen()
+            showNotificationScreen: {
+                switch showNotificationScreen.value {
+                case .contactTracingHub: self.checkAndShowContactTracingHub()
+                case .localInfo: self.checkAndShowLocalInfoScreen()
+                case .selfIsolationHub: showSelfIsolationHubScreen()
+                case .none: showNotificationScreen.send(nil)
                 }
             }
         )
         
         viewControllers = [rootViewController]
         
-        showContactTracingHub
+        showNotificationScreen
             .removeDuplicates()
-            .filter { $0 == true }
+            .filterNil()
             .receive(on: UIScheduler.shared)
-            .sink(receiveValue: { [weak self] showContactTracingHub in
+            .sink(receiveValue: { [weak self] state in
                 guard let self = self else { return }
-                self.checkAndShowContactTracingHub()
-            }).store(in: &cancellables)
-        
-        showLocalInfoScreen
-            .removeDuplicates()
-            .filter { $0 == true }
-            .receive(on: UIScheduler.shared)
-            .sink(receiveValue: { [weak self] _ in
-                self?.checkAndShowLocalInfoScreen()
+                switch state {
+                case .contactTracingHub: self.checkAndShowContactTracingHub()
+                case .localInfo: self.checkAndShowLocalInfoScreen()
+                case .selfIsolationHub: showSelfIsolationHubScreen()
+                }
             }).store(in: &cancellables)
     }
     
@@ -199,9 +205,7 @@ public class HomeFlowViewController: BaseNavigationController {
     }
     
     private func checkAndShowContactTracingHub() {
-        
-        clearContactTracingHub()
-        
+        showNotificationScreen.send(nil)
         guard presentedViewController == nil, viewControllers.count == 1 else { return }
         
         let vc = interactor.makeContactTracingHubViewController(
@@ -214,9 +218,7 @@ public class HomeFlowViewController: BaseNavigationController {
     }
     
     private func checkAndShowLocalInfoScreen() {
-        
-        clearLocalInfoScreen()
-        
+        showNotificationScreen.send(nil)
         localInfoBannerViewModel?.$wrappedValue
             .compactMap { $0?.localInfoScreenViewModel }
             .first()
@@ -250,6 +252,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     private let localInformationInteractor: LocalInformationViewController.Interacting
     private let aboutThisAppInteractor: AboutThisAppViewController.Interacting
     private let settingsInteractor: SettingsViewController.Interacting
+    private let didOpenSelfIsolationHub: () -> Void
     private let recordSelectedIsolationPaymentsButton: () -> Void
     private let userNotificationsEnabled: InterfaceProperty<Bool>
     private let exposureNotificationsEnabled: InterfaceProperty<Bool>
@@ -257,6 +260,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     private let showOrderTestButton: InterfaceProperty<Bool>
     private let showFindOutAboutTestingButton: InterfaceProperty<Bool>
     private let showWarnAndBookATestFlow: InterfaceProperty<Bool>
+    private let showFinancialSupportButton: InterfaceProperty<Bool>
     
     init(
         flowController: UINavigationController,
@@ -265,13 +269,15 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         localInformationInteractor: LocalInformationViewController.Interacting,
         aboutThisAppInteractor: AboutThisAppViewController.Interacting,
         settingsInteractor: SettingsViewController.Interacting,
+        didOpenSelfIsolationHub: @escaping () -> Void,
         recordSelectedIsolationPaymentsButton: @escaping () -> Void,
         userNotificationsEnabled: InterfaceProperty<Bool>,
         exposureNotificationsEnabled: InterfaceProperty<Bool>,
         exposureNotificationsToggleAction: @escaping (Bool) -> Void,
         showOrderTestButton: InterfaceProperty<Bool>,
         showFindOutAboutTestingButton: InterfaceProperty<Bool>,
-        showWarnAndBookATestFlow: InterfaceProperty<Bool>
+        showWarnAndBookATestFlow: InterfaceProperty<Bool>,
+        showFinancialSupportButton: InterfaceProperty<Bool>
     ) {
         self.flowController = flowController
         self.flowInteractor = flowInteractor
@@ -279,6 +285,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         self.localInformationInteractor = localInformationInteractor
         self.aboutThisAppInteractor = aboutThisAppInteractor
         self.settingsInteractor = settingsInteractor
+        self.didOpenSelfIsolationHub = didOpenSelfIsolationHub
         self.recordSelectedIsolationPaymentsButton = recordSelectedIsolationPaymentsButton
         self.userNotificationsEnabled = userNotificationsEnabled
         self.exposureNotificationsEnabled = exposureNotificationsEnabled
@@ -286,6 +293,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         self.showOrderTestButton = showOrderTestButton
         self.showFindOutAboutTestingButton = showFindOutAboutTestingButton
         self.showWarnAndBookATestFlow = showWarnAndBookATestFlow
+        self.showFinancialSupportButton = showFinancialSupportButton
     }
     
     public func didTapRiskLevelBanner(viewModel: RiskLevelInfoViewController.ViewModel) {
@@ -312,10 +320,6 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         flowInteractor.recordDidTapLocalInfoBannerMetric()
     }
     
-    public func didTapIsolationAdviceButton() {
-        flowInteractor.openIsolationAdvice()
-    }
-    
     public func didTapDiagnosisButton() {
         guard let viewController = flowInteractor.makeDiagnosisViewController() else {
             return
@@ -332,13 +336,18 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         flowController?.present(viewController, animated: true)
     }
     
-    public func didTapFinancialSupportButton() {
-        guard let viewController = flowInteractor.makeFinancialSupportViewController() else {
+    public func didTapSelfIsolationButton() {
+        guard let viewController = flowInteractor.makeSelfIsolationHubViewController(
+            flowController: flowController,
+            showOrderTestButton: showOrderTestButton,
+            showFinancialSupportButton: showFinancialSupportButton,
+            showWarnAndBookATestFlow: showWarnAndBookATestFlow,
+            recordSelectedIsolationPaymentsButton: recordSelectedIsolationPaymentsButton
+        ) else {
             return
         }
-        recordSelectedIsolationPaymentsButton()
-        viewController.modalPresentationStyle = .overFullScreen
-        flowController?.present(viewController, animated: true)
+        flowController?.pushViewController(viewController, animated: true)
+        didOpenSelfIsolationHub()
     }
     
     public func didTapAboutButton() {

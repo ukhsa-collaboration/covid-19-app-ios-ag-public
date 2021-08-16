@@ -63,7 +63,6 @@ public enum Metric: String, CaseIterable {
     case didAskForSymptomsOnPositiveTestEntry
     case didHaveSymptomsBeforeReceivedTestResult
     case didRememberOnsetSymptomsDateBeforeReceivedTestResult
-    case declaredNegativeResultFromDCT
     
     // MARK: - Risky venue warning
     
@@ -103,6 +102,11 @@ public enum Metric: String, CaseIterable {
     case positiveLabResultAfterPositiveSelfRapidTest
     case negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit
     case negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit
+    
+    // MARK: - Contact case opt-out
+    
+    case optedOutForContactIsolation
+    case optedOutForContactIsolationBackgroundTick
     
 }
 

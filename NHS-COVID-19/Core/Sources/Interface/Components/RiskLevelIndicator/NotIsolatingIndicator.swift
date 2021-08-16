@@ -36,6 +36,11 @@ public struct NotIsolatingIndicator: View {
                     .padding(8)
             }
             .frame(width: badgeSize, height: badgeSize)
+            .background(Group {
+                if animationDisabled {
+                    Image(.notIsolatingCircles)
+                }
+            })
             
             Text(.risk_level_indicator_contact_tracing_active)
                 .bold()

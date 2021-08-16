@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -21,8 +21,8 @@ struct VoidTestResultWithIsolationScreen {
         app.staticTexts[localized: .void_test_result_explanation]
     }
     
-    var onlineServicesLink: XCUIElement {
-        app.links[localized: .end_of_isolation_online_services_link]
+    var nhsGuidanceLink: XCUIElement {
+        app.links[localized: .void_test_result_with_isolation_nhs_guidance_link]
     }
     
     var continueButton: XCUIElement {

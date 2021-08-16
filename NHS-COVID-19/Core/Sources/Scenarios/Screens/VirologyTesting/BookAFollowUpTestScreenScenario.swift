@@ -10,7 +10,7 @@ public class BookAFollowUpTestScreenScenario: Scenario {
     
     public enum AlertTitle {
         public static let closeButton = "Close button tapped"
-        public static let onlineServicesLink = "Advice link tapped"
+        public static let nhsGuidanceLink = "NHS guidance link tapped"
         public static let primaryButton = "Book a follow-up test button tapped"
     }
     
@@ -28,13 +28,13 @@ public class BookAFollowUpTestScreenScenario: Scenario {
 private class Interactor: BookAFollowUpTestViewController.Interacting {
     private typealias AlertTitle = BookAFollowUpTestScreenScenario.AlertTitle
     
-    var didTapOnlineServicesLink: () -> Void
+    var didTapNHSGuidanceLink: () -> Void
     var didTapPrimaryButton: () -> Void
     var didTapCancel: () -> Void
     
     init(viewController: UIViewController) {
-        didTapOnlineServicesLink = { [weak viewController] in
-            viewController?.showAlert(title: AlertTitle.onlineServicesLink)
+        didTapNHSGuidanceLink = { [weak viewController] in
+            viewController?.showAlert(title: AlertTitle.nhsGuidanceLink)
         }
         
         didTapPrimaryButton = { [weak viewController] in

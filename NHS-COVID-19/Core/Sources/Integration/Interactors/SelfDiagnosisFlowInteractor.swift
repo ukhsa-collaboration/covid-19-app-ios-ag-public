@@ -46,6 +46,10 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
         }
     }
     
+    var shouldShowNewNoSymptomsScreen: Bool {
+        selfDiagnosisManager.shouldShowNewNoSymptomsScreen()
+    }
+    
     var adviceWhenNoSymptomsAreReported: SelfDiagnosisAdvice {
         .noSymptoms(.init(initialIsolationState))
     }
@@ -60,6 +64,10 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
     
     func nhs111LinkTapped() {
         openURL(ExternalLink.nhs111Online.url)
+    }
+    
+    func nhsGuidanceLinkTapped() {
+        openURL(ExternalLink.nhsGuidance.url)
     }
     
     func gettingTestedLinkTapped() {
@@ -88,6 +96,10 @@ extension SelfDiagnosisFlowInteractor: BookATestInfoViewControllerInteracting {
     
     public func didTapBookATestForSomeoneElse() {
         openURL(ExternalLink.bookATestForSomeoneElse.url)
+    }
+    
+    public func didTapBookAPCRTest() {
+        openURL(ExternalLink.bookPCRTest.url)
     }
 }
 

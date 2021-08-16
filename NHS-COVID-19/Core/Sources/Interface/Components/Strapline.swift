@@ -76,7 +76,7 @@ private extension Country {
         }
     }
     
-    var text: StringLocalizationKey? {
+    var text: StringLocalizableKey? {
         switch self {
         case .england:
             return .home_strapline_title

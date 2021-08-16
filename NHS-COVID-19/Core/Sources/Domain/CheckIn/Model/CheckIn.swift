@@ -6,10 +6,12 @@ import Common
 import Foundation
 
 public struct CheckIn: Codable, Equatable, Identifiable {
+    // var as modified from CheckInsStore, should probably make let
     var isRisky: Bool
     var circuitBreakerApproval: CircuitBreakerApproval
     var venueMessageType: RiskyVenue.MessageType?
     
+    // var as checkedOut is modified from CheckInsStore, should probably make let
     public var venueId: String
     public var venueName: String
     public var venuePostcode: String?
@@ -21,7 +23,7 @@ public struct CheckIn: Codable, Equatable, Identifiable {
         DateInterval(start: checkedIn.date, end: checkedOut.date)
     }
     
-    init(
+    private init(
         venueId: String,
         venueName: String,
         venuePostcode: String?,

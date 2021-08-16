@@ -110,6 +110,7 @@ public class VenueCheckInInformationViewController: UIViewController {
         poster.contentMode = .scaleAspectFit
         poster.isAccessibilityElement = true
         poster.accessibilityLabel = accessibilityLabel
+        poster.accessibilityTraits.remove(.image)
         
         let posterStack = UIStackView(arrangedSubviews: [label, poster])
         posterStack.axis = .vertical

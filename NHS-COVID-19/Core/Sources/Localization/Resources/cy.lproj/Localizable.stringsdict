@@ -159,7 +159,7 @@
 				<key>zero</key>
 				<string/>
 				<key>one</key>
-				<string>Hunanynyswch am %ld diwrnod</string>
+				<string>Cynghorwn chi i hunanynysu am %ld diwrnod</string>
 				<key>two</key>
 				<string/>
 				<key>few</key>
@@ -167,7 +167,7 @@
 				<key>many</key>
 				<string/>
 				<key>other</key>
-				<string>Hunanynyswch am %ld diwrnod</string>
+				<string>Cynghorwn chi i hunanynysu am %ld diwrnod</string>
 			</dict>
 		</dict>
 		<key>isolation_indicator_accessiblity_label days: %ld date: %@ time: %@</key>
@@ -267,6 +267,102 @@
 			</dict>
 		</dict>
 		<key>risky_venue_isolation_title_accessibility %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>zero</key>
+				<string/>
+				<key>one</key>
+				<string/>
+				<key>two</key>
+				<string/>
+				<key>few</key>
+				<string/>
+				<key>many</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>zero</key>
+				<string>%li ddiwrnod</string>
+				<key>one</key>
+				<string>%li ddiwrnod</string>
+				<key>two</key>
+				<string>%li ddiwrnod</string>
+				<key>few</key>
+				<string>%li ddiwrnod</string>
+				<key>many</key>
+				<string>%li ddiwrnod</string>
+				<key>other</key>
+				<string>%li diwrnod</string>
+			</dict>
+		</dict>
+		<key>contact_case_continue_isolation_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>zero</key>
+				<string>%li ddiwrnod</string>
+				<key>one</key>
+				<string>%li ddiwrnod</string>
+				<key>two</key>
+				<string>%li ddiwrnod</string>
+				<key>few</key>
+				<string>%li ddiwrnod</string>
+				<key>many</key>
+				<string>%li ddiwrnod</string>
+				<key>other</key>
+				<string>%li diwrnod</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>zero</key>
+				<string/>
+				<key>one</key>
+				<string/>
+				<key>two</key>
+				<string/>
+				<key>few</key>
+				<string/>
+				<key>many</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>contact_case_continue_isolation_accessibility_label %ld</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
 			<string>%#@days@</string>

@@ -39,17 +39,19 @@ public class MyDataViewController: UITableViewController {
         var symptomsOnsetDate: Date?
         var exposureNotificationDetails: ExposureNotificationDetails?
         var selfIsolationEndDate: Date?
-        var dailyTestingOptInDate: Date?
         var venueOfRiskDate: Date?
         
         public struct ExposureNotificationDetails {
             let encounterDate: Date
             let notificationDate: Date
+            let optOutOfIsolationDate: Date?
             
             public init(encounterDate: Date,
-                        notificationDate: Date) {
+                        notificationDate: Date,
+                        optOutOfIsolationDate: Date?) {
                 self.encounterDate = encounterDate
                 self.notificationDate = notificationDate
+                self.optOutOfIsolationDate = optOutOfIsolationDate
             }
         }
         
@@ -99,14 +101,12 @@ public class MyDataViewController: UITableViewController {
             symptomsOnsetDate: Date?,
             exposureNotificationDetails: ExposureNotificationDetails?,
             selfIsolationEndDate: Date?,
-            dailyTestingOptInDate: Date?,
             venueOfRiskDate: Date?
         ) {
             self.testResultDetails = testResultDetails
             self.symptomsOnsetDate = symptomsOnsetDate
             self.exposureNotificationDetails = exposureNotificationDetails
             self.selfIsolationEndDate = selfIsolationEndDate
-            self.dailyTestingOptInDate = dailyTestingOptInDate
             self.venueOfRiskDate = venueOfRiskDate
         }
     }
@@ -128,8 +128,8 @@ public class MyDataViewController: UITableViewController {
         case encounterDate(Date)
         case notificationDate(Date)
         case lastDayOfSelfIsolation(Date)
-        case dailyTestingOptIn(Date)
         case venueOfRiskDate(Date)
+        case optOutOfContactIsolation(Date)
     }
     
     private struct Section {
@@ -173,7 +173,10 @@ public class MyDataViewController: UITableViewController {
                 rows: [
                     .encounterDate($0.encounterDate),
                     .notificationDate($0.notificationDate),
-                ]
+                    $0.optOutOfIsolationDate.map {
+                        .optOutOfContactIsolation($0)
+                    },
+                ].compactMap { $0 }
             )
         }
         
@@ -182,15 +185,6 @@ public class MyDataViewController: UITableViewController {
                 header: .basic(title: localize(.mydata_section_self_isolation_heading)),
                 rows: [
                     .lastDayOfSelfIsolation($0),
-                ]
-            )
-        }
-        
-        let dailyTestingOptInSection: Section? = viewModel.dailyTestingOptInDate.map {
-            Section(
-                header: .basic(title: localize(.mydata_section_daily_testing_description)),
-                rows: [
-                    .dailyTestingOptIn($0),
                 ]
             )
         }
@@ -204,7 +198,7 @@ public class MyDataViewController: UITableViewController {
             )
         }
         
-        return [testResultSection, dailyTestingOptInSection, lastDayOfSelfIsolationSection, symptomsOnsetSection, venueOfRiskDateSection, exposureNotificationSection].compactMap { $0 }
+        return [testResultSection, lastDayOfSelfIsolationSection, symptomsOnsetSection, venueOfRiskDateSection, exposureNotificationSection].compactMap { $0 }
     }
     
     public init(viewModel: ViewModel) {
@@ -257,14 +251,14 @@ public class MyDataViewController: UITableViewController {
             // the actual "day isolation ends" instead of "moment isolation ends".
             let justBeforeEndOfIsolation = date.advanced(by: -1)
             cell = TextCell.create(tableView: tableView, title: localize(.mydata_section_self_isolation_end_date), date: justBeforeEndOfIsolation)
-        case .dailyTestingOptIn(let date):
-            cell = TextCell.create(tableView: tableView, title: localize(.mydata_daily_testing_opt_in_date_description), date: date)
         case .venueOfRiskDate(let date):
             cell = TextCell.create(tableView: tableView, title: localize(.mydata_section_venue_of_risk_date), date: date)
         case .encounterDate(let date):
             cell = TextCell.create(tableView: tableView, title: localize(.mydata_exposure_notification_details_exposure_date_description), date: date)
         case .notificationDate(let date):
             cell = TextCell.create(tableView: tableView, title: localize(.mydata_exposure_notification_details_notification_date_description), date: date)
+        case .optOutOfContactIsolation(let date):
+            cell = TextCell.create(tableView: tableView, title: localize(.mydata_exposure_notification_details_opt_out_date_description), date: date)
         }
         
         // Trigger a layout pass to prevent incorrect cell content layout

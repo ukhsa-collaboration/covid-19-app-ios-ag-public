@@ -194,5 +194,69 @@
 				<string>[to be deleted]</string>
 			</dict>
 		</dict>
+		<key>contact_case_start_isolation_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%li day</string>
+				<key>other</key>
+				<string>%li days</string>
+			</dict>
+		</dict>
+		<key>contact_case_continue_isolation_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%li day</string>
+				<key>other</key>
+				<string>%li days</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Continue to self-isolate for %ld day</string>
+				<key>other</key>
+				<string>Continue to self-isolate for %ld days</string>
+			</dict>
+		</dict>
+		<key>contact_case_continue_isolation_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Continue to self-isolate for %ld day</string>
+				<key>other</key>
+				<string>Continue to self-isolate for %ld days</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

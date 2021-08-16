@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -15,6 +15,8 @@ extension URLSessionConfiguration {
         } else {
             requestCachePolicy = .useProtocolCachePolicy // If-None-Match is not properly implemented in iOS < 13
         }
+        // 4 MB memory, 15 MB disk capacity
+        urlCache = URLCache(memoryCapacity: 4 * 1024 * 1024, diskCapacity: 15 * 1024 * 1024, directory: nil)
     }
 }
 

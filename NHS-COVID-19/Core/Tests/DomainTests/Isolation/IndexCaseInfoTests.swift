@@ -41,7 +41,7 @@ class IndexCaseInfoTests: XCTestCase {
             testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
         )
         
-        let expectedOnsetDay = manualTestEntryDay.advanced(by: -3)
+        let expectedOnsetDay = manualTestEntryDay
         XCTAssertNil(info.symptomaticInfo?.assumedOnsetDay)
         XCTAssertEqual(info.assumedOnsetDayForExposureKeys, expectedOnsetDay)
     }
@@ -55,7 +55,7 @@ class IndexCaseInfoTests: XCTestCase {
             testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
         )
         
-        let expectedOnsetDay = manualTestEntryDay.advanced(by: -3)
+        let expectedOnsetDay = manualTestEntryDay
         XCTAssertEqual(info.assumedOnsetDayForExposureKeys, expectedOnsetDay)
     }
     
@@ -68,7 +68,7 @@ class IndexCaseInfoTests: XCTestCase {
             testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
         )
         
-        let expectedOnsetDay = manualTestEntryDay.advanced(by: -3)
+        let expectedOnsetDay = manualTestEntryDay
         XCTAssertEqual(info.assumedOnsetDayForExposureKeys, expectedOnsetDay)
     }
     

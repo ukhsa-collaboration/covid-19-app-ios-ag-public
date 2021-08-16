@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import XCTest
@@ -11,7 +11,7 @@ struct PrivacyScreen {
         app.staticTexts[localized: .privacy_title]
     }
     
-    var privacyDespcription: XCUIElement {
+    var privacyDespcription: [XCUIElement] {
         app.staticTexts[localized: .privacy_description_paragraph1]
     }
     

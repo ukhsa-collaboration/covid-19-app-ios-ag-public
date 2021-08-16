@@ -36,7 +36,7 @@ class BookAFollowUpTestScreenTests: XCTestCase {
             
             XCTAssert(screen.adviceLinkButton.exists)
             screen.adviceLinkButton.tap()
-            let adviceLinkAlertTitle = app.staticTexts[AlertTitle.onlineServicesLink]
+            let adviceLinkAlertTitle = app.staticTexts[AlertTitle.nhsGuidanceLink]
             XCTAssert(adviceLinkAlertTitle.displayed)
         }
     }

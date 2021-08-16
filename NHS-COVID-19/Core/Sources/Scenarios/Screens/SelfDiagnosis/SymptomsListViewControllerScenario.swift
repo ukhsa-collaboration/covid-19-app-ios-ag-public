@@ -40,7 +40,6 @@ public class SymptomsListViewControllerScenario: Scenario {
 }
 
 private class Interactor: SymptomListViewController.Interacting {
-    
     private weak var viewController: UIViewController?
     
     init(viewController: UIViewController) {

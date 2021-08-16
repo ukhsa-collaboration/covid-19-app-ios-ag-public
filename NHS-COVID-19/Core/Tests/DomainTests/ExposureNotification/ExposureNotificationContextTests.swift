@@ -28,7 +28,8 @@ class ExposureNotificationContextTests: XCTestCase {
             encryptedStore: services.encryptedStore,
             notificationCenter: services.notificationCenter,
             currentDateProvider: services.currentDateProvider,
-            removeExposureDetectionNotifications: {}
+            removeExposureDetectionNotifications: {},
+            scheduleSelfIsolationReminderNotification: {}
         )
     }
     
@@ -103,7 +104,7 @@ class ExposureNotificationContextTests: XCTestCase {
                 encryptedStore: MockEncryptedStore(),
                 cacheStorage: FileStorage(forCachesOf: UUID().uuidString),
                 venueDecoder: VenueDecoder.forTests,
-                appInfo: AppInfo(bundleId: .random(), version: "3.10", buildNumber: "1"),
+                appInfo: AppInfo(bundleId: .random(), version: "4.16", buildNumber: "1"),
                 postcodeValidator: MockPostcodeValidator(),
                 currentDateProvider: MockDateProvider(),
                 storeReviewController: MockStoreReviewController(),

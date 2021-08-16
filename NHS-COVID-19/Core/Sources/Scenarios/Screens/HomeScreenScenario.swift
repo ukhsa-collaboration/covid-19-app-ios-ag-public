@@ -98,9 +98,7 @@ public class DisabledFeaturesHomeScreenScenario: HomeScreenScenario {
 
 public class HomeScreenAlerts {
     public static let diagnosisAlertTitle = "I don't feel well button tapped."
-    public static let isolationAdviceAlertTitle = "Read isolation advice button tapped."
     public static let checkInAlertTitle = "Check-in into a venue."
-    public static let financeAlertTitle = "Financial Support button tapped"
     public static let settingsAlertTitle = "Settings button tapped"
     public static let aboutAlertTitle = "About tapped"
     public static let linkTestResultTitle = "Link test result tapped"
@@ -108,6 +106,7 @@ public class HomeScreenAlerts {
     public static let localInfoBannerAlertTitle = "Local Information banner tapped"
     public static let contactTracingHubAlertTitle = "Contact Tracing Hub tapped"
     public static let testingHubAlertTitle = "Testing Hub tapped"
+    public static let selfIsolationAlertTitle = "Self-isolation button tapped"
 }
 
 private class Interactor: HomeViewController.Interacting {
@@ -132,20 +131,16 @@ private class Interactor: HomeViewController.Interacting {
         viewController?.showAlert(title: HomeScreenAlerts.localInfoBannerAlertTitle)
     }
     
+    func didTapSelfIsolationButton() {
+        viewController?.showAlert(title: HomeScreenAlerts.selfIsolationAlertTitle)
+    }
+    
     func didTapDiagnosisButton() {
         viewController?.showAlert(title: HomeScreenAlerts.diagnosisAlertTitle)
     }
     
-    func didTapIsolationAdviceButton() {
-        viewController?.showAlert(title: HomeScreenAlerts.isolationAdviceAlertTitle)
-    }
-    
     func didTapCheckInButton() {
         viewController?.showAlert(title: HomeScreenAlerts.checkInAlertTitle)
-    }
-    
-    func didTapFinancialSupportButton() {
-        viewController?.showAlert(title: HomeScreenAlerts.financeAlertTitle)
     }
     
     func didTapAboutButton() {

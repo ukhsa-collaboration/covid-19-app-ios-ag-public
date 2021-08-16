@@ -7,17 +7,17 @@ import Integration
 import Interface
 import UIKit
 
-public class ContactTracingHubScenario: Scenario {
-    public static let name = "Contact Tracing Hub"
-    public static let kind = ScenarioKind.screen
-    
-    public static let adviceWhenDoNotPauseCTAlertTitle = "Advice when should not pause CT tapped"
+protocol CommonContactTracingHubScenario: Scenario {
+    static var userNotificationsAuthorized: Bool { get }
+}
+
+extension CommonContactTracingHubScenario {
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
             let exposureNotificationsEnabled = CurrentValueSubject<Bool, Never>(true).property(initialValue: true)
-            let userNotificationsEnabled = CurrentValueSubject<Bool, Never>(true).property(initialValue: true)
+            let userNotificationsEnabled = CurrentValueSubject<Bool, Never>(userNotificationsAuthorized).property(initialValue: userNotificationsAuthorized)
             return ContactTracingHubViewController(
                 interactor,
                 exposureNotificationsEnabled: exposureNotificationsEnabled,
@@ -28,6 +28,23 @@ public class ContactTracingHubScenario: Scenario {
             )
         }
     }
+    
+}
+
+public enum ContactTracingHubAlertTitle {
+    public static let adviceWhenDoNotPauseCT = "Advice when should not pause CT tapped"
+}
+
+public class ContactTracingHubUserNotificationsAuthorizedScenario: CommonContactTracingHubScenario {
+    public static let name = "Contact Tracing Hub - User Notifications Authorized"
+    public static let kind = ScenarioKind.screen
+    static let userNotificationsAuthorized = true
+}
+
+public class ContactTracingHubUserNotificationsNotAuthorizedScenario: CommonContactTracingHubScenario {
+    public static let name = "Contact Tracing Hub - User Notifications Not Authorized"
+    public static let kind = ScenarioKind.screen
+    static let userNotificationsAuthorized = false
 }
 
 private class Interactor: ContactTracingHubViewController.Interacting {
@@ -40,7 +57,7 @@ private class Interactor: ContactTracingHubViewController.Interacting {
     }
     
     func didTapAdviceWhenDoNotPauseCTButton() {
-        viewController?.showAlert(title: ContactTracingHubScenario.adviceWhenDoNotPauseCTAlertTitle)
+        viewController?.showAlert(title: ContactTracingHubAlertTitle.adviceWhenDoNotPauseCT)
     }
     
     init(viewController: UIViewController) {

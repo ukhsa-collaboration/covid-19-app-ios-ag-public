@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Integration
@@ -7,6 +7,7 @@ import Interface
 import SwiftUI
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 class ExperimentAppController: AppController {
     
     let experimentManager = ExperimentManager()

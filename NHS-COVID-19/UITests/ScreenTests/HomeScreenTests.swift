@@ -66,17 +66,6 @@ class SuccessHomeScreenTests: XCTestCase {
         }
     }
     
-    func testFinanceButton() throws {
-        try runner.run { app in
-            let screen = HomeScreen(app: app)
-            
-            let financeButtonAction = app.staticTexts[HomeScreenAlerts.financeAlertTitle]
-            app.scrollTo(element: screen.financeButton)
-            screen.financeButton.tap()
-            XCTAssert(financeButtonAction.displayed)
-        }
-    }
-    
     func testSettingsButton() throws {
         try runner.run { app in
             let screen = HomeScreen(app: app)

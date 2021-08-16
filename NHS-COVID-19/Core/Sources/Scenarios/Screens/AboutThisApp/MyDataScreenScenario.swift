@@ -25,8 +25,8 @@ public class MyDataScreenScenario: Scenario {
     public static let encounterDate = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 8, hour: 8))!
     public static let notificationDate = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 11, hour: 8))!
     public static let endSelfIsolationDate = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 22, hour: 8))!
-    public static let dailyTestingOptInDate = Calendar.utc.date(from: DateComponents(year: 2021, month: 1, day: 27, hour: 8))!
     public static let venueOfRiskDate = Calendar.utc.date(from: DateComponents(year: 2021, month: 2, day: 25, hour: 21))!
+    public static let optOutOfIsolationDate = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 8, hour: 8))!
     
     static var appController: AppController {
         NavigationAppController { parent in
@@ -42,10 +42,10 @@ public class MyDataScreenScenario: Scenario {
                     symptomsOnsetDate: symptomsDate,
                     exposureNotificationDetails: .init(
                         encounterDate: encounterDate,
-                        notificationDate: notificationDate
+                        notificationDate: notificationDate,
+                        optOutOfIsolationDate: optOutOfIsolationDate
                     ),
                     selfIsolationEndDate: endSelfIsolationDate,
-                    dailyTestingOptInDate: dailyTestingOptInDate,
                     venueOfRiskDate: venueOfRiskDate
                 )
             )

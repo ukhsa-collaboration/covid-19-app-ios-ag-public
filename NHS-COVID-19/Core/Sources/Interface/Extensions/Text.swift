@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -8,7 +8,7 @@ import SwiftUI
 
 extension Text {
     
-    init(_ key: StringLocalizationKey) {
+    init(_ key: StringLocalizableKey) {
         self.init(verbatim: localize(key))
     }
     

@@ -39,7 +39,6 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case read = "Read"
     case swab = "Swab"
     case settings = "Settings"
-    case finance = "Finance"
     case pin = "Pin"
     case checkTick = "CheckTick"
     case chain = "Chain"
@@ -57,6 +56,17 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case softwareUpdate = "software-update"
     case enterTestResult = "EnterTestResult"
     case alert = "Alert"
+    case selfIsolation = "SelfIsolation"
+    case accordionPlusIcon = "AccordionPlusIcon"
+    case accordionMinusIcon = "AccordionMinusIcon"
+    
+    // MARK: Contact case only
+    
+    case adultChild = "ContactCaseOnly/AdultChild"
+    case vaccination = "ContactCaseOnly/Vaccination"
+    case isolation = "ContactCaseOnly/Isolation"
+    case swabTest = "ContactCaseOnly/Swab-test"
+    case infoCircle = "ContactCaseOnly/InfoCircle"
     
     // MARK: Key sharing
     
@@ -105,6 +115,9 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case settingInfo = "SettingInfo"
     case privacyIcon = "PrivacyIcon"
     case shareKeysReview = "ShareKeysReview"
+    
+    case isolatingCircles = "IsolationIndicatorCircles/IsolatingCircles"
+    case notIsolatingCircles = "IsolationIndicatorCircles/NotIsolatingCircles"
     
     // MARK: Contact Tracing
     

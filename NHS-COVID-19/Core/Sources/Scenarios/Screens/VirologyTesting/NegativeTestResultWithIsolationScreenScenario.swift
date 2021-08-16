@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Domain
@@ -11,7 +11,7 @@ public class NegativeTestResultWithIsolationScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name: String = "Virology Testing - Negative Result (Isolation)"
     
-    public static let onlineServicesLinkTapped: String = "Online services link tapped"
+    public static let nhsGuidanceTapped: String = "NHS guidance link tapped"
     public static let returnHomeTapped: String = "Back to home button tapped"
     
     static var appController: AppController {
@@ -45,10 +45,14 @@ private class Interactor: NegativeTestResultWithIsolationViewController.Interact
     }
     
     func didTapOnlineServicesLink() {
-        viewController?.showAlert(title: NegativeTestResultWithIsolationScreenScenario.onlineServicesLinkTapped)
+        viewController?.showAlert(title: NegativeTestResultAfterPositiveWithIsolationScreenScenario.onlineServicesLinkTapped)
     }
     
     func didTapReturnHome() {
         viewController?.showAlert(title: NegativeTestResultWithIsolationScreenScenario.returnHomeTapped)
+    }
+    
+    func didTapNHSGuidanceLink() {
+        viewController?.showAlert(title: NegativeTestResultWithIsolationScreenScenario.nhsGuidanceTapped)
     }
 }

@@ -171,6 +171,85 @@ class IsolationStateStoreTests: XCTestCase {
         TS.assert(store.isolationInfo, equals: expectedIsolationInfo)
     }
     
+    func testLoadingDataWithContactIsolationOptOut() throws {
+        $instance.encryptedStore.stored["isolation_state_info"] = #"""
+        {
+            "version" : 2,
+            "configuration" : {
+                "indexCaseSinceSelfDiagnosisOnset" : 7,
+                "maxIsolation" : 21,
+                "contactCase" : 14,
+                "indexCaseSinceSelfDiagnosisUnknownOnset" : 5,
+                "housekeepingDeletionPeriod" : 14
+            },
+            "hasAcknowledgedEndOfIsolation": true,
+            "contact" : {
+                "hasAcknowledgedStartOfIsolation": false,
+                "exposureDay" : {
+                    "day" : 11,
+                    "month" : 7,
+                    "year" : 2020
+                },
+                "notificationDay":{
+                    "year": 2020,
+                    "month": 7,
+                    "day": 13
+                },
+                "isolationOptOutInfo": {
+                    "fromDay": {
+                        "day" : 12,
+                        "month" : 7,
+                        "year" : 2020
+                    }
+                }
+            },
+            "symptomatic": {
+                "selfDiagnosisDay" : {
+                    "day" : 12,
+                    "month" : 7,
+                    "year" : 2020
+                },
+                "onsetDay" : {
+                    "day" : 10,
+                    "month" : 7,
+                    "year" : 2020
+                },
+            },
+            "test" : {
+                "testResult" : "positive",
+                "requiresConfirmatoryTest" : false,
+                "acknowledgedDay" : {
+                    "day" : 14,
+                    "month" : 7,
+                    "year" : 2020
+                }
+            }
+        }
+        """# .data(using: .utf8)!
+        
+        let onsetDay = GregorianDay(year: 2020, month: 7, day: 10)
+        let exposureDay = GregorianDay(year: 2020, month: 7, day: 11)
+        let contactOptOutDay = GregorianDay(year: 2020, month: 7, day: 12)
+        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
+        let isolationFromStartOfDay = GregorianDay(year: 2020, month: 7, day: 13)
+        let testReceivedDay = GregorianDay(year: 2020, month: 7, day: 14)
+        
+        let expectedIsolationInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: true,
+            indexCaseInfo: IndexCaseInfo(
+                symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: onsetDay),
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
+            ),
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: isolationFromStartOfDay,
+                optOutOfIsolationDay: contactOptOutDay
+            )
+        )
+        
+        TS.assert(store.isolationInfo, equals: expectedIsolationInfo)
+    }
+    
     func testLoadingTestEndDayFromTestInfoTestEndDay() throws {
         $instance.encryptedStore.stored["isolation_state_info"] = #"""
         {
@@ -736,7 +815,7 @@ class IsolationStateStoreTests: XCTestCase {
         
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: true,
+            hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: onsetDay),
                 testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
@@ -748,7 +827,12 @@ class IsolationStateStoreTests: XCTestCase {
         )
         
         store.set(isolationInfo.indexCaseInfo!)
+        
+        XCTAssertFalse(store.isolationInfo.hasAcknowledgedStartOfContactIsolation) // index case does not change acknowledgment for contact isolation
+        
         store.set(isolationInfo.contactCaseInfo!)
+        
+        XCTAssertFalse(store.isolationInfo.hasAcknowledgedStartOfContactIsolation) // contact after index keeps the acknowledgement flag
         
         let newStore = IsolationStateStore(
             store: $instance.encryptedStore,
@@ -794,7 +878,7 @@ class IsolationStateStoreTests: XCTestCase {
         
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: true,
+            hasAcknowledgedStartOfContactIsolation: true,
             indexCaseInfo: nil,
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -820,7 +904,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
                 testInfo: nil
@@ -854,7 +938,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
                 testInfo: nil
@@ -885,7 +969,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: nil,
             contactCaseInfo: nil
         )
@@ -912,7 +996,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: nil,
                 testInfo: IndexCaseInfo.TestInfo(result: .negative, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: testDay.advanced(by: -4), testEndDay: testEndDay)
@@ -943,7 +1027,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: nil,
             contactCaseInfo: nil
         )
@@ -973,7 +1057,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: nil,
                 testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: testDay.advanced(by: -4), testEndDay: testDay)
@@ -1011,7 +1095,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: nil,
                 testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: testDay.advanced(by: -4), testEndDay: testDay)
@@ -1049,7 +1133,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: nil,
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -1082,7 +1166,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: nil,
                 testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: npexDay, testEndDay: npexDay)
@@ -1121,7 +1205,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
                 testInfo: nil
@@ -1159,7 +1243,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
                 testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: npexDay, testEndDay: npexDay)
@@ -1195,7 +1279,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
                 testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: npexDay, testEndDay: npexDay)
@@ -1231,7 +1315,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
                 testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: testDay.advanced(by: -4), testEndDay: testDay)
@@ -1270,7 +1354,7 @@ class IsolationStateStoreTests: XCTestCase {
         // Given
         let isolationInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
-            hasAcknowledgedStartOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
                 testInfo: IndexCaseInfo.TestInfo(result: .negative, requiresConfirmatoryTest: false, receivedOnDay: negativeTestEndDay, testEndDay: negativeTestEndDay)

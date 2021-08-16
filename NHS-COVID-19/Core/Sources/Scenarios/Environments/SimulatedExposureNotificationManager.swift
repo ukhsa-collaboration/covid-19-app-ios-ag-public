@@ -9,10 +9,11 @@ import ExposureNotification
 import Foundation
 import Localization
 
+@available(iOSApplicationExtension, unavailable)
 class SimulatedExposureNotificationManager: ExposureNotificationManaging {
     
     private let queue = DispatchQueue.main
-    private let dataProvider = MockScenario.mockDataProvider
+    private let dataProvider = MockDataProvider.shared
     private let dateProvider: DateProviding
     
     var instanceAuthorizationStatus: AuthorizationStatus

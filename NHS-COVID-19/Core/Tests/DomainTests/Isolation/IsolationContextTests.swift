@@ -14,6 +14,7 @@ class IsolationContextTests: XCTestCase {
     private var currentDate: Date!
     private var client: MockHTTPClient!
     private var removedNotificaton = false
+    private var scheduledNotification = false
     
     override func setUp() {
         currentDate = Date()
@@ -37,12 +38,13 @@ class IsolationContextTests: XCTestCase {
             encryptedStore: MockEncryptedStore(),
             notificationCenter: NotificationCenter(),
             currentDateProvider: MockDateProvider { self.currentDate },
-            removeExposureDetectionNotifications: { self.removedNotificaton = true }
+            removeExposureDetectionNotifications: { self.removedNotificaton = true },
+            scheduleSelfIsolationReminderNotification: { self.scheduledNotification = true }
         )
     }
     
     func testMakeIsolationAcknowledgementStatePublishesState() throws {
-        let isolation = Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: .init(optOutOfIsolationDay: nil)))
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: .init(exposureDay: .today)))
         isolationContext.isolationStateManager.state = .isolationFinishedButNotAcknowledged(isolation)
         
         let ackState = try isolationContext.makeIsolationAcknowledgementState().await().get()
@@ -79,14 +81,13 @@ class IsolationContextTests: XCTestCase {
     }
     
     func testRemoveExposureDetectionNotificationOnContactCaseAcknowledgement() throws {
-        let isolation = Isolation(fromDay: .today, untilStartOfDay: .today, reason: .init(indexCaseInfo: nil, contactCaseInfo: .init(optOutOfIsolationDay: nil)))
-        isolationContext.isolationStateManager.state = .isolating(isolation, endAcknowledged: false, startAcknowledged: false)
+        let isolation = Isolation(fromDay: .today, untilStartOfDay: .today, reason: .init(indexCaseInfo: nil, contactCaseInfo: .init(exposureDay: .today)))
+        isolationContext.isolationStateManager.state = .isolating(isolation, endAcknowledged: false, startOfContactIsolationAcknowledged: false)
         
         let ackState = try isolationContext.makeIsolationAcknowledgementState().await().get()
         
-        if case .neededForStart(isolation, acknowledge: let ack) = ackState {
-            ack()
-            
+        if case .neededForStartContactIsolation(isolation, acknowledge: let ack) = ackState {
+            ack(false)
             XCTAssertTrue(removedNotificaton)
         }
     }
@@ -103,12 +104,12 @@ class IsolationContextTests: XCTestCase {
                 contactCaseInfo: nil
             )
         )
-        isolationContext.isolationStateManager.state = .isolating(isolation, endAcknowledged: false, startAcknowledged: false)
+        isolationContext.isolationStateManager.state = .isolating(isolation, endAcknowledged: false, startOfContactIsolationAcknowledged: false)
         
         let ackState = try isolationContext.makeIsolationAcknowledgementState().await().get()
         
-        if case .neededForStart(isolation, acknowledge: let ack) = ackState {
-            ack()
+        if case .neededForStartContactIsolation(isolation, acknowledge: let ack) = ackState {
+            ack(false)
             XCTAssertFalse(removedNotificaton)
         }
     }
@@ -125,12 +126,12 @@ class IsolationContextTests: XCTestCase {
                 contactCaseInfo: nil
             )
         )
-        isolationContext.isolationStateManager.state = .isolating(isolation, endAcknowledged: false, startAcknowledged: false)
+        isolationContext.isolationStateManager.state = .isolating(isolation, endAcknowledged: false, startOfContactIsolationAcknowledged: false)
         
         let ackState = try isolationContext.makeIsolationAcknowledgementState().await().get()
         
-        if case .neededForStart(isolation, acknowledge: let ack) = ackState {
-            ack()
+        if case .neededForStartContactIsolation(isolation, acknowledge: let ack) = ackState {
+            ack(false)
             XCTAssertFalse(removedNotificaton)
         }
     }
@@ -304,11 +305,12 @@ class IsolationContextTests: XCTestCase {
     }
     
     func testOptOutOfIsolationWhenContactCaseOnly() throws {
+        let exposureDay = GregorianDay.today.advanced(by: -1)
         
         // store a contact case
         isolationContext.isolationStateStore.set(
             ContactCaseInfo(
-                exposureDay: .today,
+                exposureDay: exposureDay,
                 isolationFromStartOfDay: .today
             )
         )
@@ -317,46 +319,41 @@ class IsolationContextTests: XCTestCase {
         // confirm the state of the current isolation
         XCTAssertTrue(isolationContext.isolationStateManager.isolationLogicalState.currentValue.activeIsolation!.isContactCaseOnly)
         
-        // pull the daily contact termination closure out of the context
-        let action = isolationContext.dailyContactTestingEarlyTerminationSupport
-        switch action {
-        case .enabled(optOutOfIsolation: let actionClosure):
-            actionClosure()
-        default:
-            XCTFail("Expected .enabled to be returned from dailyContactTestingEarlyTerminationSupport")
-        }
+        isolationContext.optOutContactIsolationOnExposurerDay()
         
-        // confirm that the optOutOfIsolationDay field is set to today
         let contactCaseInfo = isolationContext.isolationStateStore.isolationInfo.contactCaseInfo
-        XCTAssertEqual(contactCaseInfo?.optOutOfIsolationDay, .today)
+        XCTAssertEqual(contactCaseInfo?.optOutOfIsolationDay, exposureDay)
+        XCTAssertTrue(isolationContext.isolationStateStore.isolationInfo.hasAcknowledgedEndOfIsolation)
     }
     
-    func testOptOutOfIsolationWhenContactCaseOnlyDoesntUpdateOptOutDate() throws {
+    func testOptOutOfIsolationWhenIndexAndContactCase() throws {
+        let exposureDay = GregorianDay.today.advanced(by: -1)
         
         // store a contact case
         isolationContext.isolationStateStore.set(
             ContactCaseInfo(
-                exposureDay: .today,
+                exposureDay: exposureDay,
                 isolationFromStartOfDay: .today
+            )
+        )
+        isolationContext.isolationStateStore.set(
+            IndexCaseInfo(
+                symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: .today, onsetDay: .today),
+                testInfo: nil
             )
         )
         isolationContext.isolationStateStore.acknowldegeStartOfIsolation()
         
         // confirm the state of the current isolation
-        XCTAssertTrue(isolationContext.isolationStateManager.isolationLogicalState.currentValue.activeIsolation!.isContactCaseOnly)
+        XCTAssertTrue(isolationContext.isolationStateManager.isolationLogicalState.currentValue.activeIsolation!.isContactCase)
+        XCTAssertTrue(isolationContext.isolationStateManager.isolationLogicalState.currentValue.activeIsolation!.isIndexCase)
         
-        // pull the daily contact termination closure out of the context
-        let action = isolationContext.dailyContactTestingEarlyTerminationSupport
-        switch action {
-        case .enabled(optOutOfIsolation: _):
-            break
-        default:
-            XCTFail("Expected .enabled to be returned from dailyContactTestingEarlyTerminationSupport")
-        }
+        isolationContext.optOutContactIsolationOnExposurerDay()
         
         // confirm that the optOutOfIsolationDay field is nil
         let contactCaseInfo = isolationContext.isolationStateStore.isolationInfo.contactCaseInfo
-        XCTAssertNil(contactCaseInfo?.optOutOfIsolationDay)
+        XCTAssertEqual(contactCaseInfo?.optOutOfIsolationDay, exposureDay)
+        XCTAssertFalse(isolationContext.isolationStateStore.isolationInfo.hasAcknowledgedEndOfIsolation)
     }
     
     func testHandleSymptomsWithoutTest() {
@@ -481,7 +478,7 @@ class IsolationContextTests: XCTestCase {
                 untilStartOfDay: untilStartOfDay,
                 reason: .init(
                     indexCaseInfo: .init(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false),
-                    contactCaseInfo: .init(optOutOfIsolationDay: nil)
+                    contactCaseInfo: .init(exposureDay: .today)
                 )
             )
         )
@@ -521,5 +518,26 @@ class IsolationContextTests: XCTestCase {
         )
         XCTAssertEqual(state.0, expectedIsolationState)
         XCTAssertEqual(state.1, .hasTest(shouldChangeAdviceDueToSymptoms: false))
+    }
+    
+    func testScheduleNotificationAfterPositiveResult() throws {
+        let result = VirologyStateTestResult(
+            testResult: .positive,
+            testKitType: .labResult,
+            endDate: Date(),
+            diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random()),
+            requiresConfirmatoryTest: false
+        )
+        
+        let state = try makeResultAcknowledgementState(result: result).await().get()
+        
+        if case TestResultAcknowledgementState.neededForPositiveResultStartToIsolate(let acknowledge, _) = state {
+            XCTAssertFalse(scheduledNotification)
+            acknowledge()
+            XCTAssertTrue(scheduledNotification)
+        } else {
+            XCTFail("Unexpected state \(state)")
+        }
+        
     }
 }

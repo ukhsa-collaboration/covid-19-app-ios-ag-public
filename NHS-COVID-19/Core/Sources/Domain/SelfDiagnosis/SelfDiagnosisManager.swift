@@ -20,15 +20,21 @@ public protocol SelfDiagnosisManaging {
     func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError>
     
     func evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double) -> SelfDiagnosisEvaluation
+    
+    func shouldShowNewNoSymptomsScreen() -> Bool
 }
 
 class SelfDiagnosisManager: SelfDiagnosisManaging {
     private let httpClient: HTTPClient
     private let calculateIsolationState: (GregorianDay?) -> (IsolationState, SelfDiagnosisEvaluation.ExistingPositiveTestState)
+    private let _shouldShowNewNoSymptomsScreen: () -> Bool
     
-    init(httpClient: HTTPClient, calculateIsolationState: @escaping (GregorianDay?) -> (IsolationState, SelfDiagnosisEvaluation.ExistingPositiveTestState)) {
+    init(httpClient: HTTPClient,
+         calculateIsolationState: @escaping (GregorianDay?) -> (IsolationState, SelfDiagnosisEvaluation.ExistingPositiveTestState),
+         shouldShowNewNoSymptomsScreen: @escaping () -> Bool) {
         self.httpClient = httpClient
         self.calculateIsolationState = calculateIsolationState
+        _shouldShowNewNoSymptomsScreen = shouldShowNewNoSymptomsScreen
     }
     
     func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError> {
@@ -63,4 +69,7 @@ class SelfDiagnosisManager: SelfDiagnosisManaging {
         }
     }
     
+    func shouldShowNewNoSymptomsScreen() -> Bool {
+        _shouldShowNewNoSymptomsScreen()
+    }
 }

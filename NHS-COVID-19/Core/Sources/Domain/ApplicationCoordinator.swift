@@ -12,7 +12,7 @@ import UIKit
 
 public class ApplicationCoordinator {
     
-    private static let latestPolicyAppVersion = "3.10"
+    private static let latestPolicyAppVersion = "4.16"
     
     private static let logger = Logger(label: "ApplicationCoordinator")
     
@@ -146,11 +146,22 @@ public class ApplicationCoordinator {
             currentDateProvider: currentDateProvider,
             removeExposureDetectionNotifications: {
                 services.userNotificationsManager.removeAllDelivered(for: .exposureDetection)
+            },
+            scheduleSelfIsolationReminderNotification: {
+                SelfIsolationChangeNotifier(
+                    currentDateProviding: services.currentDateProvider,
+                    notificationManager: services.userNotificationsManager
+                )
+                .scheduleSelfIsolationReminderNotification()
             }
         )
         let isolationContext = self.isolationContext
         
-        selfDiagnosisManager = SelfDiagnosisManager(httpClient: distributeClient, calculateIsolationState: isolationContext.handleSymptomsIsolationState)
+        selfDiagnosisManager = SelfDiagnosisManager(
+            httpClient: distributeClient,
+            calculateIsolationState: isolationContext.handleSymptomsIsolationState,
+            shouldShowNewNoSymptomsScreen: { enabledFeatures.contains(.newNoSymptomsScreen) }
+        )
         
         let riskyVenueConfiguration = CachedResponse(
             httpClient: distributeClient,
@@ -256,7 +267,8 @@ public class ApplicationCoordinator {
             currentDateProvider: currentDateProvider,
             appInfo: services.appInfo,
             getPostcode: { postcodeStore.postcode.currentValue?.value },
-            getLocalAuthority: { postcodeStore.localAuthorityId.currentValue?.value }
+            getLocalAuthority: { postcodeStore.localAuthorityId.currentValue?.value },
+            getHouseKeepingDayDuration: { isolationContext.isolationStateStore.configuration.housekeepingDeletionPeriod }
         )
         
         circuitBreaker = CircuitBreaker(
@@ -336,6 +348,8 @@ public class ApplicationCoordinator {
             localAuthorityValidator: localAuthorityValidator
         )
         
+        metricReporter.monitorHousekeeping()
+        
     }
     
     private func monitorRawState() {
@@ -411,7 +425,7 @@ public class ApplicationCoordinator {
                     isolationAcknowledgementState: isolationContext.makeIsolationAcknowledgementState(),
                     exposureNotificationStateController: exposureNotificationContext.exposureNotificationStateController,
                     virologyTestingManager: virologyTestingManager,
-                    testResultAcknowledgementState: makeResultAcknowledgementState(),
+                    testResultAcknowledgementState: makeTestResultAcknowledgementState(),
                     symptomsOnsetAndExposureDetailsProvider: isolationStateStore,
                     deleteAllData: { [weak self] in
                         self?.deleteAllData()
@@ -435,21 +449,16 @@ public class ApplicationCoordinator {
                     currentLocaleConfiguration: languageStore.languageInfo.map { $0.configuration() },
                     storeNewLanguage: languageStore.save,
                     homeAnimationsStore: homeAnimationsStore,
-                    shouldShowDailyContactTestingInformFeature: { [weak self] in
-                        guard let self = self else { return false }
-                        return self.isFeatureEnabled(.dailyContactTesting) && self.isFeatureEnabled(.offerDCTOnExposureNotification)
-                    },
-                    dailyContactTestingEarlyTerminationSupport: { [weak self] in
-                        guard let self = self else { return .disabled }
-                        guard self.isFeatureEnabled(.dailyContactTesting) else {
-                            return .disabled
-                        }
-                        return self.isolationContext.dailyContactTestingEarlyTerminationSupport
-                        
-                    },
                     diagnosisKeySharer: diagnosisKeySharer,
                     localInformation: localInformation,
-                    userNotificationManaging: userNotificationManager
+                    userNotificationManaging: userNotificationManager,
+                    didOpenSelfIsolationHub: { [weak self] in
+                        guard let self = self else { return }
+                        SelfIsolationChangeNotifier(
+                            currentDateProviding: self.currentDateProvider,
+                            notificationManager: self.userNotificationManager
+                        ).removePendingOrUndelivered()
+                    }
                 )
             )
         case .recommendingUpdate(let reason, let titles, let descriptions):
@@ -494,9 +503,9 @@ public class ApplicationCoordinator {
             .eraseToAnyPublisher()
     }
     
-    private func makeResultAcknowledgementState() -> AnyPublisher<TestResultAcknowledgementState, Never> {
-        virologyTestingStateStore.$virologyTestResult
-            .combineLatest(virologyTestingStateStore.$recievedUnknownTestResult)
+    private func makeTestResultAcknowledgementState() -> AnyPublisher<TestResultAcknowledgementState, Never> {
+        virologyTestingStateStore.virologyTestResult
+            .combineLatest(virologyTestingStateStore.recievedUnknownTestResult)
             .map { [weak self] virologyTestResult, recievedUnknownTestResult -> AnyPublisher<TestResultAcknowledgementState, Never> in
                 
                 guard let self = self else {
@@ -637,9 +646,17 @@ public class ApplicationCoordinator {
         }
         
         if !state.isAppUnavailable {
+            let uploadMetricsJob = BackgroundTaskAggregator.Job { [metricReporter] in
+                metricReporter.createHouskeepingPublisher()
+                    .append(Deferred(createPublisher: metricReporter.uploadMetrics))
+                    .eraseToAnyPublisher()
+            }
+            
+            enabledJobs.append(uploadMetricsJob)
+        } else {
             enabledJobs.append(
                 BackgroundTaskAggregator.Job(
-                    work: metricReporter.uploadMetrics
+                    work: metricReporter.createHouskeepingPublisher
                 )
             )
         }
@@ -836,6 +853,13 @@ public class ApplicationCoordinator {
                 }
             )
             .store(in: &cancellables)
+        
+        SelfIsolationChangeNotifier(
+            currentDateProviding: currentDateProvider,
+            notificationManager: userNotificationsManager
+        )
+        .removesNotificationsForChanges(in: isolationContext.isolationStateManager.$state)
+        .store(in: &cancellables)
         
         IsolationStateChangeNotifier(notificationManager: userNotificationsManager)
             .alertUserToChanges(in: isolationContext.isolationStateManager.$state)

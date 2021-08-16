@@ -21,20 +21,23 @@ struct IsolationContext {
     private let notificationCenter: NotificationCenter
     private let currentDateProvider: DateProviding
     private let removeExposureDetectionNotifications: () -> Void
+    private let scheduleSelfIsolationReminderNotification: () -> Void
     
-    var shouldAskForSymptoms = CurrentValueSubject<Bool, Never>(false)
+    let shouldAskForSymptoms = CurrentValueSubject<Bool, Never>(false)
     
     init(
         isolationConfiguration: CachedResponse<IsolationConfiguration>,
         encryptedStore: EncryptedStoring,
         notificationCenter: NotificationCenter,
         currentDateProvider: DateProviding,
-        removeExposureDetectionNotifications: @escaping () -> Void
+        removeExposureDetectionNotifications: @escaping () -> Void,
+        scheduleSelfIsolationReminderNotification: @escaping () -> Void
     ) {
         self.isolationConfiguration = isolationConfiguration
         self.notificationCenter = notificationCenter
         self.currentDateProvider = currentDateProvider
         self.removeExposureDetectionNotifications = removeExposureDetectionNotifications
+        self.scheduleSelfIsolationReminderNotification = scheduleSelfIsolationReminderNotification
         
         isolationStateStore = IsolationStateStore(store: encryptedStore, latestConfiguration: { isolationConfiguration.value }, currentDateProvider: currentDateProvider)
         isolationStateManager = IsolationStateManager(stateStore: isolationStateStore, currentDateProvider: currentDateProvider)
@@ -47,12 +50,16 @@ struct IsolationContext {
                 IsolationAcknowledgementState(
                     logicalState: state,
                     now: self.currentDateProvider.currentDate,
-                    acknowledgeStart: {
+                    acknowledgeStart: { hasOptedOut in
                         isolationStateStore.acknowldegeStartOfIsolation()
-                        if state.activeIsolation?.isContactCaseOnly ?? false {
-                            removeExposureDetectionNotifications()
-                            Metrics.signpost(.acknowledgedStartOfIsolationDueToRiskyContact)
+                        if hasOptedOut {
+                            optOutContactIsolationOnExposurerDay()
+                        } else if state.activeIsolation?.isContactCaseOnly ?? false {
+                            #warning("We can get the parameter isIndexCase into the acknowledge function and replace the above if condition.")
+                            scheduleSelfIsolationReminderNotification()
                         }
+                        removeExposureDetectionNotifications()
+                        Metrics.signpost(.acknowledgedStartOfIsolationDueToRiskyContact)
                     },
                     acknowledgeEnd: isolationStateStore.acknowldegeEndOfIsolation
                 )
@@ -61,7 +68,7 @@ struct IsolationContext {
                 switch (currentState, newState) {
                 case (.notNeeded, .notNeeded): return true
                 case (.neededForEnd(let isolation1, _), .neededForEnd(let isolation2, _)): return isolation1 == isolation2
-                case (.neededForStart(let isolation1, _), .neededForStart(let isolation2, _)): return isolation1 == isolation2
+                case (.neededForStartContactIsolation(let isolation1, _), .neededForStartContactIsolation(let isolation2, _)): return isolation1 == isolation2
                 default: return false
                 }
             })
@@ -92,6 +99,9 @@ struct IsolationContext {
                                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: currentDateProvider.currentGregorianDay(timeZone: .utc), onsetDay: onsetDay),
                                 testInfo: nil
                             )
+                            if !isolationStateManager.isolationLogicalState.currentValue.isIsolating {
+                                scheduleSelfIsolationReminderNotification()
+                            }
                             self.isolationStateStore.set(info)
                             Metrics.signpost(.didRememberOnsetSymptomsDateBeforeReceivedTestResult)
                         }
@@ -143,6 +153,7 @@ struct IsolationContext {
                     }
                     
                     if !currentIsolationState.isIsolating, newIsolationState.isIsolating {
+                        scheduleSelfIsolationReminderNotification()
                         isolationStateStore.restartIsolationAcknowledgement()
                     }
                     
@@ -183,26 +194,31 @@ struct IsolationContext {
         ]
     }
     
-    var dailyContactTestingEarlyTerminationSupport: DailyContactTestingEarlyIsolationTerminationSupport {
-        
-        guard let isContactCaseOnly = isolationStateManager.isolationLogicalState.currentValue.activeIsolation?.isContactCaseOnly,
-            isContactCaseOnly else {
-            return .disabled
+    func optOutContactIsolationOnExposurerDay() {
+        guard let contactCaseInfo = isolationStateStore.isolationInfo.contactCaseInfo else {
+            return // assert? - invalid state...
+        }
+        optOutContactIsolation(optOutDay: contactCaseInfo.exposureDay)
+    }
+    
+    private func optOutContactIsolation(optOutDay: GregorianDay) {
+        guard let contactCaseInfo = isolationStateStore.isolationInfo.contactCaseInfo,
+            let activeIsolation = isolationStateManager.isolationLogicalState.currentValue.activeIsolation else {
+            return // assert? - invalid state...
         }
         
-        return .enabled(optOutOfIsolation: {
-            guard let contactCaseInfo = isolationStateStore.isolationInfo.contactCaseInfo else {
-                return // assert? - invalid state...
-            }
-            
-            Metrics.signpost(.declaredNegativeResultFromDCT)
-            
-            let updatedContactCase = mutating(contactCaseInfo) {
-                $0.optOutOfIsolationDay = self.currentDateProvider.currentGregorianDay(timeZone: .current)
-            }
-            self.isolationStateStore.set(updatedContactCase)
-            self.isolationStateStore.acknowldegeEndOfIsolation()
-        })
+        let isContactCaseOnly = activeIsolation.isContactCaseOnly
+        
+        let updatedContactCase = mutating(contactCaseInfo) {
+            $0.optOutOfIsolationDay = optOutDay
+        }
+        isolationStateStore.set(updatedContactCase)
+        
+        if isContactCaseOnly {
+            isolationStateStore.acknowldegeEndOfIsolation()
+        }
+        
+        Metrics.signpost(.optedOutForContactIsolation)
     }
     
     func handleSymptomsIsolationState(onsetDay: GregorianDay?) -> (IsolationState, SelfDiagnosisEvaluation.ExistingPositiveTestState) {
@@ -237,6 +253,9 @@ struct IsolationContext {
                 symptomaticInfo: symptomaticInfo,
                 testInfo: nil
             )
+            if !isolationStateManager.isolationLogicalState.currentValue.isIsolating {
+                scheduleSelfIsolationReminderNotification()
+            }
             let newIsolationLogicalState = isolationStateStore.set(info)
             let isolationState = IsolationState(logicalState: newIsolationLogicalState)
             return (isolationState, .hasNoTest)

@@ -8,43 +8,52 @@ import XCTest
 class ContactTracingHubFlowTests: XCTestCase {
     
     @Propped
-    private var runner: ApplicationRunner<ContactTracingHubScenario>
+    private var runner: ApplicationRunner<SandboxedScenario>
     
     override func setUp() {
         $runner.initialState.exposureNotificationsAuthorized = true
-        $runner.initialState.userNotificationsAuthorized = false
+        $runner.initialState.userNotificationsAuthorized = true
+        $runner.initialState.postcode = "SW12"
+        $runner.initialState.localAuthorityId = "E09000022"
     }
     
     func testContactTracingOffReminder() throws {
-        
-        // !TEMP! This currently fails in ar and bn
-        if let languageCode = Locale.current.languageCode {
-            if languageCode == "ar" || languageCode == "bn" {
-                return
-            }
-        }
-        
-        $runner.report(scenario: "ContactTracingHub", "Contact Tracing Off - Reminder") {
+        $runner.report(scenario: "Contact Tracing Hub", "Contact Tracing Off - Reminder") {
             """
-            Users see the contact tracing hub, toggles off contact tracing and chooses a reminder time
+            Users tap on the Manage contact tracing button in the Home screen,
+            Users see the Contact Tracing Hub,
+            Users toggle off contact tracing and choose a reminder time.
             """
         }
         try runner.run { app in
-            let screen = ContactTracingHubScreen(app: app)
+            let homeScreen = HomeScreen(app: app)
+            XCTAssertTrue(homeScreen.contactTracingHubButton.exists)
+            
+            runner.step("Home screen") {
+                """
+                The user is presented the Home screen.
+                The user taps on manage contact tracing button.
+                """
+            }
+            
+            homeScreen.contactTracingHubButton.tap()
+            
+            let contactTracingHubScreen = ContactTracingHubScreen(app: app)
             
             runner.step("Disable Contact tracing") {
                 """
+                The user is presented the Contact Tracing Hub screen.
                 Users can disable contact tracing
                 """
             }
             
             // toggle off contact tracing
-            XCTAssert(screen.exposureNotificationSwitchOn.exists)
-            XCTAssert(screen.exposureNotificationSwitchOn.isHittable)
-            screen.exposureNotificationSwitchOn.tap()
+            XCTAssertTrue(contactTracingHubScreen.exposureNotificationSwitchOn.exists)
+            XCTAssertTrue(contactTracingHubScreen.exposureNotificationSwitchOn.isHittable)
+            contactTracingHubScreen.toggleOffSwitch()
             
             // toggle turns off before contract tracing is confirmed as off atm...
-            XCTAssert(screen.exposureNotificationSwitchOff.exists)
+            XCTAssertTrue(contactTracingHubScreen.exposureNotificationSwitchOff.exists)
             
             runner.step("Choose reminder time") {
                 """
@@ -52,9 +61,9 @@ class ContactTracingHubFlowTests: XCTestCase {
                 """
             }
             
-            screen.pauseContactTracingButton.tap()
+            contactTracingHubScreen.reminderSheetPauseContactTracingButton.tap()
             
-            XCTAssert(screen.exposureNotificationSwitchOff.exists) // contact tracing is now off
+            XCTAssertTrue(contactTracingHubScreen.exposureNotificationSwitchOff.exists) // contact tracing is now off
             
             runner.step("Confirmation alert") {
                 """
@@ -62,8 +71,8 @@ class ContactTracingHubFlowTests: XCTestCase {
                 """
             }
             
-            XCTAssert(screen.reminderAlertTitle.exists)
-            screen.reminderAlertButton.tap()
+            XCTAssertTrue(contactTracingHubScreen.reminderAlertTitle.exists)
+            contactTracingHubScreen.reminderAlertButton.tap()
             
             runner.step("Contact tracing off") {
                 """
@@ -74,40 +83,103 @@ class ContactTracingHubFlowTests: XCTestCase {
     }
     
     func testContactTracingOnWithoutReminder() throws {
-        
         // ensure user notifications are off
         $runner.initialState.userNotificationsAuthorized = false
         
-        $runner.report(scenario: "ContactTracingHub", "Contact Tracing Off - No Notification Authorization") {
+        $runner.report(scenario: "Contact Tracing Hub", "Contact Tracing Off - No Notification Authorization") {
             """
-            Users see the contact tracing hub, toggles off contact tracing and does not see the option to set a reminder
+            Users tap on the Manage contact tracing button in the Home screen,
+            Users see the Contact Tracing Hub,
+            Users toggle off contact tracing and do not see the option to set a reminder.
             """
         }
         try runner.run { app in
-            let screen = ContactTracingHubScreen(app: app)
+            let homeScreen = HomeScreen(app: app)
+            XCTAssertTrue(homeScreen.contactTracingHubButton.exists)
+            
+            runner.step("Home screen") {
+                """
+                The user is presented the Home screen.
+                The user taps on manage contact tracing button.
+                """
+            }
+            
+            homeScreen.contactTracingHubButton.tap()
+            
+            let contactTracingHubScreen = ContactTracingHubScreen(app: app)
             
             runner.step("Disable Contact tracing") {
                 """
+                The user is presented the Contact Tracing Hub screen.
                 Users can disable contact tracing on the contact tracing hub
                 """
             }
             
             // toggle contact tracing off
-            XCTAssert(screen.exposureNotificationSwitchOn.exists)
-            XCTAssert(screen.exposureNotificationSwitchOn.isHittable)
-            screen.exposureNotificationSwitchOn.tap()
+            XCTAssertTrue(contactTracingHubScreen.exposureNotificationSwitchOn.exists)
+            XCTAssertTrue(contactTracingHubScreen.exposureNotificationSwitchOn.isHittable)
+            contactTracingHubScreen.toggleOffSwitch()
             
-            // check that there is no alert
-            XCTAssertFalse(screen.reminderAlertTitle.exists)
+            // check that there is no reminder sheet
+            XCTAssertFalse(contactTracingHubScreen.reminderSheetTitle.exists)
             
             // since user notifications are off we just disable without showing the reminder sheet
-            XCTAssert(screen.exposureNotificationSwitchOff.exists)
+            XCTAssertTrue(contactTracingHubScreen.exposureNotificationSwitchOff.exists)
             
             runner.step("Contact tracing off") {
                 """
                 User now sees that contact tracing is off
                 """
             }
+        }
+    }
+    
+    func testShouldNotPauseContactTracing() throws {
+        $runner.report(scenario: "Contact Tracing Hub", "When should I not pause contact tracing") {
+            """
+            Users tap on the Manage contact tracing button in the Home screen,
+            Users see the Contact Tracing Hub,
+            Users open 'When should I not pause contact tracing' advice and see that screen
+            """
+        }
+        try runner.run { app in
+            let homeScreen = HomeScreen(app: app)
+            XCTAssertTrue(homeScreen.contactTracingHubButton.exists)
+            
+            runner.step("Home screen") {
+                """
+                The user is presented the Home screen.
+                The user taps on manage contact tracing button.
+                """
+            }
+            
+            homeScreen.contactTracingHubButton.tap()
+            
+            let contactTracingHubScreen = ContactTracingHubScreen(app: app)
+            
+            runner.step("Open advice") {
+                """
+                The user is presented the Contact Tracing Hub screen.
+                The user taps on 'You shouldn't pause contact tracing when' button.
+                """
+            }
+            
+            XCTAssertTrue(contactTracingHubScreen.shouldNotPauseButton.exists)
+            app.scrollTo(element: contactTracingHubScreen.shouldNotPauseButton)
+            XCTAssertTrue(contactTracingHubScreen.shouldNotPauseButton.isHittable)
+            contactTracingHubScreen.shouldNotPauseButton.tap()
+            
+            let contactTracingAdviceScreen = ContactTracingAdviceScreen(app: app)
+            
+            runner.step("Advice screen is presented") {
+                """
+                User now sees 'When should I not pause contact tracing' advice screen.
+                """
+            }
+            
+            XCTAssertTrue(contactTracingAdviceScreen.heading.exists)
+            XCTAssertTrue(contactTracingAdviceScreen.bulletItems.allExist)
+            XCTAssertTrue(contactTracingAdviceScreen.footnote.exists)
         }
     }
 }

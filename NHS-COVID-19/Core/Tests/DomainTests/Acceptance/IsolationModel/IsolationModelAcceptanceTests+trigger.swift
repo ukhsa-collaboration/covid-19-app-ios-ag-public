@@ -14,11 +14,8 @@ extension IsolationModelAcceptanceTests {
         switch event {
         case .riskyContact:
             try triggerRiskyContact(adapter: &adapter)
-        case .riskyContactWithExposureDayOlderThanIsolationTerminationDueToDCT:
-            // There’s a bug in `Domain` related to handling of DCT when there’s a subsequent non-contact isolation.
-            // Skip the test for now.
-            throw IsolationModelUndefinedMappingError()
-            try riskyContactWithExposureDayOlderThanIsolationTerminationDueToDCT(adapter: &adapter)
+        case .riskyContactWithExposureDayOlderThanEarlyIsolationTermination:
+            try riskyContactWithExposureDayOlderThanEarlyIsolationTermination(adapter: &adapter)
         case .selfDiagnosedSymptomatic:
             let questionare = Questionnaire(context: try! context())
             try questionare.selfDiagnosePositive(onsetDay: adapter.symptomaticCase.onsetDay)
@@ -63,7 +60,6 @@ extension IsolationModelAcceptanceTests {
         case .contactIsolationEnded:
             currentDateProvider.setDate(adapter.contactCase.contactIsolationToStartOfDay.startDate(in: .current))
         case .indexIsolationEnded:
-            throw IsolationModelUndefinedMappingError() // Looks like there's a bug here around DCT opt out date. Skip this for now
             currentDateProvider.setDate(
                 max(
                     adapter.symptomaticCase.symptomaticIsolationUntilStartOfDay,
@@ -72,10 +68,11 @@ extension IsolationModelAcceptanceTests {
         case .retentionPeriodEnded:
             currentDateProvider.setDate(adapter.currentDate.day.advanced(by: 30).startDate(in: .current))
             instance.coordinator.performBackgroundTask(task: NoOpBackgroundTask())
-        case .terminateRiskyContactDueToDCT:
-            if case .enabled(let optOutOfIsolation) = try context().dailyContactTestingEarlyTerminationSupport() {
-                optOutOfIsolation()
+        case .terminatedRiskyContactEarly:
+            if case .neededForStartContactIsolation(_, let acknowledge) = try context().isolationAcknowledgementState.await().get() {
+                acknowledge(true)
             }
+            adapter.contactCase.optedOutIsolation = adapter.contactCase.exposureDay
         case .receivedUnconfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate:
             let endDay: GregorianDay
             if initialState.symptomatic == .notIsolatingAndHadSymptomsPreviously,
@@ -99,12 +96,10 @@ extension IsolationModelAcceptanceTests {
             let testEntry = ManualTestResultEntry(configuration: $instance, context: try! context())
             try testEntry.enterNegative(endDate: endDay.startDate(in: .utc))
         case .receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDateButOlderThanAssumedSymptomOnsetDayIfAny:
-            throw IsolationModelUndefinedMappingError() // We currently use v1 payload for the store which does not support `confirmatoryDayLimit`, therefore it's always nil
             let endDay = adapter.testCase.testEndDay.advanced(by: 3)
             let testEntry = ManualTestResultEntry(configuration: $instance, context: try! context())
             try testEntry.enterNegative(endDate: endDay.startDate(in: .utc))
         case .receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDate:
-            throw IsolationModelUndefinedMappingError() // We currently use v1 payload for the store which does not support `confirmatoryDayLimit`, therefore it's always nil
             let endDay = adapter.testCase.testEndDay.advanced(by: 3)
             let testEntry = ManualTestResultEntry(configuration: $instance, context: try! context())
             try testEntry.enterNegative(endDate: endDay.startDate(in: .utc))
@@ -114,7 +109,7 @@ extension IsolationModelAcceptanceTests {
     private func triggerRiskyContact(adapter: inout IsolationModelAdapter) throws {
         let riskyContact = RiskyContact(configuration: $instance)
         
-        adapter.contactCase.exposureDay = adapter.contactCase.optedOutForDCTDay
+        adapter.contactCase.exposureDay = adapter.contactCase.optedOutIsolation.advanced(by: 1)
         
         adapter.contactCase.contactIsolationToStartOfDay = adapter.contactCase.exposureDay.advanced(by: 14)
         
@@ -124,9 +119,9 @@ extension IsolationModelAcceptanceTests {
         adapter.contactCase.contactIsolationFromStartOfDay = adapter.currentDate.day
     }
     
-    private func riskyContactWithExposureDayOlderThanIsolationTerminationDueToDCT(adapter: inout IsolationModelAdapter) throws {
+    private func riskyContactWithExposureDayOlderThanEarlyIsolationTermination(adapter: inout IsolationModelAdapter) throws {
         let riskyContact = RiskyContact(configuration: $instance)
-        riskyContact.trigger(exposureDate: adapter.contactCase.optedOutForDCTDay.advanced(by: -4).startDate(in: .utc)) {
+        riskyContact.trigger(exposureDate: adapter.contactCase.optedOutIsolation.advanced(by: -4).startDate(in: .utc)) {
             instance.coordinator.performBackgroundTask(task: NoOpBackgroundTask())
         }
     }

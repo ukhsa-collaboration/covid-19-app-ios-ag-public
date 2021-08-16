@@ -137,8 +137,6 @@ private struct SubmissionPayload: Codable {
         var didHaveSymptomsBeforeReceivedTestResult = 0
         var didRememberOnsetSymptomsDateBeforeReceivedTestResult = 0
         
-        var declaredNegativeResultFromDCT = 0
-        
         // MARK: - Risky venue warning
         
         var receivedRiskyVenueM1Warning = 0
@@ -175,6 +173,11 @@ private struct SubmissionPayload: Codable {
         var positiveLabResultAfterPositiveSelfRapidTest = 0
         var negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit = 0
         var negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit = 0
+        
+        // MARK: - Contact case opt-out
+        
+        var optedOutForContactIsolation = 0
+        var optedOutForContactIsolationBackgroundTick = 0
         
     }
     
@@ -279,7 +282,6 @@ private extension Metric {
         case .didAskForSymptomsOnPositiveTestEntry: return \.didAskForSymptomsOnPositiveTestEntry
         case .didHaveSymptomsBeforeReceivedTestResult: return \.didHaveSymptomsBeforeReceivedTestResult
         case .didRememberOnsetSymptomsDateBeforeReceivedTestResult: return \.didRememberOnsetSymptomsDateBeforeReceivedTestResult
-        case .declaredNegativeResultFromDCT: return \.declaredNegativeResultFromDCT
         case .receivedPositiveSelfRapidTestResultEnteredManually: return \.receivedPositiveSelfRapidTestResultEnteredManually
         case .isIsolatingForTestedSelfRapidPositiveBackgroundTick: return \.isIsolatingForTestedSelfRapidPositiveBackgroundTick
         case .hasTestedSelfRapidPositiveBackgroundTick: return \.hasTestedSelfRapidPositiveBackgroundTick
@@ -308,6 +310,8 @@ private extension Metric {
         case .selectedHasNoSymptomsM2Journey: return \.selectedHasNoSymptomsM2Journey
         case .selectedLFDTestOrderingM2Journey: return \.selectedLFDTestOrderingM2Journey
         case .selectedHasLFDTestM2Journey: return \.selectedHasLFDTestM2Journey
+        case .optedOutForContactIsolation: return \.optedOutForContactIsolation
+        case .optedOutForContactIsolationBackgroundTick: return \.optedOutForContactIsolationBackgroundTick
         }
     }
     

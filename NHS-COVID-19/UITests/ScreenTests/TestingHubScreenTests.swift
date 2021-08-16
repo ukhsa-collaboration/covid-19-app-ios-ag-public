@@ -15,21 +15,20 @@ class TestingHubScreenNotIsolatingTests: XCTestCase {
             let screen = TestingHubScreen(app: app)
             
             XCTAssertFalse(screen.bookFreeTestButton.exists)
-            XCTAssertTrue(screen.findOutAboutTestingLinkButton.exists)
+            XCTAssertTrue(screen.orderTestKitLinkButton.exists)
             XCTAssertTrue(screen.enterTestResultButton.exists)
         }
     }
     
-    func testTapOnFindOutAboutTestingLinkButton() throws {
+    func testTapOnOrderTestKitLinkButton() throws {
         try runner.run { app in
             let screen = TestingHubScreen(app: app)
             
-            XCTAssert(screen.findOutAboutTestingLinkButton.exists)
-            XCTAssert(screen.findOutAboutTestingLinkButton.isHittable)
-            screen.findOutAboutTestingLinkButton.tap()
+            XCTAssert(screen.orderTestKitLinkButton.exists)
+            XCTAssert(screen.orderTestKitLinkButton.isHittable)
+            screen.orderTestKitLinkButton.tap()
             
-            let findOutAboutTestingAlertTitle = app.staticTexts[TestingHubScreenAlertTitle.findOutAboutTesting]
-            XCTAssert(findOutAboutTestingAlertTitle.displayed)
+            XCTAssert(app.staticTexts[TestingHubScreenAlertTitle.orderAFreeTestingKit].displayed)
         }
     }
     
@@ -41,8 +40,7 @@ class TestingHubScreenNotIsolatingTests: XCTestCase {
             XCTAssert(screen.enterTestResultButton.isHittable)
             screen.enterTestResultButton.tap()
             
-            let enterTestResultAlertTitle = app.staticTexts[TestingHubScreenAlertTitle.enterTestResult]
-            XCTAssert(enterTestResultAlertTitle.displayed)
+            XCTAssert(app.staticTexts[TestingHubScreenAlertTitle.enterTestResult].displayed)
         }
     }
     
@@ -58,7 +56,7 @@ class TestingHubScreenIsolatingTests: XCTestCase {
             let screen = TestingHubScreen(app: app)
             
             XCTAssertTrue(screen.bookFreeTestButton.exists)
-            XCTAssertFalse(screen.findOutAboutTestingLinkButton.exists)
+            XCTAssertFalse(screen.orderTestKitLinkButton.exists)
             XCTAssertTrue(screen.enterTestResultButton.exists)
         }
     }
@@ -71,8 +69,7 @@ class TestingHubScreenIsolatingTests: XCTestCase {
             XCTAssert(screen.bookFreeTestButton.isHittable)
             screen.bookFreeTestButton.tap()
             
-            let bookFreeTestAlertTitle = app.staticTexts[TestingHubScreenAlertTitle.bookFreeTest]
-            XCTAssert(bookFreeTestAlertTitle.displayed)
+            XCTAssert(app.staticTexts[TestingHubScreenAlertTitle.bookFreeTest].displayed)
         }
     }
     
@@ -84,8 +81,7 @@ class TestingHubScreenIsolatingTests: XCTestCase {
             XCTAssert(screen.enterTestResultButton.isHittable)
             screen.enterTestResultButton.tap()
             
-            let enterTestResultAlertTitle = app.staticTexts[TestingHubScreenAlertTitle.enterTestResult]
-            XCTAssert(enterTestResultAlertTitle.displayed)
+            XCTAssert(app.staticTexts[TestingHubScreenAlertTitle.enterTestResult].displayed)
         }
     }
     

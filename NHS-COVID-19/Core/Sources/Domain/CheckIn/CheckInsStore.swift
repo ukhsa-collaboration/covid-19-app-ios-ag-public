@@ -27,7 +27,7 @@ private struct CheckInsWrapper: Codable, DataConvertible {
 
 public class CheckInsStore {
     
-    private let venueDecoder: VenueDecoder
+    private let venueDecoder: VenueDecoding
     
     @Encrypted<CheckInsWrapper> private var checkInsInfo: CheckInsWrapper? {
         didSet {
@@ -85,7 +85,7 @@ public class CheckInsStore {
     private let getCachedRiskyVenueConfiguration: () -> RiskyVenueConfiguration
     
     required init(store: EncryptedStoring,
-                  venueDecoder: VenueDecoder,
+                  venueDecoder: VenueDecoding,
                   getCachedRiskyVenueConfiguration: @escaping () -> RiskyVenueConfiguration) {
         self.venueDecoder = venueDecoder
         _checkInsInfo = store.encrypted("checkins")
@@ -255,10 +255,12 @@ public class CheckInsStore {
     }
     
     public func checkIn(with payload: String, currentDate: Date) throws -> (String, () -> Void) {
-        let venue = try venueDecoder.decode(payload)
-        let checkIn = CheckIn(venue: venue, checkedInDate: currentDate)
-        save(checkIn)
-        return (venue.organisation, deleteLatest)
+        let venues = try venueDecoder.decode(payload)
+        venues.forEach { venue in
+            let checkIn = CheckIn(venue: venue, checkedInDate: currentDate)
+            save(checkIn)
+        }
+        return (venues.first?.organisation ?? "", deleteLatest) // multiple venues are only used in Scenarios, in prod we're only interested in the first venue
     }
     
     private func save(_ checkIns: [CheckIn]) {

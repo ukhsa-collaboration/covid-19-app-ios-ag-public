@@ -28,9 +28,7 @@ public enum ScenarioKind: CaseIterable, Identifiable {
     }
 }
 
-public protocol IdentifiableType: AnyObject {
-    static var id: String { get }
-}
+@objc public protocol IdentifiableType: AnyObject {}
 
 public extension IdentifiableType {
     static var id: String {

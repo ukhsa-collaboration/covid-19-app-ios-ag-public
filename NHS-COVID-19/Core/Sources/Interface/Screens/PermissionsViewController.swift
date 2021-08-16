@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -40,7 +40,7 @@ private class PermissionsStep: NSObject, OnboardingStep {
         self.submit = submit
     }
     
-    func label(for localizationKey: StringLocalizationKey) -> UILabel {
+    func label(for localizationKey: StringLocalizableKey) -> UILabel {
         let label = BaseLabel()
         label.text = localize(localizationKey)
         return label

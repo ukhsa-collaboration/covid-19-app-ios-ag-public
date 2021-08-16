@@ -5,25 +5,21 @@
 import SwiftUI
 
 public struct BulletItems: View {
-    let rows: [String]
     static let bulletStyle = SymbolProperties(type: .fullCircle, size: .halfSpacing, color: .nhsBlue)
+    private let rows: [String]
+    
+    public init(rows: [String]) {
+        self.rows = rows
+    }
+    
     public var body: some View {
         VStack(alignment: .leading, spacing: .halfSpacing) {
             ForEach(rows, id: \.self) { row in
                 HStack(alignment: .firstTextBaseline) {
-                    // ensure the bullet point aligns with the first line of the text by getting it
-                    // to center align with an invisible character which scales the same way when
-                    // the dynamic text settings change
-                    HStack(alignment: .center) {
-                        Circle()
-                            .fill(Color(Self.bulletStyle.color))
-                            .frame(width: Self.bulletStyle.size, height: Self.bulletStyle.size)
-                        Text("\u{00A0}")
-                            .styleAsBody()
-                            .frame(width: 0)
-                    }
-                    .frame(width: Self.bulletStyle.size)
-                    .accessibility(hidden: true)
+                    Circle()
+                        .fill(Color(Self.bulletStyle.color))
+                        .frame(width: Self.bulletStyle.size, height: Self.bulletStyle.size)
+                        .textBaselineAligned(font: .body)
                     
                     Text(row)
                         .styleAsBody()

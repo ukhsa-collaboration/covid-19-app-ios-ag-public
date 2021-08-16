@@ -174,7 +174,6 @@ struct SubmissionPayload: Decodable {
         var receivedRiskyContactNotification: MetricField = 0
         var receivedUnconfirmedPositiveTestResult: MetricField = 0
         var startedIsolation: MetricField = 0
-        var declaredNegativeResultFromDCT: MetricField = 0
         
         // How many times background tasks ran
         var totalBackgroundTasks: MetricField = 0
@@ -206,6 +205,9 @@ struct SubmissionPayload: Decodable {
         var receivedPositiveSelfRapidTestResultEnteredManually: MetricField = 0
         var isIsolatingForTestedSelfRapidPositiveBackgroundTick: MetricField = 0
         var hasTestedSelfRapidPositiveBackgroundTick: MetricField = 0
+        
+        var optedOutForContactIsolation: MetricField = 0
+        var optedOutForContactIsolationBackgroundTick: MetricField = 0
     }
     
     var includesMultipleApplicationVersions: Bool

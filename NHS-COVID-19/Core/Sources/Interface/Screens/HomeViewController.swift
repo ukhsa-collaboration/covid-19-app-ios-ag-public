@@ -11,9 +11,8 @@ public protocol HomeViewControllerInteracting {
     func didTapRiskLevelBanner(viewModel: RiskLevelInfoViewController.ViewModel)
     func didTapLocalInfoBanner(viewModel: LocalInformationViewController.ViewModel)
     func didTapDiagnosisButton()
-    func didTapIsolationAdviceButton()
+    func didTapSelfIsolationButton()
     func didTapCheckInButton()
-    func didTapFinancialSupportButton()
     func didTapSettingsButton()
     func didTapAboutButton()
     func didTapLinkTestResultButton()
@@ -41,11 +40,9 @@ public class HomeViewController: UIViewController {
     
     private let country: InterfaceProperty<Country>
     let showLanguageSelectionScreen: (() -> Void)?
-    let showContactTracingHub: (() -> Void)?
-    let showLocalInfoScreen: (() -> Void)?
+    let showNotificationScreen: (() -> Void)?
     private var didShowLanguageSelectionScreen = false
-    private var didShowContactTracingHub = false
-    private var didShowLocalInfoScreen = false
+    private var didShowNotificationScreen = false
     private var removeSnapshot: (() -> Void)?
     
     public init(
@@ -60,8 +57,7 @@ public class HomeViewController: UIViewController {
         showFinancialSupportButton: InterfaceProperty<Bool>,
         country: InterfaceProperty<Country>,
         showLanguageSelectionScreen: (() -> Void)?,
-        showContactTracingHub: (() -> Void)? = nil,
-        showLocalInfoScreen: (() -> Void)? = nil
+        showNotificationScreen: (() -> Void)? = nil
     ) {
         self.interactor = interactor
         self.riskLevelBannerViewModel = riskLevelBannerViewModel
@@ -76,9 +72,8 @@ public class HomeViewController: UIViewController {
         self.showFinancialSupportButton = showFinancialSupportButton
         
         self.country = country
+        self.showNotificationScreen = showNotificationScreen
         self.showLanguageSelectionScreen = showLanguageSelectionScreen
-        self.showContactTracingHub = showContactTracingHub
-        self.showLocalInfoScreen = showLocalInfoScreen
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -99,7 +94,6 @@ public class HomeViewController: UIViewController {
             shouldShowSelfDiagnosis: shouldShowSelfDiagnosis,
             exposureNotificationsEnabled: exposureNotificationsEnabled,
             exposureNotificationsToggleAction: exposureNotificationsToggleAction,
-            showFinancialSupportButton: showFinancialSupportButton,
             country: country
         )
         .navigationBarHidden(true)
@@ -156,16 +150,10 @@ public class HomeViewController: UIViewController {
             showLanguageSelectionScreen()
             removeSnapshot?()
             removeSnapshot = nil
-        } else if !didShowLocalInfoScreen, !didShowContactTracingHub {
-            #warning("Only one of the two is possible at any time, find a better solution than just calling both")
-            if let showContactTracingHub = self.showContactTracingHub {
-                didShowContactTracingHub = true
-                showContactTracingHub()
-            }
-            
-            if let showLocalInfoScreen = self.showLocalInfoScreen {
-                didShowLocalInfoScreen = true
-                showLocalInfoScreen()
+        } else if !didShowNotificationScreen {
+            if let showNotificationScreen = self.showNotificationScreen {
+                didShowNotificationScreen = true
+                showNotificationScreen()
             }
         } else {
             #warning("Find a long term solution for this.")

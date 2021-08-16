@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -55,7 +55,7 @@ class IsolationStateChangeNotifierTests: XCTestCase {
         let cancellable = notifier.alertUserToChanges(in: subject)
         defer { cancellable.cancel() }
         
-        subject.send(.isolationFinishedButNotAcknowledged(Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(optOutOfIsolationDay: nil)))))
+        subject.send(.isolationFinishedButNotAcknowledged(Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(exposureDay: .today)))))
         
         XCTAssertEqual(notificationManager.removePendingNotificationType, .isolationState)
     }
@@ -66,7 +66,7 @@ class IsolationStateChangeNotifierTests: XCTestCase {
         
         let day = GregorianDay(year: 2020, month: 5, day: 23)
         
-        subject.send(.isolating(Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: day, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(optOutOfIsolationDay: nil))), endAcknowledged: false, startAcknowledged: true))
+        subject.send(.isolating(Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: day, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(exposureDay: .today))), endAcknowledged: false, startOfContactIsolationAcknowledged: true))
         
         let triggerAt = mutating(DateComponents()) {
             $0.year = 2020
@@ -85,7 +85,7 @@ class IsolationStateChangeNotifierTests: XCTestCase {
         
         let day = GregorianDay(year: 2020, month: 5, day: 1)
         
-        subject.send(.isolating(Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: day, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(optOutOfIsolationDay: nil))), endAcknowledged: false, startAcknowledged: true))
+        subject.send(.isolating(Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: day, timeZone: .current), reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(exposureDay: .today))), endAcknowledged: false, startOfContactIsolationAcknowledged: true))
         
         let triggerAt = mutating(DateComponents()) {
             $0.year = 2020

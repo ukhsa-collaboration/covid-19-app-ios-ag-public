@@ -5,12 +5,11 @@
 import UIKit
 
 public class WelcomePoint: UIView {
-    public init(image: ImageName, header: String, body: String) {
+    public init(image: ImageName,
+                header: String? = nil,
+                body: String,
+                link: (title: String, action: () -> Void)? = nil) {
         super.init(frame: .zero)
-        
-        let headerLabel = BaseLabel()
-        headerLabel.text = header
-        headerLabel.styleAsTertiaryTitle()
         
         let bodyLabel = BaseLabel()
         bodyLabel.text = body
@@ -33,9 +32,24 @@ public class WelcomePoint: UIView {
         ])
         
         let vStack = UIStackView(arrangedSubviews: [
-            headerLabel,
             bodyLabel,
         ])
+        
+        if let header = header {
+            let headerLabel = BaseLabel()
+            headerLabel.text = header
+            headerLabel.styleAsTertiaryTitle()
+            vStack.insertArrangedSubview(headerLabel, at: 0)
+        }
+        
+        if let link = link {
+            let linkButton = LinkButton(
+                title: link.title,
+                action: link.action
+            )
+            vStack.addArrangedSubview(linkButton)
+        }
+        
         vStack.axis = .vertical
         vStack.spacing = .halfSpacing
         

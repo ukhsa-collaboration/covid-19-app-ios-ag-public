@@ -8,7 +8,7 @@ protocol LocalizableKeys {
 
 protocol DefinedLocalizationKeys {
     var defaultKeys: Set<String> { get }
-    var parameterizedKeys: Set<StringLocalizationKeyParser.ParameterizedKey> { get }
+    var parameterizedKeys: Set<StringLocalizableKeyParser.ParameterizedKey> { get }
 }
 
 protocol UsedLocalizationKeys {

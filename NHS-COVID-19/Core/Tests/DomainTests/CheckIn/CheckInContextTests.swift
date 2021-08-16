@@ -19,7 +19,7 @@ class CheckInContextTest: XCTestCase {
         
         checkInsStore = CheckInsStore(
             store: MockEncryptedStore(),
-            venueDecoder: .forTests,
+            venueDecoder: VenueDecoder.forTests,
             getCachedRiskyVenueConfiguration: {
                 RiskyVenueConfiguration(
                     optionToBookATest: DayDuration(self.optionToBookATestDuration)

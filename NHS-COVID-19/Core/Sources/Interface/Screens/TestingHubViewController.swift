@@ -6,12 +6,6 @@ import Localization
 import SwiftUI
 import UIKit
 
-public enum TestingHubAccessibilityID {
-    public static let bookFreeTestButton = "TestingHub.BookFreeTestButton"
-    public static let findOutAboutTestingLinkButton = "TestingHub.FindOutAboutTestingLinkButton"
-    public static let enterTestResultButton = "TestingHub.EnterTestResultButton"
-}
-
 private struct TestingHubView: View {
     
     private let interactor: TestingHubViewController.Interacting
@@ -30,108 +24,46 @@ private struct TestingHubView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 2) {
+            VStack(spacing: .halfHairSpacing) {
                 if showOrderTestButton.wrappedValue {
-                    TestingHubCell(viewModel:
+                    HubButtonCell(viewModel:
                         .init(
-                            title: localize(.testing_hub_row_book_free_test_title),
-                            description: localize(.testing_hub_row_book_free_test_description),
-                            accessibilityID: TestingHubAccessibilityID.bookFreeTestButton,
+                            title: localize(.testing_hub_row_book_lab_test_title),
+                            description: localize(.testing_hub_row_book_lab_test_description),
                             action: interactor.didTapBookFreeTestButton
                         )
                     )
                 }
                 if showFindOutAboutTestingButton.wrappedValue {
-                    TestingHubCell(viewModel:
+                    HubButtonCell(viewModel:
                         .init(
-                            title: localize(.testing_hub_row_find_out_about_testing_title),
-                            description: localize(.testing_hub_row_find_out_about_testing_description),
+                            title: localize(.testing_hub_row_order_free_test_title),
+                            description: localize(.testing_hub_row_order_free_test_description),
                             iconName: .externalLink,
-                            accessibilityID: TestingHubAccessibilityID.findOutAboutTestingLinkButton,
-                            action: interactor.didTapFindOutAboutTestingButton
+                            action: interactor.didTapOrderAFreeTestingKit
                         )
                     )
                 }
-                TestingHubCell(viewModel:
+                HubButtonCell(viewModel:
                     .init(
                         title: localize(.testing_hub_row_enter_test_result_title),
                         description: localize(.testing_hub_row_enter_test_result_description),
-                        accessibilityID: TestingHubAccessibilityID.enterTestResultButton,
                         action: interactor.didTapEnterTestResultButton
                     )
                 )
             }
         }
+        .padding(.bottom, .bigSpacing)
         .background(Color(.background))
-    }
-    
-}
-
-private struct TestingHubCell: View {
-    
-    struct ViewModel {
-        let title: String
-        let description: String
-        let iconName: ImageName
-        let action: () -> Void
-        let accessibilityID: String
-        
-        init(
-            title: String,
-            description: String,
-            iconName: ImageName = .menuChevron,
-            accessibilityID: String,
-            action: @escaping () -> Void
-        ) {
-            self.title = title
-            self.description = description
-            self.iconName = iconName
-            self.accessibilityID = accessibilityID
-            self.action = action
-        }
-    }
-    
-    let viewModel: ViewModel
-    
-    var body: some View {
-        let button = Button(action: viewModel.action) {
-            HStack {
-                VStack(alignment: .leading, spacing: .halfSpacing) {
-                    Text(viewModel.title)
-                        .styleAsHeading()
-                    Text(viewModel.description)
-                        .styleAsSecondaryBody()
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Image(viewModel.iconName)
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(Color(.primaryText))
-            }
-            .padding(24)
-            .contentShape(Rectangle()) // fixes tap outside of padding
-        }
-        .buttonStyle(PlainButtonStyle())
-        .background(Color(.surface))
-        .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
-        
-        let resultView: AnyView
-        if viewModel.iconName == .externalLink {
-            let linkText = viewModel.title + ", " + viewModel.description
-            resultView = AnyView(button.linkify(linkText))
-        } else {
-            resultView = AnyView(button)
-        }
-        
-        return resultView.accessibility(identifier: viewModel.accessibilityID)
     }
     
 }
 
 public protocol TestingHubViewControllerInteracting {
     func didTapBookFreeTestButton()
-    func didTapFindOutAboutTestingButton()
+    func didTapOrderAFreeTestingKit()
     func didTapEnterTestResultButton()
+    func didTapFindOutAboutTestingLink()
 }
 
 public class TestingHubViewController: RootViewController {

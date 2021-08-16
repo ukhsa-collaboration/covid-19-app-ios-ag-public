@@ -139,6 +139,43 @@ class SandboxEncryptedStore: EncryptedStoring {
                 }
             }
             """# .data(using: .utf8)!
+        case .indexAndContact:
+            let startOfIsolationday = GregorianDay.today.advanced(by: -2)
+            
+            stored["isolation_state_info"] = #"""
+            {
+                "configuration" : {
+                    "indexCaseSinceSelfDiagnosisOnset" : 7,
+                    "maxIsolation" : 21,
+                    "contactCase" : 14,
+                    "indexCaseSinceSelfDiagnosisUnknownOnset" : 5,
+                    "housekeepingDeletionPeriod" : 14
+                },
+                "isolationInfo" : {
+                    "hasAcknowledgedEndOfIsolation": false,
+                    "hasAcknowledgedStartOfIsolation": \#(host.initialState.hasAcknowledgedStartOfIsolation),
+                    "indexCaseInfo" : {
+                        "selfDiagnosisDay" : {
+                            "day" : \#(startOfIsolationday.day),
+                            "month" : \#(startOfIsolationday.month),
+                            "year" : \#(startOfIsolationday.year)
+                        }
+                    },
+                    "contactCaseInfo" : {
+                        "exposureDay" : {
+                            "day" : \#(startOfIsolationday.day),
+                            "month" : \#(startOfIsolationday.month),
+                            "year" : \#(startOfIsolationday.year)
+                        },
+                        "isolationFromStartOfDay":{
+                            "year": \#(startOfIsolationday.year),
+                            "month": \#(startOfIsolationday.month),
+                            "day": \#(startOfIsolationday.day)
+                        }
+                    }
+                }
+            }
+            """# .data(using: .utf8)!
         }
     }
     

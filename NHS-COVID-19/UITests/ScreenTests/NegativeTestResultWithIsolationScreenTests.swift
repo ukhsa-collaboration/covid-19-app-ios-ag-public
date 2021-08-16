@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -18,17 +18,17 @@ class NegativeTestResultWithIsolationScreenTests: XCTestCase {
             
             XCTAssert(screen.indicationLabel.exists)
             XCTAssert(screen.explanationLabel.exists)
-            XCTAssert(screen.onlineServicesLink.exists)
+            XCTAssert(screen.nhsGuidanceLink.exists)
             XCTAssert(screen.returnHomeButton.exists)
         }
     }
     
-    func testTapOnlineServices() throws {
+    func testTapNHSGuidance() throws {
         try runner.run { app in
             let screen = NegativeTestResultWithIsolationScreen(app: app)
             
-            screen.onlineServicesLink.tap()
-            XCTAssert(screen.onlineServicesLinkAlertTitle.exists)
+            screen.nhsGuidanceLink.tap()
+            XCTAssert(screen.nhsGuidanceLinkAlertTitle.exists)
         }
     }
     
@@ -44,8 +44,8 @@ class NegativeTestResultWithIsolationScreenTests: XCTestCase {
 
 private extension NegativeTestResultWithIsolationScreen {
     
-    var onlineServicesLinkAlertTitle: XCUIElement {
-        app.staticTexts[NegativeTestResultWithIsolationScreenScenario.onlineServicesLinkTapped]
+    var nhsGuidanceLinkAlertTitle: XCUIElement {
+        app.staticTexts[NegativeTestResultWithIsolationScreenScenario.nhsGuidanceTapped]
     }
     
     var returnHomeAlertTitle: XCUIElement {

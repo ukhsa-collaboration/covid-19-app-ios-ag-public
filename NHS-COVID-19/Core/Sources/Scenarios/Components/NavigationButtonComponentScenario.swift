@@ -16,17 +16,17 @@ public class NavigationButtonComponentScenario: Scenario {
     
     enum Showcases: CaseIterable {
         case checkIn
-        case isolationAdvice
         case symptoms
+        case selfIsolation
         
         func content() -> NavigationButton {
             switch self {
             case .checkIn:
                 return NavigationButton(imageName: .qrCode, foregroundColor: Color(.background), backgroundColor: Color(.stylePurple), text: localize(.home_checkin_button_title)) {}
-            case .isolationAdvice:
-                return NavigationButton(imageName: .read, foregroundColor: Color(.background), backgroundColor: Color(.stylePink), text: localize(.home_isolation_advice_button_title)) {}
             case .symptoms:
                 return NavigationButton(imageName: .thermometer, foregroundColor: Color(.background), backgroundColor: Color(.styleOrange), text: localize(.home_diagnosis_button_title)) {}
+            case .selfIsolation:
+                return NavigationButton(imageName: .selfIsolation, foregroundColor: Color(.background), backgroundColor: Color(.styleRed), text: localize(.home_self_isolation_button_title)) {}
             }
         }
     }

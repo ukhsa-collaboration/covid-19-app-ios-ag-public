@@ -33,8 +33,9 @@ extension CommonTestingHubScreenScenario {
 public enum TestingHubScreenAlertTitle {
     
     public static let bookFreeTest = "Book a free test tapped"
-    public static let findOutAboutTesting = "Find out about testing tapped"
+    public static let orderAFreeTestingKit = "Order a free testing kit tapped"
     public static let enterTestResult = "Enter a test result tapped"
+    public static let findOutAboutTestingFromAccordion = "Find out about testing tapped"
     
 }
 
@@ -66,12 +67,15 @@ private class Interactor: TestingHubViewController.Interacting {
         viewController?.showAlert(title: TestingHubScreenAlertTitle.bookFreeTest)
     }
     
-    func didTapFindOutAboutTestingButton() {
-        viewController?.showAlert(title: TestingHubScreenAlertTitle.findOutAboutTesting)
+    func didTapOrderAFreeTestingKit() {
+        viewController?.showAlert(title: TestingHubScreenAlertTitle.orderAFreeTestingKit)
     }
     
     func didTapEnterTestResultButton() {
         viewController?.showAlert(title: TestingHubScreenAlertTitle.enterTestResult)
     }
     
+    func didTapFindOutAboutTestingLink() {
+        viewController?.showAlert(title: TestingHubScreenAlertTitle.findOutAboutTestingFromAccordion)
+    }
 }

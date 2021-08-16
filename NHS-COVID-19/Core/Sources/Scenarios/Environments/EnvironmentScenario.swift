@@ -1,15 +1,17 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
 import Integration
 import ProductionConfiguration
 
+@available(iOSApplicationExtension, unavailable)
 protocol EnvironmentScenario: Scenario {
     static var configuration: EnvironmentConfiguration { get }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension EnvironmentScenario {
     static var kind: ScenarioKind { .environment }
     

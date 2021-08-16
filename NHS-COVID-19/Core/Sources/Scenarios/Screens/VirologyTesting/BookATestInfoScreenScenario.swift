@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Domain
@@ -51,5 +51,9 @@ private class Interactor: BookATestInfoViewController.Interacting {
     
     func didTapCancel() {
         viewController?.showAlert(title: BookATestInfoScreenScenario.cancelTapped)
+    }
+    
+    func didTapBookAPCRTest() {
+        fatalError("Should not happen in this scenario.")
     }
 }

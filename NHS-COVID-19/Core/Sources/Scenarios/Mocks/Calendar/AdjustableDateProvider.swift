@@ -13,7 +13,7 @@ final class AdjustableDateProvider: DateProviding {
     private let numberOfDaysFromNowSubject = CurrentValueSubject<Int, Never>(0)
     private var cancellables = Set<AnyCancellable>()
     
-    init(notificationCenter: NotificationCenter = .default, dataProvider: MockDataProvider = MockScenario.mockDataProvider) {
+    init(notificationCenter: NotificationCenter = .default, dataProvider: MockDataProvider = .shared) {
         self.notificationCenter = notificationCenter
         
         dataProvider.numberOfDaysFromNowDidChange

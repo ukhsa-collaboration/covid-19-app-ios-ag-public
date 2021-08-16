@@ -7,7 +7,7 @@ import Localization
 import UIKit
 
 public protocol BookAFollowUpTestViewControllerInteracting {
-    var didTapOnlineServicesLink: () -> Void { get }
+    var didTapNHSGuidanceLink: () -> Void { get }
     var didTapPrimaryButton: () -> Void { get }
     var didTapCancel: () -> Void { get }
 }
@@ -30,7 +30,7 @@ private class BookAFollowUpTestContent: PrimaryButtonStickyFooterScrollingConten
                 BaseLabel().styleAsSecondaryBody().set(text: localize(.book_a_follow_up_test_advice_link_title)),
                 LinkButton(
                     title: localize(.book_a_follow_up_test_advice_link),
-                    action: interactor.didTapOnlineServicesLink
+                    action: interactor.didTapNHSGuidanceLink
                 ),
             ],
             primaryButton: (title: localize(.book_a_follow_up_test_button), action: interactor.didTapPrimaryButton)

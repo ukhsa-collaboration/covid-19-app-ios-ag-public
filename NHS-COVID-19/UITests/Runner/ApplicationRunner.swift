@@ -139,6 +139,7 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
                 "-UIPreferredContentSizeCategoryName", deviceConfiguration.contentSize.rawValue,
                 "-\(Runner.interfaceStyleDefaultKey)", deviceConfiguration.interfaceStyle.rawValue,
                 "-AppleLanguages", "(\(deviceConfiguration.language))",
+                "-AppleLocale", deviceConfiguration.language,
             ]
             
             let localeConfiguration = LocaleConfiguration.custom(localeIdentifier: deviceConfiguration.language)

@@ -15,7 +15,7 @@ class AppReviewPresenterTests: XCTestCase {
     
     override func setUp() {
         storeReviewController = MockStoreReviewController()
-        checkInsStore = CheckInsStore(store: MockEncryptedStore(), venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        checkInsStore = CheckInsStore(store: MockEncryptedStore(), venueDecoder: VenueDecoder.forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         currentDate = UTCHour(year: 2020, month: 5, day: 15, hour: 10)
         appReviewPresenter = AppReviewPresenter(
             checkInsStore: checkInsStore,

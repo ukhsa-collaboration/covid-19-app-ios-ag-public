@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -12,7 +12,7 @@ class LocalizationTests: XCTestCase {
     func testLocalizationKeysExistForAllLanguages() throws {
         let languageSet = try LanguageSet()
         
-        let errors1 = StringLocalizationKey.allCases.compactMap { key in
+        let errors1 = StringLocalizableKey.allCases.compactMap { key in
             languageSet.errorMessage(for: key)
         }
         

@@ -5,7 +5,11 @@
 import CryptoKit
 import Foundation
 
-public struct VenueDecoder {
+public protocol VenueDecoding {
+    func decode(_ payload: String) throws -> [Venue]
+}
+
+public struct VenueDecoder: VenueDecoding {
     
     private var prefix = "UKC19TRACING"
     private var minimumVersionNumber = 1
@@ -30,7 +34,7 @@ public struct VenueDecoder {
         case invalidSignature
     }
     
-    func decode(_ payload: String) throws -> Venue {
+    public func decode(_ payload: String) throws -> [Venue] {
         let parts = payload.split(separator: ":").map { String($0) }
         
         guard parts.count == 3 else {
@@ -63,7 +67,7 @@ public struct VenueDecoder {
         }
         
         let decoder = JSONDecoder()
-        return try decoder.decode(Venue.self, from: jwt.payload)
+        return [try decoder.decode(Venue.self, from: jwt.payload)]
     }
 }
 

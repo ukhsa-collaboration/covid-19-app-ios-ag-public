@@ -34,7 +34,7 @@ struct BookAFollowUpTestScreen {
     }
     
     var adviceLinkButton: XCUIElement {
-        app.links[localized: .end_of_isolation_online_services_link]
+        app.links[localized: .book_a_follow_up_test_advice_link]
     }
     
     var primaryButton: XCUIElement {

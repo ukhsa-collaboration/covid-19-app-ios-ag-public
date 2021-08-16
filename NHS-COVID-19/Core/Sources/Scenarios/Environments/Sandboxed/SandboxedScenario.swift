@@ -1,10 +1,11 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
 import Integration
 
+@available(iOSApplicationExtension, unavailable)
 public class SandboxedScenario: Scenario {
     public static let name = "Sandboxed"
     public static let nameForSorting = "0.1"

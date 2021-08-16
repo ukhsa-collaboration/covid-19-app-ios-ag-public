@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -18,12 +18,12 @@ public class IsolationPaymentFlowViewController: BaseNavigationController {
     @Published
     fileprivate var state: State
     
-    fileprivate let _openURL: (URL) -> Void
+    fileprivate let _openURL: (URL, () -> Void) -> Void
     fileprivate let _didTapCheckEligibility: () -> AnyPublisher<URL, NetworkRequestError>
     fileprivate let _recordLaunchedIsolationPaymentsApplication: () -> Void
     private var cancellables = [AnyCancellable]()
     
-    public init(openURL: @escaping (URL) -> Void, didTapCheckEligibility: @escaping () -> AnyPublisher<URL, NetworkRequestError>, recordLaunchedIsolationPaymentsApplication: @escaping () -> Void) {
+    public init(openURL: @escaping (URL, () -> Void) -> Void, didTapCheckEligibility: @escaping () -> AnyPublisher<URL, NetworkRequestError>, recordLaunchedIsolationPaymentsApplication: @escaping () -> Void) {
         _openURL = openURL
         _recordLaunchedIsolationPaymentsApplication = recordLaunchedIsolationPaymentsApplication
         _didTapCheckEligibility = didTapCheckEligibility
@@ -66,22 +66,20 @@ public class IsolationPaymentFlowViewController: BaseNavigationController {
     fileprivate func handleCheckEligibility() {
         state = .loading
         _didTapCheckEligibility()
+            .receive(on: UIScheduler.shared)
             .sink(
                 receiveCompletion: { [weak self] completion in
-                    DispatchQueue.main.async {
-                        guard let self = self else { return }
-                        switch completion {
-                        case .finished:
-                            self.dismiss(animated: false)
-                        case .failure:
-                            self.state = .failedToLoad
-                        }
+                    guard let self = self else { return }
+                    switch completion {
+                    case .finished: break
+                    case .failure:
+                        self.state = .failedToLoad
                     }
                 },
                 receiveValue: { [weak self] url in
-                    DispatchQueue.main.async {
-                        self?._recordLaunchedIsolationPaymentsApplication()
-                        self?._openURL(url)
+                    self?._recordLaunchedIsolationPaymentsApplication()
+                    self?._openURL(url) { [weak self] in
+                        self?.dismiss(animated: false)
                     }
                 }
             )
@@ -125,11 +123,11 @@ private struct FinancialSupportViewControllerInteractor: FinancialSupportViewCon
     }
     
     public func didTapHelpForEngland() {
-        controller?._openURL(ExternalLink.financialSupportEngland.url)
+        controller?._openURL(ExternalLink.financialSupportEngland.url) {}
     }
     
     public func didTapHelpForWales() {
-        controller?._openURL(ExternalLink.financialSupportWales.url)
+        controller?._openURL(ExternalLink.financialSupportWales.url) {}
     }
     
     public func didTapCheckEligibility() {
@@ -137,6 +135,6 @@ private struct FinancialSupportViewControllerInteractor: FinancialSupportViewCon
     }
     
     public func didTapViewPrivacyNotice() {
-        controller?._openURL(ExternalLink.financialSupportPrivacyNotice.url)
+        controller?._openURL(ExternalLink.financialSupportPrivacyNotice.url) {}
     }
 }

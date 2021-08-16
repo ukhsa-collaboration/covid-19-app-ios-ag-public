@@ -29,7 +29,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         let isolationState = IsolationLogicalState.isolating(
             Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)),
             endAcknowledged: false,
-            startAcknowledged: true
+            startOfContactIsolationAcknowledged: false
         )
         
         let state = TestResultAcknowledgementState(
@@ -57,7 +57,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         let isolationState = IsolationLogicalState.isolating(
             Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)),
             endAcknowledged: false,
-            startAcknowledged: true
+            startOfContactIsolationAcknowledged: false
         )
         
         let state = TestResultAcknowledgementState(
@@ -157,9 +157,9 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         )
         
         let isolationState = IsolationLogicalState.isolating(
-            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(contactCaseInfo: Isolation.ContactCaseInfo(optOutOfIsolationDay: nil))),
+            Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(contactCaseInfo: Isolation.ContactCaseInfo(exposureDay: .today))),
             endAcknowledged: false,
-            startAcknowledged: true
+            startOfContactIsolationAcknowledged: true
         )
         
         let state = TestResultAcknowledgementState(
@@ -187,7 +187,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         let isolationState = IsolationLogicalState.isolating(
             Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)),
             endAcknowledged: false,
-            startAcknowledged: true
+            startOfContactIsolationAcknowledged: false
         )
         
         let state = TestResultAcknowledgementState(
@@ -265,7 +265,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         let isolationState = IsolationLogicalState.isolating(
             Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: true, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)),
             endAcknowledged: false,
-            startAcknowledged: true
+            startOfContactIsolationAcknowledged: false
         )
         
         let state = TestResultAcknowledgementState(
@@ -293,7 +293,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         let isolationState = IsolationLogicalState.isolating(
             Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false), contactCaseInfo: nil)),
             endAcknowledged: false,
-            startAcknowledged: true
+            startOfContactIsolationAcknowledged: false
         )
         
         let state = TestResultAcknowledgementState(
@@ -395,7 +395,7 @@ class TestResultAcknowledgementStateTests: XCTestCase {
         let isolationState = IsolationLogicalState.isolating(
             Isolation(fromDay: .today, untilStartOfDay: .today, reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: true, testKitType: nil, isSelfDiagnosed: false, isPendingConfirmation: true), contactCaseInfo: nil)),
             endAcknowledged: false,
-            startAcknowledged: true
+            startOfContactIsolationAcknowledged: false
         )
         
         let state = TestResultAcknowledgementState(

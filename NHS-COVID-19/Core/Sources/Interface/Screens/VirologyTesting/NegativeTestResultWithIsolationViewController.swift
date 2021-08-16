@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -8,6 +8,7 @@ import UIKit
 
 public protocol NegativeTestResultWithIsolationViewControllerInteracting {
     func didTapOnlineServicesLink()
+    func didTapNHSGuidanceLink()
     func didTapReturnHome()
     
 }
@@ -45,8 +46,8 @@ extension NegativeTestResultWithIsolationViewController {
                     BaseLabel().set(text: viewModel.explanationLabel).styleAsSecondaryBody(),
                     BaseLabel().set(text: localize(.negative_test_result_with_isolation_advice)).styleAsSecondaryBody(),
                     LinkButton(
-                        title: localize(.negative_test_result_with_isolation_service_link),
-                        action: interactor.didTapOnlineServicesLink
+                        title: viewModel.linkLabel,
+                        action: viewModel.testResultType == .firstResult ? interactor.didTapNHSGuidanceLink : interactor.didTapOnlineServicesLink
                     ),
                 ],
                 primaryButton: (
@@ -114,6 +115,15 @@ private extension NegativeTestResultWithIsolationViewController.ViewModel {
             return localize(.negative_test_result_with_isolation_back_to_home)
         case .afterPositive:
             return localize(.negative_test_result_after_positive_button_label)
+        }
+    }
+    
+    var linkLabel: String {
+        switch testResultType {
+        case .firstResult:
+            return localize(.negative_test_result_with_isolation_nhs_guidance_link)
+        case .afterPositive:
+            return localize(.negative_test_result_with_isolation_service_link)
         }
     }
 }

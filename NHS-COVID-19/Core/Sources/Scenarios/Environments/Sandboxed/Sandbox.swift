@@ -41,6 +41,7 @@ public enum Sandbox {
             case none
             case index
             case contact
+            case indexAndContact
         }
         
         public enum IsolationPaymentState: String {
@@ -78,7 +79,7 @@ public enum Sandbox {
         @TestInjected("sandbox.postcode")
         public var postcode: String?
         
-        @TestInjected("sandbox.lastAcceptedWithAppVersion", defaultValue: "3.10")
+        @TestInjected("sandbox.lastAcceptedWithAppVersion", defaultValue: "4.16")
         public var lastAcceptedWithAppVersion: String
         
         @TestInjected("sandbox.scannedQRCode", defaultValue: Text.validQRCode)

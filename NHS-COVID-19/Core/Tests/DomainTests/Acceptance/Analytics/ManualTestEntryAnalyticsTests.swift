@@ -176,34 +176,6 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
         assertAnalyticsPacketIsNormal()
     }
     
-    func testOptIntoDCT() throws {
-        let riskyContact = RiskyContact(configuration: $instance)
-        
-        assertAnalyticsPacketIsNormal()
-        
-        riskyContact.trigger(exposureDate: currentDateProvider.currentDate) {
-            self.assertOnFields { assertField in
-                assertField.isPresent(\.isIsolatingBackgroundTick)
-                assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
-                assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
-                assertField.equals(expected: 1, \.receivedRiskyContactNotification)
-                assertField.equals(expected: 1, \.startedIsolation)
-            }
-        }
-        
-        let action = try context().dailyContactTestingEarlyTerminationSupport()
-        switch action {
-        case .enabled(let optOutOfIsolation):
-            optOutOfIsolation()
-        default:
-            XCTFail("Expected .enabled to be returned from dailyContactTestingEarlyTerminationSupport")
-        }
-        assertOnFields { assertField in
-            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
-            assertField.equals(expected: 1, \.declaredNegativeResultFromDCT)
-        }
-    }
-    
     func testHasTestedPositiveSelfRapidTestResultEnteredManually() throws {
         assertAnalyticsPacketIsNormal()
         

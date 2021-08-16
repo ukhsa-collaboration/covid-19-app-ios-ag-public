@@ -16,7 +16,7 @@ enum AcknowledgementNeededState {
     case neededForNegativeAfterPositiveResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
     case neededForNegativeResultNotIsolating(interactor: NegativeTestResultNoIsolationViewControllerInteractor)
     case neededForEndOfIsolation(interactor: EndOfIsolationViewControllerInteractor, isolationEndDate: Date, isIndexCase: Bool)
-    case neededForStartOfIsolationExposureDetection(interactor: ExposureAcknowledgementViewControllerInteractor, isolationEndDate: Date, showDailyContactTesting: Bool)
+    case neededForStartOfIsolationExposureDetection(acknowledge: (Bool) -> Void, vaccineThresholdDate: Date, isolationEndDate: DomainProperty<Date>, isIndexCase: Bool)
     case neededForRiskyVenue(interactor: RiskyVenueInformationInteractor, venueName: String, checkInDate: Date)
     case neededForRiskyVenueWarnAndBookATest(acknowledge: () -> Void, venueName: String, checkInDate: Date)
     case neededForVoidResultContinueToIsolate(interactor: VoidTestResultFlowInteracting, isolationEndDate: Date)
@@ -67,9 +67,23 @@ enum AcknowledgementNeededState {
                     case .neededForEnd(let isolation, let acknowledge):
                         let interactor = EndOfIsolationViewControllerInteractor(acknowledge: acknowledge, openURL: context.openURL)
                         return .neededForEndOfIsolation(interactor: interactor, isolationEndDate: isolation.endDate, isIndexCase: isolation.isIndexCase)
-                    case .neededForStart(let isolation, let acknowledge):
-                        let interactor = ExposureAcknowledgementViewControllerInteractor(openURL: context.openURL, acknowledge: acknowledge)
-                        return .neededForStartOfIsolationExposureDetection(interactor: interactor, isolationEndDate: isolation.endDate, showDailyContactTesting: context.shouldShowDailyContactTestingInformFeature())
+                    case .neededForStartContactIsolation(let isolation, let acknowledge):
+                        guard let vaccineThresholdDate = isolation.vaccineThresholdDate else {
+                            return nil
+                        }
+                        
+                        return .neededForStartOfIsolationExposureDetection(
+                            acknowledge: acknowledge,
+                            vaccineThresholdDate: vaccineThresholdDate,
+                            isolationEndDate: context.isolationState.map {
+                                if case .isolate(let currentIsolation) = $0 {
+                                    return currentIsolation.endDate
+                                } else {
+                                    return isolation.endDate
+                                }
+                            },
+                            isIndexCase: isolation.isIndexCase
+                        )
                     case .notNeeded:
                         switch riskyVenueAckState {
                         case .needed(let acknowledge, let venueName, let checkInDate, let resolution):

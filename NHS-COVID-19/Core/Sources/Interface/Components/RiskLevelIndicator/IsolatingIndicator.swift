@@ -74,11 +74,13 @@ public struct IsolatingIndicator: View {
                 .bold()
                 .foregroundColor(Color(.primaryText))
                 .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.center)
             
             Text(verbatim: localize(.isolation_until_date(date: date)))
                 .font(.headline)
                 .foregroundColor(Color(.primaryText))
                 .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.center)
             
             ZStack(alignment: .center) {
                 if animationDisabled || isDetectionPaused || shouldDegradeAnimation {
@@ -105,6 +107,11 @@ public struct IsolatingIndicator: View {
             .frame(width: badgeSize, height: badgeSize, alignment: .center)
             .padding(.standardSpacing)
             .zIndex(-1)
+            .background(Group {
+                if (animationDisabled || shouldDegradeAnimation) && !isDetectionPaused {
+                    Image(.isolatingCircles)
+                }
+            })
             
             Text(verbatim: localize(.isolation_days_subtitle(days: remainingDays)))
                 .font(.headline)

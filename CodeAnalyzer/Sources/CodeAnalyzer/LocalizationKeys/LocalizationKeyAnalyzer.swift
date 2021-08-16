@@ -23,7 +23,7 @@ public class LocalizationKeyAnalyzer {
         sourceFiles: [URL]
     ) throws {
         
-        localisationKeyParser = try StringLocalizationKeyParser(file: localisationKeyFile)
+        localisationKeyParser = try StringLocalizableKeyParser(file: localisationKeyFile)
         
         localizableStringKeyParser = try LocalizableStringKeyParser(file: localizableStringsFile)
         localizableStringDictKeyParser = try LocalizableStringDictParser(file: localizableStringsDictFile)
@@ -49,7 +49,7 @@ public class LocalizationKeyAnalyzer {
         self.localizationKeysCalledFileParser = localizationKeysCalledFileParser
     }
     
-    /// Keys present in Localizable.strings and Localizable.stringsdict but not in StringLocalizationkey.swift
+    /// Keys present in Localizable.strings and Localizable.stringsdict but not in StringLocalizableKey.swift
     public var undefinedKeys: Set<LocalizableKey> {
         // FIXME: Refactor - Beautify
         var stringKeysDict = [String: LocalizableKey]()

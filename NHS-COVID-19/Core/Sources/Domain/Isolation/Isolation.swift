@@ -17,7 +17,7 @@ public struct Isolation: Equatable {
     }
     
     struct ContactCaseInfo: Equatable {
-        var optOutOfIsolationDay: GregorianDay?
+        var exposureDay: GregorianDay
     }
     
     public struct Reason: Equatable {
@@ -29,16 +29,25 @@ public struct Isolation: Equatable {
     public var untilStartOfDay: LocalDay
     public var reason: Isolation.Reason
     
-    init(fromDay: LocalDay, untilStartOfDay: LocalDay, reason: Isolation.Reason) {
+    #warning("Rename this.")
+    // Now that this is not part of `ContactCaseInfo`, we need a slightly different name.
+    public var optOutOfIsolationDay: GregorianDay?
+    
+    init(fromDay: LocalDay, untilStartOfDay: LocalDay, reason: Isolation.Reason, optOutOfIsolationDay: GregorianDay?) {
         self.fromDay = fromDay
         self.untilStartOfDay = untilStartOfDay
         self.reason = reason
+        self.optOutOfIsolationDay = optOutOfIsolationDay
     }
 }
 
 extension Isolation {
     public var endDate: Date {
         untilStartOfDay.startOfDay
+    }
+    
+    public var vaccineThresholdDate: Date? {
+        reason.contactCaseInfo?.exposureDay.advanced(by: -15).startDate(in: .current)
     }
 }
 

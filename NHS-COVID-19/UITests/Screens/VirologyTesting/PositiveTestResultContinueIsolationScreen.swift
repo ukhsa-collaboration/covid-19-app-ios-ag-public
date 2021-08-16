@@ -17,10 +17,8 @@ struct PositiveTestResultContinueIsolationScreen {
         app.staticTexts[localized: .positive_test_result_start_to_isolate_info]
     }
     
-    var explanationLabel: XCUIElement {
-        #warning("This assertion is incorrect.")
-        // If explaination copy is multiple paragraphs, it’ll be broken down into multiple labels to improve accessibility.
-        return app.staticTexts[localized: .positive_test_result_explanation]
+    var explanationLabel: [XCUIElement] {
+        app.staticTexts[localized: .positive_test_result_explanation]
     }
     
     var onlineServicesLink: XCUIElement {

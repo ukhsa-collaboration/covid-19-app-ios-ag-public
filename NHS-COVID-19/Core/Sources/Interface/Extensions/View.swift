@@ -18,7 +18,7 @@ public struct LinkButtonModifier: ViewModifier {
 }
 
 extension View {
-    func linkify(_ key: StringLocalizationKey) -> some View {
+    func linkify(_ key: StringLocalizableKey) -> some View {
         modifier(LinkButtonModifier(text: localize(key)))
     }
     

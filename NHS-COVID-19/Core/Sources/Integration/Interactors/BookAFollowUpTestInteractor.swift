@@ -8,7 +8,7 @@ import Localization
 
 struct BookAFollowUpTestInteractor: BookAFollowUpTestViewController.Interacting {
     let didTapPrimaryButton: () -> Void
-    let didTapOnlineServicesLink: () -> Void
+    let didTapNHSGuidanceLink: () -> Void
     let didTapCancel: () -> Void
     
     init(
@@ -17,7 +17,7 @@ struct BookAFollowUpTestInteractor: BookAFollowUpTestViewController.Interacting 
         openURL: @escaping (URL) -> Void
     ) {
         self.didTapPrimaryButton = didTapPrimaryButton
-        didTapOnlineServicesLink = { openURL(ExternalLink.nhs111Online.url) }
+        didTapNHSGuidanceLink = { openURL(ExternalLink.nhsGuidance.url) }
         self.didTapCancel = didTapCancel
     }
 }

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import XCTest
@@ -16,17 +16,17 @@ class VoidTestResultWithIsolationScreenTests: XCTestCase {
             XCTAssert(screen.daysIsolateLabel(daysRemaining: runner.scenario.daysToIsolate).exists)
             XCTAssert(screen.indicationLabel.exists)
             XCTAssert(screen.explanationLabel.allExist)
-            XCTAssert(screen.onlineServicesLink.exists)
+            XCTAssert(screen.nhsGuidanceLink.exists)
             XCTAssert(screen.continueButton.exists)
         }
     }
     
-    func testTapOnlineServices() throws {
+    func testTapNHSGuidance() throws {
         try runner.run { app in
             let screen = VoidTestResultWithIsolationScreen(app: app)
             
-            screen.onlineServicesLink.tap()
-            XCTAssert(screen.onlineServicesLinkAlertTitle.exists)
+            screen.nhsGuidanceLink.tap()
+            XCTAssert(screen.nhsGuidanceLinkAlertTitle.exists)
         }
     }
     
@@ -42,8 +42,8 @@ class VoidTestResultWithIsolationScreenTests: XCTestCase {
 
 private extension VoidTestResultWithIsolationScreen {
     
-    var onlineServicesLinkAlertTitle: XCUIElement {
-        app.staticTexts[VoidTestResultWithIsolationScreenScenario.onlineServicesLinkTapped]
+    var nhsGuidanceLinkAlertTitle: XCUIElement {
+        app.staticTexts[VoidTestResultWithIsolationScreenScenario.nhsGuidanceLinkTapped]
     }
     
     var primaryButtonAlertTitle: XCUIElement {

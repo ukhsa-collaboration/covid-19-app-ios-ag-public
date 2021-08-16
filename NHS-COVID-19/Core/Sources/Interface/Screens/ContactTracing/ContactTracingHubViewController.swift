@@ -157,6 +157,7 @@ private struct IconItemView: View {
             Image(icon)
                 .frame(width: .bulletPointSize, height: .bulletPointSize, alignment: .center)
                 .foregroundColor(Color(.secondaryText))
+                .textBaselineAligned(font: .headline)
                 .accessibility(hidden: true)
             VStack(alignment: .leading) {
                 Text(title)
@@ -164,6 +165,7 @@ private struct IconItemView: View {
                 Text(description)
                     .styleAsSecondaryBody()
             }
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 }

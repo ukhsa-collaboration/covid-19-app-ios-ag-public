@@ -8,6 +8,7 @@ import Integration
 import SwiftUI
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 public class Runner {
     
     public static let activeScenarioDefaultKey = "activeScenario"
@@ -68,7 +69,7 @@ public class Runner {
         ApplicationShort( // TODO: Register this only if we’re in the Mock Scenario
             type: "debug",
             title: "Debug",
-            systemImageName: "doc.text.magnifyingglass",
+            systemImageName: "line.horizontal.3.decrease.circle",
             action: { [weak self] in
                 DispatchQueue.main.async {
                     self?.showDebugUI()
@@ -189,8 +190,8 @@ public class Runner {
         let tabBar = UITabBarController()
         let mocks = UIHostingController(
             rootView: ConfigureMocksView(
-                dataProvider: MockScenario.mockDataProvider,
-                lokaliseState: LokaliseState(dataProvider: MockScenario.mockDataProvider),
+                dataProvider: .shared,
+                lokaliseState: LokaliseState(dataProvider: .shared),
                 showDevView: Binding(
                     get: { [weak self] in self?.showDevView ?? false },
                     set: { [weak self] value in self?.showDevView = value }

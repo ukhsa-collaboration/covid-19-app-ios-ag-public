@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -8,6 +8,7 @@ import UIKit
 
 let downloadAppLink = "https://apps.apple.com/us/app/nhs-covid-19/id1520427663"
 
+@available(iOSApplicationExtension, unavailable)
 public class AppAvailabilityErrorViewController: RecoverableErrorViewController {
     public struct ViewModel {
         public enum ErrorType {

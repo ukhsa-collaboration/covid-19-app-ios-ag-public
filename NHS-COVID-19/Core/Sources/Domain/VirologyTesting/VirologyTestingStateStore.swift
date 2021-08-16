@@ -74,31 +74,41 @@ private struct TestResultInfo: Codable, DataConvertible {
 
 public class VirologyTestingStateStore {
     
-    @Encrypted private var virologyTestingInfo: VirologyTestingInfo? {
-        didSet {
-            virologyTestResult = relevantUnacknowledgedTestResult
+    @PublishedEncrypted private var virologyTestingInfo: VirologyTestingInfo?
+    @PublishedEncrypted private var recievedUnknownTestResulInfo: UnknownTestResultInfo?
+    
+    private(set) lazy var virologyTestResult: DomainProperty<VirologyStateTestResult?> = {
+        $virologyTestingInfo.map { [weak self] virologyTestingInfo in
+            guard let self = self,
+                let unacknowledgedTestResult = self.getRelevantTestResult(from: virologyTestingInfo)
+            else {
+                return nil
+            }
+            
+            let diagnosisSubmissionToken: DiagnosisKeySubmissionToken?
+            if let submissionToken = unacknowledgedTestResult.diagnosisKeySubmissionToken {
+                diagnosisSubmissionToken = DiagnosisKeySubmissionToken(value: submissionToken)
+            } else {
+                diagnosisSubmissionToken = nil
+            }
+            return VirologyStateTestResult(
+                testResult: UnacknowledgedTestResult(unacknowledgedTestResult.result),
+                testKitType: TestKitType(unacknowledgedTestResult.testKitType),
+                endDate: unacknowledgedTestResult.endDate,
+                diagnosisKeySubmissionToken: diagnosisSubmissionToken,
+                requiresConfirmatoryTest: unacknowledgedTestResult.requiresConfirmatoryTest,
+                confirmatoryDayLimit: unacknowledgedTestResult.confirmatoryDayLimit
+            )
         }
-    }
+    }()
     
-    @Encrypted
-    private var recievedUnknownTestResulInfo: UnknownTestResultInfo? {
-        didSet {
-            recievedUnknownTestResult = recievedUnknownTestResulInfo != nil
-        }
-    }
-    
-    @Published
-    private(set) var virologyTestResult: VirologyStateTestResult?
-    
-    @Published
-    private(set) var recievedUnknownTestResult: Bool = false
+    private(set) lazy var recievedUnknownTestResult: DomainProperty<Bool> = {
+        $recievedUnknownTestResulInfo.map { $0 != nil }
+    }()
     
     init(store: EncryptedStoring) {
         _virologyTestingInfo = store.encrypted("virology_testing")
         _recievedUnknownTestResulInfo = store.encrypted("unknown_test_result")
-        
-        virologyTestResult = relevantUnacknowledgedTestResult
-        recievedUnknownTestResult = recievedUnknownTestResulInfo != nil
         
         migrate()
     }
@@ -132,27 +142,6 @@ public class VirologyTestingStateStore {
                     diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: testInfo.diagnosisKeySubmissionToken)
                 )
             }
-        } else {
-            return nil
-        }
-    }
-    
-    var relevantUnacknowledgedTestResult: VirologyStateTestResult? {
-        if let unacknowledgedTestResult = getRelevantTestResult() {
-            let diagnosisSubmissionToken: DiagnosisKeySubmissionToken?
-            if let submissionToken = unacknowledgedTestResult.diagnosisKeySubmissionToken {
-                diagnosisSubmissionToken = DiagnosisKeySubmissionToken(value: submissionToken)
-            } else {
-                diagnosisSubmissionToken = nil
-            }
-            return VirologyStateTestResult(
-                testResult: UnacknowledgedTestResult(unacknowledgedTestResult.result),
-                testKitType: TestKitType(unacknowledgedTestResult.testKitType),
-                endDate: unacknowledgedTestResult.endDate,
-                diagnosisKeySubmissionToken: diagnosisSubmissionToken,
-                requiresConfirmatoryTest: unacknowledgedTestResult.requiresConfirmatoryTest,
-                confirmatoryDayLimit: unacknowledgedTestResult.confirmatoryDayLimit
-            )
         } else {
             return nil
         }
@@ -232,10 +221,10 @@ public class VirologyTestingStateStore {
     
     func delete() {
         virologyTestingInfo = nil
-        recievedUnknownTestResult = false
+        recievedUnknownTestResulInfo = nil
     }
     
-    private func getRelevantTestResult() -> TestResultInfo? {
+    private func getRelevantTestResult(from virologyTestingInfo: VirologyTestingInfo?) -> TestResultInfo? {
         if let virologyTestingInfo = virologyTestingInfo,
             let unacknowledgedTestResults = virologyTestingInfo.unacknowledgedTestResults {
             if let positive = unacknowledgedTestResults.filter({ $0.result == .positive }).first {

@@ -14,7 +14,7 @@ struct CodebaseReporter {
         let localizationKeyAnalyzer = try LocalizationKeyAnalyzer(
             localizableStringsFile: corePackageSourcesFolder.appendingPathComponent(App.localizableStringsResourcePath),
             localizableStringsDictFile: corePackageSourcesFolder.appendingPathComponent(App.localizableStringsDictResourcePath),
-            localisationKeyFile: corePackageSourcesFolder.appendingPathComponent(App.stringLocalizationKeyResourcePath),
+            localisationKeyFile: corePackageSourcesFolder.appendingPathComponent(App.StringLocalizableKeyResourcePath),
             sourceFiles: App.localizedPackages.flatMap {
                 getAllFiles(in: corePackageSourcesFolder.appendingPathComponent($0))
             }

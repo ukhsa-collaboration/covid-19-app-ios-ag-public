@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Domain
@@ -17,5 +17,9 @@ struct NegativeTestResultWithIsolationViewControllerInteractor: NegativeTestResu
     
     func didTapReturnHome() {
         _acknowledge()
+    }
+    
+    func didTapNHSGuidanceLink() {
+        openURL(ExternalLink.nhsGuidance.url)
     }
 }

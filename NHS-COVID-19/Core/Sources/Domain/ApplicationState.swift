@@ -54,17 +54,10 @@ public struct RunningAppContext {
     public var currentLocaleConfiguration: DomainProperty<LocaleConfiguration>
     public var storeNewLanguage: (_ localeConfiguration: LocaleConfiguration) -> Void
     public var homeAnimationsStore: HomeAnimationsEnabledProtocol
-    public var shouldShowDailyContactTestingInformFeature: () -> Bool
-    public var dailyContactTestingEarlyTerminationSupport: () -> DailyContactTestingEarlyIsolationTerminationSupport
     public var diagnosisKeySharer: DomainProperty<DiagnosisKeySharer?>
     public var localInformation: DomainProperty<LocalInformationEndpointManager.LocalInfo?>
     public var userNotificationManaging: UserNotificationManaging
-}
-
-// FIXME: Move to a more suitable place
-public enum DailyContactTestingEarlyIsolationTerminationSupport {
-    case enabled(optOutOfIsolation: () -> Void)
-    case disabled
+    public var didOpenSelfIsolationHub: () -> Void
 }
 
 public typealias GetLocalAuthorities = (_ postcode: Postcode) -> Result<Set<LocalAuthority>, PostcodeValidationError>

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Domain
@@ -31,5 +31,9 @@ public struct BookATestInfoViewControllerInteractor: BookATestInfoViewController
     
     public func didTapBookATestForSomeoneElse() {
         _openURL(ExternalLink.bookATestForSomeoneElse.url)
+    }
+    
+    public func didTapBookAPCRTest() {
+        _openURL(ExternalLink.bookPCRTest.url)
     }
 }

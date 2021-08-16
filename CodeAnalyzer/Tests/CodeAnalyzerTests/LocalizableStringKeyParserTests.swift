@@ -33,7 +33,7 @@ final class LocalizableStringKeyParserTests: XCTestCase {
 // MARK: - Helper methods
 
 enum MockFile {
-    case stringLocalizationKey
+    case StringLocalizableKey
     case localizableString
     case localizableStringDict
     case swiftFileUsingKeys
@@ -42,8 +42,8 @@ enum MockFile {
         let resourceFilesDirectory = URL(fileURLWithPath: #file).deletingLastPathComponent().appendingPathComponent("ResourceFiles")
         
         switch self {
-        case .stringLocalizationKey:
-            return resourceFilesDirectory.appendingPathComponent("StringLocalizationKey.swift")
+        case .StringLocalizableKey:
+            return resourceFilesDirectory.appendingPathComponent("StringLocalizableKey.swift")
         case .localizableString:
             return resourceFilesDirectory.appendingPathComponent("Localizable.strings")
         case .localizableStringDict:

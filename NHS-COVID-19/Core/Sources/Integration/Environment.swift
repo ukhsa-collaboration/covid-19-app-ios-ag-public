@@ -10,19 +10,20 @@ import Foundation
 import ProductionConfiguration
 
 public struct Environment {
-    var distributionClient: HTTPClient
-    var apiClient: HTTPClient
-    var iTunesClient: HTTPClient
-    var venueDecoder: VenueDecoder
-    var backgroundTaskIdentifier: String
-    var identifier: String
-    var appInfo: AppInfo
+    public let distributionClient: HTTPClient
+    public let apiClient: HTTPClient
+    public let iTunesClient: HTTPClient
+    public let venueDecoder: VenueDecoding
+    public let backgroundTaskIdentifier: String
+    public let identifier: String
+    public let appInfo: AppInfo
+    
     public struct CopyServices {
         public let project: String
         public let token: String
     }
     
-    public var copyServices: CopyServices?
+    public let copyServices: CopyServices?
 }
 
 public extension Environment {
@@ -59,7 +60,8 @@ public extension Environment {
             venueDecoder: VenueDecoder(for: .qrCodes),
             backgroundTaskIdentifier: BackgroundTaskIdentifiers(in: .main).exposureNotification!,
             identifier: "mock",
-            appInfo: AppInfo(for: .main)
+            appInfo: AppInfo(for: .main),
+            copyServices: nil
         )
     }
     

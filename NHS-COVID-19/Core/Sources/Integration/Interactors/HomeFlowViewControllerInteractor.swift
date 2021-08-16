@@ -210,12 +210,42 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         return navigationVC
     }
     
-    func makeFinancialSupportViewController() -> UIViewController? {
+    func makeFinancialSupportViewController(flowController: UINavigationController?) -> UIViewController? {
         switch context.isolationPaymentState.currentValue {
         case .disabled: return nil
         case .enabled(let apply):
-            return IsolationPaymentFlowViewController(openURL: context.openURL, didTapCheckEligibility: apply, recordLaunchedIsolationPaymentsApplication: { Metrics.signpost(.launchedIsolationPaymentsApplication) })
+            return IsolationPaymentFlowViewController(
+                openURL: { [weak flowController] url, completion in
+                    context.openURL(url)
+                    flowController?.popViewController(animated: false)
+                    // Dismissing VC only after poping the VC that presented him, solves the flickering issue
+                    completion()
+                    
+                },
+                didTapCheckEligibility: apply,
+                recordLaunchedIsolationPaymentsApplication: { Metrics.signpost(.launchedIsolationPaymentsApplication) }
+            )
         }
+    }
+    
+    public func makeSelfIsolationHubViewController(
+        flowController: UINavigationController?,
+        showOrderTestButton: InterfaceProperty<Bool>,
+        showFinancialSupportButton: InterfaceProperty<Bool>,
+        showWarnAndBookATestFlow: InterfaceProperty<Bool>,
+        recordSelectedIsolationPaymentsButton: @escaping () -> Void
+    ) -> UIViewController? {
+        let interactor = SelfIsolationInteractor(
+            flowController: flowController,
+            flowInteractor: self,
+            showWarnAndBookATestFlow: showWarnAndBookATestFlow,
+            recordSelectedIsolationPaymentsButton: recordSelectedIsolationPaymentsButton
+        )
+        return SelfIsolationHubViewController(
+            interactor: interactor,
+            showOrderTestButton: showOrderTestButton,
+            showFinancialSupportButton: showFinancialSupportButton
+        )
     }
     
     func makeLinkTestResultViewController() -> UIViewController? {
@@ -223,15 +253,6 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         let baseNavigationController = BaseNavigationController()
         
         let interactor = LinkTestResultInteractor(
-            dailyContactTestingEarlyTerminationSupport: context.dailyContactTestingEarlyTerminationSupport(),
-            showNextScreen: { terminate in
-                if let dailyConfirmationVC = makeDailyConfirmationViewController(
-                    parentVC: baseNavigationController,
-                    with: terminate
-                ) {
-                    baseNavigationController.pushViewController(dailyConfirmationVC, animated: true)
-                }
-            },
             openURL: context.openURL,
             onCancel: {
                 baseNavigationController.dismiss(animated: true, completion: nil)
@@ -245,35 +266,6 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         baseNavigationController.pushViewController(LinkTestResultViewController(interactor: interactor), animated: false)
         
         return baseNavigationController
-    }
-    
-    func makeDailyConfirmationViewController(parentVC: UIViewController, with terminate: @escaping () -> Void) -> UIViewController? {
-        
-        let interactor = DailyContactTestingConfirmationInteractor(
-            action: {
-                let alertController = makeDCTConfirmationAlert(with: terminate)
-                parentVC.present(alertController, animated: true)
-            }
-            
-        )
-        
-        return DailyContactTestingConfirmationViewController(interactor: interactor)
-    }
-    
-    private func makeDCTConfirmationAlert(with action: @escaping () -> Void) -> UIAlertController {
-        let alertController = UIAlertController(
-            title: localize(.daily_contact_testing_confirmation_screen_alert_title),
-            message: localize(.daily_contact_testing_confirmation_screen_alert_body_description),
-            preferredStyle: .alert
-        )
-        
-        let confirmAction = UIAlertAction(title: localize(.daily_contact_testing_confirmation_screen_alert_confirm_button_title), style: .default) { _ in action() }
-        
-        alertController.addAction(UIAlertAction(title: localize(.cancel), style: .default))
-        alertController.addAction(confirmAction)
-        alertController.preferredAction = confirmAction
-        
-        return alertController
     }
     
     public func makeContactTracingHubViewController(flowController: UINavigationController?, exposureNotificationsEnabled: InterfaceProperty<Bool>, exposureNotificationsToggleAction: @escaping (Bool) -> Void, userNotificationsEnabled: InterfaceProperty<Bool>) -> UIViewController {
@@ -325,8 +317,8 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             
             private weak var flowController: UINavigationController?
             private let flowInteractor: HomeFlowViewControllerInteracting
-            private var didEnterBackgroundCancellable: Cancellable?
             private let showWarnAndBookATestFlow: InterfaceProperty<Bool>
+            private var cancellables: Set<AnyCancellable> = []
             
             init(flowController: UINavigationController?, flowInteractor: HomeFlowViewControllerInteracting, showWarnAndBookATestFlow: InterfaceProperty<Bool>) {
                 self.flowController = flowController
@@ -340,20 +332,25 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                 flowController?.present(viewController, animated: true)
             }
             
-            func didTapFindOutAboutTestingButton() {
-                didEnterBackgroundCancellable = NotificationCenter.default
+            func didTapOrderAFreeTestingKit() {
+                NotificationCenter.default
                     .publisher(for: UIApplication.didEnterBackgroundNotification)
                     .first()
                     .sink { [weak flowController] _ in
                         flowController?.popViewController(animated: false)
                     }
+                    .store(in: &cancellables)
                 
-                flowInteractor.openAdvice()
+                flowInteractor.openOrderAFreeTestingKit()
             }
             
             func didTapEnterTestResultButton() {
                 guard let viewController = flowInteractor.makeLinkTestResultViewController() else { return }
                 flowController?.present(viewController, animated: true)
+            }
+            
+            func didTapFindOutAboutTestingLink() {
+                flowInteractor.openAdvice()
             }
         }
         
@@ -429,15 +426,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                 return nil
             }
         }()
-        // TODO: We may want to pass this through as an interface property or similar rather than computing its instantaneous value here.
-        let dailyTestingOptInDate = { () -> Date? in
-            switch context.isolationState.currentValue {
-            case .isolate:
-                return nil
-            case .noNeedToIsolate(let date):
-                return date
-            }
-        }()
+        
         // TODO: We may want to pass this through as an interface property or similar rather than computing its instantaneous value here.
         let venueOfRiskDate = context.checkInContext?.recentlyVisitedSevereRiskyVenue.currentValue
         
@@ -447,11 +436,11 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             exposureNotificationDetails: exposureDetails.map { details in
                 MyDataViewController.ViewModel.ExposureNotificationDetails(
                     encounterDate: details.encounterDate,
-                    notificationDate: details.notificationDate
+                    notificationDate: details.notificationDate,
+                    optOutOfIsolationDate: details.optOutOfIsolationDate
                 )
             },
             selfIsolationEndDate: selfIsolationEndDate,
-            dailyTestingOptInDate: dailyTestingOptInDate,
             venueOfRiskDate: venueOfRiskDate?.startDate(in: .current)
         )
     }
@@ -474,16 +463,12 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         return VenueHistoryViewController.ViewModel(venueHistories: loadVenueHistory())
     }
     
-    func openIsolationAdvice() {
-        context.openURL(ExternalLink.isolationAdvice.url)
-    }
-    
     func openAdvice() {
         context.openURL(ExternalLink.generalAdvice.url)
     }
     
-    func openDailyContactTestingInformation() {
-        context.openURL(ExternalLink.dailyContactTestingInformation.url)
+    func openOrderAFreeTestingKit() {
+        context.openURL(ExternalLink.getTested.url)
     }
     
     func deleteAppData() {
@@ -531,6 +516,14 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     func openDownloadNHSAppLink() {
         context.openURL(ExternalLink.downloadNHSApp.url)
     }
+    
+    func openReadLatestGovernmentGuidanceLink() {
+        context.openURL(ExternalLink.governmentGuidance.url)
+    }
+    
+    func openFindYourLocalAuthorityLink() {
+        context.openURL(ExternalLink.findLocalAuthority.url)
+    }
 }
 
 private struct TestCheckSymptomsInteractor: TestCheckSymptomsViewController.Interacting {
@@ -555,6 +548,50 @@ private class BookARapidTestInfoInteractor: BookARapidTestInfoViewController.Int
         Metrics.signpost(.selectedLFDTestOrderingM2Journey)
         openURL(ExternalLink.getTested.url)
         dismiss?()
+    }
+    
+}
+
+private struct SelfIsolationInteractor: SelfIsolationHubViewController.Interacting {
+    
+    private weak var flowController: UINavigationController?
+    private let flowInteractor: HomeFlowViewControllerInteracting
+    private let showWarnAndBookATestFlow: InterfaceProperty<Bool>
+    private let recordSelectedIsolationPaymentsButton: () -> Void
+    
+    init(
+        flowController: UINavigationController?,
+        flowInteractor: HomeFlowViewControllerInteracting,
+        showWarnAndBookATestFlow: InterfaceProperty<Bool>,
+        recordSelectedIsolationPaymentsButton: @escaping () -> Void
+    ) {
+        self.flowController = flowController
+        self.flowInteractor = flowInteractor
+        self.showWarnAndBookATestFlow = showWarnAndBookATestFlow
+        self.recordSelectedIsolationPaymentsButton = recordSelectedIsolationPaymentsButton
+    }
+    
+    func didTapBookFreeTestButton() {
+        guard let viewController = flowInteractor.makeTestingInformationViewController(flowController: flowController, showWarnAndBookATestFlow: showWarnAndBookATestFlow) else { return }
+        viewController.modalPresentationStyle = .overFullScreen
+        flowController?.present(viewController, animated: true)
+    }
+    
+    func didTapCheckIfEligibleForFinancialSupport() {
+        guard let viewController = flowInteractor.makeFinancialSupportViewController(flowController: flowController) else {
+            return
+        }
+        recordSelectedIsolationPaymentsButton()
+        viewController.modalPresentationStyle = .overFullScreen
+        flowController?.present(viewController, animated: true)
+    }
+    
+    func didTapReadGovernmentGuidanceLink() {
+        flowInteractor.openReadLatestGovernmentGuidanceLink()
+    }
+    
+    func didTapFindYourLocalAuthorityLink() {
+        flowInteractor.openFindYourLocalAuthorityLink()
     }
     
 }

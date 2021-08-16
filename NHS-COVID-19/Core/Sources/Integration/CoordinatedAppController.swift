@@ -9,6 +9,7 @@ import Interface
 import Localization
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 public class CoordinatedAppController: AppController {
     
     private let coordinator: ApplicationCoordinator
@@ -19,8 +20,8 @@ public class CoordinatedAppController: AppController {
     
     public let showBookATest = CurrentValueSubject<Bool, Never>(false)
     public let showWarnAndBookATest = CurrentValueSubject<Bool, Never>(false)
-    public let showContactTracingHub = CurrentValueSubject<Bool, Never>(false)
-    public let showLocalInfoScreen = CurrentValueSubject<Bool, Never>(false)
+    public let showContactCaseResult = CurrentValueSubject<ContactCaseResultInterfaceState?, Never>(nil)
+    let showNotificationScreen = CurrentValueSubject<NotificationInterfaceState?, Never>(nil)
     
     private var content: UIViewController? {
         didSet {
@@ -72,19 +73,21 @@ public class CoordinatedAppController: AppController {
             switch response.notification.request.identifier {
             case UserNotificationType.exposureNotificationReminder.identifier,
                  UserNotificationType.exposureNotificationSecondReminder.identifier:
-                showContactTracingHub.send(true)
+                showNotificationScreen.send(.contactTracingHub)
                 
             case UserNotificationType.localMessage(title: "", body: "").identifier:
-                showLocalInfoScreen.send(true)
+                showNotificationScreen.send(.localInfo)
                 Metrics.signpost(.didAccessLocalInfoScreenViaNotification)
                 
             case UserNotificationType.venue(.warnAndBookATest).identifier:
                 guard let messageType = response.notification.request.content.userInfo[UserNotificationUserInfoKeys.VenueMessageType] as? String,
-                      messageType == UserNotificationType.VenueMessageType.warnAndBookATest.rawValue else {
+                    messageType == UserNotificationType.VenueMessageType.warnAndBookATest.rawValue else {
                     return
                 }
                 Metrics.signpost(.didAccessRiskyVenueM2Notification)
                 
+            case UserNotificationType.selfIsolation.identifier:
+                showNotificationScreen.send(.selfIsolationHub)
             default:
                 break
             }
@@ -108,6 +111,7 @@ public class CoordinatedAppController: AppController {
     
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension CoordinatedAppController {
     
     /// Convenience initialiser; primarily to be used internally with modified services

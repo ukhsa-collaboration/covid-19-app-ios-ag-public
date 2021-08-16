@@ -47,28 +47,25 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         
         Rule(
             """
-            Exception: A risky contact will not start a new isolation if it’s older than DCT opt in.
+            A risky contact isolation will be terminated for users that are below the age limit or fully vaccinated (self-declared).
             """,
             predicate: StatePredicate(
-                contact: [.notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT],
-                positiveTest: .all(except: .isolatingWithConfirmedTest)
+                contact: [.isolating]
             ),
-            event: .riskyContactWithExposureDayOlderThanIsolationTerminationDueToDCT,
-            update: .init()
+            event: .terminatedRiskyContactEarly,
+            update: .init(contact: .notIsolatingAndHadRiskyContactIsolationTerminatedEarly)
         ),
         
         Rule(
             """
-            A risky contact isolation will be terminated for users directed to do so as part of DCT.
-            Option to terminate risky contact is provided only if the contact is the only reason for the isolation.
+            Exception: A risky contact will not start a new isolation if it’s older than contact case opt-out (self-declared under the age limit or fully vaccinated).
             """,
             predicate: StatePredicate(
-                contact: [.isolating],
-                symptomatic: .all(except: .isolating),
-                positiveTest: .all(except: .isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest)
+                contact: [.notIsolatingAndHadRiskyContactIsolationTerminatedEarly],
+                positiveTest: .all(except: .isolatingWithConfirmedTest)
             ),
-            event: .terminateRiskyContactDueToDCT,
-            update: .init(contact: .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT)
+            event: .riskyContactWithExposureDayOlderThanEarlyIsolationTermination,
+            update: .init()
         ),
         
         Rule(
@@ -777,7 +774,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             """,
             predicates: [
                 StatePredicate(
-                    contact: [.notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT],
+                    contact: [.notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedEarly],
                     symptomatic: [.noIsolation],
                     positiveTest: [.noIsolation, .notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
                 ),
@@ -787,7 +784,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                     positiveTest: [.noIsolation, .notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
                 ),
                 StatePredicate(
-                    contact: [.notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT],
+                    contact: [.notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedEarly],
                     symptomatic: [.notIsolatingAndHadSymptomsPreviously],
                     positiveTest: [.noIsolation]
                 ),
@@ -797,7 +794,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                     positiveTest: [.notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
                 ),
                 StatePredicate(
-                    contact: [.notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT],
+                    contact: [.notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedEarly],
                     symptomatic: [.notIsolatingAndHadSymptomsPreviously],
                     positiveTest: [.notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
                 ),
@@ -822,7 +819,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                     contact: [.isolating]
                 ),
                 StatePredicate(
-                    contact: [.noIsolation, .notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT],
+                    contact: [.noIsolation, .notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedEarly],
                     positiveTest: [.isolatingWithConfirmedTest]
                 ),
             ],
@@ -835,51 +832,27 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             """,
             predicates: [
                 StatePredicate(
-                    contact: [.notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT],
+                    contact: [.notIsolatingAndHadRiskyContactIsolationTerminatedEarly],
                     positiveTest: [.isolatingWithConfirmedTest]
                 ),
             ],
-            event: .riskyContactWithExposureDayOlderThanIsolationTerminationDueToDCT
+            event: .riskyContactWithExposureDayOlderThanEarlyIsolationTermination
         ),
         
         Rule(
             filler: """
             If not in contact isolation, then the event to end it is meaningless.
             """,
-            predicate: StatePredicate(contact: [.noIsolation, .notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT]),
+            predicate: StatePredicate(contact: [.noIsolation, .notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedEarly]),
             event: .contactIsolationEnded
         ),
         
         Rule(
             filler: """
-            If not in contact isolation, then terminating it due to DCT is meaningless.
+            If not in contact isolation, then terminating it early is meaningless.
             """,
-            predicate: StatePredicate(contact: [.noIsolation, .notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT]),
-            event: .terminateRiskyContactDueToDCT
-        ),
-        
-        Rule(
-            filler: """
-            If isolating for reasons other than a contact, then terminating it due to DCT is disabled.
-            """,
-            predicates: [
-                StatePredicate(
-                    contact: [.isolating],
-                    symptomatic: [.isolating],
-                    positiveTest: [.isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest]
-                ),
-                StatePredicate(
-                    contact: [.isolating],
-                    symptomatic: [.isolating],
-                    positiveTest: .all(except: .isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest)
-                ),
-                StatePredicate(
-                    contact: [.isolating],
-                    symptomatic: .all(except: .isolating),
-                    positiveTest: [.isolatingWithConfirmedTest, .isolatingWithUnconfirmedTest]
-                ),
-            ],
-            event: .terminateRiskyContactDueToDCT
+            predicate: StatePredicate(contact: [.noIsolation, .notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedEarly]),
+            event: .terminatedRiskyContactEarly
         ),
         
         Rule(
@@ -1105,12 +1078,12 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         
         Rule(
             filler: """
-            This event is not possible if isolation wasn't terminated due to DCT.
+            This event is not possible if isolation wasn't terminated early by self-declaring under age limit or fully vaccinated.
             """,
             predicate: StatePredicate(
-                contact: .all(except: .notIsolatingAndHadRiskyContactIsolationTerminatedDueToDCT)
+                contact: .all(except: .notIsolatingAndHadRiskyContactIsolationTerminatedEarly)
             ),
-            event: .riskyContactWithExposureDayOlderThanIsolationTerminationDueToDCT
+            event: .riskyContactWithExposureDayOlderThanEarlyIsolationTermination
         ),
         Rule(
             filler: """

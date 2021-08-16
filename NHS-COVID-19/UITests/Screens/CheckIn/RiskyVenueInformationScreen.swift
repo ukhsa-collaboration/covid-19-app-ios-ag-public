@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -16,7 +16,7 @@ struct RiskyVenueInformationScreen {
         app.staticTexts[localized: .checkin_risky_venue_information_title(venue: venueName, date: checkInDate)]
     }
     
-    var description: XCUIElement {
+    var description: [XCUIElement] {
         app.staticTexts[localized: .checkin_risky_venue_information_description]
     }
     

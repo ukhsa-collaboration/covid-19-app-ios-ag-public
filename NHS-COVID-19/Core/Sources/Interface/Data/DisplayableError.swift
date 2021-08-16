@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -10,14 +10,14 @@ public struct DisplayableError: Error, Equatable {
     // We store values in this form so we keep the semantics of how the value is localised.
     // This is useful for testing, for example.
     private enum Value: Equatable {
-        case key(StringLocalizationKey)
+        case key(StringLocalizableKey)
         case parameterisedKey(ParameterisedStringLocalizable)
         case verbatim(String)
     }
     
     private var value: Value
     
-    public init(_ key: StringLocalizationKey) {
+    public init(_ key: StringLocalizableKey) {
         value = .key(key)
     }
     

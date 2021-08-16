@@ -31,7 +31,7 @@ class AcceptanceTestCase: XCTestCase {
                 $0.validPostcodes = [Postcode("B44")]
             }
             
-            var appInfo = AppInfo(bundleId: .random(), version: "3.10", buildNumber: "1")
+            var appInfo = AppInfo(bundleId: .random(), version: "4.16", buildNumber: "1")
             
             var currentDateProvider = AcceptanceTestMockDateProvider()
         }
@@ -71,7 +71,6 @@ class AcceptanceTestCase: XCTestCase {
             
             exposureNotificationContext = ExposureNotificationContext(services: services, isolationLength: DayDuration(9), interestedInExposureNotifications: { false }, getPostcode: { postcode }, getLocalAuthority: { localAuthority.id })
             coordinator = ApplicationCoordinator(services: services, enabledFeatures: configuration.enabledFeatures)
-            
         }
     }
     

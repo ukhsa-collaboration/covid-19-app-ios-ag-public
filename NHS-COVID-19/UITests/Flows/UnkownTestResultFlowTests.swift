@@ -72,7 +72,7 @@ class UnkownTestResultFlowTests: XCTestCase {
             unknownTestResultScreen.openStoreButton.tap()
             
             app.checkOnHomeScreenNotIsolating()
-            XCTAssert(homeScreen.enterTestResultButton.exists)
+            XCTAssert(homeScreen.enterTestResultButton.waitForExistence(timeout: 0.1))
             
             runner.step("Home screen") {
                 """

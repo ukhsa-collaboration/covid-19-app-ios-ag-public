@@ -9,7 +9,8 @@ import Foundation
 public protocol SymptomsOnsetDateAndExposureDetailsProviding {
     func provideSymptomsOnsetDate() -> Date?
     func provideExposureDetails() -> (encounterDate: Date,
-                                      notificationDate: Date)?
+                                      notificationDate: Date,
+                                      optOutOfIsolationDate: Date?)?
 }
 
 struct IsolationStateInfo: Equatable {
@@ -64,7 +65,6 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
         let isolationInfo = mutating(self.isolationInfo) {
             $0.indexCaseInfo = indexCaseInfo
             $0.hasAcknowledgedEndOfIsolation = false
-            $0.hasAcknowledgedStartOfIsolation = true
         }
         
         let logicalState = IsolationLogicalState(today: currentDateProvider.currentLocalDay, info: isolationInfo, configuration: configuration)
@@ -81,6 +81,7 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
         let isolationInfo = mutating(self.isolationInfo) {
             $0.contactCaseInfo = contactCaseInfo
             $0.hasAcknowledgedEndOfIsolation = false
+            $0.hasAcknowledgedStartOfContactIsolation = false
         }
         return save(isolationInfo)
     }
@@ -199,14 +200,13 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
     
     func acknowldegeStartOfIsolation() {
         let isolationInfo = mutating(self.isolationInfo) {
-            $0.hasAcknowledgedStartOfIsolation = true
+            $0.hasAcknowledgedStartOfContactIsolation = true
         }
         _ = save(isolationInfo)
     }
     
     func restartIsolationAcknowledgement() {
         let isolationInfo = mutating(self.isolationInfo) {
-            $0.hasAcknowledgedStartOfIsolation = true
             $0.hasAcknowledgedEndOfIsolation = false
         }
         _ = save(isolationInfo)
@@ -223,14 +223,20 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
     }
     
     func provideExposureDetails() -> (encounterDate: Date,
-                                      notificationDate: Date)? {
-        guard let encounterDay = isolationInfo.contactCaseInfo?.exposureDay,
-            let notificationDay = isolationInfo.contactCaseInfo?.isolationFromStartOfDay else {
+                                      notificationDate: Date,
+                                      optOutOfIsolationDate: Date?)? {
+        guard let contactCaseInfo = isolationInfo.contactCaseInfo else {
             return nil
         }
+        
+        let optOutOfIsolationDate = contactCaseInfo.optOutOfIsolationDay.map {
+            LocalDay(gregorianDay: $0, timeZone: .current).startOfDay
+        }
+        
         return (
-            encounterDate: LocalDay(gregorianDay: encounterDay, timeZone: .current).startOfDay,
-            notificationDate: LocalDay(gregorianDay: notificationDay, timeZone: .current).startOfDay
+            encounterDate: LocalDay(gregorianDay: contactCaseInfo.exposureDay, timeZone: .current).startOfDay,
+            notificationDate: LocalDay(gregorianDay: contactCaseInfo.isolationFromStartOfDay, timeZone: .current).startOfDay,
+            optOutOfIsolationDate: optOutOfIsolationDate
         )
     }
     
@@ -243,8 +249,11 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
     }
     
     func recordMetrics() -> AnyPublisher<Void, Never> {
-        if isolationStateInfo?.isolationInfo.contactCaseInfo != nil {
+        if let contactCaseInfo = isolationStateInfo?.isolationInfo.contactCaseInfo {
             Metrics.signpost(.contactCaseBackgroundTick)
+            if contactCaseInfo.optOutOfIsolationDay != nil {
+                Metrics.signpost(.optedOutForContactIsolationBackgroundTick)
+            }
         }
         if let indexCaseInfo = isolationStateInfo?.isolationInfo.indexCaseInfo {
             Metrics.signpost(.indexCaseBackgroundTick)

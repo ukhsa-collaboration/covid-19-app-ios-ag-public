@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -35,10 +35,10 @@ class ConfigurationViewController: UIViewController {
         the feature toggle is changed after onboarding.
         """
         
-        let dailyContactTesting = createToggle(feature: .dailyContactTesting, isOn: featureToggleStorage.dailyContactTestingToggle, action: #selector(toggleDailyContactTesting))
+        let newNoSymptomsScreenToggle = createToggle(feature: .newNoSymptomsScreen, isOn: featureToggleStorage.newNoSymptomsScreenToggle, action: #selector(toggleNewNoSymptomsScreen))
         
         let stackView = UIStackView(arrangedSubviews: [
-            dailyContactTesting,
+            newNoSymptomsScreenToggle,
             disclaimer,
         ])
         
@@ -71,15 +71,13 @@ class ConfigurationViewController: UIViewController {
     
     func getFeatureString(feature: Feature) -> String {
         switch feature {
-        case .dailyContactTesting:
-            return "Daily Contact Testing (ACTION)"
-        case .offerDCTOnExposureNotification:
-            return "Offer DCT To Everyone (INFORM)"
+        case .newNoSymptomsScreen:
+            return "New \"No Symptoms\" Screen"
         }
     }
     
-    @objc private func toggleDailyContactTesting() {
-        featureToggleStorage.dailyContactTestingToggle.toggle()
+    @objc private func toggleNewNoSymptomsScreen() {
+        featureToggleStorage.newNoSymptomsScreenToggle.toggle()
     }
     
 }

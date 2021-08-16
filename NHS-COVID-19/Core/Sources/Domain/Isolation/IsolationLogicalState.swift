@@ -8,7 +8,7 @@ import Foundation
 
 struct IsolationInfo: Equatable {
     var hasAcknowledgedEndOfIsolation: Bool = false
-    var hasAcknowledgedStartOfIsolation: Bool = false
+    var hasAcknowledgedStartOfContactIsolation: Bool = false
     var indexCaseInfo: IndexCaseInfo?
     var contactCaseInfo: ContactCaseInfo?
     
@@ -174,18 +174,17 @@ extension IndexCaseInfo {
 }
 
 extension IndexCaseInfo {
-    private static let assumedDaysFromOnsetToTestResult = -3
     
     var assumedOnsetDayForExposureKeys: GregorianDay {
         if let onsetDay = symptomaticInfo?.assumedOnsetDay {
             if let testEndDay = testInfo?.testEndDay, testEndDay < onsetDay {
-                return testEndDay.advanced(by: Self.assumedDaysFromOnsetToTestResult)
+                return testEndDay
             } else {
                 return onsetDay
             }
         } else {
             #warning("This is very risky. There's no indication that from the two parameters passed one must be non-null")
-            return testInfo!.testEndDay!.advanced(by: Self.assumedDaysFromOnsetToTestResult)
+            return testInfo!.testEndDay!
         }
     }
     
@@ -261,7 +260,7 @@ struct ContactCaseInfo: Equatable {
 // convenient.
 enum IsolationLogicalState: Equatable {
     case notIsolating(finishedIsolationThatWeHaveNotDeletedYet: Isolation?)
-    case isolating(Isolation, endAcknowledged: Bool, startAcknowledged: Bool)
+    case isolating(Isolation, endAcknowledged: Bool, startOfContactIsolationAcknowledged: Bool)
     case isolationFinishedButNotAcknowledged(Isolation)
     
     init(today: LocalDay, info: IsolationInfo, configuration: IsolationConfiguration) {
@@ -305,7 +304,7 @@ enum IsolationLogicalState: Equatable {
                             isSelfDiagnosed: selfDiagnosed,
                             isPendingConfirmation: isPendingConfirmation
                         ),
-                        contactCaseInfo: .init(optOutOfIsolationDay: c.reason.contactCaseInfo?.optOutOfIsolationDay)
+                        contactCaseInfo: c.reason.contactCaseInfo
                     )
                 )
             }
@@ -323,14 +322,15 @@ enum IsolationLogicalState: Equatable {
         let isolation = Isolation(
             fromDay: LocalDay(gregorianDay: _isolation.fromDay, timeZone: today.timeZone),
             untilStartOfDay: LocalDay(gregorianDay: _isolation.untilStartOfDay, timeZone: today.timeZone),
-            reason: _isolation.reason
+            reason: _isolation.reason,
+            optOutOfIsolationDay: info.contactCaseInfo?.optOutOfIsolationDay
         )
         
         if _isolation.untilStartOfDay > today.gregorianDay {
             self = .isolating(
                 isolation,
                 endAcknowledged: info.hasAcknowledgedEndOfIsolation,
-                startAcknowledged: info.hasAcknowledgedStartOfIsolation
+                startOfContactIsolationAcknowledged: info.hasAcknowledgedStartOfContactIsolation
             )
         } else if info.hasAcknowledgedEndOfIsolation {
             self = .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: isolation)
@@ -379,9 +379,11 @@ enum IsolationLogicalState: Equatable {
     
     var exposureNotificationProcessingBehaviour: ExposureNotificationProcessingBehaviour {
         if let activeIsolation = activeIsolation {
-            return activeIsolation.isContactCase || activeIsolation.hasConfirmedPositiveTestResult ? .doNotProcessExposures : .allExposures
+            if activeIsolation.isContactCase || activeIsolation.hasConfirmedPositiveTestResult {
+                return .doNotProcessExposures
+            }
         }
-        if let optOutDay = isolation?.reason.contactCaseInfo?.optOutOfIsolationDay {
+        if let optOutDay = isolation?.optOutOfIsolationDay {
             return .onlyProcessExposuresOnOrAfter(optOutDay)
         }
         return .allExposures
@@ -429,7 +431,7 @@ public enum ExposureNotificationProcessingBehaviour: Equatable {
                                  currentDateProvider: DateProviding,
                                  isolationLength: DayDuration) -> Bool {
         // Don't notify for exposures where the resultant isolation is already finished.
-        let today = currentDateProvider.currentGregorianDay(timeZone: .utc)
+        let today = currentDateProvider.currentGregorianDay(timeZone: .current)
         guard today - isolationLength < exposureDay else {
             return false
         }
@@ -437,8 +439,8 @@ public enum ExposureNotificationProcessingBehaviour: Equatable {
         switch self {
         case .allExposures:
             return true
-        case .onlyProcessExposuresOnOrAfter(let dctOptInDate):
-            return exposureDay >= dctOptInDate
+        case .onlyProcessExposuresOnOrAfter(let contactCaseOptOutDate):
+            return exposureDay > contactCaseOptOutDate
         case .doNotProcessExposures:
             return false
         }
@@ -494,17 +496,18 @@ extension _Isolation {
     
     /// Assuming `IndexCaseInfo` is `nil`
     init(contactCaseInfo: ContactCaseInfo, configuration: IsolationConfiguration) {
+        let isolationContactCaseInfo = Isolation.ContactCaseInfo(exposureDay: contactCaseInfo.exposureDay)
         if let optOutOfIsolationDay = contactCaseInfo.optOutOfIsolationDay {
             self.init(
                 fromDay: contactCaseInfo.isolationFromStartOfDay,
                 untilStartOfDay: optOutOfIsolationDay,
-                reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(optOutOfIsolationDay: contactCaseInfo.optOutOfIsolationDay))
+                reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: isolationContactCaseInfo)
             )
         } else {
             self.init(
                 fromDay: contactCaseInfo.isolationFromStartOfDay,
                 untilStartOfDay: contactCaseInfo.exposureDay + configuration.contactCase,
-                reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(optOutOfIsolationDay: contactCaseInfo.optOutOfIsolationDay))
+                reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: isolationContactCaseInfo)
             )
         }
     }

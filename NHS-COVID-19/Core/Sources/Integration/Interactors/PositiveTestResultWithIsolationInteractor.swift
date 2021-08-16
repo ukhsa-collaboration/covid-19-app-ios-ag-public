@@ -11,6 +11,7 @@ struct PositiveTestResultWithIsolationInteractor: NonNegativeTestResultWithIsola
     
     var didTapOnlineServicesLink: () -> Void
     var didTapExposureFAQLink: () -> Void
+    var didTapNHSGuidanceLink: () -> Void
     var didTapPrimaryButton: () -> Void
     var didTapCancel: (() -> Void)?
     
@@ -22,6 +23,7 @@ struct PositiveTestResultWithIsolationInteractor: NonNegativeTestResultWithIsola
         self.openURL = openURL
         didTapOnlineServicesLink = { openURL(ExternalLink.nhs111Online.url) }
         didTapExposureFAQLink = { openURL(ExternalLink.exposureFAQs.url) }
+        didTapNHSGuidanceLink = { openURL(ExternalLink.nhsGuidance.url) }
         self.didTapPrimaryButton = didTapPrimaryButton
         self.didTapCancel = didTapCancel
     }

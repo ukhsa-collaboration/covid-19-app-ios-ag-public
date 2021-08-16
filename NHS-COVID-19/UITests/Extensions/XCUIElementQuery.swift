@@ -7,11 +7,11 @@ import XCTest
 
 extension XCUIElementQuery {
     
-    subscript(localized key: StringLocalizationKey) -> XCUIElement {
+    subscript(localized key: StringLocalizableKey) -> XCUIElement {
         elementWithText(localize(key))
     }
     
-    subscript(localized key: StringLocalizationKey) -> [XCUIElement] {
+    subscript(localized key: StringLocalizableKey) -> [XCUIElement] {
         localizeAndSplit(key).map { self[verbatim: $0] }
     }
     
@@ -39,7 +39,7 @@ extension XCUIElementQuery {
             return self[string]
         } else {
             // XCUITest can not correctly match long labels.
-            return element(matching: NSPredicate(format: "label BEGINSWITH %@", String(string.prefix(80))))
+            return element(matching: NSPredicate(format: "label LIKE %@", string))
         }
     }
     

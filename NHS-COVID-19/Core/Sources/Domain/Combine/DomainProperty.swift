@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -9,7 +9,7 @@ public class DomainProperty<Value>: Publisher {
     public typealias Output = Value
     public typealias Failure = Never
     
-    private var publisher: AnyPublisher<Value, Never>
+    private let publisher: AnyPublisher<Value, Never>
     private var lastReceivedValue: Value!
     
     public var currentValue: Value {

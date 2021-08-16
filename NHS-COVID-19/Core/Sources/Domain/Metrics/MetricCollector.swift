@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -27,7 +27,7 @@ class MetricCollector {
     
     private let currentDateProvider: DateProviding
     private let enabled: MetricsState
-
+    
     init(encryptedStore: EncryptedStoring, currentDateProvider: DateProviding, enabled: MetricsState) {
         _cache = encryptedStore.encrypted("metrics")
         self.currentDateProvider = currentDateProvider
@@ -36,7 +36,7 @@ class MetricCollector {
     }
     
     func record(_ metric: Metric) {
-        guard self.enabled.state == .enabled else {
+        guard enabled.state == .enabled else {
             return
         }
         Self.logger.debug("record metric", metadata: .describing(metric.rawValue))
@@ -51,6 +51,21 @@ class MetricCollector {
         cache = mutating(cache ?? MetricsCache(entries: [], latestWindowEnd: nil)) {
             $0.entries.removeAll { $0.date <= date }
             $0.latestWindowEnd = date
+        }
+    }
+    
+    func consumeMetricsNotOnOrAfter(date: Date) {
+        guard let cache = cache else { return }
+        
+        self.cache = mutating(cache) {
+            $0.entries.removeAll { $0.date < date }
+        }
+        
+        // Only change the latestWindowEnd if it was present before and older than the new latest metric date
+        if let currentLatestWindowEnd = cache.latestWindowEnd {
+            self.cache = mutating(cache) {
+                $0.latestWindowEnd = currentLatestWindowEnd < date ? date : currentLatestWindowEnd
+            }
         }
     }
     
@@ -71,7 +86,7 @@ class MetricCollector {
     func earliestEntryDate() -> Date? {
         return cache?.latestWindowEnd ?? cache?.entries.map(\.date).min()
     }
-
+    
     func delete() {
         cache = nil
     }

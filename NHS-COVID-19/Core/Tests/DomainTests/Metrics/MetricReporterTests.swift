@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -92,6 +92,7 @@ class MetricReporterTests: XCTestCase {
             appInfo: appInfo,
             getPostcode: { postcode },
             getLocalAuthority: { authority },
+            getHouseKeepingDayDuration: { DayDuration(14) },
             metricCollector: collector,
             metricChunkCreator: creator
         )

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -13,11 +13,15 @@ class ExperimentManager: ObservableObject {
     let client: HTTPClient
     let exposureManager = ExposureManager()
     
+    private let application: UIApplication
+    
     private var _objectWillChange = PassthroughSubject<Void, Never>()
     
     private var cancellables = [AnyCancellable]()
     
+    @available(iOSApplicationExtension, unavailable)
     init() {
+        application = .shared
         let fieldTestRemote = FieldTestConfiguration.shared.remote
         client = URLSessionHTTPClient(
             remote: HTTPRemote(
@@ -38,7 +42,7 @@ class ExperimentManager: ObservableObject {
     var isProcessingResults = false {
         didSet {
             _objectWillChange.send()
-            UIApplication.shared.isIdleTimerDisabled = isProcessingResults
+            application.isIdleTimerDisabled = isProcessingResults
         }
     }
     
@@ -403,9 +407,9 @@ private extension ENExposureConfiguration {
     convenience init(from configuration: Experiment.RequestedConfiguration) {
         self.init()
         attenuationDurationThresholds = configuration.attenuationDurationThresholds.map { NSNumber(value: $0) }
-
+        
         if #available(iOS 13.7, *) {
-            var map: [NSNumber:NSNumber] = [:]
+            var map: [NSNumber: NSNumber] = [:]
             
             for x in -14 ... 14 {
                 map[NSNumber(value: x)] = NSNumber(value: ENInfectiousness.high.rawValue)

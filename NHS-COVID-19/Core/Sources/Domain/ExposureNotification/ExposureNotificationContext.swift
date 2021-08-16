@@ -180,7 +180,7 @@ struct ExposureNotificationContext {
     func resendExposureDetectionNotificationIfNeeded(isolationContext: IsolationContext) -> AnyPublisher<Void, Never> {
         Future<Void, Never> { promise in
             let isolation = isolationContext.isolationStateManager.isolationLogicalState.currentValue
-            let startAcknowledged = isolationContext.isolationStateStore.isolationInfo.hasAcknowledgedStartOfIsolation
+            let startAcknowledged = isolationContext.isolationStateStore.isolationInfo.hasAcknowledgedStartOfContactIsolation
             if isolation.isIsolating, isolation.activeIsolation?.isContactCaseOnly ?? false, !startAcknowledged {
                 userNotificationManager.add(type: .exposureDetection, at: nil, withCompletionHandler: nil)
                 Metrics.signpost(.totalRiskyContactReminderNotifications)

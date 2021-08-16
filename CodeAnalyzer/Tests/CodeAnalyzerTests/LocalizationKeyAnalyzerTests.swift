@@ -56,9 +56,9 @@ struct MockAppKeys: DefinedLocalizationKeys {
         ["key_one", "key_two", "key_three"]
     }
     
-    var parameterizedKeys: Set<StringLocalizationKeyParser.ParameterizedKey> {
+    var parameterizedKeys: Set<StringLocalizableKeyParser.ParameterizedKey> {
         [
-            StringLocalizationKeyParser.ParameterizedKey(
+            StringLocalizableKeyParser.ParameterizedKey(
                 identifier: "key_four",
                 rawValue: "key_four_%ld"
             ),

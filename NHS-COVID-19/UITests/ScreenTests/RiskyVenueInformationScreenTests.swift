@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -19,7 +19,7 @@ class RiskyVenueInformationScreenTests: XCTestCase {
             )
             
             XCTAssertTrue(screen.title.displayed)
-            XCTAssertTrue(screen.description.displayed)
+            XCTAssertTrue(screen.description.allExist)
             
             screen.actionButton.tap()
             XCTAssert(app.staticTexts[runner.scenario.goHomeTapped].displayed)

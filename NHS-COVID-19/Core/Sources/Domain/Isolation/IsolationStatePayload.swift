@@ -42,7 +42,7 @@ extension IsolationStatePayload: Codable {
         let stateInfo = PayloadV2(
             version: 2,
             configuration: isolationStateInfo.configuration,
-            contact: PayloadV2.ContactCaseInfo(info.contactCaseInfo, hasAcknowledgedStartOfIsolation: info.hasAcknowledgedStartOfIsolation),
+            contact: PayloadV2.ContactCaseInfo(info.contactCaseInfo, hasAcknowledgedStartOfIsolation: info.hasAcknowledgedStartOfContactIsolation),
             test: PayloadV2.TestCaseInfo(info.indexCaseInfo?.testInfo),
             symptomatic: PayloadV2.SymptomaticCaseInfo(info.indexCaseInfo?.symptomaticInfo),
             hasAcknowledgedEndOfIsolation: isolationStateInfo.isolationInfo.hasAcknowledgedEndOfIsolation
@@ -58,9 +58,14 @@ extension IsolationStatePayload: Codable {
 /// /// Data format used on or after v4.10
 private struct PayloadV2: Codable {
     struct ContactCaseInfo: Codable {
+        
+        struct IsolationOptOutInfo: Codable {
+            var fromDay: GregorianDay
+        }
+        
         var exposureDay: GregorianDay
         var notificationDay: GregorianDay
-        var dailyContactTestingOptInDay: GregorianDay?
+        var isolationOptOutInfo: IsolationOptOutInfo?
         var hasAcknowledgedStartOfIsolation: Bool // iOS only
     }
     
@@ -111,7 +116,7 @@ private extension IsolationInfo {
     init(payload: PayloadV2) {
         self.init(
             hasAcknowledgedEndOfIsolation: payload.hasAcknowledgedEndOfIsolation,
-            hasAcknowledgedStartOfIsolation: payload.contact?.hasAcknowledgedStartOfIsolation ?? false,
+            hasAcknowledgedStartOfContactIsolation: payload.contact?.hasAcknowledgedStartOfIsolation ?? false,
             indexCaseInfo: IndexCaseInfo(symptomatic: payload.symptomatic, test: payload.test),
             contactCaseInfo: ContactCaseInfo(contact: payload.contact)
         )
@@ -126,7 +131,7 @@ private extension ContactCaseInfo {
         self.init(
             exposureDay: contact.exposureDay,
             isolationFromStartOfDay: contact.notificationDay,
-            optOutOfIsolationDay: contact.dailyContactTestingOptInDay
+            optOutOfIsolationDay: contact.isolationOptOutInfo?.fromDay
         )
     }
     
@@ -202,11 +207,18 @@ private extension PayloadV2.ContactCaseInfo {
         self.init(
             exposureDay: contactCaseInfo.exposureDay,
             notificationDay: contactCaseInfo.isolationFromStartOfDay,
-            dailyContactTestingOptInDay: contactCaseInfo.optOutOfIsolationDay,
+            isolationOptOutInfo: PayloadV2.ContactCaseInfo.IsolationOptOutInfo(optOutOfIsolationDay: contactCaseInfo.optOutOfIsolationDay),
             hasAcknowledgedStartOfIsolation: hasAcknowledgedStartOfIsolation
         )
     }
     
+}
+
+private extension PayloadV2.ContactCaseInfo.IsolationOptOutInfo {
+    init?(optOutOfIsolationDay: GregorianDay?) {
+        guard let optOutOfIsolationDay = optOutOfIsolationDay else { return nil }
+        self.init(fromDay: optOutOfIsolationDay)
+    }
 }
 
 private extension PayloadV2.SymptomaticCaseInfo {
@@ -334,7 +346,7 @@ private extension IsolationInfo {
     init(_ payload: PayloadV1.IsolationInfo) {
         self.init(
             hasAcknowledgedEndOfIsolation: payload.hasAcknowledgedEndOfIsolation ?? false,
-            hasAcknowledgedStartOfIsolation: payload.hasAcknowledgedStartOfIsolation ?? false,
+            hasAcknowledgedStartOfContactIsolation: payload.hasAcknowledgedStartOfIsolation ?? false,
             indexCaseInfo: payload.indexCaseInfo.flatMap(IndexCaseInfo.init),
             contactCaseInfo: payload.contactCaseInfo.map(ContactCaseInfo.init)
         )

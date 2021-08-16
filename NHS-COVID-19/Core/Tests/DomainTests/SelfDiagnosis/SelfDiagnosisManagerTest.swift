@@ -22,7 +22,11 @@ class SelfDiagnosisManagerTests: XCTestCase {
     
     override func setUp() {
         isolationState = .noNeedToIsolate()
-        selfDiagnosisManager = SelfDiagnosisManager(httpClient: MockHTTPClient()) { _ in (self.isolationState, .hasNoTest) }
+        selfDiagnosisManager = SelfDiagnosisManager(
+            httpClient: MockHTTPClient(),
+            calculateIsolationState: { _ in (self.isolationState, .hasNoTest) },
+            shouldShowNewNoSymptomsScreen: { false }
+        )
         addTeardownBlock {
             self.selfDiagnosisManager = nil
         }

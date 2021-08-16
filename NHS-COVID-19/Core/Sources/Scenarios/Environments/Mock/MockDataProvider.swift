@@ -7,6 +7,8 @@ import Common
 import Foundation
 
 class MockDataProvider: ObservableObject {
+    static let shared = MockDataProvider()
+    
     static let testResults = ["POSITIVE", "NEGATIVE", "VOID", "PLOD", "UNKNOWN_TEST_RESULT_TYPE"]
     static let testKitType = ["LAB_RESULT", "RAPID_RESULT", "RAPID_SELF_REPORTED", "UNKNOWN_TEST_KIT_TYPE"]
     
@@ -25,19 +27,6 @@ class MockDataProvider: ObservableObject {
         didSet {
             _numberOfDaysFromNowDidChange.send(numberOfDaysFromNow)
             _objectWillChange.send()
-        }
-    }
-    
-    var numberOfDaysFromNowString: String {
-        get {
-            numberOfDaysFromNow > 0
-                ? "+\(numberOfDaysFromNow)"
-                : String(numberOfDaysFromNow)
-        }
-        set {
-            if let value = Int(newValue) {
-                numberOfDaysFromNow = value
-            }
         }
     }
     
@@ -136,17 +125,6 @@ class MockDataProvider: ObservableObject {
     var vocContentVersion: Int {
         didSet {
             _objectWillChange.send()
-        }
-    }
-    
-    var vocContentVersionString: String {
-        get {
-            String(vocContentVersion)
-        }
-        set {
-            if let intValue = Int(newValue) {
-                vocContentVersion = intValue
-            }
         }
     }
     
@@ -353,17 +331,6 @@ class MockDataProvider: ObservableObject {
         }
     }
     
-    var testResultEndDateDaysAgoString: String {
-        get {
-            String(testResultEndDateDaysAgo)
-        }
-        set {
-            if let value = Int(newValue) {
-                testResultEndDateDaysAgo = value
-            }
-        }
-    }
-    
     // MARK: Isolation Configuration
     
     @UserDefault("mocks.confirmatoryDayLimit")
@@ -406,32 +373,10 @@ class MockDataProvider: ObservableObject {
         }
     }
     
-    var numberOfContactsString: String {
-        get {
-            String(numberOfContacts)
-        }
-        set {
-            if let value = Int(newValue) {
-                numberOfContacts = value
-            }
-        }
-    }
-    
     @UserDefault("mocks.contactDaysAgo", defaultValue: 1)
     var contactDaysAgo: Int {
         didSet {
             _objectWillChange.send()
-        }
-    }
-    
-    var contactDaysAgoString: String {
-        get {
-            String(contactDaysAgo)
-        }
-        set {
-            if let value = Int(newValue) {
-                contactDaysAgo = value
-            }
         }
     }
     
@@ -451,6 +396,34 @@ class MockDataProvider: ObservableObject {
     
     @UserDefault("mocks.lokaliseShowKeysOnly", defaultValue: false)
     var lokaliseShowKeysOnly: Bool {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.useFakeCheckins", defaultValue: false)
+    var useFakeCheckins: Bool {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.fakeCheckinsVenueID", defaultValue: "TEST001")
+    var fakeCheckinsVenueID: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.fakeCheckinsVenueOrg", defaultValue: "Test Venue 001")
+    var fakeCheckinsVenueOrg: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.fakeCheckinsVenuePostcode", defaultValue: "SW1H0EU")
+    var fakeCheckinsVenuePostcode: String {
         didSet {
             _objectWillChange.send()
         }

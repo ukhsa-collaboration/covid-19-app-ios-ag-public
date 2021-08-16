@@ -11,6 +11,7 @@ public protocol NonNegativeTestResultWithIsolationViewControllerInteracting {
     var didTapOnlineServicesLink: () -> Void { get }
     var didTapPrimaryButton: () -> Void { get }
     var didTapExposureFAQLink: () -> Void { get }
+    var didTapNHSGuidanceLink: () -> Void { get }
     var didTapCancel: (() -> Void)? { get }
 }
 
@@ -28,6 +29,15 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
                 return InformationBox.indication.warning(testResultType.infoText)
             } else {
                 return InformationBox.indication.badNews(testResultType.infoText)
+            }
+        }()
+        
+        let linkAction: () -> Void = {
+            switch testResultType {
+            case .void:
+                return interactor.didTapNHSGuidanceLink
+            case .positive, .positiveButAlreadyConfirmedPositive:
+                return interactor.didTapOnlineServicesLink
             }
         }()
         
@@ -73,8 +83,8 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
                     ] : [],
                 BaseLabel().styleAsSecondaryBody().set(text: localize(.end_of_isolation_link_label)),
                 LinkButton(
-                    title: localize(.end_of_isolation_online_services_link),
-                    action: interactor.didTapOnlineServicesLink
+                    title: testResultType.linkLabel,
+                    action: linkAction
                 ),
             ],
             primaryButton: (title: testResultType.primaryButtonText, action: interactor.didTapPrimaryButton)
@@ -218,6 +228,15 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
             return localize(.positive_test_results_continue)
         case .positiveButAlreadyConfirmedPositive:
             return localize(.positive_test_result_already_confirmed_positive_continue)
+        }
+    }
+    
+    var linkLabel: String {
+        switch self {
+        case .positive, .positiveButAlreadyConfirmedPositive:
+            return localize(.end_of_isolation_online_services_link)
+        case .void:
+            return localize(.void_test_result_with_isolation_nhs_guidance_link)
         }
     }
 }

@@ -136,11 +136,11 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let isolation = Isolation(
             fromDay: .today,
             untilStartOfDay: .today,
-            reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(optOutOfIsolationDay: nil))
+            reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(exposureDay: .today))
         )
         
         let context = makeRunningAppContext(
-            isolationAckState: .neededForStart(isolation, acknowledge: {}),
+            isolationAckState: .neededForStartContactIsolation(isolation, acknowledge: { _ in }),
             testResultAckState: .notNeeded,
             riskyCheckInsAckState: .notNeeded
         )
@@ -210,11 +210,10 @@ class AcknowledgementNeededStateTests: XCTestCase {
             currentLocaleConfiguration: Just(.systemPreferred).eraseToAnyPublisher().domainProperty(),
             storeNewLanguage: { _ in },
             homeAnimationsStore: HomeAnimationsStore(store: MockEncryptedStore()),
-            shouldShowDailyContactTestingInformFeature: { true },
-            dailyContactTestingEarlyTerminationSupport: { .disabled },
             diagnosisKeySharer: .constant(nil),
             localInformation: .constant(nil),
-            userNotificationManaging: MockUserNotificationsManager()
+            userNotificationManaging: MockUserNotificationsManager(),
+            didOpenSelfIsolationHub: {}
         )
     }
     
@@ -243,12 +242,16 @@ class AcknowledgementNeededStateTests: XCTestCase {
             nil
         }
         
-        func provideExposureDetails() -> (encounterDate: Date, notificationDate: Date)? {
+        func provideExposureDetails() -> (encounterDate: Date, notificationDate: Date, optOutOfIsolationDate: Date?)? {
             nil
         }
     }
     
     private class MockSelfDiagnosisManager: SelfDiagnosisManaging {
+        func shouldShowNewNoSymptomsScreen() -> Bool {
+            false
+        }
+        
         var threshold: Double?
         
         func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError> {

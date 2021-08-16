@@ -22,7 +22,7 @@ class CheckInsStoreTests: XCTestCase {
         super.setUp()
         
         encryptedStore = MockEncryptedStore()
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(self.optionToBookATestDuration)) })
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: VenueDecoder.forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(self.optionToBookATestDuration)) })
     }
     
     func testLoadingNotRiskyCheckInData() throws {
@@ -63,7 +63,7 @@ class CheckInsStoreTests: XCTestCase {
             "unacknowldegedRiskyVenueIds": [],
         }
         """# .data(using: .utf8)!
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: VenueDecoder.forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         
         let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
         
@@ -115,7 +115,7 @@ class CheckInsStoreTests: XCTestCase {
             "unacknowldegedRiskyVenueIds": [],
         }
         """# .data(using: .utf8)!
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: VenueDecoder.forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         
         let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
         
@@ -175,7 +175,7 @@ class CheckInsStoreTests: XCTestCase {
             "unacknowldegedRiskyVenueIds": [],
         }
         """# .data(using: .utf8)!
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: VenueDecoder.forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         
         let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
         
@@ -236,7 +236,7 @@ class CheckInsStoreTests: XCTestCase {
             "unacknowldegedRiskyVenueIds": [],
         }
         """# .data(using: .utf8)!
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: VenueDecoder.forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         
         let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
         
@@ -291,7 +291,7 @@ class CheckInsStoreTests: XCTestCase {
             "unacknowldegedRiskyVenueIds": [],
         }
         """# .data(using: .utf8)!
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: VenueDecoder.forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         
         let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
         
@@ -317,7 +317,7 @@ class CheckInsStoreTests: XCTestCase {
         {
         }
         """# .data(using: .utf8)!
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: VenueDecoder.forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         XCTAssertNil(checkInsStore.load())
     }
     
@@ -862,7 +862,7 @@ class CheckInsStoreTests: XCTestCase {
             "unacknowldegedRiskyVenueIds": ["CDEF2345", "DCJK2345", "DCJK2346"],
         }
         """# .data(using: .utf8)!
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: VenueDecoder.forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         
         let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
         XCTAssert(loadedCheckIns.count == 3)
@@ -957,7 +957,7 @@ class CheckInsStoreTests: XCTestCase {
             "unacknowldegedRiskyVenueIds": ["DCJK2346", "CDEF2345", "DCJK2345"],
         }
         """# .data(using: .utf8)!
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: VenueDecoder.forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         
         let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
         XCTAssert(loadedCheckIns.count == 3)
@@ -1052,7 +1052,7 @@ class CheckInsStoreTests: XCTestCase {
             "unacknowldegedRiskyVenueIds": ["DCJK2346", "CDEF2345", "DCJK2345"],
         }
         """# .data(using: .utf8)!
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: VenueDecoder.forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         
         let loadedCheckIns = try XCTUnwrap(checkInsStore.load())
         XCTAssert(loadedCheckIns.count == 3)
@@ -1095,7 +1095,7 @@ class CheckInsStoreTests: XCTestCase {
         }
         """# .data(using: .utf8)!
         
-        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: .forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
+        checkInsStore = CheckInsStore(store: encryptedStore, venueDecoder: VenueDecoder.forTests, getCachedRiskyVenueConfiguration: { RiskyVenueConfiguration(optionToBookATest: DayDuration(14)) })
         
         _ = try XCTUnwrap(checkInsStore.load())
         

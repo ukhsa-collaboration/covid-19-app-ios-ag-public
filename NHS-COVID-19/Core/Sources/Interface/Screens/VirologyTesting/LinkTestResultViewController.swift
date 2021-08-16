@@ -8,14 +8,12 @@ import SwiftUI
 
 public protocol LinkTestResultViewControllerInteracting {
     func cancel()
-    func submit(testCode: String, isCheckBoxChecked: Bool?) -> AnyPublisher<Void, LinkTestValidationError>
+    func submit(testCode: String) -> AnyPublisher<Void, LinkTestValidationError>
     func reportRapidTestResultsOnGovDotUKTapped()
-    var shouldShowDCTInfoView: Bool { get }
 }
 
 public enum LinkTestValidationError: Error {
     case testCode(DisplayableError)
-    case testCodeEnteredAndCheckBoxChecked
     case noneEntered
     case decodeFailed
 }
@@ -156,9 +154,6 @@ public class LinkTestResultViewController: UIViewController {
             case .testCode(let error):
                 topErrorBoxView = nil
                 showCodeEntryError(error.localizedDescription)
-            case .testCodeEnteredAndCheckBoxChecked:
-                hideCodeEntryError()
-                showTopErrorBox(localize(.link_test_result_enter_code_daily_contact_testing_top_erorr_box_text_both_entered))
             case .none:
                 topErrorBoxView = nil
                 hideCodeEntryError()
@@ -199,34 +194,8 @@ public class LinkTestResultViewController: UIViewController {
         return stackView
     }
     
-    private var checkBoxInfo: CheckBoxInfo?
-    
-    private func dailyContactInfoStackView(checkBox: UIHostingController<CheckBox>) -> UIStackView {
-        let title = BaseLabel().set(text: localize(.link_test_result_enter_code_daily_contact_testing_heading)).styleAsHeading()
-        let paragraph = BaseLabel().set(text: localize(.link_test_result_enter_code_daily_contact_testing_paragraph)).styleAsBody()
-        let bulletedListTitle = BaseLabel().set(text: localize(.link_test_result_enter_code_daily_contact_testing_bulleted_list_title)).styleAsBody()
-        let bulletedList = BulletedList(
-            rows: localizeAndSplit(.link_test_result_enter_code_daily_contact_testing_bulleted_list)
-        )
-        
-        let stack = UIStackView(arrangedSubviews: [title, paragraph, bulletedListTitle, bulletedList, checkBox.view])
-        
-        stack.axis = .vertical
-        stack.alignment = .fill
-        stack.distribution = .equalSpacing
-        stack.spacing = .standardSpacing
-        stack.layoutMargins = .standard
-        stack.isLayoutMarginsRelativeArrangement = true
-        return stack
-        
-    }
-    
     public init(interactor: Interacting) {
         self.interactor = interactor
-        
-        if interactor.shouldShowDCTInfoView {
-            checkBoxInfo = CheckBoxInfo(isConfirmed: false, heading: localize(.link_test_result_enter_code_daily_contact_testing_checkbox))
-        }
         
         super.init(nibName: nil, bundle: nil)
         
@@ -255,14 +224,6 @@ public class LinkTestResultViewController: UIViewController {
                         reportYourResultOnGovDotUKLink]),
             informationBox,
         ]
-        
-        // If Daily Contact Testing Info should be displayed
-        if let checkBoxInfo = checkBoxInfo {
-            let checkBox = CheckBox(viewModel: checkBoxInfo)
-            let checkboxHostingVC = checkBox.hostingVC
-            addChild(checkboxHostingVC)
-            content.append(dailyContactInfoStackView(checkBox: checkboxHostingVC))
-        }
         
         stackView = UIStackView(arrangedSubviews: content)
         
@@ -313,7 +274,7 @@ public class LinkTestResultViewController: UIViewController {
         
         testCodeTextField.resignFirstResponder()
         
-        cancellable = interactor.submit(testCode: testCodeTextField.text ?? "", isCheckBoxChecked: checkBoxInfo?.isConfirmed)
+        cancellable = interactor.submit(testCode: testCodeTextField.text ?? "")
             .receive(on: RunLoop.main)
             .sink(
                 receiveCompletion: { [weak self] completion in

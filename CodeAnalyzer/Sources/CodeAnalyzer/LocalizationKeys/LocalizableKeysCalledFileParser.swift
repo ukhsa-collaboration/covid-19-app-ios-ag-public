@@ -40,7 +40,7 @@ struct LocalizableKeysCalledFileParser: UsedLocalizationKeys {
     ) throws {
         visitor = LocalizationFuncVisitor(definedKeys: definedKeys)
         try files.forEach {
-            guard $0.lastPathComponent != "StringLocalizationKey.swift" else {
+            guard $0.lastPathComponent != "StringLocalizableKey.swift" else {
                 return
             }
             
