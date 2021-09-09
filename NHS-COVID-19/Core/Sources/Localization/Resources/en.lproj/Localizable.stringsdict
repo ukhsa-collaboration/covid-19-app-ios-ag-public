@@ -258,5 +258,53 @@
 				<string>Continue to self-isolate for %ld days</string>
 			</dict>
 		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>You should self-isolate for %li full day after the date of close contact.</string>
+				<key>other</key>
+				<string>You should self-isolate for %li full days after the date of close contact.</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>You came into close contact with someone %ld day ago who has since reported a positive COVID-19 test result in the app.</string>
+				<key>other</key>
+				<string>You came into close contact with someone %ld days ago who has since reported a positive COVID-19 test result in the app.</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Your remaining self-isolation period is %ld day.</string>
+				<key>other</key>
+				<string>Your remaining self-isolation period is %ld days.</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

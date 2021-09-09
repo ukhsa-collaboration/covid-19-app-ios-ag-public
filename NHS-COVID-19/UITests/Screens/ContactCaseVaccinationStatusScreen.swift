@@ -9,6 +9,18 @@ struct ContactCaseVaccinationStatusScreen {
     let app: XCUIApplication
     let lastDoseDate: Date
     
+    var allStaticElements: [XCUIElement] {
+        [
+            title,
+            heading,
+            description,
+            fullyVaccinatedQuestion,
+            fullyVaccinatedDescription,
+            readMoreAboutVaccinesLink,
+            confirmButton,
+        ]
+    }
+    
     var title: XCUIElement {
         app.staticTexts[localized: .contact_case_vaccination_status_title]
     }
@@ -57,6 +69,32 @@ struct ContactCaseVaccinationStatusScreen {
     
     func noLastDoseDateRadioButton(selected: Bool) -> XCUIElement {
         let title = localize(.contact_case_vaccination_status_last_dose_of_vaccine_no_option_accessibility_text(date: lastDoseDate))
+        let value = selected ? localize(.radio_button_checked) : localize(.radio_button_unchecked)
+        return app.buttons[localized: .radio_button_accessibility_label(value: value, content: title)]
+    }
+    
+    var clinicalTrialQuestion: XCUIElement {
+        app.staticTexts[localized: .exposure_notification_clinical_trial_question]
+    }
+    
+    func noClinicalTrialRadioButton(selected: Bool) -> XCUIElement {
+        let title = localize(.exposure_notification_clinical_trial_no_content_description)
+        let value = selected ? localize(.radio_button_checked) : localize(.radio_button_unchecked)
+        return app.buttons[localized: .radio_button_accessibility_label(value: value, content: title)]
+    }
+    
+    var medicallyExemptQuestion: XCUIElement {
+        app.staticTexts[localized: .exposure_notification_medically_exempt_question]
+    }
+    
+    func noMedicallyExemptRadioButton(selected: Bool) -> XCUIElement {
+        let title = localize(.exposure_notification_medically_exempt_no_content_description)
+        let value = selected ? localize(.radio_button_checked) : localize(.radio_button_unchecked)
+        return app.buttons[localized: .radio_button_accessibility_label(value: value, content: title)]
+    }
+    
+    func yesMedicallyExemptRadioButton(selected: Bool) -> XCUIElement {
+        let title = localize(.exposure_notification_medically_exempt_yes_content_description)
         let value = selected ? localize(.radio_button_checked) : localize(.radio_button_unchecked)
         return app.buttons[localized: .radio_button_accessibility_label(value: value, content: title)]
     }

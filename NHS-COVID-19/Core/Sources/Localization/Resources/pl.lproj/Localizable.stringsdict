@@ -322,5 +322,65 @@
 				<string/>
 			</dict>
 		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Musisz pozostać w samoizolacji przez cały %ld dzień po dniu, w którym nastąpił bliski kontakt.</string>
+				<key>few</key>
+				<string/>
+				<key>many</key>
+				<string/>
+				<key>other</key>
+				<string>Musisz pozostać w samoizolacji przez pełnych %ld dni po dniu, w którym nastąpił bliski kontakt.</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld dzień temu nastąpił bliski kontakt z osobą, która zgłosiła w aplikacji dodatni wynik testu na COVID-19.</string>
+				<key>few</key>
+				<string/>
+				<key>many</key>
+				<string/>
+				<key>other</key>
+				<string>%ld dni temu nastąpił bliski kontakt z osobą, która zgłosiła w aplikacji dodatni wynik testu na COVID-19.</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Twój pozostały czas samoizolacji to %ld dzień.</string>
+				<key>few</key>
+				<string/>
+				<key>many</key>
+				<string/>
+				<key>other</key>
+				<string>Twój pozostały czas samoizolacji to %ld dni.</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

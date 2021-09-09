@@ -5,6 +5,7 @@
 import Combine
 import Common
 import Integration
+import Localization
 import SwiftUI
 import UIKit
 
@@ -16,6 +17,7 @@ public class Runner {
     public static let interfaceStyleDefaultKey = "interfaceStyle"
     public static let disableAnimations = "disable_animations"
     public static let disableHardwareKeyboard = "disable_hardware_keyboard"
+    public static let showStringLocalizableKeysOnly = "showStringLocalizableKeysOnly"
     
     private let loggingManager: LoggingManager
     private let appController = WrappingAppController()
@@ -81,6 +83,7 @@ public class Runner {
     public init(loggingManager: LoggingManager) {
         self.loggingManager = loggingManager
         UIApplication.shared.shortcutItems = shortcuts.map { $0.item }
+        prepareLocalizationOverriderIfNeeded()
         updateContent()
     }
     
@@ -112,6 +115,13 @@ public class Runner {
             default:
                 break
             }
+        }
+    }
+    
+    private func prepareLocalizationOverriderIfNeeded() {
+        if let showStringLocalizableKeysOnly = Int(ProcessInfo.processInfo.environment[Self.showStringLocalizableKeysOnly] ?? ""),
+            showStringLocalizableKeysOnly > 0 {
+            Localization.current.overrider = ShowLocalizableKeysOnlyOverrider()
         }
     }
     

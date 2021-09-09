@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -20,7 +20,8 @@ struct IsolationConfigurationEndpoint: HTTPEndpoint {
             indexCaseSinceSelfDiagnosisOnset: DayDuration(durations.indexCaseSinceSelfDiagnosisOnset),
             indexCaseSinceSelfDiagnosisUnknownOnset: DayDuration(durations.indexCaseSinceSelfDiagnosisUnknownOnset),
             housekeepingDeletionPeriod: DayDuration(durations.pendingTasksRetentionPeriod ?? 14),
-            indexCaseSinceNPEXDayNoSelfDiagnosis: DayDuration(durations.indexCaseSinceTestResultEndDate)
+            indexCaseSinceNPEXDayNoSelfDiagnosis: DayDuration(durations.indexCaseSinceTestResultEndDate),
+            testResultPollingTokenRetentionPeriod: DayDuration(durations.testResultPollingTokenRetentionPeriod)
         )
     }
 }
@@ -33,6 +34,7 @@ private struct Payload: Codable {
         var indexCaseSinceSelfDiagnosisUnknownOnset: Int
         var pendingTasksRetentionPeriod: Int?
         var indexCaseSinceTestResultEndDate: Int
+        var testResultPollingTokenRetentionPeriod: Int
     }
     
     var durationDays: DayDurations

@@ -17,7 +17,10 @@ class VirologyTestingManagerTests: XCTestCase {
     
     override func setUp() {
         mockServer = MockHTTPClient()
-        virologyStore = VirologyTestingStateStore(store: MockEncryptedStore())
+        virologyStore = VirologyTestingStateStore(
+            store: MockEncryptedStore(),
+            dateProvider: MockDateProvider()
+        )
         notificationManager = MockUserNotificationsManager()
         validator = MockCTATokenValidator()
         manager = VirologyTestingManager(

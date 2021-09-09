@@ -8,6 +8,19 @@ import XCTest
 struct ContactCaseNoIsolationUnderAgeLimitScreen {
     var app: XCUIApplication
     
+    var allElements: [XCUIElement] {
+        [
+            infoBox,
+            commonQuestionsLink,
+            advice,
+            guidanceLink,
+            isolationListItem,
+            lfdListItem,
+            bookAFreeTestButton,
+            backToHomeButton,
+        ]
+    }
+    
     var infoBox: XCUIElement {
         app.staticTexts[localized: .contact_case_no_isolation_under_age_limit_info_box]
     }

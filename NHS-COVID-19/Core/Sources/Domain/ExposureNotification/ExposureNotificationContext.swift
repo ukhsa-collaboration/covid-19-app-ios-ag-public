@@ -28,7 +28,7 @@ struct ExposureNotificationContext {
     var exposureDetectionStore: ExposureDetectionStore
     var exposureDetectionManager: ExposureDetectionManager
     var exposureKeysManager: ExposureKeysManager
-    var diagnosisKeyCacheHouskeeper: DiagnosisKeyCacheHousekeeper
+    var diagnosisKeyCacheHousekeeper: DiagnosisKeyCacheHousekeeper
     var handleDontWorryNotification: () -> Void
     var exposureWindowAnalyticsHandler: ExposureWindowAnalyticsHandler?
     var currentDateProvider: DateProviding
@@ -111,7 +111,7 @@ struct ExposureNotificationContext {
             exposureRiskManager: exposureRiskManager
         )
         
-        diagnosisKeyCacheHouskeeper = DiagnosisKeyCacheHousekeeper(
+        diagnosisKeyCacheHousekeeper = DiagnosisKeyCacheHousekeeper(
             fileStorage: services.cacheStorage,
             exposureDetectionStore: exposureDetectionStore,
             currentDateProvider: services.currentDateProvider
@@ -136,11 +136,11 @@ struct ExposureNotificationContext {
     }
     
     func detectExposures(deferShouldShowDontWorryNotification: @escaping () -> Void) -> AnyPublisher<Void, Never> {
-        return diagnosisKeyCacheHouskeeper.deleteFilesOlderThanADay()
+        return diagnosisKeyCacheHousekeeper.deleteFilesOlderThanADay()
             .append(
                 _detectExposures(deferShouldShowDontWorryNotification: deferShouldShowDontWorryNotification)
             )
-            .append(Deferred(createPublisher: diagnosisKeyCacheHouskeeper.deleteNotNeededFiles))
+            .append(Deferred(createPublisher: diagnosisKeyCacheHousekeeper.deleteNotNeededFiles))
             .eraseToAnyPublisher()
     }
     

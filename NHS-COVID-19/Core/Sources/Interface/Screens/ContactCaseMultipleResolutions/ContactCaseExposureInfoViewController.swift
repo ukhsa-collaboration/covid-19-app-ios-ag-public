@@ -4,6 +4,7 @@
 
 import Foundation
 import Localization
+import SwiftUI
 import UIKit
 
 public protocol ContactCaseExposureInfoInteracting {
@@ -15,7 +16,30 @@ public struct ContactCaseExposureInfoContent {
     
     var views: [StackViewContentProvider]
     
-    public init(interactor: Interacting) {
+    public init(interactor: Interacting,
+                exposureDate: Date,
+                isIndexCase: Bool) {
+        let displayMode: AccordionViewDisplayMode
+        if #available(iOS 14, *) {
+            displayMode = .singleWithChevron
+        } else {
+            displayMode = .expanded
+        }
+        let accordionController = UIHostingController(
+            rootView: AccordionView(
+                localize(.contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading),
+                displayMode: displayMode
+            ) {
+                ForEach.fromStrings(
+                    localizeAndSplit(.contact_case_exposure_info_screen_how_close_contacts_are_calculated_body),
+                    spacing: .standardSpacing
+                ) {
+                    Text($0).styleAsBody()
+                }
+            })
+        let accordionView = accordionController.view!
+        accordionView.backgroundColor = .clear
+        
         views = [
             UIImageView(.coronaVirus)
                 .styleAsDecoration()
@@ -23,21 +47,40 @@ public struct ContactCaseExposureInfoContent {
             BaseLabel().styleAsPageHeader()
                 .set(text: localize(.contact_case_exposure_info_screen_title))
                 .centralized(),
-            InformationBox.indication(
-                text: localize(.contact_case_exposure_info_screen_information),
-                style: .warning
-            ),
-            WelcomePoint(image: .thermometer, body: localize(.contact_case_exposure_info_screen_if_you_have_symptoms)),
-            PrimaryButton(title: localize(.contact_case_exposure_info_screen_continue_button), action: interactor.didTapContinue),
+            BaseLabel().styleAsBody()
+                .set(text: localize(.contact_case_exposure_info_screen_exposure_date(date: exposureDate)))
+                .centralized(),
+            accordionView,
         ]
+        
+        if !isIndexCase {
+            views.append(contentsOf: [
+                InformationBox.indication(
+                    text: localize(.contact_case_exposure_info_screen_information),
+                    style: .warning
+                ),
+                WelcomePoint(image: .thermometer, body: localize(.contact_case_exposure_info_screen_if_you_have_symptoms)),
+            ])
+        }
+        
+        views.append(contentsOf: [
+            UIView(), // This adds space when between the content and button. Otherwise the button is vertically stretched when the content height is less than screen height.
+            PrimaryButton(title: localize(.contact_case_exposure_info_screen_continue_button), action: interactor.didTapContinue),
+        ])
     }
 }
 
 public class ContactCaseExposureInfoViewController: ScrollingContentViewController {
     public typealias Interacting = ContactCaseExposureInfoInteracting
     
-    public init(interactor: Interacting) {
-        let content = ContactCaseExposureInfoContent(interactor: interactor)
+    public init(interactor: Interacting,
+                exposureDate: Date,
+                isIndexCase: Bool) {
+        let content = ContactCaseExposureInfoContent(
+            interactor: interactor,
+            exposureDate: exposureDate,
+            isIndexCase: isIndexCase
+        )
         super.init(views: content.views)
     }
     

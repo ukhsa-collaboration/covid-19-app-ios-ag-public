@@ -20,7 +20,8 @@ class IsolationStateStoreTests: XCTestCase {
                 indexCaseSinceSelfDiagnosisOnset: 8,
                 indexCaseSinceSelfDiagnosisUnknownOnset: 9,
                 housekeepingDeletionPeriod: 14,
-                indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis
+                indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis,
+                testResultPollingTokenRetentionPeriod: 28
             )
             
             public init() {}
@@ -67,7 +68,8 @@ class IsolationStateStoreTests: XCTestCase {
             indexCaseSinceSelfDiagnosisOnset: 7,
             indexCaseSinceSelfDiagnosisUnknownOnset: 5,
             housekeepingDeletionPeriod: 14,
-            indexCaseSinceNPEXDayNoSelfDiagnosis: 10
+            indexCaseSinceNPEXDayNoSelfDiagnosis: 10,
+            testResultPollingTokenRetentionPeriod: 28
         )
         
         TS.assert(store.configuration, equals: expected)
@@ -95,7 +97,8 @@ class IsolationStateStoreTests: XCTestCase {
             indexCaseSinceSelfDiagnosisOnset: 7,
             indexCaseSinceSelfDiagnosisUnknownOnset: 5,
             housekeepingDeletionPeriod: 14,
-            indexCaseSinceNPEXDayNoSelfDiagnosis: 35
+            indexCaseSinceNPEXDayNoSelfDiagnosis: 35,
+            testResultPollingTokenRetentionPeriod: 28
         )
         
         TS.assert(store.configuration, equals: expected)
@@ -565,7 +568,8 @@ class IsolationStateStoreTests: XCTestCase {
             indexCaseSinceSelfDiagnosisOnset: 7,
             indexCaseSinceSelfDiagnosisUnknownOnset: 5,
             housekeepingDeletionPeriod: 14,
-            indexCaseSinceNPEXDayNoSelfDiagnosis: 10
+            indexCaseSinceNPEXDayNoSelfDiagnosis: 10,
+            testResultPollingTokenRetentionPeriod: 28
         )
         
         TS.assert(store.configuration, equals: expected)
@@ -595,7 +599,8 @@ class IsolationStateStoreTests: XCTestCase {
             indexCaseSinceSelfDiagnosisOnset: 7,
             indexCaseSinceSelfDiagnosisUnknownOnset: 5,
             housekeepingDeletionPeriod: 14,
-            indexCaseSinceNPEXDayNoSelfDiagnosis: 35
+            indexCaseSinceNPEXDayNoSelfDiagnosis: 35,
+            testResultPollingTokenRetentionPeriod: 28
         )
         
         TS.assert(store.configuration, equals: expected)

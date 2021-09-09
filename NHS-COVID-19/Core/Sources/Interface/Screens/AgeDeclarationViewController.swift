@@ -14,7 +14,7 @@ struct AgeDeclarationContent {
     public typealias Interacting = AgeDeclarationViewControllerInteracting
     var views: [StackViewContentProvider]
     
-    init(interactor: Interacting) {
+    init(interactor: Interacting, birthThresholdDate: Date, isIndexCase: Bool) {
         let emptyError = UIHostingController(
             rootView: ErrorBox(
                 localize(.age_declaration_error_title),
@@ -28,12 +28,12 @@ struct AgeDeclarationContent {
         let yesNoOptions: [RadioButtonGroup.ButtonViewModel] = [
             .init(
                 title: localize(.age_declaration_yes_option),
-                accessibilityText: localize(.age_declaration_yes_option_accessibility_text),
+                accessibilityText: localize(.age_declaration_yes_option_accessibility_text(date: birthThresholdDate)),
                 action: { isOverAgeLimit = true }
             ),
             .init(
                 title: localize(.age_declaration_no_option),
-                accessibilityText: localize(.age_declaration_no_option_accessibility_text),
+                accessibilityText: localize(.age_declaration_no_option_accessibility_text(date: birthThresholdDate)),
                 action: { isOverAgeLimit = false }
             ),
         ]
@@ -43,14 +43,22 @@ struct AgeDeclarationContent {
         )
         radioButtonGroup.view.backgroundColor = .clear
         
-        let stackedViews: [UIView] = [
+        var stackedViews: [UIView] = [
             UIImageView(.isolationContinue).styleAsDecoration(),
             BaseLabel().set(text: localize(.age_declaration_heading)).styleAsPageHeader().centralized(),
-            BaseLabel().set(text: localize(.age_declaration_description)).styleAsBody(),
-            emptyError.view,
-            BaseLabel().set(text: localize(.age_declaration_question)).styleAsSecondaryTitle(),
-            radioButtonGroup.view,
         ]
+        
+        if !isIndexCase {
+            stackedViews.append(contentsOf: [
+                BaseLabel().set(text: localize(.age_declaration_description)).styleAsBody(),
+            ])
+        }
+        
+        stackedViews.append(contentsOf: [
+            emptyError.view,
+            BaseLabel().set(text: localize(.age_declaration_question(date: birthThresholdDate))).styleAsSecondaryTitle(),
+            radioButtonGroup.view,
+        ])
         
         let contentStack = UIStackView(arrangedSubviews: stackedViews.flatMap { $0.content })
         contentStack.axis = .vertical
@@ -84,9 +92,13 @@ public class AgeDeclarationViewController: ScrollingContentViewController {
     public typealias Interacting = AgeDeclarationViewControllerInteracting
     private let interactor: Interacting
     
-    public init(interactor: Interacting) {
+    public init(interactor: Interacting, birthThresholdDate: Date, isIndexCase: Bool) {
         self.interactor = interactor
-        let content = AgeDeclarationContent(interactor: interactor)
+        let content = AgeDeclarationContent(
+            interactor: interactor,
+            birthThresholdDate: birthThresholdDate,
+            isIndexCase: isIndexCase
+        )
         super.init(views: content.views)
         title = localize(.age_declaration_title)
     }

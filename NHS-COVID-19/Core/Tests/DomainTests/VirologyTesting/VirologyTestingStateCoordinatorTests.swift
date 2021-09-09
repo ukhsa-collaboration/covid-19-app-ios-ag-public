@@ -16,7 +16,10 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
     var isInterestedInAskingForSymptomsOnsetDay: Bool = true
     
     override func setUp() {
-        virologyStore = VirologyTestingStateStore(store: MockEncryptedStore())
+        virologyStore = VirologyTestingStateStore(
+            store: MockEncryptedStore(),
+            dateProvider: MockDateProvider()
+        )
         userNotificationManager = MockUserNotificationsManager()
         coordinator = VirologyTestingStateCoordinator(
             virologyTestingStateStore: virologyStore,
@@ -43,6 +46,7 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
         )
         let tokens = VirologyTestTokens(
             pollingToken: PollingToken(value: .random()),
+            creationDay: .today,
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random())
         )
         

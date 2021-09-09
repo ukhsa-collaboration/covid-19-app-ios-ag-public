@@ -13,7 +13,8 @@ public class ContactCaseStartIsolationScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name = "Contact Case Start Isolation"
     
-    public static let numberOfDays = 14
+    public static let numberOfDays = 10
+    public static let exposureDate = Date(timeIntervalSinceNow: -86400)
     public static let cancelTapped = "Cancel button tapped"
     public static let bookAFreeTestTapped = "Book a free test button tapped"
     public static let backToHomeTapped = "Back to home button tapped"
@@ -22,7 +23,7 @@ public class ContactCaseStartIsolationScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return ContactCaseStartIsolationViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: Double(Self.numberOfDays) * 86400))
+            return ContactCaseStartIsolationViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: Double(Self.numberOfDays) * 86400), exposureDate: exposureDate, isolationPeriod: 11)
         }
     }
 }

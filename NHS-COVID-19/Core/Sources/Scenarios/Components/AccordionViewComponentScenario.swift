@@ -57,6 +57,14 @@ private struct ContentView: View {
                             Text("The Second line")
                         }
                     }
+                    AccordionGroup("Example with chevron") {
+                        AccordionView(
+                            "How we calculate your isolation period",
+                            displayMode: .singleWithChevron
+                        ) {
+                            Text("Sample text")
+                        }
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()

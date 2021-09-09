@@ -40,7 +40,7 @@ public class PositiveTestResultStartIsolationScreenScenario: NonNegativeTestResu
     public static var name: String = "Virology Testing - Positive Result (Start Isolation)"
 }
 
-public class PositiveTestResultContinueIsolationAfterIndicativeScreenScenario: NonNegativeTestResultWithIsolationScreenScenario {
+public class PositiveTestResultContinueIsolationAfterConfirmedScreenScenario: NonNegativeTestResultWithIsolationScreenScenario {
     static var testResultType = TestResultType.positiveButAlreadyConfirmedPositive
     public static var name: String = "Virology Testing - Positive Result After Already Confirmed Positive (Continue Isolation)"
 }

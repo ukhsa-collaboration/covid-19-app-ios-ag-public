@@ -7,6 +7,9 @@ import XCTest
 
 struct ContactCaseStartIsolationScreen {
     var app: XCUIApplication
+    var isolationPeriod: Int
+    var daysSinceEncounter: Int
+    var remainingDays: Int
     
     var infoBox: XCUIElement {
         app.staticTexts[localized: .contact_case_start_isolation_info_box]
@@ -40,4 +43,5 @@ struct ContactCaseStartIsolationScreen {
         let daysRemaningText = localize(.contact_case_start_isolation_accessibility_label(days: days))
         return app.staticTexts[verbatim: daysRemaningText]
     }
+    
 }

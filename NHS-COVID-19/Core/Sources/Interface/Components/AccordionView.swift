@@ -4,6 +4,7 @@
 
 import Localization
 import SwiftUI
+import UIKit
 
 // MARK: - Accordion Group
 
@@ -30,24 +31,62 @@ public struct AccordionGroup<Content>: View where Content: View {
 
 // MARK: - Accordion View
 
-public struct AccordionView<Content>: View where Content: View {
+public enum AccordionViewDisplayMode {
+    case expanded // iOS 13 bug when used inside stackview
+    case singleWithChevron
+    case multipleWithPlusMinus
     
+    var expandedImageName: ImageName {
+        switch self {
+        case .expanded, .singleWithChevron:
+            return .accordionExpandedIcon
+        case .multipleWithPlusMinus:
+            return .accordionMinusIcon
+        }
+    }
+    
+    var collapsedImageName: ImageName {
+        switch self {
+        case .expanded, .singleWithChevron:
+            return .accordionCollapsedIcon
+        case .multipleWithPlusMinus:
+            return .accordionPlusIcon
+        }
+    }
+}
+
+public struct AccordionView<Content>: View where Content: View {
     private let text: String
     private let content: () -> Content
-    @State private var isExpanded = false
+    private let displayMode: AccordionViewDisplayMode
+    @State private var isExpanded: Bool
     
-    public init(_ text: String, @ViewBuilder content: @escaping () -> Content) {
+    public init(_ text: String,
+                displayMode: AccordionViewDisplayMode = .multipleWithPlusMinus,
+                @ViewBuilder content: @escaping () -> Content) {
         self.text = text
+        self.displayMode = displayMode
         self.content = content
+        if displayMode == .expanded {
+            _isExpanded = State(wrappedValue: true)
+        } else {
+            _isExpanded = State(wrappedValue: false)
+        }
     }
     
     public var body: some View {
         VStack(alignment: .leading) {
             Button(
-                action: { isExpanded.toggle() },
+                action: {
+                    if displayMode != .expanded {
+                        isExpanded.toggle()
+                    }
+                },
                 label: {
                     HStack(alignment: .firstTextBaseline, spacing: .iconTrailingSpacing) {
-                        Image(isExpanded ? .accordionMinusIcon : .accordionPlusIcon)
+                        Image(isExpanded
+                            ? displayMode.expandedImageName
+                            : displayMode.collapsedImageName)
                             .renderingMode(.original)
                             .resizable()
                             .frame(width: .iconSide, height: .iconSide)

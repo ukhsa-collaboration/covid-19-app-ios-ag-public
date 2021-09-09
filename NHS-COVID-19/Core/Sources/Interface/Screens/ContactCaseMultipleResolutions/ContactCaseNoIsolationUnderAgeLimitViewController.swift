@@ -27,7 +27,7 @@ extension ContactCaseNoIsolationUnderAgeLimitViewController {
                     .set(text: localize(.contact_case_no_isolation_under_age_limit_title))
                     .centralized(),
                 InformationBox.indication.warning(localize(.contact_case_no_isolation_under_age_limit_info_box)),
-                WelcomePoint(image: .swabTest, body: localize(.contact_case_no_isolation_under_age_limit_list_item_lfd)),
+                WelcomePoint(image: .socialDistancing, body: localize(.contact_case_no_isolation_under_age_limit_list_item_lfd)),
                 WelcomePoint(image: .adultChild, body: localize(.contact_case_no_isolation_under_age_limit_list_item_adult)),
                 LinkButton(
                     title: localize(.contact_case_no_isolation_under_age_limit_common_questions_button_title),

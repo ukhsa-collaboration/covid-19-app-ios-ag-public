@@ -181,6 +181,12 @@ public func localizeAndSplit(_ key: StringLocalizableKey) -> [String] {
         .map(String.init)
 }
 
+public func localizeAndSplit(_ key: ParameterisedStringLocalizable) -> [String] {
+    Localization.current.localize(key.key, arguments: key.arguments)
+        .split(separator: "\n", omittingEmptySubsequences: true)
+        .map(String.init)
+}
+
 func localizeURL(_ key: StringLocalizableKey) -> URL {
     var rawValue = key.rawValue
     

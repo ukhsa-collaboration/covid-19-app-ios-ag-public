@@ -7,6 +7,27 @@ import XCTest
 
 struct ContactCaseExposureInfoScreen {
     var app: XCUIApplication
+    var date: Date
+    
+    func allElements(isIndexCase: Bool) -> [XCUIElement] {
+        if isIndexCase {
+            return [
+                headingText,
+                exposureDateLine,
+                accordionHeading,
+                continueButton,
+            ]
+        } else {
+            return [
+                headingText,
+                exposureDateLine,
+                accordionHeading,
+                infoBoxText,
+                ifYouHaveSymptomsText,
+                continueButton,
+            ]
+        }
+    }
     
     var headingText: XCUIElement {
         app.staticTexts[localized: .contact_case_exposure_info_screen_title]
@@ -26,6 +47,23 @@ struct ContactCaseExposureInfoScreen {
     
     var alertOnTappingContinueButton: XCUIElement {
         app.staticTexts["'Continue' button tapped"]
+    }
+    
+    var accordionHeading: XCUIElement {
+        app.buttons[localized: .contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading]
+    }
+    
+    var accordionBodyElements: [XCUIElement] {
+        localizeAndSplit(.contact_case_exposure_info_screen_how_close_contacts_are_calculated_body)
+            .map {
+                app
+                    .staticTexts
+                    .element(matching: NSPredicate(format: "label LIKE %@", $0))
+            }
+    }
+    
+    var exposureDateLine: XCUIElement {
+        app.staticTexts[localized: .contact_case_exposure_info_screen_exposure_date(date: date)]
     }
     
 }

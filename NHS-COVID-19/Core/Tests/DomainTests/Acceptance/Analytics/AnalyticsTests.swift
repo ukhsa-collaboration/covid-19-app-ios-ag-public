@@ -208,6 +208,9 @@ struct SubmissionPayload: Decodable {
         
         var optedOutForContactIsolation: MetricField = 0
         var optedOutForContactIsolationBackgroundTick: MetricField = 0
+        
+        var appIsUsableBackgroundTick: MetricField = 0
+        var appIsContactTraceableBackgroundTick: MetricField = 0
     }
     
     var includesMultipleApplicationVersions: Bool

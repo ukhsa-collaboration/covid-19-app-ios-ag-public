@@ -37,7 +37,8 @@ private let isolationConfig = """
     "indexCaseSinceSelfDiagnosisUnknownOnset": \(Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset),
     "contactCase": 3,
     "maxIsolation": \(Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset),
-    "indexCaseSinceTestResultEndDate": 5
+    "indexCaseSinceTestResultEndDate": 5,
+    "testResultPollingTokenRetentionPeriod": 28
   }
 }
 

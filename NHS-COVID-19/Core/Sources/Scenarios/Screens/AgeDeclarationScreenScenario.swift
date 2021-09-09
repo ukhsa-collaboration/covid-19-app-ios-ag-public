@@ -13,11 +13,16 @@ public class AgeDeclarationScreenScenario: Scenario {
     public static let backButtonAlertTitle = "Back button tapped"
     public static let yesOptionAlertTitle = "Yes option selected"
     public static let noOptionAlertTitle = "No option selected"
+    public static let birthThresholdDate = Date(timeIntervalSinceNow: -183 * 86400)
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return AgeDeclarationViewController(interactor: interactor)
+            return AgeDeclarationViewController(
+                interactor: interactor,
+                birthThresholdDate: birthThresholdDate,
+                isIndexCase: false
+            )
         }
     }
 }

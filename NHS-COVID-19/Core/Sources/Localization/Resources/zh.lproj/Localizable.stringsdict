@@ -226,5 +226,47 @@
 				<string/>
 			</dict>
 		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>您应自密切接触之日起自我隔离 %ld 整天。</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>在 %ld 天前您与某人有密切接触，此后，他在本应用程序报告了COVID-19 检测呈阳性的结果。</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>您还剩 %ld 天的自我隔离期。</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

@@ -7,6 +7,7 @@ import Foundation
 
 private struct VirologyTokensInfo: Codable, Equatable {
     var pollingToken: String
+    var creationDay: GregorianDay?
     var diagnosisKeySubmissionToken: String
 }
 
@@ -75,7 +76,9 @@ private struct TestResultInfo: Codable, DataConvertible {
 public class VirologyTestingStateStore {
     
     @PublishedEncrypted private var virologyTestingInfo: VirologyTestingInfo?
-    @PublishedEncrypted private var recievedUnknownTestResulInfo: UnknownTestResultInfo?
+    @PublishedEncrypted private var recievedUnknownTestResultInfo: UnknownTestResultInfo?
+    
+    private let dateProvider: DateProviding
     
     private(set) lazy var virologyTestResult: DomainProperty<VirologyStateTestResult?> = {
         $virologyTestingInfo.map { [weak self] virologyTestingInfo in
@@ -103,12 +106,14 @@ public class VirologyTestingStateStore {
     }()
     
     private(set) lazy var recievedUnknownTestResult: DomainProperty<Bool> = {
-        $recievedUnknownTestResulInfo.map { $0 != nil }
+        $recievedUnknownTestResultInfo.map { $0 != nil }
     }()
     
-    init(store: EncryptedStoring) {
+    init(store: EncryptedStoring, dateProvider: DateProviding) {
         _virologyTestingInfo = store.encrypted("virology_testing")
-        _recievedUnknownTestResulInfo = store.encrypted("unknown_test_result")
+        _recievedUnknownTestResultInfo = store.encrypted("unknown_test_result")
+        
+        self.dateProvider = dateProvider
         
         migrate()
     }
@@ -122,14 +127,25 @@ public class VirologyTestingStateStore {
                 $0?.unacknowledgedTestResults = newList
             }
         }
+        
+        if let testTokensInfo = virologyTestingInfo?.tokensInfo,
+            testTokensInfo.contains(where: { $0.creationDay == nil }) {
+            virologyTestingInfo?.tokensInfo = testTokensInfo.map { token in
+                VirologyTokensInfo(
+                    pollingToken: token.pollingToken,
+                    creationDay: token.creationDay ?? dateProvider.currentGregorianDay(timeZone: .current),
+                    diagnosisKeySubmissionToken: token.diagnosisKeySubmissionToken
+                )
+            }
+        }
     }
     
     var didReceiveUnknownTestResult: Bool {
         get {
-            recievedUnknownTestResulInfo != nil
+            recievedUnknownTestResultInfo != nil
         }
         set {
-            recievedUnknownTestResulInfo = newValue ? UnknownTestResultInfo() : nil
+            recievedUnknownTestResultInfo = newValue ? UnknownTestResultInfo() : nil
         }
     }
     
@@ -137,8 +153,12 @@ public class VirologyTestingStateStore {
         if let virologyTestingInfo = virologyTestingInfo,
             let tokensInfo = virologyTestingInfo.tokensInfo {
             return tokensInfo.map { testInfo in
-                VirologyTestTokens(
+                guard let tokenCreationDay = testInfo.creationDay else {
+                    preconditionFailure("Token creation day not set for migrated token.")
+                }
+                return VirologyTestTokens(
                     pollingToken: PollingToken(value: testInfo.pollingToken),
+                    creationDay: tokenCreationDay,
                     diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: testInfo.diagnosisKeySubmissionToken)
                 )
             }
@@ -153,6 +173,7 @@ public class VirologyTestingStateStore {
     ) {
         let virologyTokens = VirologyTokensInfo(
             pollingToken: pollingToken.value,
+            creationDay: dateProvider.currentGregorianDay(timeZone: .current),
             diagnosisKeySubmissionToken: diagnosisKeySubmissionToken.value
         )
         var newList: [VirologyTokensInfo] = virologyTestingInfo?.tokensInfo ?? []
@@ -190,6 +211,7 @@ public class VirologyTestingStateStore {
     func removeTestTokens(_ tokens: VirologyTestTokens) {
         let virologyTokensInfo = VirologyTokensInfo(
             pollingToken: tokens.pollingToken.value,
+            creationDay: tokens.creationDay,
             diagnosisKeySubmissionToken: tokens.diagnosisKeySubmissionToken.value
         )
         
@@ -221,7 +243,12 @@ public class VirologyTestingStateStore {
     
     func delete() {
         virologyTestingInfo = nil
-        recievedUnknownTestResulInfo = nil
+        recievedUnknownTestResultInfo = nil
+    }
+    
+    func deleteExpiredData() {
+        virologyTestingInfo?.unacknowledgedTestResults = nil
+        recievedUnknownTestResultInfo = nil
     }
     
     private func getRelevantTestResult(from virologyTestingInfo: VirologyTestingInfo?) -> TestResultInfo? {

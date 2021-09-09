@@ -61,15 +61,6 @@ Scenarios also offer a way for the development team as well as the stakeholders 
 
 ## Modules
 
-<details>
-  <summary>Sidenote</summary>
-  
-Currently there is one violation of the separation of the modules. Specifically, `Domain` module has a dependency on `Localisation`.
-
-We consider this an acceptable as it does not stop us from providing the level of testing we need. However, we aim to fix this and return to the target architecture when possible.
-  
-</details>
-
 ### Common
 
 Contains common code available to all other packages.

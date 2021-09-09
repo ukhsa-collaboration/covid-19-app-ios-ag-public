@@ -223,30 +223,75 @@ extension CoordinatedAppController {
                 currentDateProvider: context.currentDateProvider
             )
             
-        case .neededForStartOfIsolationExposureDetection(let acknowledge, let vaccineThresholdDate, let isolationEndDate, let isIndexCase):
+        case .neededForStartOfIsolationExposureDetection(let acknowledge, let exposureDate, let birthThresholdDate, let vaccineThresholdDate, let isolationEndDate, let isIndexCase):
             let interactor = ContactCaseMultipleResolutionsFlowViewControllerInteractor(
                 openURL: context.openURL,
-                didDeclareUnderAgeLimit: { [showContactCaseResult] in
+                didDeclareUnderAgeLimit: { [showUIState] in
                     acknowledge(true)
                     if isIndexCase {
-                        showContactCaseResult.value = .continueIsolation(isolationEndDate.currentValue)
+                        showUIState.value = .showContactCaseResult(.continueIsolation(isolationEndDate.currentValue))
                     } else {
-                        showContactCaseResult.value = .underAgeLimit
+                        showUIState.value = .showContactCaseResult(.underAgeLimit)
                     }
                 },
-                didDeclareVaccinationStatus: { [showContactCaseResult] isFullyVaccinated in
-                    acknowledge(isFullyVaccinated)
-                    if isIndexCase {
-                        showContactCaseResult.value = .continueIsolation(isolationEndDate.currentValue)
-                    } else if isFullyVaccinated {
-                        showContactCaseResult.value = .fullyVaccinated
-                    } else {
-                        showContactCaseResult.value = .startIsolation(isolationEndDate.currentValue)
+                didDeclareVaccinationStatus: { [showUIState] fullyVaccinated, lastDose, clinicalTrial, medicallyExempt in
+                    var answers: [ContactCaseOptOutQuestion: Bool] = [:]
+                    fullyVaccinated.map { answers[.fullyVaccinated] = $0 }
+                    lastDose.map { answers[.lastDose] = $0 }
+                    clinicalTrial.map { answers[.clinicalTrial] = $0 }
+                    medicallyExempt.map { answers[.medicallyExempt] = $0 }
+                    let result = context.contactCaseOptOutQuestionnaire.getResolution(with: answers)
+                    
+                    let didOptOut: Bool
+                    let optOutReason: ContactCaseOptOutReason?
+                    switch result {
+                    case .notFinished:
+                        return .failure(ContactCaseVaccinationStatusNotEnoughAnswersError())
+                    case .optedOutOfIsolation(let reason):
+                        didOptOut = true
+                        optOutReason = reason
+                    case .needToIsolate:
+                        didOptOut = false
+                        optOutReason = nil
                     }
+                    
+                    acknowledge(didOptOut)
+                    if isIndexCase {
+                        showUIState.value = .showContactCaseResult(.continueIsolation(isolationEndDate.currentValue))
+                    } else if didOptOut {
+                        switch optOutReason {
+                        case .fullyVaccinated, .none:
+                            showUIState.value = .showContactCaseResult(.fullyVaccinated)
+                        case .medicallyExempt:
+                            showUIState.value = .showContactCaseResult(.medicallyExempt)
+                        }
+                    } else {
+                        showUIState.value = .showContactCaseResult(
+                            .startIsolation(
+                                endDate: isolationEndDate.currentValue,
+                                exposureDate: exposureDate
+                            ))
+                    }
+                    
+                    return .success(())
+                    
+                }, nextVaccinationStatusQuestion: { fullyVaccinated, lastDose, clinicalTrial, medicallyExempt in
+                    var answers: [ContactCaseOptOutQuestion: Bool] = [:]
+                    fullyVaccinated.map { answers[.fullyVaccinated] = $0 }
+                    lastDose.map { answers[.lastDose] = $0 }
+                    clinicalTrial.map { answers[.clinicalTrial] = $0 }
+                    medicallyExempt.map { answers[.medicallyExempt] = $0 }
+                    return context.contactCaseOptOutQuestionnaire.nextQuestion(with: answers).map(ContactCaseVaccinationStatusQuestion.init)
                 }
             )
             
-            return ContactCaseMultipleResolutionsFlowViewController(interactor: interactor, vaccineThresholdDate: vaccineThresholdDate)
+            return ContactCaseMultipleResolutionsFlowViewController(
+                interactor: interactor,
+                isIndexCase: isIndexCase,
+                exposureDate: exposureDate,
+                birthThresholdDate: birthThresholdDate,
+                vaccineThresholdDate: vaccineThresholdDate
+            )
             
         case .neededForRiskyVenue(let interactor, let venueName, let checkInDate):
             return RiskyVenueInformationViewController(
@@ -267,12 +312,8 @@ extension CoordinatedAppController {
             }()
             
             let interactor = RiskyVenueInformationBookATestInteractor(
-                bookATestTapped: { [showBookATest, showWarnAndBookATest] in
-                    if isIndexCaseIsolation {
-                        showBookATest.value = true
-                    } else {
-                        showWarnAndBookATest.value = true
-                    }
+                bookATestTapped: { [showUIState] in
+                    showUIState.send(isIndexCaseIsolation ? .showBookATest : .showWarnAndBookATest)
                     acknowledge()
                 }, goHomeTapped: {
                     acknowledge()
@@ -288,8 +329,8 @@ extension CoordinatedAppController {
             let navigationVC = BaseNavigationController()
             
             let nonNegativeInteractor = VoidTestResultWithIsolationInteractor(
-                didTapPrimaryButton: { [showBookATest] in
-                    showBookATest.value = true
+                didTapPrimaryButton: { [showUIState] in
+                    showUIState.send(.showBookATest)
                     interactor.acknowledge()
                 },
                 openURL: context.openURL,
@@ -309,8 +350,8 @@ extension CoordinatedAppController {
             
             let nonNegativeInteractor = VoidTestResultNoIsolationInteractor(
                 didTapCancel: interactor.acknowledge,
-                bookATest: { [showBookATest] in
-                    showBookATest.value = true
+                bookATest: { [showUIState] in
+                    showUIState.send(.showBookATest)
                     interactor.acknowledge()
                 },
                 openURL: context.openURL
@@ -344,7 +385,7 @@ extension CoordinatedAppController {
     private func postAcknowledgementViewController(
         with context: RunningAppContext
     ) -> UIViewController {
-        WrappingViewController { [showBookATest, showWarnAndBookATest, showContactCaseResult, showNotificationScreen] in
+        WrappingViewController { [showUIState, showNotificationScreen] in
             Localization.configurationChangePublisher
                 .map { _ in true }
                 .prepend(false)
@@ -352,9 +393,7 @@ extension CoordinatedAppController {
                     PostAcknowledgementViewController(
                         context: context,
                         shouldShowLanguageSelectionScreen: value,
-                        showBookATest: showBookATest,
-                        showWarnAndBookATest: showWarnAndBookATest,
-                        showContactCaseResult: showContactCaseResult,
+                        showUIState: showUIState,
                         showNotificationScreen: showNotificationScreen
                     )
                 }
@@ -515,5 +554,20 @@ private struct UnrecoverableErrorViewControllerInteractor: UnrecoverableErrorVie
     
     func faqLinkTapped() {
         openURL(ExternalLink.cantRunThisAppFAQs.url)
+    }
+}
+
+private extension ContactCaseVaccinationStatusQuestion {
+    init(question: ContactCaseOptOutQuestion) {
+        switch question {
+        case .fullyVaccinated:
+            self = .fullyVaccinated
+        case .lastDose:
+            self = .lastDose
+        case .clinicalTrial:
+            self = .clinicalTrial
+        case .medicallyExempt:
+            self = .medicallyExempt
+        }
     }
 }

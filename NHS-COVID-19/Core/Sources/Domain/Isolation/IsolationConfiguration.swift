@@ -12,6 +12,7 @@ struct IsolationConfiguration: Equatable {
     var indexCaseSinceSelfDiagnosisUnknownOnset: DayDuration
     var housekeepingDeletionPeriod: DayDuration
     var indexCaseSinceNPEXDayNoSelfDiagnosis: DayDuration
+    var testResultPollingTokenRetentionPeriod: DayDuration
 }
 
 extension IsolationConfiguration: Codable {
@@ -23,6 +24,7 @@ extension IsolationConfiguration: Codable {
         case indexCaseSinceSelfDiagnosisUnknownOnset
         case housekeepingDeletionPeriod
         case indexCaseSinceNPEXDayNoSelfDiagnosis
+        case testResultPollingTokenRetentionPeriod
     }
     
     init(from decoder: Decoder) throws {
@@ -37,6 +39,8 @@ extension IsolationConfiguration: Codable {
         // value of the "10" is the historical default value before we were persisting this field.
         indexCaseSinceNPEXDayNoSelfDiagnosis = try container.decodeIfPresent(DayDuration.self, forKey: .indexCaseSinceNPEXDayNoSelfDiagnosis) ?? 10
         
+        testResultPollingTokenRetentionPeriod = try container.decodeIfPresent(DayDuration.self, forKey: .testResultPollingTokenRetentionPeriod) ?? Self.default.testResultPollingTokenRetentionPeriod
+        
     }
     
     static let `default` = IsolationConfiguration(
@@ -45,6 +49,7 @@ extension IsolationConfiguration: Codable {
         indexCaseSinceSelfDiagnosisOnset: 11,
         indexCaseSinceSelfDiagnosisUnknownOnset: 9,
         housekeepingDeletionPeriod: 14,
-        indexCaseSinceNPEXDayNoSelfDiagnosis: 11
+        indexCaseSinceNPEXDayNoSelfDiagnosis: 11,
+        testResultPollingTokenRetentionPeriod: 28
     )
 }

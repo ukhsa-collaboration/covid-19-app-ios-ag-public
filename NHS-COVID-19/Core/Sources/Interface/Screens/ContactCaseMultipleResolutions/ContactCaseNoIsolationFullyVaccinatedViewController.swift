@@ -28,7 +28,7 @@ extension ContactCaseNoIsolationFullyVaccinatedViewController {
                     .centralized(),
                 InformationBox.indication.warning(localize(.contact_case_no_isolation_fully_vaccinated_info_box)),
                 WelcomePoint(image: .infoCircle, body: localize(.contact_case_no_isolation_fully_vaccinated_list_item_info)),
-                WelcomePoint(image: .swabTest, body: localize(.contact_case_no_isolation_fully_vaccinated_list_item_lfd)),
+                WelcomePoint(image: .socialDistancing, body: localize(.contact_case_no_isolation_fully_vaccinated_list_item_lfd)),
                 LinkButton(
                     title: localize(.contact_case_no_isolation_fully_vaccinated_common_questions_button_title),
                     action: interactor.didTapCommonQuestionsLink

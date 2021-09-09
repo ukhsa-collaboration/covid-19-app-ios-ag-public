@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -18,6 +18,8 @@ extension AnalyticsTests {
             \.hasSelfDiagnosedPositiveBackgroundTick: Ignore(path: \.hasSelfDiagnosedPositiveBackgroundTick),
             \.runningNormallyBackgroundTick: Ignore(path: \.runningNormallyBackgroundTick),
             \.totalBackgroundTasks: Ignore(path: \.totalBackgroundTasks),
+            \.appIsContactTraceableBackgroundTick: Ignore(path: \.appIsContactTraceableBackgroundTick),
+            \.appIsUsableBackgroundTick: Ignore(path: \.appIsUsableBackgroundTick),
         ]
         
         mutating func equals(expected: SubmissionPayload.MetricField, _ path: WritableKeyPath<SubmissionPayload.Metrics, SubmissionPayload.MetricField>) {

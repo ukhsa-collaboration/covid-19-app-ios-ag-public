@@ -18,9 +18,7 @@ public class CoordinatedAppController: AppController {
     
     public var rootViewController: UIViewController = RootViewController()
     
-    public let showBookATest = CurrentValueSubject<Bool, Never>(false)
-    public let showWarnAndBookATest = CurrentValueSubject<Bool, Never>(false)
-    public let showContactCaseResult = CurrentValueSubject<ContactCaseResultInterfaceState?, Never>(nil)
+    let showUIState = CurrentValueSubject<PostAcknowledgementViewController.UITriggeredInterfaceState?, Never>(nil)
     let showNotificationScreen = CurrentValueSubject<NotificationInterfaceState?, Never>(nil)
     
     private var content: UIViewController? {

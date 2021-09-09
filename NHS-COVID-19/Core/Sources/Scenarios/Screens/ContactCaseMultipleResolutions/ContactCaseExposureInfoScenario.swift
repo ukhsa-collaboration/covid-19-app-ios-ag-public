@@ -18,7 +18,11 @@ public class ContactCaseExposureInfoScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return ContactCaseExposureInfoViewController(interactor: interactor)
+            return ContactCaseExposureInfoViewController(
+                interactor: interactor,
+                exposureDate: DateComponents(calendar: .gregorian, timeZone: .utc, year: 2021, month: 8, day: 1).date!,
+                isIndexCase: false
+            )
         }
     }
 }

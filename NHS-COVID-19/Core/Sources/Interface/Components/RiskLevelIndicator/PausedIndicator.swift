@@ -17,23 +17,17 @@ public struct PausedIndicator: View {
             ZStack {
                 Circle()
                     .stroke()
-                    .foregroundColor(Color(.warningIcon))
+                    .foregroundColor(Color(.errorRed))
                     .frame(width: 82, height: 82)
-                
-                Circle()
-                    .stroke(lineWidth: 0.5)
-                    .foregroundColor(Color(.warningIcon))
-                    .frame(width: 82, height: 82)
-                    .scaleEffect(2)
                 
                 ZStack {
                     Circle()
-                        .foregroundColor(Color(.warningIcon))
+                        .foregroundColor(Color(.errorRed))
                     Image(.warningIcon)
                         .background(Color.clear)
                 }
                 .frame(width: 62, height: 62)
-            }
+            }.accessibility(hidden: true)
             
             Text(.risk_level_indicator_contact_tracing_not_active)
                 .font(.body)

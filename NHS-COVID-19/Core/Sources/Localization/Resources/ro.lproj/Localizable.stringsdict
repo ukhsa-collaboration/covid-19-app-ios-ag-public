@@ -290,5 +290,59 @@
 				<string/>
 			</dict>
 		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Ar trebui să vă autoizolați până la [% ld] zi întreagă după data contactului strâns.</string>
+				<key>few</key>
+				<string/>
+				<key>other</key>
+				<string>Ar trebui să vă autoizolați până la [% ld] zile întregi după data contactului strâns.</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Ați intrat în contact strâns cu cineva [% ld] în urmă cu o zi, care de atunci a raportat un rezultat pozitiv al testului COVID-19 în aplicație.</string>
+				<key>few</key>
+				<string/>
+				<key>other</key>
+				<string>Ați intrat în contact strâns cu cineva [% ld] acum câteva zile care a raportat de atunci un rezultat pozitiv al testului COVID-19 în aplicație.</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Perioada dvs. de autoizolare rămasă este de [% ld] zile.</string>
+				<key>few</key>
+				<string/>
+				<key>other</key>
+				<string>Perioada dvs. de autoizolare rămasă este de [% ld] zile.</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

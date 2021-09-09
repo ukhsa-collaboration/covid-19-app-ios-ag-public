@@ -2,6 +2,7 @@
 // Copyright © 2021 DHSC. All rights reserved.
 //
 
+import Common
 import Scenarios
 import XCTest
 @testable import Domain
@@ -14,12 +15,16 @@ class VirologyTestingStateStoreTests: XCTestCase {
         super.setUp()
         
         encryptedStore = MockEncryptedStore()
-        virologyTestingStateStore = VirologyTestingStateStore(store: encryptedStore)
+        virologyTestingStateStore = VirologyTestingStateStore(
+            store: encryptedStore,
+            dateProvider: MockDateProvider()
+        )
     }
     
     func testCanLoadVirologyTestingInfo() throws {
         let pollingToken = String.random()
         let submissionToken = String.random()
+        let creationDay = GregorianDay(dateComponents: DateComponents(year: 2020, month: 5, day: 6))
         let endDate = Calendar.utc.date(from: DateComponents(year: 2020, month: 5, day: 7, hour: 8))
         
         encryptedStore.stored["virology_testing"] = #"""
@@ -27,6 +32,11 @@ class VirologyTestingStateStoreTests: XCTestCase {
             "tokensInfo":[
                 {
                     "diagnosisKeySubmissionToken":"\#(submissionToken)",
+                    "creationDay": {
+                        "day":\#(creationDay.day),
+                        "month":\#(creationDay.month),
+                        "year":\#(creationDay.year)
+                    },
                     "pollingToken":"\#(pollingToken)"
                 }
             ],
@@ -41,12 +51,16 @@ class VirologyTestingStateStoreTests: XCTestCase {
         }
         """# .data(using: .utf8)
         
-        virologyTestingStateStore = VirologyTestingStateStore(store: encryptedStore)
+        virologyTestingStateStore = VirologyTestingStateStore(
+            store: encryptedStore,
+            dateProvider: MockDateProvider()
+        )
         
         let virologyTestTokens = try XCTUnwrap(virologyTestingStateStore.virologyTestTokens)
         let firstTokens = try XCTUnwrap(virologyTestTokens.first)
         XCTAssertEqual(firstTokens.pollingToken.value, pollingToken)
         XCTAssertEqual(firstTokens.diagnosisKeySubmissionToken.value, submissionToken)
+        XCTAssertEqual(firstTokens.creationDay, creationDay)
         
         let testResult = try XCTUnwrap(virologyTestingStateStore.virologyTestResult.currentValue)
         let diagnosisSubmissionToken = try XCTUnwrap(testResult.diagnosisKeySubmissionToken)
@@ -77,12 +91,18 @@ class VirologyTestingStateStoreTests: XCTestCase {
         }
         """# .data(using: .utf8)
         
-        let virologyTestingStateStore = VirologyTestingStateStore(store: encryptedStore)
+        let dateProvider = MockDateProvider()
+        
+        let virologyTestingStateStore = VirologyTestingStateStore(
+            store: encryptedStore,
+            dateProvider: dateProvider
+        )
         
         let virologyTestTokens = try XCTUnwrap(virologyTestingStateStore.virologyTestTokens)
         let firstTokens = try XCTUnwrap(virologyTestTokens.first)
         XCTAssertEqual(firstTokens.pollingToken.value, pollingToken)
         XCTAssertEqual(firstTokens.diagnosisKeySubmissionToken.value, submissionToken)
+        XCTAssertEqual(firstTokens.creationDay, dateProvider.currentGregorianDay(timeZone: .current))
         
         let testResult = try XCTUnwrap(virologyTestingStateStore.virologyTestResult.currentValue)
         let diagnosisSubmissionToken = try XCTUnwrap(testResult.diagnosisKeySubmissionToken)
@@ -313,6 +333,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         
         let tokens = VirologyTestTokens(
             pollingToken: removePollingToken,
+            creationDay: .today,
             diagnosisKeySubmissionToken: removeSubmissionToken
         )
         virologyTestingStateStore.removeTestTokens(tokens)
@@ -332,6 +353,7 @@ class VirologyTestingStateStoreTests: XCTestCase {
         
         let tokens = VirologyTestTokens(
             pollingToken: pollingToken,
+            creationDay: .today,
             diagnosisKeySubmissionToken: submissionToken
         )
         virologyTestingStateStore.removeTestTokens(tokens)
@@ -393,7 +415,10 @@ class VirologyTestingStateStoreTests: XCTestCase {
         }
         """# .data(using: .utf8)
         
-        virologyTestingStateStore = VirologyTestingStateStore(store: encryptedStore)
+        virologyTestingStateStore = VirologyTestingStateStore(
+            store: encryptedStore,
+            dateProvider: MockDateProvider()
+        )
         virologyTestingStateStore.delete()
         XCTAssertNil(virologyTestingStateStore.virologyTestTokens)
     }

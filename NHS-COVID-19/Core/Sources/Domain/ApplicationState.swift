@@ -58,6 +58,9 @@ public struct RunningAppContext {
     public var localInformation: DomainProperty<LocalInformationEndpointManager.LocalInfo?>
     public var userNotificationManaging: UserNotificationManaging
     public var didOpenSelfIsolationHub: () -> Void
+    public var shouldShowBookALabTest: DomainProperty<Bool>
+    public var contactCaseOptOutQuestionnaire: ContactCaseOptOutQuestionnaire
+    public var contactCaseIsolationDuration: DomainProperty<DayDuration>
 }
 
 public typealias GetLocalAuthorities = (_ postcode: Postcode) -> Result<Set<LocalAuthority>, PostcodeValidationError>

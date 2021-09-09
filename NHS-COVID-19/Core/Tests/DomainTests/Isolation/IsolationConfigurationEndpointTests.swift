@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -27,7 +27,8 @@ class IsolationConfigurationEndpointTests: XCTestCase {
             "indexCaseSinceSelfDiagnosisUnknownOnset": 2,
             "contactCase": 3,
             "maxIsolation": 4,
-            "indexCaseSinceTestResultEndDate": 5
+            "indexCaseSinceTestResultEndDate": 5,
+            "testResultPollingTokenRetentionPeriod": 28
           }
         }
         
@@ -39,7 +40,8 @@ class IsolationConfigurationEndpointTests: XCTestCase {
             indexCaseSinceSelfDiagnosisOnset: 1,
             indexCaseSinceSelfDiagnosisUnknownOnset: 2,
             housekeepingDeletionPeriod: 14,
-            indexCaseSinceNPEXDayNoSelfDiagnosis: 5
+            indexCaseSinceNPEXDayNoSelfDiagnosis: 5,
+            testResultPollingTokenRetentionPeriod: 28
         )
         
         TS.assert(try endpoint.parse(response), equals: expected)
@@ -54,7 +56,8 @@ class IsolationConfigurationEndpointTests: XCTestCase {
             "contactCase": 3,
             "maxIsolation": 4,
             "pendingTasksRetentionPeriod": 9,
-            "indexCaseSinceTestResultEndDate": 5
+            "indexCaseSinceTestResultEndDate": 5,
+            "testResultPollingTokenRetentionPeriod": 60
           }
         }
         
@@ -66,7 +69,8 @@ class IsolationConfigurationEndpointTests: XCTestCase {
             indexCaseSinceSelfDiagnosisOnset: 1,
             indexCaseSinceSelfDiagnosisUnknownOnset: 2,
             housekeepingDeletionPeriod: 9,
-            indexCaseSinceNPEXDayNoSelfDiagnosis: 5
+            indexCaseSinceNPEXDayNoSelfDiagnosis: 5,
+            testResultPollingTokenRetentionPeriod: 60
         )
         
         TS.assert(try endpoint.parse(response), equals: expected)

@@ -12,7 +12,7 @@ class AgeDeclarationScreenTests: XCTestCase {
     
     func testBasics() throws {
         try runner.run { app in
-            let screen = AgeDeclarationScreen(app: app)
+            let screen = AgeDeclarationScreen(app: app, birthThresholdDate: runner.scenario.birthThresholdDate)
             XCTAssertTrue(screen.title.exists)
             XCTAssertTrue(screen.heading.exists)
             XCTAssertTrue(screen.description.exists)
@@ -29,7 +29,7 @@ class AgeDeclarationScreenTests: XCTestCase {
     
     func testYesButton() throws {
         try runner.run { app in
-            let screen = AgeDeclarationScreen(app: app)
+            let screen = AgeDeclarationScreen(app: app, birthThresholdDate: runner.scenario.birthThresholdDate)
             screen.yesRadioButton(selected: false).tap()
             XCTAssertTrue(screen.yesRadioButton(selected: true).exists)
             
@@ -41,7 +41,7 @@ class AgeDeclarationScreenTests: XCTestCase {
     
     func testNoButton() throws {
         try runner.run { app in
-            let screen = AgeDeclarationScreen(app: app)
+            let screen = AgeDeclarationScreen(app: app, birthThresholdDate: runner.scenario.birthThresholdDate)
             screen.noRadioButton(selected: false).tap()
             XCTAssertTrue(screen.noRadioButton(selected: true).exists)
             
@@ -53,7 +53,7 @@ class AgeDeclarationScreenTests: XCTestCase {
     
     func testErrorAppearance() throws {
         try runner.run { app in
-            let screen = AgeDeclarationScreen(app: app)
+            let screen = AgeDeclarationScreen(app: app, birthThresholdDate: runner.scenario.birthThresholdDate)
             XCTAssertTrue(screen.continueButton.isHittable)
             screen.continueButton.tap()
             XCTAssertTrue(screen.error.exists)
@@ -62,7 +62,7 @@ class AgeDeclarationScreenTests: XCTestCase {
     
     func testErrorDisappearance() throws {
         try runner.run { app in
-            let screen = AgeDeclarationScreen(app: app)
+            let screen = AgeDeclarationScreen(app: app, birthThresholdDate: runner.scenario.birthThresholdDate)
             screen.continueButton.tap()
             XCTAssertTrue(screen.error.exists)
             

@@ -16,7 +16,6 @@ class ContactCaseContinueIsolationScreenTests: XCTestCase {
             XCTAssertTrue(screen.daysRemanining(with: runner.scenario.numberOfDays).exists)
             XCTAssertTrue(screen.infoBox.exists)
             XCTAssertTrue(screen.isolationListItem.exists)
-            XCTAssertTrue(screen.lfdListItem.exists)
             XCTAssertTrue(screen.advice.exists)
         }
     }

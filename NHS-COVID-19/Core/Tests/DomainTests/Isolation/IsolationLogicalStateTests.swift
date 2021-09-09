@@ -20,7 +20,8 @@ extension IsolationLogicalState: TestProp {
             indexCaseSinceSelfDiagnosisOnset: 8,
             indexCaseSinceSelfDiagnosisUnknownOnset: 9,
             housekeepingDeletionPeriod: 14,
-            indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis
+            indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis,
+            testResultPollingTokenRetentionPeriod: 28
         )
         
         public init() {}

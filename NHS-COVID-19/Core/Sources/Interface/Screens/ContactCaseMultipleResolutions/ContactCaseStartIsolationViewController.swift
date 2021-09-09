@@ -4,6 +4,7 @@
 
 import Common
 import Localization
+import SwiftUI
 import UIKit
 
 public protocol ContactCaseStartIsolationInteracting {
@@ -17,8 +18,14 @@ extension ContactCaseStartIsolationViewController {
     private struct Content {
         let views: [StackViewContentProvider]
         
-        init(interactor: Interacting, isolationEndDate: Date) {
+        init(interactor: Interacting,
+             isolationEndDate: Date,
+             exposureDate: Date,
+             isolationPeriod: DayDuration) {
             let duration = LocalDay.today.daysRemaining(until: isolationEndDate)
+            let daysSinceExposure = -LocalDay.today.daysRemaining(until: exposureDate)
+            
+            let isolationPeriodInFullDays = isolationPeriod.days - 1
             
             let pleaseIsolateStack =
                 UIStackView(arrangedSubviews: [
@@ -68,9 +75,17 @@ public class ContactCaseStartIsolationViewController: ScrollingContentViewContro
     public typealias Interacting = ContactCaseStartIsolationInteracting
     private let interactor: Interacting
     
-    public init(interactor: Interacting, isolationEndDate: Date) {
+    public init(interactor: Interacting,
+                isolationEndDate: Date,
+                exposureDate: Date,
+                isolationPeriod: DayDuration) {
         self.interactor = interactor
-        super.init(views: Content(interactor: interactor, isolationEndDate: isolationEndDate).views)
+        super.init(views: Content(
+            interactor: interactor,
+            isolationEndDate: isolationEndDate,
+            exposureDate: exposureDate,
+            isolationPeriod: isolationPeriod
+        ).views)
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             title: localize(.cancel),
             style: .done, target: self,

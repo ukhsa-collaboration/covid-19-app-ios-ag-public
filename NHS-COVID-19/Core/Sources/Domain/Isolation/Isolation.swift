@@ -49,6 +49,17 @@ extension Isolation {
     public var vaccineThresholdDate: Date? {
         reason.contactCaseInfo?.exposureDay.advanced(by: -15).startDate(in: .current)
     }
+    
+    public func birthThresholdDate(country: Country) -> Date? {
+        switch country {
+        case .england: return reason.contactCaseInfo?.exposureDay.advanced(by: -183).startDate(in: .current)
+        case .wales: return reason.contactCaseInfo?.exposureDay.startDate(in: .current)
+        }
+    }
+    
+    public var exposureDate: Date? {
+        reason.contactCaseInfo?.exposureDay.startDate(in: .current)
+    }
 }
 
 extension Isolation {

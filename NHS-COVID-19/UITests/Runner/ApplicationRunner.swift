@@ -63,10 +63,13 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
     }
     
     @_transparent
-    func run(file: StaticString = #file, line: UInt = #line, work: (XCUIApplication) throws -> Void) throws {
+    func run(file: StaticString = #file,
+             line: UInt = #line,
+             deviceConfigurations: Set<DeviceConfiguration> = DeviceConfiguration.reportConfigurationsSparse,
+             work: (XCUIApplication) throws -> Void) throws {
         // We use @_transparent on these types. This way, any error thrown by the guts of the application runner shows
         // up on the line that calls `run`; but we preserve line information of errors thrown by `work`.
-        try _run(file: file, line: line, work: work)
+        try _run(file: file, line: line, deviceConfigurations: deviceConfigurations, work: work)
     }
     
     @_transparent
@@ -75,7 +78,10 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
     }
     
     @_transparent
-    private func _run(file: StaticString, line: UInt, work: (XCUIApplication) throws -> Void) throws {
+    private func _run(file: StaticString,
+                      line: UInt,
+                      deviceConfigurations: Set<DeviceConfiguration>,
+                      work: (XCUIApplication) throws -> Void) throws {
         switch ProcessInfo().testMode {
         case .standard:
             try runOnce(work: work)
@@ -89,7 +95,7 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
             
             let initialConfiguration = DeviceConfiguration(from: .shared)
             
-            try DeviceConfiguration.reportConfigurationsSparse.forEach { deviceConfiguration in
+            try deviceConfigurations.forEach { deviceConfiguration in
                 try runOnce(deviceConfiguration: deviceConfiguration, work: work)
                 
                 // Save screenshots after each run to avoid keeping it all in memory.
@@ -142,6 +148,11 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
                 "-AppleLocale", deviceConfiguration.language,
             ]
             
+            let showKeysOnly = deviceConfiguration.showStringLocalizableKeysOnly
+            app.launchEnvironment[Runner.showStringLocalizableKeysOnly] = showKeysOnly ? "1" : "0"
+            // Set overrider for UITests target
+            Localization.current.overrider = showKeysOnly ? ShowLocalizableKeysOnlyOverrider() : nil
+            
             let localeConfiguration = LocaleConfiguration.custom(localeIdentifier: deviceConfiguration.language)
             localeConfiguration.becomeCurrent()
         }
@@ -149,6 +160,7 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
         app.launch()
         useCaseBuilder?.app = app
         useCaseBuilder?.deviceConfiguration = deviceConfiguration
+        
         defer {
             LocaleConfiguration.systemPreferred.becomeCurrent()
             useCaseBuilder?.app = nil

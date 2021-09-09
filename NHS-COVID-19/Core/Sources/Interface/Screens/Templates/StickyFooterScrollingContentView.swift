@@ -71,7 +71,7 @@ class PrimaryLinkButtonStickyFooterScrollingContent: BasicStickyFooterScrollingC
 
 public class StickyFooterScrollingContentView: UIView {
     
-    private let scrollView: UIScrollView
+    let scrollView: UIScrollView
     private let footerStack: UIStackView?
     private let scrollingStack: UIStackView
     
@@ -147,12 +147,20 @@ public class StickyFooterScrollingContentView: UIView {
 }
 
 public class StickyFooterScrollingContentViewController: UIViewController {
+    private weak var scrollView: UIScrollView?
+    
     init(content: StickyFooterScrollingContent) {
         super.init(nibName: nil, bundle: nil)
-        view = StickyFooterScrollingContentView(content: content)
+        let stickyView = StickyFooterScrollingContentView(content: content)
+        scrollView = stickyView.scrollView
+        view = stickyView
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func scroll(to view: UIView) {
+        scrollView?.scroll(to: view)
     }
 }

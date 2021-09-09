@@ -1,8 +1,9 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import XCTest
+import XCUIFullScreenshot
 
 class UseCaseBuilder {
     private(set) var useCase: UseCase
@@ -15,13 +16,30 @@ class UseCaseBuilder {
         self.useCase = useCase
     }
     
+    private var shouldUseFullScreenshot: Bool {
+        guard let config = deviceConfiguration else { return false }
+        return config.orientation == .portrait &&
+            config.contentSize == .medium &&
+            config.showStringLocalizableKeysOnly == true
+    }
+    
     func step(name: String, description: () -> String = { "" }) {
         guard let app = app, let deviceConfiguration = deviceConfiguration else {
             preconditionFailure("Can only add a step after setting the application and configuration.")
         }
         
         let fileName = "\(useCase.screenshotsFolderName)/\(name) (\(deviceConfiguration.joinedTags)).png"
-        let data = app.windows.firstMatch.screenshot().pngRepresentation
+        
+        let data: Data
+        
+        if shouldUseFullScreenshot == true, let fullscreenImageData = app.windows.firstMatch.fullScreenshot()?.pngData() {
+            data = fullscreenImageData
+        } else {
+            // Using XCUIscreen instead of app, fixes the issue with
+            // taking landscape screenshots
+            data = XCUIScreen.main.screenshot().pngRepresentation
+        }
+        
         let screenshot = UseCase.Screenshot(fileName: fileName, tags: deviceConfiguration.screenshotTags)
         
         screenshots[fileName] = data
@@ -50,9 +68,16 @@ private extension DeviceConfiguration {
     }
     
     var screenshotTags: [String] {
-        [orientation.tag, contentSize.tag, interfaceStyle.tag, language]
+        [orientation.tag, contentSize.tag, interfaceStyle.tag, languageOrTag]
     }
     
+}
+
+private extension DeviceConfiguration {
+    var languageOrTag: String {
+        let localizableKeysOnlyTag = "key"
+        return showStringLocalizableKeysOnly ? localizableKeysOnlyTag : language
+    }
 }
 
 private extension UIDeviceOrientation {

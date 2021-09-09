@@ -6,7 +6,7 @@ import Combine
 import Common
 import Foundation
 
-class Housekeeper {
+class IsolationHousekeeper {
     private let getHousekeepingDeletionPeriod: () -> DayDuration
     private let getToday: () -> GregorianDay
     private let getIsolationLogicalState: () -> IsolationLogicalState
@@ -35,7 +35,7 @@ class Housekeeper {
             getIsolationLogicalState: { isolationStateManager.state },
             getIsolationStateInfo: { isolationStateStore.isolationInfo },
             clearData: {
-                virologyTestingStateStore.delete()
+                virologyTestingStateStore.deleteExpiredData()
                 isolationStateStore.isolationStateInfo = nil
             }
         )

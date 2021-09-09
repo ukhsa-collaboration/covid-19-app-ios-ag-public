@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -128,8 +128,12 @@ class ExposureNotificationStateController: ObservableObject {
     
     func recordMetrics() -> AnyPublisher<Void, Never> {
         Metrics.signpost(.runningNormallyTick)
+        Metrics.signpost(.appIsUsableBackgroundTick)
+        
         if !isEnabled {
             Metrics.signpost(.pauseTick)
+        } else {
+            Metrics.signpost(.appIsContactTraceableBackgroundTick)
         }
         
         return Empty().eraseToAnyPublisher()

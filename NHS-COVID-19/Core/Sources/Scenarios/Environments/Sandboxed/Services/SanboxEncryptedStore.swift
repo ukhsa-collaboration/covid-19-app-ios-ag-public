@@ -109,6 +109,35 @@ class SandboxEncryptedStore: EncryptedStoring {
                 }
             }
             """# .data(using: .utf8)!
+        case .indexWithPositiveTest:
+            let testEndDay = GregorianDay.today.advanced(by: -2)
+            stored["isolation_state_info"] = #"""
+            {
+                "version" : 2,
+                "configuration" : {
+                    "indexCaseSinceSelfDiagnosisOnset" : 7,
+                    "maxIsolation" : 21,
+                    "contactCase" : 14,
+                    "indexCaseSinceSelfDiagnosisUnknownOnset" : 5,
+                    "housekeepingDeletionPeriod" : 14
+                },
+                "hasAcknowledgedEndOfIsolation": false,
+                "test" : {
+                    "testResult" : "positive",
+                    "requiresConfirmatoryTest" : false,
+                    "acknowledgedDay" : {
+                        "day" : \#(testEndDay.day),
+                        "month" : \#(testEndDay.month),
+                        "year" : \#(testEndDay.year)
+                    },
+                    "testEndDay" : {
+                        "day" : \#(testEndDay.day),
+                        "month" : \#(testEndDay.month),
+                        "year" : \#(testEndDay.year)
+                    }
+                }
+            }
+            """# .data(using: .utf8)!
         case .contact:
             let exposureDay = GregorianDay.today.advanced(by: -Sandbox.Config.Isolation.daysSinceReceivingExposureNotification)
             let isolationFromStartOfDay = GregorianDay.today.advanced(by: -1)
@@ -140,7 +169,7 @@ class SandboxEncryptedStore: EncryptedStoring {
             }
             """# .data(using: .utf8)!
         case .indexAndContact:
-            let startOfIsolationday = GregorianDay.today.advanced(by: -2)
+            let startOfIsolationday = GregorianDay.today.advanced(by: -Sandbox.Config.Isolation.daysSinceReceivingExposureNotification)
             
             stored["isolation_state_info"] = #"""
             {

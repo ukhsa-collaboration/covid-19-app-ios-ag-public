@@ -258,5 +258,53 @@
 				<string/>
 			</dict>
 		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>કોઈની સાથે નજીકનો કોન્ટેક્ટ થયો હોય એની તારીખ પછી, તમારે %ld દિવસો સુધી સેલ્ફ-આઇસોલેટ થવું.</string>
+				<key>other</key>
+				<string>કોઈની સાથે નજીકનો કોન્ટેક્ટ થયો હોય એની તારીખ પછી, તમારે %ld દિવસો સુધી સેલ્ફ-આઇસોલેટ થવું.</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>એપમાં કોઈનું ટેસ્ટ રિઝલ્ટ %ld દિવસો પહેલા COVID-19નું પોઝિટિવ હતું જેનાં કોન્ટેક્ટમાં તમે આવ્યા છો.</string>
+				<key>other</key>
+				<string>એપમાં કોઈનું ટેસ્ટ રિઝલ્ટ %ld દિવસો પહેલા COVID-19નું પોઝિટિવ હતું જેનાં કોન્ટેક્ટમાં તમે આવ્યા છો.</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>તમારે સેલ્ફ-આયસોલેશનનાં  %ld દિવસે બાકી છે.</string>
+				<key>other</key>
+				<string>તમારે સેલ્ફ-આયસોલેશનનાં %ld દિવસો બાકી છે.</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

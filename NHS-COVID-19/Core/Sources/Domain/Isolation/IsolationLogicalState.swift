@@ -13,7 +13,7 @@ struct IsolationInfo: Equatable {
     var contactCaseInfo: ContactCaseInfo?
     
     var isolationStartDay: GregorianDay? {
-        switch (indexCaseInfo?.startDay, contactCaseInfo?.exposureDay) {
+        switch (indexCaseInfo?.isolationStartDay, contactCaseInfo?.exposureDay) {
         case (.none, .none): return nil
         case (.some(let indexIsolationStartDay), .some(let exposureDay)): return min(indexIsolationStartDay, exposureDay)
         case (.some(let indexIsolationStartDay), .none): return indexIsolationStartDay
@@ -169,6 +169,15 @@ extension IndexCaseInfo {
             return day
         case .manualTestEntry(let npexDay):
             return npexDay
+        }
+    }
+    
+    var isolationStartDay: GregorianDay? {
+        switch isolationTrigger {
+        case .selfDiagnosis(let day):
+            return day
+        case .manualTestEntry(let npexDay):
+            return testInfo?.result == .positive ? npexDay : nil
         }
     }
 }

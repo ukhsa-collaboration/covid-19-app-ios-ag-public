@@ -258,5 +258,53 @@
 				<string/>
 			</dict>
 		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Yakın temas tarihinden sonra tam %ld gün kendinizi karantinaya almalısınız.</string>
+				<key>other</key>
+				<string>Yakın temas tarihinden sonra tam %ld gün kendinizi karantinaya almalısınız.</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld gün önce yakın temasta bulunduğunuz biri, o tarihten sonra uygulama üzerinden COVID-19 test sonucunun pozitif çıktığını bildirdi.</string>
+				<key>other</key>
+				<string>%ld gün önce yakın temasta bulunduğunuz biri, o tarihten sonra uygulama üzerinden COVID-19 test sonucunun pozitif çıktığını bildirdi.</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Karantina sürenizin bitmesine %ld gün kaldı.</string>
+				<key>other</key>
+				<string>Karantina sürenizin bitmesine %ld gün kaldı.</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

@@ -14,6 +14,7 @@ struct DeviceConfiguration: Hashable {
     var orientation: UIDeviceOrientation
     var contentSize: UIContentSizeCategory
     var interfaceStyle: InterfaceStyle
+    var showStringLocalizableKeysOnly: Bool = false
 }
 
 extension DeviceConfiguration {
@@ -66,7 +67,7 @@ extension DeviceConfiguration {
     }()
     
     static let reportConfigurationsSparse: Set<DeviceConfiguration> = {
-        Set(orientationAndStyleMinimal + contentSizesMinimal + languages)
+        Set(orientationAndStyleMinimal + contentSizesMinimal + languages + stringLocalizableKeysOnly)
     }()
     
     static let testConfigurationLanguages: Set<DeviceConfiguration> = {
@@ -126,6 +127,18 @@ extension DeviceConfiguration {
                 interfaceStyle: .light
             )
         }
+    }
+    
+    private static var stringLocalizableKeysOnly: [DeviceConfiguration] {
+        [
+            DeviceConfiguration(
+                language: "en",
+                orientation: .portrait,
+                contentSize: .medium,
+                interfaceStyle: .light,
+                showStringLocalizableKeysOnly: true
+            ),
+        ]
     }
     
 }

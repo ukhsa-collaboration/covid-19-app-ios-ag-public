@@ -295,37 +295,37 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 StatePredicate(
                     contact: .all(except: .noIsolation),
                     symptomatic: .all(except: .noIsolation),
-                    positiveTest: .all(except: .noIsolation)
+                    positiveTest: .all(except: .noIsolation, .notIsolatingAndHasNegativeTest)
                 ),
                 StatePredicate(
                     contact: [.noIsolation],
                     symptomatic: .all(except: .noIsolation),
-                    positiveTest: .all(except: .noIsolation)
+                    positiveTest: .all(except: .noIsolation, .notIsolatingAndHasNegativeTest)
                 ),
                 StatePredicate(
                     contact: .all(except: .noIsolation),
                     symptomatic: [.noIsolation],
-                    positiveTest: .all(except: .noIsolation)
+                    positiveTest: .all(except: .noIsolation, .notIsolatingAndHasNegativeTest)
                 ),
                 StatePredicate(
                     contact: .all(except: .noIsolation),
                     symptomatic: .all(except: .noIsolation),
-                    positiveTest: [.noIsolation]
+                    positiveTest: [.noIsolation, .notIsolatingAndHasNegativeTest]
                 ),
                 StatePredicate(
                     contact: [.noIsolation],
                     symptomatic: [.noIsolation],
-                    positiveTest: .all(except: .noIsolation)
+                    positiveTest: .all(except: .noIsolation, .notIsolatingAndHasNegativeTest)
                 ),
                 StatePredicate(
                     contact: .all(except: .noIsolation),
                     symptomatic: [.noIsolation],
-                    positiveTest: [.noIsolation]
+                    positiveTest: [.noIsolation, .notIsolatingAndHasNegativeTest]
                 ),
                 StatePredicate(
                     contact: [.noIsolation],
                     symptomatic: .all(except: .noIsolation),
-                    positiveTest: [.noIsolation]
+                    positiveTest: [.noIsolation, .notIsolatingAndHasNegativeTest]
                 ),
             ],
             event: .receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate,
@@ -503,37 +503,37 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 StatePredicate(
                     contact: .all(except: .noIsolation),
                     symptomatic: .all(except: .noIsolation),
-                    positiveTest: .all(except: .noIsolation)
+                    positiveTest: .all(except: .noIsolation, .notIsolatingAndHasNegativeTest)
                 ),
                 StatePredicate(
                     contact: [.noIsolation],
                     symptomatic: .all(except: .noIsolation),
-                    positiveTest: .all(except: .noIsolation)
+                    positiveTest: .all(except: .noIsolation, .notIsolatingAndHasNegativeTest)
                 ),
                 StatePredicate(
                     contact: .all(except: .noIsolation),
                     symptomatic: [.noIsolation],
-                    positiveTest: .all(except: .noIsolation)
+                    positiveTest: .all(except: .noIsolation, .notIsolatingAndHasNegativeTest)
                 ),
                 StatePredicate(
                     contact: .all(except: .noIsolation),
                     symptomatic: .all(except: .noIsolation),
-                    positiveTest: [.noIsolation]
+                    positiveTest: [.noIsolation, .notIsolatingAndHasNegativeTest]
                 ),
                 StatePredicate(
                     contact: [.noIsolation],
                     symptomatic: [.noIsolation],
-                    positiveTest: .all(except: .noIsolation)
+                    positiveTest: .all(except: .noIsolation, .notIsolatingAndHasNegativeTest)
                 ),
                 StatePredicate(
                     contact: .all(except: .noIsolation),
                     symptomatic: [.noIsolation],
-                    positiveTest: [.noIsolation]
+                    positiveTest: [.noIsolation, .notIsolatingAndHasNegativeTest]
                 ),
                 StatePredicate(
                     contact: [.noIsolation],
                     symptomatic: .all(except: .noIsolation),
-                    positiveTest: [.noIsolation]
+                    positiveTest: [.noIsolation, .notIsolatingAndHasNegativeTest]
                 ),
                 
             ],
@@ -1029,7 +1029,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             predicate: StatePredicate(
                 contact: [.noIsolation],
                 symptomatic: [.noIsolation],
-                positiveTest: [.noIsolation]
+                positiveTest: [.noIsolation, .notIsolatingAndHasNegativeTest]
             ),
             event: .receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate
         ),
@@ -1071,7 +1071,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             predicate: StatePredicate(
                 contact: [.noIsolation],
                 symptomatic: [.noIsolation],
-                positiveTest: [.noIsolation]
+                positiveTest: [.noIsolation, .notIsolatingAndHasNegativeTest]
             ),
             event: .receivedUnconfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate
         ),

@@ -7,7 +7,7 @@ import TestSupport
 import XCTest
 @testable import Domain
 
-class HousekeeperTests: XCTestCase {
+class IsolationHousekeeperTests: XCTestCase {
     
     var cleared = false
     
@@ -18,8 +18,8 @@ class HousekeeperTests: XCTestCase {
     private func createHouseKeeper(deletionPeriod: Int,
                                    today: GregorianDay,
                                    isolationInfo: IsolationInfo,
-                                   isolationLogicalState: IsolationLogicalState) -> Housekeeper {
-        Housekeeper(
+                                   isolationLogicalState: IsolationLogicalState) -> IsolationHousekeeper {
+        IsolationHousekeeper(
             getHousekeepingDeletionPeriod: { DayDuration(deletionPeriod) },
             getToday: { today },
             getIsolationLogicalState: { isolationLogicalState },

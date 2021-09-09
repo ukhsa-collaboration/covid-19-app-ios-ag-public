@@ -108,6 +108,11 @@ public enum Metric: String, CaseIterable {
     case optedOutForContactIsolation
     case optedOutForContactIsolationBackgroundTick
     
+    // MARK: - New app state metrics
+    
+    case appIsUsableBackgroundTick
+    case appIsContactTraceableBackgroundTick
+    
 }
 
 public enum Metrics {

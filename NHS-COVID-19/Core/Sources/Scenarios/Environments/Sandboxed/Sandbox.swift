@@ -42,6 +42,7 @@ public enum Sandbox {
             case index
             case contact
             case indexAndContact
+            case indexWithPositiveTest
         }
         
         public enum IsolationPaymentState: String {

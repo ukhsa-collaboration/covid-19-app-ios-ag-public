@@ -24,10 +24,6 @@ struct ContactCaseContinueIsolationScreen {
         app.staticTexts[localized: .contact_case_continue_isolation_list_item_isolation]
     }
     
-    var lfdListItem: XCUIElement {
-        app.staticTexts[localized: .contact_case_continue_isolation_list_item_lfd]
-    }
-    
     var backToHomeButton: XCUIElement {
         app.buttons[localized: .contact_case_continue_isolation_primary_button_title]
     }

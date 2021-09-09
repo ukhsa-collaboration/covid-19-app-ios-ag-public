@@ -179,6 +179,11 @@ private struct SubmissionPayload: Codable {
         var optedOutForContactIsolation = 0
         var optedOutForContactIsolationBackgroundTick = 0
         
+        // MARK: - New app state metrics
+        
+        var appIsUsableBackgroundTick = 0
+        var appIsContactTraceableBackgroundTick = 0
+        
     }
     
     var includesMultipleApplicationVersions: Bool
@@ -312,6 +317,8 @@ private extension Metric {
         case .selectedHasLFDTestM2Journey: return \.selectedHasLFDTestM2Journey
         case .optedOutForContactIsolation: return \.optedOutForContactIsolation
         case .optedOutForContactIsolationBackgroundTick: return \.optedOutForContactIsolationBackgroundTick
+        case .appIsUsableBackgroundTick: return \.appIsUsableBackgroundTick
+        case .appIsContactTraceableBackgroundTick: return \.appIsContactTraceableBackgroundTick
         }
     }
     

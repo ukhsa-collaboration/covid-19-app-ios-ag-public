@@ -96,18 +96,10 @@ public class HomeViewController: UIViewController {
             exposureNotificationsToggleAction: exposureNotificationsToggleAction,
             country: country
         )
-        .navigationBarHidden(true)
         
         let controller = UIHostingController(rootView: homeView)
         controller.view.backgroundColor = UIColor(.background)
-        
-        if #available(iOS 14.0, *) {
-            addChild(controller)
-            view.addAutolayoutSubview(controller.view)
-            controller.didMove(toParent: self)
-        } else {
-            view.addAutolayoutSubview(controller.view)
-        }
+        view.addAutolayoutSubview(controller.view)
         
         NSLayoutConstraint.activate([
             controller.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),

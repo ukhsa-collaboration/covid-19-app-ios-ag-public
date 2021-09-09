@@ -59,14 +59,16 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case selfIsolation = "SelfIsolation"
     case accordionPlusIcon = "AccordionPlusIcon"
     case accordionMinusIcon = "AccordionMinusIcon"
+    case accordionCollapsedIcon = "AccordionCollapsedIcon"
+    case accordionExpandedIcon = "AccordionExpandedIcon"
     
     // MARK: Contact case only
     
     case adultChild = "ContactCaseOnly/AdultChild"
-    case vaccination = "ContactCaseOnly/Vaccination"
     case isolation = "ContactCaseOnly/Isolation"
     case swabTest = "ContactCaseOnly/Swab-test"
     case infoCircle = "ContactCaseOnly/InfoCircle"
+    case socialDistancing = "ContactCaseOnly/SocialDistancing"
     
     // MARK: Key sharing
     

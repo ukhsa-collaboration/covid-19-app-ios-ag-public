@@ -43,6 +43,33 @@ struct IsolationContext {
         isolationStateManager = IsolationStateManager(stateStore: isolationStateStore, currentDateProvider: currentDateProvider)
     }
     
+    func canBookALabTest() -> AnyPublisher<Bool, Never> {
+        isolationStateManager.$state
+            .combineLatest(isolationConfiguration.$value)
+            .map { state, configuration in
+                switch state {
+                case .isolating:
+                    return true
+                case .notIsolating(let isolation):
+                    return showOptOutLabTestBooking(isolation: isolation, duration: configuration.contactCase)
+                case .isolationFinishedButNotAcknowledged(let isolation):
+                    return showOptOutLabTestBooking(isolation: isolation, duration: configuration.contactCase)
+                }
+            }.eraseToAnyPublisher()
+    }
+    
+    private func showOptOutLabTestBooking(isolation: Isolation?, duration: DayDuration) -> Bool {
+        guard let isolation = isolation else { return false }
+        
+        if isolation.optOutOfIsolationDay != nil,
+            let exposureDay = isolation.reason.contactCaseInfo?.exposureDay {
+            let endDay = exposureDay.advanced(by: duration.days)
+            return endDay > currentDateProvider.currentGregorianDay(timeZone: .current)
+        } else {
+            return false
+        }
+    }
+    
     func makeIsolationAcknowledgementState() -> AnyPublisher<IsolationAcknowledgementState, Never> {
         isolationStateManager.$state
             .combineLatest(notificationCenter.onApplicationBecameActive, currentDateProvider.today) { state, _, _ in state }

@@ -258,5 +258,53 @@
 				<string/>
 			</dict>
 		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>ঘনিষ্ঠ সংস্পর্শে আসার পর %ld পূর্ণদিবস পর্যন্ত আপনার স্ব-বিচ্ছিন্ন থাকা উচিৎ।</string>
+				<key>other</key>
+				<string>ঘনিষ্ঠ সংস্পর্শে আসার পর %ld পূর্ণদিবস পর্যন্ত আপনার স্ব-বিচ্ছিন্ন থাকা উচিৎ।</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%@ দিন আগে আপনি এমন কারো ঘনিষ্ঠ সংস্পর্শে এসেছিলেন যিনি পরবর্তীতে তার কোভিড-১৯ পরীক্ষায় পজিটিভ ফলাফল পেয়েছেন বলে অ্যাপের ম্যাধ্যমে জানিয়েছেন।</string>
+				<key>other</key>
+				<string>%@ দিন আগে আপনি এমন কারো ঘনিষ্ঠ সংস্পর্শে এসেছিলেন যিনি পরবর্তীতে তার কোভিড-১৯ পরীক্ষায় পজিটিভ ফলাফল পেয়েছেন বলে অ্যাপের ম্যাধ্যমে জানিয়েছেন।</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>আপনার স্ব-বিচ্ছিন্ন থাকার সময়কাল শেষ হতে %ld দিন বাকি।</string>
+				<key>other</key>
+				<string>আপনার স্ব-বিচ্ছিন্ন থাকার সময়কাল শেষ হতে %ld দিন বাকি।</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

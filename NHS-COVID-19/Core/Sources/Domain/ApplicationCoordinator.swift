@@ -41,7 +41,7 @@ public class ApplicationCoordinator {
     private let virologyTestingStateStore: VirologyTestingStateStore
     private let keySharingStore: KeySharingStore
     private let circuitBreaker: CircuitBreaker
-    private let housekeeper: Housekeeper
+    private let isolationHousekeeper: IsolationHousekeeper
     private let riskyVenueHousekeeper: RiskyVenueHousekeeper
     private let exposureNotificationReminder: ExposureNotificationReminder
     private let completedOnboardingForCurrentSession = CurrentValueSubject<Bool, Never>(false)
@@ -194,7 +194,10 @@ public class ApplicationCoordinator {
             riskyVenueConfiguration: riskyVenueConfiguration
         )
         
-        virologyTestingStateStore = VirologyTestingStateStore(store: services.encryptedStore)
+        virologyTestingStateStore = VirologyTestingStateStore(
+            store: services.encryptedStore,
+            dateProvider: dateProvider
+        )
         virologyTestingManager = VirologyTestingManager(
             httpClient: services.apiClient,
             virologyTestingStateCoordinator: VirologyTestingStateCoordinator(
@@ -287,7 +290,7 @@ public class ApplicationCoordinator {
             exposureNotificationProcessingBehaviour: exposureNotificationProcessingBehaviour
         )
         
-        housekeeper = Housekeeper(
+        isolationHousekeeper = IsolationHousekeeper(
             isolationStateStore: isolationContext.isolationStateStore,
             isolationStateManager: isolationStateManager,
             virologyTestingStateStore: virologyTestingStateStore,
@@ -458,7 +461,9 @@ public class ApplicationCoordinator {
                             currentDateProviding: self.currentDateProvider,
                             notificationManager: self.userNotificationManager
                         ).removePendingOrUndelivered()
-                    }
+                    }, shouldShowBookALabTest: isolationContext.canBookALabTest().domainProperty(),
+                    contactCaseOptOutQuestionnaire: ContactCaseOptOutQuestionnaire(country: country),
+                    contactCaseIsolationDuration: isolationContext.isolationConfiguration.$value.map { $0.contactCase }.domainProperty()
                 )
             )
         case .recommendingUpdate(let reason, let titles, let descriptions):
@@ -630,7 +635,7 @@ public class ApplicationCoordinator {
         case .runningExposureNotification,
              .policyAcceptanceRequired,
              .localAuthorityRequired,
-             .postcodeAndLocalAuthorityRequired where postcodeStore.postcode != nil,
+             .postcodeAndLocalAuthorityRequired where postcodeStore.postcode.currentValue != nil,
              .recommendedUpdate:
             enabledJobs.append(contentsOf: makeBackgroundJobsForRunningState())
         case .appUnavailable,
@@ -671,8 +676,15 @@ public class ApplicationCoordinator {
         let isolationPaymentContext = self.isolationPaymentContext
         let exposureNotificationContext = self.exposureNotificationContext
         let isolationContext = self.isolationContext
-        let exposureWindowHouskeeper = ExposureWindowHousekeeper(
+        let exposureWindowHousekeeper = ExposureWindowHousekeeper(
             deleteExpiredExposureWindows: exposureNotificationContext.deleteExpiredExposureWindows
+        )
+        let virologyTokenHousekeeper = VirologyTokenHousekeeper(
+            virologyTestingStateStore: virologyTestingStateStore,
+            getTokenDeletionPeriod: {
+                isolationContext.isolationConfiguration.value.testResultPollingTokenRetentionPeriod
+            },
+            getToday: { self.currentDateProvider.currentGregorianDay(timeZone: .current) }
         )
         let expsoureNotificationJob = BackgroundTaskAggregator.Job {
             exposureNotificationContext.detectExposures(
@@ -683,8 +695,7 @@ public class ApplicationCoordinator {
             .append(Deferred(createPublisher: { exposureNotificationContext.resendExposureDetectionNotificationIfNeeded(isolationContext: isolationContext) }))
             .append(Deferred(createPublisher: circuitBreaker.processExposureNotificationApproval))
             .append(Deferred(createPublisher: isolationPaymentContext.processCanApplyForFinancialSupport))
-            .append(Deferred(createPublisher: exposureWindowHouskeeper.executeHousekeeping))
-            
+            .append(Deferred(createPublisher: exposureWindowHousekeeper.executeHousekeeping))
             .eraseToAnyPublisher()
         }
         enabledJobs.append(expsoureNotificationJob)
@@ -715,15 +726,18 @@ public class ApplicationCoordinator {
         }
         enabledJobs.append(matchRiskyVenuesJob)
         
-        let pollingTestResultsJob = BackgroundTaskAggregator.Job(
-            work: virologyTestingManager.evaulateTestResults
-        )
-        enabledJobs.append(pollingTestResultsJob)
+        let virologyTokenCleanupAndPollingJob = BackgroundTaskAggregator.Job { virologyTokenHousekeeper
+            .executeHousekeeping()
+            .append(Deferred(createPublisher: self.virologyTestingManager.evaulateTestResults))
+            .eraseToAnyPublisher()
+        }
         
-        let housekeepingJob = BackgroundTaskAggregator.Job(
-            work: housekeeper.executeHousekeeping
+        enabledJobs.append(virologyTokenCleanupAndPollingJob)
+        
+        let isolationHousekeepingJob = BackgroundTaskAggregator.Job(
+            work: isolationHousekeeper.executeHousekeeping
         )
-        enabledJobs.append(housekeepingJob)
+        enabledJobs.append(isolationHousekeepingJob)
         
         let riskyVenueHousekeepingJob = BackgroundTaskAggregator.Job(
             work: riskyVenueHousekeeper.executeHousekeeping

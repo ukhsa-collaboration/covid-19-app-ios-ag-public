@@ -258,5 +258,53 @@
 				<string/>
 			</dict>
 		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>ਤੁਹਾਨੂੰ ਨਜ਼ਦੀਕੀ ਸੰਪਰਕ ਦੀ ਮਿਤੀ ਤੋਂ ਬਾਅਦ %ld ਪੂਰੇ ਦਿਨ ਤੱਕ ਸਵੈ-ਇਕਾਂਤ ਰਹਿਣਾ ਚਾਹੀਦਾ ਹੈ।</string>
+				<key>other</key>
+				<string>ਤੁਹਾਨੂੰ ਨਜ਼ਦੀਕੀ ਸੰਪਰਕ ਦੀ ਮਿਤੀ ਤੋਂ ਬਾਅਦ %ld ਪੂਰੇ ਦਿਨਾਂ ਤੱਕ ਸਵੈ-ਇਕਾਂਤ ਵਿੱਚ ਰਹਿਣਾ ਚਾਹੀਦਾ ਹੈ।</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>ਤੁਸੀਂ ਕੁਝ ਦਿਨ ਪਹਿਲਾਂ %ld ਕਿਸੇ ਦੇ ਨਜ਼ਦੀਕੀ ਸੰਪਰਕ ਵਿੱਚ ਆਏ ਹੋ ਜਿਸ ਲਈ COVID-19 ਬਾਰੇ ਐਪ ਵਿੱਚ ਟੈਸਟ ਦਾ ਨਤੀਜਾ ਪਾਜ਼ਿਟਿਵ ਦੱਸਿਆ ਗਿਆ ਹੈ।</string>
+				<key>other</key>
+				<string>ਤੁਸੀਂ ਕੁਝ ਦਿਨ ਪਹਿਲਾਂ %ld ਕਿਸੇ ਦੇ ਨਜ਼ਦੀਕੀ ਸੰਪਰਕ ਵਿੱਚ ਆਏ ਹੋ ਜਿਸ ਲਈ COVID-19 ਬਾਰੇ ਐਪ ਵਿੱਚ ਟੈਸਟ ਦਾ ਨਤੀਜਾ ਪਾਜ਼ਿਟਿਵ ਦੱਸਿਆ ਗਿਆ ਹੈ।</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>ਤੁਹਾਡੀ ਬਾਕੀ ਰਹਿੰਦੀ ਸਵੈ-ਇਕਾਂਤ ਦੀ ਮਿਆਦ %ld ਦਿਨ ਹੈ।</string>
+				<key>other</key>
+				<string>ਤੁਹਾਡੀ ਬਾਕੀ ਰਹਿੰਦੀ ਸਵੈ-ਇਕਾਂਤ ਦੀ ਮਿਆਦ %ld ਦਿਨ ਹੈ।</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

@@ -607,11 +607,8 @@ public enum StringLocalizableKey: String, CaseIterable {
     case age_declaration_title
     case age_declaration_heading
     case age_declaration_description
-    case age_declaration_question
     case age_declaration_yes_option
     case age_declaration_no_option
-    case age_declaration_yes_option_accessibility_text
-    case age_declaration_no_option_accessibility_text
     case age_declaration_primary_button_title
     case age_declaration_error_title
     case age_declaration_error_description
@@ -690,6 +687,10 @@ public enum StringLocalizableKey: String, CaseIterable {
     
     case link_nhs_guidance
     
+    // MARK: - Contact case resolutions
+    
+    // MARK: Start isolation
+    
     case contact_case_start_isolation_title
     case contact_case_start_isolation_info_box
     case contact_case_start_isolation_advice
@@ -698,14 +699,18 @@ public enum StringLocalizableKey: String, CaseIterable {
     case contact_case_start_isolation_list_item_isolation
     case contact_case_start_isolation_primary_button_title
     case contact_case_start_isolation_secondary_button_title
+    case contact_case_start_isolation_how_we_calculate_isolation_days_title
+    
+    // MARK: Continue isolation
     
     case contact_case_continue_isolation_title
     case contact_case_continue_isolation_info_box
     case contact_case_continue_isolation_advice
     case contact_case_continue_isolation_link_title
-    case contact_case_continue_isolation_list_item_lfd
     case contact_case_continue_isolation_list_item_isolation
     case contact_case_continue_isolation_primary_button_title
+    
+    // MARK: No need to isolate - person under age limit
     
     case contact_case_no_isolation_under_age_limit_title
     case contact_case_no_isolation_under_age_limit_info_box
@@ -717,6 +722,8 @@ public enum StringLocalizableKey: String, CaseIterable {
     case contact_case_no_isolation_under_age_limit_primary_button_title
     case contact_case_no_isolation_under_age_limit_secondary_button_title
     
+    // MARK: No isolation - person fully vaccinated
+    
     case contact_case_no_isolation_fully_vaccinated_title
     case contact_case_no_isolation_fully_vaccinated_info_box
     case contact_case_no_isolation_fully_vaccinated_common_questions_button_title
@@ -726,6 +733,18 @@ public enum StringLocalizableKey: String, CaseIterable {
     case contact_case_no_isolation_fully_vaccinated_list_item_info
     case contact_case_no_isolation_fully_vaccinated_primary_button_title
     case contact_case_no_isolation_fully_vaccinated_secondary_button_title
+    
+    // MARK: No isolation - person medically exempt
+    
+    case risky_contact_isolation_advice_medically_exempt
+    case risky_contact_isolation_advice_medically_exempt_info
+    case risky_contact_isolation_advice_medically_exempt_research
+    case risky_contact_isolation_advice_medically_exempt_advice
+    case risky_contact_isolation_advice_medically_exempt_common_questions_link_title
+    case risky_contact_isolation_advice_medically_exempt_nhs_guidance_link_preamble
+    case risky_contact_isolation_advice_medically_exempt_nhs_guidance_link_title
+    case risky_contact_isolation_advice_medically_exempt_primary_button_title
+    case risky_contact_isolation_advice_medically_exempt_secondary_button_title
     
     // MARK: - Self-isolation Hub
     
@@ -799,6 +818,8 @@ public enum StringLocalizableKey: String, CaseIterable {
     case contact_case_exposure_info_screen_information
     case contact_case_exposure_info_screen_if_you_have_symptoms
     case contact_case_exposure_info_screen_continue_button
+    case contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading
+    case contact_case_exposure_info_screen_how_close_contacts_are_calculated_body
     
     // MARK: - Contact Case Exposure Vaccination Status screen
     
@@ -817,6 +838,17 @@ public enum StringLocalizableKey: String, CaseIterable {
     case contact_case_vaccination_status_last_dose_of_vaccine_no_option
     case contact_case_vaccination_status_error_title
     case contact_case_vaccination_status_error_description
+    case exposure_notification_clinical_trial_question
+    case exposure_notification_clinical_trial_yes
+    case exposure_notification_clinical_trial_no
+    case exposure_notification_clinical_trial_yes_content_description
+    case exposure_notification_clinical_trial_no_content_description
+    case exposure_notification_medically_exempt_question
+    case exposure_notification_medically_exempt_description
+    case exposure_notification_medically_exempt_yes
+    case exposure_notification_medically_exempt_no
+    case exposure_notification_medically_exempt_yes_content_description
+    case exposure_notification_medically_exempt_no_content_description
     
     // MARK: - New 'no symptoms' screen
     
@@ -867,6 +899,7 @@ public enum ParameterisedStringLocalizable: Equatable {
         case contact_case_start_isolation_accessibility_label = "contact_case_start_isolation_accessibility_label %ld"
         case contact_case_continue_isolation_days = "contact_case_continue_isolation_days %ld"
         case contact_case_continue_isolation_accessibility_label = "contact_case_continue_isolation_accessibility_label %ld"
+        case contact_case_start_isolation_how_we_calculate_isolation_days_body = "contact_case_start_isolation_how_we_calculate_isolation_days_body %@"
         
         case mydata_date_description = "mydata_date_description %@"
         case mydata_date_interval_description = "mydata_date_interval_description %@ %@"
@@ -892,6 +925,15 @@ public enum ParameterisedStringLocalizable: Equatable {
         case contact_case_vaccination_status_last_dose_of_vaccine_question = "contact_case_vaccination_status_last_dose_of_vaccine_question %@"
         case contact_case_vaccination_status_last_dose_of_vaccine_yes_option_accessibility_text = "contact_case_vaccination_status_last_dose_of_vaccine_yes_option_accessibility_text %@"
         case contact_case_vaccination_status_last_dose_of_vaccine_no_option_accessibility_text = "contact_case_vaccination_status_last_dose_of_vaccine_no_option_accessibility_text %@"
+        case age_declaration_question = "age_declaration_question %@"
+        case age_declaration_yes_option_accessibility_text = "age_declaration_yes_option_accessibility_text %@"
+        case age_declaration_no_option_accessibility_text = "age_declaration_no_option_accessibility_text %@"
+        
+        case contact_case_exposure_info_screen_exposure_date = "contact_case_exposure_info_screen_exposure_date %@"
+        
+        case contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period = "contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld"
+        case contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter = "contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld"
+        case contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days = "contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld"
     }
     
     case checkin_confirmation_date(date: Date)
@@ -925,6 +967,10 @@ public enum ParameterisedStringLocalizable: Equatable {
     case contact_case_start_isolation_accessibility_label(days: Int)
     case contact_case_continue_isolation_days(days: Int)
     case contact_case_continue_isolation_accessibility_label(days: Int)
+    case contact_case_start_isolation_how_we_calculate_isolation_days_body(exposureDate: Date)
+    case contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period(isolationPeriod: Int)
+    case contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter(daysSinceEncounter: Int)
+    case contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days(remainingIsolationDays: Int)
     
     case mydata_date_description(date: Date)
     case mydata_date_interval_description(startdate: Date, endDate: Date)
@@ -946,6 +992,11 @@ public enum ParameterisedStringLocalizable: Equatable {
     case contact_case_vaccination_status_last_dose_of_vaccine_question(date: Date)
     case contact_case_vaccination_status_last_dose_of_vaccine_yes_option_accessibility_text(date: Date)
     case contact_case_vaccination_status_last_dose_of_vaccine_no_option_accessibility_text(date: Date)
+    case age_declaration_question(date: Date)
+    case age_declaration_yes_option_accessibility_text(date: Date)
+    case age_declaration_no_option_accessibility_text(date: Date)
+    
+    case contact_case_exposure_info_screen_exposure_date(date: Date)
     
     var key: Key {
         switch self {
@@ -992,6 +1043,19 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .contact_case_vaccination_status_last_dose_of_vaccine_question: return .contact_case_vaccination_status_last_dose_of_vaccine_question
         case .contact_case_vaccination_status_last_dose_of_vaccine_yes_option_accessibility_text: return .contact_case_vaccination_status_last_dose_of_vaccine_yes_option_accessibility_text
         case .contact_case_vaccination_status_last_dose_of_vaccine_no_option_accessibility_text: return .contact_case_vaccination_status_last_dose_of_vaccine_no_option_accessibility_text
+        case .age_declaration_question: return .age_declaration_question
+        case .age_declaration_yes_option_accessibility_text: return .age_declaration_yes_option_accessibility_text
+        case .age_declaration_no_option_accessibility_text: return .age_declaration_no_option_accessibility_text
+        case .contact_case_exposure_info_screen_exposure_date:
+            return .contact_case_exposure_info_screen_exposure_date
+        case .contact_case_start_isolation_how_we_calculate_isolation_days_body:
+            return .contact_case_start_isolation_how_we_calculate_isolation_days_body
+        case .contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period:
+            return .contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period
+        case .contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter:
+            return .contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter
+        case .contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days:
+            return .contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days
         }
     }
     
@@ -1024,19 +1088,19 @@ public enum ParameterisedStringLocalizable: Equatable {
             return [days]
         case .isolation_until_date(let date):
             return [
-                DateFormatter.dayOfYear.string(from: date.advanced(by: -1)),
+                DateFormatter.dayOfYear().string(from: date.advanced(by: -1)),
                 DateFormatter.time.string(from: date.advanced(by: -1)),
             ]
         case .end_of_isolation_has_passed_description(let date),
              .end_of_isolation_is_near_description(let date):
             return [
-                DateFormatter.dayOfYear.string(from: date.advanced(by: -1)),
+                DateFormatter.dayOfYear().string(from: date.advanced(by: -1)),
                 DateFormatter.time.string(from: date.advanced(by: -1)),
             ]
         case .isolation_indicator_accessiblity_label(let date, let days):
             return [
                 days,
-                DateFormatter.dayOfYear.string(from: date.advanced(by: -1)),
+                DateFormatter.dayOfYear().string(from: date.advanced(by: -1)),
                 DateFormatter.time.string(from: date.advanced(by: -1)),
             ]
         case .positive_symptoms_days(let days):
@@ -1061,7 +1125,7 @@ public enum ParameterisedStringLocalizable: Equatable {
             return [days]
             
         case .mydata_date_description(let date):
-            return [DateFormatter.dayOfYear.string(from: date)]
+            return [DateFormatter.dayOfYear().string(from: date)]
         case .mydata_date_interval_description(let startDate, let endDate):
             return [DateIntervalFormatter.dayOfYearInterval.string(from: startDate, to: endDate.advanced(by: -1))]
             
@@ -1085,12 +1149,27 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .settings_language_confirm_selection_alert_description(let selectedLanguage):
             return [selectedLanguage]
         case .venue_history_heading_accessibility_label(let date):
-            return [DateFormatter.dayOfYear.string(from: date)]
+            return [DateFormatter.dayOfYear().string(from: date)]
             
         case .contact_case_vaccination_status_last_dose_of_vaccine_question(let date),
              .contact_case_vaccination_status_last_dose_of_vaccine_yes_option_accessibility_text(let date),
              .contact_case_vaccination_status_last_dose_of_vaccine_no_option_accessibility_text(let date):
-            return [DateFormatter.dayOfYear.string(from: date)]
+            return [DateFormatter.dayOfYear().string(from: date)]
+            
+        case .age_declaration_question(let date),
+             .age_declaration_yes_option_accessibility_text(let date),
+             .age_declaration_no_option_accessibility_text(let date):
+            return [DateFormatter.dayOfYear(style: .full).string(from: date)]
+        case .contact_case_exposure_info_screen_exposure_date(let date):
+            return [DateFormatter.dayOfYear(style: .full).string(from: date)]
+        case .contact_case_start_isolation_how_we_calculate_isolation_days_body(let exposureDate):
+            return [DateFormatter.dayOfYear(style: .full).string(from: exposureDate)]
+        case .contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period(let isolationPeriod):
+            return [isolationPeriod]
+        case .contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter(let daysSinceEncounter):
+            return [daysSinceEncounter]
+        case .contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days(let remainingIsolationDays):
+            return [remainingIsolationDays]
         }
     }
     
@@ -1106,10 +1185,20 @@ public enum ParameterisedStringLocalizable: Equatable {
 
 private extension DateFormatter {
     
+    enum MonthStyle {
+        case full
+        case medium
+    }
+    
     // For formats, see: https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
-    static var dayOfYear: DateFormatter {
+    static func dayOfYear(style: MonthStyle = .medium) -> DateFormatter {
         let dateFormatter = Localization.make(DateFormatter.self)
-        dateFormatter.setLocalizedDateFormatFromTemplate("yyyyMMMd")
+        switch style {
+        case .medium:
+            dateFormatter.setLocalizedDateFormatFromTemplate("yyyyMMMd")
+        case .full:
+            dateFormatter.setLocalizedDateFormatFromTemplate("yyyyMMMMd")
+        }
         return dateFormatter
     }
     

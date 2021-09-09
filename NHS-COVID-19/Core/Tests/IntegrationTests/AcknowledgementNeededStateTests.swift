@@ -213,7 +213,10 @@ class AcknowledgementNeededStateTests: XCTestCase {
             diagnosisKeySharer: .constant(nil),
             localInformation: .constant(nil),
             userNotificationManaging: MockUserNotificationsManager(),
-            didOpenSelfIsolationHub: {}
+            didOpenSelfIsolationHub: {},
+            shouldShowBookALabTest: .constant(false),
+            contactCaseOptOutQuestionnaire: ContactCaseOptOutQuestionnaire(country: .constant(.england)),
+            contactCaseIsolationDuration: .constant(DayDuration(11))
         )
     }
     

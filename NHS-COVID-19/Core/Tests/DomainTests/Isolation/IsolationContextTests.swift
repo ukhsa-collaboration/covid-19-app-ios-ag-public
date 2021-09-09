@@ -32,7 +32,8 @@ class IsolationContextTests: XCTestCase {
                     indexCaseSinceSelfDiagnosisOnset: 8,
                     indexCaseSinceSelfDiagnosisUnknownOnset: 9,
                     housekeepingDeletionPeriod: 14,
-                    indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis
+                    indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis,
+                    testResultPollingTokenRetentionPeriod: 28
                 )
             ),
             encryptedStore: MockEncryptedStore(),
@@ -41,6 +42,83 @@ class IsolationContextTests: XCTestCase {
             removeExposureDetectionNotifications: { self.removedNotificaton = true },
             scheduleSelfIsolationReminderNotification: { self.scheduledNotification = true }
         )
+    }
+    
+    func testCanBookALabTestIfInDateRangeAndNotIsolating() throws {
+        let isoInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: true,
+            hasAcknowledgedStartOfContactIsolation: true,
+            indexCaseInfo: nil,
+            contactCaseInfo: ContactCaseInfo(exposureDay: .today, isolationFromStartOfDay: .today, optOutOfIsolationDay: .today)
+        )
+        
+        isolationContext.isolationStateManager.state = IsolationLogicalState(stateInfo: IsolationStateInfo(isolationInfo: isoInfo, configuration: .default), day: .today)
+        
+        let canBookALabTest = try isolationContext.canBookALabTest().await().get()
+        XCTAssertTrue(canBookALabTest)
+    }
+    
+    func testCanBookALabTestIfNotInDateRangeAndNotIsolating() throws {
+        let config = isolationContext.isolationConfiguration.value
+        let exposureDay = GregorianDay.today.advanced(by: -config.contactCase.days)
+        
+        let isoInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: true,
+            hasAcknowledgedStartOfContactIsolation: true,
+            indexCaseInfo: nil,
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: exposureDay,
+                optOutOfIsolationDay: exposureDay
+            )
+        )
+        
+        isolationContext.isolationStateManager.state = IsolationLogicalState(stateInfo: IsolationStateInfo(isolationInfo: isoInfo, configuration: config), day: .today)
+        
+        let canBookALabTest = try isolationContext.canBookALabTest().await().get()
+        XCTAssertFalse(canBookALabTest)
+    }
+    
+    func testCanBookALabTestIfIsolationFinishedAndNotAcknowledged() throws {
+        let config = isolationContext.isolationConfiguration.value
+        let exposureDay = GregorianDay.today.advanced(by: -config.contactCase.days)
+        
+        let isoInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: true,
+            indexCaseInfo: nil,
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: exposureDay,
+                optOutOfIsolationDay: exposureDay
+            )
+        )
+        
+        isolationContext.isolationStateManager.state = IsolationLogicalState(stateInfo: IsolationStateInfo(isolationInfo: isoInfo, configuration: config), day: .today)
+        
+        let canBookALabTest = try isolationContext.canBookALabTest().await().get()
+        XCTAssertFalse(canBookALabTest)
+    }
+    
+    func testCanBookALabTestIfInIsolation() throws {
+        let config = isolationContext.isolationConfiguration.value
+        let exposureDay = GregorianDay.today.advanced(by: -1)
+        
+        let isoInfo = IsolationInfo(
+            hasAcknowledgedEndOfIsolation: false,
+            hasAcknowledgedStartOfContactIsolation: true,
+            indexCaseInfo: nil,
+            contactCaseInfo: ContactCaseInfo(
+                exposureDay: exposureDay,
+                isolationFromStartOfDay: exposureDay,
+                optOutOfIsolationDay: GregorianDay.today.advanced(by: 1)
+            )
+        )
+        
+        isolationContext.isolationStateManager.state = IsolationLogicalState(stateInfo: IsolationStateInfo(isolationInfo: isoInfo, configuration: config), day: .today)
+        
+        let canBookALabTest = try isolationContext.canBookALabTest().await().get()
+        XCTAssertTrue(canBookALabTest)
     }
     
     func testMakeIsolationAcknowledgementStatePublishesState() throws {

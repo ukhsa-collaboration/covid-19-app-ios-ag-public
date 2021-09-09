@@ -23,4 +23,31 @@ class IsolationPropertiesTests: XCTestCase {
         XCTAssertEqual(isolation.vaccineThresholdDate, expectedDate)
     }
     
+    func testBirthThresholdDateForEngland() {
+        let isolation = Isolation(
+            fromDay: .today,
+            untilStartOfDay: .today,
+            reason: Isolation.Reason(
+                indexCaseInfo: nil,
+                contactCaseInfo: Isolation.ContactCaseInfo(exposureDay: .init(year: 2021, month: 8, day: 30))
+            )
+        )
+        
+        let expectedDate = GregorianDay(year: 2021, month: 2, day: 28).startDate(in: .current)
+        XCTAssertEqual(isolation.birthThresholdDate(country: .england), expectedDate)
+    }
+    
+    func testBirthThresholdDateForWales() {
+        let isolation = Isolation(
+            fromDay: .today,
+            untilStartOfDay: .today,
+            reason: Isolation.Reason(
+                indexCaseInfo: nil,
+                contactCaseInfo: Isolation.ContactCaseInfo(exposureDay: .init(year: 2021, month: 8, day: 30))
+            )
+        )
+        
+        let expectedDate = GregorianDay(year: 2021, month: 8, day: 30).startDate(in: .current)
+        XCTAssertEqual(isolation.birthThresholdDate(country: .wales), expectedDate)
+    }
 }

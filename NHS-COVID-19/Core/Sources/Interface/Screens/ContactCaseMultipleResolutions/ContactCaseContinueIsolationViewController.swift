@@ -41,7 +41,6 @@ extension ContactCaseContinueIsolationViewController {
                     .styleAsDecoration(),
                 pleaseIsolateStack,
                 InformationBox.indication.warning(localize(.contact_case_continue_isolation_info_box)),
-                WelcomePoint(image: .swabTest, body: localize(.contact_case_continue_isolation_list_item_lfd)),
                 WelcomePoint(image: .isolation, body: localize(.contact_case_continue_isolation_list_item_isolation)),
                 BaseLabel()
                     .styleAsBody()
@@ -50,6 +49,7 @@ extension ContactCaseContinueIsolationViewController {
                     title: localize(.contact_case_continue_isolation_link_title),
                     action: interactor.didTapGuidanceLink
                 ),
+                UIView(),
                 PrimaryButton(
                     title: localize(.contact_case_continue_isolation_primary_button_title),
                     action: interactor.didTapBackToHome

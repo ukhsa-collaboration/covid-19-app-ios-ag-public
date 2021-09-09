@@ -20,7 +20,6 @@ public enum ColorName: String, CaseIterable, Identifiable {
     
     case lightSurface = "Light Surface"
     case sectionHeaderText = "Section Header Text"
-    case warningIcon = "Warning Icon"
     case navigationBar = "Navigation Bar"
     
     case styleTurquoise = "Style/Turquoise"
