@@ -269,9 +269,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>قریبی رابطے کی تاریخ کے بعد آپ کو مکمل %ld دن تک خود کو تنہا رکھنا چاہیے۔</string>
+				<string>قریبی رابطے کی تاریخ کے بعد آپ کو مکمل %li دن تک خود کو تنہا رکھنا چاہیے۔</string>
 				<key>other</key>
-				<string>قریبی رابطے کی تاریخ کے بعد آپ کو %ld  مکمل دنوں تک خود کو تنہا رکھنا چاہیے۔</string>
+				<string>قریبی رابطے کی تاریخ کے بعد آپ کو %li مکمل دنوں تک خود کو تنہا رکھنا چاہیے۔</string>
 			</dict>
 		</dict>
 		<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>

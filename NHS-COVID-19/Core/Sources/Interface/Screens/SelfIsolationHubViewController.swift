@@ -42,6 +42,13 @@ private struct SelfIsolationHubView: View {
                         )
                     )
                 }
+                HubButtonCell(viewModel:
+                    .init(
+                        title: localize(.self_isolation_hub_get_isolation_note_title),
+                        description: localize(.self_isolation_hub_get_isolation_note_description),
+                        iconName: .externalLink,
+                        action: interactor.didTapGetIsolationNoteLink
+                    ))
             }
             
             accordionGroups
@@ -99,6 +106,7 @@ public protocol SelfIsolationHubViewControllerInteracting {
     func didTapCheckIfEligibleForFinancialSupport()
     func didTapReadGovernmentGuidanceLink()
     func didTapFindYourLocalAuthorityLink()
+    func didTapGetIsolationNoteLink()
 }
 
 public class SelfIsolationHubViewController: RootViewController {

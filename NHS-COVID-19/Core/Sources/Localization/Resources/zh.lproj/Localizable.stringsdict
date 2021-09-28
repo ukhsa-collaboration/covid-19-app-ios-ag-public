@@ -237,7 +237,7 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>other</key>
-				<string>您应自密切接触之日起自我隔离 %ld 整天。</string>
+				<string>您应自密切接触之日起自我隔离 %li 整天。</string>
 			</dict>
 		</dict>
 		<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>

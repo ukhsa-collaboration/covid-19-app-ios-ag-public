@@ -57,6 +57,7 @@ public protocol HomeFlowViewControllerInteracting {
     func recordDidTapLocalInfoBannerMetric()
     func openReadLatestGovernmentGuidanceLink()
     func openFindYourLocalAuthorityLink()
+    func didTapGetIsolationNoteLink()
 }
 
 public enum ExposureNotificationReminderIn: Int, CaseIterable {

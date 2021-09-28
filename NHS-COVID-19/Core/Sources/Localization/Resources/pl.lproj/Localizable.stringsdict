@@ -333,13 +333,13 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Musisz pozostać w samoizolacji przez cały %ld dzień po dniu, w którym nastąpił bliski kontakt.</string>
+				<string>Musisz pozostać w samoizolacji przez cały %li dzień po dniu, w którym nastąpił bliski kontakt.</string>
 				<key>few</key>
 				<string/>
 				<key>many</key>
 				<string/>
 				<key>other</key>
-				<string>Musisz pozostać w samoizolacji przez pełnych %ld dni po dniu, w którym nastąpił bliski kontakt.</string>
+				<string>Musisz pozostać w samoizolacji przez pełnych %li dni po dniu, w którym nastąpił bliski kontakt.</string>
 			</dict>
 		</dict>
 		<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>

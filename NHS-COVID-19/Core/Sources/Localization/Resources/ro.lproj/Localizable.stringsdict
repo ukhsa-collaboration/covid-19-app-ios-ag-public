@@ -49,11 +49,11 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Continuați să vă auto-izolați pentru %ld zi</string>
+				<string>Continuați să vă autoizolați pentru %ld zi</string>
 				<key>few</key>
-				<string>Continuați să vă auto-izolați pentru %ld zile</string>
+				<string>Continuați să vă autoizolați pentru %ld zile</string>
 				<key>other</key>
-				<string>Continuați să vă auto-izolați pentru %ld zile</string>
+				<string>Continuați să vă autoizolați pentru %ld zile</string>
 			</dict>
 		</dict>
 		<key>isolation_days_accessibility_label %ld</key>
@@ -301,11 +301,11 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Ar trebui să vă autoizolați până la [% ld] zi întreagă după data contactului strâns.</string>
+				<string>Ar trebui să vă autoizolați până la %li zi întreagă după data contactului strâns.</string>
 				<key>few</key>
 				<string/>
 				<key>other</key>
-				<string>Ar trebui să vă autoizolați până la [% ld] zile întregi după data contactului strâns.</string>
+				<string>Ar trebui să vă autoizolați până la %li zile întregi după data contactului strâns.</string>
 			</dict>
 		</dict>
 		<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>

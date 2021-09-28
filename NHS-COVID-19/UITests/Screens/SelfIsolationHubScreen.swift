@@ -16,6 +16,10 @@ struct SelfIsolationHubScreen {
         app.buttons.element(containing: localize(.self_isolation_hub_financial_support_title))
     }
     
+    var isolationNoteButton: XCUIElement {
+        app.links.element(containing: localize(.self_isolation_hub_get_isolation_note_title))
+    }
+    
     var howToSelfIsolateAccordionTitleButton: XCUIElement {
         app.buttons[localized: .self_isolation_hub_accordion_how_to_title]
     }

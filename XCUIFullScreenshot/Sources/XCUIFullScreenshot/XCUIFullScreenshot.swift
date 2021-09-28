@@ -6,10 +6,6 @@ import XCTest
 
 extension XCUIElement {
     
-    /// Provides header, footer and scrollable content images
-    /// And scroll view height
-//    public func scrollableScreenshot() -> X {[]}
-    
     #warning("Must have a scroll view")
     public func fullScreenshot() -> UIImage? {
         
@@ -56,8 +52,6 @@ extension XCUIElement {
             }
             
             scrollView.scroll()
-            // Wait for scroll bar to dissapear
-            usleep(1500000)
             
             // In case scroll view content is clipped, it will never reach max scroll content height
             // but it will be scrolled 100%

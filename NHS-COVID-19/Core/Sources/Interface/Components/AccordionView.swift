@@ -32,13 +32,12 @@ public struct AccordionGroup<Content>: View where Content: View {
 // MARK: - Accordion View
 
 public enum AccordionViewDisplayMode {
-    case expanded // iOS 13 bug when used inside stackview
     case singleWithChevron
     case multipleWithPlusMinus
     
     var expandedImageName: ImageName {
         switch self {
-        case .expanded, .singleWithChevron:
+        case .singleWithChevron:
             return .accordionExpandedIcon
         case .multipleWithPlusMinus:
             return .accordionMinusIcon
@@ -47,7 +46,7 @@ public enum AccordionViewDisplayMode {
     
     var collapsedImageName: ImageName {
         switch self {
-        case .expanded, .singleWithChevron:
+        case .singleWithChevron:
             return .accordionCollapsedIcon
         case .multipleWithPlusMinus:
             return .accordionPlusIcon
@@ -59,7 +58,12 @@ public struct AccordionView<Content>: View where Content: View {
     private let text: String
     private let content: () -> Content
     private let displayMode: AccordionViewDisplayMode
-    @State private var isExpanded: Bool
+    @State private var isExpanded: Bool = false
+    private var onSizeChanged: ((CGSize) -> Void)?
+    
+    public mutating func onSizeChanged(_ perform: @escaping (CGSize) -> Void) {
+        onSizeChanged = perform
+    }
     
     public init(_ text: String,
                 displayMode: AccordionViewDisplayMode = .multipleWithPlusMinus,
@@ -67,20 +71,13 @@ public struct AccordionView<Content>: View where Content: View {
         self.text = text
         self.displayMode = displayMode
         self.content = content
-        if displayMode == .expanded {
-            _isExpanded = State(wrappedValue: true)
-        } else {
-            _isExpanded = State(wrappedValue: false)
-        }
     }
     
     public var body: some View {
         VStack(alignment: .leading) {
             Button(
                 action: {
-                    if displayMode != .expanded {
-                        isExpanded.toggle()
-                    }
+                    isExpanded.toggle()
                 },
                 label: {
                     HStack(alignment: .firstTextBaseline, spacing: .iconTrailingSpacing) {
@@ -124,6 +121,7 @@ public struct AccordionView<Content>: View where Content: View {
                     .padding(.leading, .iconSide + .iconTrailingSpacing)
             }
         }
+        .onSizeChanged { onSizeChanged?($0) }
     }
     
 }

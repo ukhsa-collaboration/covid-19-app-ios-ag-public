@@ -148,6 +148,7 @@ class ExposureNotificationFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: fullyVaccinatedScreen.backToHomeButton)
             fullyVaccinatedScreen.backToHomeButton.tap()
             
             // Home Screen
@@ -234,6 +235,7 @@ class ExposureNotificationFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: vaccinationStatusScreen.noMedicallyExemptRadioButton(selected: false))
             vaccinationStatusScreen.noMedicallyExemptRadioButton(selected: false).tap()
             XCTAssertTrue(vaccinationStatusScreen.noMedicallyExemptRadioButton(selected: true).exists)
             
@@ -384,6 +386,7 @@ class ExposureNotificationFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: medicallyExemptScreen.backToHomeButton)
             medicallyExemptScreen.backToHomeButton.tap()
             
             // Home Screen

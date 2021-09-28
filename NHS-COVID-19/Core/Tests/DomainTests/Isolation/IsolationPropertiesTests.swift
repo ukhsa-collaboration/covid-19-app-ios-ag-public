@@ -3,6 +3,7 @@
 //
 
 import Common
+import Scenarios
 import TestSupport
 import XCTest
 @testable import Domain
@@ -49,5 +50,42 @@ class IsolationPropertiesTests: XCTestCase {
         
         let expectedDate = GregorianDay(year: 2021, month: 8, day: 30).startDate(in: .current)
         XCTAssertEqual(isolation.birthThresholdDate(country: .wales), expectedDate)
+    }
+    
+    func testSecondTestDateWithinLimit() {
+        let encouterDate = GregorianDay(year: 2021, month: 9, day: 10)
+        let dateProvider = MockDateProvider(getDate: {
+            GregorianDay(year: 2021, month: 9, day: 15).startDate(in: .current)
+        })
+        let isolation = Isolation(
+            fromDay: LocalDay(gregorianDay: encouterDate, timeZone: .current),
+            untilStartOfDay: LocalDay(gregorianDay: encouterDate.advanced(by: 11), timeZone: .current),
+            reason: Isolation.Reason(
+                indexCaseInfo: nil,
+                contactCaseInfo: Isolation.ContactCaseInfo(exposureDay: encouterDate)
+            )
+        )
+        
+        XCTAssertEqual(isolation.secondTestAdvice(dateProvider: dateProvider, country: .england), nil)
+        let expectedDate = GregorianDay(year: 2021, month: 9, day: 18).startDate(in: .current)
+        XCTAssertEqual(isolation.secondTestAdvice(dateProvider: dateProvider, country: .wales), expectedDate)
+    }
+    
+    func testSecondTestDateOutsideLimit() {
+        let encouterDate = GregorianDay(year: 2021, month: 9, day: 10)
+        let dateProvider = MockDateProvider(getDate: {
+            GregorianDay(year: 2021, month: 9, day: 16).startDate(in: .current)
+        })
+        let isolation = Isolation(
+            fromDay: LocalDay(gregorianDay: encouterDate, timeZone: .current),
+            untilStartOfDay: LocalDay(gregorianDay: encouterDate.advanced(by: 11), timeZone: .current),
+            reason: Isolation.Reason(
+                indexCaseInfo: nil,
+                contactCaseInfo: Isolation.ContactCaseInfo(exposureDay: encouterDate)
+            )
+        )
+        
+        XCTAssertEqual(isolation.secondTestAdvice(dateProvider: dateProvider, country: .wales), nil)
+        XCTAssertEqual(isolation.secondTestAdvice(dateProvider: dateProvider, country: .england), nil)
     }
 }

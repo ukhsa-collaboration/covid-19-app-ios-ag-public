@@ -17,6 +17,10 @@ public struct NotIsolatingIndicator: View {
     
     public var body: some View {
         VStack(alignment: .center, spacing: .doubleSpacing) {
+            Text(verbatim: " ") // This adds empty space with dynamic height
+                .font(.title)
+                .accessibility(hidden: true)
+            
             ZStack {
                 if self.animationDisabled {
                     Circle()
@@ -48,8 +52,11 @@ public struct NotIsolatingIndicator: View {
                 .foregroundColor(Color(.primaryText))
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
+            
+            Text(" ") // This adds empty space with dynamic height
+                .font(.body)
+                .accessibility(hidden: true)
         }
-        .frame(height: .appActivityIndicatorMinHeight)
         .accessibilityElement()
         .contentShape(Rectangle())
         .accessibility(label: Text(localize(.risk_level_indicator_contact_tracing_active)))

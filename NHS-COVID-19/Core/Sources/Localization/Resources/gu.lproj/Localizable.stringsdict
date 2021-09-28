@@ -269,9 +269,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>કોઈની સાથે નજીકનો કોન્ટેક્ટ થયો હોય એની તારીખ પછી, તમારે %ld દિવસો સુધી સેલ્ફ-આઇસોલેટ થવું.</string>
+				<string>કોઈની સાથે નજીકનો કોન્ટેક્ટ થયો હોય એની તારીખ પછી, તમારે %li દિવસો સુધી સેલ્ફ-આઇસોલેટ થવું.</string>
 				<key>other</key>
-				<string>કોઈની સાથે નજીકનો કોન્ટેક્ટ થયો હોય એની તારીખ પછી, તમારે %ld દિવસો સુધી સેલ્ફ-આઇસોલેટ થવું.</string>
+				<string>કોઈની સાથે નજીકનો કોન્ટેક્ટ થયો હોય એની તારીખ પછી, તમારે %li દિવસો સુધી સેલ્ફ-આઇસોલેટ થવું.</string>
 			</dict>
 		</dict>
 		<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>

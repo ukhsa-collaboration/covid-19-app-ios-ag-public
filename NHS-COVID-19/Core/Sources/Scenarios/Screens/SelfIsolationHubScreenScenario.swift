@@ -13,6 +13,7 @@ public class SelfIsolationHubScreenScenario: Scenario {
     public static let financialSupportAlertTitle = "Financial support button tapped"
     public static let readGovernmentGuidanceAlertTitle = "Read government guidance link tapped"
     public static let findYourLocalAuthorityAlertTitle = "Find your local authority link tapped"
+    public static let getIsolationNoteAlertTitle = "Get Isolation note link tapped"
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
@@ -47,5 +48,9 @@ private struct Interactor: SelfIsolationHubViewController.Interacting {
     
     func didTapFindYourLocalAuthorityLink() {
         viewController.showAlert(title: SelfIsolationHubScreenScenario.findYourLocalAuthorityAlertTitle)
+    }
+    
+    func didTapGetIsolationNoteLink() {
+        viewController.showAlert(title: SelfIsolationHubScreenScenario.getIsolationNoteAlertTitle)
     }
 }

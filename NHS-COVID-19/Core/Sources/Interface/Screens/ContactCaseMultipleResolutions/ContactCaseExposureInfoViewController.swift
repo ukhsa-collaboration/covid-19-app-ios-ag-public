@@ -19,16 +19,10 @@ public struct ContactCaseExposureInfoContent {
     public init(interactor: Interacting,
                 exposureDate: Date,
                 isIndexCase: Bool) {
-        let displayMode: AccordionViewDisplayMode
-        if #available(iOS 14, *) {
-            displayMode = .singleWithChevron
-        } else {
-            displayMode = .expanded
-        }
         let accordionController = UIHostingController(
             rootView: AccordionView(
                 localize(.contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading),
-                displayMode: displayMode
+                displayMode: .singleWithChevron
             ) {
                 ForEach.fromStrings(
                     localizeAndSplit(.contact_case_exposure_info_screen_how_close_contacts_are_calculated_body),
@@ -39,6 +33,15 @@ public struct ContactCaseExposureInfoContent {
             })
         let accordionView = accordionController.view!
         accordionView.backgroundColor = .clear
+        
+        // it fixes bug with height of expanded accordion on iOS 13 and iOS 15
+        accordionView.translatesAutoresizingMaskIntoConstraints = false
+        let accordionHeightConstraint = accordionView.heightAnchor.constraint(equalToConstant: 0)
+        accordionController.rootView.onSizeChanged { size in
+            guard size.height > 0 else { return }
+            accordionHeightConstraint.constant = size.height
+            accordionHeightConstraint.isActive = true
+        }
         
         views = [
             UIImageView(.coronaVirus)

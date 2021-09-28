@@ -64,6 +64,8 @@ public enum Metric: String, CaseIterable {
     case didHaveSymptomsBeforeReceivedTestResult
     case didRememberOnsetSymptomsDateBeforeReceivedTestResult
     
+    case didAccessSelfIsolationNoteLink
+    
     // MARK: - Risky venue warning
     
     case receivedRiskyVenueM1Warning

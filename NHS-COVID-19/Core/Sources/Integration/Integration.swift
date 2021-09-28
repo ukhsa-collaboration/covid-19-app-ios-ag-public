@@ -223,15 +223,15 @@ extension CoordinatedAppController {
                 currentDateProvider: context.currentDateProvider
             )
             
-        case .neededForStartOfIsolationExposureDetection(let acknowledge, let exposureDate, let birthThresholdDate, let vaccineThresholdDate, let isolationEndDate, let isIndexCase):
+        case .neededForStartOfIsolationExposureDetection(let acknowledge, let exposureDate, let birthThresholdDate, let vaccineThresholdDate, let secondTestAdviceDate, let isolationEndDate, let isIndexCase):
             let interactor = ContactCaseMultipleResolutionsFlowViewControllerInteractor(
                 openURL: context.openURL,
                 didDeclareUnderAgeLimit: { [showUIState] in
                     acknowledge(true)
                     if isIndexCase {
-                        showUIState.value = .showContactCaseResult(.continueIsolation(isolationEndDate.currentValue))
+                        showUIState.value = .showContactCaseResult(.continueIsolation(endDate: isolationEndDate.currentValue, secondTestAdviceDate: secondTestAdviceDate))
                     } else {
-                        showUIState.value = .showContactCaseResult(.underAgeLimit)
+                        showUIState.value = .showContactCaseResult(.underAgeLimit(secondTestAdviceDate: secondTestAdviceDate))
                     }
                 },
                 didDeclareVaccinationStatus: { [showUIState] fullyVaccinated, lastDose, clinicalTrial, medicallyExempt in
@@ -257,11 +257,11 @@ extension CoordinatedAppController {
                     
                     acknowledge(didOptOut)
                     if isIndexCase {
-                        showUIState.value = .showContactCaseResult(.continueIsolation(isolationEndDate.currentValue))
+                        showUIState.value = .showContactCaseResult(.continueIsolation(endDate: isolationEndDate.currentValue, secondTestAdviceDate: secondTestAdviceDate))
                     } else if didOptOut {
                         switch optOutReason {
                         case .fullyVaccinated, .none:
-                            showUIState.value = .showContactCaseResult(.fullyVaccinated)
+                            showUIState.value = .showContactCaseResult(.fullyVaccinated(secondTestAdviceDate: secondTestAdviceDate))
                         case .medicallyExempt:
                             showUIState.value = .showContactCaseResult(.medicallyExempt)
                         }
@@ -269,7 +269,8 @@ extension CoordinatedAppController {
                         showUIState.value = .showContactCaseResult(
                             .startIsolation(
                                 endDate: isolationEndDate.currentValue,
-                                exposureDate: exposureDate
+                                exposureDate: exposureDate,
+                                secondTestAdviceDate: secondTestAdviceDate
                             ))
                     }
                     

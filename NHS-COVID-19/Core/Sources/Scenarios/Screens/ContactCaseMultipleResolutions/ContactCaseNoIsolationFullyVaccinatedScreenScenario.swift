@@ -22,7 +22,7 @@ public class ContactCaseNoIsolationFullyVaccinatedScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return ContactCaseNoIsolationFullyVaccinatedViewController(interactor: interactor)
+            return ContactCaseNoIsolationFullyVaccinatedViewController(interactor: interactor, secondTestAdviceDate: nil)
         }
     }
 }

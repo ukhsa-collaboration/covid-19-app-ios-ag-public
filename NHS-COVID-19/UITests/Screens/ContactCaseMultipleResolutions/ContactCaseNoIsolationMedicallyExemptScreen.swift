@@ -13,6 +13,7 @@ struct ContactCaseNoIsolationMedicallyExemptScreen {
             heading,
             infoBox,
             researchText,
+            groupText,
             socialDistancingText,
             commonQuestionsLink,
             guidanceLink,
@@ -31,6 +32,10 @@ struct ContactCaseNoIsolationMedicallyExemptScreen {
     
     var researchText: XCUIElement {
         app.staticTexts[localized: .risky_contact_isolation_advice_medically_exempt_research]
+    }
+    
+    var groupText: XCUIElement {
+        app.staticTexts[localized: .risky_contact_isolation_advice_medically_exempt_group]
     }
     
     var socialDistancingText: XCUIElement {

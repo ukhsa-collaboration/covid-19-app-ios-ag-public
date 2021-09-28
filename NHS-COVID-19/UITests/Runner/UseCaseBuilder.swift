@@ -20,7 +20,8 @@ class UseCaseBuilder {
         guard let config = deviceConfiguration else { return false }
         return config.orientation == .portrait &&
             config.contentSize == .medium &&
-            config.showStringLocalizableKeysOnly == true
+            config.interfaceStyle == .light &&
+            (config.showStringLocalizableKeysOnly == true || config.language == "en")
     }
     
     func step(name: String, description: () -> String = { "" }) {
@@ -32,7 +33,7 @@ class UseCaseBuilder {
         
         let data: Data
         
-        if shouldUseFullScreenshot == true, let fullscreenImageData = app.windows.firstMatch.fullScreenshot()?.pngData() {
+        if shouldUseFullScreenshot, let fullscreenImageData = app.windows.firstMatch.fullScreenshot()?.pngData() {
             data = fullscreenImageData
         } else {
             // Using XCUIscreen instead of app, fixes the issue with

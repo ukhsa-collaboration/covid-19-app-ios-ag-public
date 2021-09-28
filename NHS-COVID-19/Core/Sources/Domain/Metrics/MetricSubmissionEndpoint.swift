@@ -137,6 +137,8 @@ private struct SubmissionPayload: Codable {
         var didHaveSymptomsBeforeReceivedTestResult = 0
         var didRememberOnsetSymptomsDateBeforeReceivedTestResult = 0
         
+        var didAccessSelfIsolationNoteLink = 0
+        
         // MARK: - Risky venue warning
         
         var receivedRiskyVenueM1Warning = 0
@@ -319,6 +321,7 @@ private extension Metric {
         case .optedOutForContactIsolationBackgroundTick: return \.optedOutForContactIsolationBackgroundTick
         case .appIsUsableBackgroundTick: return \.appIsUsableBackgroundTick
         case .appIsContactTraceableBackgroundTick: return \.appIsContactTraceableBackgroundTick
+        case .didAccessSelfIsolationNoteLink: return \.didAccessSelfIsolationNoteLink
         }
     }
     

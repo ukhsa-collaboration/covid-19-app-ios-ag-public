@@ -33,6 +33,7 @@ public enum ExternalLink: CaseIterable {
     case findLocalAuthority
     case bookPCRTest
     case approvedVaccinesInfo
+    case isolationNote
     
     public var url: URL {
         switch self {
@@ -92,6 +93,8 @@ public enum ExternalLink: CaseIterable {
             return localizeURL(.new_no_symptoms_screen_pcr_testing_link_url)
         case .approvedVaccinesInfo:
             return localizeURL(.link_approved_vaccines_info)
+        case .isolationNote:
+            return localizeURL(.link_isolation_note)
         }
     }
 }

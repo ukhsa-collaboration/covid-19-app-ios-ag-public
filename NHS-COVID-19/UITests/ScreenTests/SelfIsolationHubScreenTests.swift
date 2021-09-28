@@ -16,6 +16,7 @@ class SelfIsolationHubScreenTests: XCTestCase {
             
             XCTAssertTrue(screen.bookFreeTestButton.exists)
             XCTAssertTrue(screen.financialSupportButton.exists)
+            XCTAssertTrue(screen.isolationNoteButton.exists)
             XCTAssertTrue(screen.howToSelfIsolateAccordionTitleButton.exists)
             XCTAssertTrue(screen.practicalSupportAccordionTitleButton.exists)
             XCTAssertFalse(screen.readLatestGovenrnmentGuidanceLink.exists)
@@ -36,6 +37,14 @@ class SelfIsolationHubScreenTests: XCTestCase {
             let screen = SelfIsolationHubScreen(app: app)
             screen.financialSupportButton.tap()
             XCTAssertTrue(app.staticTexts[runner.scenario.financialSupportAlertTitle].exists)
+        }
+    }
+    
+    func testIsolationNoteButton() throws {
+        try runner.run { app in
+            let screen = SelfIsolationHubScreen(app: app)
+            screen.isolationNoteButton.tap()
+            XCTAssertTrue(app.staticTexts[runner.scenario.getIsolationNoteAlertTitle].exists)
         }
     }
     

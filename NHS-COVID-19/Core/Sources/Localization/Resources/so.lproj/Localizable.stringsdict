@@ -269,9 +269,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Waa inaad is-go'doomisaa ilaa %ld maalmood oo buuxa ka dib taariikhda u dhawaanshaha qofka cudurka laga helay.</string>
+				<string>Waa inaad is-go'doomisaa ilaa %li maalmood oo buuxa ka dib taariikhda u dhawaanshaha qofka cudurka laga helay.</string>
 				<key>other</key>
-				<string>Waa inaad is-go'doomisaa ilaa %ld maalmood oo buuxa ka dib taariikhda u dhawaanshaha qofka cudurka laga helay.</string>
+				<string>Waa inaad is-go'doomisaa ilaa %li maalmood oo buuxa ka dib taariikhda u dhawaanshaha qofka cudurka laga helay.</string>
 			</dict>
 		</dict>
 		<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>

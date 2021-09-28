@@ -405,6 +405,7 @@ public enum StringLocalizableKey: String, CaseIterable {
     case link_government_guidance
     case link_find_local_authority
     case link_approved_vaccines_info
+    case link_isolation_note
     
     case cancel
     case back
@@ -738,6 +739,7 @@ public enum StringLocalizableKey: String, CaseIterable {
     
     case risky_contact_isolation_advice_medically_exempt
     case risky_contact_isolation_advice_medically_exempt_info
+    case risky_contact_isolation_advice_medically_exempt_group
     case risky_contact_isolation_advice_medically_exempt_research
     case risky_contact_isolation_advice_medically_exempt_advice
     case risky_contact_isolation_advice_medically_exempt_common_questions_link_title
@@ -753,6 +755,8 @@ public enum StringLocalizableKey: String, CaseIterable {
     case self_isolation_hub_book_a_test_description
     case self_isolation_hub_financial_support_title
     case self_isolation_hub_financial_support_description
+    case self_isolation_hub_get_isolation_note_title
+    case self_isolation_hub_get_isolation_note_description
     
     // MARK: Self-isolation Hub - Accordion Content
     
@@ -895,6 +899,11 @@ public enum ParameterisedStringLocalizable: Equatable {
         case exposure_acknowledgement_days = "exposure_acknowledgement_days %ld"
         case exposure_acknowledgement_please_isolate_accessibility_label = "exposure_acknowledgement_please_isolate_accessibility_label %ld"
         
+        case contact_case_start_isolation_list_item_testing_with_date = "contact_case_start_isolation_list_item_testing_with_date %@"
+        case contact_case_continue_isolation_list_item_testing_with_date = "contact_case_continue_isolation_list_item_testing_with_date %@"
+        case contact_case_no_isolation_under_age_limit_list_item_testing_with_date = "contact_case_no_isolation_under_age_limit_list_item_testing_with_date %@"
+        case contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date = "contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date %@"
+        
         case contact_case_start_isolation_days = "contact_case_start_isolation_days %ld"
         case contact_case_start_isolation_accessibility_label = "contact_case_start_isolation_accessibility_label %ld"
         case contact_case_continue_isolation_days = "contact_case_continue_isolation_days %ld"
@@ -963,6 +972,11 @@ public enum ParameterisedStringLocalizable: Equatable {
     case exposure_acknowledgement_days(days: Int)
     case exposure_acknowledgement_please_isolate_accessibility_label(days: Int)
     
+    case contact_case_no_isolation_under_age_limit_list_item_testing_with_date(date: Date)
+    case contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date(date: Date)
+    case contact_case_continue_isolation_list_item_testing_with_date(date: Date)
+    case contact_case_start_isolation_list_item_testing_with_date(date: Date)
+    
     case contact_case_start_isolation_days(days: Int)
     case contact_case_start_isolation_accessibility_label(days: Int)
     case contact_case_continue_isolation_days(days: Int)
@@ -1018,6 +1032,11 @@ public enum ParameterisedStringLocalizable: Equatable {
             
         case .exposure_acknowledgement_days: return .exposure_acknowledgement_days
         case .exposure_acknowledgement_please_isolate_accessibility_label: return .exposure_acknowledgement_please_isolate_accessibility_label
+            
+        case .contact_case_no_isolation_under_age_limit_list_item_testing_with_date: return .contact_case_no_isolation_under_age_limit_list_item_testing_with_date
+        case .contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date: return .contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date
+        case .contact_case_continue_isolation_list_item_testing_with_date: return .contact_case_continue_isolation_list_item_testing_with_date
+        case .contact_case_start_isolation_list_item_testing_with_date: return .contact_case_start_isolation_list_item_testing_with_date
             
         case .contact_case_start_isolation_days: return .contact_case_start_isolation_days
         case .contact_case_start_isolation_accessibility_label: return .contact_case_start_isolation_accessibility_label
@@ -1114,6 +1133,15 @@ public enum ParameterisedStringLocalizable: Equatable {
             return [days]
         case .exposure_acknowledgement_please_isolate_accessibility_label(let days):
             return [days]
+            
+        case .contact_case_no_isolation_under_age_limit_list_item_testing_with_date(let date):
+            return [DateFormatter.dayOfYear().string(from: date)]
+        case .contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date(let date):
+            return [DateFormatter.dayOfYear().string(from: date)]
+        case .contact_case_continue_isolation_list_item_testing_with_date(let date):
+            return [DateFormatter.dayOfYear().string(from: date)]
+        case .contact_case_start_isolation_list_item_testing_with_date(let date):
+            return [DateFormatter.dayOfYear().string(from: date)]
             
         case .contact_case_start_isolation_days(let days):
             return [days]

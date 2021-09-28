@@ -65,6 +65,7 @@ public enum ImageName: String, CaseIterable, Identifiable {
     // MARK: Contact case only
     
     case adultChild = "ContactCaseOnly/AdultChild"
+    case groupOfPeople = "ContactCaseOnly/GroupOfPeople"
     case isolation = "ContactCaseOnly/Isolation"
     case swabTest = "ContactCaseOnly/Swab-test"
     case infoCircle = "ContactCaseOnly/InfoCircle"

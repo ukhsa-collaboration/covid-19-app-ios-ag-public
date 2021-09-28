@@ -11,9 +11,9 @@ public enum IsolationState: Equatable {
     init(logicalState: IsolationLogicalState) {
         switch logicalState {
         case .notIsolating(let isolation):
-            self = .noNeedToIsolate(optOutOfIsolationDay: isolation?.optOutOfIsolationDay?.startDate(in: .current))
+            self = .noNeedToIsolate(optOutOfIsolationDay: isolation?.optOutOfContactIsolationInfo?.optOutDay.startDate(in: .current))
         case .isolationFinishedButNotAcknowledged(let isolation):
-            self = .noNeedToIsolate(optOutOfIsolationDay: isolation.optOutOfIsolationDay?.startDate(in: .current))
+            self = .noNeedToIsolate(optOutOfIsolationDay: isolation.optOutOfContactIsolationInfo?.optOutDay.startDate(in: .current))
         case .isolating(let isolation, _, _):
             self = .isolate(isolation)
         }

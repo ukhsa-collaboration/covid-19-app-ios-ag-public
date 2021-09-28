@@ -37,7 +37,6 @@ extension CGFloat {
     public static let locationIconPreferredLength: CGFloat = 14
     public static let symbolIconWidth: CGFloat = 22
     
-    public static let appActivityIndicatorMinHeight: CGFloat = 240
     public static let indicatorPulseMaxSize: CGFloat = 500
 }
 

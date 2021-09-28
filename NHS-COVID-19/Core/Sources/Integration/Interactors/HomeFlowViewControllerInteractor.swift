@@ -524,6 +524,10 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     func openFindYourLocalAuthorityLink() {
         context.openURL(ExternalLink.findLocalAuthority.url)
     }
+    
+    func didTapGetIsolationNoteLink() {
+        context.openURL(ExternalLink.isolationNote.url)
+    }
 }
 
 private struct TestCheckSymptomsInteractor: TestCheckSymptomsViewController.Interacting {
@@ -592,6 +596,12 @@ private struct SelfIsolationInteractor: SelfIsolationHubViewController.Interacti
     
     func didTapFindYourLocalAuthorityLink() {
         flowInteractor.openFindYourLocalAuthorityLink()
+    }
+    
+    func didTapGetIsolationNoteLink() {
+        flowInteractor.didTapGetIsolationNoteLink()
+        flowController?.popViewController(animated: true)
+        Metrics.signpost(.didAccessSelfIsolationNoteLink)
     }
     
 }

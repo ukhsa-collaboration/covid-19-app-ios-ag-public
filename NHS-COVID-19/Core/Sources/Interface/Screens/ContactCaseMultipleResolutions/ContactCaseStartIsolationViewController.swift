@@ -21,11 +21,9 @@ extension ContactCaseStartIsolationViewController {
         init(interactor: Interacting,
              isolationEndDate: Date,
              exposureDate: Date,
+             secondTestAdviceDate: Date?,
              isolationPeriod: DayDuration) {
             let duration = LocalDay.today.daysRemaining(until: isolationEndDate)
-            let daysSinceExposure = -LocalDay.today.daysRemaining(until: exposureDate)
-            
-            let isolationPeriodInFullDays = isolationPeriod.days - 1
             
             let pleaseIsolateStack =
                 UIStackView(arrangedSubviews: [
@@ -44,12 +42,24 @@ extension ContactCaseStartIsolationViewController {
             pleaseIsolateStack.isAccessibilityElement = true
             pleaseIsolateStack.accessibilityTraits = [.header, .staticText]
             
-            views = [
+            var views: [StackViewContentProvider] = [
                 UIImageView(.isolationStartContact)
                     .styleAsDecoration(),
                 pleaseIsolateStack,
                 InformationBox.indication.warning(localize(.contact_case_start_isolation_info_box)),
-                WelcomePoint(image: .swabTest, body: localize(.contact_case_start_isolation_list_item_lfd)),
+            ]
+            
+            if let secondTestAdviceDate = secondTestAdviceDate {
+                views.append(contentsOf: [
+                    WelcomePoint(image: .swabTest, body: localize(.contact_case_start_isolation_list_item_testing_with_date(date: secondTestAdviceDate))),
+                ])
+            } else {
+                views.append(contentsOf: [
+                    WelcomePoint(image: .swabTest, body: localize(.contact_case_start_isolation_list_item_lfd)),
+                ])
+            }
+            
+            views.append(contentsOf: [
                 WelcomePoint(image: .isolation, body: localize(.contact_case_start_isolation_list_item_isolation)),
                 BaseLabel()
                     .styleAsBody()
@@ -66,7 +76,9 @@ extension ContactCaseStartIsolationViewController {
                     title: localize(.contact_case_start_isolation_secondary_button_title),
                     action: interactor.didTapBackToHome
                 ),
-            ]
+            ])
+            
+            self.views = views
         }
     }
 }
@@ -78,12 +90,14 @@ public class ContactCaseStartIsolationViewController: ScrollingContentViewContro
     public init(interactor: Interacting,
                 isolationEndDate: Date,
                 exposureDate: Date,
+                secondTestAdviceDate: Date?,
                 isolationPeriod: DayDuration) {
         self.interactor = interactor
         super.init(views: Content(
             interactor: interactor,
             isolationEndDate: isolationEndDate,
             exposureDate: exposureDate,
+            secondTestAdviceDate: secondTestAdviceDate,
             isolationPeriod: isolationPeriod
         ).views)
         navigationItem.leftBarButtonItem = UIBarButtonItem(

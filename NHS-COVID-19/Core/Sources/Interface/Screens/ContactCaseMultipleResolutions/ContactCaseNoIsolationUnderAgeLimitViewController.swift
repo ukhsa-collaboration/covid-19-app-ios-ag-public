@@ -18,8 +18,8 @@ extension ContactCaseNoIsolationUnderAgeLimitViewController {
     private struct Content {
         let views: [StackViewContentProvider]
         
-        init(interactor: Interacting) {
-            views = [
+        init(interactor: Interacting, secondTestAdviceDate: Date?) {
+            var views: [StackViewContentProvider] = [
                 UIImageView(.isolationStartIndex)
                     .styleAsDecoration(),
                 BaseLabel()
@@ -27,6 +27,15 @@ extension ContactCaseNoIsolationUnderAgeLimitViewController {
                     .set(text: localize(.contact_case_no_isolation_under_age_limit_title))
                     .centralized(),
                 InformationBox.indication.warning(localize(.contact_case_no_isolation_under_age_limit_info_box)),
+            ]
+            
+            secondTestAdviceDate.map {
+                views.append(contentsOf: [
+                    WelcomePoint(image: .swabTest, body: localize(.contact_case_no_isolation_under_age_limit_list_item_testing_with_date(date: $0))),
+                ])
+            }
+            
+            views.append(contentsOf: [
                 WelcomePoint(image: .socialDistancing, body: localize(.contact_case_no_isolation_under_age_limit_list_item_lfd)),
                 WelcomePoint(image: .adultChild, body: localize(.contact_case_no_isolation_under_age_limit_list_item_adult)),
                 LinkButton(
@@ -48,7 +57,9 @@ extension ContactCaseNoIsolationUnderAgeLimitViewController {
                     title: localize(.contact_case_no_isolation_under_age_limit_secondary_button_title),
                     action: interactor.didTapBackToHome
                 ),
-            ]
+            ])
+            
+            self.views = views
         }
     }
 }
@@ -57,9 +68,9 @@ public class ContactCaseNoIsolationUnderAgeLimitViewController: ScrollingContent
     public typealias Interacting = ContactCaseNoIsolationUnderAgeLimitInteracting
     private let interactor: Interacting
     
-    public init(interactor: Interacting) {
+    public init(interactor: Interacting, secondTestAdviceDate: Date?) {
         self.interactor = interactor
-        super.init(views: Content(interactor: interactor).views)
+        super.init(views: Content(interactor: interactor, secondTestAdviceDate: secondTestAdviceDate).views)
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             title: localize(.cancel),
             style: .done, target: self,

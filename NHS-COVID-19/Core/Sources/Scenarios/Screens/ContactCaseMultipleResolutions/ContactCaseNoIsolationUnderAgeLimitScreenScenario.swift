@@ -22,7 +22,7 @@ public class ContactCaseNoIsolationUnderAgeLimitScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return ContactCaseNoIsolationUnderAgeLimitViewController(interactor: interactor)
+            return ContactCaseNoIsolationUnderAgeLimitViewController(interactor: interactor, secondTestAdviceDate: nil)
         }
     }
 }

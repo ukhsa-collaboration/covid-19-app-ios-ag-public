@@ -11,11 +11,11 @@ import Localization
 import UIKit
 
 public enum ContactCaseResultInterfaceState: Equatable {
-    case underAgeLimit
-    case fullyVaccinated
+    case underAgeLimit(secondTestAdviceDate: Date?)
+    case fullyVaccinated(secondTestAdviceDate: Date?)
     case medicallyExempt
-    case startIsolation(endDate: Date, exposureDate: Date)
-    case continueIsolation(Date)
+    case startIsolation(endDate: Date, exposureDate: Date, secondTestAdviceDate: Date?)
+    case continueIsolation(endDate: Date, secondTestAdviceDate: Date?)
 }
 
 class PostAcknowledgementViewController: UIViewController {
@@ -123,28 +123,32 @@ class PostAcknowledgementViewController: UIViewController {
             return warnAndBookATestViewController()
         case .contactCase(let state):
             switch state {
-            case .underAgeLimit:
+            case .underAgeLimit(let secondTestAdviceDate):
                 return ContactCaseNoIsolationUnderAgeLimitViewController(
-                    interactor: ContactCaseNoIsolationUnderAgeLimitInteractor(viewController: self, openURL: context.openURL)
+                    interactor: ContactCaseNoIsolationUnderAgeLimitInteractor(viewController: self, openURL: context.openURL),
+                    secondTestAdviceDate: secondTestAdviceDate
                 )
-            case .fullyVaccinated:
+            case .fullyVaccinated(let secondTestAdviceDate):
                 return ContactCaseNoIsolationFullyVaccinatedViewController(
-                    interactor: ContactCaseNoIsolationFullyVaccinatedInteractor(viewController: self, openURL: context.openURL)
+                    interactor: ContactCaseNoIsolationFullyVaccinatedInteractor(viewController: self, openURL: context.openURL),
+                    secondTestAdviceDate: secondTestAdviceDate
                 )
             case .medicallyExempt:
                 return ContactCaseNoIsolationMedicallyExemptViewController(
                     interactor: ContactCaseNoIsolationMedicallyExemptInteractor(viewController: self, openURL: context.openURL)
                 )
-            case .startIsolation(let endDate, let exposureDate):
+            case .startIsolation(let endDate, let exposureDate, let secondTestAdviceDate):
                 return ContactCaseStartIsolationViewController(
                     interactor: ContactCaseStartIsolationInteractor(viewController: self, openURL: context.openURL),
                     isolationEndDate: endDate,
                     exposureDate: exposureDate,
+                    secondTestAdviceDate: secondTestAdviceDate,
                     isolationPeriod: context.contactCaseIsolationDuration.currentValue
                 )
-            case .continueIsolation(let date):
+            case .continueIsolation(let date, let secondTestAdviceDate):
                 return ContactCaseContinueIsolationViewController(
                     interactor: ContactCaseContinueIsolationInteractor(viewController: self, openURL: context.openURL),
+                    secondTestAdviceDate: secondTestAdviceDate,
                     isolationEndDate: date
                 )
             }

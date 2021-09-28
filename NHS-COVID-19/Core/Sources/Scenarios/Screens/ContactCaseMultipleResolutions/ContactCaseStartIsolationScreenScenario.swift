@@ -23,7 +23,7 @@ public class ContactCaseStartIsolationScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return ContactCaseStartIsolationViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: Double(Self.numberOfDays) * 86400), exposureDate: exposureDate, isolationPeriod: 11)
+            return ContactCaseStartIsolationViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: Double(Self.numberOfDays) * 86400), exposureDate: exposureDate, secondTestAdviceDate: nil, isolationPeriod: 11)
         }
     }
 }

@@ -25,7 +25,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
         
         // To simplify logic, contact case isolation is always removed when we have a positive test isolation.
         StatePredicate(
-            contact: [.notIsolatingAndHadRiskyContactPreviously],
+            contact: [.notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedEarly],
             positiveTest: [.isolatingWithConfirmedTest]
         ),
     ]
@@ -50,7 +50,8 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             A risky contact isolation will be terminated for users that are below the age limit or fully vaccinated (self-declared).
             """,
             predicate: StatePredicate(
-                contact: [.isolating]
+                contact: [.isolating],
+                positiveTest: .all(except: .isolatingWithConfirmedTest)
             ),
             event: .terminatedRiskyContactEarly,
             update: .init(contact: .notIsolatingAndHadRiskyContactIsolationTerminatedEarly)

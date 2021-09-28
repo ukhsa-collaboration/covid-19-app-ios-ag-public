@@ -61,10 +61,8 @@ struct IsolationContext {
     private func showOptOutLabTestBooking(isolation: Isolation?, duration: DayDuration) -> Bool {
         guard let isolation = isolation else { return false }
         
-        if isolation.optOutOfIsolationDay != nil,
-            let exposureDay = isolation.reason.contactCaseInfo?.exposureDay {
-            let endDay = exposureDay.advanced(by: duration.days)
-            return endDay > currentDateProvider.currentGregorianDay(timeZone: .current)
+        if let optOutOfContactIsolationInfo = isolation.optOutOfContactIsolationInfo {
+            return optOutOfContactIsolationInfo.untilStartOfDay > currentDateProvider.currentLocalDay
         } else {
             return false
         }

@@ -16,7 +16,7 @@ enum AcknowledgementNeededState {
     case neededForNegativeAfterPositiveResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
     case neededForNegativeResultNotIsolating(interactor: NegativeTestResultNoIsolationViewControllerInteractor)
     case neededForEndOfIsolation(interactor: EndOfIsolationViewControllerInteractor, isolationEndDate: Date, isIndexCase: Bool)
-    case neededForStartOfIsolationExposureDetection(acknowledge: (Bool) -> Void, exposureDate: Date, birthThresholdDate: Date, vaccineThresholdDate: Date, isolationEndDate: DomainProperty<Date>, isIndexCase: Bool)
+    case neededForStartOfIsolationExposureDetection(acknowledge: (Bool) -> Void, exposureDate: Date, birthThresholdDate: Date, vaccineThresholdDate: Date, secondTestAdviceDate: Date?, isolationEndDate: DomainProperty<Date>, isIndexCase: Bool)
     case neededForRiskyVenue(interactor: RiskyVenueInformationInteractor, venueName: String, checkInDate: Date)
     case neededForRiskyVenueWarnAndBookATest(acknowledge: () -> Void, venueName: String, checkInDate: Date)
     case neededForVoidResultContinueToIsolate(interactor: VoidTestResultFlowInteracting, isolationEndDate: Date)
@@ -77,11 +77,17 @@ enum AcknowledgementNeededState {
                             return nil
                         }
                         
+                        let secondTestAdviceDate = isolation.secondTestAdvice(
+                            dateProvider: context.currentDateProvider,
+                            country: context.country.currentValue
+                        )
+                        
                         return .neededForStartOfIsolationExposureDetection(
                             acknowledge: acknowledge,
                             exposureDate: exposureDate,
                             birthThresholdDate: birthThresholdDate,
                             vaccineThresholdDate: vaccineThresholdDate,
+                            secondTestAdviceDate: secondTestAdviceDate,
                             isolationEndDate: context.isolationState.map {
                                 if case .isolate(let currentIsolation) = $0 {
                                     return currentIsolation.endDate

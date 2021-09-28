@@ -28,6 +28,7 @@ extension ContactCaseNoIsolationMedicallyExemptViewController {
                     .centralized(),
                 InformationBox.indication.warning(localize(.risky_contact_isolation_advice_medically_exempt_info)),
                 WelcomePoint(image: .info, body: localize(.risky_contact_isolation_advice_medically_exempt_research)),
+                WelcomePoint(image: .groupOfPeople, body: localize(.risky_contact_isolation_advice_medically_exempt_group)),
                 WelcomePoint(image: .socialDistancing, body: localize(.risky_contact_isolation_advice_medically_exempt_advice)),
                 LinkButton(
                     title: localize(.risky_contact_isolation_advice_medically_exempt_common_questions_link_title),

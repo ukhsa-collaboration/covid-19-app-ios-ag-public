@@ -417,7 +417,20 @@ class IsolationLogicalStateTests: XCTestCase {
     func testReleasedFromIsolationWhenPersonOptsOutFromContactIsolation() {
         let exposureDay = GregorianDay.today.advanced(by: -2)
         $state.isolationInfo.contactCaseInfo = ContactCaseInfo(exposureDay: exposureDay, isolationFromStartOfDay: $state.today.gregorianDay, optOutOfIsolationDay: .today)
-        XCTAssertEqual(state.isolation, Isolation(fromDay: .today, untilStartOfDay: LocalDay(gregorianDay: .today, timeZone: $state.today.timeZone), reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: .init(exposureDay: exposureDay)), optOutOfIsolationDay: .today))
+        let expected = Isolation(
+            fromDay: .today,
+            untilStartOfDay: LocalDay(gregorianDay: .today, timeZone: $state.today.timeZone),
+            reason: Isolation.Reason(
+                indexCaseInfo: nil,
+                contactCaseInfo: .init(
+                    exposureDay: exposureDay
+                )
+            ), optOutOfContactIsolationInfo: Isolation.OptOutOfContactIsolationInfo(
+                optOutDay: .today,
+                untilStartOfDay: LocalDay(gregorianDay: exposureDay + DayDuration(14), timeZone: .current)
+            )
+        )
+        XCTAssertEqual(state.isolation, expected)
     }
 }
 

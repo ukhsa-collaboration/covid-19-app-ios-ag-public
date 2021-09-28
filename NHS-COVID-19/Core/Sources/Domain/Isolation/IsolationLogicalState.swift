@@ -328,11 +328,20 @@ enum IsolationLogicalState: Equatable {
         // reduce how long we can isolate
         _isolation.untilStartOfDay = min(_isolation.untilStartOfDay, _isolation.fromDay + configuration.maxIsolation)
         
+        let contactCaseOptOutInfo: Isolation.OptOutOfContactIsolationInfo? = info.contactCaseInfo.flatMap { contactCaseInfo in
+            guard let optOutDay = contactCaseInfo.optOutOfIsolationDay else { return nil }
+            let untilStartOfDay = _Isolation.calculateContactCaseEndDay(exposureDay: contactCaseInfo.exposureDay, contactCaseDuration: configuration.contactCase)
+            return Isolation.OptOutOfContactIsolationInfo(
+                optOutDay: optOutDay,
+                untilStartOfDay: LocalDay(gregorianDay: untilStartOfDay, timeZone: today.timeZone)
+            )
+        }
+        
         let isolation = Isolation(
             fromDay: LocalDay(gregorianDay: _isolation.fromDay, timeZone: today.timeZone),
             untilStartOfDay: LocalDay(gregorianDay: _isolation.untilStartOfDay, timeZone: today.timeZone),
             reason: _isolation.reason,
-            optOutOfIsolationDay: info.contactCaseInfo?.optOutOfIsolationDay
+            optOutOfContactIsolationInfo: contactCaseOptOutInfo
         )
         
         if _isolation.untilStartOfDay > today.gregorianDay {
@@ -392,7 +401,7 @@ enum IsolationLogicalState: Equatable {
                 return .doNotProcessExposures
             }
         }
-        if let optOutDay = isolation?.optOutOfIsolationDay {
+        if let optOutDay = isolation?.optOutOfContactIsolationInfo?.optOutDay {
             return .onlyProcessExposuresOnOrAfter(optOutDay)
         }
         return .allExposures
@@ -515,10 +524,14 @@ extension _Isolation {
         } else {
             self.init(
                 fromDay: contactCaseInfo.isolationFromStartOfDay,
-                untilStartOfDay: contactCaseInfo.exposureDay + configuration.contactCase,
+                untilStartOfDay: Self.calculateContactCaseEndDay(exposureDay: contactCaseInfo.exposureDay, contactCaseDuration: configuration.contactCase),
                 reason: Isolation.Reason(indexCaseInfo: nil, contactCaseInfo: isolationContactCaseInfo)
             )
         }
+    }
+    
+    static func calculateContactCaseEndDay(exposureDay: GregorianDay, contactCaseDuration: DayDuration) -> GregorianDay {
+        return exposureDay + contactCaseDuration
     }
     
 }

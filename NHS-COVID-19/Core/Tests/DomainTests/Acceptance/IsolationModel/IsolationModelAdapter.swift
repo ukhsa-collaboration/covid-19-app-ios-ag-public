@@ -127,7 +127,7 @@ struct IsolationModelAdapter {
         )
     }
     
-    func indexCaseIsolation(optOutOfIsolationDate: Date? = nil) -> Isolation {
+    func indexCaseIsolation(optedOutOfContactIsolation: Bool = false) -> Isolation {
         Isolation(
             fromDay: LocalDay(gregorianDay: symptomaticCase.selfDiagnosisDay, timeZone: .current),
             untilStartOfDay: LocalDay(gregorianDay: symptomaticCase.symptomaticIsolationUntilStartOfDay, timeZone: .current),
@@ -140,7 +140,7 @@ struct IsolationModelAdapter {
                 ),
                 contactCaseInfo: nil
             ),
-            optOutOfIsolationDay: optOutOfIsolationDate.map { GregorianDay(date: $0, timeZone: .current) }
+            optOutOfContactIsolationInfo: optedOutOfContactIsolation ? Isolation.OptOutOfContactIsolationInfo(optOutDay: contactCase.optedOutIsolation, untilStartOfDay: LocalDay(gregorianDay: contactCase.exposureDay + DayDuration(14), timeZone: .current)) : nil
         )
     }
     
@@ -173,7 +173,7 @@ struct IsolationModelAdapter {
     }
     
     func indexCasePositiveTestIsolation(
-        optOutOfIsolationDate: Date? = nil,
+        optedOutOfContactIsolation: Bool = false,
         isPendingConfirmation: Bool = false,
         isSelfDiagnosed: Bool = false
     ) -> Isolation {
@@ -200,7 +200,7 @@ struct IsolationModelAdapter {
                 ),
                 contactCaseInfo: nil
             ),
-            optOutOfIsolationDay: optOutOfIsolationDate.map { GregorianDay(date: $0, timeZone: .current) }
+            optOutOfContactIsolationInfo: optedOutOfContactIsolation ? Isolation.OptOutOfContactIsolationInfo(optOutDay: contactCase.optedOutIsolation, untilStartOfDay: LocalDay(gregorianDay: contactCase.exposureDay + DayDuration(14), timeZone: .current)) : nil
         )
     }
 }

@@ -25,19 +25,23 @@ public struct Isolation: Equatable {
         var contactCaseInfo: Isolation.ContactCaseInfo?
     }
     
+    public struct OptOutOfContactIsolationInfo: Equatable {
+        var optOutDay: GregorianDay
+        // This day would've been the potential end day for the contact isolation
+        var untilStartOfDay: LocalDay
+    }
+    
     public var fromDay: LocalDay
     public var untilStartOfDay: LocalDay
     public var reason: Isolation.Reason
     
-    #warning("Rename this.")
-    // Now that this is not part of `ContactCaseInfo`, we need a slightly different name.
-    public var optOutOfIsolationDay: GregorianDay?
+    public var optOutOfContactIsolationInfo: OptOutOfContactIsolationInfo?
     
-    init(fromDay: LocalDay, untilStartOfDay: LocalDay, reason: Isolation.Reason, optOutOfIsolationDay: GregorianDay?) {
+    init(fromDay: LocalDay, untilStartOfDay: LocalDay, reason: Isolation.Reason, optOutOfContactIsolationInfo: OptOutOfContactIsolationInfo?) {
         self.fromDay = fromDay
         self.untilStartOfDay = untilStartOfDay
         self.reason = reason
-        self.optOutOfIsolationDay = optOutOfIsolationDay
+        self.optOutOfContactIsolationInfo = optOutOfContactIsolationInfo
     }
 }
 
@@ -59,6 +63,18 @@ extension Isolation {
     
     public var exposureDate: Date? {
         reason.contactCaseInfo?.exposureDay.startDate(in: .current)
+    }
+    
+    public func secondTestAdvice(dateProvider: DateProviding, country: Country) -> Date? {
+        switch country {
+        case .england: return nil
+        case .wales:
+            if let exposureDay = reason.contactCaseInfo?.exposureDay, dateProvider.currentGregorianDay(timeZone: .current) < exposureDay.advanced(by: 6) {
+                return exposureDay.advanced(by: 8).startDate(in: .current)
+            } else {
+                return nil
+            }
+        }
     }
 }
 

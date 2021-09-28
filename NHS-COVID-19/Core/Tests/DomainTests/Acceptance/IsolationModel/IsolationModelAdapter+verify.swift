@@ -20,8 +20,8 @@ extension IsolationModelAdapter {
             guard lhs.reason == rhs.reason else {
                 throw IsolationModelAcceptanceError("Expected isolation reason to be \(lhs.reason). Instead it is \(rhs.reason)")
             }
-            guard lhs.optOutOfIsolationDay == rhs.optOutOfIsolationDay else {
-                throw IsolationModelAcceptanceError("When isolation, expected opt out of isolation date to be \(String(describing: lhs.optOutOfIsolationDay)). Instead it is \(String(describing: rhs.optOutOfIsolationDay))")
+            guard lhs.optOutOfContactIsolationInfo == rhs.optOutOfContactIsolationInfo else {
+                throw IsolationModelAcceptanceError("When isolation, expected opt out of isolation to be \(String(describing: lhs.optOutOfContactIsolationInfo)). Instead it is \(String(describing: rhs.optOutOfContactIsolationInfo))")
             }
         case (.noNeedToIsolate, .isolate(let payload)):
             throw IsolationModelAcceptanceError("Expected to not be in isolation but instead it is isolating with \(payload.reason)")
@@ -93,7 +93,7 @@ extension IsolationModelAdapter {
         case (.notIsolatingAndHadRiskyContactPreviously, .isolating, .noIsolation):
             return .isolate(indexCaseIsolation())
         case (.notIsolatingAndHadRiskyContactIsolationTerminatedEarly, .isolating, .noIsolation):
-            return .isolate(indexCaseIsolation(optOutOfIsolationDate: contactCase.optedOutIsolationDate))
+            return .isolate(indexCaseIsolation(optedOutOfContactIsolation: true))
         // 3 (*, .notIsolatingAndHadSymptomsPreviously, .noIsolation)
         case (.isolating, .notIsolatingAndHadSymptomsPreviously, .noIsolation):
             return .isolate(contactCaseIsolation)
@@ -107,14 +107,14 @@ extension IsolationModelAdapter {
         case (.notIsolatingAndHadRiskyContactPreviously, .isolating, .isolatingWithConfirmedTest):
             throw IsolationModelAcceptanceError.forbidden
         case (.notIsolatingAndHadRiskyContactIsolationTerminatedEarly, .isolating, .isolatingWithConfirmedTest):
-            return .isolate(indexCasePositiveTestIsolation(optOutOfIsolationDate: contactCase.optedOutIsolationDate, isSelfDiagnosed: true))
+            throw IsolationModelAcceptanceError.forbidden
         // 3 (*, .isolating, .isolatingWithUnconfirmedTest)
         case (.isolating, .isolating, .isolatingWithUnconfirmedTest):
             return .isolate(bothCasesIsolation(hasPositiveTestResult: true, isPendingConfirmation: true, isSelfDiagnosed: true))
         case (.notIsolatingAndHadRiskyContactPreviously, .isolating, .isolatingWithUnconfirmedTest):
             return .isolate(indexCasePositiveTestIsolation(isPendingConfirmation: true, isSelfDiagnosed: true))
         case (.notIsolatingAndHadRiskyContactIsolationTerminatedEarly, .isolating, .isolatingWithUnconfirmedTest):
-            return .isolate(indexCasePositiveTestIsolation(optOutOfIsolationDate: contactCase.optedOutIsolationDate, isPendingConfirmation: true, isSelfDiagnosed: true))
+            return .isolate(indexCasePositiveTestIsolation(optedOutOfContactIsolation: true, isPendingConfirmation: true, isSelfDiagnosed: true))
         // 3 (*, .isolating, .notIsolatingAndHadConfirmedTestPreviously)
         case (.isolating, .isolating, .notIsolatingAndHadConfirmedTestPreviously):
             throw IsolationModelAcceptanceError.forbidden
@@ -184,9 +184,9 @@ extension IsolationModelAdapter {
             return .isolate(contactCaseIsolation)
         // 5 (.notIsolatingAndHadRiskyContactIsolationTerminatedEarly, .noIsolation, .*)
         case (.notIsolatingAndHadRiskyContactIsolationTerminatedEarly, .noIsolation, .isolatingWithConfirmedTest):
-            return .isolate(indexCasePositiveTestIsolation(optOutOfIsolationDate: contactCase.optedOutIsolationDate))
+            throw IsolationModelAcceptanceError.forbidden
         case (.notIsolatingAndHadRiskyContactIsolationTerminatedEarly, .noIsolation, .isolatingWithUnconfirmedTest):
-            return .isolate(indexCasePositiveTestIsolation(optOutOfIsolationDate: contactCase.optedOutIsolationDate, isPendingConfirmation: true))
+            return .isolate(indexCasePositiveTestIsolation(optedOutOfContactIsolation: true, isPendingConfirmation: true))
         case (.notIsolatingAndHadRiskyContactIsolationTerminatedEarly, .noIsolation, .notIsolatingAndHadConfirmedTestPreviously):
             return .noNeedToIsolate(optOutOfIsolationDay: contactCase.optedOutIsolationDate)
         case (.notIsolatingAndHadRiskyContactIsolationTerminatedEarly, .noIsolation, .notIsolatingAndHadUnconfirmedTestPreviously):
