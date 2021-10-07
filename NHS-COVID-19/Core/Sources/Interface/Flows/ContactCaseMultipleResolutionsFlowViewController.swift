@@ -9,30 +9,36 @@ import SwiftUI
 import UIKit
 
 public protocol ContactCaseMultipleResolutionsFlowViewControllerInteracting {
-    func didDeclareUnderAgeLimit()
-    func nextVaccinationStatusQuestion(
-        fullyVaccinated: Bool?,
-        lastDose: Bool?,
-        clinicalTrial: Bool?,
-        medicallyExempt: Bool?
-    ) -> [ContactCaseVaccinationStatusQuestion]
-    func didDeclareVaccinationStatus(
-        fullyVaccinated: Bool?,
-        lastDose: Bool?,
-        clinicalTrial: Bool?,
-        medicallyExempt: Bool?
-    ) -> Result<Void, ContactCaseVaccinationStatusNotEnoughAnswersError>
+    func nextVaccinationStatusQuestion(answers: ContactCaseVaccinationStatusAnswers) -> [ContactCaseVaccinationStatusQuestion]
+    func didDeclareVaccinationStatus(answers: ContactCaseVaccinationStatusAnswers) -> Result<ContactCaseResolution, ContactCaseVaccinationStatusNotEnoughAnswersError>
     func didTapAboutApprovedVaccinesLink()
+    func didReviewQuestions(overAgeLimit: Bool, vaccinationStatusAnswers: ContactCaseVaccinationStatusAnswers) -> Void
+}
+
+public struct ContactCaseResolution {
+    let overAgeLimit: Bool
+    let vaccinationStatusAnswers: [ContactCaseVaccinationStatusQuestionAndAnswer]
+    
+    public init(overAgeLimit: Bool, vaccinationStatusAnswers: [ContactCaseVaccinationStatusQuestionAndAnswer]) {
+        self.overAgeLimit = overAgeLimit
+        self.vaccinationStatusAnswers = vaccinationStatusAnswers
+    }
 }
 
 public class ContactCaseMultipleResolutionsFlowViewController: BaseNavigationController {
     
     public typealias Interacting = ContactCaseMultipleResolutionsFlowViewControllerInteracting
     
-    private enum State: Equatable {
+    private enum State {
         case exposureInfo
         case ageDeclaration
         case vaccinationStatus
+        case review(QuestionsAndAnswers)
+    }
+    
+    private struct QuestionsAndAnswers: Equatable {
+        let overAgeLimit: Bool
+        let vaccinationStatusAnswers: [ContactCaseVaccinationStatusQuestionAndAnswer]
     }
     
     private let interactor: Interacting
@@ -95,7 +101,8 @@ public class ContactCaseMultipleResolutionsFlowViewController: BaseNavigationCon
                     if isOverAgeLimit {
                         self?.state = .vaccinationStatus
                     } else {
-                        self?.interactor.didDeclareUnderAgeLimit()
+                        let qA = QuestionsAndAnswers(overAgeLimit: isOverAgeLimit, vaccinationStatusAnswers: [])
+                        self?.state = .review(qA)
                     }
                 }
             )
@@ -110,19 +117,57 @@ public class ContactCaseMultipleResolutionsFlowViewController: BaseNavigationCon
                 didTapAboutApprovedVaccinesLink: { [weak self] in
                     self?.interactor.didTapAboutApprovedVaccinesLink()
                 },
-                didTapConfirm: { [weak self] fullyVaccinated, lastDose, clinicalTrial, medicallyExempt in
+                didTapConfirm: { [weak self] answers in
                     guard let self = self else { return Result.failure(ContactCaseVaccinationStatusNotEnoughAnswersError()) }
-                    return self.interactor.didDeclareVaccinationStatus(fullyVaccinated: fullyVaccinated, lastDose: lastDose, clinicalTrial: clinicalTrial, medicallyExempt: medicallyExempt)
+                    let result = self.interactor.didDeclareVaccinationStatus(answers: answers)
+                    
+                    if case .success(let resolution) = result {
+                        let qA = QuestionsAndAnswers(
+                            overAgeLimit: resolution.overAgeLimit,
+                            vaccinationStatusAnswers: resolution.vaccinationStatusAnswers
+                        )
+                        self.state = .review(qA)
+                    }
+                    return result.map { _ in
+                        ()
+                    }
                 },
-                didAnswerQuestion: { [weak self] fullyVaccinated, lastDose, clinicalTrial, medicallyExempt in
+                didAnswerQuestion: { [weak self] answers in
                     guard let self = self else { return [] }
-                    return self.interactor.nextVaccinationStatusQuestion(fullyVaccinated: fullyVaccinated, lastDose: lastDose, clinicalTrial: clinicalTrial, medicallyExempt: medicallyExempt)
+                    return self.interactor.nextVaccinationStatusQuestion(answers: answers)
                 }
             )
             return ContactCaseVaccinationStatusViewController(
                 interactor: interactor,
                 vaccineThresholdDate: vaccineThresholdDate,
                 isIndexCase: isIndexCase
+            )
+        case .review(let questionsAndAnswers):
+            let interactor = ContactCaseSummaryViewControllerInteractor(
+                didTapSubmitAnswerButton: { overAgeLimit, vaccinationStatusAnswers in
+                    self.interactor.didReviewQuestions(
+                        overAgeLimit: overAgeLimit,
+                        vaccinationStatusAnswers: vaccinationStatusAnswers
+                    )
+                }, didTapChangeAgeButton: {
+                    if questionsAndAnswers.overAgeLimit {
+                        // Pop-back two viewcontrollers to be on the age screen
+                        let viewControllers = self.viewControllers
+                        self.popToViewController(viewControllers[viewControllers.count - 3], animated: true)
+                    } else {
+                        self.popViewController(animated: true)
+                    }
+                }, didTapChangeVaccinationStatusButton: {
+                    self.popViewController(animated: true)
+                }
+            )
+            
+            return ContactCaseSummaryViewController(
+                interactor: interactor,
+                overAgeLimit: questionsAndAnswers.overAgeLimit,
+                vaccinationStatusQuestionsAndAnswers: questionsAndAnswers.vaccinationStatusAnswers,
+                birthThresholdDate: birthThresholdDate,
+                vaccineThresholdDate: vaccineThresholdDate
             )
         }
     }
@@ -162,13 +207,13 @@ private struct AgeDeclarationViewControllerInteractor: AgeDeclarationViewControl
 private struct VaccinationStatusViewControllerInteractor: ContactCaseVaccinationStatusViewController.Interacting {
     
     private let _didTapAboutApprovedVaccinesLink: () -> Void
-    private let _didTapConfirm: (_ fullyVaccinated: Bool?, _ lastDose: Bool?, _ clinicalTrial: Bool?, _ medicallyExempt: Bool?) -> Result<Void, ContactCaseVaccinationStatusNotEnoughAnswersError>
-    private let _didAnswerQuestion: (_ fullyVaccinated: Bool?, _ lastDose: Bool?, _ clinicalTrial: Bool?, _ medicallyExempt: Bool?) -> [ContactCaseVaccinationStatusQuestion]
+    private let _didTapConfirm: (ContactCaseVaccinationStatusAnswers) -> Result<Void, ContactCaseVaccinationStatusNotEnoughAnswersError>
+    private let _didAnswerQuestion: (ContactCaseVaccinationStatusAnswers) -> [ContactCaseVaccinationStatusQuestion]
     
     init(
         didTapAboutApprovedVaccinesLink: @escaping () -> Void,
-        didTapConfirm: @escaping (_ fullyVaccinated: Bool?, _ lastDose: Bool?, _ clinicalTrial: Bool?, _ medicallyExempt: Bool?) -> Result<Void, ContactCaseVaccinationStatusNotEnoughAnswersError>,
-        didAnswerQuestion: @escaping (_ fullyVaccinated: Bool?, _ lastDose: Bool?, _ clinicalTrial: Bool?, _ medicallyExempt: Bool?) -> [ContactCaseVaccinationStatusQuestion]
+        didTapConfirm: @escaping (ContactCaseVaccinationStatusAnswers) -> Result<Void, ContactCaseVaccinationStatusNotEnoughAnswersError>,
+        didAnswerQuestion: @escaping (ContactCaseVaccinationStatusAnswers) -> [ContactCaseVaccinationStatusQuestion]
     ) {
         _didTapAboutApprovedVaccinesLink = didTapAboutApprovedVaccinesLink
         _didTapConfirm = didTapConfirm
@@ -179,12 +224,39 @@ private struct VaccinationStatusViewControllerInteractor: ContactCaseVaccination
         _didTapAboutApprovedVaccinesLink()
     }
     
-    func didTapConfirm(fullyVaccinated: Bool?, lastDose: Bool?, clinicalTrial: Bool?, medicallyExempt: Bool?) -> Result<Void, ContactCaseVaccinationStatusNotEnoughAnswersError> {
-        _didTapConfirm(fullyVaccinated, lastDose, clinicalTrial, medicallyExempt)
+    func didTapConfirm(answers: ContactCaseVaccinationStatusAnswers) -> Result<Void, ContactCaseVaccinationStatusNotEnoughAnswersError> {
+        _didTapConfirm(answers)
     }
     
-    func didAnswerQuestion(fullyVaccinated: Bool?, lastDose: Bool?, clinicalTrial: Bool?, medicallyExempt: Bool?) -> [ContactCaseVaccinationStatusQuestion] {
-        _didAnswerQuestion(fullyVaccinated, lastDose, clinicalTrial, medicallyExempt)
+    func didAnswerQuestion(answers: ContactCaseVaccinationStatusAnswers) -> [ContactCaseVaccinationStatusQuestion] {
+        _didAnswerQuestion(answers)
     }
     
+}
+
+private struct ContactCaseSummaryViewControllerInteractor: ContactCaseSummaryViewController.Interacting {
+    
+    private let _didTapSubmitAnswersButton: (Bool, ContactCaseVaccinationStatusAnswers) -> Void
+    private let _didTapChangeAgeButton: () -> Void
+    private let _didTapChangeVaccinationStatusButton: () -> Void
+    
+    init(didTapSubmitAnswerButton: @escaping (Bool, ContactCaseVaccinationStatusAnswers) -> Void,
+         didTapChangeAgeButton: @escaping () -> Void,
+         didTapChangeVaccinationStatusButton: @escaping () -> Void) {
+        _didTapSubmitAnswersButton = didTapSubmitAnswerButton
+        _didTapChangeAgeButton = didTapChangeAgeButton
+        _didTapChangeVaccinationStatusButton = didTapChangeVaccinationStatusButton
+    }
+    
+    func didTapChangeAgeButton() {
+        _didTapChangeAgeButton()
+    }
+    
+    func didTapChangeVaccinationStatusButton() {
+        _didTapChangeVaccinationStatusButton()
+    }
+    
+    func didTapSubmitAnswersButton(overAgeLimit: Bool, vaccinationStatusAnswers: ContactCaseVaccinationStatusAnswers) {
+        _didTapSubmitAnswersButton(overAgeLimit, vaccinationStatusAnswers)
+    }
 }

@@ -327,7 +327,7 @@
 "checkin_information_help_scanning_section_description" = "Waxaannu kugula talineynaa inaad la hadasho xubin ka mid ah shaqaalaha goobta jooga si aad u ogaato inay jiraan siyaabo kale aad isku soo xaadirin karto.";
 "checkin_information_whats_a_qr_code_section_title" = "Qaabka loo aqoonsado warqadda  koodhka NHS QR";
 "checkin_information_whats_a_qr_code_section_description_new" = "Waa kuwan sida ay u eg yihiin warqadaha rasmiga ah ee NHS QR. Waxaad u baahantahay inaad iskaan-garayso koodhka, oo ah afar-geeska dhex-bartanka ku yaalla.";
-"about_this_app_software_information_date_of_release_description" = "9/2021";
+"about_this_app_software_information_date_of_release_description" = "10/2021";
 "link_test_result_enter_code_example" = "Tusaale: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Koodhka baaritaanka";
 "link_test_result_button_title" = "Sii wad";
@@ -924,8 +924,8 @@
 "contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld" = "%#@days@";
-"self_isolation_hub_get_isolation_note_title" = "Hel warqad is-go'doomin";
-"self_isolation_hub_get_isolation_note_description" = "Haddii aad u baahan tahay warqad is-go'doomin si aad u tusto loo-shaqeeyahaaga";
+"self_isolation_hub_get_isolation_note_title" = "Hel warqad is-go'doomin ah si aad u tusto loo-shaqeeyahaaga";
+"self_isolation_hub_get_isolation_note_description" = "App-ka ma hayo ama manala wadaago macluumaadkaaga shakhsi adeeggan, markaa waxaad u baahan doontaa inaad galiso faahfaahintaada";
 "link_isolation_note" = "https://111.nhs.uk/isolation-note";
 "link_isolation_note_wls" = "https://111.nhs.uk/isolation-note";
 "risky_contact_isolation_advice_medically_exempt_group" = "Si loo helo caddaalad iyo sinnaan, haddii aadan awoodin inaad hesho tallaalka sababo caafimaad awgood uma baahnid inaad is-go'doomiso.";
@@ -937,3 +937,10 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date %@" = "Waxaa lagugula talinaynaa in aad ballansato baaritaan PCR oo lacag la'aan ah sida ugu dhaqsaha badan. Baaritaankaaga koowaad kadib, waa in aad sido kale ballansataa baaritaan PCR labaad ee %@";
 "contact_case_no_isolation_under_age_limit_list_item_testing" = "";
 "contact_case_no_isolation_under_age_limit_list_item_testing_with_date %@" = "Waxaa lagugula talinaynaa in aad ballansato baaritaan PCR oo lacag la'aan ah sida ugu dhaqsaha badan. Baaritaankaaga koowaad kadib, waa in aad sido kale ballansataa baaritaan PCR labaad ee %@";
+"contact_case_summary_change_age_button" = "Beddel";
+"contact_case_summary_change_age_accessiblity_button" = "";
+"contact_case_summary_change_vaccination_status_button" = "Beddel";
+"contact_case_summary_change_vaccination_status_accessiblity_button" = "Change your vaccination status";
+"contact_case_summary_title" = "Eeg jawaabahaaga";
+"contact_case_summary_heading" = "Eeg jawaabahaaga";
+"contact_case_summary_submit_button" = "Gudbi jawaabaha";

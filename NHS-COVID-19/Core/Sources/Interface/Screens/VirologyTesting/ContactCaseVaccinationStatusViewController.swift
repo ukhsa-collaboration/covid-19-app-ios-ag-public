@@ -9,16 +9,15 @@ import SwiftUI
 
 public protocol ContactCaseVaccinationStatusViewControllerInteracting {
     func didTapAboutApprovedVaccinesLink()
-    func didTapConfirm(fullyVaccinated: Bool?,
-                       lastDose: Bool?,
-                       clinicalTrial: Bool?,
-                       medicallyExempt: Bool?) -> Result<Void, ContactCaseVaccinationStatusNotEnoughAnswersError>
-    func didAnswerQuestion(
-        fullyVaccinated: Bool?,
-        lastDose: Bool?,
-        clinicalTrial: Bool?,
-        medicallyExempt: Bool?
-    ) -> [ContactCaseVaccinationStatusQuestion]
+    func didTapConfirm(answers: ContactCaseVaccinationStatusAnswers) -> Result<Void, ContactCaseVaccinationStatusNotEnoughAnswersError>
+    func didAnswerQuestion(answers: ContactCaseVaccinationStatusAnswers) -> [ContactCaseVaccinationStatusQuestion]
+}
+
+public struct ContactCaseVaccinationStatusAnswers {
+    public var fullyVaccinated: Bool?
+    public var lastDose: Bool?
+    public var clinicalTrial: Bool?
+    public var medicallyExempt: Bool?
 }
 
 public enum ContactCaseVaccinationStatusQuestion {
@@ -251,7 +250,13 @@ class ContactCaseVaccinationStatusContent {
             title: localize(.contact_case_vaccination_status_confirm_button_title),
             action: { [weak self] in
                 guard let self = self else { return }
-                let result = self.interactor.didTapConfirm(fullyVaccinated: self.hasReceivedAllVaccineDosesSubject, lastDose: self.isLastVaccineDoseTimeValid, clinicalTrial: self.clinicalTrial, medicallyExempt: self.medicallyExempt)
+                let answers = ContactCaseVaccinationStatusAnswers(
+                    fullyVaccinated: self.hasReceivedAllVaccineDosesSubject,
+                    lastDose: self.isLastVaccineDoseTimeValid,
+                    clinicalTrial: self.clinicalTrial,
+                    medicallyExempt: self.medicallyExempt
+                )
+                let result = self.interactor.didTapConfirm(answers: answers)
                 
                 if case .failure = result {
                     self.emptyError.view.isHidden = false
@@ -273,7 +278,13 @@ class ContactCaseVaccinationStatusContent {
     }
     
     private func nextQuestion() {
-        let newQuestions = interactor.didAnswerQuestion(fullyVaccinated: hasReceivedAllVaccineDosesSubject, lastDose: isLastVaccineDoseTimeValid, clinicalTrial: clinicalTrial, medicallyExempt: medicallyExempt)
+        let answers = ContactCaseVaccinationStatusAnswers(
+            fullyVaccinated: hasReceivedAllVaccineDosesSubject,
+            lastDose: isLastVaccineDoseTimeValid,
+            clinicalTrial: clinicalTrial,
+            medicallyExempt: medicallyExempt
+        )
+        let newQuestions = interactor.didAnswerQuestion(answers: answers)
         
         let shouldShowLastDose = newQuestions.contains(.lastDose)
         let shouldShowClinicalTrial = newQuestions.contains(.clinicalTrial)

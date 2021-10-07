@@ -92,6 +92,7 @@ public struct AccordionView<Content>: View where Content: View {
                             .foregroundColor(Color(.nhsBlue))
                             .styleAsHeading()
                             .accessibility(removeTraits: .isHeader)
+                            .multilineTextAlignment(.leading)
                     }
                     .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)

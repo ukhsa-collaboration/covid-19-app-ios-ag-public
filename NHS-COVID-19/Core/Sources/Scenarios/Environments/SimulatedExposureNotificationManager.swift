@@ -84,7 +84,7 @@ class SimulatedExposureNotificationManager: ExposureNotificationManaging {
     }
     
     func getExposureInfo(summary: ENExposureDetectionSummary, userExplanation: String, completionHandler: @escaping ENGetExposureInfoHandler) -> Progress {
-        let info = repeatElement(SimulatedExposureInfo(daysAgo: dataProvider.contactDaysAgo), count: dataProvider.numberOfContacts)
+        let info = repeatElement(SimulatedExposureInfo(daysAgo: dataProvider.contactDaysAgo, currentDateProvider: dateProvider), count: dataProvider.numberOfContacts)
         queue.async {
             completionHandler(Array(info), nil)
         }
@@ -97,7 +97,7 @@ class SimulatedExposureNotificationManager: ExposureNotificationManaging {
     
     @available(iOS 13.7, *)
     func getExposureWindows(summary: ENExposureDetectionSummary, completionHandler: @escaping ENGetExposureWindowsHandler) -> Progress {
-        let windows = repeatElement(SimulatedRiskyExposureWindow(daysAgo: dataProvider.contactDaysAgo), count: dataProvider.numberOfContacts)
+        let windows = repeatElement(SimulatedRiskyExposureWindow(daysAgo: dataProvider.contactDaysAgo, currentDateProvider: dateProvider), count: dataProvider.numberOfContacts)
         queue.async {
             completionHandler(Array(windows), nil)
         }
@@ -107,17 +107,17 @@ class SimulatedExposureNotificationManager: ExposureNotificationManaging {
 
 private class SimulatedExposureInfo: ENExposureInfo {
     
-    private let daysAgo: Int
+    private let _date: Date
     private let _attenuationDurations: [NSNumber]
     
-    init(daysAgo: Int) {
-        self.daysAgo = daysAgo
+    init(daysAgo: Int, currentDateProvider: DateProviding) {
+        _date = currentDateProvider.currentGregorianDay(timeZone: .current).advanced(by: -daysAgo).startDate(in: .utc)
         _attenuationDurations = [1800, 1800, 1800]
         super.init()
     }
     
     override var date: Date {
-        GregorianDay.today.advanced(by: -daysAgo).startDate(in: .utc)
+        _date
     }
     
     override var attenuationDurations: [NSNumber] {
@@ -133,15 +133,15 @@ private class SimulatedExposureInfo: ENExposureInfo {
 @available(iOS 13.7, *)
 private class SimulatedRiskyExposureWindow: ENExposureWindow {
     
-    private let daysAgo: Int
+    private let _date: Date
     
-    init(daysAgo: Int) {
-        self.daysAgo = daysAgo
+    init(daysAgo: Int, currentDateProvider: DateProviding) {
+        _date = currentDateProvider.currentGregorianDay(timeZone: .current).advanced(by: -daysAgo).startDate(in: .utc)
         super.init()
     }
     
     override var date: Date {
-        GregorianDay.today.advanced(by: -daysAgo).startDate(in: .utc)
+        _date
     }
     
     override var infectiousness: ENInfectiousness {

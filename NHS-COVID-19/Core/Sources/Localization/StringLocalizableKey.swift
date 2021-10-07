@@ -874,6 +874,17 @@ public enum StringLocalizableKey: String, CaseIterable {
     case new_no_symptoms_screen_general_guidance_text
     case new_no_symptoms_screen_general_guidance_link_title
     case new_no_symptoms_screen_back_home_button
+    
+    // MARK: - Age and vaccination status summary screen
+    
+    case contact_case_summary_change_age_button
+    case contact_case_summary_change_age_accessiblity_button
+    case contact_case_summary_change_vaccination_status_button
+    case contact_case_summary_change_vaccination_status_accessiblity_button
+    case contact_case_summary_title
+    case contact_case_summary_heading
+    case contact_case_summary_submit_button
+    
 }
 
 public enum ParameterisedStringLocalizable: Equatable {

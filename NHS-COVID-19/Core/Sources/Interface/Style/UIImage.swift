@@ -17,6 +17,8 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case onboardingPrivacy = "PrivacyScreemBannerImage"
     case tickImage = "TickIcon"
     case tick = "Tick"
+    case checkIcon = "CheckIcon"
+    case crossIcon = "CrossIcon"
     case menuChevron = "ChevronMenuIcon"
     case warningIcon = "WarningIcon"
     case camera = "Camera"

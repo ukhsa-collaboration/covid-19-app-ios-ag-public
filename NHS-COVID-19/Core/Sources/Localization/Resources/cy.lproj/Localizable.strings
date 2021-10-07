@@ -327,7 +327,7 @@
 "checkin_information_help_scanning_section_description" = "Cynghorwn chi i siarad ag aelod o staff yn y lleoliad i weld a oes ffyrdd eraill o fewngofnodi.";
 "checkin_information_whats_a_qr_code_section_title" = "Sut i adnabod poster cod QR y GIG";
 "checkin_information_whats_a_qr_code_section_description_new" = "Dyma sut olwg sydd ar bosteri cod QR swyddogol y GIG. Mae angen i chi sganio’r cod, sydd yn y sgwâr yn y canol.";
-"about_this_app_software_information_date_of_release_description" = "9/2021";
+"about_this_app_software_information_date_of_release_description" = "10/2021";
 "link_test_result_enter_code_example" = "Enghraifft: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Cod y prawf";
 "link_test_result_button_title" = "Parhau";
@@ -804,7 +804,7 @@
 "radio_button_unchecked" = "heb wirio";
 "radio_button_accessibility_label %@ %@" = "%@. %@";
 "age_declaration_title" = "Eich oed";
-"age_declaration_heading" = "Eich oed";
+"age_declaration_heading" = "Eich oedran";
 "age_declaration_description" = "Ni fyddwn yn defnyddio’ch atebion ond i wirio a allai fod angen i chi hunanynysu. ";
 "age_declaration_question" = "Oeddech chi'n 18 neu'n hŷn ar 16 Chwefror 2021?";
 "age_declaration_yes_option" = "Ydw";
@@ -924,8 +924,8 @@
 "contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld" = "%#@days@";
-"self_isolation_hub_get_isolation_note_title" = "Cael nodyn ynysu";
-"self_isolation_hub_get_isolation_note_description" = "Os oes angen nodyn ynysu arnoch I'w ddangos i'ch cyflogwr";
+"self_isolation_hub_get_isolation_note_title" = "Mynnwch nodyn ynysu i ddangos i'ch cyflogwr";
+"self_isolation_hub_get_isolation_note_description" = "Nid yw'r ap yn dal nac yn rhannu eich gwybodaeth bersonol gyda'r gwasanaeth hwn, felly bydd angen i chi nodi'ch manylion";
 "link_isolation_note" = "https://111.nhs.uk/isolation-note";
 "link_isolation_note_wls" = "https://111.nhs.uk/isolation-note";
 "risky_contact_isolation_advice_medically_exempt_group" = "Er tegwch a chydraddoldeb, os na allwch gael y brechiad am resymau meddygol, does dim angen i chi hunanynysu.";
@@ -937,3 +937,10 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date %@" = "Rydym yn eich cynghori i archebu prawf PCR am ddim cyn gynted â phosibl. Ar ôl eich prawf cyntaf, dylech hefyd archebu ail brawf PCR ar gyfer %@";
 "contact_case_no_isolation_under_age_limit_list_item_testing" = "";
 "contact_case_no_isolation_under_age_limit_list_item_testing_with_date %@" = "Rydym yn eich cynghori i archebu prawf PCR am ddim cyn gynted â phosibl. Ar ôl eich prawf cyntaf, dylech hefyd archebu ail brawf PCR ar gyfer %@";
+"contact_case_summary_change_age_button" = "Newid";
+"contact_case_summary_change_age_accessiblity_button" = "";
+"contact_case_summary_change_vaccination_status_button" = "Newid";
+"contact_case_summary_change_vaccination_status_accessiblity_button" = "Change your vaccination status";
+"contact_case_summary_title" = "Gwiriwch eich atebion";
+"contact_case_summary_heading" = "Gwiriwch eich atebion";
+"contact_case_summary_submit_button" = "Cyflwynwch eich atebion";

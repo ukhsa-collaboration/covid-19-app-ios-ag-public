@@ -327,7 +327,7 @@
 "checkin_information_help_scanning_section_description" = "ہم آپ کو  مشورہ دیتے ہیں کہ آپ یہ معلوم کرنے کے لیے متعلقہ مقام پر عملہ کے کسی فرد سے بات کریں کہ آیا چیک-ان کرنے کے دیگر طریقے بھی ہیں۔";
 "checkin_information_whats_a_qr_code_section_title" = "NHS کے QR کوڈ پوسٹر کو کیسے پہچانیں";
 "checkin_information_whats_a_qr_code_section_description_new" = "NHS کا آفیشیل QR کوڈ پوسٹر اس طرح کا نظر آتا ہے۔ آپ کو کوڈ کو اسکین کرنا ہوتا ہے، جو درمیان میں چوکور ہے۔";
-"about_this_app_software_information_date_of_release_description" = "9/2021";
+"about_this_app_software_information_date_of_release_description" = "10/2021";
 "link_test_result_enter_code_example" = "مثال: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "ٹیسٹ کوڈ";
 "link_test_result_button_title" = "جاری رکھیں";
@@ -804,7 +804,7 @@
 "radio_button_unchecked" = "غیر نشانزد";
 "radio_button_accessibility_label %@ %@" = "%@. %@";
 "age_declaration_title" = "آپ کی عمر";
-"age_declaration_heading" = "آپ کی عمر";
+"age_declaration_heading" = "ٓپ کی عمر";
 "age_declaration_description" = "ہم آپ کے جوابات کا استعمال صرف اس بات کی جانچ کے لیے کریں گے کہ آیا آپ کو خود کو علیحدہ کرنے کی ضرورت پڑ سکتی ہے۔";
 "age_declaration_question" = "کیا 16 فروری 2021 کو آپ  کی عمر 18 برس یا اس سے زیادہ تھی؟";
 "age_declaration_yes_option" = "ہاں";
@@ -924,8 +924,8 @@
 "contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld" = "%#@days@";
-"self_isolation_hub_get_isolation_note_title" = "آئیسولیشن نوٹ حاصل کریں";
-"self_isolation_hub_get_isolation_note_description" = "اگر آپ کو اپنے آجر(ایمپلائر) کو دکھانے کے لیے آئیسولیشن نوٹ کی ضرورت ہے تو";
+"self_isolation_hub_get_isolation_note_title" = "اپنے آجر(ایمپلائر) کو دکھانے کے لیے آئیسولیشن نوٹ حاصل کریں";
+"self_isolation_hub_get_isolation_note_description" = "یہ ایپ آپ کی ذاتی معلومات اپنے پاس نہیں رکھتا یا اس سروس کو فراہم نہیں کرتا، چنانچہ آپ کو اپنی تفصیلات داخل کرنے کی ضرورت ہو گی";
 "link_isolation_note" = "https://111.nhs.uk/isolation-note";
 "link_isolation_note_wls" = "https://111.nhs.uk/isolation-note";
 "risky_contact_isolation_advice_medically_exempt_group" = "انصاف اور برابری کے لیے، اگر آپ طبی وجوہات کی بنا پر ویکسین حاصل کرنے سے قاصر ہیں تو آپ کو خود کو تنہا رکھنے کی ضرورت نہیں ہے۔";
@@ -937,3 +937,10 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date %@" = "آپ کو مشورہ دیا جاتا ہے کہ جتنی  جلد ممکن ہو مفت PCR ٹیسٹ بُک کروائیں۔ اپنے پہلے ٹیسٹ کے بعد، آپ کو %@ کے لیے ایک دوسرا PCR ٹیسٹ بھی بُک کروانا چاہیے";
 "contact_case_no_isolation_under_age_limit_list_item_testing" = "";
 "contact_case_no_isolation_under_age_limit_list_item_testing_with_date %@" = "آپ کو مشورہ دیا جاتا ہے کہ جتنی  جلد ممکن ہو مفت PCR ٹیسٹ بُک کروائیں۔ اپنے پہلے ٹیسٹ کے بعد، آپ کو %@ کے لیے ایک دوسرا PCR ٹیسٹ بھی بُک کروانا چاہیے";
+"contact_case_summary_change_age_button" = "تبدیل کریں";
+"contact_case_summary_change_age_accessiblity_button" = "";
+"contact_case_summary_change_vaccination_status_button" = "تبدیل کریں";
+"contact_case_summary_change_vaccination_status_accessiblity_button" = "Change your vaccination status";
+"contact_case_summary_title" = "اپنے جوابات چیک کریں";
+"contact_case_summary_heading" = "اپنے جوابات چیک کریں";
+"contact_case_summary_submit_button" = "جوابات پیش کریں";

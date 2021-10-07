@@ -44,8 +44,8 @@ private class Interactor: ContactCaseVaccinationStatusViewController.Interacting
         viewController?.showAlert(title: ContactCaseVaccinationStatusScreenScenario.linkTapped)
     }
     
-    func didAnswerQuestion(fullyVaccinated: Bool?, lastDose: Bool?, clinicalTrial: Bool?, medicallyExempt: Bool?) -> [ContactCaseVaccinationStatusQuestion] {
-        if let fullyVaccinated = fullyVaccinated {
+    func didAnswerQuestion(answers: ContactCaseVaccinationStatusAnswers) -> [ContactCaseVaccinationStatusQuestion] {
+        if let fullyVaccinated = answers.fullyVaccinated {
             if fullyVaccinated {
                 return [.fullyVaccinated, .lastDose]
             } else {
@@ -56,9 +56,9 @@ private class Interactor: ContactCaseVaccinationStatusViewController.Interacting
         }
     }
     
-    func didTapConfirm(fullyVaccinated: Bool?, lastDose: Bool?, clinicalTrial: Bool?, medicallyExempt: Bool?) -> Result<Void, ContactCaseVaccinationStatusNotEnoughAnswersError> {
-        if let fullyVaccinated = fullyVaccinated {
-            if let lastDose = lastDose {
+    func didTapConfirm(answers: ContactCaseVaccinationStatusAnswers) -> Result<Void, ContactCaseVaccinationStatusNotEnoughAnswersError> {
+        if let fullyVaccinated = answers.fullyVaccinated {
+            if let lastDose = answers.lastDose {
                 if fullyVaccinated, lastDose {
                     viewController?.showAlert(title: ContactCaseVaccinationStatusScreenScenario.confirmFullyVaccinatedTapped)
                 } else {

@@ -327,7 +327,7 @@
 "checkin_information_help_scanning_section_description" = "Vă recomandăm să discutați cu un membru al personalului localului pentru a verifica dacă există alte modalități de a înregistra vizita.";
 "checkin_information_whats_a_qr_code_section_title" = "Cum se recunoaște un afiș cu cod QR NHS";
 "checkin_information_whats_a_qr_code_section_description_new" = "Iată cum arată afișele oficiale cu cod QR NHS. Trebuie să scanați codul, respectiv pătratul din mijloc.";
-"about_this_app_software_information_date_of_release_description" = "9/2021";
+"about_this_app_software_information_date_of_release_description" = "10/2021";
 "link_test_result_enter_code_example" = "Exemplu: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Rezultatele testului";
 "link_test_result_button_title" = "Continuare";
@@ -924,8 +924,8 @@
 "contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld" = "%#@days@";
-"self_isolation_hub_get_isolation_note_title" = "Obțineți o adeverință de izolare";
-"self_isolation_hub_get_isolation_note_description" = "În cazul în care aveți nevoie de o adeverință de izolare pentru a o prezenta angajatorului";
+"self_isolation_hub_get_isolation_note_title" = "Obțineți o adeverință de izolare pentru a o prezenta angajatorului";
+"self_isolation_hub_get_isolation_note_description" = "Aplicația nu stochează și nu partajează informațiile dvs. personale cu acest serviciu, prin urmare este necesar să vă introduceți datele";
 "link_isolation_note" = "https://111.nhs.uk/isolation-note";
 "link_isolation_note_wls" = "https://111.nhs.uk/isolation-note";
 "risky_contact_isolation_advice_medically_exempt_group" = "În scopuri de echitate și egalitate, dacă nu vă puteți vaccina din motive medicale, nu trebuie să vă autoizolați.";
@@ -937,3 +937,10 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date %@" = "Vă recomandăm să rezervați un test PCR gratuit cât mai curând posibil. După primul test, trebuie să rezervați și al doilea test PCR pentru %@";
 "contact_case_no_isolation_under_age_limit_list_item_testing" = "";
 "contact_case_no_isolation_under_age_limit_list_item_testing_with_date %@" = "Vă recomandăm să rezervați un test PCR gratuit cât mai curând posibil. După primul test, trebuie să rezervați și al doilea test PCR pentru %@";
+"contact_case_summary_change_age_button" = "Modificare";
+"contact_case_summary_change_age_accessiblity_button" = "";
+"contact_case_summary_change_vaccination_status_button" = "Modificare";
+"contact_case_summary_change_vaccination_status_accessiblity_button" = "Change your vaccination status";
+"contact_case_summary_title" = "Verificați răspunsurile";
+"contact_case_summary_heading" = "Verificați răspunsurile";
+"contact_case_summary_submit_button" = "Trimiteți răspunsurile";

@@ -327,7 +327,7 @@
 "checkin_information_help_scanning_section_description" = "Mekana giriş yapmanın diğer yolları olup olmadığıyla ilgili olarak bir personelle konuşmanızı tavsiye ederiz.";
 "checkin_information_whats_a_qr_code_section_title" = "Bir NHS QR kodu posteri nasıl tanınır";
 "checkin_information_whats_a_qr_code_section_description_new" = "Resmi NHS QR kodu posterlerinin neye benzediğine dair bir örneği burada görebilirsiniz. Ortasında kare olan kodu taratmanız gerekir.";
-"about_this_app_software_information_date_of_release_description" = "9/2021";
+"about_this_app_software_information_date_of_release_description" = "10/2021";
 "link_test_result_enter_code_example" = "Örnek: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Test kodu";
 "link_test_result_button_title" = "Devam";
@@ -735,7 +735,7 @@
 "home_self_isolation_button_title" = "Kişisel karantina";
 "testing_hub_row_order_free_test_title" = "COVID-19 için test yaptırın";
 "testing_hub_row_order_free_test_description" = "Farklı COVID-19 testleri ve nasıl test yaptıracağınız hakkında bilgi edinin";
-"self_isolation_hub_book_a_test_title" = "Karantinadayken ücretsiz bir test için rezervasyon yapın";
+"self_isolation_hub_book_a_test_title" = "Karantinadayken ücretsiz test yaptırmak için randevu alın";
 "self_isolation_hub_book_a_test_description" = "COVID-19'u (koronavirüs) yayma riski taşıyor olabilirsiniz";
 "self_isolation_hub_financial_support_title" = "Finansal destek için uygunluğunuzu kontrol edin";
 "self_isolation_hub_financial_support_description" = "Karantinadayken finansal destek ödemesi alma hakkında bilgi edinin";
@@ -852,14 +852,14 @@
 "contact_case_vaccination_status_title" = "Aşı durumunuz";
 "contact_case_vaccination_status_heading" = "Aşı durumunuz";
 "contact_case_vaccination_status_description" = "Yanıtlarınızı sadece kendinizi karantinaya almanız gerekip gerekmediğini kontrol etmek için kullanacağız.";
-"contact_case_vaccination_status_all_doses_of_vaccine_question" = "COVID-19'a karşı bütün aşı dozlarınızı oldunuz mu?";
+"contact_case_vaccination_status_all_doses_of_vaccine_question" = "COVID-19’a karşı bütün doz aşılarınızı oldunuz mu?";
 "contact_case_vaccination_status_all_doses_of_vaccine_description" = "Bunun, Birleşik Krallık'ta kullanım için onaylanmış bir aşı olması gerekir.";
 "contact_case_vaccination_status_all_doses_of_vaccine_yes_option" = "Evet";
 "contact_case_vaccination_status_all_doses_of_vaccine_no_option" = "Hayır";
 "contact_case_vaccination_status_all_doses_of_vaccine_yes_option_accessibility_text" = "Evet, COVID-19'a karşı bütün aşı dozlarımı oldum";
 "contact_case_vaccination_status_all_doses_of_vaccine_no_option_accessibility_text" = "Hayır, COVID-19'a karşı bütün aşı dozlarımı olmadım";
 "contact_case_vaccination_status_aproved_vaccines_link_title" = "Onaylı aşılar hakkında daha fazla bilgi edinin";
-"contact_case_vaccination_status_last_dose_of_vaccine_question %@" = "\"Son aşı dozunuzu %@ tarihinden önce mi oldunuz?";
+"contact_case_vaccination_status_last_dose_of_vaccine_question %@" = "Son doz aşınızı %@ tarihinde veya öncesinde mi oldunuz?";
 "contact_case_vaccination_status_last_dose_of_vaccine_yes_option" = "Evet";
 "contact_case_vaccination_status_last_dose_of_vaccine_no_option" = "Hayır";
 "contact_case_vaccination_status_last_dose_of_vaccine_yes_option_accessibility_text %@" = "Evet, son aşı dozumu %@ tarihinden önce oldum.";
@@ -924,8 +924,8 @@
 "contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld" = "%#@days@";
-"self_isolation_hub_get_isolation_note_title" = "Bir Karantina notu edinin";
-"self_isolation_hub_get_isolation_note_description" = "İşvereninize göstermek için bir karantina notuna ihtiyacınız varsa";
+"self_isolation_hub_get_isolation_note_title" = "İşvereninize vermek üzere karantina belgesi alın";
+"self_isolation_hub_get_isolation_note_description" = "Uygulama kişisel bilgilerinizi bu hizmetle paylaşmadığından bilgilerinizi kendiniz girmeniz gerekecek";
 "link_isolation_note" = "https://111.nhs.uk/isolation-note";
 "link_isolation_note_wls" = "https://111.nhs.uk/isolation-note";
 "risky_contact_isolation_advice_medically_exempt_group" = "Hakkaniyet ve eşitlik adına; eğer tıbbi sebeplerden dolayı aşı olamıyorsanız, kendinizi karantinaya almanız gerekmez.";
@@ -937,3 +937,10 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date %@" = "En kısa zamanda ücretsiz bir PCR testi için rezervasyon yapmanız tavsiye edilmektedir. İlk testinizden sonra, aynı zamanda %@ tarihi için de ikinci bir PCR testi rezervasyonu yapmanız tavsiye edilmektedir.";
 "contact_case_no_isolation_under_age_limit_list_item_testing" = "";
 "contact_case_no_isolation_under_age_limit_list_item_testing_with_date %@" = "En kısa zamanda ücretsiz bir PCR testi için rezervasyon yapmanız tavsiye edilmektedir. İlk testinizden sonra, aynı zamanda %@ tarihi için de ikinci bir PCR testi rezervasyonu yapmanız tavsiye edilmektedir.";
+"contact_case_summary_change_age_button" = "Değiştir";
+"contact_case_summary_change_age_accessiblity_button" = "";
+"contact_case_summary_change_vaccination_status_button" = "Değiştir";
+"contact_case_summary_change_vaccination_status_accessiblity_button" = "Change your vaccination status";
+"contact_case_summary_title" = "Yanıtlarınızı kontrol edin";
+"contact_case_summary_heading" = "Yanıtlarınızı kontrol edin";
+"contact_case_summary_submit_button" = "Yanıtları ilet";

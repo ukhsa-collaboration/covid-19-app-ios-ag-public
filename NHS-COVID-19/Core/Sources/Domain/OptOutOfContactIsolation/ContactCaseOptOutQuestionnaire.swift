@@ -21,8 +21,8 @@ public struct ContactCaseOptOutQuestionnaire {
     
     public enum Resolution: Equatable {
         case notFinished
-        case optedOutOfIsolation(ContactCaseOptOutReason)
-        case needToIsolate
+        case optedOutOfIsolation(ContactCaseOptOutReason, [ContactCaseOptOutQuestion])
+        case needToIsolate([ContactCaseOptOutQuestion])
     }
     
     private enum State: Equatable {
@@ -56,10 +56,10 @@ public struct ContactCaseOptOutQuestionnaire {
         switch nextState {
         case .showQuestions:
             return .notFinished
-        case .finishedNoNeedToIsolate(_, let reason):
-            return .optedOutOfIsolation(reason)
-        case .finishedWithIsolation:
-            return .needToIsolate
+        case .finishedNoNeedToIsolate(let questions, let reason):
+            return .optedOutOfIsolation(reason, questions)
+        case .finishedWithIsolation(let questions):
+            return .needToIsolate(questions)
         }
     }
     

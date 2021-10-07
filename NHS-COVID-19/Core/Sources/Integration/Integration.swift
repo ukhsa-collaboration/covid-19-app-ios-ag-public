@@ -226,63 +226,68 @@ extension CoordinatedAppController {
         case .neededForStartOfIsolationExposureDetection(let acknowledge, let exposureDate, let birthThresholdDate, let vaccineThresholdDate, let secondTestAdviceDate, let isolationEndDate, let isIndexCase):
             let interactor = ContactCaseMultipleResolutionsFlowViewControllerInteractor(
                 openURL: context.openURL,
-                didDeclareUnderAgeLimit: { [showUIState] in
-                    acknowledge(true)
-                    if isIndexCase {
-                        showUIState.value = .showContactCaseResult(.continueIsolation(endDate: isolationEndDate.currentValue, secondTestAdviceDate: secondTestAdviceDate))
-                    } else {
-                        showUIState.value = .showContactCaseResult(.underAgeLimit(secondTestAdviceDate: secondTestAdviceDate))
-                    }
-                },
-                didDeclareVaccinationStatus: { [showUIState] fullyVaccinated, lastDose, clinicalTrial, medicallyExempt in
-                    var answers: [ContactCaseOptOutQuestion: Bool] = [:]
-                    fullyVaccinated.map { answers[.fullyVaccinated] = $0 }
-                    lastDose.map { answers[.lastDose] = $0 }
-                    clinicalTrial.map { answers[.clinicalTrial] = $0 }
-                    medicallyExempt.map { answers[.medicallyExempt] = $0 }
-                    let result = context.contactCaseOptOutQuestionnaire.getResolution(with: answers)
+                didDeclareVaccinationStatus: { answers in
+                    let mappedAnswers = answers.mapAnswersToDomain()
+                    let result = context.contactCaseOptOutQuestionnaire.getResolution(with: mappedAnswers)
                     
-                    let didOptOut: Bool
-                    let optOutReason: ContactCaseOptOutReason?
                     switch result {
                     case .notFinished:
                         return .failure(ContactCaseVaccinationStatusNotEnoughAnswersError())
-                    case .optedOutOfIsolation(let reason):
-                        didOptOut = true
-                        optOutReason = reason
-                    case .needToIsolate:
-                        didOptOut = false
-                        optOutReason = nil
+                    case .optedOutOfIsolation(_, let questions):
+                        return .success(ContactCaseResolution(overAgeLimit: true, vaccinationStatusAnswers: answers.mapAnswersWithInterfaceQuestions(questions: questions)))
+                    case .needToIsolate(let questions):
+                        return .success(ContactCaseResolution(overAgeLimit: true, vaccinationStatusAnswers: answers.mapAnswersWithInterfaceQuestions(questions: questions)))
                     }
-                    
-                    acknowledge(didOptOut)
-                    if isIndexCase {
-                        showUIState.value = .showContactCaseResult(.continueIsolation(endDate: isolationEndDate.currentValue, secondTestAdviceDate: secondTestAdviceDate))
-                    } else if didOptOut {
-                        switch optOutReason {
-                        case .fullyVaccinated, .none:
-                            showUIState.value = .showContactCaseResult(.fullyVaccinated(secondTestAdviceDate: secondTestAdviceDate))
-                        case .medicallyExempt:
-                            showUIState.value = .showContactCaseResult(.medicallyExempt)
+                }, nextVaccinationStatusQuestion: { answers in
+                    let mappedAnswers = answers.mapAnswersToDomain()
+                    return context.contactCaseOptOutQuestionnaire.nextQuestion(with: mappedAnswers).map(ContactCaseVaccinationStatusQuestion.init)
+                },
+                didReviewQuestions: { [showUIState] overAgeLimit, vaccinationStatusAnswers in
+                    if !overAgeLimit {
+                        acknowledge(true)
+                        if isIndexCase {
+                            showUIState.value = .showContactCaseResult(.continueIsolation(endDate: isolationEndDate.currentValue, secondTestAdviceDate: secondTestAdviceDate))
+                        } else {
+                            showUIState.value = .showContactCaseResult(.underAgeLimit(secondTestAdviceDate: secondTestAdviceDate))
                         }
                     } else {
-                        showUIState.value = .showContactCaseResult(
-                            .startIsolation(
-                                endDate: isolationEndDate.currentValue,
-                                exposureDate: exposureDate,
-                                secondTestAdviceDate: secondTestAdviceDate
-                            ))
+                        let mappedAnswers = vaccinationStatusAnswers.mapAnswersToDomain()
+                        let result = context.contactCaseOptOutQuestionnaire.getResolution(with: mappedAnswers)
+                        
+                        let didOptOut: Bool
+                        let optOutReason: ContactCaseOptOutReason?
+                        switch result {
+                        case .notFinished:
+                            assertionFailure("Should not be possible")
+                            didOptOut = false
+                            optOutReason = nil
+                        case .optedOutOfIsolation(let reason, _):
+                            didOptOut = true
+                            optOutReason = reason
+                        case .needToIsolate:
+                            didOptOut = false
+                            optOutReason = nil
+                        }
+                        
+                        acknowledge(didOptOut)
+                        if isIndexCase {
+                            showUIState.value = .showContactCaseResult(.continueIsolation(endDate: isolationEndDate.currentValue, secondTestAdviceDate: secondTestAdviceDate))
+                        } else if didOptOut {
+                            switch optOutReason {
+                            case .fullyVaccinated, .none:
+                                showUIState.value = .showContactCaseResult(.fullyVaccinated(secondTestAdviceDate: secondTestAdviceDate))
+                            case .medicallyExempt:
+                                showUIState.value = .showContactCaseResult(.medicallyExempt)
+                            }
+                        } else {
+                            showUIState.value = .showContactCaseResult(
+                                .startIsolation(
+                                    endDate: isolationEndDate.currentValue,
+                                    exposureDate: exposureDate,
+                                    secondTestAdviceDate: secondTestAdviceDate
+                                ))
+                        }
                     }
-                    
-                    return .success(())
-                    
-                }, nextVaccinationStatusQuestion: { fullyVaccinated, lastDose, clinicalTrial, medicallyExempt in
-                    var answers: [ContactCaseOptOutQuestion: Bool] = [:]
-                    fullyVaccinated.map { answers[.fullyVaccinated] = $0 }
-                    lastDose.map { answers[.lastDose] = $0 }
-                    clinicalTrial.map { answers[.clinicalTrial] = $0 }
-                    medicallyExempt.map { answers[.medicallyExempt] = $0 }
-                    return context.contactCaseOptOutQuestionnaire.nextQuestion(with: answers).map(ContactCaseVaccinationStatusQuestion.init)
                 }
             )
             
@@ -570,5 +575,63 @@ private extension ContactCaseVaccinationStatusQuestion {
         case .medicallyExempt:
             self = .medicallyExempt
         }
+    }
+}
+
+private extension ContactCaseVaccinationStatusAnswers {
+    func mapAnswersToDomain() -> [ContactCaseOptOutQuestion: Bool] {
+        var mappedAnswers: [ContactCaseOptOutQuestion: Bool] = [:]
+        fullyVaccinated.map { mappedAnswers[.fullyVaccinated] = $0 }
+        lastDose.map { mappedAnswers[.lastDose] = $0 }
+        clinicalTrial.map { mappedAnswers[.clinicalTrial] = $0 }
+        medicallyExempt.map { mappedAnswers[.medicallyExempt] = $0 }
+        return mappedAnswers
+    }
+    
+    func mapAnswersWithInterfaceQuestions(questions: [ContactCaseOptOutQuestion]) -> [ContactCaseVaccinationStatusQuestionAndAnswer] {
+        var questionsAnswers: [ContactCaseVaccinationStatusQuestionAndAnswer] = []
+        for question in questions {
+            switch question {
+            case .fullyVaccinated:
+                if let fullyVaccinated = fullyVaccinated {
+                    questionsAnswers.append(
+                        ContactCaseVaccinationStatusQuestionAndAnswer(
+                            question: .fullyVaccinated,
+                            answer: fullyVaccinated
+                        )
+                    )
+                }
+            case .lastDose:
+                if let lastDose = lastDose {
+                    questionsAnswers.append(
+                        ContactCaseVaccinationStatusQuestionAndAnswer(
+                            question: .lastDose,
+                            answer: lastDose
+                        )
+                    )
+                }
+            case .clinicalTrial:
+                if let clinicalTrial = clinicalTrial {
+                    questionsAnswers.append(
+                        ContactCaseVaccinationStatusQuestionAndAnswer(
+                            question: .clinicalTrial,
+                            answer: clinicalTrial
+                        )
+                    )
+                }
+                
+            case .medicallyExempt:
+                if let medicallyExempt = medicallyExempt {
+                    questionsAnswers.append(
+                        ContactCaseVaccinationStatusQuestionAndAnswer(
+                            question: .medicallyExempt,
+                            answer: medicallyExempt
+                        )
+                    )
+                }
+                
+            }
+        }
+        return questionsAnswers
     }
 }

@@ -327,7 +327,7 @@
 "checkin_information_help_scanning_section_description" = "Radzimy porozmawiać z personelem lokalu, aby dowiedzieć się, czy istnieją inne metody zameldowania.";
 "checkin_information_whats_a_qr_code_section_title" = "Jak rozpoznać plakat z kodem NHS QR";
 "checkin_information_whats_a_qr_code_section_description_new" = "Oto jak wyglądają oficjalne plakaty z kodami NHS QR. Należy zeskanować kod, czyli kwadrat znajdujący się pośrodku plakatu.";
-"about_this_app_software_information_date_of_release_description" = "9/2021";
+"about_this_app_software_information_date_of_release_description" = "10/2021";
 "link_test_result_enter_code_example" = "Przykład: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Kod testowy";
 "link_test_result_button_title" = "Kontynuuj";
@@ -924,8 +924,8 @@
 "contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld" = "%#@days@";
-"self_isolation_hub_get_isolation_note_title" = "Otrzymaj zaświadczenie o izolacji";
-"self_isolation_hub_get_isolation_note_description" = "Jeżeli potrzebujesz zaświadczenia o izolacji w celu okazania pracodawcy";
+"self_isolation_hub_get_isolation_note_title" = "Otrzymaj zaświadczenie o izolacji w celu okazania pracodawcy";
+"self_isolation_hub_get_isolation_note_description" = "Aplikacja nie przechowuje ani nie udostępnia Twoich danych osobowych w ramach tej usługi, dlatego musisz wpisać swoje dane.";
 "link_isolation_note" = "https://111.nhs.uk/isolation-note";
 "link_isolation_note_wls" = "https://111.nhs.uk/isolation-note";
 "risky_contact_isolation_advice_medically_exempt_group" = "Zgodnie z zasadami sprawiedliwości i równości, jeżeli nie możesz zaszczepić się ze względów medycznych, nie musisz pozostawać w samoizolacji.";
@@ -937,3 +937,10 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date %@" = "Zaleca się, aby jak najszybciej zamówić bezpłatny test PCR. Po wykonaniu pierwszego testu musisz również zamówić drugi test PCR i przeprowadzić go w dniu %@.";
 "contact_case_no_isolation_under_age_limit_list_item_testing" = "";
 "contact_case_no_isolation_under_age_limit_list_item_testing_with_date %@" = "Zaleca się, aby jak najszybciej zamówić bezpłatny test PCR. Po wykonaniu pierwszego testu musisz również zamówić drugi test PCR i przeprowadzić go w dniu %@.";
+"contact_case_summary_change_age_button" = "Zmień";
+"contact_case_summary_change_age_accessiblity_button" = "";
+"contact_case_summary_change_vaccination_status_button" = "Zmień";
+"contact_case_summary_change_vaccination_status_accessiblity_button" = "Change your vaccination status";
+"contact_case_summary_title" = "Sprawdź swoje odpowiedzi";
+"contact_case_summary_heading" = "Sprawdź swoje odpowiedzi";
+"contact_case_summary_submit_button" = "Wyślij odpowiedzi";

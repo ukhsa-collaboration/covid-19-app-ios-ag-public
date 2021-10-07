@@ -327,7 +327,7 @@
 "checkin_information_help_scanning_section_description" = "તપાસ કરવાની અન્ય રીતો છે કે કેમ તે જોવા માટે અમે તમને સ્થળ પર સ્ટાફના સભ્ય સાથે વાત કરવાની સલાહ આપીશું.";
 "checkin_information_whats_a_qr_code_section_title" = "NHS QR કોડ પોસ્ટરને કેવી રીતે ઓળખવું";
 "checkin_information_whats_a_qr_code_section_description_new" = "અહીં સત્તાવાર NHS QR કોડ પોસ્ટર્સ છે. તમારે કોડ સ્કેન કરવાની જરૂર છે, જે મધ્યમાં ચોરસ છે.";
-"about_this_app_software_information_date_of_release_description" = "9/2021";
+"about_this_app_software_information_date_of_release_description" = "10/2021";
 "link_test_result_enter_code_example" = "ઉદાહરણ: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "ટેસ્ટ કોડ";
 "link_test_result_button_title" = "ચાલુ રાખો";
@@ -804,7 +804,7 @@
 "radio_button_unchecked" = "તપાસ નથી થઈ";
 "radio_button_accessibility_label %@ %@" = "%@. %@";
 "age_declaration_title" = "તમારી ઉંમર ";
-"age_declaration_heading" = "તમારી ઉંમર ";
+"age_declaration_heading" = "તમારી ઉમર";
 "age_declaration_description" = "અમે તમારા જવાબોનો ઉપયોગ ફક્ત તે તપાસ માટે કરીશું કે તમારે સેલ્ફ-આઇસોલેટ થવાની જરૂર પડી શકે કે નહીં.";
 "age_declaration_question" = "તમે 16 ફેબ્રુઆરી 2021 ના રોજ 18 વર્ષ અથવા તેથી વધુ ઉંમરના હતા?";
 "age_declaration_yes_option" = "હા";
@@ -924,8 +924,8 @@
 "contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld" = "%#@days@";
-"self_isolation_hub_get_isolation_note_title" = "આઇસોલેશ નોટ લો";
-"self_isolation_hub_get_isolation_note_description" = "જો તમારે તમારા કામે આઇસોલેશન નોટ બતાવવાની હોય તો";
+"self_isolation_hub_get_isolation_note_title" = "તમારા કામે દેખાડવા માટે આઇસોલેશન નોટ લો";
+"self_isolation_hub_get_isolation_note_description" = "આ એપમાં તમારી વ્યક્તિગત માહિતી રાખતા નથી એટલા માટે તમારે એ વિગતો નાંખવી પડશે. ";
 "link_isolation_note" = "https://111.nhs.uk/isolation-note";
 "link_isolation_note_wls" = "https://111.nhs.uk/isolation-note";
 "risky_contact_isolation_advice_medically_exempt_group" = "ન્યાય અને સમાનતા માટે, જો તમે મેડિકલ કારણને લીધે વેક્સિન ન મેળવી શકો તો તમારે સેલ્ફ-આઇસોલેટ થવાની જરૂર નથી.";
@@ -937,3 +937,10 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date %@" = "તમને જેમ બને એમ જલદી ફ્રિ PCR  ટેસ્ટ કરવાની સલાહ આપવામાં આવે છે. તમારે પહેલી ટેસ્ટ પછી તમે બીજી PCR ટેસ્ટ બૂક આ %@ તારીખે કરાવી શકો.";
 "contact_case_no_isolation_under_age_limit_list_item_testing" = "";
 "contact_case_no_isolation_under_age_limit_list_item_testing_with_date %@" = "તમને જેમ બને એમ જલદી ફ્રિ PCR  ટેસ્ટ કરવાની સલાહ આપવામાં આવે છે. તમારે પહેલી ટેસ્ટ પછી તમે બીજી PCR ટેસ્ટ બૂક આ %@ તારીખે કરાવી શકો.";
+"contact_case_summary_change_age_button" = "બદલો";
+"contact_case_summary_change_age_accessiblity_button" = "";
+"contact_case_summary_change_vaccination_status_button" = "બદલો";
+"contact_case_summary_change_vaccination_status_accessiblity_button" = "Change your vaccination status";
+"contact_case_summary_title" = "તમારા જવાબો ચેક કરો";
+"contact_case_summary_heading" = "તમારા જવાબો ચેક કરો";
+"contact_case_summary_submit_button" = "જવાબો મોકલો";

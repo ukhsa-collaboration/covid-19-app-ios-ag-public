@@ -327,7 +327,7 @@
 "checkin_information_help_scanning_section_description" = "ننصحك بالتحدّث إلى أحد الأفراد العاملين في المكان لمعرفة الطرق الأخرى المتاحة لتسجيل الدخول.";
 "checkin_information_whats_a_qr_code_section_title" = "كيفية التعرّف على أحد ملصقات رموز NHS QR";
 "checkin_information_whats_a_qr_code_section_description_new" = "نُوضِّح هنا أشكال ملصقات رموز NHS QR الرسمية. يتعين عليك إجراء مسح ضوئي للرمز الذي يظهر في المربع الموجود في المنتصف.";
-"about_this_app_software_information_date_of_release_description" = "9/2021";
+"about_this_app_software_information_date_of_release_description" = "10/2021";
 "link_test_result_enter_code_example" = "على سبيل المثال: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "رمز الاختبار";
 "link_test_result_button_title" = "استمرار";
@@ -924,8 +924,8 @@
 "contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld" = "%#@days@";
-"self_isolation_hub_get_isolation_note_title" = "الحصول على إشعارٍ بالعزل";
-"self_isolation_hub_get_isolation_note_description" = "عند حاجتك إلى إشعارٍ بالعزل لتقديمه إلى صاحب العمل لديك";
+"self_isolation_hub_get_isolation_note_title" = "الحصول على إشعارٍ بالعزل لتقديمه إلى صاحب العمل لديك";
+"self_isolation_hub_get_isolation_note_description" = "لا يقوم التطبيق بالاحتفاظ ببياناتك الشخصية أو مشاركتها مع هذه الخدمة، ومن ثمَّ يتعين عليك إدخال التفاصيل الخاصة بك";
 "link_isolation_note" = "https://111.nhs.uk/isolation-note";
 "link_isolation_note_wls" = "https://111.nhs.uk/isolation-note";
 "risky_contact_isolation_advice_medically_exempt_group" = "من منطلق الإنصاف والمساواة، لا تحتاج إلى تطبيق العزل الذاتي إذا كان يتعذّر عليك الحصول على اللقاح لأسبابٍ طبيةٍ.";
@@ -937,3 +937,10 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date %@" = "نوصيك بحجز أحد اختبارات PCR المجانية في أقرب وقتٍ ممكنٍ. بعد الاختبار الأول لك، ينبغي لك أيضًا حجز اختبار PCR ثانٍ في %@";
 "contact_case_no_isolation_under_age_limit_list_item_testing" = "";
 "contact_case_no_isolation_under_age_limit_list_item_testing_with_date %@" = "نوصيك بحجز أحد اختبارات PCR المجانية في أقرب وقتٍ ممكنٍ. بعد الاختبار الأول لك، ينبغي لك أيضًا حجز اختبار PCR ثانٍ في %@";
+"contact_case_summary_change_age_button" = "تغيير";
+"contact_case_summary_change_age_accessiblity_button" = "";
+"contact_case_summary_change_vaccination_status_button" = "تغيير";
+"contact_case_summary_change_vaccination_status_accessiblity_button" = "Change your vaccination status";
+"contact_case_summary_title" = "مراجعة إجاباتك";
+"contact_case_summary_heading" = "مراجعة إجاباتك";
+"contact_case_summary_submit_button" = "إرسال الإجابات";

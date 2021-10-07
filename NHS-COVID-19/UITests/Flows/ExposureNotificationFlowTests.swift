@@ -135,7 +135,22 @@ class ExposureNotificationFlowTests: XCTestCase {
             }
             
             XCTAssertTrue(vaccinationStatusScreen.confirmButton.exists)
+            app.scrollTo(element: vaccinationStatusScreen.confirmButton)
             vaccinationStatusScreen.confirmButton.tap()
+            
+            // Summary screen
+            let summaryScreen = ContactCaseSummaryScreen(app: app)
+            XCTAssertTrue(summaryScreen.heading.exists)
+            
+            runner.step("Review Screen") {
+                """
+                The person sees the 'Check your answers' screen.
+                They tap the 'Submit answers' button.
+                """
+            }
+            
+            app.scrollTo(element: summaryScreen.submitButton)
+            summaryScreen.submitButton.tap()
             
             // Fully Vaccinated
             let fullyVaccinatedScreen = ContactCaseNoIsolationFullyVaccinatedScreen(app: app)
@@ -256,7 +271,22 @@ class ExposureNotificationFlowTests: XCTestCase {
             }
             
             XCTAssertTrue(vaccinationStatusScreen.confirmButton.exists)
+            app.scrollTo(element: vaccinationStatusScreen.confirmButton)
             vaccinationStatusScreen.confirmButton.tap()
+            
+            // Summary screen
+            let summaryScreen = ContactCaseSummaryScreen(app: app)
+            XCTAssertTrue(summaryScreen.heading.exists)
+            
+            runner.step("Review Screen") {
+                """
+                The person sees the 'Check your answers' screen.
+                They tap the 'Submit answers' button.
+                """
+            }
+            
+            app.scrollTo(element: summaryScreen.submitButton)
+            summaryScreen.submitButton.tap()
             
             // Advice to self-isolate
             let startIsolationScreen = ContactCaseStartIsolationScreen(
@@ -373,7 +403,22 @@ class ExposureNotificationFlowTests: XCTestCase {
             }
             
             XCTAssertTrue(vaccinationStatusScreen.confirmButton.exists)
+            app.scrollTo(element: vaccinationStatusScreen.confirmButton)
             vaccinationStatusScreen.confirmButton.tap()
+            
+            // Summary screen
+            let summaryScreen = ContactCaseSummaryScreen(app: app)
+            XCTAssertTrue(summaryScreen.heading.exists)
+            
+            runner.step("Review Screen") {
+                """
+                The person sees the 'Check your answers' screen.
+                They tap the 'Submit answers' button.
+                """
+            }
+            
+            app.scrollTo(element: summaryScreen.submitButton)
+            summaryScreen.submitButton.tap()
             
             // Advice to self-isolate
             let medicallyExemptScreen = ContactCaseNoIsolationMedicallyExemptScreen(app: app)
@@ -451,6 +496,20 @@ class ExposureNotificationFlowTests: XCTestCase {
             
             XCTAssertTrue(ageDeclarationScreen.continueButton.exists)
             ageDeclarationScreen.continueButton.tap()
+            
+            // Summary screen
+            let summaryScreen = ContactCaseSummaryScreen(app: app)
+            XCTAssertTrue(summaryScreen.heading.exists)
+            
+            runner.step("Review Screen") {
+                """
+                The person sees the 'Check your answers' screen.
+                They tap the 'Submit answers' button.
+                """
+            }
+            
+            app.scrollTo(element: summaryScreen.submitButton)
+            summaryScreen.submitButton.tap()
             
             // Under Age Limit
             let underAgeLimitScreen = ContactCaseNoIsolationUnderAgeLimitScreen(app: app)
@@ -567,7 +626,22 @@ class ExposureNotificationFlowTests: XCTestCase {
             }
             
             XCTAssertTrue(vaccinationStatusScreen.confirmButton.exists)
+            app.scrollTo(element: vaccinationStatusScreen.confirmButton)
             vaccinationStatusScreen.confirmButton.tap()
+            
+            // Summary screen
+            let summaryScreen = ContactCaseSummaryScreen(app: app)
+            XCTAssertTrue(summaryScreen.heading.exists)
+            
+            runner.step("Review Screen") {
+                """
+                The person sees the 'Check your answers' screen.
+                They tap the 'Submit answers' button.
+                """
+            }
+            
+            app.scrollTo(element: summaryScreen.submitButton)
+            summaryScreen.submitButton.tap()
             
             // Continue Isolation screen
             let continueIsolationScreen = ContactCaseContinueIsolationScreen(app: app)
@@ -690,7 +764,22 @@ class ExposureNotificationFlowTests: XCTestCase {
             }
             
             XCTAssertTrue(vaccinationStatusScreen.confirmButton.exists)
+            app.scrollTo(element: vaccinationStatusScreen.confirmButton)
             vaccinationStatusScreen.confirmButton.tap()
+            
+            // Summary screen
+            let summaryScreen = ContactCaseSummaryScreen(app: app)
+            XCTAssertTrue(summaryScreen.heading.exists)
+            
+            runner.step("Review Screen") {
+                """
+                The person sees the 'Check your answers' screen.
+                They tap the 'Submit answers' button.
+                """
+            }
+            
+            app.scrollTo(element: summaryScreen.submitButton)
+            summaryScreen.submitButton.tap()
             
             // Continue Isolation screen
             let continueIsolationScreen = ContactCaseContinueIsolationScreen(app: app)
@@ -771,6 +860,20 @@ class ExposureNotificationFlowTests: XCTestCase {
             
             XCTAssertTrue(ageDeclarationScreen.continueButton.exists)
             ageDeclarationScreen.continueButton.tap()
+            
+            // Summary screen
+            let summaryScreen = ContactCaseSummaryScreen(app: app)
+            XCTAssertTrue(summaryScreen.heading.exists)
+            
+            runner.step("Review Screen") {
+                """
+                The person sees the 'Check your answers' screen.
+                They tap the 'Submit answers' button.
+                """
+            }
+            
+            app.scrollTo(element: summaryScreen.submitButton)
+            summaryScreen.submitButton.tap()
             
             // Continue Isolation screen
             let continueIsolationScreen = ContactCaseContinueIsolationScreen(app: app)

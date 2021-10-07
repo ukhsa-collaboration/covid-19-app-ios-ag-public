@@ -327,7 +327,7 @@
 "checkin_information_help_scanning_section_description" = "ਅਸੀਂ ਤੁਹਾਨੂੰ ਸਲਾਹ ਦਿੰਦੇ ਹਾਂ ਕਿ ਤੁਸੀਂ ਸਥਾਨ 'ਤੇ ਸਟਾਫ਼ ਦੇ ਕਿਸੇ ਮੈਂਬਰ ਨਾਲ ਗੱਲ ਕਰਕੇ ਪਤਾ ਕਰੋ ਕਿ ਕੀ ਚੈੱਕ-ਇਨ ਕਰਨ ਦੇ ਹੋਰ ਤਰੀਕੇ ਹਨ।";
 "checkin_information_whats_a_qr_code_section_title" = "ਕਿਸੇ NHS QR ਕੋਡ ਪੋਸਟਰ ਨੂੰ ਕਿਵੇਂ ਪਛਾਣਨਾ ਹੈ";
 "checkin_information_whats_a_qr_code_section_description_new" = "ਅਧਿਕਾਰਤ NHS QR ਕੋਡ ਪੋਸਟਰ ਇਸ ਤਰ੍ਹਾਂ ਦੇ ਦਿਖਾਈ ਦਿੰਦੇ ਹਨ। ਤੁਹਾਨੂੰ ਕੋਡ ਨੂੰ ਸਕੈਨ ਕਰਨ ਦੀ ਲੋੜ ਹੈ ਜੋ, ਕੇਂਦਰ ਵਿੱਚ ਇੱਕ ਵਰਗ ਹੁੰਦਾ ਹੈ।";
-"about_this_app_software_information_date_of_release_description" = "9/2021";
+"about_this_app_software_information_date_of_release_description" = "10/2021";
 "link_test_result_enter_code_example" = "ਉਦਾਹਰਣ: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "ਟੈਸਟ ਕੋਡ";
 "link_test_result_button_title" = "ਜਾਰੀ ਰੱਖੋ";
@@ -924,8 +924,8 @@
 "contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld" = "%#@days@";
-"self_isolation_hub_get_isolation_note_title" = "ਇਕਾਂਤਵਾਸ ਨੋਟ ਪ੍ਰਾਪਤ ਕਰੋ";
-"self_isolation_hub_get_isolation_note_description" = "ਜੇ ਤੁਹਾਨੂੰ ਆਪਣੇ ਮਾਲਕ ਨੂੰ ਦਿਖਾਉਣ ਲਈ ਆਈਸੋਲੇਸ਼ਨ ਨੋਟ ਦੀ ਲੋੜ ਹੈ";
+"self_isolation_hub_get_isolation_note_title" = "ਆਪਣੇ ਮਾਲਕ ਨੂੰ ਦਿਖਾਉਣ ਲਈ ਆਈਸੋਲੇਸ਼ਨ ਨੋਟ ਪ੍ਰਾਪਤ ਕਰੋ";
+"self_isolation_hub_get_isolation_note_description" = "ਐਪ ਦੁਆਰਾ ਤੁਹਾਡੀ ਨਿੱਜੀ ਜਾਣਕਾਰੀ ਨੂੰ ਇਸ ਸੇਵਾ ਨਾਲ ਰੱਖਿਆ ਜਾਂ ਸਾਂਝਾ ਨਹੀਂ ਕੀਤਾ ਜਾਂਦਾ, ਇਸ ਲਈ ਤੁਹਾਨੂੰ ਆਪਣੇ ਵੇਰਵੇ ਦਰਜ ਕਰਨ ਦੀ ਲੋੜ ਹੋਏਗੀ";
 "link_isolation_note" = "https://111.nhs.uk/isolation-note";
 "link_isolation_note_wls" = "https://111.nhs.uk/isolation-note";
 "risky_contact_isolation_advice_medically_exempt_group" = "ਨਿਰਪੱਖਤਾ ਅਤੇ ਸਮਾਨਤਾ ਲਈ, ਜੇ ਤੁਸੀਂ ਡਾਕਟਰੀ ਕਾਰਨਾਂ ਕਰਕੇ ਟੀਕਾ ਲਗਵਾਉਣ ਵਿੱਚ ਅਸਮਰੱਥ ਹੋ ਤਾਂ ਤੁਹਾਨੂੰ ਸਵੈ-ਇਕਾਂਤਵਾਸ ਦੀ ਲੋੜ ਨਹੀਂ।";
@@ -937,3 +937,10 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date %@" = "ਤੁਹਾਨੂੰ ਸਲਾਹ ਦਿੱਤੀ ਜਾਂਦੀ ਹੈ ਕਿ ਜਿੰਨੀ ਛੇਤੀ ਹੋ ਸਕੇ ਇੱਕ ਮੁਫਤ PCR ਟੈਸਟ ਬੁੱਕ ਕਰਵਾਓ। ਆਪਣੇ ਪਹਿਲੇ ਟੈਸਟ ਤੋਂ ਬਾਅਦ, ਤੁਹਾਨੂੰ %@ ਲਈ ਦੂਜਾ PCR ਟੈਸਟ ਵੀ ਬੁੱਕ ਕਰਵਾਉਣਾ ਚਾਹੀਦਾ ਹੈ।";
 "contact_case_no_isolation_under_age_limit_list_item_testing" = "";
 "contact_case_no_isolation_under_age_limit_list_item_testing_with_date %@" = "ਤੁਹਾਨੂੰ ਸਲਾਹ ਦਿੱਤੀ ਜਾਂਦੀ ਹੈ ਕਿ ਜਿੰਨੀ ਛੇਤੀ ਹੋ ਸਕੇ ਇੱਕ ਮੁਫਤ PCR ਟੈਸਟ ਬੁੱਕ ਕਰਵਾਓ। ਆਪਣੇ ਪਹਿਲੇ ਟੈਸਟ ਤੋਂ ਬਾਅਦ, ਤੁਹਾਨੂੰ %@ ਲਈ ਦੂਜਾ PCR ਟੈਸਟ ਵੀ ਬੁੱਕ ਕਰਵਾਉਣਾ ਚਾਹੀਦਾ ਹੈ।";
+"contact_case_summary_change_age_button" = "ਬਦਲੋ";
+"contact_case_summary_change_age_accessiblity_button" = "";
+"contact_case_summary_change_vaccination_status_button" = "ਬਦਲੋ";
+"contact_case_summary_change_vaccination_status_accessiblity_button" = "Change your vaccination status";
+"contact_case_summary_title" = "ਆਪਣੇ ਜਵਾਬ ਜਾਂਚੋ";
+"contact_case_summary_heading" = "ਆਪਣੇ ਜਵਾਬ ਜਾਂਚੋ";
+"contact_case_summary_submit_button" = "ਜਵਾਬ ਭਰੋ";

@@ -327,7 +327,7 @@
 "checkin_information_help_scanning_section_description" = "We advise you to speak to a member of staff at the venue to see if there are other ways of checking in.";
 "checkin_information_whats_a_qr_code_section_title" = "How to recognise an NHS QR code poster";
 "checkin_information_whats_a_qr_code_section_description_new" = "Here are what the official NHS QR code posters look like. You need to scan the code, which is the square in the middle.";
-"about_this_app_software_information_date_of_release_description" = "9/2021";
+"about_this_app_software_information_date_of_release_description" = "10/2021";
 "link_test_result_enter_code_example" = "Example: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Test code";
 "link_test_result_button_title" = "Continue";
@@ -924,8 +924,8 @@
 "contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld" = "%#@days@";
 "contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld" = "%#@days@";
-"self_isolation_hub_get_isolation_note_title" = "Get an isolation note";
-"self_isolation_hub_get_isolation_note_description" = "If you need an isolation note to show your employer";
+"self_isolation_hub_get_isolation_note_title" = "Get an isolation note to show your employer";
+"self_isolation_hub_get_isolation_note_description" = "The app does not hold or share your personal information with this service, so you will need to enter your details";
 "link_isolation_note" = "https://111.nhs.uk/isolation-note";
 "link_isolation_note_wls" = "https://111.nhs.uk/isolation-note";
 "risky_contact_isolation_advice_medically_exempt_group" = "For fairness and equality, if you are unable to get the vaccine for medical reasons you do not need to self-isolate.";
@@ -937,3 +937,10 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date %@" = "You are advised to book a free PCR test as soon as possible. After your first test, you should also book a second PCR test for %@.";
 "contact_case_no_isolation_under_age_limit_list_item_testing" = "You are advised to book a free PCR test as soon as possible. After your first test, you should also book a second PCR test as soon as possible.";
 "contact_case_no_isolation_under_age_limit_list_item_testing_with_date %@" = "You are advised to book a free PCR test as soon as possible. After your first test, you should also book a second PCR test for %@.";
+"contact_case_summary_change_age_button" = "Change";
+"contact_case_summary_change_age_accessiblity_button" = "Change your age";
+"contact_case_summary_change_vaccination_status_button" = "Change";
+"contact_case_summary_change_vaccination_status_accessiblity_button" = "Change your vaccination status";
+"contact_case_summary_title" = "Check your answers";
+"contact_case_summary_heading" = "Check your answers";
+"contact_case_summary_submit_button" = "Submit answers";

@@ -46,6 +46,8 @@
 		222C189124F01BD4002C6CF6 /* VoidTestResultWithIsolationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222C189024F01BD4002C6CF6 /* VoidTestResultWithIsolationScreen.swift */; };
 		223A9BB324D19EF00055582E /* NegativeTestResultWithIsolationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223A9BB224D19EF00055582E /* NegativeTestResultWithIsolationScreen.swift */; };
 		223A9BB524D1A0270055582E /* NegativeTestResultWithIsolationScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223A9BB424D1A0270055582E /* NegativeTestResultWithIsolationScreenTests.swift */; };
+		223FA09426FB8615004B1D39 /* ContactCaseSummaryScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223FA09326FB8615004B1D39 /* ContactCaseSummaryScreenTests.swift */; };
+		223FA09626FB86B1004B1D39 /* ContactCaseSummaryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223FA09526FB86B1004B1D39 /* ContactCaseSummaryScreen.swift */; };
 		2244EA1D2493A07700F88149 /* TestSupport in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 2244EA1C2493A07700F88149 /* TestSupport */; };
 		2245D54C268C791B005BFFED /* SelfIsolationHubScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2245D54B268C791A005BFFED /* SelfIsolationHubScreen.swift */; };
 		2245D54E268C79E3005BFFED /* SelfIsolationHubScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2245D54D268C79E3005BFFED /* SelfIsolationHubScreenTests.swift */; };
@@ -314,6 +316,8 @@
 		222C189024F01BD4002C6CF6 /* VoidTestResultWithIsolationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoidTestResultWithIsolationScreen.swift; sourceTree = "<group>"; };
 		223A9BB224D19EF00055582E /* NegativeTestResultWithIsolationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NegativeTestResultWithIsolationScreen.swift; sourceTree = "<group>"; };
 		223A9BB424D1A0270055582E /* NegativeTestResultWithIsolationScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NegativeTestResultWithIsolationScreenTests.swift; sourceTree = "<group>"; };
+		223FA09326FB8615004B1D39 /* ContactCaseSummaryScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCaseSummaryScreenTests.swift; sourceTree = "<group>"; };
+		223FA09526FB86B1004B1D39 /* ContactCaseSummaryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCaseSummaryScreen.swift; sourceTree = "<group>"; };
 		2245D54B268C791A005BFFED /* SelfIsolationHubScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfIsolationHubScreen.swift; sourceTree = "<group>"; };
 		2245D54D268C79E3005BFFED /* SelfIsolationHubScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfIsolationHubScreenTests.swift; sourceTree = "<group>"; };
 		2260358F26932EB800D53DD5 /* HubButtonCellComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HubButtonCellComponentTests.swift; sourceTree = "<group>"; };
@@ -764,6 +768,7 @@
 				ED64549F269C626500A846BD /* GetAFreeTestKitScreenTests.swift */,
 				ED7A653A26A9B36E00774E7F /* AgeDeclarationScreenTests.swift */,
 				ED34642826B01A5D0051FB80 /* ContactCaseVaccinationStatusScreenTests.swift */,
+				223FA09326FB8615004B1D39 /* ContactCaseSummaryScreenTests.swift */,
 			);
 			path = ScreenTests;
 			sourceTree = "<group>";
@@ -1053,6 +1058,7 @@
 				EDDE871D265FA052002C9073 /* LocalInformationScreen.swift */,
 				22B78E7B2678C71D0026A71C /* WarnAndTestCheckSymptomsScreen.swift */,
 				ED32D6AE2679096A0002DC38 /* ContactTracingAdviceScreen.swift */,
+				223FA09526FB86B1004B1D39 /* ContactCaseSummaryScreen.swift */,
 				ED7A653826A9B1F100774E7F /* AgeDeclarationScreen.swift */,
 				ED34642626B0163E0051FB80 /* ContactCaseVaccinationStatusScreen.swift */,
 			);
@@ -1572,6 +1578,7 @@
 				95E57ECA2552CA350061161A /* LocalAuthorityFlowTests.swift in Sources */,
 				95E637902546EEAE00135F42 /* LocalAuthorityInformationScreen.swift in Sources */,
 				08D0A08F257FA30A0055AD6F /* SettingsScreenTests.swift in Sources */,
+				223FA09626FB86B1004B1D39 /* ContactCaseSummaryScreen.swift in Sources */,
 				893E46F7247023D300F9AAF6 /* UseCaseBuilder.swift in Sources */,
 				5F67467D2645A7A500D58F66 /* UnknownTestResultsScreen.swift in Sources */,
 				8B84BE722587E3850008E74D /* LanguageSelectionScreen.swift in Sources */,
@@ -1662,6 +1669,7 @@
 				22B78E7C2678C71D0026A71C /* WarnAndTestCheckSymptomsScreen.swift in Sources */,
 				5F84C9322695CE5800E566B2 /* AboutThisAppReleaseDateAndVersionScreenTests.swift in Sources */,
 				DDF8A86C24EBD3740064A6FC /* BelowRequiredAgeErrorScreenTests.swift in Sources */,
+				223FA09426FB8615004B1D39 /* ContactCaseSummaryScreenTests.swift in Sources */,
 				223A9BB324D19EF00055582E /* NegativeTestResultWithIsolationScreen.swift in Sources */,
 				0851DE5E25CAC56A00B87078 /* TestCheckSymptomsScreenTests.swift in Sources */,
 				ED34642726B0163E0051FB80 /* ContactCaseVaccinationStatusScreen.swift in Sources */,

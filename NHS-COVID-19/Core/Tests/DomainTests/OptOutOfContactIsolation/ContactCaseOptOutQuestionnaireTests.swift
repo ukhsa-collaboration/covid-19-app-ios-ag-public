@@ -58,7 +58,7 @@ class ContactCaseOptOutQuestionnaireTests: XCTestCase {
             .fullyVaccinated,
             .lastDose,
         ]
-        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .optedOutOfIsolation(.fullyVaccinated)
+        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .optedOutOfIsolation(.fullyVaccinated, expectedQuestions)
         
         XCTAssertEqual(expectedQuestions, nextQuestions)
         XCTAssertEqual(expectedResolution, resolution)
@@ -103,7 +103,7 @@ class ContactCaseOptOutQuestionnaireTests: XCTestCase {
             .lastDose,
             .clinicalTrial,
         ]
-        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .optedOutOfIsolation(.fullyVaccinated)
+        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .optedOutOfIsolation(.fullyVaccinated, expectedQuestions)
         
         XCTAssertEqual(expectedQuestions, nextQuestions)
         XCTAssertEqual(expectedResolution, resolution)
@@ -126,7 +126,7 @@ class ContactCaseOptOutQuestionnaireTests: XCTestCase {
             .lastDose,
             .clinicalTrial,
         ]
-        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .needToIsolate
+        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .needToIsolate(expectedQuestions)
         
         XCTAssertEqual(expectedQuestions, nextQuestions)
         XCTAssertEqual(expectedResolution, resolution)
@@ -175,7 +175,7 @@ class ContactCaseOptOutQuestionnaireTests: XCTestCase {
             .clinicalTrial,
             .medicallyExempt,
         ]
-        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .optedOutOfIsolation(.medicallyExempt)
+        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .optedOutOfIsolation(.medicallyExempt, expectedQuestions)
         
         XCTAssertEqual(expectedQuestions, nextQuestions)
         XCTAssertEqual(expectedResolution, resolution)
@@ -200,7 +200,7 @@ class ContactCaseOptOutQuestionnaireTests: XCTestCase {
             .clinicalTrial,
             .medicallyExempt,
         ]
-        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .needToIsolate
+        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .needToIsolate(expectedQuestions)
         
         XCTAssertEqual(expectedQuestions, nextQuestions)
         XCTAssertEqual(expectedResolution, resolution)
@@ -241,7 +241,7 @@ class ContactCaseOptOutQuestionnaireTests: XCTestCase {
             .fullyVaccinated,
             .clinicalTrial,
         ]
-        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .optedOutOfIsolation(.fullyVaccinated)
+        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .optedOutOfIsolation(.fullyVaccinated, expectedQuestions)
         
         XCTAssertEqual(expectedQuestions, nextQuestions)
         XCTAssertEqual(expectedResolution, resolution)
@@ -262,7 +262,7 @@ class ContactCaseOptOutQuestionnaireTests: XCTestCase {
             .fullyVaccinated,
             .clinicalTrial,
         ]
-        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .needToIsolate
+        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .needToIsolate(expectedQuestions)
         
         XCTAssertEqual(expectedQuestions, nextQuestions)
         XCTAssertEqual(expectedResolution, resolution)
@@ -303,7 +303,7 @@ class ContactCaseOptOutQuestionnaireTests: XCTestCase {
             .fullyVaccinated,
             .medicallyExempt,
         ]
-        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .optedOutOfIsolation(.medicallyExempt)
+        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .optedOutOfIsolation(.medicallyExempt, expectedQuestions)
         
         XCTAssertEqual(expectedQuestions, nextQuestions)
         XCTAssertEqual(expectedResolution, resolution)
@@ -348,7 +348,7 @@ class ContactCaseOptOutQuestionnaireTests: XCTestCase {
             .medicallyExempt,
             .clinicalTrial,
         ]
-        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .optedOutOfIsolation(.fullyVaccinated)
+        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .optedOutOfIsolation(.fullyVaccinated, expectedQuestions)
         
         XCTAssertEqual(expectedQuestions, nextQuestions)
         XCTAssertEqual(expectedResolution, resolution)
@@ -371,7 +371,7 @@ class ContactCaseOptOutQuestionnaireTests: XCTestCase {
             .medicallyExempt,
             .clinicalTrial,
         ]
-        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .needToIsolate
+        let expectedResolution: ContactCaseOptOutQuestionnaire.Resolution = .needToIsolate(expectedQuestions)
         
         XCTAssertEqual(expectedQuestions, nextQuestions)
         XCTAssertEqual(expectedResolution, resolution)
