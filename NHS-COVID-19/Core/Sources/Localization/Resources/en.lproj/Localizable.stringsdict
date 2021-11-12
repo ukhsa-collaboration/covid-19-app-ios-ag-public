@@ -306,5 +306,117 @@
 				<string>Your remaining self-isolation period is %ld days.</string>
 			</dict>
 		</dict>
+		<key>contact_case_dct_explainer_duration %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld day</string>
+				<key>other</key>
+				<string>%ld days</string>
+			</dict>
+		</dict>
+		<key>contact_case_dct_explainer_title_accessible %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Take a test every day for %li day</string>
+				<key>other</key>
+				<string>Take a test every day for %li days</string>
+			</dict>
+		</dict>
+		<key>contact_case_dct_option_self_isolate_title %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Self-isolate for %ld day</string>
+				<key>other</key>
+				<string>Self-isolate for %ld days</string>
+			</dict>
+		</dict>
+		<key>contact_case_dct_option_take_test_title %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Take a test every day for %ld day</string>
+				<key>other</key>
+				<string>Take a test every day for %ld days</string>
+			</dict>
+		</dict>
+		<key>contact_case_dct_option_self_isolate_bulleted_list %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Self-isolate for the %ld day and book a free PCR test.You will need to self-isolate even if your test result is negative.</string>
+				<key>other</key>
+				<string>Self-isolate for the full %ld days and book a free PCR test.You will need to self-isolate even if your test result is negative.</string>
+			</dict>
+		</dict>
+		<key>contact_case_dct_option_take_test_selected_confirm_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Confirm you are going to take a test every day for %ld day</string>
+				<key>other</key>
+				<string>Confirm you are going to take a test every day for %ld days</string>
+			</dict>
+		</dict>
+		<key>contact_case_dct_option_self_isolate_selected_confirm_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Confirm you are going to self-isolate for %ld day</string>
+				<key>other</key>
+				<string>Confirm you are going to self-isolate for %ld days</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

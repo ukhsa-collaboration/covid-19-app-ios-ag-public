@@ -15,7 +15,7 @@
 				<key>one</key>
 				<string>%ld ਘੰਟੇ ਵਿੱਚ ਕੰਟੈਕਟ ਟਰੇਸਿੰਗ ਨੂੰ ਮੁੜ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਰਿਮਾਂਇਡਰ ਸੈੱਟ ਕਰੋ।</string>
 				<key>other</key>
-				<string>%ld ਘੰਟਿਆਂ ਵਿੱਚ ਕੰਟੈਕਟ ਟਰੇਸਿੰਗ ਨੂੰ ਮੁੜ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਰਿਮਾਂਇਡਰ ਸੈੱਟ ਕਰੋ।</string>
+				<string>ਐਪ ਤੁਹਾਨੂੰ %ld ਘੰਟਿਆਂ ਵਿੱਚ ਸੰਪਰਕ ਟ੍ਰੇਸਿੰਗ ਨੂੰ ਚਾਲੂ ਕਰਨ ਬਾਰੇ ਯਾਦ ਦਵਾਏਗੀ</string>
 			</dict>
 		</dict>
 		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>
@@ -304,6 +304,118 @@
 				<string>ਤੁਹਾਡੀ ਬਾਕੀ ਰਹਿੰਦੀ ਸਵੈ-ਇਕਾਂਤ ਦੀ ਮਿਆਦ %ld ਦਿਨ ਹੈ।</string>
 				<key>other</key>
 				<string>ਤੁਹਾਡੀ ਬਾਕੀ ਰਹਿੰਦੀ ਸਵੈ-ਇਕਾਂਤ ਦੀ ਮਿਆਦ %ld ਦਿਨ ਹੈ।</string>
+			</dict>
+		</dict>
+		<key>contact_case_dct_explainer_duration %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string/>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>contact_case_dct_explainer_title_accessible %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string/>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>contact_case_dct_option_self_isolate_title %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string/>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>contact_case_dct_option_take_test_title %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string/>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>contact_case_dct_option_self_isolate_bulleted_list %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string/>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>contact_case_dct_option_take_test_selected_confirm_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string/>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>contact_case_dct_option_self_isolate_selected_confirm_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string/>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string/>
+				<key>other</key>
+				<string/>
 			</dict>
 		</dict>
 	</dict>
