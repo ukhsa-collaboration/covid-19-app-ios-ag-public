@@ -20,9 +20,6 @@ class AboutThisAppReleaseDateAndVersionScreenTests: XCTestCase {
         
         let configuration = Set(arrayLiteral: DeviceConfiguration(language: "en", orientation: .portrait, contentSize: .medium, interfaceStyle: .light))
         try runner.run(deviceConfigurations: configuration, work: { app in
-            let screen = AboutThisAppScreen(app: app)
-            app.scrollTo(element: screen.dateOfRelease)
-            
             runner.step("Display release date and version number")
         })
     }

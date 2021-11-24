@@ -37,18 +37,28 @@ extension CoordinatedAppController {
             let vc = UnrecoverableErrorViewController(interactor: interactor)
             return BaseNavigationController(rootViewController: vc)
             
-        case .onboarding(let complete, let openURL):
+        case .onboarding(let complete, let openURL, let useWithoutBluetooth):
             let interactor = OnboardingInteractor(
                 complete: complete,
                 openURL: openURL
             )
-            return OnboardingFlowViewController(interactor: interactor)
-            
-        case .authorizationRequired(let requestPermissions, let country):
-            return PermissionsViewController(
-                country: country.interfaceProperty,
-                submit: requestPermissions
+            return OnboardingFlowViewController(
+                interactor: interactor,
+                useWithoutBluetooth: useWithoutBluetooth
             )
+            
+        case .authorizationRequired(let requestPermissions, let country, let useWithoutBluetooth):
+            if useWithoutBluetooth {
+                return ContactTracingUsesBluetoothViewController(
+                    interactor: ContactTracingUsesBluetoothInteractor(submitAction: requestPermissions),
+                    country: country.interfaceProperty
+                )
+            } else {
+                return PermissionsViewController(
+                    country: country.interfaceProperty,
+                    submit: requestPermissions
+                )
+            }
             
         case .postcodeAndLocalAuthorityRequired(let openURL, let getLocalAuthorities, let storeLocalAuthority):
             let interactor = LocalAuthorityOnboardingInteractor(
@@ -499,6 +509,18 @@ class LocalAuthorityOnboardingInteractor: LocalAuthorityFlowViewController.Inter
     
     func didTapGovUKLink() {
         openURL(ExternalLink.visitUKgov.url)
+    }
+}
+
+private struct ContactTracingUsesBluetoothInteractor: ContactTracingUsesBluetoothViewController.Interacting {
+    let submitAction: () -> Void
+    
+    init(submitAction: @escaping () -> Void) {
+        self.submitAction = submitAction
+    }
+    
+    func didTapContinueButton() {
+        submitAction()
     }
 }
 

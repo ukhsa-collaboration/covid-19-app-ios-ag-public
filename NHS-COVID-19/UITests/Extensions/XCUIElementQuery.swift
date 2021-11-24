@@ -15,6 +15,10 @@ extension XCUIElementQuery {
         localizeAndSplit(key).map { self[verbatim: $0] }
     }
     
+    subscript(localized key: ParameterisedStringLocalizable) -> [XCUIElement] {
+        localizeAndSplit(key).map { self[verbatim: $0] }
+    }
+    
     subscript(localized key: ParameterisedStringLocalizable) -> XCUIElement {
         elementWithText(localize(key))
     }

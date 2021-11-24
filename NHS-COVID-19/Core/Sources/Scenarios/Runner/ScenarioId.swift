@@ -39,11 +39,16 @@ struct ScenarioId: CaseIterable, Hashable, Identifiable, RawRepresentable {
     }
     
     static let allCases: [ScenarioId] = {
-        // Improved thanks to some hints from https://stackoverflow.com/a/54150007
+        // AnyClass.init seems to register new objective-C class the first time it is called.
+        //
+        // In order for the count variable to reserve enough capacity, we call this method once
+        // so that any new classes are registered to the runtime.
+        _ = [AnyClass](unsafeUninitializedCapacity: Int(1)) { buffer, initialisedCount in
+            initialisedCount = 0
+        }
         
-        // Add 1 since `objc_getClassList` seems to return a count increased by 1
-        // the second time we call it.
-        let count = objc_getClassList(nil, 0) + 1
+        // Improved thanks to some hints from https://stackoverflow.com/a/54150007
+        let count = objc_getClassList(nil, 0)
         let classes = [AnyClass](unsafeUninitializedCapacity: Int(count)) { buffer, initialisedCount in
             let autoreleasingPointer = AutoreleasingUnsafeMutablePointer<AnyClass>(buffer.baseAddress)
             initialisedCount = Int(objc_getClassList(autoreleasingPointer, count))

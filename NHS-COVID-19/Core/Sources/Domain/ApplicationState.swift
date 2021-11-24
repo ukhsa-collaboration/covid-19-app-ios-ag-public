@@ -107,10 +107,10 @@ public enum ApplicationState {
     case failedToStart(openURL: (URL) -> Void)
     
     /// Application needs to show onboarding.
-    case onboarding(complete: () -> Void, openURL: (URL) -> Void)
+    case onboarding(complete: () -> Void, openURL: (URL) -> Void, useWithoutBluetooth: Bool)
     
     /// Application requires onboarding.
-    case authorizationRequired(requestPermissions: () -> Void, country: DomainProperty<Country>)
+    case authorizationRequired(requestPermissions: () -> Void, country: DomainProperty<Country>, useWithoutBluetooth: Bool)
     
     /// Application is set up, but can not run exposure detection. See `reason`.
     ///

@@ -182,7 +182,12 @@ public func localizeAndSplit(_ key: StringLocalizableKey) -> [String] {
 }
 
 public func localizeAndSplit(_ key: ParameterisedStringLocalizable) -> [String] {
-    Localization.current.localize(key.key, arguments: key.arguments)
+    #warning("""
+    We use replacingOccurrences(:) here because values in stringDict (XML)
+    will escape backslash char since it's a special XML char
+    """)
+    return Localization.current.localize(key.key, arguments: key.arguments)
+        .replacingOccurrences(of: "\\n", with: "\n")
         .split(separator: "\n", omittingEmptySubsequences: true)
         .map(String.init)
 }
@@ -290,6 +295,21 @@ extension LocaleString {
         case .text:
             return string.applyCurrentLanguageDirection()
         }
+    }
+}
+
+extension LocaleURL {
+    public enum LocaleError: Error {
+        case unknown
+    }
+    
+    public func localizedURL() throws -> URL {
+        guard let identifier = Localization.preferredLocaleIdentifier(
+            from: Array(values.keys.map { $0.identifier })
+        ), let url = self[Locale(identifier: identifier)] else {
+            throw LocaleError.unknown
+        }
+        return url
     }
 }
 

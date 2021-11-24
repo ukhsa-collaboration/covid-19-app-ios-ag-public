@@ -37,8 +37,11 @@ class ConfigurationViewController: UIViewController {
         
         let newNoSymptomsScreenToggle = createToggle(feature: .newNoSymptomsScreen, isOn: featureToggleStorage.newNoSymptomsScreenToggle, action: #selector(toggleNewNoSymptomsScreen))
         
+        let bluetoothOff = createToggle(feature: .bluetoothOff, isOn: featureToggleStorage.bluetoothOffToggle, action: #selector(toggleBluetoothOff))
+        
         let stackView = UIStackView(arrangedSubviews: [
             newNoSymptomsScreenToggle,
+            bluetoothOff,
             disclaimer,
         ])
         
@@ -73,6 +76,8 @@ class ConfigurationViewController: UIViewController {
         switch feature {
         case .newNoSymptomsScreen:
             return "New \"No Symptoms\" Screen"
+        case .bluetoothOff:
+            return "Use app without bluetooth"
         }
     }
     
@@ -80,6 +85,9 @@ class ConfigurationViewController: UIViewController {
         featureToggleStorage.newNoSymptomsScreenToggle.toggle()
     }
     
+    @objc private func toggleBluetoothOff() {
+        featureToggleStorage.bluetoothOffToggle.toggle()
+    }
 }
 
 extension CaseIterable where Self: Equatable {

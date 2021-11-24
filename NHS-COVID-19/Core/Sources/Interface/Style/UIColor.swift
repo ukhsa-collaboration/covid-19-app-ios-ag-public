@@ -13,6 +13,7 @@ public enum ColorName: String, CaseIterable, Identifiable {
     case activeScanIndicator = "NHS Active Scan Indicator"
     case secondaryText = "Secondary Text"
     case primaryText = "Primary Text"
+    case tertiaryText = "Tertiary Text"
     case surface = "Surface"
     case errorRed = "Error Red"
     case amber = "Amber"

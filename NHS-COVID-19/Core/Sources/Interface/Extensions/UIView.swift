@@ -4,6 +4,8 @@
 
 import UIKit
 
+typealias SpacerView = UIView
+
 extension UIView {
     
     var isPortrait: Bool {

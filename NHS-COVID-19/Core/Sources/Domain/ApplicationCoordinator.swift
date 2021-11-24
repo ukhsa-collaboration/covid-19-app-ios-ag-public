@@ -390,10 +390,15 @@ public class ApplicationCoordinator {
                     self?.policyManager.acceptWithCurrentAppVersion()
                     completedOnboardingForCurrentSession.value = true
                 },
-                openURL: application.open
+                openURL: application.open,
+                useWithoutBluetooth: isFeatureEnabled(.bluetoothOff)
             )
         case .authorizationRequired:
-            return .authorizationRequired(requestPermissions: requestPermissions, country: country)
+            return .authorizationRequired(
+                requestPermissions: requestPermissions,
+                country: country,
+                useWithoutBluetooth: isFeatureEnabled(.bluetoothOff)
+            )
         case .canNotRunExposureNotification(let reason):
             return .canNotRunExposureNotification(reason: disabledReason(from: reason), country: country.currentValue)
         case .postcodeAndLocalAuthorityRequired:

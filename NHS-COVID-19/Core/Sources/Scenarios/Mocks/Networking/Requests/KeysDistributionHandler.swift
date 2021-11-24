@@ -10,7 +10,7 @@ struct KeysDistributionHandler: RequestHandler {
         case withBinAndSigFile
     }
     
-    var paths = ["/distribution/daily", "/distribution/two-hourly"]
+    var paths = ["/distribution/daily/", "/distribution/two-hourly/"]
     
     var response: Result<HTTPResponse, HTTPRequestError> {
         return Self.response()

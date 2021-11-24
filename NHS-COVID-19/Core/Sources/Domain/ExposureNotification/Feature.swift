@@ -10,5 +10,8 @@ public enum Feature: CaseIterable {
     /// symptoms in the symptoms questionnaire.
     case newNoSymptomsScreen
     
+    /// Enable user to use the app with bluetooth off.
+    case bluetoothOff
+    
     public static let productionEnabledFeatures: [Feature] = []
 }

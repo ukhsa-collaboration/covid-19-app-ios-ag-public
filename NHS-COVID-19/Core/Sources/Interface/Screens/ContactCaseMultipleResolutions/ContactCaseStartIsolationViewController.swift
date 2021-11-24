@@ -4,7 +4,6 @@
 
 import Common
 import Localization
-import SwiftUI
 import UIKit
 
 public protocol ContactCaseStartIsolationInteracting {
@@ -91,7 +90,8 @@ public class ContactCaseStartIsolationViewController: ScrollingContentViewContro
                 isolationEndDate: Date,
                 exposureDate: Date,
                 secondTestAdviceDate: Date?,
-                isolationPeriod: DayDuration) {
+                isolationPeriod: DayDuration,
+                shouldShowCancel: Bool = true) {
         self.interactor = interactor
         super.init(views: Content(
             interactor: interactor,
@@ -100,11 +100,13 @@ public class ContactCaseStartIsolationViewController: ScrollingContentViewContro
             secondTestAdviceDate: secondTestAdviceDate,
             isolationPeriod: isolationPeriod
         ).views)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(
-            title: localize(.cancel),
-            style: .done, target: self,
-            action: #selector(didTapCancel)
-        )
+        if shouldShowCancel {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(
+                title: localize(.cancel),
+                style: .done, target: self,
+                action: #selector(didTapCancel)
+            )
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -113,5 +115,10 @@ public class ContactCaseStartIsolationViewController: ScrollingContentViewContro
     
     @objc func didTapCancel() {
         interactor.didTapCancel()
+    }
+    
+    override public func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
     }
 }

@@ -9,11 +9,11 @@ struct ContactTracingHubScreen {
     var app: XCUIApplication
     
     var exposureNotificationSwitchOn: XCUIElement {
-        app.switches[localized: .contact_tracing_toggle_title_on]
+        app.switches[localized: .contact_tracing_toggle_title_on].firstMatch
     }
     
     var exposureNotificationSwitchOff: XCUIElement {
-        app.switches[localized: .contact_tracing_toggle_title_off]
+        app.switches[localized: .contact_tracing_toggle_title_off].firstMatch
     }
     
     func toggleOnSwitch() {
@@ -28,7 +28,7 @@ struct ContactTracingHubScreen {
     /// It taps on a whole toggle view (including text) instead of switch element.
     /// This method finds switch and taps on it.
     private func toggleSwitch(_ key: StringLocalizableKey) {
-        let switchElement: XCUIElement = app.switches[localized: key]
+        let switchElement: XCUIElement = app.switches[localized: key].firstMatch
         
         let horizontalOffset: CGFloat = 5
         let switchPosition: CGPoint

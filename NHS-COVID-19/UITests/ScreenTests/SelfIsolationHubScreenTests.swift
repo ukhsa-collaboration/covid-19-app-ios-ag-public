@@ -80,6 +80,10 @@ class SelfIsolationHubScreenTests: XCTestCase {
             app.scrollTo(element: screen.findYourLocalAuthorityLink)
             XCTAssert(screen.findYourLocalAuthorityLink.exists)
             XCTAssert(screen.findYourLocalAuthorityLink.isHittable)
+            
+            // we can't scroll to the link so we scroll to the next element instead
+            // to get the link out of the non-clickable safe area
+            app.scrollTo(element: screen.practicalSupportAccordionTitleButton)
             screen.findYourLocalAuthorityLink.tap()
             
             XCTAssert(app.staticTexts[runner.scenario.findYourLocalAuthorityAlertTitle].displayed)

@@ -10,9 +10,15 @@ public struct FeatureToggleStorage {
     @UserDefault("scenario.toggle.newNoSymptomsScreen", defaultValue: Feature.productionEnabledFeatures.contains(.newNoSymptomsScreen))
     public var newNoSymptomsScreenToggle: Bool
     
+    @UserDefault("scenario.toggle.bluetoothOff", defaultValue: Feature.productionEnabledFeatures.contains(.bluetoothOff))
+    public var bluetoothOffToggle: Bool
+    
     #warning("Retrieve key from UserDefault")
     public var allFeatureKeys: [String] {
-        [$newNoSymptomsScreenToggle.key]
+        [
+            $newNoSymptomsScreenToggle.key,
+            $bluetoothOffToggle.key,
+        ]
     }
     
     public init() {}
@@ -23,6 +29,10 @@ public struct FeatureToggleStorage {
         
         if store.newNoSymptomsScreenToggle {
             enabledFeatures.append(.newNoSymptomsScreen)
+        }
+        
+        if store.bluetoothOffToggle {
+            enabledFeatures.append(.bluetoothOff)
         }
         
         return enabledFeatures

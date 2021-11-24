@@ -99,12 +99,23 @@ public class CoordinatedAppController: AppController {
     }
     
     private func setupUI() {
-        let appearance = UINavigationBar.appearance()
-        appearance.tintColor = UIColor(.lightSurface)
-        appearance.barTintColor = UIColor(.navigationBar)
-        appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(.lightSurface)]
-        appearance.shadowImage = UIImage()
-        appearance.isTranslucent = false
+        if #available(iOS 15, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            UINavigationBar.appearance().tintColor = UIColor(.lightSurface)
+            appearance.backgroundColor = UIColor(.navigationBar)
+            appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(.lightSurface)]
+            appearance.shadowImage = UIImage()
+            UINavigationBar.appearance().standardAppearance = appearance
+            UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        } else {
+            let appearance = UINavigationBar.appearance()
+            appearance.tintColor = UIColor(.lightSurface)
+            appearance.barTintColor = UIColor(.navigationBar)
+            appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor(.lightSurface)]
+            appearance.shadowImage = UIImage()
+            appearance.isTranslucent = false
+        }
     }
     
 }

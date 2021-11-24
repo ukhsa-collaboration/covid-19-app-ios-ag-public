@@ -8,11 +8,11 @@ struct HomeAnimationsScreen {
     var app: XCUIApplication
     
     var homeAnimationsToggleOnDescription: XCUIElement {
-        app.switches[localized: .home_animations_toggle_description_on]
+        app.switches[localized: .home_animations_toggle_description_on].firstMatch
     }
     
     var homeAnimationsToggleOffDescription: XCUIElement {
-        app.switches[localized: .home_animations_toggle_description_off]
+        app.switches[localized: .home_animations_toggle_description_off].firstMatch
     }
     
     var title: XCUIElement {

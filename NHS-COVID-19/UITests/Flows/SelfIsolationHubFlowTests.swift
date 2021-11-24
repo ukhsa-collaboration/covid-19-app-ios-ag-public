@@ -6,7 +6,6 @@ import Scenarios
 import XCTest
 
 class SelfIsolationHubFlowTests: XCTestCase {
-    
     @Propped
     private var runner: ApplicationRunner<SandboxedScenario>
     
@@ -69,7 +68,7 @@ class SelfIsolationHubFlowTests: XCTestCase {
             }
             
             financialSupportScreen.checkEligibilityLinkButton.tap()
-            XCTAssert(homeScreen.aboutButton.waitForExistence(timeout: 0.1))
+            XCTAssert(homeScreen.aboutButton.waitForExistence(timeout: 0.3))
             
             runner.step("Home screen - after financial suppport") {
                 """

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import UIKit
@@ -14,22 +14,25 @@ public class OnboardingFlowViewController: BaseNavigationController {
     
     public typealias Interacting = OnboardingFlowViewControllerInteracting
     
-    private enum State {
+    fileprivate enum State {
         case start
         case deniedAge
+        case howAppWorks
         case privacy
     }
     
     private let interactor: Interacting
+    private let useWithoutBluetooth: Bool
     
-    private var state = State.start {
+    fileprivate var state = State.start {
         didSet {
             update(for: state)
         }
     }
     
-    public init(interactor: Interacting) {
+    public init(interactor: Interacting, useWithoutBluetooth: Bool) {
         self.interactor = interactor
+        self.useWithoutBluetooth = useWithoutBluetooth
         super.init()
         
         update(for: state)
@@ -49,9 +52,17 @@ public class OnboardingFlowViewController: BaseNavigationController {
         switch state {
         case .start:
             return StartOnboardingViewController(
-                complete: { [weak self] in self?.state = .privacy },
+                complete: { [weak self] in
+                    if self?.useWithoutBluetooth ?? false {
+                        self?.state = .howAppWorks
+                    } else {
+                        self?.state = .privacy
+                    }
+                },
                 reject: { [weak self] in self?.state = .deniedAge }
             )
+        case .howAppWorks:
+            return HowAppWorksViewController(interactor: HowAppWorksInteractor(controller: self))
         case .privacy:
             return PrivacyViewController(interactor: self)
         case .deniedAge:
@@ -75,5 +86,18 @@ extension OnboardingFlowViewController: PrivacyViewController.Interacting {
     
     public func didTapNoThanks() {
         state = .start
+    }
+    
+}
+
+struct HowAppWorksInteractor: HowAppWorksViewController.Interacting {
+    private weak var viewController: OnboardingFlowViewController?
+    
+    init(controller: OnboardingFlowViewController?) {
+        viewController = controller
+    }
+    
+    func didTapContinueButton() {
+        viewController?.state = .privacy
     }
 }

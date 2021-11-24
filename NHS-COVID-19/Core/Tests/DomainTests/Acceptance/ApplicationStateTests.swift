@@ -50,7 +50,7 @@ class ApplicationStateTests: AcceptanceTestCase {
         try completeExposureNotificationActivation(authorizationStatus: .unknown)
         try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
         
-        guard case .onboarding(let complete, let openUrl) = coordinator.state else {
+        guard case .onboarding(let complete, let openUrl, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
@@ -67,7 +67,7 @@ class ApplicationStateTests: AcceptanceTestCase {
         
         try savePostcode(.init("B44"), LocalAuthority(name: "Local Authority 1", id: .init("LA1"), country: .england)).get()
         
-        guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
+        guard case .authorizationRequired(let requestPermissions, _, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
@@ -94,7 +94,7 @@ class ApplicationStateTests: AcceptanceTestCase {
         try completeExposureNotificationActivation(authorizationStatus: .authorized, status: .disabled)
         try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
         
-        guard case .onboarding(let complete, _) = coordinator.state else {
+        guard case .onboarding(let complete, _, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
@@ -106,7 +106,7 @@ class ApplicationStateTests: AcceptanceTestCase {
         
         try savePostcode(.init("B44"), LocalAuthority(name: "Local Authority 1", id: .init("LA1"), country: .england)).get()
         
-        guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
+        guard case .authorizationRequired(let requestPermissions, _, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
@@ -125,7 +125,7 @@ class ApplicationStateTests: AcceptanceTestCase {
         try completeExposureNotificationActivation(authorizationStatus: .unknown)
         try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
         
-        guard case .onboarding(let complete, _) = coordinator.state else {
+        guard case .onboarding(let complete, _, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
@@ -137,7 +137,7 @@ class ApplicationStateTests: AcceptanceTestCase {
         
         try savePostcode(.init("B44"), LocalAuthority(name: "Local Authority 1", id: .init("LA1"), country: .england)).get()
         
-        guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
+        guard case .authorizationRequired(let requestPermissions, _, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
@@ -157,7 +157,7 @@ class ApplicationStateTests: AcceptanceTestCase {
         try completeExposureNotificationActivation(authorizationStatus: .unknown)
         try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
         
-        guard case .onboarding(let complete, _) = coordinator.state else {
+        guard case .onboarding(let complete, _, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
@@ -169,7 +169,7 @@ class ApplicationStateTests: AcceptanceTestCase {
         
         try savePostcode(.init("B44"), LocalAuthority(name: "Local Authority 1", id: .init("LA1"), country: .england)).get()
         
-        guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
+        guard case .authorizationRequired(let requestPermissions, _, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         

@@ -22,6 +22,11 @@ public enum StringLocalizableKey: String, CaseIterable {
     
     case bluetooth_disabled_title
     case bluetooth_disabled_description
+    case onboarding_permissions_bluetooth_title
+    case onboarding_permissions_bluetooth_description
+    case onboarding_permissions_bluetooth_description2
+    case onboarding_permissions_bluetooth_checklist
+    case onboarding_permissions_bluetooth_continue_button_title
     
     case authorization_denied_title
     case authorization_denied_description
@@ -55,6 +60,19 @@ public enum StringLocalizableKey: String, CaseIterable {
     case exposure_notification_permissions_onboarding_step_body
     case permissions_onboarding_step_detail
     case permissions_continue_button_title
+    
+    // MARK: - Onboarding how app works
+    
+    case onboarding_how_app_works_title
+    case onboarding_how_app_works_bluetooth_bullet_header
+    case onboarding_how_app_works_bluetooth_bullet_desc
+    case onboarding_how_app_works_battery_bullet_header
+    case onboarding_how_app_works_battery_bullet_desc
+    case onboarding_how_app_works_location_bullet_header
+    case onboarding_how_app_works_location_bullet_desc
+    case onboarding_how_app_works_privacy_bullet_header
+    case onboarding_how_app_works_privacy_bullet_desc
+    case onboarding_how_app_works_continue
     
     case privacy_title
     case privacy_description_paragraph1
@@ -885,6 +903,13 @@ public enum StringLocalizableKey: String, CaseIterable {
     case contact_case_summary_heading
     case contact_case_summary_submit_button
     
+    // MARK: - New 'Bluetooth disabled' screen
+    
+    case launcher_permissions_bluetooth_title
+    case launcher_permissions_bluetooth_hint
+    case launcher_permissions_bluetooth_description
+    case launcher_permissions_bluetooth_button
+    case launcher_permissions_bluetooth_secondary_button
 }
 
 public enum ParameterisedStringLocalizable: Equatable {
@@ -1276,4 +1301,13 @@ private extension DateIntervalFormatter {
         formatter.timeStyle = .short
         return formatter
     }()
+}
+
+private extension Array where Element == String {
+    private static let arraySeparator = ". "
+    
+    var concatForAccessibility: String {
+        joined(separator: Self.arraySeparator) // Join values with a dot between parts
+            .replacingOccurrences(of: "..", with: ".") // Some parts had a dot already, so replace double-dots
+    }
 }

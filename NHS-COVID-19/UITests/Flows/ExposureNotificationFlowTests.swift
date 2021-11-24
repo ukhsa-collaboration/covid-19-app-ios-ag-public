@@ -135,6 +135,7 @@ class ExposureNotificationFlowTests: XCTestCase {
             }
             
             XCTAssertTrue(vaccinationStatusScreen.confirmButton.exists)
+            app.scrollTo(element: vaccinationStatusScreen.confirmButton)
             vaccinationStatusScreen.confirmButton.tap()
             
             // Summary screen
@@ -148,6 +149,7 @@ class ExposureNotificationFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: summaryScreen.submitButton)
             summaryScreen.submitButton.tap()
             
             // Fully Vaccinated
@@ -269,6 +271,7 @@ class ExposureNotificationFlowTests: XCTestCase {
             }
             
             XCTAssertTrue(vaccinationStatusScreen.confirmButton.exists)
+            app.scrollTo(element: vaccinationStatusScreen.confirmButton)
             vaccinationStatusScreen.confirmButton.tap()
             
             // Summary screen
@@ -282,6 +285,7 @@ class ExposureNotificationFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: summaryScreen.submitButton)
             summaryScreen.submitButton.tap()
             
             // Advice to self-isolate
@@ -399,6 +403,7 @@ class ExposureNotificationFlowTests: XCTestCase {
             }
             
             XCTAssertTrue(vaccinationStatusScreen.confirmButton.exists)
+            app.scrollTo(element: vaccinationStatusScreen.confirmButton)
             vaccinationStatusScreen.confirmButton.tap()
             
             // Summary screen
@@ -412,6 +417,7 @@ class ExposureNotificationFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: summaryScreen.submitButton)
             summaryScreen.submitButton.tap()
             
             // Advice to self-isolate
@@ -502,6 +508,7 @@ class ExposureNotificationFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: summaryScreen.submitButton)
             summaryScreen.submitButton.tap()
             
             // Under Age Limit
@@ -619,6 +626,7 @@ class ExposureNotificationFlowTests: XCTestCase {
             }
             
             XCTAssertTrue(vaccinationStatusScreen.confirmButton.exists)
+            app.scrollTo(element: vaccinationStatusScreen.confirmButton)
             vaccinationStatusScreen.confirmButton.tap()
             
             // Summary screen
@@ -632,6 +640,7 @@ class ExposureNotificationFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: summaryScreen.submitButton)
             summaryScreen.submitButton.tap()
             
             // Continue Isolation screen
@@ -755,6 +764,7 @@ class ExposureNotificationFlowTests: XCTestCase {
             }
             
             XCTAssertTrue(vaccinationStatusScreen.confirmButton.exists)
+            app.scrollTo(element: vaccinationStatusScreen.confirmButton)
             vaccinationStatusScreen.confirmButton.tap()
             
             // Summary screen
@@ -768,6 +778,7 @@ class ExposureNotificationFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: summaryScreen.submitButton)
             summaryScreen.submitButton.tap()
             
             // Continue Isolation screen
@@ -861,6 +872,7 @@ class ExposureNotificationFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: summaryScreen.submitButton)
             summaryScreen.submitButton.tap()
             
             // Continue Isolation screen

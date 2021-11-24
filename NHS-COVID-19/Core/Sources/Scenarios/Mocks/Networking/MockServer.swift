@@ -53,7 +53,9 @@ class MockServer: HTTPClient {
         
         Self.logger.debug("starting request", metadata: .describing(request))
         
-        if let handler = handlers.first(where: { $0.hasResponse(for: request.path) }) {
+        let responseHandlers = handlers.filter { $0.hasResponse(for: request.path) }
+        precondition(responseHandlers.count <= 1, "Found multiple handlers for same url")
+        if let handler = responseHandlers.first {
             return handler.response.publisher
                 .handleEvents()
                 .log(into: Self.logger, level: .debug, "ending request- \(request.path)")

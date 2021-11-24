@@ -402,26 +402,6 @@
 				<string/>
 			</dict>
 		</dict>
-		<key>contact_case_dct_explainer_title_accessible %ld</key>
-		<dict>
-			<key>NSStringLocalizedFormatKey</key>
-			<string/>
-			<key>days</key>
-			<dict>
-				<key>NSStringFormatSpecTypeKey</key>
-				<string>NSStringPluralRuleType</string>
-				<key>NSStringFormatValueTypeKey</key>
-				<string>li</string>
-				<key>one</key>
-				<string/>
-				<key>few</key>
-				<string/>
-				<key>many</key>
-				<string/>
-				<key>other</key>
-				<string/>
-			</dict>
-		</dict>
 		<key>contact_case_dct_option_self_isolate_title %ld</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>

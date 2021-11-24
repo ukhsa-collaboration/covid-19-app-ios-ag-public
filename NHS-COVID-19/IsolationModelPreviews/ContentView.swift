@@ -16,28 +16,29 @@ extension UIView {
     }
 }
 
+// https://www.hackingwithswift.com/quick-start/swiftui/how-to-convert-a-swiftui-view-to-an-image
+extension View {
+    func viewPngData() -> Data {
+        let controller = UIHostingController(rootView: self)
+        let view = controller.view
+        
+        let targetSize = controller.view.intrinsicContentSize
+        view?.bounds = CGRect(origin: .zero, size: targetSize)
+        view?.backgroundColor = .clear
+        
+        let renderer = UIGraphicsImageRenderer(size: targetSize)
+        
+        return renderer.pngData(actions: { rendererContext in
+            view?.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
+            view?.layer.render(in: rendererContext.cgContext)
+        })
+    }
+}
+
 class ImageSaver: NSObject, UIDocumentPickerDelegate {
     func save(url: URL) {
         let documentsPicker = UIDocumentPickerViewController(url: url, in: .moveToService)
         UIApplication.shared.windows.first?.rootViewController?.present(documentsPicker, animated: true)
-    }
-}
-
-// https://stackoverflow.com/questions/57200521/how-to-convert-a-view-not-uiview-to-an-image
-struct BoundsReader: View {
-    @Binding var bounds: CGRect
-    
-    var body: some View {
-        GeometryReader { proxy in
-            self.createView(proxy: proxy)
-        }
-    }
-    
-    func createView(proxy: GeometryProxy) -> some View {
-        DispatchQueue.main.async {
-            self.bounds = proxy.frame(in: .local)
-        }
-        return Rectangle().fill(Color.clear)
     }
 }
 
@@ -66,7 +67,6 @@ struct StatesView: View {
 
 struct CaptureView<Content: View>: View {
     let content: Content
-    @State private var bounds: CGRect = .zero
     private let saver = ImageSaver()
     var body: some View {
         content
@@ -77,25 +77,18 @@ struct CaptureView<Content: View>: View {
                     Text("Save Image...")
                 }
             })
-            .background(BoundsReader(bounds: $bounds))
+        
     }
     
     private func saveImage() {
         
-        guard !bounds.isEmpty else {
-            print("empty bounds")
-            return
-        }
-        
-        let host = UIHostingController(rootView: content)
-        host.view.drawHierarchy(in: bounds, afterScreenUpdates: true)
-        let imageData = host.view.asPNG(bounds: bounds)
+        let imageData = viewPngData()
         do {
             let url = FileManager.default.temporaryDirectory.appendingPathComponent("image.png")
             try imageData.write(to: url)
             saver.save(url: url)
         } catch {
-            print("\(error)")
+            print("CaptureView SaveImage: \(error)")
         }
     }
 }

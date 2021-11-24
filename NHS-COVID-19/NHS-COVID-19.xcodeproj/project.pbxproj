@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07DAB7E9273BD77B008B2A09 /* BluetoothDisabledWarningScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DAB7E8273BD77B008B2A09 /* BluetoothDisabledWarningScreen.swift */; };
+		07DAB7EB273BD84D008B2A09 /* BluetoothDisabledWarningScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DAB7EA273BD84D008B2A09 /* BluetoothDisabledWarningScreenTests.swift */; };
 		0805240525CAEFCF001E0FF6 /* TestSymptomsReviewScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0805240425CAEFCF001E0FF6 /* TestSymptomsReviewScreen.swift */; };
 		0805240B25CAF06B001E0FF6 /* TestSymptomsReviewScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0805240A25CAF06B001E0FF6 /* TestSymptomsReviewScreenTests.swift */; };
 		0806134A2552D12100E6E504 /* RiskLevelExplanationFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080613492552D12100E6E504 /* RiskLevelExplanationFlowTests.swift */; };
@@ -93,6 +95,10 @@
 		7FF67E8324B49F540097F2A0 /* QRCodeScannerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF67E8224B49F540097F2A0 /* QRCodeScannerScreen.swift */; };
 		7FF67E8524B4A4E10097F2A0 /* CameraAccessDeniedScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF67E8424B4A4E10097F2A0 /* CameraAccessDeniedScreen.swift */; };
 		7FF67E8724B4BA370097F2A0 /* QRCodeScannerScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF67E8624B4BA370097F2A0 /* QRCodeScannerScreenTests.swift */; };
+		882F9957273C047F0075541E /* HowAppWorksScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882F9956273C047F0075541E /* HowAppWorksScreen.swift */; };
+		882F995A273C05890075541E /* HowAppWorksScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 882F9959273C05890075541E /* HowAppWorksScreenTests.swift */; };
+		885C23C1273BBD8C00D14BDA /* ContactTracingUsesBlueoothScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885C23C0273BBD8C00D14BDA /* ContactTracingUsesBlueoothScreen.swift */; };
+		885C23C3273BBF7000D14BDA /* ContactTracingUsesBluetoothScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885C23C2273BBF7000D14BDA /* ContactTracingUsesBluetoothScreenTests.swift */; };
 		8924879724687C9C001CA0F4 /* StartOnboardingScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8924879624687C9C001CA0F4 /* StartOnboardingScreenTests.swift */; };
 		8924879924687CB1001CA0F4 /* StartOnboardingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8924879824687CB1001CA0F4 /* StartOnboardingScreen.swift */; };
 		892C82A524C3A3260014494C /* ImageComparisonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9E4C8D2493C49400B2D909 /* ImageComparisonTests.swift */; };
@@ -276,6 +282,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		07DAB7E8273BD77B008B2A09 /* BluetoothDisabledWarningScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDisabledWarningScreen.swift; sourceTree = "<group>"; };
+		07DAB7EA273BD84D008B2A09 /* BluetoothDisabledWarningScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothDisabledWarningScreenTests.swift; sourceTree = "<group>"; };
 		0805240425CAEFCF001E0FF6 /* TestSymptomsReviewScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSymptomsReviewScreen.swift; sourceTree = "<group>"; };
 		0805240A25CAF06B001E0FF6 /* TestSymptomsReviewScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSymptomsReviewScreenTests.swift; sourceTree = "<group>"; };
 		080613492552D12100E6E504 /* RiskLevelExplanationFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskLevelExplanationFlowTests.swift; sourceTree = "<group>"; };
@@ -365,6 +373,10 @@
 		7FF67E8224B49F540097F2A0 /* QRCodeScannerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeScannerScreen.swift; sourceTree = "<group>"; };
 		7FF67E8424B4A4E10097F2A0 /* CameraAccessDeniedScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAccessDeniedScreen.swift; sourceTree = "<group>"; };
 		7FF67E8624B4BA370097F2A0 /* QRCodeScannerScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeScannerScreenTests.swift; sourceTree = "<group>"; };
+    882F9956273C047F0075541E /* HowAppWorksScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowAppWorksScreen.swift; sourceTree = "<group>"; };
+		882F9959273C05890075541E /* HowAppWorksScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowAppWorksScreenTests.swift; sourceTree = "<group>"; };
+		885C23C0273BBD8C00D14BDA /* ContactTracingUsesBlueoothScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTracingUsesBlueoothScreen.swift; sourceTree = "<group>"; };
+		885C23C2273BBF7000D14BDA /* ContactTracingUsesBluetoothScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTracingUsesBluetoothScreenTests.swift; sourceTree = "<group>"; };
 		8924879624687C9C001CA0F4 /* StartOnboardingScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartOnboardingScreenTests.swift; sourceTree = "<group>"; };
 		8924879824687CB1001CA0F4 /* StartOnboardingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartOnboardingScreen.swift; sourceTree = "<group>"; };
 		8925EDBC24DAC43200D8CD6B /* SimulatedENAuthorizationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatedENAuthorizationScreen.swift; sourceTree = "<group>"; };
@@ -645,6 +657,22 @@
 			path = CheckIn;
 			sourceTree = "<group>";
 		};
+		882F9955273C04640075541E /* AboutThisApp */ = {
+			isa = PBXGroup;
+			children = (
+				882F9956273C047F0075541E /* HowAppWorksScreen.swift */,
+			);
+			path = AboutThisApp;
+			sourceTree = "<group>";
+		};
+		882F9958273C05680075541E /* AboutThisApp */ = {
+			isa = PBXGroup;
+			children = (
+				882F9959273C05890075541E /* HowAppWorksScreenTests.swift */,
+			);
+			path = AboutThisApp;
+			sourceTree = "<group>";
+		};
 		8925EDBB24DAC41D00D8CD6B /* SimulatedScreens */ = {
 			isa = PBXGroup;
 			children = (
@@ -700,6 +728,7 @@
 		89AB940B2462AACA004E405C /* ScreenTests */ = {
 			isa = PBXGroup;
 			children = (
+				882F9958273C05680075541E /* AboutThisApp */,
 				8BB0F96D26A8904D004D7517 /* ContactCaseMultipleResolutions */,
 				22B78E7D2678C8010026A71C /* WarnAndTestCheckSymptomsScreenTests.swift */,
 				89AB940C2462AAE3004E405C /* EnterPostcodeScreenTests.swift */,
@@ -710,6 +739,7 @@
 				95B52FFC2490B7530076580F /* PrivacyScreenTests.swift */,
 				95A95E6224A0CA8B00BCF307 /* UnrecoverableErrorScreenTests.swift */,
 				953A953924A0F55F00725940 /* BluetoothDisabledScreenTests.swift */,
+				07DAB7EA273BD84D008B2A09 /* BluetoothDisabledWarningScreenTests.swift */,
 				953A954324A1D7AE00725940 /* AuthorizationDeniedScreenTests.swift */,
 				7FF67E8624B4BA370097F2A0 /* QRCodeScannerScreenTests.swift */,
 				9409ED2A24BC93D000847D58 /* SymptomsListScreenTests.swift */,
@@ -769,6 +799,7 @@
 				ED7A653A26A9B36E00774E7F /* AgeDeclarationScreenTests.swift */,
 				ED34642826B01A5D0051FB80 /* ContactCaseVaccinationStatusScreenTests.swift */,
 				223FA09326FB8615004B1D39 /* ContactCaseSummaryScreenTests.swift */,
+				885C23C2273BBF7000D14BDA /* ContactTracingUsesBluetoothScreenTests.swift */,
 			);
 			path = ScreenTests;
 			sourceTree = "<group>";
@@ -1022,6 +1053,7 @@
 		89C3DC8B2462C883001338E3 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				882F9955273C04640075541E /* AboutThisApp */,
 				8BB0F96A26A88E8D004D7517 /* ContactCaseMultipleResolutions */,
 				8B82B3B62600C70900A87955 /* StopTheSpread */,
 				95E6378E2546EE9F00135F42 /* LocalAuthority */,
@@ -1037,6 +1069,7 @@
 				95B52FFE2490B7C90076580F /* PrivacyScreen.swift */,
 				95A95E6424A0CAC100BCF307 /* UnrecoverableErrorScreen.swift */,
 				953A953B24A0F62E00725940 /* BluetoothDisabledScreen.swift */,
+				07DAB7E8273BD77B008B2A09 /* BluetoothDisabledWarningScreen.swift */,
 				953A954124A1D59600725940 /* AuthorizationDeniedScreen.swift */,
 				94AA418024C186E70073E493 /* LoadingFailedScreen.swift */,
 				22CDCECB24CAE3810047B203 /* AboutThisAppScreen.swift */,
@@ -1061,6 +1094,7 @@
 				223FA09526FB86B1004B1D39 /* ContactCaseSummaryScreen.swift */,
 				ED7A653826A9B1F100774E7F /* AgeDeclarationScreen.swift */,
 				ED34642626B0163E0051FB80 /* ContactCaseVaccinationStatusScreen.swift */,
+				885C23C0273BBD8C00D14BDA /* ContactTracingUsesBlueoothScreen.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -1604,6 +1638,7 @@
 				95E322F324FFFA900002596D /* SimulatedShareRandomIdsScreen.swift in Sources */,
 				89E125312468190E00209CC2 /* Accessibility.swift in Sources */,
 				086C999E2600D64D00BC6B92 /* ThankYouScreen.swift in Sources */,
+				885C23C1273BBD8C00D14BDA /* ContactTracingUsesBlueoothScreen.swift in Sources */,
 				22A6FCF4264C1C91004B51C3 /* UnkownTestResultFlowTests.swift in Sources */,
 				DDF8A86E24EBD3A30064A6FC /* BelowRequiredAgeErrorScreen.swift in Sources */,
 				89AB940D2462AAE3004E405C /* EnterPostcodeScreenTests.swift in Sources */,
@@ -1645,6 +1680,7 @@
 				94894E3F24CABD4500D6CDA7 /* PositiveTestResultNoSymptomsScreenTests.swift in Sources */,
 				22B2D35624D1E47100814CEC /* NoSymptomsIsolatingScreenTests.swift in Sources */,
 				2273582525EEA2FE003C86DE /* MyAreaScreen.swift in Sources */,
+				07DAB7EB273BD84D008B2A09 /* BluetoothDisabledWarningScreenTests.swift in Sources */,
 				0805240B25CAF06B001E0FF6 /* TestSymptomsReviewScreenTests.swift in Sources */,
 				5FFF6351263AA72700BA77A2 /* ContactTracingHubScreen.swift in Sources */,
 				133E8D5124CCA675002828DB /* BookATestScreenTests.swift in Sources */,
@@ -1673,6 +1709,7 @@
 				223A9BB324D19EF00055582E /* NegativeTestResultWithIsolationScreen.swift in Sources */,
 				0851DE5E25CAC56A00B87078 /* TestCheckSymptomsScreenTests.swift in Sources */,
 				ED34642726B0163E0051FB80 /* ContactCaseVaccinationStatusScreen.swift in Sources */,
+				882F995A273C05890075541E /* HowAppWorksScreenTests.swift in Sources */,
 				223A9BB524D1A0270055582E /* NegativeTestResultWithIsolationScreenTests.swift in Sources */,
 				892C82A524C3A3260014494C /* ImageComparisonTests.swift in Sources */,
 				95BFB77424A33AFC00406724 /* LogoStraplineComponentTests.swift in Sources */,
@@ -1681,6 +1718,7 @@
 				FD3BB7DD25EE9521003ADF9B /* VenueHistoryScreenTests.swift in Sources */,
 				228071B4261E3FD600486992 /* ShareKeysReminderScreen.swift in Sources */,
 				9485D9D724C8673900215CAB /* PositiveTestResultContinueIsolationScreen.swift in Sources */,
+				885C23C3273BBF7000D14BDA /* ContactTracingUsesBluetoothScreenTests.swift in Sources */,
 				22CDCECC24CAE3810047B203 /* AboutThisAppScreen.swift in Sources */,
 				086C99A52600D6BC00BC6B92 /* ThankYouScreenTests.swift in Sources */,
 				ED6454A0269C626500A846BD /* GetAFreeTestKitScreenTests.swift in Sources */,
@@ -1713,6 +1751,7 @@
 				FD878EA8256BD665009D597A /* FinancialSupportScreen.swift in Sources */,
 				95486426265E812700C50E59 /* NoSymptomsAfterPositiveTestScreen.swift in Sources */,
 				2260359026932EB800D53DD5 /* HubButtonCellComponentTests.swift in Sources */,
+				07DAB7E9273BD77B008B2A09 /* BluetoothDisabledWarningScreen.swift in Sources */,
 				13C110AD250FC05100EA0367 /* StraplineComponentTests.swift in Sources */,
 				8BB0F96F26A89060004D7517 /* ContactCaseExposureInfoScreenTests.swift in Sources */,
 				089E16FD26AAD33800634BD4 /* ContactCaseNoIsolationUnderAgeLimitScreen.swift in Sources */,
@@ -1729,6 +1768,7 @@
 				5FFF635D263AA80400BA77A2 /* ContactTracingHubScreenTests.swift in Sources */,
 				DD7CDD3A250A376B001DFB74 /* PositiveTestResultStartIsolationScreen.swift in Sources */,
 				7FF67E8524B4A4E10097F2A0 /* CameraAccessDeniedScreen.swift in Sources */,
+				882F9957273C047F0075541E /* HowAppWorksScreen.swift in Sources */,
 				95004B0125078C0E00BD6F76 /* NegativeAfterPositiveTestResultScreen.swift in Sources */,
 				FDE2CA5725485A7E00256C49 /* SelectLocalAuthorityScreen.swift in Sources */,
 				9485D9D924C8691800215CAB /* PositiveTestResultContinueIsolationScreenTests.swift in Sources */,

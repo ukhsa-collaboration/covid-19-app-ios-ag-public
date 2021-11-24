@@ -5,6 +5,13 @@
 import Foundation
 import SwiftUI
 
+public class SelfSizingHostingController<Content>: UIHostingController<Content> where Content: View {
+    override public func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        view.invalidateIntrinsicContentSize()
+    }
+}
+
 struct SizingView<T: View>: View {
     let view: T
     let updateSizeHandler: (_ size: CGSize) -> Void
