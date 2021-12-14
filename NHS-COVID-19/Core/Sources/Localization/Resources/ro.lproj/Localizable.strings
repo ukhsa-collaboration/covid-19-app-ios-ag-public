@@ -12,9 +12,9 @@
 "bluetooth_disabled_description_4" = "Vă rugăm să intrați la setări și să activați Bluetooth-ul.";
 "exposure_notification_disabled_title" = "Pentru ca aplicația să funcționeze, trebuie să activați permisiunile în dispozitivul dvs.";
 "exposure_notification_disabled_description_1" = "Pentru ca aplicația să funcționeze corect, trebuie să utilizeze caracteristicile telefonului dvs., cum ar fi „Bluetooth Low Energy” pentru urmărirea contactelor și camera pentru verificarea locaților.\n\nÎn telefonul dvs. aceste permisiuni ar putea fi numite „Notificări de expunere” sau „Jurnal de expunere”.";
-"exposure_notification_disabled_action" = "Intrați la Setări";
-"authorization_denied_title" = "Pentru ca aplicația să funcționeze, trebuie să activați permisiunile în dispozitivul dvs.";
-"authorization_denied_description_1" = "Această aplicație folosește „Notificări de expunere” pentru a vă informa dacă ați intrat în contact cu alți utilizatori ai aplicației care au raportat un test pozitiv pentru Coronavirus.";
+"exposure_notification_disabled_action" = "Deschideți setările telefonului";
+"authorization_denied_title" = "Permiteți „Exposure notifications” pentru ca această aplicație să funcționeze";
+"authorization_denied_description_1" = "Astfel aplicația vă va informa dacă ați intrat în contact direct cu o persoană testată pozitiv pentru COVID-19.\n\nEste posibil ca telefonul dvs. să denumească aceste „Exposure notifications” ca „Exposure logging”.\n\nMergeți la setările telefonului și modificați la „Permiteți” (Allow).";
 "authorization_denied_description_2" = "\"Jurnalul de expunere” se întâmplă atunci când Bluetooth permite telefonului dvs. să primească numere de identificare codate aleatoriu aparținând altor utilizatori și apoi transmite numărul dvs. de identificare către telefoanele lor. Poate fi dezactivat oricând, dar aplicația nu va mai funcționa după aceea.";
 "authorization_denied_description_3" = "Vă rugăm să acceptați permisiunile atunci când vi se solicită.";
 "authorization_denied_action" = "Intrați la Setări";
@@ -160,7 +160,7 @@
 "exposure_acknowledgement_link" = "NHS 111 online";
 "exposure_acknowledgement_button" = "Înțeleg";
 "isolation_until_date %@ %@" = "Până pe %@ la %@";
-"isolation_until_date_title" = "Trebuie să vă auto-izolați";
+"isolation_until_date_title" = "Trebuie să vă autoizolați";
 "end_of_isolation_isolate_title" = "Vești bune!";
 "end_of_isolation_has_passed_description date: %@ time: %@" = "V-a expirat izolarea pe %@ la %@";
 "end_of_isolation_is_near_description date: %@ time: %@" = "Auto-izolarea dvs. se termină pe %@ la %@";
@@ -281,7 +281,7 @@
 "link_book_a_test_for_someone_else" = "https://www.nhs.uk/conditions/coronavirus-covid-19/testing-and-tracing/get-a-test-to-check-if-you-have-coronavirus/";
 "close" = "Închidere";
 "bluetooth_disabled_description" = "Această aplicație utilizează Bluetooth pentru a ști când se află lângă un alt telefon cu această aplicație instalată. Dacă aveți Bluetooth-ul dezactivat, această aplicație nu va funcționa.\n\nAceastă aplicație utilizează „Bluetooth Low Energy” (\"energie redusă Bluetooth\") - o tehnologie de economisire a bateriei.\n\nVă rugăm să accesați setările și să activați Bluetooth-ul.";
-"authorization_denied_description" = "Această aplicație folosește „Notificări de expunere” pentru a vă informa dacă ați intrat în contact cu alți utilizatori ai aplicației care au raportat un test pozitiv pentru Coronavirus.\n\nEste posibil ca telefonul dvs. să le numească „Notificări de expunere” sau „Înregistrare expunere”.";
+"authorization_denied_description" = "Astfel aplicația vă va informa dacă ați intrat în contact direct cu o persoană testată pozitiv pentru COVID-19.\n\nEste posibil ca telefonul dvs. să denumească aceste ’Exposure notifications’ ca ’Exposure logging’.\n\nMergeți la setările telefonului și modificați la ’Permiteți’ (Allow).";
 "checkin_camera_qrcode_scanner_title" = "Scanați un poster cu cod QR NHS oficial pentru a înregistra vizita";
 "checkin_camera_qrcode_scanner_status_label" = "Cum contribuie acest lucru la siguranța noastră";
 "checkin_confirmation_title" = "Check-in reușit";
@@ -381,7 +381,7 @@
 "alert_latest_app_version_update_body" = "Atingeți aici pentru mai multe informații.";
 "ask_me_later_button_title" = "Întreabă-mă mai târziu";
 "policy_update_title" = "Schimbări în politicile noastre";
-"policy_update_description" = "Vă mulțumim că utilizați aplicația NHS pentru COVID-19. \n\nAm făcut modificări în aplicație pentru a ne alinia la noua politică. Persoanelor vaccinate cu ambele doze sau sub 18 ani nu li se mai recomandă să se autoizoleze dacă au intrat în contact cu o persoană care a testat pozitiv pentru COVID-19, însă li se recomandă să se testeze.\n\nDacă vă autoizolați deja pentru că ați intrat în contact cu cineva infectat și sunteți vaccinat /ă cu ambele doze sau aveți sub 18 ani, nu trebuie să continuați autoizolarea. Dacă aveți simptome sau ați testat pozitiv, trebuie să finalizați perioada de autoizolare.\n\nPăstrați aplicația pe dispozitiv pentru a fi la curent cu cele mai recente recomandări și pentru a ajuta la oprirea răspândirii COVID-19.\n\nTermenii de utilizare și Notificarea privind confidențialitatea au fost actualizate pentru a reflecta aceste modificări.";
+"policy_update_description" = "Vă mulțumim că utilizați aplicația NHS pentru COVID-19. \n\nAm făcut modificări în aplicație pentru a ne alinia la noua politică. Persoanelor vaccinate cu ambele doze sau sub 18 ani nu li se mai recomandă să se autoizoleze dacă au intrat în contact cu o persoană care a testat pozitiv pentru COVID-19, însă li se recomandă să se testeze.\n\nDacă vă autoizolați deja pentru că ați intrat în contact cu cineva infectat și sunteți vaccinat /ă cu ambele doze sau aveți sub 18 ani, nu trebuie să continuați autoizolare. Dacă aveți simptome sau ați testat pozitiv, trebuie să finalizați perioada de autoizolare.\n\nPăstrați aplicația pe dispozitiv pentru a fi la curent cu cele mai recente recomandări și pentru a ajuta la oprirea răspândirii COVID-19.\n\nTermenii de utilizare și Notificarea privind confidențialitatea au fost actualizate pentru a reflecta aceste modificări.";
 "policy_update_button" = "Continuare";
 "exposure_faqs_link_label" = "Dacă vă aflați în afara Angliei și Țării Galilor, este nevoie să urmați instrucțiunile în vigoare din țara în care vă aflați.";
 "exposure_faqs_link_button_title" = "Întrebări frecvente";
@@ -720,7 +720,7 @@
 "warn_and_test_check_symptoms_confirm_alert_body" = "Dacă apăsați pe „Renunțați”, puteți reporni procesul mai târziu și rezerva un test, selectând „Testarea COVID-19” din ecranul de pornire.";
 "warn_and_test_check_symptoms_confirm_alert_leave" = "Renunțați";
 "warn_and_test_check_symptoms_confirm_alert_stay" = "Rămâneți";
-"home_self_isolation_button_title" = "Autoizolarea";
+"home_self_isolation_button_title" = "Autoizolare";
 "testing_hub_row_order_free_test_title" = "Testați-vă pentru COVID-19";
 "testing_hub_row_order_free_test_description" = "Aflați mai multe despre diferitele tipuri de teste pentru COVID-19 şi despre cum vă puteți testa";
 "self_isolation_hub_book_a_test_title" = "Rezervați un test gratuit în timpul perioadei de autoizolare";
@@ -745,7 +745,7 @@
 "testing_hub_accordion_find_out_about_testing_title" = "";
 "testing_hub_accordion_find_out_about_testing_text" = "";
 "testing_hub_accordion_find_out_about_testing_link_title" = "";
-"alert_self_isolation_change_title" = "Asistență cu autoizolarea";
+"alert_self_isolation_change_title" = "Asistență cu autoizolare";
 "self_isolation_hub_accordion_group_advice_and_support_heading" = "Recomandări și asistență";
 "self_isolation_hub_accordion_how_to_title" = "Cum să vă autoizolați";
 "self_isolation_hub_accordion_how_to_top_text_1" = "Stați acasă pentru a reduce răspândirea coronavirusului (COVID-19).\n\nCe trebuie să faceți când sunteți informat /ă că trebuie să vă autoizolați:";
@@ -784,7 +784,7 @@
 "void_test_result_with_isolation_nhs_guidance_link" = "Instrucțiuni NHS";
 "book_a_follow_up_test_advice_link" = "Instrucțiuni NHS";
 "contact_case_continue_isolation_info_box" = "Dacă nu ați făcut deja acest lucru, puteți rezerva un test gratuit PCR în secțiunea „Testarea pentru COVID-19” de pe ecranul de pornire";
-"contact_case_exposure_info_screen_information" = "Este posibil să fiți nevoit /ă să vă autoizolați în funcție de vârstă și de situația vaccinării.";
+"contact_case_exposure_info_screen_information" = "Este posibil să fie nevoie să vă auto-izolati, în funcție de vârstă, starea de vaccinare sau instrucțiunile de la directia de sănătate publică Test and Trace";
 "contact_case_exposure_info_screen_if_you_have_symptoms" = "Dacă aveți simptome, selectați „Verificați simptomele” de pe ecranul de pornire și faceți un test.";
 "contact_case_exposure_info_screen_continue_button" = "Continuare";
 "contact_case_exposure_info_screen_title" = "Aplicația a detectat că v-ați aflat în apropierea unei persoane care a testat pozitiv pentru coronavirus (COVID-19).";
@@ -814,13 +814,13 @@
 "contact_case_continue_isolation_advice" = "Pentru îndrumări suplimentare, vă rugăm să vizitați:";
 "contact_case_continue_isolation_link_title" = "Instrucțiuni NHS";
 "contact_case_continue_isolation_primary_button_title" = "Înapoi la ecranul de pornire";
-"contact_case_no_isolation_fully_vaccinated_title" = "Nu trebuie să vă autoizolați";
-"contact_case_no_isolation_fully_vaccinated_info_box" = "Vă recomandăm să rezervați un test PCR gratuit";
-"contact_case_no_isolation_fully_vaccinated_list_item_info" = "Cercetările au arătat că vaccinurile vă ajută să reduceți riscul de a lua și transmite COVID-19.";
+"contact_case_no_isolation_fully_vaccinated_title" = "Nu trebuie să vă auto-izolati, cu excepția cazului în care vi se spune direct de către directia de sănătate publică Test and Trace";
+"contact_case_no_isolation_fully_vaccinated_info_box" = "Vi se recomandă insistent să rezervați un test PCR gratuit, chiar dacă nu aveți simptome";
+"contact_case_no_isolation_fully_vaccinated_list_item_info" = "Ajutați la oprirea răspândirii COVID-19 prin purtarea mastii de protecție pe nas și pe gură în transportul public, în magazine și în locuri aglomerate și spălându-vă pe mâini în mod regulat.";
 "contact_case_no_isolation_fully_vaccinated_list_item_lfd" = "Este încă important să vă reduceți contactul cu ceilalți.";
-"contact_case_no_isolation_under_age_limit_title" = "Nu trebuie să vă autoizolați";
-"contact_case_no_isolation_under_age_limit_info_box" = "Vă recomandăm să rezervați un test PCR gratuit";
-"contact_case_no_isolation_under_age_limit_list_item_lfd" = "Este încă important să vă reduceți contactul cu ceilalți.";
+"contact_case_no_isolation_under_age_limit_title" = "Nu trebuie să vă auto-izolati, cu excepția cazului în care vi se spune direct de către directia de sănătate publică Test and Trace";
+"contact_case_no_isolation_under_age_limit_info_box" = "Vi se recomandă insistent să rezervați un test PCR gratuit, chiar dacă nu aveți simptome";
+"contact_case_no_isolation_under_age_limit_list_item_lfd" = "Ajutați la oprirea răspândirii COVID-19 prin purtarea mastii de protecție pe nas și pe gură în transportul public, în magazine și în locuri aglomerate și spălându-vă pe mâini în mod regulat.";
 "contact_case_no_isolation_under_age_limit_list_item_adult" = "Vă recomandăm să arătați acest mesaj unui adult de încredere.";
 "contact_case_no_isolation_under_age_limit_common_questions_button_title" = "Întrebări frecvente";
 "contact_case_no_isolation_under_age_limit_advice" = "Pentru îndrumări suplimentare, vă rugăm să vizitați:";
@@ -897,7 +897,7 @@
 "risky_contact_isolation_advice_medically_exempt_reduce_risk_with_vaccination" = "";
 "risky_contact_isolation_advice_medically_exempt_advice" = "Este încă important să vă reduceți contactul cu ceilalți.";
 "risky_contact_isolation_advice_medically_exempt" = "Nu trebuie să vă autoizolați";
-"risky_contact_isolation_advice_medically_exempt_info" = "Vă recomandăm să rezervați un test PCR gratuit";
+"risky_contact_isolation_advice_medically_exempt_info" = "Vi se recomandă insistent să rezervați un test PCR gratuit, chiar dacă nu aveți simptome";
 "risky_contact_isolation_advice_medically_exempt_common_questions_link_title" = "Întrebări frecvente";
 "risky_contact_isolation_advice_medically_exempt_nhs_guidance_link_preamble" = "Pentru îndrumări suplimentare, vă rugăm să vizitați:";
 "risky_contact_isolation_advice_medically_exempt_nhs_guidance_link_title" = "Instrucțiuni NHS";
