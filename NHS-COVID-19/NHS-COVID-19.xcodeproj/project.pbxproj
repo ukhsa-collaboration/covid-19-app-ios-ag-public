@@ -25,7 +25,7 @@
 		089E16F926AAD30300634BD4 /* ContactCaseNoIsolationUnderAgeLimitScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089E16F826AAD30300634BD4 /* ContactCaseNoIsolationUnderAgeLimitScreenTests.swift */; };
 		089E16FB26AAD31800634BD4 /* ContactCaseNoIsolationFullyVaccinatedScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089E16FA26AAD31800634BD4 /* ContactCaseNoIsolationFullyVaccinatedScreenTests.swift */; };
 		089E16FD26AAD33800634BD4 /* ContactCaseNoIsolationUnderAgeLimitScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089E16FC26AAD33800634BD4 /* ContactCaseNoIsolationUnderAgeLimitScreen.swift */; };
-		089E16FF26AAD34800634BD4 /* ContactCaseNoIsolationFullyVaccinatedScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089E16FE26AAD34800634BD4 /* ContactCaseNoIsolationFullyVaccinatedScreen.swift */; };
+		089E16FF26AAD34800634BD4 /* ContactCaseNoIsolationFullyVaccinatedEnglandScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089E16FE26AAD34800634BD4 /* ContactCaseNoIsolationFullyVaccinatedEnglandScreen.swift */; };
 		08D0A089257FA2820055AD6F /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D0A088257FA2820055AD6F /* SettingsScreen.swift */; };
 		08D0A08F257FA30A0055AD6F /* SettingsScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D0A08E257FA30A0055AD6F /* SettingsScreenTests.swift */; };
 		08FCCF1225E5195900D13DBA /* PublishedEncryptedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FCCF1125E5195900D13DBA /* PublishedEncryptedTests.swift */; };
@@ -301,7 +301,7 @@
 		089E16F826AAD30300634BD4 /* ContactCaseNoIsolationUnderAgeLimitScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCaseNoIsolationUnderAgeLimitScreenTests.swift; sourceTree = "<group>"; };
 		089E16FA26AAD31800634BD4 /* ContactCaseNoIsolationFullyVaccinatedScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCaseNoIsolationFullyVaccinatedScreenTests.swift; sourceTree = "<group>"; };
 		089E16FC26AAD33800634BD4 /* ContactCaseNoIsolationUnderAgeLimitScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCaseNoIsolationUnderAgeLimitScreen.swift; sourceTree = "<group>"; };
-		089E16FE26AAD34800634BD4 /* ContactCaseNoIsolationFullyVaccinatedScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCaseNoIsolationFullyVaccinatedScreen.swift; sourceTree = "<group>"; };
+		089E16FE26AAD34800634BD4 /* ContactCaseNoIsolationFullyVaccinatedEnglandScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCaseNoIsolationFullyVaccinatedEnglandScreen.swift; sourceTree = "<group>"; };
 		08D0A088257FA2820055AD6F /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		08D0A08E257FA30A0055AD6F /* SettingsScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreenTests.swift; sourceTree = "<group>"; };
 		08FCCF1125E5195900D13DBA /* PublishedEncryptedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishedEncryptedTests.swift; sourceTree = "<group>"; };
@@ -1115,7 +1115,7 @@
 				089E16F026AAAACE00634BD4 /* ContactCaseContinueIsolationScreen.swift */,
 				089E16F426AAC15300634BD4 /* ContactCaseStartIsolationScreen.swift */,
 				089E16FC26AAD33800634BD4 /* ContactCaseNoIsolationUnderAgeLimitScreen.swift */,
-				089E16FE26AAD34800634BD4 /* ContactCaseNoIsolationFullyVaccinatedScreen.swift */,
+				089E16FE26AAD34800634BD4 /* ContactCaseNoIsolationFullyVaccinatedEnglandScreen.swift */,
 				8BEBC89826D561410056B63A /* ContactCaseNoIsolationMedicallyExemptScreen.swift */,
 			);
 			path = ContactCaseMultipleResolutions;
@@ -1698,7 +1698,7 @@
 				8BEBC89926D561410056B63A /* ContactCaseNoIsolationMedicallyExemptScreen.swift in Sources */,
 				0851DE5825CAC4C200B87078 /* TestCheckSymptomsScreen.swift in Sources */,
 				95004AFF25078BB400BD6F76 /* NegativeAfterPositiveTestResultScreenTests.swift in Sources */,
-				089E16FF26AAD34800634BD4 /* ContactCaseNoIsolationFullyVaccinatedScreen.swift in Sources */,
+				089E16FF26AAD34800634BD4 /* ContactCaseNoIsolationFullyVaccinatedEnglandScreen.swift in Sources */,
 				13DC05ED24C6055500E4D5BC /* CheckInConfirmationScreenTests.swift in Sources */,
 				9450BC2124BDC3690025E215 /* NoSymptomsScreen.swift in Sources */,
 				95A95E6524A0CAC100BCF307 /* UnrecoverableErrorScreen.swift in Sources */,

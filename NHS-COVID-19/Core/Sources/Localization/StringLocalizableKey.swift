@@ -741,6 +741,11 @@ public enum StringLocalizableKey: String, CaseIterable {
     case contact_case_no_isolation_under_age_limit_primary_button_title
     case contact_case_no_isolation_under_age_limit_secondary_button_title
     
+    case contact_case_no_isolation_under_age_limit_title_wales
+    case contact_case_no_isolation_under_age_limit_info_box_wales
+    case contact_case_no_isolation_under_age_limit_list_item_lfd_wales
+    case contact_case_no_isolation_under_age_limit_list_item_adult_wales
+    
     // MARK: No isolation - person fully vaccinated
     
     case contact_case_no_isolation_fully_vaccinated_title
@@ -752,6 +757,11 @@ public enum StringLocalizableKey: String, CaseIterable {
     case contact_case_no_isolation_fully_vaccinated_list_item_info
     case contact_case_no_isolation_fully_vaccinated_primary_button_title
     case contact_case_no_isolation_fully_vaccinated_secondary_button_title
+    
+    case contact_case_no_isolation_fully_vaccinated_title_wales
+    case contact_case_no_isolation_fully_vaccinated_info_box_wales
+    case contact_case_no_isolation_fully_vaccinated_list_item_lfd_wales
+    case contact_case_no_isolation_fully_vaccinated_list_item_info_wales
     
     // MARK: No isolation - person medically exempt
     

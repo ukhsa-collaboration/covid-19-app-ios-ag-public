@@ -5,14 +5,14 @@
 import Scenarios
 import XCTest
 
-class ContactCaseNoIsolationUnderAgeLimitScreenTests: XCTestCase {
+class ContactCaseNoIsolationUnderAgeLimitEnglandScreenTests: XCTestCase {
     
     @Propped
-    private var runner: ApplicationRunner<ContactCaseNoIsolationUnderAgeLimitScreenScenario>
+    private var runner: ApplicationRunner<ContactCaseNoIsolationUnderAgeLimitEnglandScreenScenario>
     
     func testBasics() throws {
         try runner.run { app in
-            let screen = ContactCaseNoIsolationUnderAgeLimitScreen(app: app)
+            let screen = ContactCaseNoIsolationUnderAgeLimitEnglandScreen(app: app)
             XCTAssertTrue(screen.commonQuestionsLink.exists)
             XCTAssertTrue(screen.infoBox.exists)
             XCTAssertTrue(screen.isolationListItem.exists)
@@ -23,7 +23,7 @@ class ContactCaseNoIsolationUnderAgeLimitScreenTests: XCTestCase {
     
     func testGuidanceLinkButton() throws {
         try runner.run { app in
-            let screen = ContactCaseNoIsolationUnderAgeLimitScreen(app: app)
+            let screen = ContactCaseNoIsolationUnderAgeLimitEnglandScreen(app: app)
             screen.guidanceLink.tap()
             
             XCTAssertTrue(app.staticTexts[runner.scenario.guidanceLinkTapped].exists)
@@ -32,7 +32,7 @@ class ContactCaseNoIsolationUnderAgeLimitScreenTests: XCTestCase {
     
     func testCommonQuestionsLinkButton() throws {
         try runner.run { app in
-            let screen = ContactCaseNoIsolationUnderAgeLimitScreen(app: app)
+            let screen = ContactCaseNoIsolationUnderAgeLimitEnglandScreen(app: app)
             screen.commonQuestionsLink.tap()
             
             XCTAssertTrue(app.staticTexts[runner.scenario.commonQuestionsLinkTapped].exists)
@@ -41,7 +41,7 @@ class ContactCaseNoIsolationUnderAgeLimitScreenTests: XCTestCase {
     
     func testBookAFreeTestButton() throws {
         try runner.run { app in
-            let screen = ContactCaseNoIsolationUnderAgeLimitScreen(app: app)
+            let screen = ContactCaseNoIsolationUnderAgeLimitEnglandScreen(app: app)
             app.scrollTo(element: screen.bookAFreeTestButton)
             screen.bookAFreeTestButton.tap()
             
@@ -51,7 +51,62 @@ class ContactCaseNoIsolationUnderAgeLimitScreenTests: XCTestCase {
     
     func testBackToHomeButton() throws {
         try runner.run { app in
-            let screen = ContactCaseNoIsolationUnderAgeLimitScreen(app: app)
+            let screen = ContactCaseNoIsolationUnderAgeLimitEnglandScreen(app: app)
+            screen.backToHomeButton.tap()
+            
+            XCTAssertTrue(app.staticTexts[runner.scenario.backToHomeTapped].exists)
+        }
+    }
+}
+
+class ContactCaseNoIsolationUnderAgeLimitWalesScreenTests: XCTestCase {
+    
+    @Propped
+    private var runner: ApplicationRunner<ContactCaseNoIsolationUnderAgeLimitWalesScreenScenario>
+    
+    func testBasics() throws {
+        try runner.run { app in
+            let screen = ContactCaseNoIsolationUnderAgeLimitWalesScreen(app: app)
+            XCTAssertTrue(screen.commonQuestionsLink.exists)
+            XCTAssertTrue(screen.infoBox.exists)
+            XCTAssertTrue(screen.isolationListItem.exists)
+            XCTAssertTrue(screen.lfdListItem.exists)
+            XCTAssertTrue(screen.secondTestDateListItem.exists)
+            XCTAssertTrue(screen.advice.exists)
+        }
+    }
+    
+    func testGuidanceLinkButton() throws {
+        try runner.run { app in
+            let screen = ContactCaseNoIsolationUnderAgeLimitWalesScreen(app: app)
+            screen.guidanceLink.tap()
+            
+            XCTAssertTrue(app.staticTexts[runner.scenario.guidanceLinkTapped].exists)
+        }
+    }
+    
+    func testCommonQuestionsLinkButton() throws {
+        try runner.run { app in
+            let screen = ContactCaseNoIsolationUnderAgeLimitWalesScreen(app: app)
+            screen.commonQuestionsLink.tap()
+            
+            XCTAssertTrue(app.staticTexts[runner.scenario.commonQuestionsLinkTapped].exists)
+        }
+    }
+    
+    func testBookAFreeTestButton() throws {
+        try runner.run { app in
+            let screen = ContactCaseNoIsolationUnderAgeLimitWalesScreen(app: app)
+            app.scrollTo(element: screen.bookAFreeTestButton)
+            screen.bookAFreeTestButton.tap()
+            
+            XCTAssertTrue(app.staticTexts[runner.scenario.bookAFreeTestTapped].exists)
+        }
+    }
+    
+    func testBackToHomeButton() throws {
+        try runner.run { app in
+            let screen = ContactCaseNoIsolationUnderAgeLimitWalesScreen(app: app)
             screen.backToHomeButton.tap()
             
             XCTAssertTrue(app.staticTexts[runner.scenario.backToHomeTapped].exists)

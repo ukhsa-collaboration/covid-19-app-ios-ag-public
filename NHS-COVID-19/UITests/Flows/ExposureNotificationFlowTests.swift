@@ -153,7 +153,7 @@ class ExposureNotificationFlowTests: XCTestCase {
             summaryScreen.submitButton.tap()
             
             // Fully Vaccinated
-            let fullyVaccinatedScreen = ContactCaseNoIsolationFullyVaccinatedScreen(app: app)
+            let fullyVaccinatedScreen = ContactCaseNoIsolationFullyVaccinatedEnglandScreen(app: app)
             XCTAssertTrue(fullyVaccinatedScreen.allElements.allExist)
             
             runner.step("Fully Vaccinated screen") {
@@ -512,7 +512,7 @@ class ExposureNotificationFlowTests: XCTestCase {
             summaryScreen.submitButton.tap()
             
             // Under Age Limit
-            let underAgeLimitScreen = ContactCaseNoIsolationUnderAgeLimitScreen(app: app)
+            let underAgeLimitScreen = ContactCaseNoIsolationUnderAgeLimitEnglandScreen(app: app)
             XCTAssertTrue(underAgeLimitScreen.allElements.allExist)
             XCTAssertTrue(underAgeLimitScreen.backToHomeButton.exists)
             

@@ -124,15 +124,37 @@ class PostAcknowledgementViewController: UIViewController {
         case .contactCase(let state):
             switch state {
             case .underAgeLimit(let secondTestAdviceDate):
-                return ContactCaseNoIsolationUnderAgeLimitViewController(
-                    interactor: ContactCaseNoIsolationUnderAgeLimitInteractor(viewController: self, openURL: context.openURL),
-                    secondTestAdviceDate: secondTestAdviceDate
-                )
+                #warning("""
+                Welsh policy is currently to invite people to book a second PCR,
+                so we can currently infer that if you have one you're in Wales.
+                We should refactor so we don't rely on this assumption.
+                """)
+                if let secondTestAdviceDate = secondTestAdviceDate {
+                    return ContactCaseNoIsolationUnderAgeLimitWalesViewController(
+                        interactor: ContactCaseNoIsolationUnderAgeLimitInteractor(viewController: self, openURL: context.openURL),
+                        secondTestAdviceDate: secondTestAdviceDate
+                    )
+                } else {
+                    return ContactCaseNoIsolationUnderAgeLimitEnglandViewController(
+                        interactor: ContactCaseNoIsolationUnderAgeLimitInteractor(viewController: self, openURL: context.openURL)
+                    )
+                }
             case .fullyVaccinated(let secondTestAdviceDate):
-                return ContactCaseNoIsolationFullyVaccinatedViewController(
-                    interactor: ContactCaseNoIsolationFullyVaccinatedInteractor(viewController: self, openURL: context.openURL),
-                    secondTestAdviceDate: secondTestAdviceDate
-                )
+                #warning("""
+                Welsh policy is currently to invite people to book a second PCR,
+                so we can currently infer that if you have one you're in Wales.
+                We should refactor so we don't rely on this assumption.
+                """)
+                if let secondTestAdviceDate = secondTestAdviceDate {
+                    return ContactCaseNoIsolationFullyVaccinatedWalesViewController(
+                        interactor: ContactCaseNoIsolationFullyVaccinatedInteractor(viewController: self, openURL: context.openURL),
+                        secondTestAdviceDate: secondTestAdviceDate
+                    )
+                } else {
+                    return ContactCaseNoIsolationFullyVaccinatedEnglandViewController(
+                        interactor: ContactCaseNoIsolationFullyVaccinatedInteractor(viewController: self, openURL: context.openURL)
+                    )
+                }
             case .medicallyExempt:
                 return ContactCaseNoIsolationMedicallyExemptViewController(
                     interactor: ContactCaseNoIsolationMedicallyExemptInteractor(viewController: self, openURL: context.openURL)
@@ -439,7 +461,7 @@ private struct BookARapidTestInfoInteractor: BookARapidTestInfoViewController.In
     }
 }
 
-private struct ContactCaseNoIsolationUnderAgeLimitInteractor: ContactCaseNoIsolationUnderAgeLimitViewController.Interacting {
+private struct ContactCaseNoIsolationUnderAgeLimitInteractor: ContactCaseNoIsolationUnderAgeLimitEnglandViewController.Interacting {
     private weak var viewController: PostAcknowledgementViewController?
     private let openURL: (URL) -> Void
     
@@ -469,7 +491,7 @@ private struct ContactCaseNoIsolationUnderAgeLimitInteractor: ContactCaseNoIsola
     }
 }
 
-private struct ContactCaseNoIsolationFullyVaccinatedInteractor: ContactCaseNoIsolationFullyVaccinatedViewController.Interacting {
+private struct ContactCaseNoIsolationFullyVaccinatedInteractor: ContactCaseNoIsolationFullyVaccinatedEnglandViewController.Interacting {
     private weak var viewController: PostAcknowledgementViewController?
     private let openURL: (URL) -> Void
     
