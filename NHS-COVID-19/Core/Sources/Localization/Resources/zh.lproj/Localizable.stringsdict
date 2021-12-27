@@ -352,5 +352,33 @@
 				<string/>
 			</dict>
 		</dict>
+		<key>local_statistics_main_screen_daily_accessibility_text %ld %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>每日</string>
+			<key>tests</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>local_statistics_main_screen_last_7_days_accessibility_text %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@tests@</string>
+			<key>tests</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>%li 过去7天内的阳性检测结果</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

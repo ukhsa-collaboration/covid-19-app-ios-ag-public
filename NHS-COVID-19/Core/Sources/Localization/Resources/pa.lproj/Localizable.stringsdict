@@ -402,5 +402,37 @@
 				<string/>
 			</dict>
 		</dict>
+		<key>local_statistics_main_screen_daily_accessibility_text %ld %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>ਰੋਜ਼ਾਨਾ</string>
+			<key>tests</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>local_statistics_main_screen_last_7_days_accessibility_text %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@tests@</string>
+			<key>tests</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%li ਪਿਛਲੇ 7 ਦਿਨਾਂ ਵਿੱਚ ਪਾਜ਼ੀਟਿਵ ਟੈਸਟ</string>
+				<key>other</key>
+				<string>ਪਿਛਲੇ 7 ਦਿਨਾਂ ਵਿੱਚ ਪਾਜ਼ੀਟਿਵ ਟੈਸਟ %li</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>
