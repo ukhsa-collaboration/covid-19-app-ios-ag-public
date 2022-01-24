@@ -715,7 +715,7 @@
 "checkin_risky_venue_information_warn_and_book_a_test_bulleted_list" = "You should do this even if you have been fully vaccinated.";
 "checkin_risky_venue_information_warn_and_book_a_test_additional_info" = "Around 1 in 3 people who have COVID-19 do not have symptoms, but they can still pass it on and put others at risk.";
 "test_check_symptoms_subheading" = "The main symptoms of coronavirus (COVID-19) are:";
-"test_check_symptoms_footer" = "If you think you may have COVID-19 symptoms, even if they are mild, select ‘Check symptoms‘ below. Call 119 for more information or advice.";
+"test_check_symptoms_footer" = "If you think you may have COVID-19 symptoms, even if they are mild, select ‘Check symptoms’ below. Call 119 for more information or advice.";
 "warn_and_test_check_symptoms_confirm_alert_title" = "Are you sure you want to leave?";
 "warn_and_test_check_symptoms_confirm_alert_body" = "If you tap ‘Leave’ you can restart this process later and book a test by selecting ‘Testing for COVID-19’ from the home screen.";
 "warn_and_test_check_symptoms_confirm_alert_leave" = "Leave";
@@ -783,7 +783,7 @@
 "negative_test_result_with_isolation_nhs_guidance_link" = "NHS guidance";
 "void_test_result_with_isolation_nhs_guidance_link" = "NHS guidance";
 "book_a_follow_up_test_advice_link" = "NHS guidance";
-"contact_case_continue_isolation_info_box" = "If you have not already done so, you can book a free PCR test from ‘Testing for COVID-19’ on the home screen.";
+"contact_case_continue_isolation_info_box" = "If you have not already done so, you should take a free COVID-19 test as soon as possible";
 "contact_case_exposure_info_screen_information" = "You may need to self-isolate depending on your age, vaccination status, or instructions from contact tracers";
 "contact_case_exposure_info_screen_if_you_have_symptoms" = "If you have symptoms, select “Check symptoms” on the home screen and get a test.";
 "contact_case_exposure_info_screen_continue_button" = "Continue";
@@ -801,7 +801,7 @@
 "age_declaration_error_title" = "Error";
 "age_declaration_error_description" = "To continue, you need to select an answer";
 "contact_case_start_isolation_title" = "Self-isolate for";
-"contact_case_start_isolation_info_box" = "Self-isolate and book a free PCR test";
+"contact_case_start_isolation_info_box" = "Self-isolate and take a free COVID-19 test";
 "contact_case_start_isolation_list_item_lfd" = "Book a free PCR test to see if you have COVID-19.";
 "contact_case_start_isolation_list_item_isolation" = "You are at high risk of catching and spreading COVID-19, even if you don’t have any symptoms. By staying at home you can help keep yourself and others safe.";
 "contact_case_start_isolation_advice" = "For further advice, please visit:";
@@ -911,9 +911,9 @@
 "link_isolation_note_wls" = "https://111.nhs.uk/isolation-note";
 "risky_contact_isolation_advice_medically_exempt_group" = "For fairness and equality, if you are unable to get the vaccine for medical reasons you do not need to self-isolate.";
 "contact_case_start_isolation_list_item_testing" = "You are advised to book a free PCR test as soon as possible. After your first test, you should also book a second PCR test as soon as possible";
-"contact_case_start_isolation_list_item_testing_with_date %@" = "You are advised to book a free PCR test as soon as possible. After your first test, you should also book a second PCR test for %@.";
+"contact_case_start_isolation_list_item_testing_with_date %@" = "You are advised to take a free rapid lateral flow test as soon as possible. You should also take a second rapid lateral flow test on the %@.";
 "contact_case_continue_isolation_list_item_testing" = "You are advised to book a free PCR test as soon as possible. After your first test, you should also book a second PCR test as soon as possible.";
-"contact_case_continue_isolation_list_item_testing_with_date %@" = "If you have not already done so, you are advised to book a free PCR test as soon as possible. After your first test, you should also book a second PCR test for %@.";
+"contact_case_continue_isolation_list_item_testing_with_date %@" = "Book a free PCR test if you have symptoms.";
 "contact_case_no_isolation_fully_vaccinated_list_item_testing" = "You are advised to book a free PCR test as soon as possible. After your first test, you should also book a second PCR test as soon as possible.";
 "contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date %@" = "Book a free PCR test if you have symptoms.";
 "contact_case_no_isolation_under_age_limit_list_item_testing" = "You are advised to book a free PCR test as soon as possible. After your first test, you should also book a second PCR test as soon as possible.";
@@ -1005,3 +1005,6 @@
 "contact_case_no_isolation_under_age_limit_info_box_wales" = "To reduce risk, you should take and report a daily rapid lateral flow test for 7 days";
 "contact_case_no_isolation_under_age_limit_list_item_lfd_wales" = "It is still important to follow national guidance, including reducing contact with others, especially the elderly and vulnerable.";
 "contact_case_no_isolation_under_age_limit_list_item_adult_wales" = "You are advised to show this message to a trusted adult.";
+"contact_case_start_isolation_book_lfd_test_url" = "https://gov.wales/get-rapid-lateral-flow-covid-19-tests-if-you-do-not-have-symptoms";
+"contact_case_start_isolation_primary_button_title_wales" = "Get a free rapid lateral flow kit";
+"contact_case_start_isolation_list_item_testing_once_asap_wales" = "You are advised to take a free rapid lateral flow test as soon as possible.";

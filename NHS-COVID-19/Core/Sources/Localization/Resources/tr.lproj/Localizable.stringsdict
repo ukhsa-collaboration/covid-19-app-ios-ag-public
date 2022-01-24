@@ -402,37 +402,5 @@
 				<string/>
 			</dict>
 		</dict>
-		<key>local_statistics_main_screen_daily_accessibility_text %ld %@</key>
-		<dict>
-			<key>NSStringLocalizedFormatKey</key>
-			<string>Günlük</string>
-			<key>tests</key>
-			<dict>
-				<key>NSStringFormatSpecTypeKey</key>
-				<string>NSStringPluralRuleType</string>
-				<key>NSStringFormatValueTypeKey</key>
-				<string>li</string>
-				<key>one</key>
-				<string/>
-				<key>other</key>
-				<string/>
-			</dict>
-		</dict>
-		<key>local_statistics_main_screen_last_7_days_accessibility_text %ld</key>
-		<dict>
-			<key>NSStringLocalizedFormatKey</key>
-			<string>%#@tests@</string>
-			<key>tests</key>
-			<dict>
-				<key>NSStringFormatSpecTypeKey</key>
-				<string>NSStringPluralRuleType</string>
-				<key>NSStringFormatValueTypeKey</key>
-				<string>li</string>
-				<key>one</key>
-				<string>%li son 7 gün içindeki pozitif test</string>
-				<key>other</key>
-				<string>%li son 7 gün içindeki pozitif test</string>
-			</dict>
-		</dict>
 	</dict>
 </plist>

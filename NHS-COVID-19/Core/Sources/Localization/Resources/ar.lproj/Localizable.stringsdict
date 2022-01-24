@@ -602,53 +602,5 @@
 				<string/>
 			</dict>
 		</dict>
-		<key>local_statistics_main_screen_daily_accessibility_text %ld %@</key>
-		<dict>
-			<key>NSStringLocalizedFormatKey</key>
-			<string>يوميا</string>
-			<key>tests</key>
-			<dict>
-				<key>NSStringFormatSpecTypeKey</key>
-				<string>NSStringPluralRuleType</string>
-				<key>NSStringFormatValueTypeKey</key>
-				<string>li</string>
-				<key>zero</key>
-				<string/>
-				<key>one</key>
-				<string/>
-				<key>two</key>
-				<string/>
-				<key>few</key>
-				<string/>
-				<key>many</key>
-				<string/>
-				<key>other</key>
-				<string/>
-			</dict>
-		</dict>
-		<key>local_statistics_main_screen_last_7_days_accessibility_text %ld</key>
-		<dict>
-			<key>NSStringLocalizedFormatKey</key>
-			<string>%#@tests@</string>
-			<key>tests</key>
-			<dict>
-				<key>NSStringFormatSpecTypeKey</key>
-				<string>NSStringPluralRuleType</string>
-				<key>NSStringFormatValueTypeKey</key>
-				<string>li</string>
-				<key>zero</key>
-				<string>الاختبارات الإيجابية في أخر 7 أيام %li</string>
-				<key>one</key>
-				<string>اختبار إيجابي في أخر 7 أيام %li</string>
-				<key>two</key>
-				<string>الاختبارات الإيجابية في أخر 7 أيام %li</string>
-				<key>few</key>
-				<string>الاختبارات الإيجابية في أخر 7 أيام %li</string>
-				<key>many</key>
-				<string>الاختبارات الإيجابية في أخر 7 أيام %li</string>
-				<key>other</key>
-				<string>الاختبارات الإيجابية في أخر 7 أيام %li</string>
-			</dict>
-		</dict>
 	</dict>
 </plist>

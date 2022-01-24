@@ -424,6 +424,7 @@ public enum StringLocalizableKey: String, CaseIterable {
     case link_find_local_authority
     case link_approved_vaccines_info
     case link_isolation_note
+    case contact_case_start_isolation_book_lfd_test_url
     
     case cancel
     case back
@@ -715,8 +716,10 @@ public enum StringLocalizableKey: String, CaseIterable {
     case contact_case_start_isolation_advice
     case contact_case_start_isolation_link_title
     case contact_case_start_isolation_list_item_lfd
+    case contact_case_start_isolation_list_item_testing_once_asap_wales
     case contact_case_start_isolation_list_item_isolation
     case contact_case_start_isolation_primary_button_title
+    case contact_case_start_isolation_primary_button_title_wales
     case contact_case_start_isolation_secondary_button_title
     case contact_case_start_isolation_how_we_calculate_isolation_days_title
     

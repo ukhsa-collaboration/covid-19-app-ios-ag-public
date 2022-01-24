@@ -9,9 +9,9 @@ import Integration
 import Interface
 import UIKit
 
-public class ContactCaseStartIsolationScreenScenario: Scenario {
+public class ContactCaseStartIsolationScreenEnglandScenario: Scenario {
     public static var kind = ScenarioKind.screen
-    public static var name = "Contact Case Start Isolation"
+    public static var name = "Contact Case Start Isolation (England)"
     
     public static let numberOfDays = 10
     public static let exposureDate = Date(timeIntervalSinceNow: -86400)
@@ -23,12 +23,12 @@ public class ContactCaseStartIsolationScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return ContactCaseStartIsolationViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: Double(Self.numberOfDays) * 86400), exposureDate: exposureDate, secondTestAdviceDate: nil, isolationPeriod: 11)
+            return ContactCaseStartIsolationEnglandViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: Double(Self.numberOfDays) * 86400), exposureDate: exposureDate, isolationPeriod: 11)
         }
     }
 }
 
-private class Interactor: ContactCaseStartIsolationViewController.Interacting {
+private class Interactor: ContactCaseStartIsolationEnglandViewController.Interacting {
     private weak var viewController: UIViewController?
     
     init(viewController: UIViewController) {
@@ -36,18 +36,70 @@ private class Interactor: ContactCaseStartIsolationViewController.Interacting {
     }
     
     func didTapCancel() {
-        viewController?.showAlert(title: ContactCaseStartIsolationScreenScenario.cancelTapped)
+        viewController?.showAlert(title: ContactCaseStartIsolationScreenEnglandScenario.cancelTapped)
     }
     
     func didTapGuidanceLink() {
-        viewController?.showAlert(title: ContactCaseStartIsolationScreenScenario.guidanceLinkTapped)
+        viewController?.showAlert(title: ContactCaseStartIsolationScreenEnglandScenario.guidanceLinkTapped)
     }
     
     func didTapBackToHome() {
-        viewController?.showAlert(title: ContactCaseStartIsolationScreenScenario.backToHomeTapped)
+        viewController?.showAlert(title: ContactCaseStartIsolationScreenEnglandScenario.backToHomeTapped)
     }
     
-    func didTapBookAFreeTest() {
-        viewController?.showAlert(title: ContactCaseStartIsolationScreenScenario.bookAFreeTestTapped)
+    func didTapGetTestButton() {
+        viewController?.showAlert(title: ContactCaseStartIsolationScreenEnglandScenario.bookAFreeTestTapped)
+    }
+}
+
+public class ContactCaseStartIsolationScreenWalesScenario: Scenario {
+    public static var kind = ScenarioKind.screen
+    public static var name = "Contact Case Start Isolation (Wales)"
+    
+    public static let numberOfDays = 10
+    public static let daysUntilSecondTest = 8
+    public static let exposureDate = Date(timeIntervalSinceNow: -86400)
+    public static let isolationEndDate = Date(timeIntervalSinceNow: Double(numberOfDays) * 86400)
+    public static let secondTestAdviceDate = Date(timeIntervalSinceNow: Double(daysUntilSecondTest) * 86400)
+    public static let cancelTapped = "Cancel button tapped"
+    public static let bookAFreeTestTapped = "Take a COVID-19 test button tapped"
+    public static let backToHomeTapped = "Back to home button tapped"
+    public static let guidanceLinkTapped = "GuidanceLink link tapped"
+    
+    static var appController: AppController {
+        NavigationAppController { (parent: UINavigationController) in
+            let interactor = WalesInteractor(viewController: parent)
+            return ContactCaseStartIsolationWalesViewController(
+                interactor: interactor,
+                isolationEndDate: isolationEndDate,
+                exposureDate: exposureDate,
+                secondTestAdviceDate: secondTestAdviceDate,
+                isolationPeriod: 11
+            )
+        }
+    }
+}
+
+private class WalesInteractor: ContactCaseStartIsolationWalesViewController.Interacting {
+    private weak var viewController: UIViewController?
+    
+    init(viewController: UIViewController) {
+        self.viewController = viewController
+    }
+    
+    func didTapCancel() {
+        viewController?.showAlert(title: ContactCaseStartIsolationScreenWalesScenario.cancelTapped)
+    }
+    
+    func didTapGuidanceLink() {
+        viewController?.showAlert(title: ContactCaseStartIsolationScreenWalesScenario.guidanceLinkTapped)
+    }
+    
+    func didTapBackToHome() {
+        viewController?.showAlert(title: ContactCaseStartIsolationScreenWalesScenario.backToHomeTapped)
+    }
+    
+    func didTapGetTestButton() {
+        viewController?.showAlert(title: ContactCaseStartIsolationScreenWalesScenario.bookAFreeTestTapped)
     }
 }

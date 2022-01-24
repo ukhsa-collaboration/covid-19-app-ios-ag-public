@@ -602,53 +602,5 @@
 				<string/>
 			</dict>
 		</dict>
-		<key>local_statistics_main_screen_daily_accessibility_text %ld %@</key>
-		<dict>
-			<key>NSStringLocalizedFormatKey</key>
-			<string>Dyddiol</string>
-			<key>tests</key>
-			<dict>
-				<key>NSStringFormatSpecTypeKey</key>
-				<string>NSStringPluralRuleType</string>
-				<key>NSStringFormatValueTypeKey</key>
-				<string>li</string>
-				<key>zero</key>
-				<string/>
-				<key>one</key>
-				<string/>
-				<key>two</key>
-				<string/>
-				<key>few</key>
-				<string/>
-				<key>many</key>
-				<string/>
-				<key>other</key>
-				<string/>
-			</dict>
-		</dict>
-		<key>local_statistics_main_screen_last_7_days_accessibility_text %ld</key>
-		<dict>
-			<key>NSStringLocalizedFormatKey</key>
-			<string>%#@tests@</string>
-			<key>tests</key>
-			<dict>
-				<key>NSStringFormatSpecTypeKey</key>
-				<string>NSStringPluralRuleType</string>
-				<key>NSStringFormatValueTypeKey</key>
-				<string>li</string>
-				<key>zero</key>
-				<string>%li profion positif yn y 7 niwrnod diwethaf</string>
-				<key>one</key>
-				<string>%li prawf positif yn y 7 niwrnod diwethaf</string>
-				<key>two</key>
-				<string>%li profion positif yn y 7 niwrnod diwethaf</string>
-				<key>few</key>
-				<string>%li profion positif yn y 7 niwrnod diwethaf</string>
-				<key>many</key>
-				<string>%li profion positif yn y 7 niwrnod diwethaf</string>
-				<key>other</key>
-				<string>%li profion positif yn y 7 niwrnod diwethaf</string>
-			</dict>
-		</dict>
 	</dict>
 </plist>

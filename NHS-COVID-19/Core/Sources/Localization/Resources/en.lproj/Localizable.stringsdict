@@ -402,37 +402,5 @@
 				<string>Confirm you are going to self-isolate for %ld days</string>
 			</dict>
 		</dict>
-		<key>local_statistics_main_screen_daily_accessibility_text %ld %@</key>
-		<dict>
-			<key>NSStringLocalizedFormatKey</key>
-			<string>Daily</string>
-			<key>tests</key>
-			<dict>
-				<key>NSStringFormatSpecTypeKey</key>
-				<string>NSStringPluralRuleType</string>
-				<key>NSStringFormatValueTypeKey</key>
-				<string>li</string>
-				<key>one</key>
-				<string>%ld daily positive test in %@</string>
-				<key>other</key>
-				<string>%ld daily positive tests in %@</string>
-			</dict>
-		</dict>
-		<key>local_statistics_main_screen_last_7_days_accessibility_text %ld</key>
-		<dict>
-			<key>NSStringLocalizedFormatKey</key>
-			<string>%#@tests@</string>
-			<key>tests</key>
-			<dict>
-				<key>NSStringFormatSpecTypeKey</key>
-				<string>NSStringPluralRuleType</string>
-				<key>NSStringFormatValueTypeKey</key>
-				<string>li</string>
-				<key>one</key>
-				<string>%li positive test in the last 7 days</string>
-				<key>other</key>
-				<string>%li positive tests in the last 7 days</string>
-			</dict>
-		</dict>
 	</dict>
 </plist>

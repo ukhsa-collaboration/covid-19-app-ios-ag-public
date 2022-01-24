@@ -124,33 +124,25 @@ class PostAcknowledgementViewController: UIViewController {
         case .contactCase(let state):
             switch state {
             case .underAgeLimit(let secondTestAdviceDate):
-                #warning("""
-                Welsh policy is currently to invite people to book a second PCR,
-                so we can currently infer that if you have one you're in Wales.
-                We should refactor so we don't rely on this assumption.
-                """)
-                if let secondTestAdviceDate = secondTestAdviceDate {
+                switch context.country.currentValue {
+                case .wales:
                     return ContactCaseNoIsolationUnderAgeLimitWalesViewController(
                         interactor: ContactCaseNoIsolationUnderAgeLimitInteractor(viewController: self, openURL: context.openURL),
                         secondTestAdviceDate: secondTestAdviceDate
                     )
-                } else {
+                case .england:
                     return ContactCaseNoIsolationUnderAgeLimitEnglandViewController(
                         interactor: ContactCaseNoIsolationUnderAgeLimitInteractor(viewController: self, openURL: context.openURL)
                     )
                 }
             case .fullyVaccinated(let secondTestAdviceDate):
-                #warning("""
-                Welsh policy is currently to invite people to book a second PCR,
-                so we can currently infer that if you have one you're in Wales.
-                We should refactor so we don't rely on this assumption.
-                """)
-                if let secondTestAdviceDate = secondTestAdviceDate {
+                switch context.country.currentValue {
+                case .wales:
                     return ContactCaseNoIsolationFullyVaccinatedWalesViewController(
                         interactor: ContactCaseNoIsolationFullyVaccinatedInteractor(viewController: self, openURL: context.openURL),
                         secondTestAdviceDate: secondTestAdviceDate
                     )
-                } else {
+                case .england:
                     return ContactCaseNoIsolationFullyVaccinatedEnglandViewController(
                         interactor: ContactCaseNoIsolationFullyVaccinatedInteractor(viewController: self, openURL: context.openURL)
                     )
@@ -160,13 +152,31 @@ class PostAcknowledgementViewController: UIViewController {
                     interactor: ContactCaseNoIsolationMedicallyExemptInteractor(viewController: self, openURL: context.openURL)
                 )
             case .startIsolation(let endDate, let exposureDate, let secondTestAdviceDate):
-                return ContactCaseStartIsolationViewController(
-                    interactor: ContactCaseStartIsolationInteractor(viewController: self, openURL: context.openURL),
-                    isolationEndDate: endDate,
-                    exposureDate: exposureDate,
-                    secondTestAdviceDate: secondTestAdviceDate,
-                    isolationPeriod: context.contactCaseIsolationDuration.currentValue
-                )
+                switch context.country.currentValue {
+                case .wales:
+                    return ContactCaseStartIsolationWalesViewController(
+                        interactor: ContactCaseStartIsolationInteractor(
+                            viewController: self,
+                            openURL: context.openURL,
+                            testBookingAction: .orderLateralFlow
+                        ),
+                        isolationEndDate: endDate,
+                        exposureDate: exposureDate,
+                        secondTestAdviceDate: secondTestAdviceDate,
+                        isolationPeriod: context.contactCaseIsolationDuration.currentValue
+                    )
+                case .england:
+                    return ContactCaseStartIsolationEnglandViewController(
+                        interactor: ContactCaseStartIsolationInteractor(
+                            viewController: self,
+                            openURL: context.openURL,
+                            testBookingAction: .bookPCR
+                        ),
+                        isolationEndDate: endDate,
+                        exposureDate: exposureDate,
+                        isolationPeriod: context.contactCaseIsolationDuration.currentValue
+                    )
+                }
             case .continueIsolation(let date, let secondTestAdviceDate):
                 return ContactCaseContinueIsolationViewController(
                     interactor: ContactCaseContinueIsolationInteractor(viewController: self, openURL: context.openURL),
@@ -551,17 +561,32 @@ private struct ContactCaseNoIsolationMedicallyExemptInteractor: ContactCaseNoIso
     }
 }
 
-private struct ContactCaseStartIsolationInteractor: ContactCaseStartIsolationViewController.Interacting {
-    private weak var viewController: PostAcknowledgementViewController?
-    private let openURL: (URL) -> Void
-    
-    init(viewController: PostAcknowledgementViewController?, openURL: @escaping (URL) -> Void) {
-        self.viewController = viewController
-        self.openURL = openURL
+private struct ContactCaseStartIsolationInteractor: ContactCaseStartIsolationInteracting {
+    enum TestOrderingAction {
+        case bookPCR
+        case orderLateralFlow
     }
     
-    func didTapBookAFreeTest() {
-        viewController?.showUIState.send(.showBookATest)
+    private weak var viewController: PostAcknowledgementViewController?
+    private let openURL: (URL) -> Void
+    private let testOrderingAction: TestOrderingAction
+    
+    init(viewController: PostAcknowledgementViewController?,
+         openURL: @escaping (URL) -> Void,
+         testBookingAction: TestOrderingAction) {
+        self.viewController = viewController
+        self.openURL = openURL
+        testOrderingAction = testBookingAction
+    }
+    
+    func didTapGetTestButton() {
+        switch testOrderingAction {
+        case .bookPCR:
+            viewController?.showUIState.send(.showBookATest)
+        case .orderLateralFlow:
+            openURL(ExternalLink.getRapidTestsAsymptomaticWales.url)
+            viewController?.showUIState.send(nil)
+        }
     }
     
     func didTapBackToHome() {

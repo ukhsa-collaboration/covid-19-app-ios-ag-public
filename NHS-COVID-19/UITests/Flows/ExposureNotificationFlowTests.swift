@@ -289,7 +289,7 @@ class ExposureNotificationFlowTests: XCTestCase {
             summaryScreen.submitButton.tap()
             
             // Advice to self-isolate
-            let startIsolationScreen = ContactCaseStartIsolationScreen(
+            let startIsolationScreen = ContactCaseStartIsolationScreenEngland(
                 app: app,
                 isolationPeriod: Self.contactCaseIsolationDays,
                 daysSinceEncounter: Self.daysSinceExposure,
