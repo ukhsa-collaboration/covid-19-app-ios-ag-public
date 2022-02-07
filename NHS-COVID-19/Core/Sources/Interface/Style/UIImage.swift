@@ -63,6 +63,7 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case accordionMinusIcon = "AccordionMinusIcon"
     case accordionCollapsedIcon = "AccordionCollapsedIcon"
     case accordionExpandedIcon = "AccordionExpandedIcon"
+    case statsChart = "StatsChart"
     
     // MARK: Contact case only
     

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -14,7 +14,6 @@ class NegativeTestResultFlowTests: XCTestCase {
     private var runner: ApplicationRunner<SandboxedScenario>
     
     override func setUp() {
-        $runner.initialState.isPilotActivated = true
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = false
         $runner.initialState.cameraAuthorized = true

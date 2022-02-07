@@ -41,6 +41,8 @@ class PostAcknowledgementViewController: UIViewController {
     private let context: RunningAppContext
     private let shouldShowLanguageSelectionScreen: Bool
     fileprivate let showUIState: CurrentValueSubject<UITriggeredInterfaceState?, Never>
+    fileprivate let bluetoothOffAcknowledgementNeeded: AnyPublisher<Bool, Never>
+    fileprivate let bluetoothOffAcknowledgedCallback: () -> Void
     private let showNotificationScreen: CurrentValueSubject<NotificationInterfaceState?, Never>
     
     private var content: UIViewController? {
@@ -63,11 +65,14 @@ class PostAcknowledgementViewController: UIViewController {
         self.shouldShowLanguageSelectionScreen = shouldShowLanguageSelectionScreen
         self.showUIState = showUIState
         self.showNotificationScreen = showNotificationScreen
+        bluetoothOffAcknowledgementNeeded = context.bluetoothOffAcknowledgementNeeded
+        bluetoothOffAcknowledgedCallback = context.bluetoothOffAcknowledgedCallback
         
         super.init(nibName: nil, bundle: nil)
         
         PostAcknowledgmentState.makePostAcknowledgmentState(
             showUIState: showUIState,
+            bluetoothOffAcknowledgementNeeded: bluetoothOffAcknowledgementNeeded,
             diagnosisKeySharer: context.diagnosisKeySharer,
             virologyTestingManager: context.virologyTestingManager
         )
@@ -104,6 +109,9 @@ class PostAcknowledgementViewController: UIViewController {
     
     private func makeContentViewController() -> UIViewController {
         switch interfaceState {
+        case .bluetoothOff:
+            let interactor = BluetoothDisabledWarningInteractor(viewController: self, openSettings: context.openSettings)
+            return BluetoothDisabledWarningViewController.viewController(for: .onboarding, interactor: interactor, country: context.country.currentValue)
         case .home:
             return homeViewController()
         case .keySharing(let diagnosisKeySharer, let shareFlowType):
@@ -282,7 +290,7 @@ class PostAcknowledgementViewController: UIViewController {
                 .mapToInterface(with: context.currentDateProvider)
                 .property(initialValue: .notIsolating),
             paused: context.exposureNotificationStateController.isEnabledPublisher.map { !$0 }.property(initialValue: false),
-            animationDisabled: animationDisabled
+            animationDisabled: animationDisabled, bluetoothOff: context.bluetoothOff.interfaceProperty
         )
         
         let didRecentlyVisitSevereRiskyVenue = context.checkInContext?.recentlyVisitedSevereRiskyVenue ?? DomainProperty<GregorianDay?>.constant(nil)
@@ -324,6 +332,7 @@ class PostAcknowledgementViewController: UIViewController {
         
         return HomeFlowViewController(
             interactor: interactor,
+            bluetoothOff: context.bluetoothOff.eraseToAnyPublisher(),
             riskLevelBannerViewModel: riskLevelBannerViewModel,
             localInfoBannerViewModel: localInfoBannerViewModel,
             isolationViewModel: isolationViewModel,
@@ -337,7 +346,8 @@ class PostAcknowledgementViewController: UIViewController {
             recordSelectedIsolationPaymentsButton: { Metrics.signpost(.selectedIsolationPaymentsButton) },
             country: country,
             shouldShowLanguageSelectionScreen: shouldShowLanguageSelectionScreen,
-            showNotificationScreen: showNotificationScreen
+            showNotificationScreen: showNotificationScreen,
+            shouldShowLocalStats: context.shouldShowLocalStats
         )
     }
     
@@ -621,5 +631,23 @@ private struct ContactCaseContinueIsolationInteractor: ContactCaseContinueIsolat
     
     func didTapGuidanceLink() {
         openURL(ExternalLink.nhsGuidance.url)
+    }
+}
+
+private struct BluetoothDisabledWarningInteractor: BluetoothDisabledWarningViewController.Interacting {
+    private weak var viewController: PostAcknowledgementViewController?
+    private let openSettings: () -> Void
+    
+    init(viewController: PostAcknowledgementViewController?, openSettings: @escaping () -> Void) {
+        self.viewController = viewController
+        self.openSettings = openSettings
+    }
+    
+    func didTapSettings() {
+        openSettings()
+    }
+    
+    func didTapContinue() {
+        viewController?.bluetoothOffAcknowledgedCallback()
     }
 }

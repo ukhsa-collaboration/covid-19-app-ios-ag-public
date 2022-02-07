@@ -22,7 +22,6 @@ public class OnboardingFlowViewController: BaseNavigationController {
     }
     
     private let interactor: Interacting
-    private let useWithoutBluetooth: Bool
     
     fileprivate var state = State.start {
         didSet {
@@ -30,9 +29,8 @@ public class OnboardingFlowViewController: BaseNavigationController {
         }
     }
     
-    public init(interactor: Interacting, useWithoutBluetooth: Bool) {
+    public init(interactor: Interacting) {
         self.interactor = interactor
-        self.useWithoutBluetooth = useWithoutBluetooth
         super.init()
         
         update(for: state)
@@ -53,11 +51,7 @@ public class OnboardingFlowViewController: BaseNavigationController {
         case .start:
             return StartOnboardingViewController(
                 complete: { [weak self] in
-                    if self?.useWithoutBluetooth ?? false {
-                        self?.state = .howAppWorks
-                    } else {
-                        self?.state = .privacy
-                    }
+                    self?.state = .howAppWorks
                 },
                 reject: { [weak self] in self?.state = .deniedAge }
             )

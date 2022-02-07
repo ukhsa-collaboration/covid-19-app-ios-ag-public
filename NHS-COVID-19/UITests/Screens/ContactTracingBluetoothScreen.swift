@@ -5,7 +5,7 @@
 import Interface
 import XCTest
 
-struct ContactTracingUsesBlueoothScreen {
+struct ContactTracingBluetoothScreen {
     let app: XCUIApplication
     
     var title: XCUIElement {

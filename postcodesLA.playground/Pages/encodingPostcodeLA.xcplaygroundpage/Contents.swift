@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -51,7 +51,7 @@ let localAuthorities = arr.map { _, id, name -> (String, LA) in
         switch String(id.first!) {
         case "E": return "England"
         case "S": return "Scotland"
-        case "N": return "Nothern Island"
+        case "N": return "Northern Ireland"
         case "W": return "Wales"
         default: fatalError()
         }

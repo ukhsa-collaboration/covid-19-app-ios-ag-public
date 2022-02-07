@@ -6,16 +6,16 @@ import Integration
 import Interface
 import UIKit
 
-public class ContactTracingUsesBluetoothScreenScenario: Scenario {
+public class ContactTracingBluetoothScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
-    public static var name: String = "Contact Tracing Uses Bluetooth"
+    public static var name: String = "Contact Tracing Bluetooth"
     
     public static let continueButtonTapped = "Continue Button Tapped"
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return ContactTracingUsesBluetoothViewController(
+            return ContactTracingBluetoothViewController(
                 interactor: interactor,
                 country: .constant(.england)
             )
@@ -23,7 +23,7 @@ public class ContactTracingUsesBluetoothScreenScenario: Scenario {
     }
 }
 
-private class Interactor: ContactTracingUsesBluetoothViewController.Interacting {
+private class Interactor: ContactTracingBluetoothViewController.Interacting {
     
     private weak var viewController: UIViewController?
     
@@ -32,7 +32,7 @@ private class Interactor: ContactTracingUsesBluetoothViewController.Interacting 
     }
     
     func didTapContinueButton() {
-        viewController?.showAlert(title: ContactTracingUsesBluetoothScreenScenario.continueButtonTapped)
+        viewController?.showAlert(title: ContactTracingBluetoothScreenScenario.continueButtonTapped)
     }
     
 }

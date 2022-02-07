@@ -10,7 +10,6 @@ enum LogicalState: Equatable {
     
     enum ExposureDetectionDisabledReason {
         case authorizationDenied
-        case bluetoothDisabled
     }
     
     case starting
@@ -30,6 +29,9 @@ public struct RunningAppContext {
     public var checkInContext: CheckInContext?
     public var postcodeInfo: DomainProperty<(postcode: Postcode, localAuthority: LocalAuthority?, risk: DomainProperty<RiskyPostcodeEndpointManager.PostcodeRisk?>)?>
     public var country: DomainProperty<Country>
+    public var bluetoothOff: DomainProperty<Bool>
+    public var bluetoothOffAcknowledgementNeeded: AnyPublisher<Bool, Never>
+    public var bluetoothOffAcknowledgedCallback: () -> Void
     public var openSettings: () -> Void
     public var openAppStore: () -> Void
     public var openURL: (URL) -> Void
@@ -61,6 +63,8 @@ public struct RunningAppContext {
     public var shouldShowBookALabTest: DomainProperty<Bool>
     public var contactCaseOptOutQuestionnaire: ContactCaseOptOutQuestionnaire
     public var contactCaseIsolationDuration: DomainProperty<DayDuration>
+    public var shouldShowLocalStats: Bool
+    public var localCovidStatsManager: LocalCovidStatsManaging
 }
 
 public typealias GetLocalAuthorities = (_ postcode: Postcode) -> Result<Set<LocalAuthority>, PostcodeValidationError>
@@ -87,9 +91,6 @@ public enum ApplicationState {
     public enum ExposureDetectionDisabledReason {
         /// Authorization is denied by the user.
         case authorizationDenied(openSettings: () -> Void)
-        
-        /// Bluetooth is disabled.
-        case bluetoothDisabled
     }
     
     /// Application is starting. This should normally be very quick.
@@ -107,10 +108,10 @@ public enum ApplicationState {
     case failedToStart(openURL: (URL) -> Void)
     
     /// Application needs to show onboarding.
-    case onboarding(complete: () -> Void, openURL: (URL) -> Void, useWithoutBluetooth: Bool)
+    case onboarding(complete: () -> Void, openURL: (URL) -> Void)
     
     /// Application requires onboarding.
-    case authorizationRequired(requestPermissions: () -> Void, country: DomainProperty<Country>, useWithoutBluetooth: Bool)
+    case authorizationRequired(requestPermissions: () -> Void, country: DomainProperty<Country>)
     
     /// Application is set up, but can not run exposure detection. See `reason`.
     ///

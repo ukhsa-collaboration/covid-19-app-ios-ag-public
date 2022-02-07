@@ -10,8 +10,9 @@ public enum Feature: CaseIterable {
     /// symptoms in the symptoms questionnaire.
     case newNoSymptomsScreen
     
-    /// Enable user to use the app with bluetooth off.
-    case bluetoothOff
+    /// Puts a button on the home screen that allows people to see the local COVID statistics
+    /// for their area and for the whole country.
+    case localStatistics
     
     public static let productionEnabledFeatures: [Feature] = []
 }

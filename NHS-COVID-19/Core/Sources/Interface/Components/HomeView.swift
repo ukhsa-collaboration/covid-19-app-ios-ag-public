@@ -15,6 +15,7 @@ struct HomeView: View {
     @ObservedObject private var shouldShowSelfDiagnosis: InterfaceProperty<Bool>
     private let exposureNotificationState: ExposureNotificationState
     private let country: InterfaceProperty<Country>
+    private let shouldShowLocalStats: Bool
     
     init(
         interactor: HomeViewController.Interacting,
@@ -24,7 +25,8 @@ struct HomeView: View {
         shouldShowSelfDiagnosis: InterfaceProperty<Bool>,
         exposureNotificationsEnabled: InterfaceProperty<Bool>,
         exposureNotificationsToggleAction: @escaping (Bool) -> Void,
-        country: InterfaceProperty<Country>
+        country: InterfaceProperty<Country>,
+        shouldShowLocalStats: Bool
     ) {
         self.interactor = interactor
         self.riskLevelBannerViewModel = riskLevelBannerViewModel
@@ -32,6 +34,7 @@ struct HomeView: View {
         self.isolationViewModel = isolationViewModel
         self.shouldShowSelfDiagnosis = shouldShowSelfDiagnosis
         self.country = country
+        self.shouldShowLocalStats = shouldShowLocalStats
         
         exposureNotificationState = ExposureNotificationState(
             enabled: exposureNotificationsEnabled,
@@ -58,7 +61,8 @@ struct HomeView: View {
                         viewModel: isolationViewModel,
                         turnContactTracingOnTapAction: {
                             exposureNotificationState.enabled = true
-                        }
+                        },
+                        openSettings: interactor.openSettings
                     )
                     .zIndex(-1)
                     
@@ -104,6 +108,10 @@ struct HomeView: View {
                 )
             }
             
+            if isolationViewModel.isolationState == .notIsolating && shouldShowLocalStats {
+                statsButton()
+            }
+            
             if shouldShowSelfDiagnosis.wrappedValue {
                 NavigationButton(
                     imageName: .thermometer,
@@ -130,6 +138,10 @@ struct HomeView: View {
                 action: interactor.didTapLinkTestResultButton
             )
             
+            if isolationViewModel.isolationState != .notIsolating && shouldShowLocalStats {
+                statsButton()
+            }
+            
             NavigationButton(
                 imageName: .settings,
                 foregroundColor: Color(.background),
@@ -154,5 +166,15 @@ struct HomeView: View {
                 action: interactor.didTapContactTracingHubButton
             )
         }
+    }
+    
+    private func statsButton() -> some View {
+        NavigationButton(
+            imageName: .statsChart,
+            foregroundColor: Color(.background),
+            backgroundColor: Color(.styleGold),
+            text: localize(.status_option_local_data),
+            action: interactor.didTapStatsButton
+        )
     }
 }

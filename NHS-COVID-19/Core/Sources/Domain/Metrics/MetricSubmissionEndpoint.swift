@@ -184,6 +184,7 @@ private struct SubmissionPayload: Codable {
         // MARK: - New app state metrics
         
         var appIsUsableBackgroundTick = 0
+        var appIsUsableBluetoothOffBackgroundTick = 0
         var appIsContactTraceableBackgroundTick = 0
         
     }
@@ -320,6 +321,7 @@ private extension Metric {
         case .optedOutForContactIsolation: return \.optedOutForContactIsolation
         case .optedOutForContactIsolationBackgroundTick: return \.optedOutForContactIsolationBackgroundTick
         case .appIsUsableBackgroundTick: return \.appIsUsableBackgroundTick
+        case .appIsUsableBluetoothOffBackgroundTick: return \.appIsUsableBluetoothOffBackgroundTick
         case .appIsContactTraceableBackgroundTick: return \.appIsContactTraceableBackgroundTick
         case .didAccessSelfIsolationNoteLink: return \.didAccessSelfIsolationNoteLink
         }

@@ -135,6 +135,17 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         )
     }
     
+    func makeLocalCovidStatsViewController(flowController: UINavigationController?) -> UIViewController {
+        let interactor = LocalCovidStatsFlowInteractor(
+            viewController: flowController,
+            localStatsManager: context.localCovidStatsManager,
+            country: context.country,
+            localAuthorityId: context.postcodeInfo.map { $0?.localAuthority?.id },
+            openURL: context.openURL
+        )
+        return LocalStatisticsFlowViewController(interactor)
+    }
+    
     func makeTestingInformationViewController(flowController: UINavigationController?, showWarnAndBookATestFlow: InterfaceProperty<Bool>) -> UIViewController? {
         if showWarnAndBookATestFlow.wrappedValue {
             return warnAndBookATestViewController(flowController: flowController)
@@ -292,6 +303,11 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             userNotificationsEnabled: userNotificationsEnabled
         )
         return viewController
+    }
+    
+    func makeBluetoothDisabledWarningViewController(flowController: UINavigationController?) -> UIViewController {
+        let interactor = BluetoothDisabledWarningInteractor(viewController: flowController, openSettings: context.openSettings)
+        return BluetoothDisabledWarningViewController.viewController(for: .contactTracing, interactor: interactor, country: context.country.currentValue)
     }
     
     func makeLocalInfoScreenViewController(
@@ -528,6 +544,10 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     func didTapGetIsolationNoteLink() {
         context.openURL(ExternalLink.isolationNote.url)
     }
+    
+    func openSettings() {
+        context.openSettings()
+    }
 }
 
 private struct TestCheckSymptomsInteractor: TestCheckSymptomsViewController.Interacting {
@@ -604,4 +624,22 @@ private struct SelfIsolationInteractor: SelfIsolationHubViewController.Interacti
         Metrics.signpost(.didAccessSelfIsolationNoteLink)
     }
     
+}
+
+private struct BluetoothDisabledWarningInteractor: BluetoothDisabledWarningViewController.Interacting {
+    private weak var viewController: UINavigationController?
+    private let openSettings: () -> Void
+    
+    init(viewController: UINavigationController?, openSettings: @escaping () -> Void) {
+        self.viewController = viewController
+        self.openSettings = openSettings
+    }
+    
+    func didTapSettings() {
+        openSettings()
+    }
+    
+    func didTapContinue() {
+        viewController?.popViewController(animated: true)
+    }
 }

@@ -20,19 +20,23 @@ public struct RiskLevelIndicator: View {
         @InterfaceProperty var isolationState: IsolationState
         @InterfaceProperty var paused: Bool
         @InterfaceProperty var animationDisabled: Bool
+        @InterfaceProperty var bluetoothOff: Bool
         
         public init(
             isolationState: InterfaceProperty<IsolationState>,
             paused: InterfaceProperty<Bool>,
-            animationDisabled: InterfaceProperty<Bool>
+            animationDisabled: InterfaceProperty<Bool>,
+            bluetoothOff: InterfaceProperty<Bool>
         ) {
             _isolationState = isolationState
             _paused = paused
             _animationDisabled = animationDisabled
+            _bluetoothOff = bluetoothOff
             
             anyCancellable = _animationDisabled.$wrappedValue.combineLatest(
                 isolationState.$wrappedValue,
-                paused.$wrappedValue
+                paused.$wrappedValue,
+                bluetoothOff.$wrappedValue
             )
             .sink(receiveValue: { [weak self] _ in
                 self?.objectWillChange.send()
@@ -42,10 +46,12 @@ public struct RiskLevelIndicator: View {
     
     @ObservedObject private var viewModel: ViewModel
     private let turnContactTracingOnTapAction: () -> Void
+    private let openSettings: () -> Void
     
-    public init(viewModel: ViewModel, turnContactTracingOnTapAction: @escaping () -> Void) {
+    public init(viewModel: ViewModel, turnContactTracingOnTapAction: @escaping () -> Void, openSettings: @escaping () -> Void) {
         self.viewModel = viewModel
         self.turnContactTracingOnTapAction = turnContactTracingOnTapAction
+        self.openSettings = openSettings
     }
     
     public var body: some View {
@@ -53,8 +59,8 @@ public struct RiskLevelIndicator: View {
     }
     
     private func containedView() -> AnyView {
-        switch (viewModel.isolationState, viewModel.paused) {
-        case (let .isolating(days, percentRemaining, endDate, _), _):
+        switch (viewModel.isolationState, viewModel.bluetoothOff, viewModel.paused) {
+        case (let .isolating(days, percentRemaining, endDate, _), _, _):
             return Self.makeIsolatingIndicator(
                 days: days,
                 percentRemaining: percentRemaining,
@@ -62,10 +68,20 @@ public struct RiskLevelIndicator: View {
                 isDetectionPaused: viewModel.paused,
                 animationDisabled: viewModel.animationDisabled
             )
-        case (.notIsolating, false):
+        case (.notIsolating, true, _):
+            return Self.makePausedIndicator(
+                action: openSettings,
+                message: localize(.bluetooth_not_active),
+                buttonTitle: localize(.bluetooth_activate)
+            )
+        case (.notIsolating, false, false):
             return Self.makeNotIsolatingIndicator(animationDisabled: viewModel.animationDisabled)
-        case (.notIsolating, true):
-            return Self.makePausedIndicator(turnBackOnTapAction: turnContactTracingOnTapAction)
+        case (.notIsolating, false, true):
+            return Self.makePausedIndicator(
+                action: turnContactTracingOnTapAction,
+                message: localize(.risk_level_indicator_contact_tracing_not_active),
+                buttonTitle: localize(.risk_level_indicator_contact_tracing_turn_back_on_button)
+            )
         }
     }
 }

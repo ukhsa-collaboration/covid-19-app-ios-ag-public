@@ -204,10 +204,11 @@ public class SymptomsReviewViewController: UIViewController {
             let symptomButton = UIButton()
             symptomButton.setTitle(localize(.symptom_review_button), for: .normal)
             symptomButton.setTitleColor(UIColor(.nhsBlue), for: .normal)
-            symptomButton.titleLabel?.setDynamicTextStyle(.headline)
+            symptomButton.titleLabel?.setDynamicTextStyle(.headline, numberOfLines: 1)
             symptomButton.tag = index
             symptomButton.addTarget(self, action: #selector(changeSymptom(sender:)), for: .touchUpInside)
             symptomButton.setContentHuggingPriority(.almostRequest, for: .horizontal)
+            symptomButton.setContentCompressionResistancePriority(.almostRequest, for: .horizontal)
             symptomButton.accessibilityLabel = localize(.symptom_review_button_accessibility_label(symptom: symptom.heading))
             
             let symptomRow = UIStackView(arrangedSubviews: [symptomLabel, symptomButton])

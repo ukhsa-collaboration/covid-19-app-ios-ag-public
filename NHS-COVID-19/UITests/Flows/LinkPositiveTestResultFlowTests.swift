@@ -14,7 +14,6 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
     private var runner: ApplicationRunner<SandboxedScenario>
     
     override func setUpWithError() throws {
-        $runner.initialState.isPilotActivated = true
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = false
         $runner.initialState.cameraAuthorized = true
@@ -44,6 +43,7 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: homeScreen.enterTestResultButton)
             homeScreen.enterTestResultButton.tap()
             
             let linkTestResultScreen = LinkTestResultScreen(app: app)
@@ -151,6 +151,7 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: homeScreen.enterTestResultButton)
             homeScreen.enterTestResultButton.tap()
             
             let linkTestResultScreen = LinkTestResultScreen(app: app)
@@ -272,6 +273,7 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: homeScreen.enterTestResultButton)
             homeScreen.enterTestResultButton.tap()
             
             let linkTestResultScreen = LinkTestResultScreen(app: app)

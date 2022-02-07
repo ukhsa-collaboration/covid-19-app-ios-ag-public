@@ -96,6 +96,7 @@ public enum StringLocalizableKey: String, CaseIterable {
     case home_contact_tracing_hub_button_title
     case home_testing_hub_button_title
     case home_self_isolation_button_title
+    case status_option_local_data
     
     case risk_level_indicator_contact_tracing_active
     case risk_level_indicator_contact_tracing_not_active
@@ -923,6 +924,44 @@ public enum StringLocalizableKey: String, CaseIterable {
     case launcher_permissions_bluetooth_description
     case launcher_permissions_bluetooth_button
     case launcher_permissions_bluetooth_secondary_button
+    
+    case bluetooth_not_active
+    case bluetooth_activate
+    
+    // MARK: - New 'Bluetooth disabled' screen for manage contact tracing
+    
+    case contact_tracing_permissions_bluetooth_title
+    case contact_tracing_permissions_bluetooth_hint
+    case contact_tracing_permissions_bluetooth_description
+    case contact_tracing_permissions_bluetooth_button
+    case contact_tracing_permissions_bluetooth_secondary_button
+    
+    // MARK: - Local Statistics Data screen
+    
+    case local_statistics_main_screen_navigation_title
+    case local_statistics_main_screen_title
+    case local_statistics_main_screen_info
+    case local_statistics_main_screen_more_info
+    case local_statistics_main_screen_dashboard_link_title
+    
+    case local_statistics_main_screen_people_tested_positive
+    case local_statistics_main_screen_cases_per_hundred_thousand
+    case local_statistics_main_screen_local_authority_lower_tier
+    case local_statistics_main_screen_last_seven_days_rate_no_change
+    case local_statistics_main_screen_about_the_data_heading
+    case local_statistics_main_screen_england_average
+    case local_statistics_main_screen_wales_average
+    case local_statistics_main_screen_daily
+    case local_statistics_main_screen_last_7_days
+    case local_statistics_main_screen_last_seven_days_rate_no_change_accessibility_text
+    case local_statistics_main_screen_cases_per_hundred_thousand_accessibility_text
+    case local_statistics_main_screen_last_7_days_not_available_accessibility_text
+    case local_statistics_main_screen_england_rate_100k_not_available_accessibility_text
+    case local_statistics_main_screen_wales_rate_100k_not_available_accessibility_text
+    case local_statistics_main_screen_dashboard_url
+    case local_statistics_main_screen_about_data_footnote_2
+    case local_statistics_main_screen_rolling_rate_100k_accessibility_text
+    case local_statistics_error_loading_title
 }
 
 public enum ParameterisedStringLocalizable: Equatable {
@@ -992,6 +1031,22 @@ public enum ParameterisedStringLocalizable: Equatable {
         case contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period = "contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld"
         case contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter = "contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld"
         case contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days = "contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld"
+        case local_statistics_main_screen_last_updated = "local_statistics_main_screen_last_updated date: %@ time: %@"
+        
+        case local_statistics_main_screen_people_tested_positive_last_updated = "local_statistics_main_screen_people_tested_positive_last_updated %@"
+        case local_statistics_main_screen_rolling_rate_last_updated = "local_statistics_main_screen_rolling_rate_last_updated %@"
+        case local_statistics_main_screen_last_seven_days_rate_up = "local_statistics_main_screen_last_seven_days_rate_up value: %ld percentageValue: %ld"
+        case local_statistics_main_screen_last_seven_days_rate_down = "local_statistics_main_screen_last_seven_days_rate_down value: %ld percentageValue: %ld"
+        case local_statistics_main_screen_daily_accessibility_text = "local_statistics_main_screen_daily_accessibility_text %ld %@"
+        case local_statistics_main_screen_last_7_days_accessibility_text = "local_statistics_main_screen_last_7_days_accessibility_text %ld"
+        case local_statistics_main_screen_last_seven_days_rate_up_accessibility_text = "local_statistics_main_screen_last_seven_days_rate_up_accessibility_text value: %ld percentValue: %ld"
+        case local_statistics_main_screen_last_seven_days_rate_down_accessibility_text = "local_statistics_main_screen_last_seven_days_rate_down_accessibility_text value: %ld percentValue: %ld"
+        case local_statistics_main_screen_daily_cases_not_available_accessibility_text = "local_statistics_main_screen_daily_cases_not_available_accessibility_text localAuthority: %@"
+        case local_statistics_main_screen_local_authority_rate_100k_not_available_accessibility_text = "local_statistics_main_screen_local_authority_rate_100k_not_available_accessibility_text localAuthority: %@"
+        case local_statistics_main_screen_local_authority_rate_100k_accessibility_text = "local_statistics_main_screen_local_authority_rate_100k_accessibility_text localAuthority: %@ rolingRate: %ld"
+        case local_statistics_main_screen_england_rate_100k_accessibility_text = "local_statistics_main_screen_england_rate_100k_accessibility_text rollingRate: %ld"
+        case local_statistics_main_screen_wales_rate_100k_accessibility_text = "local_statistics_main_screen_wales_rate_100k_accessibility_text rollingRate: %ld"
+        case local_statistics_main_screen_about_data_footnote_1 = "local_statistics_main_screen_about_data_footnote_1 startDate: %@, endDate: %@"
     }
     
     case checkin_confirmation_date(date: Date)
@@ -1060,6 +1115,24 @@ public enum ParameterisedStringLocalizable: Equatable {
     case age_declaration_no_option_accessibility_text(date: Date)
     
     case contact_case_exposure_info_screen_exposure_date(date: Date)
+    case local_statistics_main_screen_last_updated(date: Date)
+    
+    case local_statistics_main_screen_people_tested_positive_last_updated(date: Date)
+    case local_statistics_main_screen_rolling_rate_last_updated(date: Date)
+    case local_statistics_main_screen_last_seven_days_rate_up(value: Int, percentageValue: Double)
+    case local_statistics_main_screen_last_seven_days_rate_down(value: Int, percentageValue: Double)
+    #warning("Change this to be plural")
+    case local_statistics_main_screen_daily_accessibility_text(positivTests: Int, localAuthority: String)
+    #warning("Change this to be plural")
+    case local_statistics_main_screen_last_7_days_accessibility_text(positiveTests: Int)
+    case local_statistics_main_screen_last_seven_days_rate_up_accessibility_text(value: Int, percentValue: Double)
+    case local_statistics_main_screen_last_seven_days_rate_down_accessibility_text(value: Int, percentValue: Double)
+    case local_statistics_main_screen_daily_cases_not_available_accessibility_text(localAuthority: String)
+    case local_statistics_main_screen_local_authority_rate_100k_not_available_accessibility_text(localAuthority: String)
+    case local_statistics_main_screen_local_authority_rate_100k_accessibility_text(localAuthority: String, rolingRate: Double)
+    case local_statistics_main_screen_england_rate_100k_accessibility_text(rollingRate: Double)
+    case local_statistics_main_screen_wales_rate_100k_accessibility_text(rollingRate: Double)
+    case local_statistics_main_screen_about_data_footnote_1(startDate: Date, endDate: Date)
     
     var key: Key {
         switch self {
@@ -1124,6 +1197,36 @@ public enum ParameterisedStringLocalizable: Equatable {
             return .contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter
         case .contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days:
             return .contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days
+        case .local_statistics_main_screen_last_updated:
+            return .local_statistics_main_screen_last_updated
+        case .local_statistics_main_screen_people_tested_positive_last_updated:
+            return .local_statistics_main_screen_people_tested_positive_last_updated
+        case .local_statistics_main_screen_rolling_rate_last_updated:
+            return .local_statistics_main_screen_rolling_rate_last_updated
+        case .local_statistics_main_screen_last_seven_days_rate_up:
+            return .local_statistics_main_screen_last_seven_days_rate_up
+        case .local_statistics_main_screen_last_seven_days_rate_down:
+            return .local_statistics_main_screen_last_seven_days_rate_down
+        case .local_statistics_main_screen_daily_accessibility_text:
+            return .local_statistics_main_screen_daily_accessibility_text
+        case .local_statistics_main_screen_last_7_days_accessibility_text:
+            return .local_statistics_main_screen_last_7_days_accessibility_text
+        case .local_statistics_main_screen_last_seven_days_rate_up_accessibility_text:
+            return .local_statistics_main_screen_last_seven_days_rate_up_accessibility_text
+        case .local_statistics_main_screen_last_seven_days_rate_down_accessibility_text:
+            return .local_statistics_main_screen_last_seven_days_rate_down_accessibility_text
+        case .local_statistics_main_screen_daily_cases_not_available_accessibility_text:
+            return .local_statistics_main_screen_daily_cases_not_available_accessibility_text
+        case .local_statistics_main_screen_local_authority_rate_100k_not_available_accessibility_text:
+            return .local_statistics_main_screen_local_authority_rate_100k_not_available_accessibility_text
+        case .local_statistics_main_screen_local_authority_rate_100k_accessibility_text:
+            return .local_statistics_main_screen_local_authority_rate_100k_accessibility_text
+        case .local_statistics_main_screen_england_rate_100k_accessibility_text:
+            return .local_statistics_main_screen_england_rate_100k_accessibility_text
+        case .local_statistics_main_screen_wales_rate_100k_accessibility_text:
+            return .local_statistics_main_screen_wales_rate_100k_accessibility_text
+        case .local_statistics_main_screen_about_data_footnote_1:
+            return .local_statistics_main_screen_about_data_footnote_1
         }
     }
     
@@ -1247,6 +1350,42 @@ public enum ParameterisedStringLocalizable: Equatable {
             return [daysSinceEncounter]
         case .contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days(let remainingIsolationDays):
             return [remainingIsolationDays]
+        case .local_statistics_main_screen_last_updated(date: let date):
+            return [
+                DateFormatter.dayOfYear(style: .full).string(from: date),
+                DateFormatter.time.string(from: date),
+            ]
+        case .local_statistics_main_screen_people_tested_positive_last_updated(date: let date):
+            return [DateFormatter.dayOfYear(style: .full).string(from: date)]
+        case .local_statistics_main_screen_rolling_rate_last_updated(date: let date):
+            return [DateFormatter.dayOfYear(style: .full).string(from: date)]
+        case .local_statistics_main_screen_last_seven_days_rate_up(value: let value, percentageValue: let percentageValue):
+            return [value, percentageValue]
+        case .local_statistics_main_screen_last_seven_days_rate_down(value: let value, percentageValue: let percentageValue):
+            return [value, percentageValue]
+        case .local_statistics_main_screen_daily_accessibility_text(positivTests: let positivTests, localAuthority: let localAuthority):
+            return [positivTests, localAuthority]
+        case .local_statistics_main_screen_last_7_days_accessibility_text(positiveTests: let positiveTests):
+            return [positiveTests]
+        case .local_statistics_main_screen_last_seven_days_rate_up_accessibility_text(value: let value, percentValue: let percentValue):
+            return [value, percentValue]
+        case .local_statistics_main_screen_last_seven_days_rate_down_accessibility_text(value: let value, percentValue: let percentValue):
+            return [value, percentValue]
+        case .local_statistics_main_screen_daily_cases_not_available_accessibility_text(localAuthority: let localAuthority):
+            return [localAuthority]
+        case .local_statistics_main_screen_local_authority_rate_100k_not_available_accessibility_text(localAuthority: let localAuthority):
+            return [localAuthority]
+        case .local_statistics_main_screen_local_authority_rate_100k_accessibility_text(localAuthority: let localAuthority, rolingRate: let rolingRate):
+            return [localAuthority, rolingRate]
+        case .local_statistics_main_screen_england_rate_100k_accessibility_text(rollingRate: let rollingRate):
+            return [rollingRate]
+        case .local_statistics_main_screen_wales_rate_100k_accessibility_text(rollingRate: let rollingRate):
+            return [rollingRate]
+        case .local_statistics_main_screen_about_data_footnote_1(startDate: let startDate, endDate: let endDate):
+            return [
+                DateFormatter.dayOfYear(style: .full).string(from: startDate),
+                DateFormatter.dayOfYear(style: .full).string(from: endDate),
+            ]
         }
     }
     

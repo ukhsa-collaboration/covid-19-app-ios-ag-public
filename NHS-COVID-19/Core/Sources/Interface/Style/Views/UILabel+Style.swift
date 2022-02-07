@@ -114,9 +114,9 @@ extension UILabel {
         return self
     }
     
-    func setDynamicTextStyle(_ style: UIFont.TextStyle) {
+    func setDynamicTextStyle(_ style: UIFont.TextStyle, numberOfLines: Int = 0) {
         font = .preferredFont(forTextStyle: style)
-        numberOfLines = 0
+        self.numberOfLines = numberOfLines
         adjustsFontForContentSizeCategory = true
     }
     

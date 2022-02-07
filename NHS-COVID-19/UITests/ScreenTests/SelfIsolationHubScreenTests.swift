@@ -55,12 +55,14 @@ class SelfIsolationHubScreenTests: XCTestCase {
             // expand 'How to self-isolate' accordion
             XCTAssert(screen.howToSelfIsolateAccordionTitleButton.exists)
             XCTAssert(screen.howToSelfIsolateAccordionTitleButton.isHittable)
+            app.scrollTo(element: screen.howToSelfIsolateAccordionTitleButton)
             screen.howToSelfIsolateAccordionTitleButton.tap()
             
             // tap on link
             app.scrollTo(element: screen.readLatestGovenrnmentGuidanceLink)
             XCTAssert(screen.readLatestGovenrnmentGuidanceLink.exists)
             XCTAssert(screen.readLatestGovenrnmentGuidanceLink.isHittable)
+            app.scrollTo(element: screen.readLatestGovenrnmentGuidanceLink)
             screen.readLatestGovenrnmentGuidanceLink.tap()
             
             XCTAssert(app.staticTexts[runner.scenario.readGovernmentGuidanceAlertTitle].displayed)
@@ -74,13 +76,14 @@ class SelfIsolationHubScreenTests: XCTestCase {
             // expand 'How to self-isolate' accordion
             XCTAssert(screen.howToSelfIsolateAccordionTitleButton.exists)
             XCTAssert(screen.howToSelfIsolateAccordionTitleButton.isHittable)
+            app.scrollTo(element: screen.howToSelfIsolateAccordionTitleButton)
             screen.howToSelfIsolateAccordionTitleButton.tap()
             
             // tap on link
             app.scrollTo(element: screen.findYourLocalAuthorityLink)
             XCTAssert(screen.findYourLocalAuthorityLink.exists)
             XCTAssert(screen.findYourLocalAuthorityLink.isHittable)
-            
+
             // we can't scroll to the link so we scroll to the next element instead
             // to get the link out of the non-clickable safe area
             app.scrollTo(element: screen.practicalSupportAccordionTitleButton)
@@ -97,12 +100,14 @@ class SelfIsolationHubScreenTests: XCTestCase {
             // expand 'Practical support while you are self-isolating' accordion
             XCTAssert(screen.practicalSupportAccordionTitleButton.exists)
             XCTAssert(screen.practicalSupportAccordionTitleButton.isHittable)
+            app.scrollTo(element: screen.practicalSupportAccordionTitleButton)
             screen.practicalSupportAccordionTitleButton.tap()
             
             // tap on link
             app.scrollTo(element: screen.findYourLocalAuthorityLink)
             XCTAssert(screen.findYourLocalAuthorityLink.exists)
             XCTAssert(screen.findYourLocalAuthorityLink.isHittable)
+            app.scrollTo(element: screen.findYourLocalAuthorityLink)
             screen.findYourLocalAuthorityLink.tap()
             
             XCTAssert(app.staticTexts[runner.scenario.findYourLocalAuthorityAlertTitle].displayed)

@@ -15,7 +15,7 @@ public class BluetoothDisabledWarningScreenScenario: Scenario {
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
-            BluetoothDisabledWarningViewController(interactor: Interactor(viewController: parent), country: .england)
+            BluetoothDisabledWarningViewController.viewController(for: .onboarding, interactor: Interactor(viewController: parent), country: .england)
         }
     }
 }

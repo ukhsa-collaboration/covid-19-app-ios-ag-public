@@ -54,6 +54,8 @@ public class ApplicationCoordinator {
     private let trafficObfuscationClient: TrafficObfuscationClient
     private let userNotificationManager: UserNotificationManaging
     private let diagnosisKeySharer: DomainProperty<DiagnosisKeySharer?>
+    public let bluetoothOffAcknowledged = CurrentValueSubject<Bool, Never>(false)
+    private let localCovidStatsManager: LocalCovidStatsManaging
     
     private var recommendedUpdateManager: RecommendedUpdateManager?
     
@@ -161,6 +163,10 @@ public class ApplicationCoordinator {
             httpClient: distributeClient,
             calculateIsolationState: isolationContext.handleSymptomsIsolationState,
             shouldShowNewNoSymptomsScreen: { enabledFeatures.contains(.newNoSymptomsScreen) }
+        )
+        
+        localCovidStatsManager = LocalCovidStatsManager(
+            httpClient: distributeClient
         )
         
         let riskyVenueConfiguration = CachedResponse(
@@ -390,14 +396,12 @@ public class ApplicationCoordinator {
                     self?.policyManager.acceptWithCurrentAppVersion()
                     completedOnboardingForCurrentSession.value = true
                 },
-                openURL: application.open,
-                useWithoutBluetooth: isFeatureEnabled(.bluetoothOff)
+                openURL: application.open
             )
         case .authorizationRequired:
             return .authorizationRequired(
                 requestPermissions: requestPermissions,
-                country: country,
-                useWithoutBluetooth: isFeatureEnabled(.bluetoothOff)
+                country: country
             )
         case .canNotRunExposureNotification(let reason):
             return .canNotRunExposureNotification(reason: disabledReason(from: reason), country: country.currentValue)
@@ -415,6 +419,13 @@ public class ApplicationCoordinator {
             #warning("What should be done if this happens?")
             preconditionFailure("This constellation should never happen")
         case .fullyOnboarded:
+            let bluetoothOff = exposureNotificationContext.exposureNotificationManager.exposureNotificationStatusPublisher.map { $0 == .bluetoothOff }.eraseToAnyPublisher()
+            let bluetoothOffAcknowledgementNeeded = bluetoothOffAcknowledged.combineLatest(bluetoothOff).map { acknowledged, bluetoothOff -> Bool in
+                if acknowledged { return false }
+                else if bluetoothOff { return true }
+                else { return false }
+            }.eraseToAnyPublisher()
+            
             let isolationStateStore = isolationContext.isolationStateStore
             
             return .runningExposureNotification(
@@ -422,6 +433,11 @@ public class ApplicationCoordinator {
                     checkInContext: checkInContext,
                     postcodeInfo: postcodeInfo,
                     country: country,
+                    bluetoothOff: bluetoothOff.domainProperty(),
+                    bluetoothOffAcknowledgementNeeded: bluetoothOffAcknowledgementNeeded,
+                    bluetoothOffAcknowledgedCallback: { [weak self] in
+                        self?.bluetoothOffAcknowledged.send(true)
+                    },
                     openSettings: application.openSettings,
                     openAppStore: application.openAppStore,
                     openURL: application.open,
@@ -468,7 +484,9 @@ public class ApplicationCoordinator {
                         ).removePendingOrUndelivered()
                     }, shouldShowBookALabTest: isolationContext.canBookALabTest().domainProperty(),
                     contactCaseOptOutQuestionnaire: ContactCaseOptOutQuestionnaire(country: country),
-                    contactCaseIsolationDuration: isolationContext.isolationConfiguration.$value.map { $0.contactCase }.domainProperty()
+                    contactCaseIsolationDuration: isolationContext.isolationConfiguration.$value.map { $0.contactCase }.domainProperty(),
+                    shouldShowLocalStats: isFeatureEnabled(.localStatistics),
+                    localCovidStatsManager: localCovidStatsManager
                 )
             )
         case .recommendingUpdate(let reason, let titles, let descriptions):
@@ -575,8 +593,6 @@ public class ApplicationCoordinator {
         switch logicalReason {
         case .authorizationDenied:
             return .authorizationDenied(openSettings: application.openSettings)
-        case .bluetoothDisabled:
-            return .bluetoothDisabled
         }
     }
     
@@ -921,6 +937,7 @@ public class ApplicationCoordinator {
     
     private func deleteAllData() {
         completedOnboardingForCurrentSession.value = false
+        bluetoothOffAcknowledged.value = false
         postcodeStore.delete()
         checkInContext.checkInsStore.deleteAll()
         isolationContext.isolationStateStore.isolationStateInfo = nil

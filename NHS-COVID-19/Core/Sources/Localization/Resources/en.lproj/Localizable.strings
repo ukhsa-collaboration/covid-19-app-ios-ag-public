@@ -17,7 +17,7 @@
 "authorization_denied_description_1" = "This is how the app tells you if you’ve been in close contact with someone who has tested positive for COVID-19.\n\nYour phone may call these ‘Exposure notifications’ or ‘Exposure logging’.\n\nGo to your phone settings and change to ‘Allow’.";
 "authorization_denied_description_2" = "‘Exposure Logging’ happens when Bluetooth allows your phone to receive encrypted random IDs of other users and then passes your random ID to their phones. It can be deactivated at any time, but the app will then stop working.";
 "authorization_denied_description_3" = "Please accept permissions when prompted.";
-"authorization_denied_action" = "Go to settings";
+"authorization_denied_action" = "Open phone settings";
 "authentication_code_title" = "Currently only for NHS Volunteer Responders, Isle of Wight and Newham residents";
 "authentication_code_textfield_heading" = "Enter your unique code";
 "authentication_code_textfield_example" = "Example: 5apv-enka";
@@ -317,7 +317,7 @@
 "checkin_information_help_scanning_section_description" = "We advise you to speak to a member of staff at the venue to see if there are other ways of checking in.";
 "checkin_information_whats_a_qr_code_section_title" = "How to recognise an NHS QR code poster";
 "checkin_information_whats_a_qr_code_section_description_new" = "Here are what the official NHS QR code posters look like. You need to scan the code, which is the square in the middle.";
-"about_this_app_software_information_date_of_release_description" = "12/2021";
+"about_this_app_software_information_date_of_release_description" = "2/2022";
 "link_test_result_enter_code_example" = "Example: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Test code";
 "link_test_result_button_title" = "Continue";
@@ -715,7 +715,7 @@
 "checkin_risky_venue_information_warn_and_book_a_test_bulleted_list" = "You should do this even if you have been fully vaccinated.";
 "checkin_risky_venue_information_warn_and_book_a_test_additional_info" = "Around 1 in 3 people who have COVID-19 do not have symptoms, but they can still pass it on and put others at risk.";
 "test_check_symptoms_subheading" = "The main symptoms of coronavirus (COVID-19) are:";
-"test_check_symptoms_footer" = "If you think you may have COVID-19 symptoms, even if they are mild, select ‘Check symptoms’ below. Call 119 for more information or advice.";
+"test_check_symptoms_footer" = "If you think you may have COVID-19 symptoms, even if they are mild, select ‘Check symptoms‘ below. Call 119 for more information or advice.";
 "warn_and_test_check_symptoms_confirm_alert_title" = "Are you sure you want to leave?";
 "warn_and_test_check_symptoms_confirm_alert_body" = "If you tap ‘Leave’ you can restart this process later and book a test by selecting ‘Testing for COVID-19’ from the home screen.";
 "warn_and_test_check_symptoms_confirm_alert_leave" = "Leave";
@@ -991,9 +991,9 @@
 "local_statistics_main_screen_last_seven_days_rate_down_accessibility_text value: %ld percentValue: %ld" = "Down by %ld (%.0f%%) change from previous 7 days";
 "local_statistics_main_screen_daily_cases_not_available_accessibility_text localAuthority: %@" = "Daily positive tests in %@s are not available";
 "local_statistics_main_screen_local_authority_rate_100k_not_available_accessibility_text localAuthority: %@" = "%@ cases per 100,000 people are not available";
-"local_statistics_main_screen_local_authority_rate_100k_accessibility_text localAuthority: %@ rolingRate: %ld" = "%@ %ld";
-"local_statistics_main_screen_england_rate_100k_accessibility_text rollingRate: %ld" = "England %ld";
-"local_statistics_main_screen_wales_rate_100k_accessibility_text rollingRate: %ld" = "Wales %ld";
+"local_statistics_main_screen_local_authority_rate_100k_accessibility_text localAuthority: %@ rolingRate: %ld" = "%@ %.1f";
+"local_statistics_main_screen_england_rate_100k_accessibility_text rollingRate: %ld" = "England %.1f";
+"local_statistics_main_screen_wales_rate_100k_accessibility_text rollingRate: %ld" = "Wales %.1f";
 "local_statistics_main_screen_about_data_footnote_1 startDate: %@, endDate: %@" = "¹Change from previous 7 days (%@ - %@)";
 "local_statistics_error_loading_title" = "Error loading";
 "local_statistics_main_screen_rolling_rate_100k_accessibility_text" = "Cases per 100,000 people are presented by specimen date (the date when the sample was taken from the person being tested).";
@@ -1005,6 +1005,7 @@
 "contact_case_no_isolation_under_age_limit_info_box_wales" = "To reduce risk, you should take and report a daily rapid lateral flow test for 7 days";
 "contact_case_no_isolation_under_age_limit_list_item_lfd_wales" = "It is still important to follow national guidance, including reducing contact with others, especially the elderly and vulnerable.";
 "contact_case_no_isolation_under_age_limit_list_item_adult_wales" = "You are advised to show this message to a trusted adult.";
+"contact_case_start_isolation_primary_button_wales_title" = "Take a COVID-19 test";
 "contact_case_start_isolation_book_lfd_test_url" = "https://gov.wales/get-rapid-lateral-flow-covid-19-tests-if-you-do-not-have-symptoms";
 "contact_case_start_isolation_primary_button_title_wales" = "Get a free rapid lateral flow kit";
 "contact_case_start_isolation_list_item_testing_once_asap_wales" = "You are advised to take a free rapid lateral flow test as soon as possible.";

@@ -21,6 +21,11 @@ public struct Environment {
     public struct CopyServices {
         public let project: String
         public let token: String
+        
+        public init(project: String, token: String) {
+            self.project = project
+            self.token = token
+        }
     }
     
     public let copyServices: CopyServices?
@@ -52,7 +57,7 @@ public extension Environment {
         )
     }
     
-    static func mock(with client: HTTPClient) -> Environment {
+    static func mock(with client: HTTPClient, copyServices: CopyServices? = nil) -> Environment {
         Environment(
             distributionClient: client,
             apiClient: client,
@@ -61,7 +66,7 @@ public extension Environment {
             backgroundTaskIdentifier: BackgroundTaskIdentifiers(in: .main).exposureNotification!,
             identifier: "mock",
             appInfo: AppInfo(for: .main),
-            copyServices: nil
+            copyServices: copyServices.map { Environment.CopyServices(project: $0.project, token: $0.token) }
         )
     }
     

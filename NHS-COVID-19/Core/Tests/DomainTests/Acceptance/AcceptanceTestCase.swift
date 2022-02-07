@@ -140,7 +140,7 @@ extension AcceptanceTestCase {
         try completeExposureNotificationActivation(authorizationStatus: .unknown)
         try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
         
-        guard case .onboarding(let complete, _, _) = coordinator.state else {
+        guard case .onboarding(let complete, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
@@ -152,7 +152,7 @@ extension AcceptanceTestCase {
         
         try savePostcode(.init("B44"), LocalAuthority(name: "Local Authority 1", id: .init("LA1"), country: .england)).get()
         
-        guard case .authorizationRequired(let requestPermissions, _, _) = coordinator.state else {
+        guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
@@ -170,7 +170,7 @@ extension AcceptanceTestCase {
     
     func completeReOnboarding() throws {
         
-        guard case .onboarding(let complete, _, _) = coordinator.state else {
+        guard case .onboarding(let complete, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
@@ -185,34 +185,6 @@ extension AcceptanceTestCase {
         guard case .runningExposureNotification = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
-    }
-    
-    func completeRunningWithBluetoothDisabled() throws {
-        try completeExposureNotificationActivation(authorizationStatus: .unknown)
-        try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
-        
-        guard case .onboarding(let complete, _, _) = coordinator.state else {
-            throw TestError("Unexpected state \(coordinator.state)")
-        }
-        
-        complete()
-        
-        guard case .postcodeAndLocalAuthorityRequired(_, _, let savePostcode) = coordinator.state else {
-            throw TestError("Unexpected state \(coordinator.state)")
-        }
-        
-        try savePostcode(.init("B44"), LocalAuthority(name: "Local Authority 1", id: .init("LA1"), country: .england)).get()
-        
-        guard case .authorizationRequired(let requestPermissions, _, _) = coordinator.state else {
-            throw TestError("Unexpected state \(coordinator.state)")
-        }
-        
-        requestPermissions()
-        exposureNotificationManager.instanceAuthorizationStatus = .authorized
-        enableExposureNotification(finalState: .bluetoothOff)
-        exposureNotificationManager.activationCompletionHandler?(nil)
-        
-        try completeUserNotificationsAuthorization(authorizationStatus: .authorized)
     }
     
     func completeExposureNotificationActivation(

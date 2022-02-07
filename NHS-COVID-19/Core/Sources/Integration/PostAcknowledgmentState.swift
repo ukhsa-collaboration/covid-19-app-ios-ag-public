@@ -10,6 +10,7 @@ import Interface
 
 enum PostAcknowledgmentState {
     case home
+    case bluetoothOff
     case keySharing(DiagnosisKeySharer, SendKeysFlowViewController.ShareFlowType)
     case followUpTest
     case contactCase(ContactCaseResultInterfaceState)
@@ -19,17 +20,19 @@ enum PostAcknowledgmentState {
     
     static func makePostAcknowledgmentState(
         showUIState: CurrentValueSubject<PostAcknowledgementViewController.UITriggeredInterfaceState?, Never>,
+        bluetoothOffAcknowledgementNeeded: AnyPublisher<Bool, Never>,
         diagnosisKeySharer: DomainProperty<DiagnosisKeySharer?>,
         virologyTestingManager: VirologyTestingManaging
     ) -> AnyPublisher<PostAcknowledgmentState, Never> {
         showUIState
-            .combineLatest(diagnosisKeySharer, virologyTestingManager.isFollowUpTestRequired())
+            .combineLatest(diagnosisKeySharer, virologyTestingManager.isFollowUpTestRequired(), bluetoothOffAcknowledgementNeeded)
             .receive(on: UIScheduler.shared)
             .map { combinedState in
-                // (showUIState, diagnosisKeySharer, isFollowUpTestRequired)
+                // (showUIState, diagnosisKeySharer, isFollowUpTestRequired, bluetoothOffAcknowledgementNeeded)
                 let showUIState = combinedState.0
                 let diagnosisKeySharer = combinedState.1
                 let isFollowUpTestRequired = combinedState.2
+                let bluetoothOffAcknowledgementNeeded = combinedState.3
                 
                 if let showUIState = showUIState {
                     switch showUIState {
@@ -48,12 +51,13 @@ enum PostAcknowledgmentState {
                 } else if isFollowUpTestRequired {
                     return .followUpTest
                 } else {
-                    return .home
+                    return bluetoothOffAcknowledgementNeeded ? .bluetoothOff : .home
                 }
             }
             .removeDuplicates(by: { lhs, rhs in
                 switch (lhs, rhs) {
                 case (.home, .home),
+                     (.bluetoothOff, .bluetoothOff),
                      (.keySharing, .keySharing),
                      (.followUpTest, .followUpTest),
                      (.contactCase, .contactCase),
@@ -61,7 +65,8 @@ enum PostAcknowledgmentState {
                      (.bookATest, .bookATest),
                      (.warnAndBookATest, .warnAndBookATest):
                     return true
-                case (_, .keySharing),
+                case (_, .bluetoothOff),
+                     (_, .keySharing),
                      (_, .followUpTest),
                      (_, .contactCase),
                      (_, .thankYou),
@@ -72,7 +77,8 @@ enum PostAcknowledgmentState {
                      (.thankYou(_), _),
                      (.contactCase(_), _),
                      (.followUpTest, _),
-                     (.keySharing(_, _), _):
+                     (.keySharing(_, _), _),
+                     (.bluetoothOff, _):
                     return false
                 }
             })

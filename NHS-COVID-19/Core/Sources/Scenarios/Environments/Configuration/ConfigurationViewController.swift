@@ -36,12 +36,11 @@ class ConfigurationViewController: UIViewController {
         """
         
         let newNoSymptomsScreenToggle = createToggle(feature: .newNoSymptomsScreen, isOn: featureToggleStorage.newNoSymptomsScreenToggle, action: #selector(toggleNewNoSymptomsScreen))
-        
-        let bluetoothOff = createToggle(feature: .bluetoothOff, isOn: featureToggleStorage.bluetoothOffToggle, action: #selector(toggleBluetoothOff))
+        let localStatsButtonToggle = createToggle(feature: .localStatistics, isOn: featureToggleStorage.localStatisticsToggle, action: #selector(toggleLocalStatistics))
         
         let stackView = UIStackView(arrangedSubviews: [
             newNoSymptomsScreenToggle,
-            bluetoothOff,
+            localStatsButtonToggle,
             disclaimer,
         ])
         
@@ -76,8 +75,8 @@ class ConfigurationViewController: UIViewController {
         switch feature {
         case .newNoSymptomsScreen:
             return "New \"No Symptoms\" Screen"
-        case .bluetoothOff:
-            return "Use app without bluetooth"
+        case .localStatistics:
+            return "Local statistics home screen button"
         }
     }
     
@@ -85,8 +84,8 @@ class ConfigurationViewController: UIViewController {
         featureToggleStorage.newNoSymptomsScreenToggle.toggle()
     }
     
-    @objc private func toggleBluetoothOff() {
-        featureToggleStorage.bluetoothOffToggle.toggle()
+    @objc private func toggleLocalStatistics() {
+        featureToggleStorage.localStatisticsToggle.toggle()
     }
 }
 

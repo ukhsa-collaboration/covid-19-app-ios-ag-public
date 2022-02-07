@@ -57,11 +57,9 @@ public final class BookAFollowUpTestViewController: StickyFooterScrollingContent
         super.viewWillAppear(animated)
         
         navigationController?.setNavigationBarHidden(false, animated: animated)
-        navigationController?.navigationBar.tintColor = UIColor(.nhsBlue)
-        setNavigationBarTransparent(true)
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             title: localize(.book_a_follow_up_test_close_button),
-            style: .plain,
+            style: .done,
             target: self,
             action: #selector(didTapCancel)
         )

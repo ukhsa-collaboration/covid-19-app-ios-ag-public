@@ -31,8 +31,10 @@ public protocol HomeFlowViewControllerInteracting {
     func makeLinkTestResultViewController() -> UIViewController?
     func makeContactTracingHubViewController(flowController: UINavigationController?, exposureNotificationsEnabled: InterfaceProperty<Bool>, exposureNotificationsToggleAction: @escaping (Bool) -> Void, userNotificationsEnabled: InterfaceProperty<Bool>) -> UIViewController
     func makeLocalInfoScreenViewController(viewModel: LocalInformationViewController.ViewModel, interactor: LocalInformationViewController.Interacting) -> UIViewController
+    func makeBluetoothDisabledWarningViewController(flowController: UINavigationController?) -> UIViewController
     func removeDeliveredLocalInfoNotifications()
     func makeTestingHubViewController(flowController: UINavigationController?, showOrderTestButton: InterfaceProperty<Bool>, showFindOutAboutTestingButton: InterfaceProperty<Bool>, showWarnAndBookATestFlow: InterfaceProperty<Bool>) -> UIViewController
+    func makeLocalCovidStatsViewController(flowController: UINavigationController?) -> UIViewController
     func getMyDataViewModel() -> MyDataViewController.ViewModel
     func getMyAreaViewModel() -> MyAreaTableViewController.ViewModel
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never>
@@ -58,6 +60,7 @@ public protocol HomeFlowViewControllerInteracting {
     func openReadLatestGovernmentGuidanceLink()
     func openFindYourLocalAuthorityLink()
     func didTapGetIsolationNoteLink()
+    func openSettings()
 }
 
 public enum ExposureNotificationReminderIn: Int, CaseIterable {
@@ -83,6 +86,7 @@ public class HomeFlowViewController: BaseNavigationController {
     
     public init(
         interactor: Interacting,
+        bluetoothOff: AnyPublisher<Bool, Never>,
         riskLevelBannerViewModel: InterfaceProperty<RiskLevelBanner.ViewModel?>,
         localInfoBannerViewModel: InterfaceProperty<LocalInformationBanner.ViewModel?>,
         isolationViewModel: RiskLevelIndicator.ViewModel,
@@ -96,7 +100,8 @@ public class HomeFlowViewController: BaseNavigationController {
         recordSelectedIsolationPaymentsButton: @escaping () -> Void,
         country: InterfaceProperty<Country>,
         shouldShowLanguageSelectionScreen: Bool,
-        showNotificationScreen: CurrentValueSubject<NotificationInterfaceState?, Never>
+        showNotificationScreen: CurrentValueSubject<NotificationInterfaceState?, Never>,
+        shouldShowLocalStats: Bool
     ) {
         self.interactor = interactor
         
@@ -123,6 +128,7 @@ public class HomeFlowViewController: BaseNavigationController {
         let homeViewControllerInteractor = HomeViewControllerInteractor(
             flowController: self,
             flowInteractor: interactor,
+            bluetoothOff: bluetoothOff,
             riskLevelInteractor: riskLevelInteractor,
             localInformationInteractor: localInformationInteractor,
             aboutThisAppInteractor: aboutThisAppInteractor,
@@ -172,7 +178,8 @@ public class HomeFlowViewController: BaseNavigationController {
                 case .selfIsolationHub: showSelfIsolationHubScreen()
                 case .none: showNotificationScreen.send(nil)
                 }
-            }
+            },
+            shouldShowLocalStats: shouldShowLocalStats
         )
         
         viewControllers = [rootViewController]
@@ -249,6 +256,7 @@ public class HomeFlowViewController: BaseNavigationController {
 private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     private weak var flowController: UINavigationController?
     private let flowInteractor: HomeFlowViewController.Interacting
+    private let bluetoothOff: AnyPublisher<Bool, Never>
     private let riskLevelInteractor: RiskLevelInfoViewController.Interacting
     private let localInformationInteractor: LocalInformationViewController.Interacting
     private let aboutThisAppInteractor: AboutThisAppViewController.Interacting
@@ -266,6 +274,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     init(
         flowController: UINavigationController,
         flowInteractor: HomeFlowViewController.Interacting,
+        bluetoothOff: AnyPublisher<Bool, Never>,
         riskLevelInteractor: RiskLevelInfoViewController.Interacting,
         localInformationInteractor: LocalInformationViewController.Interacting,
         aboutThisAppInteractor: AboutThisAppViewController.Interacting,
@@ -282,6 +291,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     ) {
         self.flowController = flowController
         self.flowInteractor = flowInteractor
+        self.bluetoothOff = bluetoothOff
         self.riskLevelInteractor = riskLevelInteractor
         self.localInformationInteractor = localInformationInteractor
         self.aboutThisAppInteractor = aboutThisAppInteractor
@@ -375,8 +385,24 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     }
     
     public func didTapContactTracingHubButton() {
-        let viewController = flowInteractor.makeContactTracingHubViewController(flowController: flowController, exposureNotificationsEnabled: exposureNotificationsEnabled, exposureNotificationsToggleAction: exposureNotificationsToggleAction, userNotificationsEnabled: userNotificationsEnabled)
-        flowController?.pushViewController(viewController, animated: true)
+        
+        let vc = WrappingViewController {
+            bluetoothOff
+                .regulate(as: .modelChange)
+                .map { bluetoothOff in
+                    if bluetoothOff {
+                        return flowInteractor.makeBluetoothDisabledWarningViewController(flowController: flowController)
+                    } else {
+                        return flowInteractor.makeContactTracingHubViewController(
+                            flowController: flowController,
+                            exposureNotificationsEnabled: exposureNotificationsEnabled,
+                            exposureNotificationsToggleAction: exposureNotificationsToggleAction,
+                            userNotificationsEnabled: userNotificationsEnabled
+                        )
+                    }
+                }
+        }
+        flowController?.pushViewController(vc, animated: true)
     }
     
     public func didTapTestingHubButton() {
@@ -392,6 +418,16 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     public var shouldShowCheckIn: Bool {
         flowInteractor.shouldShowCheckIn
     }
+    
+    func openSettings() {
+        flowInteractor.openSettings()
+    }
+    
+    func didTapStatsButton() {
+        let localStatsFlowContorller = flowInteractor.makeLocalCovidStatsViewController(flowController: flowController)
+        flowController?.pushViewController(localStatsFlowContorller, animated: true)
+    }
+    
 }
 
 private struct AboutThisAppInteractor: AboutThisAppViewController.Interacting {

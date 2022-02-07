@@ -161,6 +161,20 @@ struct ConfigureMocksView: View {
                         }
                     }
                     BackwardsCompatibleDisclosureGroup(
+                        title: "Local Covid Stats",
+                        systemImage: "chart.xyaxis.line"
+                    ) {
+                        TextFieldRow(label: "Local Authority Id", text: $dataProvider.localCovidStatsLAId)
+                        Picker(selection: $dataProvider.localCovidStatsDirection, label: Text("Direction")) {
+                            ForEach(0 ..< MockDataProvider.covidStatsDirection.count) {
+                                Text(verbatim: MockDataProvider.covidStatsDirection[$0])
+                            }
+                        }
+                        Toggle("People tested positive - has data", isOn: $dataProvider.peopleTestedPositiveHasData)
+                        Toggle("Cases per 100k - has data", isOn: $dataProvider.casesPer100KHasData)
+                    }
+                    
+                    BackwardsCompatibleDisclosureGroup(
                         title: "App Availability",
                         systemImage: "apps.iphone"
                     ) {
@@ -179,6 +193,11 @@ struct ConfigureMocksView: View {
                         VStack(alignment: .leading) {
                             Toggle("Use fake EN contacts", isOn: $dataProvider.useFakeENContacts)
                             Text(verbatim: "Only takes effect after restarting the scenario")
+                                .font(.caption)
+                        }
+                        VStack(alignment: .leading) {
+                            Toggle("Bluetooth", isOn: $dataProvider.bluetoothEnabled)
+                            Text(verbatim: "Changing this will emit the value instantly")
                                 .font(.caption)
                         }
                         StepperNumericInput(

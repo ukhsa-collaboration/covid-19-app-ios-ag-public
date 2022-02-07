@@ -17,8 +17,8 @@ class SandboxedAppController: AppController {
     
     let rootViewController = UIViewController()
     
-    init() {
-        host = SandboxHost(container: rootViewController, initialState: Sandbox.InitialState())
+    init(initialState: Sandbox.InitialState) {
+        host = SandboxHost(container: rootViewController, initialState: initialState)
         content = CoordinatedAppController(sandboxedIn: host)
         rootViewController.addFilling(content.rootViewController)
     }

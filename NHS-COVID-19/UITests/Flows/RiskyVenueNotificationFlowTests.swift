@@ -12,7 +12,6 @@ class RiskyVenueNotificationFlowTests: XCTestCase {
     private var runner: ApplicationRunner<SandboxedScenario>
     
     override func setUpWithError() throws {
-        $runner.initialState.isPilotActivated = true
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = false
         $runner.initialState.postcode = "S1"

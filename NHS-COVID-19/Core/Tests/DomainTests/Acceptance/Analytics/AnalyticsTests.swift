@@ -210,6 +210,7 @@ struct SubmissionPayload: Decodable {
         var optedOutForContactIsolationBackgroundTick: MetricField = 0
         
         var appIsUsableBackgroundTick: MetricField = 0
+        var appIsUsableBluetoothOffBackgroundTick: MetricField = 0
         var appIsContactTraceableBackgroundTick: MetricField = 0
     }
     

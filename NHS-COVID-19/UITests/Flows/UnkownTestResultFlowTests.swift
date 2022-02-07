@@ -43,6 +43,7 @@ class UnkownTestResultFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: homeScreen.enterTestResultButton)
             homeScreen.enterTestResultButton.tap()
             
             let linkTestResultScreen = LinkTestResultScreen(app: app)

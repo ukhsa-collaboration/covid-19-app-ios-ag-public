@@ -237,9 +237,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string/>
+				<string>%ld દિવસ માટે સેલ્ફ-આઇસોલેશનમાં રહો</string>
 				<key>other</key>
-				<string/>
+				<string>%ld દિવસો માટે સેલ્ફ-આઇસોલેશનમાં રહો</string>
 			</dict>
 		</dict>
 		<key>contact_case_continue_isolation_accessibility_label %ld</key>
@@ -400,6 +400,38 @@
 				<string/>
 				<key>other</key>
 				<string/>
+			</dict>
+		</dict>
+		<key>local_statistics_main_screen_daily_accessibility_text %ld %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@tests@</string>
+			<key>tests</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>local_statistics_main_screen_last_7_days_accessibility_text %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@tests@</string>
+			<key>tests</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%li છેલ્લા 7 દિવસોમાં પૉઝિટિવ ટેસ્ટ</string>
+				<key>other</key>
+				<string>%li છેલ્લા 7 દિવસોમાં પૉઝિટિવ ટેસ્ટ્સ</string>
 			</dict>
 		</dict>
 	</dict>

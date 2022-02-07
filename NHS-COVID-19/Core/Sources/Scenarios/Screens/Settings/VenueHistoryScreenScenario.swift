@@ -21,7 +21,7 @@ public class VenueHistoryScreenScenario: Scenario {
     public static let venueNames: [String] = ["Testing Venue 1 with a very, very long name so that it wraps", "Testing Venue 2", "Testing Venue 3"]
     public static let venuePostcodes: [String?] = ["SW11AA", "SE17EH", nil]
     
-    fileprivate static var venueHistories = [
+    private static let venueHistories = [
         VenueHistory(
             id: VenueHistory.ID(value: UUID().uuidString),
             venueId: venueID1,
@@ -52,17 +52,23 @@ public class VenueHistoryScreenScenario: Scenario {
         NavigationAppController { parent in
             VenueHistoryViewController(
                 viewModel: VenueHistoryViewController.ViewModel(venueHistories: venueHistories),
-                interactor: Interactor(
-                    updateVenueHistories: { deletedVenueHistory in
-                        venueHistories = venueHistories.filter { $0 != deletedVenueHistory }
-                        return venueHistories
-                    }
-                )
+                interactor: Interactor(venueHistories: venueHistories)
             )
         }
     }
 }
 
-private struct Interactor: VenueHistoryViewController.Interacting {
-    var updateVenueHistories: (VenueHistory) -> [VenueHistory]
+private class Interactor: VenueHistoryViewController.Interacting {
+    private var venueHistories: [VenueHistory]
+    
+    init(venueHistories: [VenueHistory]) {
+        self.venueHistories = venueHistories
+    }
+    
+    var updateVenueHistories: (VenueHistory) -> [VenueHistory] {
+        { deletedVenueHistory in
+            self.venueHistories = self.venueHistories.filter { $0 != deletedVenueHistory }
+            return self.venueHistories
+        }
+    }
 }

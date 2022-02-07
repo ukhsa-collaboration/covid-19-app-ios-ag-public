@@ -2,8 +2,8 @@
 // Copyright © 2021 DHSC. All rights reserved.
 //
 
+import Scenarios
 import XCTest
-@testable import Scenarios
 
 class PositiveTestResultContinueIsolationAfterConfirmedScreenTests: XCTestCase {
     

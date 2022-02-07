@@ -15,7 +15,7 @@ struct BluetoothDisabledWarningScreen {
         app.staticTexts[localized: .launcher_permissions_bluetooth_hint]
     }
     
-    var description: XCUIElement {
+    var description: [XCUIElement] {
         app.staticTexts[localized: .launcher_permissions_bluetooth_description]
     }
     

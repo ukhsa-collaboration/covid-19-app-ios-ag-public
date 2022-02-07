@@ -16,7 +16,7 @@ class BluetoothDisabledWarningScreenTests: XCTestCase {
             
             XCTAssert(screen.heading.exists)
             XCTAssert(screen.infoBox.exists)
-            XCTAssert(screen.description.exists)
+            XCTAssert(screen.description.allExist)
         }
     }
     

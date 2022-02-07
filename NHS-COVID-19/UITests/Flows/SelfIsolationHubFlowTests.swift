@@ -10,7 +10,6 @@ class SelfIsolationHubFlowTests: XCTestCase {
     private var runner: ApplicationRunner<SandboxedScenario>
     
     override func setUp() {
-        $runner.initialState.isPilotActivated = true
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = false
         $runner.initialState.postcode = "S1"

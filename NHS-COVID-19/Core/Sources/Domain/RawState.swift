@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -91,9 +91,7 @@ struct RawState: Equatable {
             return .failedToStart
         case .restricted:
             return .failedToStart
-        case .bluetoothOff:
-            return .canNotRunExposureNotification(.bluetoothDisabled)
-        case .active, .disabled:
+        case .active, .disabled, .bluetoothOff:
             switch userNotificationsStatus {
             case .unknown:
                 return .starting

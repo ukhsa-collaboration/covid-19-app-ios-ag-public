@@ -8,12 +8,13 @@ import Integration
 import Interface
 import UIKit
 
-protocol NonNegativeTestResultWithIsolationScreenScenario: Scenario {
-    typealias TestResultType = NonNegativeTestResultWithIsolationViewController.TestResultType
-    static var testResultType: TestResultType { get }
-}
+// Below is probably not the best pattern, but is a small improvement over the previous pattern that lets us avoid using
+// `@testable` in the UI tests.
 
-extension NonNegativeTestResultWithIsolationScreenScenario {
+// A public protocol extending `TestScenario`; used just to provide some static methods.
+public protocol NonNegativeTestResultWithIsolationScreenTestScenario: TestScenario {}
+
+extension NonNegativeTestResultWithIsolationScreenTestScenario {
     public static var kind: ScenarioKind { .screen }
     public static var onlineServicesLinkTapped: String { "Online services link tapped" }
     public static var exposureFAQLinkTapped: String { "Exposure FAQ link tapped" }
@@ -21,6 +22,15 @@ extension NonNegativeTestResultWithIsolationScreenScenario {
     public static var primaryButtonTapped: String { "Primary button tapped" }
     public static var noThanksLinkTapped: String { "No thanks link tapped" }
     public static var daysToIsolate: Int { 7 }
+}
+
+// A private protocol extending both the public protocol above and `Scenario`.
+protocol NonNegativeTestResultWithIsolationScreenScenario: NonNegativeTestResultWithIsolationScreenTestScenario, Scenario {
+    typealias TestResultType = NonNegativeTestResultWithIsolationViewController.TestResultType
+    static var testResultType: TestResultType { get }
+}
+
+extension NonNegativeTestResultWithIsolationScreenScenario {
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in

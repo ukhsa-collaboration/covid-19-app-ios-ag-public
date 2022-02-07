@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -11,7 +11,6 @@ class CheckInFlowTests: XCTestCase {
     private var runner: ApplicationRunner<SandboxedScenario>
     
     override func setUp() {
-        $runner.initialState.isPilotActivated = true
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = true
         $runner.initialState.cameraAuthorized = false

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -11,7 +11,7 @@ class OnboardingFlowTests: XCTestCase {
     private var runner: ApplicationRunner<SandboxedScenario>
     
     func testHappyPathFreshInstallToHomeScreenPostcodeAndSelectLocalAuthority() throws {
-                
+        
         $runner.report(scenario: "Onboarding", "Happy path - select local authority") {
             """
             Enter a valid postcode and select local authority to provide all permissions, and reach home screen.
@@ -38,8 +38,16 @@ class OnboardingFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: startScreen.ageConfirmationAcceptButton)
+            
             XCTAssert(startScreen.ageConfirmationAcceptButton.exists)
             startScreen.ageConfirmationAcceptButton.tap()
+            
+            let howAppWorksScreen = HowAppWorksScreen(app: app)
+            XCTAssert(howAppWorksScreen.title.exists)
+            
+            app.scrollTo(element: howAppWorksScreen.continueButton)
+            howAppWorksScreen.continueButton.tap()
             
             let privacyScreen = PrivacyScreen(app: app)
             XCTAssert(privacyScreen.title.exists)
@@ -106,17 +114,10 @@ class OnboardingFlowTests: XCTestCase {
             
             localAuthorityScreen.button.tap()
             
-            let permissionsScreen = PermissionsScreen(app: app)
-            XCTAssert(permissionsScreen.stepTitle.exists)
+            let contactTracingBluetoothScreen = ContactTracingBluetoothScreen(app: app)
+            XCTAssert(contactTracingBluetoothScreen.continueButton.exists)
             
-            runner.step("Permissions") {
-                """
-                The user is presented with information on which permissions are necessary for the app before we ask for authorization.
-                The user continues.
-                """
-            }
-            
-            permissionsScreen.continueButton.tap()
+            contactTracingBluetoothScreen.continueButton.tap()
             
             let simulatedENAuthorizationScreen = SimulatedENAuthorizationScreen(app: app)
             
@@ -151,7 +152,7 @@ class OnboardingFlowTests: XCTestCase {
     }
     
     func testHappyPathFreshInstallToHomeScreenPostcodeAndConfirmLocalAuthority() throws {
-                
+        
         $runner.report(scenario: "Onboarding", "Happy path - confirm local authority") {
             """
             Enter a valid postcode and confirm local authority to provide all permissions, and reach home screen.
@@ -178,8 +179,16 @@ class OnboardingFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: startScreen.ageConfirmationAcceptButton)
+            
             XCTAssert(startScreen.ageConfirmationAcceptButton.exists)
             startScreen.ageConfirmationAcceptButton.tap()
+            
+            let howAppWorksScreen = HowAppWorksScreen(app: app)
+            XCTAssert(howAppWorksScreen.title.exists)
+            
+            app.scrollTo(element: howAppWorksScreen.continueButton)
+            howAppWorksScreen.continueButton.tap()
             
             let privacyScreen = PrivacyScreen(app: app)
             XCTAssert(privacyScreen.title.exists)
@@ -238,17 +247,10 @@ class OnboardingFlowTests: XCTestCase {
             
             localAuthorityConfirmationScreen.button.tap()
             
-            let permissionsScreen = PermissionsScreen(app: app)
-            XCTAssert(permissionsScreen.stepTitle.exists)
+            let contactTracingBluetoothScreen = ContactTracingBluetoothScreen(app: app)
+            XCTAssert(contactTracingBluetoothScreen.continueButton.exists)
             
-            runner.step("Permissions") {
-                """
-                The user is presented with information on which permissions are necessary for the app before we ask for authorization.
-                The user continues.
-                """
-            }
-            
-            permissionsScreen.continueButton.tap()
+            contactTracingBluetoothScreen.continueButton.tap()
             
             let simulatedENAuthorizationScreen = SimulatedENAuthorizationScreen(app: app)
             
@@ -283,7 +285,7 @@ class OnboardingFlowTests: XCTestCase {
     }
     
     func testPostcodeErrors() throws {
-                
+        
         $runner.report(scenario: "Onboarding", "Error Cases - Postcode") {
             """
             Enter an invalid or unsupported postcode
@@ -298,6 +300,12 @@ class OnboardingFlowTests: XCTestCase {
             
             XCTAssert(startScreen.ageConfirmationAcceptButton.exists)
             startScreen.ageConfirmationAcceptButton.tap()
+            
+            let howAppWorksScreen = HowAppWorksScreen(app: app)
+            XCTAssert(howAppWorksScreen.title.exists)
+            
+            app.scrollTo(element: howAppWorksScreen.continueButton)
+            howAppWorksScreen.continueButton.tap()
             
             let privacyScreen = PrivacyScreen(app: app)
             XCTAssert(privacyScreen.title.exists)
@@ -345,7 +353,7 @@ class OnboardingFlowTests: XCTestCase {
     }
     
     func testLocalAuthorityErrors() throws {
-                
+        
         $runner.report(scenario: "Onboarding", "Error Cases - Local Authority") {
             """
             Enter a valid postcode and select invalid or unsupported local authority.
@@ -360,6 +368,12 @@ class OnboardingFlowTests: XCTestCase {
             
             XCTAssert(startScreen.ageConfirmationAcceptButton.exists)
             startScreen.ageConfirmationAcceptButton.tap()
+            
+            let howAppWorksScreen = HowAppWorksScreen(app: app)
+            XCTAssert(howAppWorksScreen.title.exists)
+            
+            app.scrollTo(element: howAppWorksScreen.continueButton)
+            howAppWorksScreen.continueButton.tap()
             
             let privacyScreen = PrivacyScreen(app: app)
             XCTAssert(privacyScreen.title.exists)
@@ -415,4 +429,89 @@ class OnboardingFlowTests: XCTestCase {
         }
     }
     
+    func testHappyPathFreshInstallToHomeScreenBluetoothOff() throws {
+        
+        $runner.initialState.bluetootOff = true
+        
+        $runner.report(scenario: "Bluetooth disabled", "Displays bluetooth disabled screen") {
+            """
+            User bluetooth disabled screen
+            """
+        }
+        
+        try runner.run { app in
+            let startScreen = StartOnboardingScreen(app: app)
+            XCTAssert(startScreen.stepTitle.exists)
+            
+            startScreen.continueButton.tap()
+            
+            app.scrollTo(element: startScreen.ageConfirmationAcceptButton)
+            
+            XCTAssert(startScreen.ageConfirmationAcceptButton.exists)
+            startScreen.ageConfirmationAcceptButton.tap()
+            
+            let howAppWorksScreen = HowAppWorksScreen(app: app)
+            XCTAssert(howAppWorksScreen.title.exists)
+            
+            app.scrollTo(element: howAppWorksScreen.continueButton)
+            howAppWorksScreen.continueButton.tap()
+            
+            let privacyScreen = PrivacyScreen(app: app)
+            XCTAssert(privacyScreen.title.exists)
+            
+            app.scrollTo(element: privacyScreen.agreeButton)
+            
+            privacyScreen.agreeButton.tap()
+            
+            let postcodeScreen = EnterPostcodeScreen(app: app)
+            XCTAssert(postcodeScreen.stepTitle.exists)
+            
+            postcodeScreen.postcodeTextField.tap()
+            postcodeScreen.postcodeTextField.typeText("ST15")
+            
+            if runner.isGeneratingReport {
+                #warning("Can we improve this?")
+                // The scrolling of text field into view is still animated. Wait for it to finish
+                usleep(300_000)
+            }
+            
+            postcodeScreen.continueButton.tap()
+            
+            let localAuthorityScreen = SelectLocalAuthorityScreen(app: app)
+            XCTAssert(localAuthorityScreen.linkBtn.exists)
+            
+            localAuthorityScreen.localAuthorityCard(checked: false, title: "Stafford").tap()
+            
+            localAuthorityScreen.button.tap()
+            
+            let contactTracingBluetoothScreen = ContactTracingBluetoothScreen(app: app)
+            XCTAssert(contactTracingBluetoothScreen.continueButton.exists)
+            
+            contactTracingBluetoothScreen.continueButton.tap()
+            
+            let simulatedENAuthorizationScreen = SimulatedENAuthorizationScreen(app: app)
+            
+            simulatedENAuthorizationScreen.allowButton.tap()
+            
+            let simulatedUserNotificationAuthorizationScreen = SimulatedUserNotificationAuthorizationScreen(app: app)
+            
+            simulatedUserNotificationAuthorizationScreen.allowButton.tap()
+            
+            let bluetoothDisabledWarrningScreen = BluetoothDisabledWarningScreen(app: app)
+            
+            runner.step("Show bluetooth disabled screen") {
+                """
+                User bluetooth disabled screen
+                """
+            }
+            
+            XCTAssert(bluetoothDisabledWarrningScreen.heading.exists)
+            let continueWithouthBluetooth = bluetoothDisabledWarrningScreen.secondaryButton
+            continueWithouthBluetooth.tap()
+            
+            app.checkOnHomeScreenBluetoothOff()
+            let homeScreen = HomeScreen(app: app)
+            XCTAssert(homeScreen.turnOnBluetoothButton.exists)
+        }
+    }
 }

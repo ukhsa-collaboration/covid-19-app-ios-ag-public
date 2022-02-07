@@ -11,7 +11,6 @@ class EditPostcodeFlowTest: XCTestCase {
     private var runner: ApplicationRunner<SandboxedScenario>
     
     override func setUp() {
-        $runner.initialState.isPilotActivated = true
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = true
         $runner.initialState.postcode = "S1"

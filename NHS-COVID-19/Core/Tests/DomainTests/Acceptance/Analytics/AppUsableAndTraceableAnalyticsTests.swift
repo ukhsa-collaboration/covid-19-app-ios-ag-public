@@ -13,8 +13,8 @@ class AppUsableAndTraceableAnalyticsTests: AnalyticsTests {
         // Onboarding on day 1, no change
         assertOnFields { assertFields in
             assertFields.isPresent(\.appIsUsableBackgroundTick)
+            assertFields.isNotPresent(\.appIsUsableBluetoothOffBackgroundTick)
             assertFields.isPresent(\.appIsContactTraceableBackgroundTick)
-            
         }
     }
     
@@ -29,6 +29,7 @@ class AppUsableAndTraceableAnalyticsTests: AnalyticsTests {
         // On day 2, the backgroundtasks should've run but we did not increase the two fields
         assertOnFields { assertFields in
             assertFields.isNotPresent(\.appIsUsableBackgroundTick)
+            assertFields.isNotPresent(\.appIsUsableBluetoothOffBackgroundTick)
             assertFields.isNotPresent(\.appIsContactTraceableBackgroundTick)
         }
     }
@@ -43,8 +44,8 @@ class AppUsableAndTraceableAnalyticsTests: AnalyticsTests {
         
         // On day 2, the backgroundtasks should've run but we did not increase the two fields
         assertOnFields { assertFields in
-            assertFields.isNotPresent(\.appIsUsableBackgroundTick)
-            assertFields.isNotPresent(\.appIsContactTraceableBackgroundTick)
+            assertFields.isPresent(\.appIsUsableBackgroundTick)
+            assertFields.isPresent(\.appIsUsableBluetoothOffBackgroundTick)
         }
     }
     
@@ -60,6 +61,7 @@ class AppUsableAndTraceableAnalyticsTests: AnalyticsTests {
         // On day 2, the backgroundtasks should've run - the app shoul've been usable, but not contact traceable
         assertOnFields { assertFields in
             assertFields.isPresent(\.appIsUsableBackgroundTick)
+            assertFields.isNotPresent(\.appIsUsableBluetoothOffBackgroundTick)
             assertFields.isNotPresent(\.appIsContactTraceableBackgroundTick)
             assertFields.isPresent(\.encounterDetectionPausedBackgroundTick)
         }

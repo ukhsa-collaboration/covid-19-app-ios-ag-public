@@ -7,6 +7,7 @@ import Integration
 
 @available(iOSApplicationExtension, unavailable)
 public class SandboxedScenario: Scenario {
+    public static let initialStateEnvironmentKey = "initialState"
     public static let name = "Sandboxed"
     public static let nameForSorting = "0.1"
     public static let kind = ScenarioKind.environment
@@ -18,7 +19,14 @@ public class SandboxedScenario: Scenario {
         """
     }
     
+    public static var defaultInputs: Sandbox.InitialState {
+        .init()
+    }
+    
     static var appController: AppController {
-        SandboxedAppController()
+        let initialState = ProcessInfo.processInfo.environment[initialStateEnvironmentKey]
+            .flatMap { Data(base64Encoded: $0) }
+            .flatMap { try? JSONDecoder().decode(Sandbox.InitialState.self, from: $0) }
+        return SandboxedAppController(initialState: initialState ?? Sandbox.InitialState())
     }
 }

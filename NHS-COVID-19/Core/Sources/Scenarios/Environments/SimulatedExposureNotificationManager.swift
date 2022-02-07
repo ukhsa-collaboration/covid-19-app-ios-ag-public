@@ -11,10 +11,12 @@ import Localization
 
 @available(iOSApplicationExtension, unavailable)
 class SimulatedExposureNotificationManager: ExposureNotificationManaging {
+    private var cancellables = Set<AnyCancellable>()
     
     private let queue = DispatchQueue.main
     private let dataProvider = MockDataProvider.shared
     private let dateProvider: DateProviding
+    private let bluetoothEnabled: AnyPublisher<Bool, Never>
     
     var instanceAuthorizationStatus: AuthorizationStatus
     
@@ -32,18 +34,23 @@ class SimulatedExposureNotificationManager: ExposureNotificationManaging {
             .eraseToAnyPublisher()
     }
     
-    init(dateProvider: DateProviding) {
+    init(dateProvider: DateProviding, bluetoothEnabled: AnyPublisher<Bool, Never>) {
         self.dateProvider = dateProvider
+        self.bluetoothEnabled = bluetoothEnabled
         instanceAuthorizationStatus = .unknown
         exposureNotificationStatus = .unknown
         exposureNotificationEnabled = false
+        bluetoothEnabled.sink { [weak self] bluetoothEnabled in
+            self?.queue.async {
+                self?.exposureNotificationStatus = bluetoothEnabled ? .active : .bluetoothOff
+            }
+        }.store(in: &cancellables)
     }
     
     func activate(completionHandler: @escaping ErrorHandler) {
         queue.async {
             self.instanceAuthorizationStatus = .authorized
             self.exposureNotificationEnabled = true
-            self.exposureNotificationStatus = .active
             completionHandler(nil)
         }
     }

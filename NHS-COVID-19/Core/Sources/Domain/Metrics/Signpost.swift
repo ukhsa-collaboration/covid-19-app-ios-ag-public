@@ -113,6 +113,7 @@ public enum Metric: String, CaseIterable {
     // MARK: - New app state metrics
     
     case appIsUsableBackgroundTick
+    case appIsUsableBluetoothOffBackgroundTick
     case appIsContactTraceableBackgroundTick
     
 }

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Combine
@@ -52,7 +52,7 @@ class SandboxExposureNotificationManager: ExposureNotificationManaging {
             self.instanceAuthorizationStatus = allowed ? .authorized : .unknown
             self.exposureNotificationEnabled = allowed && enabled
             self.hasPreviouslyAskedForPermission = allowed
-            self.exposureNotificationStatus = .active
+            self.exposureNotificationStatus = self.host.initialState.bluetootOff ? .bluetoothOff : .active
             completionHandler(nil)
         }
     }

@@ -58,88 +58,59 @@ public enum Sandbox {
         public static let validQRCode = "UKC19TRACING:1:eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjMifQ.eyJpZCI6IjRXVDU5TTVZIiwib3BuIjoiR292ZXJubWVudCBPZmZpY2UgT2YgSHVtYW4gUmVzb3VyY2VzIn0.ZIvwm9rxiRTm4o-koafL6Bzre9pakcyae8m6_MSyvAl-CFkUgfm6gcXYn4gg5OScKZ1-XayHBGwEdps0RKXs4g"
     }
     
-    public class InitialState {
-        var modifiedLaunchArguments = [String: String]()
+    public struct InitialState: Codable, Equatable {
         
-        @TestInjected("sandbox.isPilotActivated", defaultValue: false)
-        public var isPilotActivated: Bool
+        public var exposureNotificationsAuthorized: Bool = false
         
-        @TestInjected("sandbox.exposureNotificationsAuthorized", defaultValue: false)
-        public var exposureNotificationsAuthorized: Bool
+        public var exposureNotificationsEnabled: Bool = true
         
-        @TestInjected("sandbox.exposureNotificationsEnabled", defaultValue: true)
-        public var exposureNotificationsEnabled: Bool
-        
-        @TestInjected("sandbox.userNotificationsAuthorized", defaultValue: nil)
         public var userNotificationsAuthorized: Bool?
         
-        @TestInjected("sandbox.cameraAuthorized", defaultValue: false)
-        public var cameraAuthorized: Bool
+        public var cameraAuthorized: Bool = false
         
-        // Defaults to nil, but setting to nil causes fatal error
-        @TestInjected("sandbox.postcode")
         public var postcode: String?
         
-        @TestInjected("sandbox.lastAcceptedWithAppVersion", defaultValue: "4.16")
-        public var lastAcceptedWithAppVersion: String
+        public var lastAcceptedWithAppVersion: String = "4.16"
         
-        @TestInjected("sandbox.scannedQRCode", defaultValue: Text.validQRCode)
-        public var scannedQRCode: String
+        public var scannedQRCode: String = Text.validQRCode
         
-        @TestInjected("sandbox.shouldScanQRCode", defaultValue: true)
-        public var shouldScanQRCode: Bool
+        public var shouldScanQRCode: Bool = true
         
-        @TestInjected("sandbox.qrCodeScanTime", defaultValue: 2.0)
-        public var qrCodeScanTime: Double
+        public var qrCodeScanTime: Double = 2.0
         
-        @TestInjected("sandbox.cameraUnavailable", defaultValue: false)
-        public var cameraUnavailable: Bool
+        public var cameraUnavailable: Bool = false
         
-        @TestInjected("sandbox.isolationCase", defaultValue: Text.IsolationCase.none.rawValue)
-        public var isolationCase: String
+        public var isolationCase: String = Text.IsolationCase.none.rawValue
         
-        @TestInjected("sandbox.testResult")
         public var testResult: String?
         
-        @TestInjected("sandbox.requiresConfirmatoryTest", defaultValue: false)
-        public var requiresConfirmatoryTest: Bool
+        public var requiresConfirmatoryTest: Bool = false
         
-        @TestInjected("sandbox.supportsKeySubmission", defaultValue: true)
-        public var supportsKeySubmission: Bool
+        public var supportsKeySubmission: Bool = true
         
-        @TestInjected("sandbox.testKitType", defaultValue: "LAB_RESULT")
-        public var testKitType: String
+        public var testKitType: String = "LAB_RESULT"
         
-        @TestInjected("sandbox.testResultEndDate")
         private(set) var testResultEndDateString: String?
         
-        @TestInjected("sandbox.localAuthorityId")
         public var localAuthorityId: String?
         
-        @TestInjected("sandbox.isolationPaymentState", defaultValue: Text.IsolationPaymentState.disabled.rawValue)
-        public var isolationPaymentState: String
+        public var isolationPaymentState: String = Text.IsolationPaymentState.disabled.rawValue
         
-        @TestInjected("sandbox.riskyVenueMessageType")
         public var riskyVenueMessageType: String?
         
-        @TestInjected("sandbox.hasAcknowledgedStartOfIsolation", defaultValue: true)
-        public var hasAcknowledgedStartOfIsolation: Bool
+        public var hasAcknowledgedStartOfIsolation: Bool = true
         
-        @TestInjected("sandbox.hasCheckIns", defaultValue: false)
-        public var hasCheckIns: Bool
+        public var hasCheckIns: Bool = false
         
-        public func set(testResultEndDate: Date) throws {
+        public var bluetootOff: Bool = false
+        
+        public init() {}
+        
+        public mutating func set(testResultEndDate: Date) throws {
             let data = try JSONEncoder().encode(testResultEndDate)
             testResultEndDateString = String(data: data, encoding: .utf8)!
         }
         
-        public init() {}
-        
-        public var launchArguments: [String] {
-            modifiedLaunchArguments.flatMap { key, value in
-                ["-\(key)", value]
-            }
-        }
     }
     
     public enum Config {

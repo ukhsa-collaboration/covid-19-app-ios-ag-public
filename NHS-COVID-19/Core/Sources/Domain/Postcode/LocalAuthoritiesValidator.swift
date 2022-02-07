@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -12,7 +12,7 @@ protocol LocalAuthoritiesValidating {
 
 public struct LocalAuthority: Equatable, Hashable {
     public var name: String
-    var id: LocalAuthorityId
+    public var id: LocalAuthorityId
     var country: Country?
 }
 

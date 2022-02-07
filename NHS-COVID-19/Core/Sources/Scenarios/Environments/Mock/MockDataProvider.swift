@@ -12,6 +12,8 @@ class MockDataProvider: ObservableObject {
     static let testResults = ["POSITIVE", "NEGATIVE", "VOID", "PLOD", "UNKNOWN_TEST_RESULT_TYPE"]
     static let testKitType = ["LAB_RESULT", "RAPID_RESULT", "RAPID_SELF_REPORTED", "UNKNOWN_TEST_KIT_TYPE"]
     
+    static let covidStatsDirection = ["DOWN", "UP", "SAME"]
+    
     private let _numberOfDaysFromNowDidChange = PassthroughSubject<Int, Never>()
     private let _riskyLocalAuthorityMinimumBackgroundTaskUpdateIntervalDidChange = PassthroughSubject<Int, Never>()
     private let _objectWillChange = PassthroughSubject<Void, Never>()
@@ -207,6 +209,36 @@ class MockDataProvider: ObservableObject {
         _riskyLocalAuthorityMinimumBackgroundTaskUpdateIntervalDidChange.eraseToAnyPublisher()
     }
     
+    // MARK: Local Covid Stats
+    
+    @UserDefault("mocks.localCovidStatsLAId", defaultValue: "")
+    var localCovidStatsLAId: String {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.localCovidStats", defaultValue: 0)
+    var localCovidStatsDirection: Int {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.peopleTestedPositiveHasData", defaultValue: true)
+    var peopleTestedPositiveHasData: Bool {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.casesPer100K", defaultValue: true)
+    var casesPer100KHasData: Bool {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
     // MARK: Risky Venues
     
     @UserDefault("mocks.riskyVenueIDsWarnAndInform", defaultValue: "")
@@ -361,6 +393,13 @@ class MockDataProvider: ObservableObject {
     
     @UserDefault("mocks.useFakeENContacts", defaultValue: false)
     var useFakeENContacts: Bool {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
+    @UserDefault("mocks.bluetoothEnabled", defaultValue: true)
+    var bluetoothEnabled: Bool {
         didSet {
             _objectWillChange.send()
         }

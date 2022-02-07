@@ -237,9 +237,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string/>
+				<string>অনুগ্রহ করে %ld দিনের জন্য স্ব-বিচ্ছিন্ন থাকুন</string>
 				<key>other</key>
-				<string/>
+				<string>অনুগ্রহ করে %ld দিনের জন্য স্ব-বিচ্ছিন্ন থাকুন</string>
 			</dict>
 		</dict>
 		<key>contact_case_continue_isolation_accessibility_label %ld</key>
@@ -400,6 +400,38 @@
 				<string/>
 				<key>other</key>
 				<string/>
+			</dict>
+		</dict>
+		<key>local_statistics_main_screen_daily_accessibility_text %ld %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@tests@</string>
+			<key>tests</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>local_statistics_main_screen_last_7_days_accessibility_text %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@tests@</string>
+			<key>tests</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%li গত 7 দিনে করা ইতিবাচক পরীক্ষা</string>
+				<key>other</key>
+				<string>%li গত 7 দিনে করা ইতিবাচক পরীক্ষাগুলি</string>
 			</dict>
 		</dict>
 	</dict>

@@ -57,7 +57,7 @@ extension HomeScreenScenario {
                 ),
                 riskLevelBannerViewModel: .constant(postcodeViewModel(parent: parent)),
                 localInfoBannerViewModel: .constant(localInfoBannerViewModel),
-                isolationViewModel: RiskLevelIndicator.ViewModel(isolationState: .constant(.notIsolating), paused: .constant(false), animationDisabled: .constant(false)),
+                isolationViewModel: RiskLevelIndicator.ViewModel(isolationState: .constant(.notIsolating), paused: .constant(false), animationDisabled: .constant(false), bluetoothOff: .constant(false)),
                 exposureNotificationsEnabled: exposureNotificationsEnabled.property(initialValue: false),
                 exposureNotificationsToggleAction: { [weak parent] toggle in
                     parent?.showAlert(title: "Toggle state changed to \(toggle)")
@@ -66,7 +66,8 @@ extension HomeScreenScenario {
                 userNotificationsEnabled: .constant(false),
                 showFinancialSupportButton: .constant(true),
                 country: .constant(.england),
-                showLanguageSelectionScreen: nil
+                showLanguageSelectionScreen: nil,
+                shouldShowLocalStats: true
             )
         }
     }
@@ -107,6 +108,8 @@ public class HomeScreenAlerts {
     public static let contactTracingHubAlertTitle = "Contact Tracing Hub tapped"
     public static let testingHubAlertTitle = "Testing Hub tapped"
     public static let selfIsolationAlertTitle = "Self-isolation button tapped"
+    public static let openSettingAlertTitle = "Open phone settings button tapped"
+    public static let statsTappedAlertTitle = "Stats button tapped"
 }
 
 private class Interactor: HomeViewController.Interacting {
@@ -165,5 +168,13 @@ private class Interactor: HomeViewController.Interacting {
     
     var shouldShowCheckIn: Bool {
         checkInEnabled
+    }
+    
+    func openSettings() {
+        viewController?.showAlert(title: HomeScreenAlerts.openSettingAlertTitle)
+    }
+    
+    func didTapStatsButton() {
+        viewController?.showAlert(title: HomeScreenAlerts.statsTappedAlertTitle)
     }
 }

@@ -291,6 +291,27 @@ class CircuitBreakerTests: XCTestCase {
         XCTAssertTrue(handledDontWorryNotification)
     }
     
+    /// Asserts that `store.exposureInfo` is not thrown away if there is an error from the circuit
+    /// breaker, and that the exposure is handled later.
+    func testRetainsRiskyExposuresIfCallFailed() throws {
+        let handledContactCaseExpectation = expectation(description: "contact case passed off for handling")
+        handleContactCase = { _ in handledContactCaseExpectation.fulfill() }
+        
+        let riskInfo = RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
+        store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)
+        
+        client.shouldShowError = true
+        try processPendingApprovals()
+        XCTAssertEqual(store.exposureInfo?.riskInfo, riskInfo)
+        
+        client.shouldShowError = false
+        client.approvalResponse = .init(approvalToken: CircuitBreakerApprovalToken(.random()), approval: .yes)
+        try processPendingApprovals()
+        XCTAssertNil(store.exposureInfo)
+        
+        waitForExpectations(timeout: 1)
+    }
+    
     func testShowDontWorryNotificationWithErrorDoNotShow() throws {
         let riskInfo = RiskInfo(riskScore: 7.5, riskScoreVersion: 1, day: .init(year: 2020, month: 5, day: 5))
         store.exposureInfo = ExposureInfo(approvalToken: nil, riskInfo: riskInfo)

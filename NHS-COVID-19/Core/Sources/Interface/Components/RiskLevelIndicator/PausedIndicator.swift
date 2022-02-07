@@ -6,10 +6,14 @@ import Localization
 import SwiftUI
 
 public struct PausedIndicator: View {
-    private let turnBackOnTapAction: () -> Void
+    private let action: () -> Void
+    let message: String
+    let buttonTitle: String
     
-    fileprivate init(turnBackOnTapAction: @escaping () -> Void) {
-        self.turnBackOnTapAction = turnBackOnTapAction
+    fileprivate init(action: @escaping () -> Void, message: String, buttonTitle: String) {
+        self.action = action
+        self.message = message
+        self.buttonTitle = buttonTitle
     }
     
     public var body: some View {
@@ -29,14 +33,15 @@ public struct PausedIndicator: View {
                 .frame(width: 62, height: 62)
             }.accessibility(hidden: true)
             
-            Text(.risk_level_indicator_contact_tracing_not_active)
+            Text(message)
                 .font(.body)
                 .foregroundColor(Color(.primaryText))
                 .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.center)
             
             Button.underlined(
-                text: localize(.risk_level_indicator_contact_tracing_turn_back_on_button),
-                action: turnBackOnTapAction
+                text: buttonTitle,
+                action: action
             )
             .foregroundColor(Color(.nhsLightBlue))
             .font(Font.headline.weight(.bold))
@@ -50,7 +55,7 @@ public struct PausedIndicator: View {
 }
 
 extension RiskLevelIndicator {
-    static func makePausedIndicator(turnBackOnTapAction: @escaping () -> Void) -> AnyView {
-        AnyView(PausedIndicator(turnBackOnTapAction: turnBackOnTapAction))
+    static func makePausedIndicator(action: @escaping () -> Void, message: String, buttonTitle: String) -> AnyView {
+        AnyView(PausedIndicator(action: action, message: message, buttonTitle: buttonTitle))
     }
 }

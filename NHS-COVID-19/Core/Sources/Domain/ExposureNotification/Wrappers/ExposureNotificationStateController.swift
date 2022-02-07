@@ -127,12 +127,16 @@ class ExposureNotificationStateController: ObservableObject {
     }
     
     func recordMetrics() -> AnyPublisher<Void, Never> {
-        Metrics.signpost(.runningNormallyTick)
         Metrics.signpost(.appIsUsableBackgroundTick)
+        if exposureNotificationState == .bluetoothOff {
+            Metrics.signpost(.appIsUsableBluetoothOffBackgroundTick)
+        } else {
+            Metrics.signpost(.runningNormallyTick)
+        }
         
         if !isEnabled {
             Metrics.signpost(.pauseTick)
-        } else {
+        } else if exposureNotificationState != .bluetoothOff {
             Metrics.signpost(.appIsContactTraceableBackgroundTick)
         }
         

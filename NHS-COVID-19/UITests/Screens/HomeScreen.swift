@@ -63,4 +63,17 @@ struct HomeScreen {
     var selfIsolationHubButton: XCUIElement {
         app.buttons[localized: .home_self_isolation_button_title]
     }
+    
+    var statsHubButton: XCUIElement {
+        app.buttons[localized: .status_option_local_data]
+    }
+    
+    var contactTracingDoesNotWorkWithBTOffLabel: XCUIElement {
+        app.staticTexts[localized: .bluetooth_not_active]
+    }
+    
+    var turnOnBluetoothButton: XCUIElement {
+        app.buttons[localized: .bluetooth_activate]
+    }
+    
 }

@@ -25,6 +25,7 @@ public enum ColorName: String, CaseIterable, Identifiable {
     
     case styleTurquoise = "Style/Turquoise"
     case styleGreen = "Style/Green"
+    case styleGold = "Style/Gold"
     case styleOrange = "Style/Orange"
     case stylePink = "Style/Pink"
     case stylePurple = "Style/Purple"

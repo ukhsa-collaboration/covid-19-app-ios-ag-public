@@ -175,10 +175,11 @@ public func localize(_ key: StringLocalizableKey, localeConfiguration: LocaleCon
     Localization(configuration: localeConfiguration).localize(key)
 }
 
-public func localizeAndSplit(_ key: StringLocalizableKey) -> [String] {
-    Localization.current.localize(key)
+public func localizeAndSplit(_ key: StringLocalizableKey, applyCurrentLanguageDirection: Bool = true) -> [String] {
+    Localization.current.localize(key, applyCurrentLanguageDirection: false)
         .split(separator: "\n", omittingEmptySubsequences: true)
         .map(String.init)
+        .map { applyCurrentLanguageDirection ? $0.applyCurrentLanguageDirection() : $0 }
 }
 
 public func localizeAndSplit(_ key: ParameterisedStringLocalizable) -> [String] {

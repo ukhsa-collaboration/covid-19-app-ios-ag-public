@@ -37,28 +37,20 @@ extension CoordinatedAppController {
             let vc = UnrecoverableErrorViewController(interactor: interactor)
             return BaseNavigationController(rootViewController: vc)
             
-        case .onboarding(let complete, let openURL, let useWithoutBluetooth):
+        case .onboarding(let complete, let openURL):
             let interactor = OnboardingInteractor(
                 complete: complete,
                 openURL: openURL
             )
             return OnboardingFlowViewController(
-                interactor: interactor,
-                useWithoutBluetooth: useWithoutBluetooth
+                interactor: interactor
             )
             
-        case .authorizationRequired(let requestPermissions, let country, let useWithoutBluetooth):
-            if useWithoutBluetooth {
-                return ContactTracingUsesBluetoothViewController(
-                    interactor: ContactTracingUsesBluetoothInteractor(submitAction: requestPermissions),
-                    country: country.interfaceProperty
-                )
-            } else {
-                return PermissionsViewController(
-                    country: country.interfaceProperty,
-                    submit: requestPermissions
-                )
-            }
+        case .authorizationRequired(let requestPermissions, let country):
+            return ContactTracingBluetoothViewController(
+                interactor: ContactTracingBluetoothInteractor(submitAction: requestPermissions),
+                country: country.interfaceProperty
+            )
             
         case .postcodeAndLocalAuthorityRequired(let openURL, let getLocalAuthorities, let storeLocalAuthority):
             let interactor = LocalAuthorityOnboardingInteractor(
@@ -92,8 +84,6 @@ extension CoordinatedAppController {
                     interacting: interactor,
                     country: country
                 )
-            case .bluetoothDisabled:
-                vc = BluetoothDisabledViewController(country: country)
             }
             return BaseNavigationController(rootViewController: vc)
             
@@ -512,7 +502,7 @@ class LocalAuthorityOnboardingInteractor: LocalAuthorityFlowViewController.Inter
     }
 }
 
-private struct ContactTracingUsesBluetoothInteractor: ContactTracingUsesBluetoothViewController.Interacting {
+private struct ContactTracingBluetoothInteractor: ContactTracingBluetoothViewController.Interacting {
     let submitAction: () -> Void
     
     init(submitAction: @escaping () -> Void) {

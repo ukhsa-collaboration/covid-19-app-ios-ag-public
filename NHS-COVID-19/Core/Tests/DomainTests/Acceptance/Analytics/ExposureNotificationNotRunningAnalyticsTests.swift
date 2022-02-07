@@ -22,6 +22,8 @@ class ExposureNotificationNotRunningAnalyticsTests: AnalyticsTests {
         // On day 2, the backgroundtasks should've run but we did not increase .runningNormallyBackgroundTick
         assertOnFields { assertFields in
             assertFields.isLessThanTotalBackgroundTasks(\.runningNormallyBackgroundTick)
+            assertFields.isLessThanTotalBackgroundTasks(\.appIsUsableBackgroundTick)
+            assertFields.isLessThanTotalBackgroundTasks(\.appIsUsableBluetoothOffBackgroundTick)
         }
         
         // Check again that a new window was sent
@@ -41,6 +43,8 @@ class ExposureNotificationNotRunningAnalyticsTests: AnalyticsTests {
         // On day 2, the backgroundtasks should've run but we did not increase .runningNormallyBackgroundTick
         assertOnFields { assertFields in
             assertFields.isLessThanTotalBackgroundTasks(\.runningNormallyBackgroundTick)
+            assertFields.isPresent(\.appIsUsableBackgroundTick)
+            assertFields.isPresent(\.appIsUsableBluetoothOffBackgroundTick)
         }
         
         // Check again that a new window was sent

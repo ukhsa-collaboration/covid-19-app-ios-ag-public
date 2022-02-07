@@ -13,7 +13,6 @@ class SettingsFlowTests: XCTestCase {
     private var runner: ApplicationRunner<SandboxedScenario>
     
     override func setUp() {
-        $runner.initialState.isPilotActivated = true
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = false
         $runner.initialState.postcode = "S1"
@@ -39,6 +38,7 @@ class SettingsFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: homeScreen.settingsButton)
             homeScreen.settingsButton.tap()
             
             let settingsScreen = SettingsScreen(app: app)
@@ -86,6 +86,7 @@ class SettingsFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: homeScreen.settingsButton)
             homeScreen.settingsButton.tap()
             
             let settingsScreen = SettingsScreen(app: app)
@@ -131,6 +132,7 @@ class SettingsFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: homeScreen.settingsButton)
             homeScreen.settingsButton.tap()
             
             let settingsScreen = SettingsScreen(app: app)
@@ -179,6 +181,7 @@ class SettingsFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: homeScreen.settingsButton)
             homeScreen.settingsButton.tap()
             
             let settingsScreen = SettingsScreen(app: app)

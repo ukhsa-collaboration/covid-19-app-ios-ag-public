@@ -73,6 +73,7 @@ class WrappingAppController: AppController {
     
     var content: AppController? {
         didSet {
+            oldValue?.rootViewController.dismiss(animated: false, completion: nil)
             oldValue?.rootViewController.remove()
             if let content = content {
                 rootViewController.addFilling(content.rootViewController)

@@ -182,6 +182,9 @@ class AcknowledgementNeededStateTests: XCTestCase {
             checkInContext: nil,
             postcodeInfo: .constant(nil),
             country: Just(.england).eraseToAnyPublisher().domainProperty(),
+            bluetoothOff: .constant(false),
+            bluetoothOffAcknowledgementNeeded: Just(false).eraseToAnyPublisher(),
+            bluetoothOffAcknowledgedCallback: {},
             openSettings: {},
             openAppStore: {},
             openURL: { _ in },
@@ -216,7 +219,9 @@ class AcknowledgementNeededStateTests: XCTestCase {
             didOpenSelfIsolationHub: {},
             shouldShowBookALabTest: .constant(false),
             contactCaseOptOutQuestionnaire: ContactCaseOptOutQuestionnaire(country: .constant(.england)),
-            contactCaseIsolationDuration: .constant(DayDuration(11))
+            contactCaseIsolationDuration: .constant(DayDuration(11)),
+            shouldShowLocalStats: true,
+            localCovidStatsManager: MockLocalStatsManager()
         )
     }
     
@@ -280,6 +285,52 @@ class AcknowledgementNeededStateTests: XCTestCase {
         init(reviewController: StoreReviewControlling, currentDateProvider: DateProviding) {
             self.reviewController = reviewController
             self.currentDateProvider = currentDateProvider
+        }
+    }
+    
+    typealias StatsValue = LocalCovidStatsDaily.LocalAuthorityStats.Value
+    typealias Direction = LocalCovidStatsDaily.Direction
+    
+    private class MockLocalStatsManager: LocalCovidStatsManaging {
+        
+        func fetchLocalCovidStats() -> AnyPublisher<LocalCovidStatsDaily, NetworkRequestError> {
+            
+            let formatter = ISO8601DateFormatter()
+            let date = { (string: String) throws -> Date in
+                try XCTUnwrap(formatter.date(from: string))
+            }
+            
+            let day = GregorianDay(year: 2021, month: 11, day: 18)
+            let dayOne = GregorianDay(year: 2021, month: 11, day: 13)
+            return Future<LocalCovidStatsDaily, NetworkRequestError> { promise in
+                promise(.success(try! LocalCovidStatsDaily(
+                    lastFetch: date("2021-11-15T21:59:00Z"),
+                    england: LocalCovidStatsDaily.CountryStats(newCasesBySpecimenDateRollingRate: 510.8, lastUpdate: dayOne),
+                    wales: LocalCovidStatsDaily.CountryStats(newCasesBySpecimenDateRollingRate: nil, lastUpdate: dayOne),
+                    lowerTierLocalAuthorities: [
+                        LocalAuthorityId("E06000037"): LocalCovidStatsDaily.LocalAuthorityStats(
+                            id: LocalAuthorityId("E06000037"),
+                            name: "West Berkshire",
+                            newCasesByPublishDateRollingSum: StatsValue(value: -771, lastUpdate: day),
+                            newCasesByPublishDateChange: StatsValue(value: 207, lastUpdate: day),
+                            newCasesByPublishDateDirection: StatsValue(value: .up, lastUpdate: day),
+                            newCasesByPublishDate: StatsValue(value: 105, lastUpdate: day),
+                            newCasesByPublishDateChangePercentage: StatsValue(value: 36.7, lastUpdate: day),
+                            newCasesBySpecimenDateRollingRate: StatsValue(value: 289.5, lastUpdate: dayOne)
+                        ),
+                        LocalAuthorityId("E08000035"): LocalCovidStatsDaily.LocalAuthorityStats(
+                            id: LocalAuthorityId("E08000035"),
+                            name: "Leeds",
+                            newCasesByPublishDateRollingSum: StatsValue(value: nil, lastUpdate: day),
+                            newCasesByPublishDateChange: StatsValue(value: nil, lastUpdate: day),
+                            newCasesByPublishDateDirection: StatsValue(value: nil, lastUpdate: day),
+                            newCasesByPublishDate: StatsValue(value: nil, lastUpdate: day),
+                            newCasesByPublishDateChangePercentage: StatsValue(value: nil, lastUpdate: day),
+                            newCasesBySpecimenDateRollingRate: StatsValue(value: nil, lastUpdate: dayOne)
+                        ),
+                    ]
+                )))
+            }.eraseToAnyPublisher()
         }
     }
 }

@@ -7,11 +7,11 @@ import Localization
 import SwiftUI
 import UIKit
 
-public protocol ContactTracingUsesBlueoothInteracting {
+public protocol ContactTracingBluetoothInteracting {
     func didTapContinueButton()
 }
 
-extension ContactTracingUsesBluetoothViewController {
+extension ContactTracingBluetoothViewController {
     struct Content {
         var views: [StackViewContentProvider]
         
@@ -43,8 +43,8 @@ extension ContactTracingUsesBluetoothViewController {
     }
 }
 
-public class ContactTracingUsesBluetoothViewController: ScrollingContentViewController {
-    public typealias Interacting = ContactTracingUsesBlueoothInteracting
+public class ContactTracingBluetoothViewController: ScrollingContentViewController {
+    public typealias Interacting = ContactTracingBluetoothInteracting
     private let interactor: Interacting
     
     public init(interactor: Interacting, country: InterfaceProperty<Country>) {

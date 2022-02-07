@@ -13,7 +13,9 @@ import XCTest
 struct ApplicationRunner<Scenario: TestScenario>: TestProp {
     struct Configuration: TestPropConfiguration {
         var disableAnimations = true
-        let initialState = Sandbox.InitialState()
+        
+        var initialState: Scenario.Inputs = Scenario.defaultInputs
+        
         fileprivate var useCase: UseCase?
         mutating func report(scenario: String = Scenario.name, _ name: String, _ description: () -> String = { "" }) {
             useCase = UseCase(
@@ -129,10 +131,14 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
         if let deviceConfiguration = deviceConfiguration {
             deviceConfiguration.configure(.shared)
         }
+        let encodedJson = try JSONEncoder().encode(configuration.initialState).base64EncodedString()
+        
         let app = XCUIApplication()
         app.launchEnvironment[Runner.disableAnimations] = configuration.disableAnimations ? "1" : "0"
         app.launchEnvironment[Runner.disableHardwareKeyboard] = "1"
-        app.launchArguments = ["-\(Runner.activeScenarioDefaultKey)", Scenario.id] + configuration.initialState.launchArguments
+        app.launchEnvironment[Runner.shouldResetScenarioAfterEnteringBackground] = "1"
+        app.launchEnvironment[SandboxedScenario.initialStateEnvironmentKey] = encodedJson
+        app.launchArguments = ["-\(Runner.activeScenarioDefaultKey)", Scenario.id]
         
         FeatureToggleStorage().allFeatureKeys.forEach {
             app.launchArguments += ["-\($0)", configuration.enabledFeatures.contains($0) ? "<true/>" : "<false/>"]
@@ -157,7 +163,7 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
             localeConfiguration.becomeCurrent()
         }
         
-        app.launch()
+        try app.run(with: AppLaunchConfiguration(configuration: configuration, device: deviceConfiguration))
         useCaseBuilder?.app = app
         useCaseBuilder?.deviceConfiguration = deviceConfiguration
         
@@ -168,6 +174,44 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
         }
         
         try work(app)
+    }
+    
+}
+
+private struct AppLaunchConfiguration: Equatable {
+    var scenarioId: String
+    var deviceConfiguration: DeviceConfiguration?
+    var disableAnimations: Bool
+    var encodedInitialState: String
+    var enabledFeatures: Set<String>
+    
+    init<Scenario: TestScenario>(configuration: ApplicationRunner<Scenario>.Configuration, device: DeviceConfiguration?) throws {
+        scenarioId = Scenario.id
+        deviceConfiguration = device
+        disableAnimations = configuration.disableAnimations
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .sortedKeys
+        encodedInitialState = try encoder.encode(configuration.initialState).base64EncodedString()
+        enabledFeatures = configuration.enabledFeatures
+    }
+}
+
+private extension XCUIApplication {
+    private static var previousConfiguration: AppLaunchConfiguration?
+    
+    func run(with configuration: AppLaunchConfiguration) {
+        defer { Self.previousConfiguration = configuration }
+        
+        if configuration == Self.previousConfiguration {
+            print("Running the app using the same configuration")
+            XCUIDevice.shared.press(.home)
+            Thread.sleep(forTimeInterval: 0.5)
+            activate()
+            Thread.sleep(forTimeInterval: 0.5)
+        } else {
+            print("Running the app with different configuration")
+            launch()
+        }
     }
     
 }

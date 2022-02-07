@@ -65,6 +65,7 @@ public class CoordinatedAppController: AppController {
     }
     
     public func handleUserNotificationResponse(_ response: UNNotificationResponse, completionHandler: @escaping () -> Void) {
+        coordinator.bluetoothOffAcknowledged.send(true)
         if let action = UserNotificationAction(rawValue: response.actionIdentifier) {
             coordinator.handleUserNotificationAction(action, completion: completionHandler)
         } else {

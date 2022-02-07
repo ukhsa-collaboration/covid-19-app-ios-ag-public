@@ -17,6 +17,7 @@ public class Runner {
     public static let interfaceStyleDefaultKey = "interfaceStyle"
     public static let disableAnimations = "disable_animations"
     public static let disableHardwareKeyboard = "disable_hardware_keyboard"
+    public static let shouldResetScenarioAfterEnteringBackground = "shouldResetScenarioAfterEnteringBackground"
     public static let showStringLocalizableKeysOnly = "showStringLocalizableKeysOnly"
     
     private let loggingManager: LoggingManager
@@ -85,6 +86,26 @@ public class Runner {
         UIApplication.shared.shortcutItems = shortcuts.map { $0.item }
         prepareLocalizationOverriderIfNeeded()
         updateContent()
+        
+        if
+            let shouldResetScenarioAfterEnteringBackground = Int(ProcessInfo.processInfo.environment[Self.shouldResetScenarioAfterEnteringBackground] ?? ""),
+            shouldResetScenarioAfterEnteringBackground > 0 {
+            setUpScenarioResettingListeners()
+        }
+    }
+    
+    private func setUpScenarioResettingListeners() {
+        var stashedScenarioId: ScenarioId?
+        NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification, object: nil).sink { [weak self] _ in
+            stashedScenarioId = self?.activeScenarioId
+            self?.activeScenarioId = nil
+        }.store(in: &cancellables)
+        
+        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification, object: nil).sink { [weak self] _ in
+            if let stashedScenarioId = stashedScenarioId {
+                self?.activeScenarioId = stashedScenarioId
+            }
+        }.store(in: &cancellables)
     }
     
     public func prepare(_ window: UIWindow) {

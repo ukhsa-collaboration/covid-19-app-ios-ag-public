@@ -182,4 +182,22 @@ class ContactTracingHubFlowTests: XCTestCase {
             XCTAssertTrue(contactTracingAdviceScreen.footnote.exists)
         }
     }
+    
+    func testContactTracingDoesNotWorkWithoutBT() throws {
+        $runner.initialState.bluetootOff = true
+        try runner.run { app in
+            
+            let bluetoothOffWarningScren = BluetoothDisabledWarningScreen(app: app)
+            bluetoothOffWarningScren.secondaryButton.tap()
+            
+            let homeScreen = HomeScreen(app: app)
+            XCTAssert(homeScreen.contactTracingDoesNotWorkWithBTOffLabel.exists)
+            
+            app.scrollTo(element: homeScreen.contactTracingHubButton)
+            homeScreen.contactTracingHubButton.tap()
+            
+            let bluetoothDisabledWarrningScreen = BluetoothDisabledWarningScreen(app: app)
+            XCTAssert(bluetoothDisabledWarrningScreen.heading.exists)
+        }
+    }
 }

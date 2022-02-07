@@ -20,6 +20,7 @@ extension AnalyticsTests {
             \.totalBackgroundTasks: Ignore(path: \.totalBackgroundTasks),
             \.appIsContactTraceableBackgroundTick: Ignore(path: \.appIsContactTraceableBackgroundTick),
             \.appIsUsableBackgroundTick: Ignore(path: \.appIsUsableBackgroundTick),
+            \.appIsUsableBluetoothOffBackgroundTick: Ignore(path: \.appIsUsableBluetoothOffBackgroundTick),
         ]
         
         mutating func equals(expected: SubmissionPayload.MetricField, _ path: WritableKeyPath<SubmissionPayload.Metrics, SubmissionPayload.MetricField>) {

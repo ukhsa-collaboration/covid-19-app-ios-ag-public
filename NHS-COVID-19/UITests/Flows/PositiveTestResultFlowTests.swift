@@ -17,7 +17,6 @@ class PositiveTestResultsFlowTest: XCTestCase {
     let today = LocalDay.today
     
     override func setUpWithError() throws {
-        $runner.initialState.isPilotActivated = true
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = false
         $runner.initialState.cameraAuthorized = true

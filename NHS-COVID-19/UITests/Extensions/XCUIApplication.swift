@@ -50,4 +50,10 @@ extension XCUIApplication {
          */
         XCTAssert(element.waitForExistence(timeout: 2.0))
     }
+    
+    func checkOnHomeScreenBluetoothOff() {
+        let homeScreen = HomeScreen(app: self)
+        XCTAssert(homeScreen.contactTracingDoesNotWorkWithBTOffLabel.exists)
+    }
+    
 }

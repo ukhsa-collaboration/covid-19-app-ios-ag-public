@@ -18,7 +18,9 @@ public protocol HomeViewControllerInteracting {
     func didTapLinkTestResultButton()
     func didTapContactTracingHubButton()
     func didTapTestingHubButton()
+    func didTapStatsButton()
     var shouldShowCheckIn: Bool { get }
+    func openSettings()
 }
 
 public class HomeViewController: UIViewController {
@@ -37,6 +39,7 @@ public class HomeViewController: UIViewController {
     
     private let shouldShowSelfDiagnosis: InterfaceProperty<Bool>
     private let showFinancialSupportButton: InterfaceProperty<Bool>
+    private let shouldShowLocalStats: Bool
     
     private let country: InterfaceProperty<Country>
     let showLanguageSelectionScreen: (() -> Void)?
@@ -57,7 +60,8 @@ public class HomeViewController: UIViewController {
         showFinancialSupportButton: InterfaceProperty<Bool>,
         country: InterfaceProperty<Country>,
         showLanguageSelectionScreen: (() -> Void)?,
-        showNotificationScreen: (() -> Void)? = nil
+        showNotificationScreen: (() -> Void)? = nil,
+        shouldShowLocalStats: Bool
     ) {
         self.interactor = interactor
         self.riskLevelBannerViewModel = riskLevelBannerViewModel
@@ -74,6 +78,7 @@ public class HomeViewController: UIViewController {
         self.country = country
         self.showNotificationScreen = showNotificationScreen
         self.showLanguageSelectionScreen = showLanguageSelectionScreen
+        self.shouldShowLocalStats = shouldShowLocalStats
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -94,7 +99,8 @@ public class HomeViewController: UIViewController {
             shouldShowSelfDiagnosis: shouldShowSelfDiagnosis,
             exposureNotificationsEnabled: exposureNotificationsEnabled,
             exposureNotificationsToggleAction: exposureNotificationsToggleAction,
-            country: country
+            country: country,
+            shouldShowLocalStats: shouldShowLocalStats
         )
         
         let controller = UIHostingController(rootView: homeView)

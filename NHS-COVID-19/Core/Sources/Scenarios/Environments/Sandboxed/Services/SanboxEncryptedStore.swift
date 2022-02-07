@@ -13,11 +13,6 @@ class SandboxEncryptedStore: EncryptedStoring {
     
     init(host: SandboxHost) {
         self.host = host
-        if host.initialState.isPilotActivated {
-            stored["activation"] = """
-            { "isActivated": true }
-            """.data(using: .utf8)
-        }
         
         if let postcode = host.initialState.postcode,
             let localAuthorityId = host.initialState.localAuthorityId {

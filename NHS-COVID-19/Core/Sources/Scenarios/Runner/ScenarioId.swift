@@ -9,16 +9,16 @@ import SwiftUI
 
 struct ScenarioId: CaseIterable, Hashable, Identifiable, RawRepresentable {
     
-    var scenarioType: Scenario.Type
+    var scenarioType: AppControllingScenario.Type
     
-    init(withType type: Scenario.Type) {
+    init(withType type: AppControllingScenario.Type) {
         scenarioType = type
     }
     
     init?(rawValue: String) {
         guard
             let type = NSClassFromString(rawValue),
-            let conformingType = type as? Scenario.Type else {
+            let conformingType = type as? AppControllingScenario.Type else {
             return nil
         }
         scenarioType = conformingType
@@ -64,7 +64,7 @@ struct ScenarioId: CaseIterable, Hashable, Identifiable, RawRepresentable {
             // `class_conformsToProtocol` is safe to call on all types, so we use to filter down to “our” classes before
             // we try to cast them.
             .filter { class_conformsToProtocol($0, IdentifiableType.self) }
-            .compactMap { $0 as? Scenario.Type }
+            .compactMap { $0 as? AppControllingScenario.Type }
             .map { ScenarioId(withType: $0) }
             .sorted { $0.scenarioType.name < $1.scenarioType.name }
     }()

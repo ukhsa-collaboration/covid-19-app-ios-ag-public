@@ -13,6 +13,7 @@ public class RiskLevelIndicatorComponentScenario: Scenario {
     public static let name = "Risk Level Indicator"
     public static let kind = ScenarioKind.component
     public static let turnContactTracingOnTappedTitle = "Turn Contact Tracing On tapped"
+    public static let openPhoneSettingTappedTitle = "Open phone settings Button tapped"
     
     enum Showcases: CaseIterable {
         case isolatingThreeDays
@@ -28,22 +29,24 @@ public class RiskLevelIndicatorComponentScenario: Scenario {
                         .isolating(days: 3, percentRemaining: 0.2, endDate: Date(), hasPositiveTest: false)
                     ),
                     paused: .constant(false),
-                    animationDisabled: .constant(false)
+                    animationDisabled: .constant(false),
+                    bluetoothOff: .constant(true)
                 )
             case .isolatingFourteenDays:
                 return RiskLevelIndicator.ViewModel(
                     isolationState: .constant(
                         .isolating(days: 14, percentRemaining: 0.2, endDate: Date(), hasPositiveTest: false)),
                     paused: .constant(false),
-                    animationDisabled: .constant(false)
+                    animationDisabled: .constant(false),
+                    bluetoothOff: .constant(true)
                 )
             case .notIsolating:
                 return RiskLevelIndicator.ViewModel(
                     isolationState: .constant(
-                        .notIsolating), paused: .constant(false), animationDisabled: .constant(false)
+                        .notIsolating), paused: .constant(false), animationDisabled: .constant(false), bluetoothOff: .constant(true)
                 )
             case .paused:
-                return RiskLevelIndicator.ViewModel(isolationState: .constant(.notIsolating), paused: .constant(true), animationDisabled: .constant(false))
+                return RiskLevelIndicator.ViewModel(isolationState: .constant(.notIsolating), paused: .constant(true), animationDisabled: .constant(false), bluetoothOff: .constant(false))
             }
         }
     }
@@ -57,6 +60,7 @@ private struct RiskLevelIndicatorView: View {
     
     @State var preferredColourScheme: ColorScheme? = nil
     @State private var turnContactTracingOnAlertIsPresented = false
+    @State private var openPhoneSettingsAlertIsPresented = false
     
     @SwiftUI.Environment(\.colorScheme) var colorScheme
     
@@ -67,7 +71,8 @@ private struct RiskLevelIndicatorView: View {
             List(RiskLevelIndicatorComponentScenario.Showcases.allCases, id: \.index) {
                 RiskLevelIndicator(
                     viewModel: $0.content(),
-                    turnContactTracingOnTapAction: { turnContactTracingOnAlertIsPresented = true }
+                    turnContactTracingOnTapAction: { turnContactTracingOnAlertIsPresented = true },
+                    openSettings: { openPhoneSettingsAlertIsPresented = true }
                 )
             }
             .navigationBarItems(trailing: toggleColorSchemeButton)
@@ -75,6 +80,9 @@ private struct RiskLevelIndicatorView: View {
             .alert(isPresented: $turnContactTracingOnAlertIsPresented, content: {
                 Alert(title: Text(RiskLevelIndicatorComponentScenario.turnContactTracingOnTappedTitle))
             })
+            .alert(isPresented: $openPhoneSettingsAlertIsPresented) {
+                Alert(title: Text(RiskLevelIndicatorComponentScenario.openPhoneSettingTappedTitle))
+            }
         }
         .preferredColorScheme(preferredColourScheme)
         

@@ -293,13 +293,13 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string/>
+				<string>Proszę izolować się przez %ld dzień</string>
 				<key>few</key>
-				<string/>
+				<string>Proszę izolować się przez %ld dni</string>
 				<key>many</key>
-				<string/>
+				<string>Proszę izolować się przez %ld dni</string>
 				<key>other</key>
-				<string/>
+				<string>Proszę izolować się przez %ld dni</string>
 			</dict>
 		</dict>
 		<key>contact_case_continue_isolation_accessibility_label %ld</key>
@@ -500,6 +500,46 @@
 				<string/>
 				<key>other</key>
 				<string/>
+			</dict>
+		</dict>
+		<key>local_statistics_main_screen_daily_accessibility_text %ld %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@tests@</string>
+			<key>tests</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string/>
+				<key>few</key>
+				<string/>
+				<key>many</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>local_statistics_main_screen_last_7_days_accessibility_text %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@tests@</string>
+			<key>tests</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%li pozytywny test w ciągu ostatnich 7 dni</string>
+				<key>few</key>
+				<string>%li pozytywne testy w ciągu ostatnich 7 dni</string>
+				<key>many</key>
+				<string>%li pozytywne testy w ciągu ostatnich 7 dni</string>
+				<key>other</key>
+				<string>%li pozytywne testy w ciągu ostatnich 7 dni</string>
 			</dict>
 		</dict>
 	</dict>

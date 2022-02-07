@@ -2,6 +2,7 @@
 // Copyright © 2021 DHSC. All rights reserved.
 //
 
+import Combine
 import Common
 import Domain
 import Foundation
@@ -25,7 +26,10 @@ public class MockScenario: Scenario {
     
     static var appController: AppController {
         let server = MockServer(dataProvider: .shared)
-        return CoordinatedAppController(developmentWith: .mock(with: server))
+        return CoordinatedAppController(developmentWith: .mock(with: server, copyServices: Environment.CopyServices(
+            project: "895873615f401231224445.23171698",
+            token: "7ef5472a38bba08d2d57cb3e1174687743d9e13f"
+        )))
     }
 }
 
@@ -104,14 +108,17 @@ private extension ApplicationServices {
     
     @available(iOSApplicationExtension, unavailable)
     private convenience init(simulatedENServicesFor environment: Environment) {
-        
         let dateProvider = AdjustableDateProvider()
+        let bluetoothEnabled = MockDataProvider.shared.objectWillChange
+            .map { _ in MockDataProvider.shared.bluetoothEnabled }
+            .prepend(MockDataProvider.shared.bluetoothEnabled)
+            .eraseToAnyPublisher()
         
         self.init(
             standardServicesFor: environment,
             dateProvider: dateProvider,
             riskyPostcodeUpdateIntervalProvider: RiskyPostcodeAdjustableMinimumUpdateIntervalProvider(),
-            exposureNotificationManager: SimulatedExposureNotificationManager(dateProvider: dateProvider),
+            exposureNotificationManager: SimulatedExposureNotificationManager(dateProvider: dateProvider, bluetoothEnabled: bluetoothEnabled),
             cameraManager: MockableCameraManager(),
             venueDecoder: MockableVenueDecoder(venueDecoder: environment.venueDecoder),
             application: MockableApplication()
@@ -120,7 +127,6 @@ private extension ApplicationServices {
     
     @available(iOSApplicationExtension, unavailable)
     convenience init(developmentServicesFor environment: Environment) {
-        
         let dateProvider = AdjustableDateProvider()
         
         #if targetEnvironment(simulator)
