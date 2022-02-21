@@ -79,7 +79,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: testReceivedDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -108,7 +109,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: testReceivedDay.advanced(by: -1).startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -129,6 +131,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: true,
                 receivedOnDay: firstRapidTestReceivedDay,
                 testEndDay: firstRapidTestNpexDay
             )
@@ -146,7 +149,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: secondRapidTestReceivedDay.advanced(by: -1).startOfDay,
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -167,6 +171,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: true,
                 receivedOnDay: firstRapidTestReceivedDay,
                 testEndDay: firstRapidTestNpexDay
             )
@@ -184,7 +189,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: secondRapidTestReceivedDay.advanced(by: -1).startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -205,6 +211,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: firstRapidTestReceivedDay,
                 testEndDay: firstRapidTestNpexDay
             )
@@ -222,7 +229,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: secondRapidTestReceivedDay.advanced(by: -1).startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -235,7 +243,7 @@ class TestResultIsolationOperationTests: XCTestCase {
         let npexDay = LocalDay.today.advanced(by: -15)
         let indexCaseInfo = IndexCaseInfo(
             symptomaticInfo: nil,
-            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
+            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, shouldOfferFollowUpTest: true, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
         )
         let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
         
@@ -249,7 +257,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: endDay,
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -275,7 +284,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: LocalDay.today.startOfDay,
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -294,6 +304,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
             )
@@ -307,7 +318,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: LocalDay.today.startOfDay,
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -326,7 +338,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: LocalDay.today.startOfDay,
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -341,7 +354,7 @@ class TestResultIsolationOperationTests: XCTestCase {
         // Given
         let isolationInfo = IsolationInfo(indexCaseInfo: IndexCaseInfo(
             symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: testReceivedDay.advanced(by: -2), onsetDay: nil),
-            testInfo: IndexCaseInfo.TestInfo(result: .negative, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: testReceivedDay.advanced(by: -1), testEndDay: nil)
+            testInfo: IndexCaseInfo.TestInfo(result: .negative, testKitType: .labResult, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: testReceivedDay.advanced(by: -1), testEndDay: nil)
         ), contactCaseInfo: nil)
         
         // When
@@ -353,7 +366,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: LocalDay.today.startOfDay,
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -373,6 +387,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay.advanced(by: -4),
                 testEndDay: testEndDay
             )
@@ -387,7 +402,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: LocalDay.today.startOfDay,
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -406,7 +422,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: LocalDay.today.startOfDay,
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -425,6 +442,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .negative,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay.advanced(by: -4),
                 testEndDay: testDay
             )
@@ -443,7 +461,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: LocalDay.today.startOfDay,
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -462,7 +481,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: LocalDay.today.startOfDay,
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -482,6 +502,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
             )
@@ -500,7 +521,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -520,6 +542,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
             )
@@ -538,7 +561,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -569,7 +593,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: endDay.startOfDay,
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -600,7 +625,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: endDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -626,7 +652,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: LocalDay.today.advanced(by: -21).startOfDay,
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -657,7 +684,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: endDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -677,6 +705,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: true,
                 receivedOnDay: testDay,
                 testEndDay: nil
             )
@@ -695,7 +724,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: endDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -715,6 +745,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: nil
             )
@@ -733,7 +764,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: endDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -753,6 +785,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: true,
                 receivedOnDay: testDay,
                 testEndDay: npexDay
             )
@@ -771,7 +804,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: endDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -791,6 +825,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: npexDay
             )
@@ -809,7 +844,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: endDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -829,6 +865,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: true,
                 receivedOnDay: testDay,
                 testEndDay: nil
             )
@@ -847,7 +884,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: endDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -867,6 +905,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: nil
             )
@@ -885,7 +924,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: endDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -905,6 +945,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: nil
             )
@@ -923,7 +964,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: endDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -943,6 +985,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .negative,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: npexDay
             )
@@ -961,7 +1004,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: endDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -981,6 +1025,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .negative,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: nil
             )
@@ -999,7 +1044,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: endDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1019,6 +1065,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false,
                 confirmatoryDayLimit: 1,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
@@ -1038,7 +1085,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1058,6 +1106,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: true,
                 confirmatoryDayLimit: 0,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
@@ -1077,7 +1126,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1097,6 +1147,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: true,
                 confirmatoryDayLimit: 2,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
@@ -1116,7 +1167,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1137,6 +1189,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: true,
                 confirmatoryDayLimit: 2,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
@@ -1156,7 +1209,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1177,6 +1231,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: true,
                 confirmatoryDayLimit: 0,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
@@ -1196,7 +1251,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1217,6 +1273,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: true,
                 confirmatoryDayLimit: 2,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
@@ -1236,7 +1293,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1257,6 +1315,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 confirmatoryDayLimit: nil,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
@@ -1276,7 +1335,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1297,6 +1357,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 confirmatoryDayLimit: nil,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
@@ -1316,7 +1377,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1337,6 +1399,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
             )
@@ -1355,7 +1418,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1376,6 +1440,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
             )
@@ -1394,7 +1459,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1415,6 +1481,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
             )
@@ -1433,7 +1500,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1454,6 +1522,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
             )
@@ -1472,7 +1541,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1493,6 +1563,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
             )
@@ -1511,7 +1582,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1532,6 +1604,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
             )
@@ -1550,7 +1623,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .labResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1571,6 +1645,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .positive,
                 testKitType: .rapidResult,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: true,
                 receivedOnDay: testDay,
                 testEndDay: testEndDay
             )
@@ -1589,7 +1664,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 testKitType: .rapidResult,
                 endDate: newEndDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
             ),
             configuration: configuration
         )
@@ -1609,6 +1685,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .negative,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: storedNegativeResultDay,
                 testEndDay: storedNegativeResultDay
             )
@@ -1628,6 +1705,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 endDate: newPositiveTestResultDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false,
                 confirmatoryDayLimit: 1 // don't care
             ),
             configuration: configuration
@@ -1648,6 +1726,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .negative,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: storedNegativeResultDay,
                 testEndDay: storedNegativeResultDay
             )
@@ -1667,6 +1746,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 endDate: newPositiveTestResultDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false,
                 confirmatoryDayLimit: 1 // don't care
             ),
             configuration: configuration
@@ -1688,6 +1768,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .negative,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: npexDay
             )
@@ -1707,6 +1788,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 endDate: endDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false,
                 confirmatoryDayLimit: 1
             ),
             configuration: configuration
@@ -1728,6 +1810,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .negative,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: npexDay
             )
@@ -1747,6 +1830,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 endDate: endDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false,
                 confirmatoryDayLimit: 2
             ),
             configuration: configuration
@@ -1767,6 +1851,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .negative,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: npexDay
             )
@@ -1786,6 +1871,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 endDate: endDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false,
                 confirmatoryDayLimit: 1
             ),
             configuration: configuration
@@ -1806,6 +1892,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 result: .negative,
                 testKitType: .labResult,
                 requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
                 receivedOnDay: testDay,
                 testEndDay: npexDay
             )
@@ -1825,6 +1912,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 endDate: endDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
                 requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false,
                 confirmatoryDayLimit: 1
             ),
             configuration: configuration
@@ -1840,7 +1928,7 @@ private extension IndexCaseInfo {
     init(selfDiagnosisDay: GregorianDay, onsetDay: GregorianDay?, testResult: TestResult?) {
         self.init(
             symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: onsetDay),
-            testInfo: testResult.map { TestInfo(result: $0, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: .today, testEndDay: nil) }
+            testInfo: testResult.map { TestInfo(result: $0, testKitType: .labResult, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: .today, testEndDay: nil) }
         )
     }
 }

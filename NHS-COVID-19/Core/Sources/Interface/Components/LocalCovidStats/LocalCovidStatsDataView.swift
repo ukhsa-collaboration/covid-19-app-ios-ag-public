@@ -52,9 +52,8 @@ public struct LocalCovidStatsDataView: View {
     }
     
     private func setDateWith(offset: Int) -> Date {
-        let lastFetchDate = GregorianDay(date: localStats.lastFetch, timeZone: .current)
-        let adjustedDate = lastFetchDate.advanced(by: offset)
-        return (adjustedDate.startDate(in: .current))
+        let lastUpdateGregorianDay = localStats.lowerTierLocalAuthority.newCasesByPublishDate.lastUpdate
+        return lastUpdateGregorianDay.advanced(by: offset).startDate(in: .utc)
     }
 }
 
@@ -228,11 +227,11 @@ public struct NumbersView: View {
     func imageName() -> String {
         switch trend {
         case .up:
-            return "arrow.up.right.circle.fill"
+            return "arrow.up.forward.circle.fill"
         case .down:
-            return "arrow.down.backward.circle.fill"
+            return "arrow.down.forward.circle.fill"
         case .same:
-            return "arrow.right.circle.fill"
+            return "arrow.forward.circle.fill"
         case .none:
             return ""
         }
@@ -254,7 +253,7 @@ public struct RollingStatsView: View {
     public var body: some View {
         
         Text(localize(.local_statistics_main_screen_cases_per_hundred_thousand))
-            .styleAsSecondaryHeading()
+            .styleAsHeading()
             .accessibility(label: Text(localize(.local_statistics_main_screen_rolling_rate_100k_accessibility_text)))
             .fixedSize(horizontal: false, vertical: true)
         

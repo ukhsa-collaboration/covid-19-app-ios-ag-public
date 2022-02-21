@@ -148,6 +148,7 @@ struct IsolationContext {
                     for: result.testResult,
                     testKitType: result.testKitType,
                     requiresConfirmatoryTest: result.requiresConfirmatoryTest,
+                    shouldOfferFollowUpTest: result.shouldOfferFollowUpTest,
                     confirmatoryDayLimit: result.confirmatoryDayLimit,
                     receivedOn: self.currentDateProvider.currentGregorianDay(timeZone: .current),
                     npexDay: result.endDay,
@@ -196,7 +197,7 @@ struct IsolationContext {
                     
                     completionHandler(
                         AcknowledgementCompletionActions(
-                            shouldSuggestBookingFollowUpTest: shouldSuggestBookingFollowUpTest,
+                            shouldSuggestBookingFollowUpTest: shouldSuggestBookingFollowUpTest && result.shouldOfferFollowUpTest,
                             shouldAllowKeySubmission: storeOperation != .ignore
                         )
                     )

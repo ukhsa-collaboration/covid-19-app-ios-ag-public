@@ -16,7 +16,7 @@ public class SymptomsAfterPositiveTestViewControllerScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return SymptomsAfterPositiveTestViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: 7 * 86400))
+            return SymptomsAfterPositiveTestViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: 7 * 86400), currentDateProvider: MockDateProvider())
         }
     }
 }

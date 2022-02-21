@@ -17,7 +17,7 @@ public class NegativeTestResultWithIsolationScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return NegativeTestResultWithIsolationViewController(interactor: interactor, viewModel: .init(isolationEndDate: Date(timeIntervalSinceNow: 12 * 86400), testResultType: .firstResult))
+            return NegativeTestResultWithIsolationViewController(interactor: interactor, viewModel: .init(isolationEndDate: Date(timeIntervalSinceNow: 12 * 86400), testResultType: .firstResult), currentDateProvider: MockDateProvider())
         }
     }
 }
@@ -31,7 +31,7 @@ public class NegativeTestResultAfterPositiveWithIsolationScreenScenario: Scenari
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return NegativeTestResultWithIsolationViewController(interactor: interactor, viewModel: .init(isolationEndDate: Date(timeIntervalSinceNow: 12 * 86400), testResultType: .afterPositive))
+            return NegativeTestResultWithIsolationViewController(interactor: interactor, viewModel: .init(isolationEndDate: Date(timeIntervalSinceNow: 12 * 86400), testResultType: .afterPositive), currentDateProvider: MockDateProvider())
         }
     }
 }

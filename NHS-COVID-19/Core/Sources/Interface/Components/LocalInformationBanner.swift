@@ -34,6 +34,7 @@ public struct LocalInformationBanner: View {
                     Text(viewModel.text)
                         .styleAsBody()
                         .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.leading)
                     HStack {
                         Text(localize(.local_information_banner_read_more))
                         Image(.menuChevron)

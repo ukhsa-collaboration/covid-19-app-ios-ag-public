@@ -132,7 +132,8 @@ extension CoordinatedAppController {
         return NonNegativeTestResultWithIsolationViewController(
             interactor: positiveTestResultWithIsolationInteractor,
             isolationEndDate: isolationEndDate,
-            testResultType: .positive(isolation: isolation, requiresConfirmatoryTest: false)
+            testResultType: .positive(isolation: isolation, requiresConfirmatoryTest: false),
+            currentDateProvider: context.currentDateProvider
         )
     }
     
@@ -183,7 +184,8 @@ extension CoordinatedAppController {
                 return NonNegativeTestResultWithIsolationViewController(
                     interactor: positiveTestResultWithIsolationInteractor,
                     isolationEndDate: isolationEndDate,
-                    testResultType: .positiveButAlreadyConfirmedPositive
+                    testResultType: .positiveButAlreadyConfirmedPositive,
+                    currentDateProvider: context.currentDateProvider
                 )
             }
             
@@ -203,7 +205,7 @@ extension CoordinatedAppController {
         case .neededForNegativeResultContinueToIsolate(let interactor, let isolationEndDate):
             return NegativeTestResultWithIsolationViewController(
                 interactor: interactor,
-                viewModel: .init(isolationEndDate: isolationEndDate, testResultType: .firstResult)
+                viewModel: .init(isolationEndDate: isolationEndDate, testResultType: .firstResult), currentDateProvider: context.currentDateProvider
             )
             
         case .neededForNegativeResultNotIsolating(let interactor):
@@ -212,7 +214,7 @@ extension CoordinatedAppController {
         case .neededForNegativeAfterPositiveResultContinueToIsolate(interactor: let interactor, isolationEndDate: let isolationEndDate):
             return NegativeTestResultWithIsolationViewController(
                 interactor: interactor,
-                viewModel: .init(isolationEndDate: isolationEndDate, testResultType: .afterPositive)
+                viewModel: .init(isolationEndDate: isolationEndDate, testResultType: .afterPositive), currentDateProvider: context.currentDateProvider
             )
             
         case .neededForEndOfIsolation(let interactor, let isolationEndDate, let isIndexCase):
@@ -346,7 +348,8 @@ extension CoordinatedAppController {
             let nonNegativeVC = NonNegativeTestResultWithIsolationViewController(
                 interactor: nonNegativeInteractor,
                 isolationEndDate: isolationEndDate,
-                testResultType: .void
+                testResultType: .void,
+                currentDateProvider: context.currentDateProvider
             )
             navigationVC.viewControllers = [nonNegativeVC]
             return navigationVC

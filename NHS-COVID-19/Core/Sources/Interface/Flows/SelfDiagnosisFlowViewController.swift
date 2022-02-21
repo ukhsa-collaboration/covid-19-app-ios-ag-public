@@ -153,16 +153,16 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
             return SelfDiagnosisAfterPositiveTestIsolatingViewController(interactor: interactor, symptomState: .noSymptoms)
         case .noSymptoms(.isolateForUnspecifiedReason(let endDate)):
             let interactor = NoSymptomsIsolatingViewControllerInteractor(navigationController: self, didTapOnlineServicesLink: self.interactor.nhs111LinkTapped)
-            return NoSymptomsIsolatingViewController(interactor: interactor, isolationEndDate: endDate)
+            return NoSymptomsIsolatingViewController(interactor: interactor, isolationEndDate: endDate, dateProvider: currentDateProvider)
         case .hasSymptoms(.isolate(.hasNoTests, let isolationEndDate)):
             let interactor = PositiveSymptomsViewControllerInteractor(controller: self)
-            return PositiveSymptomsViewController(interactor: interactor, isolationEndDate: isolationEndDate)
+            return PositiveSymptomsViewController(interactor: interactor, isolationEndDate: isolationEndDate, currentDateProvider: currentDateProvider)
         case .hasSymptoms(.isolate(.hasTestsButShouldUseSymptoms, let isolationEndDate)):
             let interactor = SymptomsAfterPositiveTestViewControllerInteractor(
                 navigationController: self,
                 didTapOnlineServicesLink: self.interactor.nhs111LinkTapped
             )
-            return SymptomsAfterPositiveTestViewController(interactor: interactor, isolationEndDate: isolationEndDate)
+            return SymptomsAfterPositiveTestViewController(interactor: interactor, isolationEndDate: isolationEndDate, currentDateProvider: currentDateProvider)
         case .hasSymptoms(.followAdviceForExistingPositiveTest):
             let interactor = SelfDiagnosisAfterPositiveTestIsolatingViewControllerInteractor(
                 navigationController: self,

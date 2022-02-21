@@ -65,6 +65,7 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
                 response.virologyTestResult,
                 diagnosisKeySubmissionToken: response.diagnosisKeySubmissionSupport ? virologyTestTokens.diagnosisKeySubmissionToken : nil,
                 requiresConfirmatoryTest: response.requiresConfirmatoryTest,
+                shouldOfferFollowUpTest: response.shouldOfferFollowUpTest,
                 confirmatoryDayLimit: response.confirmatoryDayLimit
             )
         case .noResultYet:
@@ -93,6 +94,7 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
                 response.virologyTestResult,
                 diagnosisKeySubmissionToken: token,
                 requiresConfirmatoryTest: response.requiresConfirmatoryTest,
+                shouldOfferFollowUpTest: response.shouldOfferFollowUpTest,
                 confirmatoryDayLimit: response.confirmatoryDayLimit,
                 askForOnsetDay: true
             )
@@ -101,6 +103,7 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
                 response.virologyTestResult,
                 diagnosisKeySubmissionToken: nil,
                 requiresConfirmatoryTest: response.requiresConfirmatoryTest,
+                shouldOfferFollowUpTest: response.shouldOfferFollowUpTest,
                 confirmatoryDayLimit: response.confirmatoryDayLimit,
                 askForOnsetDay: true
             )
@@ -127,6 +130,7 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         _ result: VirologyTestResult,
         diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?,
         requiresConfirmatoryTest: Bool,
+        shouldOfferFollowUpTest: Bool,
         confirmatoryDayLimit: Int?
     ) {
         sendNotification()
@@ -134,6 +138,7 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
             result,
             diagnosisKeySubmissionToken: diagnosisKeySubmissionToken,
             requiresConfirmatoryTest: requiresConfirmatoryTest,
+            shouldOfferFollowUpTest: shouldOfferFollowUpTest,
             confirmatoryDayLimit: confirmatoryDayLimit,
             askForOnsetDay: false
         )
@@ -143,6 +148,7 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         _ result: VirologyTestResult,
         diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?,
         requiresConfirmatoryTest: Bool,
+        shouldOfferFollowUpTest: Bool,
         confirmatoryDayLimit: Int?,
         askForOnsetDay: Bool
     ) {
@@ -150,6 +156,7 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
             virologyTestResult: result,
             diagnosisKeySubmissionToken: result.testResult == .positive ? diagnosisKeySubmissionToken : nil,
             requiresConfirmatoryTest: requiresConfirmatoryTest,
+            shouldOfferFollowUpTest: shouldOfferFollowUpTest,
             confirmatoryDayLimit: confirmatoryDayLimit
         )
         if askForOnsetDay, requiresOnsetDay(result, requiresConfirmatoryTest: requiresConfirmatoryTest) {

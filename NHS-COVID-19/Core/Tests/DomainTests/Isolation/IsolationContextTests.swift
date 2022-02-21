@@ -229,7 +229,8 @@ class IsolationContextTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random()),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let state = try makeResultAcknowledgementState(result: result).await().get()
@@ -258,7 +259,8 @@ class IsolationContextTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random()),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let state = try makeResultAcknowledgementState(result: result).await().get()
@@ -288,7 +290,8 @@ class IsolationContextTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: nil,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let state = try makeResultAcknowledgementState(result: result).await().get()
@@ -316,7 +319,8 @@ class IsolationContextTests: XCTestCase {
             testKitType: .rapidResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random()),
-            requiresConfirmatoryTest: true
+            requiresConfirmatoryTest: true,
+            shouldOfferFollowUpTest: false
         )
         
         let state = try makeResultAcknowledgementState(result: result).await().get()
@@ -340,7 +344,8 @@ class IsolationContextTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: nil,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let state = try makeResultAcknowledgementState(result: result).await().get()
@@ -368,7 +373,8 @@ class IsolationContextTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: nil,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let state = try makeResultAcknowledgementState(result: result).await().get()
@@ -468,6 +474,7 @@ class IsolationContextTests: XCTestCase {
                 testInfo: IndexCaseInfo.TestInfo(
                     result: .positive,
                     requiresConfirmatoryTest: false,
+                    shouldOfferFollowUpTest: false,
                     receivedOnDay: receivedOnDay,
                     testEndDay: testEndDay
                 )
@@ -502,6 +509,7 @@ class IsolationContextTests: XCTestCase {
                 testInfo: IndexCaseInfo.TestInfo(
                     result: .positive,
                     requiresConfirmatoryTest: false,
+                    shouldOfferFollowUpTest: false,
                     receivedOnDay: receivedOnDay,
                     testEndDay: testEndDay
                 )
@@ -536,6 +544,7 @@ class IsolationContextTests: XCTestCase {
                 testInfo: IndexCaseInfo.TestInfo(
                     result: .positive,
                     requiresConfirmatoryTest: false,
+                    shouldOfferFollowUpTest: false,
                     receivedOnDay: receivedOnDay,
                     testEndDay: testEndDay
                 )
@@ -577,6 +586,7 @@ class IsolationContextTests: XCTestCase {
                 testInfo: IndexCaseInfo.TestInfo(
                     result: .positive,
                     requiresConfirmatoryTest: false,
+                    shouldOfferFollowUpTest: false,
                     receivedOnDay: receivedOnDay,
                     testEndDay: testEndDay
                 )
@@ -604,7 +614,8 @@ class IsolationContextTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random()),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let state = try makeResultAcknowledgementState(result: result).await().get()

@@ -23,7 +23,8 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let isolationState = IsolationLogicalState.isolating(
@@ -51,7 +52,8 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: nil,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let isolationState = IsolationLogicalState.isolating(
@@ -79,7 +81,8 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let isolationState = IsolationLogicalState.isolationFinishedButNotAcknowledged(
@@ -105,7 +108,8 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let isolationState = IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil)
@@ -129,7 +133,8 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: nil,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let isolationState = IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil)
@@ -153,7 +158,8 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let isolationState = IsolationLogicalState.isolating(
@@ -181,7 +187,8 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let isolationState = IsolationLogicalState.isolating(
@@ -209,7 +216,8 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let isolationState = IsolationLogicalState.isolationFinishedButNotAcknowledged(
@@ -235,7 +243,8 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let isolationState = IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil)
@@ -259,7 +268,8 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let isolationState = IsolationLogicalState.isolating(
@@ -287,7 +297,8 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let isolationState = IsolationLogicalState.isolating(
@@ -315,7 +326,8 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let isolationState = IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil)
@@ -339,7 +351,8 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let isolationState = IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil)
@@ -363,7 +376,8 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let isolationState = IsolationLogicalState.isolationFinishedButNotAcknowledged(
@@ -389,7 +403,8 @@ class TestResultAcknowledgementStateTests: XCTestCase {
             testKitType: .labResult,
             endDate: Date(),
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: UUID().uuidString),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let isolationState = IsolationLogicalState.isolating(

@@ -39,6 +39,10 @@ struct LinkVirologyTestResultEndpoint: HTTPEndpoint {
             throw VirologyTestResultResponseError.confirmatoryTimeLimitProvidedWhenNoConfirmatoryTestRequired
         }
         
+        if !payload.requiresConfirmatoryTest, payload.shouldOfferFollowUpTest {
+            throw VirologyTestResultResponseError.confirmedTestOfferingFollowUpTest
+        }
+        
         return LinkVirologyTestResultResponse(
             virologyTestResult: VirologyTestResult(
                 testResult: VirologyTestResult.TestResult(payload.testResult),
@@ -47,6 +51,7 @@ struct LinkVirologyTestResultEndpoint: HTTPEndpoint {
             ),
             diagnosisKeySubmissionSupport: try DiagnosisKeySubmissionSupport(payload),
             requiresConfirmatoryTest: payload.requiresConfirmatoryTest,
+            shouldOfferFollowUpTest: payload.shouldOfferFollowUpTest,
             confirmatoryDayLimit: payload.confirmatoryDayLimit
         )
     }
@@ -90,6 +95,7 @@ private struct ResponseBody: Codable {
     var diagnosisKeySubmissionToken: String?
     var diagnosisKeySubmissionSupported: Bool
     var requiresConfirmatoryTest: Bool
+    var shouldOfferFollowUpTest: Bool
     var confirmatoryDayLimit: Int?
 }
 
@@ -126,6 +132,7 @@ enum VirologyTestResultResponseError: Error {
     case lfdVoidOrNegative
     case confirmatoryTimeLimitProvidedWhenNoConfirmatoryTestRequired
     case unconfirmedNonPostiveNotSupported
+    case confirmedTestOfferingFollowUpTest
 }
 
 extension DiagnosisKeySubmissionSupport {

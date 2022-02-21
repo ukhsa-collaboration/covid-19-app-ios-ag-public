@@ -41,7 +41,8 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
             PollVirologyTestResultResponse(
                 virologyTestResult: result,
                 diagnosisKeySubmissionSupport: true,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             )
         )
         let tokens = VirologyTestTokens(
@@ -65,7 +66,8 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
                 endDate: Date()
             ),
             diagnosisKeySubmissionSupport: .supported(diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random())),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         coordinator.handleManualTestResult(response)
         

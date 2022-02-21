@@ -46,6 +46,7 @@ public struct IndexCaseInfo: Equatable {
         public var result: TestResult
         public var testKitType: TestKitType?
         public var requiresConfirmatoryTest: Bool
+        public var shouldOfferFollowUpTest: Bool
         public var confirmatoryDayLimit: Int?
         public var receivedOnDay: GregorianDay
         public var confirmedOnDay: GregorianDay?
@@ -65,11 +66,14 @@ public struct IndexCaseInfo: Equatable {
         }
         
         public var completionStatus: CompletionStatus {
-            if requiresConfirmatoryTest {
+            if !shouldOfferFollowUpTest {
+                return .notRequired
+            } else if requiresConfirmatoryTest {
                 if let completedOnDay = completedOnDay {
                     return .completed(onDay: completedOnDay)
+                } else {
+                    return .pending
                 }
-                return .pending
             } else {
                 return .notRequired
             }
@@ -79,6 +83,7 @@ public struct IndexCaseInfo: Equatable {
             result: TestResult,
             testKitType: TestKitType? = nil,
             requiresConfirmatoryTest: Bool,
+            shouldOfferFollowUpTest: Bool,
             confirmatoryDayLimit: Int? = nil,
             receivedOnDay: GregorianDay,
             confirmedOnDay: GregorianDay? = nil,
@@ -88,6 +93,7 @@ public struct IndexCaseInfo: Equatable {
             self.result = result
             self.testKitType = testKitType
             self.requiresConfirmatoryTest = requiresConfirmatoryTest
+            self.shouldOfferFollowUpTest = shouldOfferFollowUpTest
             self.confirmatoryDayLimit = confirmatoryDayLimit
             self.receivedOnDay = receivedOnDay
             self.confirmedOnDay = confirmedOnDay

@@ -91,6 +91,7 @@ private struct PayloadV2: Codable {
         var acknowledgedDay: GregorianDay
         
         var requiresConfirmatoryTest: Bool
+        var shouldOfferFollowUpTest: Bool?
         var confirmatoryDayLimit: Int?
         // This is either `confirmedDay` or `completedDay`. Keeping the name because of codable store backwards compatibility.
         var confirmedDay: GregorianDay?
@@ -156,6 +157,7 @@ private extension IndexCaseInfo {
                 result: TestResult($0.testResult),
                 testKitType: TestKitType($0.testKitType),
                 requiresConfirmatoryTest: $0.requiresConfirmatoryTest,
+                shouldOfferFollowUpTest: $0.shouldOfferFollowUpTest ?? $0.requiresConfirmatoryTest,
                 confirmatoryDayLimit: $0.confirmatoryDayLimit,
                 receivedOnDay: $0.acknowledgedDay,
                 confirmedOnDay: isCompletedAndConfirmed ? $0.confirmedDay : nil,
@@ -255,6 +257,7 @@ private extension PayloadV2.TestCaseInfo {
             testKitType: PayloadV2.TestCaseInfo.TestKitType(testInfo.testKitType),
             acknowledgedDay: testInfo.receivedOnDay,
             requiresConfirmatoryTest: testInfo.requiresConfirmatoryTest,
+            shouldOfferFollowUpTest: testInfo.shouldOfferFollowUpTest,
             confirmatoryDayLimit: testInfo.confirmatoryDayLimit,
             confirmedDay: testInfo.completedOnDay,
             confirmatoryTestCompletionStatus: confirmatoryTestCompletionStatus,
@@ -385,6 +388,7 @@ private extension IndexCaseInfo.TestInfo {
             result: result,
             testKitType: TestKitType(testInfo.testKitType),
             requiresConfirmatoryTest: testInfo.requiresConfirmatoryTest ?? false,
+            shouldOfferFollowUpTest: testInfo.requiresConfirmatoryTest ?? false,
             confirmatoryDayLimit: nil,
             receivedOnDay: testInfo.receivedOnDay,
             confirmedOnDay: testInfo.confirmedOnDay,

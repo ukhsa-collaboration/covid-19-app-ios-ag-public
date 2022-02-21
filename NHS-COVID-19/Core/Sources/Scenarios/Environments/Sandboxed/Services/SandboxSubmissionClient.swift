@@ -53,7 +53,8 @@ class SandboxSubmissionClient: HTTPClient {
             "testKit":"\#(testKitType)",
             "diagnosisKeySubmissionToken": "\#(UUID().uuidString)",
             "diagnosisKeySubmissionSupported": \#(keySubmissionSupported),
-            "requiresConfirmatoryTest": \#(requiresConfirmatoryTest)
+            "requiresConfirmatoryTest": \#(requiresConfirmatoryTest),
+            "shouldOfferFollowUpTest": \#(requiresConfirmatoryTest)
             }
             """#))
             return Result.success(response)

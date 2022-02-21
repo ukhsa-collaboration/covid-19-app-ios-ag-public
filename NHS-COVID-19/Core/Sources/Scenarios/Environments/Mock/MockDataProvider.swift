@@ -356,6 +356,13 @@ class MockDataProvider: ObservableObject {
         }
     }
     
+    @UserDefault("mocks.shouldOfferFollowUpTest", defaultValue: true)
+    var shouldOfferFollowUpTest: Bool {
+        didSet {
+            _objectWillChange.send()
+        }
+    }
+    
     @UserDefault("mocks.testResultEndDateDaysAgo", defaultValue: 0)
     var testResultEndDateDaysAgo: Int {
         didSet {

@@ -180,6 +180,7 @@ private struct ListRow: View {
                 Text(text)
                     .styleAsBody()
                     .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Image(.menuChevron)
                     .foregroundColor(Color(.secondaryText))

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -14,8 +14,8 @@ public protocol NoSymptomsIsolatingViewControllerInteracting {
 
 extension NoSymptomsIsolatingViewController {
     private class Content: PrimaryButtonStickyFooterScrollingContent {
-        init(interactor: Interacting, isolationEndDate: Date) {
-            let daysToIsolate = LocalDay.today.daysRemaining(until: isolationEndDate)
+        init(interactor: Interacting, isolationEndDate: Date, currentDateProvider: DateProviding) {
+            let daysToIsolate = currentDateProvider.currentLocalDay.daysRemaining(until: isolationEndDate)
             
             let headingStack = UIStackView(
                 content: BasicContent(
@@ -65,9 +65,9 @@ public class NoSymptomsIsolatingViewController: StickyFooterScrollingContentView
     public typealias Interacting = NoSymptomsIsolatingViewControllerInteracting
     private let interactor: Interacting
     
-    public init(interactor: Interacting, isolationEndDate: Date) {
+    public init(interactor: Interacting, isolationEndDate: Date, dateProvider: DateProviding) {
         self.interactor = interactor
-        super.init(content: Content(interactor: interactor, isolationEndDate: isolationEndDate))
+        super.init(content: Content(interactor: interactor, isolationEndDate: isolationEndDate, currentDateProvider: dateProvider))
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             title: localize(.cancel),
             style: .done, target: self,

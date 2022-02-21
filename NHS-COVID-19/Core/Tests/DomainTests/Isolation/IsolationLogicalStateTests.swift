@@ -258,7 +258,7 @@ class IsolationLogicalStateTests: XCTestCase {
         let npexDay = LocalDay.today.advanced(by: -2)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
             symptomaticInfo: nil,
-            testInfo: .init(result: .positive, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
+            testInfo: .init(result: .positive, testKitType: .labResult, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
         )
         
         let endDay = npexDay.advanced(by: $state.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days).gregorianDay
@@ -269,7 +269,7 @@ class IsolationLogicalStateTests: XCTestCase {
         let npexDay = LocalDay.today.advanced(by: -12)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
             symptomaticInfo: nil,
-            testInfo: .init(result: .positive, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
+            testInfo: .init(result: .positive, testKitType: .labResult, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
         )
         
         let endDay = npexDay.advanced(by: $state.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days).gregorianDay
@@ -318,7 +318,7 @@ class IsolationLogicalStateTests: XCTestCase {
         let npexDay = LocalDay.today.advanced(by: -12)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
             symptomaticInfo: nil,
-            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
+            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, shouldOfferFollowUpTest: true, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
         )
         
         let endDay = npexDay.advanced(by: $state.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days).gregorianDay
@@ -330,7 +330,7 @@ class IsolationLogicalStateTests: XCTestCase {
         let npexDay = LocalDay.today.advanced(by: -2)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
             symptomaticInfo: nil,
-            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
+            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, shouldOfferFollowUpTest: true, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
         )
         
         let endDay = npexDay.advanced(by: $state.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days).gregorianDay
@@ -345,7 +345,7 @@ class IsolationLogicalStateTests: XCTestCase {
         let npexDay = LocalDay.today.advanced(by: -3)
         $state.isolationInfo.indexCaseInfo = IndexCaseInfo(
             symptomaticInfo: nil,
-            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
+            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, shouldOfferFollowUpTest: true, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
         )
         
         let endDay = $state.selfDiagnosisDay.advanced(by: 12)
@@ -449,7 +449,7 @@ private extension IndexCaseInfo {
     init(selfDiagnosisDay: GregorianDay, onsetDay: GregorianDay?, testResult: TestResult?) {
         self.init(
             symptomaticInfo: SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: onsetDay),
-            testInfo: testResult.map { TestInfo(result: $0, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: .today, testEndDay: nil) }
+            testInfo: testResult.map { TestInfo(result: $0, testKitType: .labResult, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: .today, testEndDay: nil) }
         )
     }
     

@@ -13,6 +13,7 @@ struct PollVirologyTestResultResponse: Equatable {
     var virologyTestResult: VirologyTestResult
     var diagnosisKeySubmissionSupport: Bool
     var requiresConfirmatoryTest: Bool
+    var shouldOfferFollowUpTest: Bool
     var confirmatoryDayLimit: Int?
 }
 
@@ -34,5 +35,6 @@ struct LinkVirologyTestResultResponse: Equatable {
     var virologyTestResult: VirologyTestResult
     var diagnosisKeySubmissionSupport: DiagnosisKeySubmissionSupport
     var requiresConfirmatoryTest: Bool
+    var shouldOfferFollowUpTest: Bool
     var confirmatoryDayLimit: Int?
 }

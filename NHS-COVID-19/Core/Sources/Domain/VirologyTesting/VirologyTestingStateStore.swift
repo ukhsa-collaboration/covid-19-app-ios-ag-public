@@ -70,6 +70,7 @@ private struct TestResultInfo: Codable, DataConvertible {
     var endDate: Date // Date test result arrives at NPEx
     var diagnosisKeySubmissionToken: String?
     var requiresConfirmatoryTest: Bool
+    var shouldOfferFollowUpTest: Bool?
     var confirmatoryDayLimit: Int?
 }
 
@@ -100,6 +101,7 @@ public class VirologyTestingStateStore {
                 endDate: unacknowledgedTestResult.endDate,
                 diagnosisKeySubmissionToken: diagnosisSubmissionToken,
                 requiresConfirmatoryTest: unacknowledgedTestResult.requiresConfirmatoryTest,
+                shouldOfferFollowUpTest: unacknowledgedTestResult.shouldOfferFollowUpTest ?? unacknowledgedTestResult.requiresConfirmatoryTest,
                 confirmatoryDayLimit: unacknowledgedTestResult.confirmatoryDayLimit
             )
         }
@@ -189,6 +191,7 @@ public class VirologyTestingStateStore {
         virologyTestResult: VirologyTestResult,
         diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?,
         requiresConfirmatoryTest: Bool,
+        shouldOfferFollowUpTest: Bool,
         confirmatoryDayLimit: Int? = nil
     ) {
         let testResultInfo = TestResultInfo(
@@ -197,6 +200,7 @@ public class VirologyTestingStateStore {
             endDate: virologyTestResult.endDate,
             diagnosisKeySubmissionToken: diagnosisKeySubmissionToken?.value,
             requiresConfirmatoryTest: requiresConfirmatoryTest,
+            shouldOfferFollowUpTest: shouldOfferFollowUpTest,
             confirmatoryDayLimit: confirmatoryDayLimit
         )
         

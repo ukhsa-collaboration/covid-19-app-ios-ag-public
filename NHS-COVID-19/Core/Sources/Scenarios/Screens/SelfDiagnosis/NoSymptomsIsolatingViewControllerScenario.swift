@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Domain
@@ -17,7 +17,7 @@ public class NoSymptomsIsolatingViewControllerScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return NoSymptomsIsolatingViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: 14 * 86400))
+            return NoSymptomsIsolatingViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: 14 * 86400), dateProvider: MockDateProvider())
         }
     }
 }

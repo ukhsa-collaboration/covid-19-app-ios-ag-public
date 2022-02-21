@@ -20,6 +20,7 @@ struct LinkVirologyTestResultHandler: RequestHandler {
         let diagnosisKeySubmissionSupported = dataProvider.keySubmissionSupported
         let diagnosisKeySubmissionToken = dataProvider.keySubmissionSupported ? UUID().uuidString : nil
         let requiresConfirmatoryTest = dataProvider.requiresConfirmatoryTest
+        let shouldOfferFollowUpTest = dataProvider.shouldOfferFollowUpTest
         
         let response = HTTPResponse.ok(with: .json(#"""
         {
@@ -29,7 +30,8 @@ struct LinkVirologyTestResultHandler: RequestHandler {
         \#(value(named: "diagnosisKeySubmissionToken", content: diagnosisKeySubmissionToken)),
         "diagnosisKeySubmissionSupported": \#(diagnosisKeySubmissionSupported),
         "requiresConfirmatoryTest": \#(requiresConfirmatoryTest),
-        \#(value(named: "confirmatoryDayLimit", content: confirmatoryDayLimit))
+        "shouldOfferFollowUpTest": \#(shouldOfferFollowUpTest),
+        \#(value(named: "confirmatoryDayLimit", content: confirmatoryDayLimit)),
         }
         """#))
         return Result.success(response)

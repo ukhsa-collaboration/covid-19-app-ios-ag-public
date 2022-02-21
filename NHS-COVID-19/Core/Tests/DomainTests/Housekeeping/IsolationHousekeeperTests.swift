@@ -105,7 +105,7 @@ class IsolationHousekeeperTests: XCTestCase {
         let housekeeper = createHouseKeeper(
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
-            isolationInfo: IsolationInfo(indexCaseInfo: IndexCaseInfo(symptomaticInfo: nil, testInfo: IndexCaseInfo.TestInfo(result: .negative, requiresConfirmatoryTest: false, receivedOnDay: GregorianDay(year: 2020, month: 7, day: 24), testEndDay: testEndDay)), contactCaseInfo: nil),
+            isolationInfo: IsolationInfo(indexCaseInfo: IndexCaseInfo(symptomaticInfo: nil, testInfo: IndexCaseInfo.TestInfo(result: .negative, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: GregorianDay(year: 2020, month: 7, day: 24), testEndDay: testEndDay)), contactCaseInfo: nil),
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet:
                 nil)
         )
@@ -119,7 +119,7 @@ class IsolationHousekeeperTests: XCTestCase {
         let housekeeper = createHouseKeeper(
             deletionPeriod: 14,
             today: GregorianDay(year: 2020, month: 7, day: 24),
-            isolationInfo: IsolationInfo(indexCaseInfo: IndexCaseInfo(symptomaticInfo: nil, testInfo: IndexCaseInfo.TestInfo(result: .negative, requiresConfirmatoryTest: false, receivedOnDay: GregorianDay(year: 2020, month: 7, day: 24), testEndDay: testEndDay)), contactCaseInfo: nil),
+            isolationInfo: IsolationInfo(indexCaseInfo: IndexCaseInfo(symptomaticInfo: nil, testInfo: IndexCaseInfo.TestInfo(result: .negative, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: GregorianDay(year: 2020, month: 7, day: 24), testEndDay: testEndDay)), contactCaseInfo: nil),
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet:
                 nil)
         )

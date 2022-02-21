@@ -163,7 +163,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedEndOfIsolation: true,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: onsetDay),
-                testInfo: IndexCaseInfo.TestInfo(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -241,7 +241,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedEndOfIsolation: true,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: onsetDay),
-                testInfo: IndexCaseInfo.TestInfo(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -304,7 +304,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedEndOfIsolation: true,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: nil,
-                testInfo: IndexCaseInfo.TestInfo(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: testReceivedDay, testEndDay: npexDay)
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: testReceivedDay, testEndDay: npexDay)
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -377,7 +377,7 @@ class IsolationStateStoreTests: XCTestCase {
                 symptomaticInfo: nil,
                 testInfo: IndexCaseInfo.TestInfo(
                     result: .positive,
-                    requiresConfirmatoryTest: true,
+                    requiresConfirmatoryTest: true, shouldOfferFollowUpTest: true,
                     receivedOnDay: testReceivedDay,
                     confirmedOnDay: completedOnDay,
                     completedOnDay: completedOnDay,
@@ -453,7 +453,7 @@ class IsolationStateStoreTests: XCTestCase {
                 symptomaticInfo: nil,
                 testInfo: IndexCaseInfo.TestInfo(
                     result: .positive,
-                    requiresConfirmatoryTest: true,
+                    requiresConfirmatoryTest: true, shouldOfferFollowUpTest: true,
                     receivedOnDay: testReceivedDay,
                     confirmedOnDay: completedOnDay,
                     completedOnDay: completedOnDay,
@@ -529,7 +529,7 @@ class IsolationStateStoreTests: XCTestCase {
                 symptomaticInfo: nil,
                 testInfo: IndexCaseInfo.TestInfo(
                     result: .positive,
-                    requiresConfirmatoryTest: true,
+                    requiresConfirmatoryTest: true, shouldOfferFollowUpTest: true,
                     receivedOnDay: testReceivedDay,
                     confirmedOnDay: nil,
                     completedOnDay: completedOnDay,
@@ -665,7 +665,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedEndOfIsolation: true,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: onsetDay),
-                testInfo: IndexCaseInfo.TestInfo(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -729,7 +729,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedEndOfIsolation: true,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: nil,
-                testInfo: IndexCaseInfo.TestInfo(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: testReceivedDay, testEndDay: npexDay)
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: testReceivedDay, testEndDay: npexDay)
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -801,7 +801,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedEndOfIsolation: true,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: onsetDay),
-                testInfo: IndexCaseInfo.TestInfo(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -823,7 +823,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: onsetDay),
-                testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .labResult, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -855,7 +855,7 @@ class IsolationStateStoreTests: XCTestCase {
         
         store.set(IndexCaseInfo(
             symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: onsetDay),
-            testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
+            testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .labResult, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
         ))
         
         let providedOnsetDate = try XCTUnwrap(store.provideSymptomsOnsetDate())
@@ -870,7 +870,7 @@ class IsolationStateStoreTests: XCTestCase {
         
         store.set(IndexCaseInfo(
             symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
-            testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
+            testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .labResult, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: testReceivedDay, testEndDay: nil)
         ))
         
         let providedOnsetDate = try XCTUnwrap(store.provideSymptomsOnsetDate())
@@ -926,6 +926,7 @@ class IsolationStateStoreTests: XCTestCase {
             for: .positive,
             testKitType: .labResult,
             requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false,
             receivedOn: testDay,
             npexDay: npexDay,
             operation: .update
@@ -957,6 +958,7 @@ class IsolationStateStoreTests: XCTestCase {
             for: .positive,
             testKitType: .labResult,
             requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false,
             receivedOn: testDay,
             npexDay: npexDay,
             operation: .update
@@ -985,6 +987,7 @@ class IsolationStateStoreTests: XCTestCase {
             for: .void,
             testKitType: .labResult,
             requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false,
             receivedOn: testDay,
             npexDay: testDay.advanced(by: -2),
             operation: .nothing
@@ -1004,7 +1007,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: nil,
-                testInfo: IndexCaseInfo.TestInfo(result: .negative, testKitType: .labResult, requiresConfirmatoryTest: false, receivedOnDay: testDay.advanced(by: -4), testEndDay: testEndDay)
+                testInfo: IndexCaseInfo.TestInfo(result: .negative, testKitType: .labResult, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: testDay.advanced(by: -4), testEndDay: testEndDay)
             ),
             contactCaseInfo: nil
         )
@@ -1015,6 +1018,7 @@ class IsolationStateStoreTests: XCTestCase {
             for: .positive,
             testKitType: .labResult,
             requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false,
             receivedOn: testDay,
             npexDay: testDay.advanced(by: -2),
             operation: .overwrite
@@ -1043,6 +1047,7 @@ class IsolationStateStoreTests: XCTestCase {
             for: .positive,
             testKitType: .labResult,
             requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false,
             receivedOn: testDay,
             npexDay: testDay.advanced(by: -2),
             operation: .update
@@ -1065,7 +1070,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: nil,
-                testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: testDay.advanced(by: -4), testEndDay: testDay)
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, shouldOfferFollowUpTest: true, receivedOnDay: testDay.advanced(by: -4), testEndDay: testDay)
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -1078,7 +1083,7 @@ class IsolationStateStoreTests: XCTestCase {
             from: isolationInfo,
             for: .positive,
             testKitType: .labResult,
-            requiresConfirmatoryTest: false,
+            requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false,
             receivedOn: testDay,
             npexDay: npexDayConfirmed,
             operation: .confirm
@@ -1103,7 +1108,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: nil,
-                testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: testDay.advanced(by: -4), testEndDay: testDay)
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, shouldOfferFollowUpTest: true, receivedOnDay: testDay.advanced(by: -4), testEndDay: testDay)
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -1116,7 +1121,7 @@ class IsolationStateStoreTests: XCTestCase {
             from: isolationInfo,
             for: .negative,
             testKitType: .labResult,
-            requiresConfirmatoryTest: false,
+            requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false,
             receivedOn: testDay,
             npexDay: npexDayCompleted,
             operation: .complete
@@ -1151,7 +1156,7 @@ class IsolationStateStoreTests: XCTestCase {
             from: isolationInfo,
             for: .positive,
             testKitType: .labResult,
-            requiresConfirmatoryTest: false,
+            requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false,
             receivedOn: testDay,
             npexDay: npexDayConfirmed,
             operation: .ignore
@@ -1174,7 +1179,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: nil,
-                testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: npexDay, testEndDay: npexDay)
+                testInfo: .init(result: .positive, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: npexDay, testEndDay: npexDay)
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -1187,7 +1192,7 @@ class IsolationStateStoreTests: XCTestCase {
             from: isolationInfo,
             for: .positive,
             testKitType: .labResult,
-            requiresConfirmatoryTest: false,
+            requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false,
             receivedOn: testDay,
             npexDay: newNpexDay,
             operation: .overwriteAndConfirm
@@ -1226,7 +1231,7 @@ class IsolationStateStoreTests: XCTestCase {
             from: isolationInfo,
             for: .positive,
             testKitType: .labResult,
-            requiresConfirmatoryTest: false,
+            requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false,
             receivedOn: testDay,
             npexDay: npexDay,
             operation: .updateAndConfirm
@@ -1251,7 +1256,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
-                testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: npexDay, testEndDay: npexDay)
+                testInfo: .init(result: .positive, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: npexDay, testEndDay: npexDay)
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -1264,7 +1269,7 @@ class IsolationStateStoreTests: XCTestCase {
             from: isolationInfo,
             for: .positive,
             testKitType: .labResult,
-            requiresConfirmatoryTest: false,
+            requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false,
             receivedOn: testDay,
             npexDay: npexDay,
             operation: .deleteSymptoms
@@ -1287,7 +1292,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
-                testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: npexDay, testEndDay: npexDay)
+                testInfo: .init(result: .positive, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: npexDay, testEndDay: npexDay)
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -1300,7 +1305,7 @@ class IsolationStateStoreTests: XCTestCase {
             from: isolationInfo,
             for: .positive,
             testKitType: .labResult,
-            requiresConfirmatoryTest: false,
+            requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false,
             receivedOn: testDay,
             npexDay: npexDay,
             operation: .deleteTest
@@ -1323,7 +1328,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
-                testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, receivedOnDay: testDay.advanced(by: -4), testEndDay: testDay)
+                testInfo: IndexCaseInfo.TestInfo(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, shouldOfferFollowUpTest: true, receivedOnDay: testDay.advanced(by: -4), testEndDay: testDay)
             ),
             contactCaseInfo: ContactCaseInfo(
                 exposureDay: exposureDay,
@@ -1336,7 +1341,7 @@ class IsolationStateStoreTests: XCTestCase {
             from: isolationInfo,
             for: .negative,
             testKitType: .labResult,
-            requiresConfirmatoryTest: false,
+            requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false,
             receivedOn: testDay,
             npexDay: npexDayCompleted,
             operation: .completeAndDeleteSymptoms
@@ -1362,7 +1367,7 @@ class IsolationStateStoreTests: XCTestCase {
             hasAcknowledgedStartOfContactIsolation: false,
             indexCaseInfo: IndexCaseInfo(
                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
-                testInfo: IndexCaseInfo.TestInfo(result: .negative, requiresConfirmatoryTest: false, receivedOnDay: negativeTestEndDay, testEndDay: negativeTestEndDay)
+                testInfo: IndexCaseInfo.TestInfo(result: .negative, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: negativeTestEndDay, testEndDay: negativeTestEndDay)
             ),
             contactCaseInfo: nil
         )
@@ -1372,7 +1377,7 @@ class IsolationStateStoreTests: XCTestCase {
             from: isolationInfo,
             for: .positive,
             testKitType: .rapidResult,
-            requiresConfirmatoryTest: true,
+            requiresConfirmatoryTest: true, shouldOfferFollowUpTest: true,
             receivedOn: negativeTestEndDay,
             npexDay: positiveTestEndDay,
             operation: .overwriteAndComplete

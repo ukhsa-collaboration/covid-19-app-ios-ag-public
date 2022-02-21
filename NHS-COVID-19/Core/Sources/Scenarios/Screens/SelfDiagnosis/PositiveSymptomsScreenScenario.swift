@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Domain
@@ -19,7 +19,7 @@ public class PositiveSymptomsScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return PositiveSymptomsViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: 7 * 86400))
+            return PositiveSymptomsViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: 7 * 86400), currentDateProvider: MockDateProvider())
         }
     }
 }

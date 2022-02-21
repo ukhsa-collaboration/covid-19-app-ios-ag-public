@@ -38,7 +38,7 @@ class IndexCaseInfoTests: XCTestCase {
         
         let info = IndexCaseInfo(
             symptomaticInfo: nil,
-            testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
+            testInfo: .init(result: .positive, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
         )
         
         let expectedOnsetDay = manualTestEntryDay
@@ -52,7 +52,7 @@ class IndexCaseInfoTests: XCTestCase {
         
         let info = IndexCaseInfo(
             symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: onsetDay, onsetDay: onsetDay),
-            testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
+            testInfo: .init(result: .positive, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
         )
         
         let expectedOnsetDay = manualTestEntryDay
@@ -65,7 +65,7 @@ class IndexCaseInfoTests: XCTestCase {
         
         let info = IndexCaseInfo(
             symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
-            testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
+            testInfo: .init(result: .positive, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
         )
         
         let expectedOnsetDay = manualTestEntryDay
@@ -78,7 +78,7 @@ class IndexCaseInfoTests: XCTestCase {
         
         let info = IndexCaseInfo(
             symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: onsetDay, onsetDay: onsetDay),
-            testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
+            testInfo: .init(result: .positive, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
         )
         
         XCTAssertEqual(info.assumedOnsetDayForExposureKeys, onsetDay)
@@ -90,7 +90,7 @@ class IndexCaseInfoTests: XCTestCase {
         
         let info = IndexCaseInfo(
             symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: nil),
-            testInfo: .init(result: .positive, requiresConfirmatoryTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
+            testInfo: .init(result: .positive, requiresConfirmatoryTest: false, shouldOfferFollowUpTest: false, receivedOnDay: manualTestEntryDay, testEndDay: manualTestEntryDay)
         )
         
         let expectedOnsetDay = selfDiagnosisDay.advanced(by: -2)

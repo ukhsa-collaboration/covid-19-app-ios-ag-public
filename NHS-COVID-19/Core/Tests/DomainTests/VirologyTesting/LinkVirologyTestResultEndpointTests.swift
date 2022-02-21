@@ -39,7 +39,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testKit" : "RAPID_RESULT",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
             "diagnosisKeySubmissionSupported" : true,
-            "requiresConfirmatoryTest": false
+            "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false
         }
         """#))
         
@@ -52,7 +53,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
                 endDate: try XCTUnwrap(formatter.date(from: date))
             ),
             diagnosisKeySubmissionSupport: .supported(diagnosisKeySubmissionToken: submissionToken),
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let parsedResponse = try endpoint.parse(actualResponse)
@@ -71,7 +73,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testKit" : "RAPID_RESULT",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
             "diagnosisKeySubmissionSupported" : true,
-            "requiresConfirmatoryTest": true
+            "requiresConfirmatoryTest": true,
+            "shouldOfferFollowUpTest": true
         }
         """#))
         
@@ -88,7 +91,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
                 ).date!
             ),
             diagnosisKeySubmissionSupport: .supported(diagnosisKeySubmissionToken: submissionToken),
-            requiresConfirmatoryTest: true
+            requiresConfirmatoryTest: true,
+            shouldOfferFollowUpTest: true
         )
         
         TS.assert(try endpoint.parse(actualResponse), equals: expectedResponse)
@@ -105,7 +109,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testKit" : "LAB_RESULT",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
             "diagnosisKeySubmissionSupported" : false,
-            "requiresConfirmatoryTest": true
+            "requiresConfirmatoryTest": true,
+            "shouldOfferFollowUpTest": true
         }
         """#))
         
@@ -123,7 +128,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testKit" : "LAB_RESULT",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
             "diagnosisKeySubmissionSupported" : false,
-            "requiresConfirmatoryTest": false
+            "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false
         }
         """#))
         
@@ -141,7 +147,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testKit" : "LAB_RESULT",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
             "diagnosisKeySubmissionSupported" : false,
-            "requiresConfirmatoryTest": true
+            "requiresConfirmatoryTest": true,
+            "shouldOfferFollowUpTest": true
         }
         """#))
         
@@ -159,7 +166,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testKit" : "LAB_RESULT",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)",
             "diagnosisKeySubmissionSupported" : false,
-            "requiresConfirmatoryTest": false
+            "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false
         }
         """#))
         
@@ -183,7 +191,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testKit" : "RAPID_RESULT",
             "diagnosisKeySubmissionToken": null,
             "diagnosisKeySubmissionSupported" : false,
-            "requiresConfirmatoryTest": true
+            "requiresConfirmatoryTest": true,
+            "shouldOfferFollowUpTest": true
         }
         """#))
         
@@ -196,7 +205,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
                 endDate: try XCTUnwrap(formatter.date(from: date))
             ),
             diagnosisKeySubmissionSupport: .notSupported,
-            requiresConfirmatoryTest: true
+            requiresConfirmatoryTest: true,
+            shouldOfferFollowUpTest: true
         )
         
         let parsedResponse = try endpoint.parse(actualResponse)
@@ -214,7 +224,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testKit" : "Invalid",
             "diagnosisKeySubmissionToken": null,
             "diagnosisKeySubmissionSupported" : false,
-            "requiresConfirmatoryTest": true
+            "requiresConfirmatoryTest": true,
+            "shouldOfferFollowUpTest": true
         }
         """#))
         XCTAssertThrowsError(try endpoint.parse(actualResponse))
@@ -230,7 +241,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testKit" : "RAPID_RESULT",
             "diagnosisKeySubmissionToken": null,
             "diagnosisKeySubmissionSupported" : false,
-            "requiresConfirmatoryTest": false
+            "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false
         }
         """#))
         
@@ -247,7 +259,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testKit" : "RAPID_RESULT",
             "diagnosisKeySubmissionToken": null,
             "diagnosisKeySubmissionSupported" : false,
-            "requiresConfirmatoryTest": true
+            "requiresConfirmatoryTest": true,
+            "shouldOfferFollowUpTest": true
         }
         """#))
         
@@ -264,7 +277,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "testKit" : "RAPID_RESULT",
             "diagnosisKeySubmissionToken": null,
             "diagnosisKeySubmissionSupported" : false,
-            "requiresConfirmatoryTest": true
+            "requiresConfirmatoryTest": true,
+            "shouldOfferFollowUpTest": true
         }
         """#))
         

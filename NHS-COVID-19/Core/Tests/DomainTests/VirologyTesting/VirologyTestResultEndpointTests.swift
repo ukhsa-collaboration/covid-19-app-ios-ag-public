@@ -30,7 +30,8 @@ class VirologyTestResultEndpointTests: XCTestCase {
             "testResult": "POSITIVE",
             "testKit": "LAB_RESULT",
             "diagnosisKeySubmissionSupported": true,
-            "requiresConfirmatoryTest": false
+            "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false
         }
         """#))
         
@@ -40,7 +41,8 @@ class VirologyTestResultEndpointTests: XCTestCase {
             PollVirologyTestResultResponse(
                 virologyTestResult: VirologyTestResult(testResult: .positive, testKitType: .labResult, endDate: try XCTUnwrap(formatter.date(from: date))),
                 diagnosisKeySubmissionSupport: true,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             )
         )
         
@@ -57,7 +59,8 @@ class VirologyTestResultEndpointTests: XCTestCase {
             "testResult": "NEGATIVE",
             "testKit": "LAB_RESULT",
             "diagnosisKeySubmissionSupported": true,
-            "requiresConfirmatoryTest": false
+            "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false
         }
         """#))
         
@@ -67,7 +70,8 @@ class VirologyTestResultEndpointTests: XCTestCase {
             PollVirologyTestResultResponse(
                 virologyTestResult: VirologyTestResult(testResult: .negative, testKitType: .labResult, endDate: try XCTUnwrap(formatter.date(from: date))),
                 diagnosisKeySubmissionSupport: true,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             )
         )
         
@@ -84,7 +88,8 @@ class VirologyTestResultEndpointTests: XCTestCase {
             "testResult": "VOID",
             "testKit": "LAB_RESULT",
             "diagnosisKeySubmissionSupported": true,
-            "requiresConfirmatoryTest": false
+            "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false
         }
         """#))
         
@@ -94,7 +99,8 @@ class VirologyTestResultEndpointTests: XCTestCase {
             PollVirologyTestResultResponse(
                 virologyTestResult: VirologyTestResult(testResult: .void, testKitType: .labResult, endDate: try XCTUnwrap(formatter.date(from: date))),
                 diagnosisKeySubmissionSupport: true,
-                requiresConfirmatoryTest: false
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
             )
         )
         
@@ -119,7 +125,8 @@ class VirologyTestResultEndpointTests: XCTestCase {
             "testResult": "NEGATIVE",
             "testKit": "RAPID_RESULT",
             "diagnosisKeySubmissionSupported": true,
-            "requiresConfirmatoryTest": true
+            "requiresConfirmatoryTest": true,
+            "shouldOfferFollowUpTest": true
         }
         """#))
         
@@ -134,7 +141,8 @@ class VirologyTestResultEndpointTests: XCTestCase {
             "testResult": "VOID",
             "testKit": "RAPID_SELF_REPORTED",
             "diagnosisKeySubmissionSupported": true,
-            "requiresConfirmatoryTest": false
+            "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false
         }
         """#))
         
@@ -151,7 +159,8 @@ class VirologyTestResultEndpointTests: XCTestCase {
             "testResult": "POSITIVE",
             "testKit": "RAPID_RESULT",
             "diagnosisKeySubmissionSupported": true,
-            "requiresConfirmatoryTest": true
+            "requiresConfirmatoryTest": true,
+            "shouldOfferFollowUpTest": true
         }
         """#))
         
@@ -167,7 +176,8 @@ class VirologyTestResultEndpointTests: XCTestCase {
                     try XCTUnwrap(formatter.date(from: date))
                 ),
                 diagnosisKeySubmissionSupport: true,
-                requiresConfirmatoryTest: true
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: true
             ))
         
         TS.assert(try endpoint.parse(response), equals: expectedResponse)

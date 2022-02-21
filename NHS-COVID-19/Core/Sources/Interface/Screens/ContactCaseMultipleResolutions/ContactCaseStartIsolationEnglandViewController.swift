@@ -20,8 +20,9 @@ extension ContactCaseStartIsolationEnglandViewController {
         init(interactor: Interacting,
              isolationEndDate: Date,
              exposureDate: Date,
-             isolationPeriod: DayDuration) {
-            let duration = LocalDay.today.daysRemaining(until: isolationEndDate)
+             isolationPeriod: DayDuration,
+             currentDateProvider: DateProviding) {
+            let duration = currentDateProvider.currentLocalDay.daysRemaining(until: isolationEndDate)
             
             let pleaseIsolateStack =
                 UIStackView(arrangedSubviews: [
@@ -75,13 +76,15 @@ public class ContactCaseStartIsolationEnglandViewController: ScrollingContentVie
                 isolationEndDate: Date,
                 exposureDate: Date,
                 isolationPeriod: DayDuration,
-                shouldShowCancel: Bool = true) {
+                shouldShowCancel: Bool = true,
+                currentDateProvider: DateProviding) {
         self.interactor = interactor
         super.init(views: Content(
             interactor: interactor,
             isolationEndDate: isolationEndDate,
             exposureDate: exposureDate,
-            isolationPeriod: isolationPeriod
+            isolationPeriod: isolationPeriod,
+            currentDateProvider: currentDateProvider
         ).views)
         if shouldShowCancel {
             navigationItem.leftBarButtonItem = UIBarButtonItem(
@@ -114,8 +117,10 @@ extension ContactCaseStartIsolationWalesViewController {
              isolationEndDate: Date,
              exposureDate: Date,
              secondTestAdviceDate: Date?,
-             isolationPeriod: DayDuration) {
-            let duration = LocalDay.today.daysRemaining(until: isolationEndDate)
+             isolationPeriod: DayDuration,
+             currentDateProvider: DateProviding) {
+            
+            let duration = currentDateProvider.currentLocalDay.daysRemaining(until: isolationEndDate)
             
             let pleaseIsolateStack =
                 UIStackView(arrangedSubviews: [
@@ -185,14 +190,16 @@ public class ContactCaseStartIsolationWalesViewController: ScrollingContentViewC
                 exposureDate: Date,
                 secondTestAdviceDate: Date?,
                 isolationPeriod: DayDuration,
-                shouldShowCancel: Bool = true) {
+                shouldShowCancel: Bool = true,
+                currentDateProvider: DateProviding) {
         self.interactor = interactor
         super.init(views: Content(
             interactor: interactor,
             isolationEndDate: isolationEndDate,
             exposureDate: exposureDate,
             secondTestAdviceDate: secondTestAdviceDate,
-            isolationPeriod: isolationPeriod
+            isolationPeriod: isolationPeriod,
+            currentDateProvider: currentDateProvider
         ).views)
         if shouldShowCancel {
             navigationItem.leftBarButtonItem = UIBarButtonItem(

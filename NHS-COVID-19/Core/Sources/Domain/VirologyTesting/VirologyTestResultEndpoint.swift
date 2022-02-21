@@ -37,6 +37,10 @@ struct VirologyTestResultEndpoint: HTTPEndpoint {
                 throw VirologyTestResultResponseError.lfdVoidOrNegative
             }
             
+            if !payload.requiresConfirmatoryTest, payload.shouldOfferFollowUpTest {
+                throw VirologyTestResultResponseError.confirmedTestOfferingFollowUpTest
+            }
+            
             return .receivedResult(
                 PollVirologyTestResultResponse(
                     virologyTestResult: VirologyTestResult(
@@ -46,6 +50,7 @@ struct VirologyTestResultEndpoint: HTTPEndpoint {
                     ),
                     diagnosisKeySubmissionSupport: payload.diagnosisKeySubmissionSupported,
                     requiresConfirmatoryTest: payload.requiresConfirmatoryTest,
+                    shouldOfferFollowUpTest: payload.shouldOfferFollowUpTest,
                     confirmatoryDayLimit: payload.confirmatoryDayLimit
                 )
             )
@@ -92,6 +97,7 @@ private struct ResponseBody: Codable {
     var testKit: TestKitType
     var diagnosisKeySubmissionSupported: Bool
     var requiresConfirmatoryTest: Bool
+    var shouldOfferFollowUpTest: Bool
     var confirmatoryDayLimit: Int?
 }
 

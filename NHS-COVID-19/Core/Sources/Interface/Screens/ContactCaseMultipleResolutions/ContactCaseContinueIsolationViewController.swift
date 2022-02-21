@@ -16,8 +16,8 @@ extension ContactCaseContinueIsolationViewController {
     private struct Content {
         let views: [StackViewContentProvider]
         
-        init(interactor: Interacting, secondTestAdviceDate: Date?, isolationEndDate: Date) {
-            let duration = LocalDay.today.daysRemaining(until: isolationEndDate)
+        init(interactor: Interacting, secondTestAdviceDate: Date?, isolationEndDate: Date, currentDateProvider: DateProviding) {
+            let duration = currentDateProvider.currentLocalDay.daysRemaining(until: isolationEndDate)
             
             let pleaseIsolateStack =
                 UIStackView(arrangedSubviews: [
@@ -74,9 +74,9 @@ public class ContactCaseContinueIsolationViewController: ScrollingContentViewCon
     public typealias Interacting = ContactCaseContinueIsolationInteracting
     private let interactor: Interacting
     
-    public init(interactor: Interacting, secondTestAdviceDate: Date?, isolationEndDate: Date) {
+    public init(interactor: Interacting, secondTestAdviceDate: Date?, isolationEndDate: Date, currentDateProvider: DateProviding) {
         self.interactor = interactor
-        super.init(views: Content(interactor: interactor, secondTestAdviceDate: secondTestAdviceDate, isolationEndDate: isolationEndDate).views)
+        super.init(views: Content(interactor: interactor, secondTestAdviceDate: secondTestAdviceDate, isolationEndDate: isolationEndDate, currentDateProvider: currentDateProvider).views)
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             title: localize(.cancel),
             style: .done, target: self,

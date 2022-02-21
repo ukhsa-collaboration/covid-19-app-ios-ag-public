@@ -16,8 +16,8 @@ public protocol PositiveSymptomsViewControllerInteracting {
 extension PositiveSymptomsViewController {
     private class Content: PrimaryButtonStickyFooterScrollingContent {
         
-        init(interactor: Interacting, isolationEndDate: Date) {
-            let daysToIsolate = LocalDay.today.daysRemaining(until: isolationEndDate)
+        init(interactor: Interacting, isolationEndDate: Date, currentDateProvider: DateProviding) {
+            let daysToIsolate = currentDateProvider.currentLocalDay.daysRemaining(until: isolationEndDate)
             
             let headingStack = UIStackView(
                 content: BasicContent(
@@ -79,9 +79,9 @@ public class PositiveSymptomsViewController: StickyFooterScrollingContentViewCon
     public typealias Interacting = PositiveSymptomsViewControllerInteracting
     private let interactor: Interacting
     
-    public init(interactor: Interacting, isolationEndDate: Date) {
+    public init(interactor: Interacting, isolationEndDate: Date, currentDateProvider: DateProviding) {
         self.interactor = interactor
-        super.init(content: Content(interactor: interactor, isolationEndDate: isolationEndDate))
+        super.init(content: Content(interactor: interactor, isolationEndDate: isolationEndDate, currentDateProvider: currentDateProvider))
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             title: localize(.cancel),
             style: .done, target: self,

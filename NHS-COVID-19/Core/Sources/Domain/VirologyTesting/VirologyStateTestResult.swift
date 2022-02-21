@@ -11,6 +11,7 @@ struct VirologyStateTestResult {
     var endDate: Date
     var diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?
     var requiresConfirmatoryTest: Bool
+    var shouldOfferFollowUpTest: Bool
     var confirmatoryDayLimit: Int?
 }
 

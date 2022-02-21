@@ -21,7 +21,7 @@ public class ContactCaseContinueIsolationScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return ContactCaseContinueIsolationViewController(interactor: interactor, secondTestAdviceDate: nil, isolationEndDate: Date(timeIntervalSinceNow: Double(Self.numberOfDays) * 86400))
+            return ContactCaseContinueIsolationViewController(interactor: interactor, secondTestAdviceDate: nil, isolationEndDate: Date(timeIntervalSinceNow: Double(Self.numberOfDays) * 86400), currentDateProvider: MockDateProvider())
         }
     }
 }

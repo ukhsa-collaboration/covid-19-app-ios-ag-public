@@ -138,7 +138,8 @@ class VirologyTestingStateStoreTests: XCTestCase {
         virologyTestingStateStore.saveResult(
             virologyTestResult: virologyTestResult,
             diagnosisKeySubmissionToken: submissionToken,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let savedResult = try XCTUnwrap(virologyTestingStateStore.virologyTestResult.currentValue)
@@ -161,7 +162,8 @@ class VirologyTestingStateStoreTests: XCTestCase {
         virologyTestingStateStore.saveResult(
             virologyTestResult: virologyTestResult,
             diagnosisKeySubmissionToken: submissionToken,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let savedResult = try XCTUnwrap(virologyTestingStateStore.virologyTestResult.currentValue)
@@ -184,7 +186,8 @@ class VirologyTestingStateStoreTests: XCTestCase {
         virologyTestingStateStore.saveResult(
             virologyTestResult: virologyTestResult,
             diagnosisKeySubmissionToken: submissionToken,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let savedResult = try XCTUnwrap(virologyTestingStateStore.virologyTestResult.currentValue)
@@ -205,7 +208,8 @@ class VirologyTestingStateStoreTests: XCTestCase {
         virologyTestingStateStore.saveResult(
             virologyTestResult: voidTestResult,
             diagnosisKeySubmissionToken: voidSubmissionToken,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let positiveTestResult = VirologyTestResult(
@@ -217,7 +221,8 @@ class VirologyTestingStateStoreTests: XCTestCase {
         virologyTestingStateStore.saveResult(
             virologyTestResult: positiveTestResult,
             diagnosisKeySubmissionToken: positiveSubmissionToken,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let negativeTestResult = VirologyTestResult(
@@ -229,7 +234,8 @@ class VirologyTestingStateStoreTests: XCTestCase {
         virologyTestingStateStore.saveResult(
             virologyTestResult: negativeTestResult,
             diagnosisKeySubmissionToken: negativeSubmissionToken,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let firstResult = try XCTUnwrap(virologyTestingStateStore.virologyTestResult.currentValue)
@@ -267,7 +273,8 @@ class VirologyTestingStateStoreTests: XCTestCase {
         virologyTestingStateStore.saveResult(
             virologyTestResult: virologyTestResult,
             diagnosisKeySubmissionToken: submissionToken,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let publishedResult = try virologyTestingStateStore.virologyTestResult.await().get()
@@ -289,7 +296,8 @@ class VirologyTestingStateStoreTests: XCTestCase {
         virologyTestingStateStore.saveResult(
             virologyTestResult: virologyTestResult,
             diagnosisKeySubmissionToken: submissionToken,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let nextTestResult = VirologyTestResult(
@@ -300,7 +308,8 @@ class VirologyTestingStateStoreTests: XCTestCase {
         virologyTestingStateStore.saveResult(
             virologyTestResult: nextTestResult,
             diagnosisKeySubmissionToken: nil,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let publishedResult = try virologyTestingStateStore.virologyTestResult.await().get()
@@ -377,7 +386,8 @@ class VirologyTestingStateStoreTests: XCTestCase {
         virologyTestingStateStore.saveResult(
             virologyTestResult: virologyTestResult,
             diagnosisKeySubmissionToken: submissionToken,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         
         let result = VirologyStateTestResult(
@@ -385,7 +395,8 @@ class VirologyTestingStateStoreTests: XCTestCase {
             testKitType: virologyTestResult.testKitType,
             endDate: virologyTestResult.endDate,
             diagnosisKeySubmissionToken: submissionToken,
-            requiresConfirmatoryTest: false
+            requiresConfirmatoryTest: false,
+            shouldOfferFollowUpTest: false
         )
         virologyTestingStateStore.remove(testResult: result)
         

@@ -19,11 +19,7 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
     typealias Interacting = NonNegativeTestResultWithIsolationViewControllerInteracting
     typealias TestResultType = NonNegativeTestResultWithIsolationViewController.TestResultType
     
-    static func daysRemaining(_ isolationEndDate: Date) -> Int {
-        LocalDay.today.daysRemaining(until: isolationEndDate)
-    }
-    
-    init(interactor: Interacting, isolationEndDate: Date, testResultType: TestResultType) {
+    init(interactor: Interacting, isolationEndDate: Date, testResultType: TestResultType, currentDateProvider: DateProviding) {
         let informationBox: InformationBox = {
             if case .positive(_, true) = testResultType {
                 return InformationBox.indication.warning(testResultType.infoText)
@@ -53,7 +49,7 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
                             .centralized(),
                         BaseLabel()
                             .styleAsPageHeader()
-                            .set(text: localize(.positive_symptoms_days(days: Self.daysRemaining(isolationEndDate))))
+                            .set(text: localize(.positive_symptoms_days(days: currentDateProvider.currentLocalDay.daysRemaining(until: isolationEndDate))))
                             .isAccessibilityElement(false)
                             .centralized(),
                         BaseLabel()
@@ -68,7 +64,7 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
                 ))
                     .accessibilityTraits([.staticText, .header])
                     .isAccessibilityElement(true)
-                    .accessibilityLabel(testResultType.titleAccessibilityLabel(daysRemaining: Self.daysRemaining(isolationEndDate))),
+                    .accessibilityLabel(testResultType.titleAccessibilityLabel(daysRemaining: currentDateProvider.currentLocalDay.daysRemaining(until: isolationEndDate))),
                 informationBox,
                 testResultType.explanationText.map {
                     BaseLabel().styleAsSecondaryBody().set(text: $0)
@@ -108,13 +104,14 @@ public class NonNegativeTestResultWithIsolationViewController: StickyFooterScrol
     
     private let interactor: Interacting
     
-    public init(interactor: Interacting, isolationEndDate: Date, testResultType: TestResultType) {
+    public init(interactor: Interacting, isolationEndDate: Date, testResultType: TestResultType, currentDateProvider: DateProviding) {
         self.interactor = interactor
         
         let content = NonNegativeTestResultWithIsolationContent(
             interactor: interactor,
             isolationEndDate: isolationEndDate,
-            testResultType: testResultType
+            testResultType: testResultType,
+            currentDateProvider: currentDateProvider
         )
         
         super.init(content: content)

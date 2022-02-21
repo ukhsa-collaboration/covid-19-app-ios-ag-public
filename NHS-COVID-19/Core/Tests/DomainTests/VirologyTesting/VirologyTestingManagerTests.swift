@@ -86,7 +86,8 @@ class VirologyTestingManagerTests: XCTestCase {
             "testResult": "POSITIVE",
             "testKit": "LAB_RESULT",
             "diagnosisKeySubmissionSupported": true,
-            "requiresConfirmatoryTest": false
+            "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false
         }
         """#))
         
@@ -125,7 +126,8 @@ class VirologyTestingManagerTests: XCTestCase {
             "testResult": "POSITIVE",
             "testKit": "LAB_RESULT",
             "diagnosisKeySubmissionSupported": true,
-            "requiresConfirmatoryTest": false
+            "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false
         }
         """#))
         
@@ -150,7 +152,8 @@ class VirologyTestingManagerTests: XCTestCase {
             "testResult": "NEGATIVE",
             "testKit": "LAB_RESULT",
             "diagnosisKeySubmissionSupported": true,
-            "requiresConfirmatoryTest": false
+            "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false
         }
         """#))
         
@@ -175,7 +178,8 @@ class VirologyTestingManagerTests: XCTestCase {
             "testResult": "VOID",
             "testKit": "LAB_RESULT",
             "diagnosisKeySubmissionSupported": true,
-            "requiresConfirmatoryTest": false
+            "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false
         }
         """#))
         
@@ -200,7 +204,8 @@ class VirologyTestingManagerTests: XCTestCase {
             "testResult": "UNKNOWN_TEST_RESULT_TYPE",
             "testKit": "LAB_RESULT",
             "diagnosisKeySubmissionSupported": true,
-            "requiresConfirmatoryTest": false
+            "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false
         }
         """#))
         
@@ -226,6 +231,7 @@ class VirologyTestingManagerTests: XCTestCase {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
             "diagnosisKeySubmissionSupported": true,
             "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false,
             "testKit": "LAB_RESULT",
             "testResult": "UNKNOWN_TEST_RESULT_TYPE",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)"
@@ -257,6 +263,7 @@ class VirologyTestingManagerTests: XCTestCase {
             "testEndDate": "2020-04-23T00:00:00.0000000Z",
             "diagnosisKeySubmissionSupported": true,
             "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false,
             "testKit": "LAB_RESULT",
             "testResult": "POSITIVE",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)"
@@ -280,6 +287,7 @@ class VirologyTestingManagerTests: XCTestCase {
             "testResult": "NEGATIVE",
             "diagnosisKeySubmissionSupported": false,
             "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false,
             "testKit": "LAB_RESULT",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)"
         }
@@ -302,6 +310,7 @@ class VirologyTestingManagerTests: XCTestCase {
             "testResult": "VOID",
             "diagnosisKeySubmissionSupported": false,
             "requiresConfirmatoryTest": false,
+            "shouldOfferFollowUpTest": false,
             "testKit": "LAB_RESULT",
             "diagnosisKeySubmissionToken": "\#(submissionToken.value)"
         }

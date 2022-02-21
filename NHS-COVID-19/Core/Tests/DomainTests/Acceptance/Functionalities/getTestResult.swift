@@ -17,6 +17,7 @@ func getTestResult(result: VirologyTestResult.TestResult,
     {
         "diagnosisKeySubmissionToken": "6B162698-ADC5-47AF-8790-71ACF770FFAF",
         "requiresConfirmatoryTest": \(requiresConfirmatoryTest),
+        "shouldOfferFollowUpTest": \(requiresConfirmatoryTest),
         "testEndDate": "\(timestamp)",
         "testResult": "\(String(from: result))",
         "testKit": "\(String(from: testKitType))",

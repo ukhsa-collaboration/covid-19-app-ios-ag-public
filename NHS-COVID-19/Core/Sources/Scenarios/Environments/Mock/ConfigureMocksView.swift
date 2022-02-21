@@ -154,6 +154,7 @@ struct ConfigureMocksView: View {
                             step: 1
                         )
                         TextFieldRow(label: "Confirmatory day limit", text: $dataProvider.confirmatoryDayLimitString)
+                        Toggle("Should offer follow-up test", isOn: $dataProvider.shouldOfferFollowUpTest)
                         Picker(selection: $dataProvider.receivedTestResult, label: Text("Result")) {
                             ForEach(0 ..< MockDataProvider.testResults.count) {
                                 Text(verbatim: MockDataProvider.testResults[$0])

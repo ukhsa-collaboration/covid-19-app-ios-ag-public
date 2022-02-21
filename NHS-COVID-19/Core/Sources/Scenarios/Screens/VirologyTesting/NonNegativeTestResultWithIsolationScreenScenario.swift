@@ -35,7 +35,7 @@ extension NonNegativeTestResultWithIsolationScreenScenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent, buttonAlertText: primaryButtonTapped, cancelTappedAlertText: nil, onlineServicesTappedText: Self.onlineServicesLinkTapped, exposureFAQTappedText: Self.exposureFAQLinkTapped, nhsGuidanceTappedText: Self.nhsGuidanceLinkTapped)
-            return NonNegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: Double(daysToIsolate) * 86400), testResultType: Self.testResultType)
+            return NonNegativeTestResultWithIsolationViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: Double(daysToIsolate) * 86400), testResultType: Self.testResultType, currentDateProvider: MockDateProvider())
         }
     }
 }

@@ -15,8 +15,8 @@ public protocol NegativeTestResultWithIsolationViewControllerInteracting {
 
 extension NegativeTestResultWithIsolationViewController {
     private class Content: PrimaryButtonStickyFooterScrollingContent {
-        init(interactor: Interacting, viewModel: ViewModel) {
-            let daysToIsolate = LocalDay.today.daysRemaining(until: viewModel.isolationEndDate)
+        init(interactor: Interacting, viewModel: ViewModel, currentDateProvider: DateProviding) {
+            let daysToIsolate = currentDateProvider.currentLocalDay.daysRemaining(until: viewModel.isolationEndDate)
             
             super.init(
                 scrollingViews: [
@@ -76,8 +76,8 @@ public class NegativeTestResultWithIsolationViewController: StickyFooterScrollin
         }
     }
     
-    public init(interactor: Interacting, viewModel: ViewModel) {
-        super.init(content: Content(interactor: interactor, viewModel: viewModel))
+    public init(interactor: Interacting, viewModel: ViewModel, currentDateProvider: DateProviding) {
+        super.init(content: Content(interactor: interactor, viewModel: viewModel, currentDateProvider: currentDateProvider))
     }
     
     required init?(coder: NSCoder) {

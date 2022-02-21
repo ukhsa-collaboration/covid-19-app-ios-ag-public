@@ -19,6 +19,7 @@ struct VirologyTestResultsHandler: RequestHandler {
         let diagnosisKeySubmissionSupported = dataProvider.keySubmissionSupported
         let requiresConfirmatoryTest = dataProvider.requiresConfirmatoryTest
         let confirmatoryDayLimit = dataProvider.confirmatoryDayLimit
+        let shouldOfferFollowUpTest = dataProvider.shouldOfferFollowUpTest
         
         let response = HTTPResponse.ok(with: .json(#"""
         {
@@ -27,6 +28,7 @@ struct VirologyTestResultsHandler: RequestHandler {
         "testKit": "\#(testKit)",
         "diagnosisKeySubmissionSupported": \#(diagnosisKeySubmissionSupported),
         "requiresConfirmatoryTest": \#(requiresConfirmatoryTest),
+        "shouldOfferFollowUpTest": \#(shouldOfferFollowUpTest),
         \#(value(named: "confirmatoryDayLimit", content: confirmatoryDayLimit))
         }
         """#))

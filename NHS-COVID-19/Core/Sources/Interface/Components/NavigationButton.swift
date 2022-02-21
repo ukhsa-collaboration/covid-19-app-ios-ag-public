@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Common
@@ -115,6 +115,7 @@ public struct NavigationButton: View {
                             .fontWeight(fontWeight)
                             .foregroundColor(colorScheme.fontColor)
                             .fixedSize(horizontal: false, vertical: true)
+                            .multilineTextAlignment(.leading)
                         Spacer()
                         Image(iconName)
                             .resizable()

@@ -23,7 +23,7 @@ public class ContactCaseStartIsolationScreenEnglandScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return ContactCaseStartIsolationEnglandViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: Double(Self.numberOfDays) * 86400), exposureDate: exposureDate, isolationPeriod: 11)
+            return ContactCaseStartIsolationEnglandViewController(interactor: interactor, isolationEndDate: Date(timeIntervalSinceNow: Double(Self.numberOfDays) * 86400), exposureDate: exposureDate, isolationPeriod: 11, currentDateProvider: MockDateProvider())
         }
     }
 }
@@ -74,7 +74,8 @@ public class ContactCaseStartIsolationScreenWalesScenario: Scenario {
                 isolationEndDate: isolationEndDate,
                 exposureDate: exposureDate,
                 secondTestAdviceDate: secondTestAdviceDate,
-                isolationPeriod: 11
+                isolationPeriod: 11,
+                currentDateProvider: MockDateProvider()
             )
         }
     }

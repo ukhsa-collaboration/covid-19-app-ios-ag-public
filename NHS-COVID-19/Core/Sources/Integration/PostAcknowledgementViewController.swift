@@ -171,7 +171,8 @@ class PostAcknowledgementViewController: UIViewController {
                         isolationEndDate: endDate,
                         exposureDate: exposureDate,
                         secondTestAdviceDate: secondTestAdviceDate,
-                        isolationPeriod: context.contactCaseIsolationDuration.currentValue
+                        isolationPeriod: context.contactCaseIsolationDuration.currentValue,
+                        currentDateProvider: context.currentDateProvider
                     )
                 case .england:
                     return ContactCaseStartIsolationEnglandViewController(
@@ -182,14 +183,15 @@ class PostAcknowledgementViewController: UIViewController {
                         ),
                         isolationEndDate: endDate,
                         exposureDate: exposureDate,
-                        isolationPeriod: context.contactCaseIsolationDuration.currentValue
+                        isolationPeriod: context.contactCaseIsolationDuration.currentValue, currentDateProvider: context.currentDateProvider
                     )
                 }
             case .continueIsolation(let date, let secondTestAdviceDate):
                 return ContactCaseContinueIsolationViewController(
                     interactor: ContactCaseContinueIsolationInteractor(viewController: self, openURL: context.openURL),
                     secondTestAdviceDate: secondTestAdviceDate,
-                    isolationEndDate: date
+                    isolationEndDate: date,
+                    currentDateProvider: context.currentDateProvider
                 )
             }
         }
