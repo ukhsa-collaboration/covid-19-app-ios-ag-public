@@ -18,6 +18,7 @@ public class ContactCaseNoIsolationMedicallyExemptScreenScenario: Scenario {
     public static let backToHomeTapped = "Back to home button tapped"
     public static let guidanceLinkTapped = "GuidanceLink link tapped"
     public static let commonQuestionsLinkTapped = "CommonQuestions link tapped"
+    public static let readGuidanceLinkTapped = "ReadGuidance link tapped"
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
@@ -52,5 +53,9 @@ private class Interactor: ContactCaseNoIsolationMedicallyExemptViewController.In
     
     func didTapCommonQuestionsLink() {
         viewController?.showAlert(title: ContactCaseNoIsolationMedicallyExemptScreenScenario.commonQuestionsLinkTapped)
+    }
+    
+    func didTapReadGuidanceForContacts() {
+        viewController?.showAlert(title: ContactCaseNoIsolationMedicallyExemptScreenScenario.readGuidanceLinkTapped)
     }
 }

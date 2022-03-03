@@ -125,9 +125,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>আপনাকে %3$@-এ %2$@ পর্যন্ত স্ব-বিচ্ছিন্ন থাকতে হবে । %1$ld দিন বাকি আছে।</string>
+				<string>%3$@ এ %2$@ পর্যন্ত নিজেকে আলাদা রাখুন। %1$ld দিন বাকি।</string>
 				<key>other</key>
-				<string>আপনাকে %3$@-এ %2$@ পর্যন্ত স্ব-বিচ্ছিন্ন থাকতে হবে। %1$ld দিন বাকি আছে।</string>
+				<string>%3$@ এ %2$@ পর্যন্ত নিজেকে আলাদা রাখুন। %1$ld দিন বাকি।</string>
 			</dict>
 		</dict>
 		<key>isolation_days_subtitle %ld</key>

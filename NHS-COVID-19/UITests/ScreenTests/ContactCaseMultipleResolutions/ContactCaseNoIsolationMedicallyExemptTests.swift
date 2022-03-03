@@ -15,36 +15,18 @@ class ContactCaseNoIsolationMedicallyExemptScreenTests: XCTestCase {
             let screen = ContactCaseNoIsolationMedicallyExemptScreen(app: app)
             for element in screen.allElements {
                 app.scrollTo(element: element)
-                XCTAssertTrue(element.exists)
+                XCTAssertTrue(element.exists, "Could not found \(element)")
             }
         }
     }
     
-    func testGuidanceLinkButton() throws {
+    func testReadGuidanceLinkButton() throws {
         try runner.run { app in
             let screen = ContactCaseNoIsolationMedicallyExemptScreen(app: app)
-            screen.guidanceLink.tap()
+            app.scrollTo(element: screen.readGuidanceLinkButton)
+            screen.readGuidanceLinkButton.tap()
             
-            XCTAssertTrue(app.staticTexts[runner.scenario.guidanceLinkTapped].exists)
-        }
-    }
-    
-    func testCommonQuestionsLinkButton() throws {
-        try runner.run { app in
-            let screen = ContactCaseNoIsolationMedicallyExemptScreen(app: app)
-            screen.commonQuestionsLink.tap()
-            
-            XCTAssertTrue(app.staticTexts[runner.scenario.commonQuestionsLinkTapped].exists)
-        }
-    }
-    
-    func testBookAFreeTestButton() throws {
-        try runner.run { app in
-            let screen = ContactCaseNoIsolationMedicallyExemptScreen(app: app)
-            app.scrollTo(element: screen.bookAFreeTestButton)
-            screen.bookAFreeTestButton.tap()
-            
-            XCTAssertTrue(app.staticTexts[runner.scenario.bookAFreeTestTapped].exists)
+            XCTAssertTrue(app.staticTexts[runner.scenario.readGuidanceLinkTapped].exists)
         }
     }
     

@@ -396,7 +396,8 @@ public class ApplicationCoordinator {
                     self?.policyManager.acceptWithCurrentAppVersion()
                     completedOnboardingForCurrentSession.value = true
                 },
-                openURL: application.open
+                openURL: application.open,
+                isFeatureEnabled: isFeatureEnabled
             )
         case .authorizationRequired:
             return .authorizationRequired(
@@ -431,6 +432,7 @@ public class ApplicationCoordinator {
             return .runningExposureNotification(
                 RunningAppContext(
                     checkInContext: checkInContext,
+                    shouldShowVenueCheckIn: isFeatureEnabled(.venueCheckIn),
                     postcodeInfo: postcodeInfo,
                     country: country,
                     bluetoothOff: bluetoothOff.domainProperty(),

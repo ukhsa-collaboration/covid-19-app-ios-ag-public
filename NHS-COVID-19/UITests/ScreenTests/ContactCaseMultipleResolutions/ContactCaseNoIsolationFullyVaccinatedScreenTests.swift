@@ -13,39 +13,20 @@ class ContactCaseNoIsolationFullyVaccinatedEnglandScreenTests: XCTestCase {
     func testBasics() throws {
         try runner.run { app in
             let screen = ContactCaseNoIsolationFullyVaccinatedEnglandScreen(app: app)
-            XCTAssertTrue(screen.commonQuestionsLink.exists)
-            XCTAssertTrue(screen.infoBox.exists)
-            XCTAssertTrue(screen.isolationListItem.exists)
-            XCTAssertTrue(screen.lfdListItem.exists)
-            XCTAssertTrue(screen.advice.exists)
+            for element in screen.allElements {
+                XCTAssertTrue(element.exists, "Could not find: \(element)")
+            }
         }
     }
     
-    func testGuidanceLinkButton() throws {
-        try runner.run { app in
-            let screen = ContactCaseNoIsolationFullyVaccinatedEnglandScreen(app: app)
-            screen.guidanceLink.tap()
-            
-            XCTAssertTrue(app.staticTexts[runner.scenario.guidanceLinkTapped].exists)
-        }
-    }
     
-    func testCommonQuestionsLinkButton() throws {
+    func testReadGuidanceLinkButton() throws {
         try runner.run { app in
             let screen = ContactCaseNoIsolationFullyVaccinatedEnglandScreen(app: app)
-            screen.commonQuestionsLink.tap()
+            app.scrollTo(element: screen.readGuidanceLinkButton)
+            screen.readGuidanceLinkButton.tap()
             
-            XCTAssertTrue(app.staticTexts[runner.scenario.commonQuestionsLinkTapped].exists)
-        }
-    }
-    
-    func testBookAFreeTestButton() throws {
-        try runner.run { app in
-            let screen = ContactCaseNoIsolationFullyVaccinatedEnglandScreen(app: app)
-            app.scrollTo(element: screen.bookAFreeTestButton)
-            screen.bookAFreeTestButton.tap()
-            
-            XCTAssertTrue(app.staticTexts[runner.scenario.bookAFreeTestTapped].exists)
+            XCTAssertTrue(app.staticTexts[runner.scenario.readGuidanceLinkTapped].exists)
         }
     }
     

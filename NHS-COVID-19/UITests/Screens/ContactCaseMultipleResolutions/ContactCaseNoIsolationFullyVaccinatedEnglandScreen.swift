@@ -11,12 +11,11 @@ struct ContactCaseNoIsolationFullyVaccinatedEnglandScreen {
     var allElements: [XCUIElement] {
         [
             infoBox,
-            commonQuestionsLink,
-            advice,
-            guidanceLink,
-            isolationListItem,
-            lfdListItem,
-            bookAFreeTestButton,
+            socialDistancingListItem,
+            vulnerablePeopleListItem,
+            wearAMaskListItem,
+            workFromHomeListItem,
+            readGuidanceLinkButton,
             backToHomeButton,
         ]
     }
@@ -25,28 +24,25 @@ struct ContactCaseNoIsolationFullyVaccinatedEnglandScreen {
         app.staticTexts[localized: .contact_case_no_isolation_fully_vaccinated_info_box]
     }
     
-    var commonQuestionsLink: XCUIElement {
-        app.links[localized: .contact_case_no_isolation_fully_vaccinated_common_questions_button_title]
+    var socialDistancingListItem: XCUIElement {
+        app.staticTexts[localized: .contact_case_no_isolation_fully_vaccinated_list_item_social_distancing_england]
     }
     
-    var advice: XCUIElement {
-        app.staticTexts[localized: .contact_case_no_isolation_fully_vaccinated_advice]
+    var vulnerablePeopleListItem: XCUIElement {
+        app.staticTexts[localized: .contact_case_no_isolation_fully_vaccinated_list_item_get_tested_before_meeting_vulnerable_people_england]
     }
     
-    var guidanceLink: XCUIElement {
-        app.links[localized: .contact_case_no_isolation_fully_vaccinated_link_title]
+    var wearAMaskListItem: XCUIElement {
+        app.staticTexts[localized: .contact_case_no_isolation_fully_vaccinated_list_item_wear_a_mask_england]
     }
     
-    var isolationListItem: XCUIElement {
-        app.staticTexts[localized: .contact_case_no_isolation_fully_vaccinated_list_item_info]
+    var workFromHomeListItem: XCUIElement {
+        app.staticTexts[localized: .contact_case_no_isolation_fully_vaccinated_list_item_work_from_home_england]
     }
+
     
-    var lfdListItem: XCUIElement {
-        app.staticTexts[localized: .contact_case_no_isolation_fully_vaccinated_list_item_lfd]
-    }
-    
-    var bookAFreeTestButton: XCUIElement {
-        app.buttons[localized: .contact_case_no_isolation_fully_vaccinated_primary_button_title]
+    var readGuidanceLinkButton: XCUIElement {
+        app.links[localized: .contact_case_no_isolation_fully_vaccinated_primary_button_title_read_guidance_england]
     }
     
     var backToHomeButton: XCUIElement {

@@ -181,17 +181,17 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>zero</key>
-				<string/>
+				<string>Hunanynyswch tan %2$@ am %3$@. %1$ld diwrnod yn weddill.</string>
 				<key>one</key>
-				<string>Mae angen ichi hunanynysu tan %2$@ am %3$@. %1$ld diwrnod i fynd.</string>
+				<string>Hunanynyswch tan %2$@ a %3$@. %1$ld dd/diwrnod yn weddill.</string>
 				<key>two</key>
-				<string/>
+				<string>Hunanynyswch tan %2$@ am %3$@. %1$ld diwrnod yn weddill.</string>
 				<key>few</key>
-				<string/>
+				<string>Hunanynyswch tan %2$@ am %3$@. %1$ld diwrnod yn weddill.</string>
 				<key>many</key>
-				<string/>
+				<string>Hunanynyswch tan %2$@ am %3$@. %1$ld diwrnod yn weddill.</string>
 				<key>other</key>
-				<string>Mae angen ichi hunanynysu tan %2$@ am %3$@. %1$ld diwrnod i fynd.</string>
+				<string>Hunanynyswch tan %2$@ am %3$@. %1$ld diwrnod yn weddill.</string>
 			</dict>
 		</dict>
 		<key>isolation_days_subtitle %ld</key>

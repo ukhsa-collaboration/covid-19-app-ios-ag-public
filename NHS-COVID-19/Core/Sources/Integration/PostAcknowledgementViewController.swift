@@ -484,6 +484,7 @@ private struct BookARapidTestInfoInteractor: BookARapidTestInfoViewController.In
 }
 
 private struct ContactCaseNoIsolationUnderAgeLimitInteractor: ContactCaseNoIsolationUnderAgeLimitEnglandViewController.Interacting {
+    
     private weak var viewController: PostAcknowledgementViewController?
     private let openURL: (URL) -> Void
     
@@ -511,6 +512,12 @@ private struct ContactCaseNoIsolationUnderAgeLimitInteractor: ContactCaseNoIsola
     func didTapCommonQuestionsLink() {
         openURL(ExternalLink.faq.url)
     }
+    
+    func didTapReadGuidanceForContacts() {
+        openURL(ExternalLink.guidanceForContactsInEngland.url)
+        viewController?.showUIState.send(nil)
+    }
+    
 }
 
 private struct ContactCaseNoIsolationFullyVaccinatedInteractor: ContactCaseNoIsolationFullyVaccinatedEnglandViewController.Interacting {
@@ -541,6 +548,11 @@ private struct ContactCaseNoIsolationFullyVaccinatedInteractor: ContactCaseNoIso
     func didTapCommonQuestionsLink() {
         openURL(ExternalLink.faq.url)
     }
+    
+    func didTapReadGuidanceForContacts() {
+        openURL(ExternalLink.guidanceForContactsInEngland.url)
+        viewController?.showUIState.send(nil)
+    }
 }
 
 private struct ContactCaseNoIsolationMedicallyExemptInteractor: ContactCaseNoIsolationMedicallyExemptViewController.Interacting {
@@ -570,6 +582,11 @@ private struct ContactCaseNoIsolationMedicallyExemptInteractor: ContactCaseNoIso
     
     func didTapCommonQuestionsLink() {
         openURL(ExternalLink.faq.url)
+    }
+    
+    func didTapReadGuidanceForContacts() {
+        openURL(ExternalLink.guidanceForContactsInEngland.url)
+        viewController?.showUIState.send(nil)
     }
 }
 

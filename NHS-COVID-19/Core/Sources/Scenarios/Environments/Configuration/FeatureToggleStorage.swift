@@ -13,11 +13,15 @@ public struct FeatureToggleStorage {
     @UserDefault("scenario.toggle.localStatistic", defaultValue: Feature.productionEnabledFeatures.contains(.localStatistics))
     public var localStatisticsToggle: Bool
     
+    @UserDefault("scenario.toggle.venueCheckIn", defaultValue: Feature.productionEnabledFeatures.contains(.venueCheckIn))
+    public var venueCheckInToggle: Bool
+    
     #warning("Retrieve key from UserDefault")
     public var allFeatureKeys: [String] {
         [
             $newNoSymptomsScreenToggle.key,
             $localStatisticsToggle.key,
+            $venueCheckInToggle.key,
         ]
     }
     
@@ -33,6 +37,10 @@ public struct FeatureToggleStorage {
         
         if store.localStatisticsToggle {
             enabledFeatures.append(.localStatistics)
+        }
+        
+        if store.venueCheckInToggle {
+            enabledFeatures.append(.venueCheckIn)
         }
         
         return enabledFeatures

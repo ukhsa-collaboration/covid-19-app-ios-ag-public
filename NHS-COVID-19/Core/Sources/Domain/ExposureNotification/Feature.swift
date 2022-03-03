@@ -14,5 +14,10 @@ public enum Feature: CaseIterable {
     /// for their area and for the whole country.
     case localStatistics
     
+    /// Allows people to check in to venues by scanning QR codes.
+    /// Does NOT stop people from seeing the venues they've previously checked in to, or receiving
+    /// risky venue alerts for those.
+    case venueCheckIn
+    
     public static let productionEnabledFeatures: [Feature] = []
 }

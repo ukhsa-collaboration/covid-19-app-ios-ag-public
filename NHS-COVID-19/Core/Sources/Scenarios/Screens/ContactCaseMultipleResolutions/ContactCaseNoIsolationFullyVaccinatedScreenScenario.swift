@@ -18,6 +18,7 @@ public class ContactCaseNoIsolationFullyVaccinatedEnglandScreenScenario: Scenari
     public static let backToHomeTapped = "Back to home button tapped"
     public static let guidanceLinkTapped = "GuidanceLink link tapped"
     public static let commonQuestionsLinkTapped = "CommonQuestions link tapped"
+    public static let readGuidanceLinkTapped = "ReadGuidance link tapped"
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
@@ -52,6 +53,10 @@ private class EnglandInteractor: ContactCaseNoIsolationFullyVaccinatedInteractin
     
     func didTapCommonQuestionsLink() {
         viewController?.showAlert(title: ContactCaseNoIsolationFullyVaccinatedEnglandScreenScenario.commonQuestionsLinkTapped)
+    }
+    
+    func didTapReadGuidanceForContacts() {
+        viewController?.showAlert(title: ContactCaseNoIsolationFullyVaccinatedEnglandScreenScenario.readGuidanceLinkTapped)
     }
 }
 
@@ -98,5 +103,9 @@ private class WalesInteractor: ContactCaseNoIsolationFullyVaccinatedInteracting 
     
     func didTapCommonQuestionsLink() {
         viewController?.showAlert(title: ContactCaseNoIsolationFullyVaccinatedWalesScreenScenario.commonQuestionsLinkTapped)
+    }
+    
+    func didTapReadGuidanceForContacts() {
+        assertionFailure("Should not be able to tap England guidance button from the Wales screen.")
     }
 }

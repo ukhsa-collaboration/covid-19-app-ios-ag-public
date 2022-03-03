@@ -426,6 +426,7 @@ public enum StringLocalizableKey: String, CaseIterable {
     case link_approved_vaccines_info
     case link_isolation_note
     case contact_case_start_isolation_book_lfd_test_url
+    case contact_case_guidance_for_contacts_in_england_url
     
     case cancel
     case back
@@ -742,6 +743,10 @@ public enum StringLocalizableKey: String, CaseIterable {
     case contact_case_no_isolation_under_age_limit_link_title
     case contact_case_no_isolation_under_age_limit_list_item_lfd
     case contact_case_no_isolation_under_age_limit_list_item_adult
+    case contact_case_no_isolation_under_age_limit_list_item_social_distancing_england
+    case contact_case_no_isolation_under_age_limit_list_item_get_tested_before_meeting_vulnerable_people_england
+    case contact_case_no_isolation_under_age_limit_list_item_wear_a_mask_england
+    case contact_case_no_isolation_under_age_limit_primary_button_title_read_guidance_england
     case contact_case_no_isolation_under_age_limit_primary_button_title
     case contact_case_no_isolation_under_age_limit_secondary_button_title
     
@@ -759,7 +764,12 @@ public enum StringLocalizableKey: String, CaseIterable {
     case contact_case_no_isolation_fully_vaccinated_link_title
     case contact_case_no_isolation_fully_vaccinated_list_item_lfd
     case contact_case_no_isolation_fully_vaccinated_list_item_info
+    case contact_case_no_isolation_fully_vaccinated_list_item_social_distancing_england
+    case contact_case_no_isolation_fully_vaccinated_list_item_get_tested_before_meeting_vulnerable_people_england
+    case contact_case_no_isolation_fully_vaccinated_list_item_wear_a_mask_england
+    case contact_case_no_isolation_fully_vaccinated_list_item_work_from_home_england
     case contact_case_no_isolation_fully_vaccinated_primary_button_title
+    case contact_case_no_isolation_fully_vaccinated_primary_button_title_read_guidance_england
     case contact_case_no_isolation_fully_vaccinated_secondary_button_title
     
     case contact_case_no_isolation_fully_vaccinated_title_wales
@@ -774,10 +784,15 @@ public enum StringLocalizableKey: String, CaseIterable {
     case risky_contact_isolation_advice_medically_exempt_group
     case risky_contact_isolation_advice_medically_exempt_research
     case risky_contact_isolation_advice_medically_exempt_advice
+    case risky_contact_isolation_advice_medically_exempt_social_distancing_england
+    case risky_contact_isolation_advice_medically_exempt_get_tested_before_meeting_vulnerable_people_england
+    case risky_contact_isolation_advice_medically_exempt_wear_a_mask_england
+    case risky_contact_isolation_advice_medically_exempt_work_from_home_england
     case risky_contact_isolation_advice_medically_exempt_common_questions_link_title
     case risky_contact_isolation_advice_medically_exempt_nhs_guidance_link_preamble
     case risky_contact_isolation_advice_medically_exempt_nhs_guidance_link_title
     case risky_contact_isolation_advice_medically_exempt_primary_button_title
+    case risky_contact_isolation_advice_medically_exempt_primary_button_title_read_guidance_england
     case risky_contact_isolation_advice_medically_exempt_secondary_button_title
     
     // MARK: - Self-isolation Hub

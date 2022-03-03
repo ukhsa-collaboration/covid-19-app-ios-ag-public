@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2021 DHSC. All rights reserved.
 //
 
 import Localization
@@ -7,8 +7,10 @@ import UIKit
 
 public class StartOnboardingViewController: OnboardingStepViewController {
     
-    public init(complete: @escaping () -> Void, reject: @escaping () -> Void) {
-        super.init(step: StartOnboardingStep(accept: complete, reject: reject))
+    public init(complete: @escaping () -> Void,
+                reject: @escaping () -> Void,
+                shouldShowVenueCheckIn: Bool) {
+        super.init(step: StartOnboardingStep(accept: complete, reject: reject, shouldShowVenueCheckIn: shouldShowVenueCheckIn))
     }
     
     override public func viewWillAppear(_ animated: Bool) {
@@ -24,6 +26,7 @@ public class StartOnboardingViewController: OnboardingStepViewController {
 
 private class StartOnboardingStep: OnboardingStep {
     private let accept: () -> Void
+    private let shouldShowVenueCheckIn: Bool
     fileprivate let alert: Alert?
     
     private lazy var title: UILabel = {
@@ -36,8 +39,11 @@ private class StartOnboardingStep: OnboardingStep {
     let actionTitle = localize(.start_onboarding_button_title)
     let image: UIImage? = UIImage(.onboardingStart)
     
-    init(accept: @escaping () -> Void, reject: @escaping () -> Void) {
+    init(accept: @escaping () -> Void,
+         reject: @escaping () -> Void,
+         shouldShowVenueCheckIn: Bool) {
         self.accept = accept
+        self.shouldShowVenueCheckIn = shouldShowVenueCheckIn
         alert = Alert(
             title: .age_confirmation_alert_title,
             body: .age_confirmation_alert_body,
@@ -73,7 +79,14 @@ private class StartOnboardingStep: OnboardingStep {
     var footerContent = [UIView]()
     
     var content: [UIView] {
-        let stackView = UIStackView(arrangedSubviews: [title, subtitle, stepDescription1, stepDescription2, stepDescription3, stepDescription4])
+        
+        let titles = [title, subtitle]
+        
+        let steps = shouldShowVenueCheckIn
+            ? [stepDescription1, stepDescription2, stepDescription3, stepDescription4]
+            : [stepDescription1, stepDescription3, stepDescription4]
+        
+        let stackView = UIStackView(arrangedSubviews: titles + steps)
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing

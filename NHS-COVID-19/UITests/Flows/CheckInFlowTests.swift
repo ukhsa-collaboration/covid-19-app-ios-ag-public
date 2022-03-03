@@ -17,6 +17,7 @@ class CheckInFlowTests: XCTestCase {
         $runner.initialState.postcode = "SW12"
         $runner.initialState.localAuthorityId = "E09000022"
         $runner.initialState.qrCodeScanTime = 0.5
+        $runner.enable(\.$venueCheckInToggle)
     }
     
     func testHappyPath() throws {

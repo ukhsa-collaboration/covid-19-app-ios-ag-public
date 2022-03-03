@@ -22,6 +22,7 @@ public class OnboardingFlowViewController: BaseNavigationController {
     }
     
     private let interactor: Interacting
+    private let shouldShowVenueCheckIn: Bool
     
     fileprivate var state = State.start {
         didSet {
@@ -29,8 +30,10 @@ public class OnboardingFlowViewController: BaseNavigationController {
         }
     }
     
-    public init(interactor: Interacting) {
+    public init(interactor: Interacting,
+                shouldShowVenueCheckIn: Bool) {
         self.interactor = interactor
+        self.shouldShowVenueCheckIn = shouldShowVenueCheckIn
         super.init()
         
         update(for: state)
@@ -53,7 +56,8 @@ public class OnboardingFlowViewController: BaseNavigationController {
                 complete: { [weak self] in
                     self?.state = .howAppWorks
                 },
-                reject: { [weak self] in self?.state = .deniedAge }
+                reject: { [weak self] in self?.state = .deniedAge },
+                shouldShowVenueCheckIn: shouldShowVenueCheckIn
             )
         case .howAppWorks:
             return HowAppWorksViewController(interactor: HowAppWorksInteractor(controller: self))

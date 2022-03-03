@@ -180,6 +180,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         let currentDateProvider = MockDateProvider()
         return RunningAppContext(
             checkInContext: nil,
+            shouldShowVenueCheckIn: false,
             postcodeInfo: .constant(nil),
             country: Just(.england).eraseToAnyPublisher().domainProperty(),
             bluetoothOff: .constant(false),

@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Localization
@@ -25,31 +25,31 @@ struct StartOnboardingScreen {
     }
     
     var stepDescription2Header: XCUIElement {
-        app.staticTexts[localized: .start_onboarding_step_1_header]
+        app.staticTexts[localized: .start_onboarding_step_2_header]
     }
     
     var stepDescription2Body: XCUIElement {
-        app.staticTexts[localized: .start_onboarding_step_1_description]
+        app.staticTexts[localized: .start_onboarding_step_2_description]
     }
     
     var stepDescription3Header: XCUIElement {
-        app.staticTexts[localized: .start_onboarding_step_1_header]
+        app.staticTexts[localized: .start_onboarding_step_3_header]
     }
     
     var stepDescription3Body: XCUIElement {
-        app.staticTexts[localized: .start_onboarding_step_1_description]
+        app.staticTexts[localized: .start_onboarding_step_3_description]
     }
     
     var stepDescription4Header: XCUIElement {
-        app.staticTexts[localized: .start_onboarding_step_1_header]
+        app.staticTexts[localized: .start_onboarding_step_4_header]
     }
     
     var stepDescription4Body: XCUIElement {
-        app.staticTexts[localized: .start_onboarding_step_1_description]
+        app.staticTexts[localized: .start_onboarding_step_4_description]
     }
     
     var continueButton: XCUIElement {
-        app.windows["MainWindow"].buttons[localized: .start_onboarding_button_title]
+        app.buttons[localized: .start_onboarding_button_title]
     }
     
     var ageConfirmationAcceptButton: XCUIElement {

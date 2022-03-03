@@ -125,9 +125,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Waxaad u baahan tahay inaad isu-go’doomisid ila %2$@ markay tahay %3$@. %1$ld maalin ayaa ka hartay.</string>
+				<string>Is gooniyey illaa %2$@ saacada %3$@. %1$ld maalmood ee lagu aado.</string>
 				<key>other</key>
-				<string>Waxaad u baahan tahay inaad isu-go’doomisid ila %2$@ markay tahay %3$@.  %1$ld maalmood ayaa ka hartay.</string>
+				<string>Is gooniyey illaa %2$@ saacada %3$@. %1$ld maalmood ee lagu aado.</string>
 			</dict>
 		</dict>
 		<key>isolation_days_subtitle %ld</key>

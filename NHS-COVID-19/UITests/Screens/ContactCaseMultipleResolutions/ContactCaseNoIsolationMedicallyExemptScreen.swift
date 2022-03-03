@@ -12,12 +12,11 @@ struct ContactCaseNoIsolationMedicallyExemptScreen {
         [
             heading,
             infoBox,
-            researchText,
-            groupText,
-            socialDistancingText,
-            commonQuestionsLink,
-            guidanceLink,
-            bookAFreeTestButton,
+            socialDistancingListItem,
+            swabTestListItem,
+            faceMaskListItem,
+            workFromHomeListItem,
+            readGuidanceLinkButton,
             backToHomeButton,
         ]
     }
@@ -30,16 +29,20 @@ struct ContactCaseNoIsolationMedicallyExemptScreen {
         app.staticTexts[localized: .risky_contact_isolation_advice_medically_exempt_info]
     }
     
-    var researchText: XCUIElement {
-        app.staticTexts[localized: .risky_contact_isolation_advice_medically_exempt_research]
+    var socialDistancingListItem: XCUIElement {
+        app.staticTexts[localized: .risky_contact_isolation_advice_medically_exempt_social_distancing_england]
     }
     
-    var groupText: XCUIElement {
-        app.staticTexts[localized: .risky_contact_isolation_advice_medically_exempt_group]
+    var swabTestListItem: XCUIElement {
+        app.staticTexts[localized: .risky_contact_isolation_advice_medically_exempt_get_tested_before_meeting_vulnerable_people_england]
     }
     
-    var socialDistancingText: XCUIElement {
-        app.staticTexts[localized: .risky_contact_isolation_advice_medically_exempt_advice]
+    var faceMaskListItem: XCUIElement {
+        app.staticTexts[localized: .risky_contact_isolation_advice_medically_exempt_wear_a_mask_england]
+    }
+    
+    var workFromHomeListItem: XCUIElement {
+        app.staticTexts[localized: .risky_contact_isolation_advice_medically_exempt_work_from_home_england]
     }
     
     var commonQuestionsLink: XCUIElement {
@@ -50,8 +53,8 @@ struct ContactCaseNoIsolationMedicallyExemptScreen {
         app.links[localized: .risky_contact_isolation_advice_medically_exempt_nhs_guidance_link_title]
     }
     
-    var bookAFreeTestButton: XCUIElement {
-        app.buttons[localized: .risky_contact_isolation_advice_medically_exempt_primary_button_title]
+    var readGuidanceLinkButton: XCUIElement {
+        app.links[localized: .risky_contact_isolation_advice_medically_exempt_primary_button_title_read_guidance_england]
     }
     
     var backToHomeButton: XCUIElement {

@@ -125,9 +125,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Kişisel karantinanızın sona ereceği zaman: %2$@, %3$@. %1$ld gün kaldı.</string>
+				<string>%2$@ günü, saat %3$@'a kadar karantinada kalın. %1$ld gün kaldı.</string>
 				<key>other</key>
-				<string>Kişisel karantinanızın sona ereceği zaman: %2$@, %3$@. %1$ld gün kaldı.</string>
+				<string>%2$@ günü, saat %3$@'a kadar karantinada kalın. %1$ld gün kaldı.</string>
 			</dict>
 		</dict>
 		<key>isolation_days_subtitle %ld</key>

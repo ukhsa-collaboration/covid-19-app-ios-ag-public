@@ -8,6 +8,7 @@ import UIKit
 
 public protocol ContactCaseNoIsolationMedicallyExemptInteracting {
     func didTapBookAFreeTest()
+    func didTapReadGuidanceForContacts()
     func didTapBackToHome()
     func didTapCancel()
     func didTapGuidanceLink()
@@ -27,23 +28,15 @@ extension ContactCaseNoIsolationMedicallyExemptViewController {
                     .set(text: localize(.risky_contact_isolation_advice_medically_exempt))
                     .centralized(),
                 InformationBox.indication.warning(localize(.risky_contact_isolation_advice_medically_exempt_info)),
-                WelcomePoint(image: .info, body: localize(.risky_contact_isolation_advice_medically_exempt_research)),
-                WelcomePoint(image: .groupOfPeople, body: localize(.risky_contact_isolation_advice_medically_exempt_group)),
-                WelcomePoint(image: .socialDistancing, body: localize(.risky_contact_isolation_advice_medically_exempt_advice)),
-                LinkButton(
-                    title: localize(.risky_contact_isolation_advice_medically_exempt_common_questions_link_title),
-                    action: interactor.didTapCommonQuestionsLink
-                ),
-                BaseLabel()
-                    .set(text: localize(.risky_contact_isolation_advice_medically_exempt_nhs_guidance_link_preamble)),
-                LinkButton(
-                    title: localize(.risky_contact_isolation_advice_medically_exempt_nhs_guidance_link_title),
-                    action: interactor.didTapGuidanceLink
-                ),
                 
-                PrimaryButton(
-                    title: localize(.risky_contact_isolation_advice_medically_exempt_primary_button_title),
-                    action: interactor.didTapBookAFreeTest
+                WelcomePoint(image: .socialDistancing, body: localize(.risky_contact_isolation_advice_medically_exempt_social_distancing_england)),
+                WelcomePoint(image: .swabTest, body: localize(.risky_contact_isolation_advice_medically_exempt_get_tested_before_meeting_vulnerable_people_england)),
+                WelcomePoint(image: .riskLevelFaceCoveringsIcon, body: localize(.risky_contact_isolation_advice_medically_exempt_wear_a_mask_england)),
+                WelcomePoint(image: .riskLevelWorkIcon, body: localize(.risky_contact_isolation_advice_medically_exempt_work_from_home_england)),
+                
+                PrimaryLinkButton(
+                    title: localize(.risky_contact_isolation_advice_medically_exempt_primary_button_title_read_guidance_england),
+                    action: interactor.didTapReadGuidanceForContacts
                 ),
                 SecondaryButton(
                     title: localize(.risky_contact_isolation_advice_medically_exempt_secondary_button_title),

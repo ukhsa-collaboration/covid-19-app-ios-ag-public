@@ -27,6 +27,7 @@ enum LogicalState: Equatable {
 
 public struct RunningAppContext {
     public var checkInContext: CheckInContext?
+    public var shouldShowVenueCheckIn: Bool
     public var postcodeInfo: DomainProperty<(postcode: Postcode, localAuthority: LocalAuthority?, risk: DomainProperty<RiskyPostcodeEndpointManager.PostcodeRisk?>)?>
     public var country: DomainProperty<Country>
     public var bluetoothOff: DomainProperty<Bool>
@@ -108,7 +109,11 @@ public enum ApplicationState {
     case failedToStart(openURL: (URL) -> Void)
     
     /// Application needs to show onboarding.
-    case onboarding(complete: () -> Void, openURL: (URL) -> Void)
+    case onboarding(
+        complete: () -> Void,
+        openURL: (URL) -> Void,
+        isFeatureEnabled: (Feature) -> Bool
+    )
     
     /// Application requires onboarding.
     case authorizationRequired(requestPermissions: () -> Void, country: DomainProperty<Country>)

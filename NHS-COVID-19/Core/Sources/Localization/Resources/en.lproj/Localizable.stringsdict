@@ -125,9 +125,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>You need to self-isolate until %2$@ at %3$@. %1$ld day to go.</string>
+				<string>Self-isolate until %2$@ at %3$@. %1$ld day to go.</string>
 				<key>other</key>
-				<string>You need to self-isolate until %2$@ at %3$@. %1$ld days to go.</string>
+				<string>Self-isolate until %2$@ at %3$@. %1$ld days to go.</string>
 			</dict>
 		</dict>
 		<key>isolation_days_subtitle %ld</key>

@@ -139,11 +139,11 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Trebuie să vă autoizolați până pe %2$@ la %3$@. %1$ld zi rămasă.</string>
+				<string>Auto-izolați-vă până pe %2$@, la ora %3$@. Mai aveți %1$ld zi.</string>
 				<key>few</key>
-				<string>Trebuie să vă autoizolați până pe %2$@ la %3$@. %1$ld zile rămase.</string>
+				<string>Auto-izolați-vă până pe %2$@, la ora %3$@. Mai aveți %1$ld zile.</string>
 				<key>other</key>
-				<string>Trebuie să vă autoizolați până pe %2$@ la %3$@. %1$ld zile rămase.</string>
+				<string>Auto-izolați-vă până pe %2$@, la ora %3$@. Mai aveți %1$ld zile.</string>
 			</dict>
 		</dict>
 		<key>isolation_days_subtitle %ld</key>

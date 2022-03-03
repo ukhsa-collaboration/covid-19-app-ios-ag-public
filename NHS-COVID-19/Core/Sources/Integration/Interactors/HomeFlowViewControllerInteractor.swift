@@ -395,7 +395,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     }
     
     var shouldShowCheckIn: Bool {
-        context.checkInContext != nil
+        context.shouldShowVenueCheckIn && context.checkInContext != nil
     }
     
     func getMyAreaViewModel() -> MyAreaTableViewController.ViewModel {

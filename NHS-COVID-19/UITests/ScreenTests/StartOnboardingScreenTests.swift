@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -10,25 +10,25 @@ class StartOnboardingScreenTests: XCTestCase {
     @Propped
     private var runner: ApplicationRunner<StartOnboardingScreenScenario>
     
-    func testBasics() throws {
+    func testBasicsWithVenueCheckInTurnedOn() throws {
         try runner.run { app in
             let screen = StartOnboardingScreen(app: app)
             
-            XCTAssert(screen.stepTitle.exists)
-            XCTAssert(screen.stepDescription1Header.exists)
-            XCTAssert(screen.stepDescription1Body.exists)
-            XCTAssert(screen.stepDescription2Header.exists)
-            XCTAssert(screen.stepDescription2Body.exists)
-            XCTAssert(screen.stepDescription3Header.exists)
-            XCTAssert(screen.stepDescription3Body.exists)
-            XCTAssert(screen.stepDescription4Header.exists)
-            XCTAssert(screen.stepDescription4Body.exists)
-            XCTAssert(screen.continueButton.exists)
+            XCTAssertTrue(screen.stepTitle.exists)
+            XCTAssertTrue(screen.stepDescription1Header.exists)
+            XCTAssertTrue(screen.stepDescription1Body.exists)
+            XCTAssertTrue(screen.stepDescription2Header.exists)
+            XCTAssertTrue(screen.stepDescription2Body.exists)
+            XCTAssertTrue(screen.stepDescription3Header.exists)
+            XCTAssertTrue(screen.stepDescription3Body.exists)
+            XCTAssertTrue(screen.stepDescription4Header.exists)
+            XCTAssertTrue(screen.stepDescription4Body.exists)
+            XCTAssertTrue(screen.continueButton.exists)
             
         }
     }
     
-    func testAgeCongirmationAccepted() throws {
+    func testAgeConfirmationAccepted() throws {
         try runner.run { app in
             let screen = StartOnboardingScreen(app: app)
             screen.continueButton.tap()
@@ -41,7 +41,7 @@ class StartOnboardingScreenTests: XCTestCase {
         }
     }
     
-    func testAgeCongirmationRejected() throws {
+    func testAgeConfirmationRejected() throws {
         try runner.run { app in
             let screen = StartOnboardingScreen(app: app)
             screen.continueButton.tap()
@@ -51,6 +51,34 @@ class StartOnboardingScreenTests: XCTestCase {
             
             let rejected = StartOnboardingScreenScenario.rejectAlertTitle
             XCTAssert(screen.ageConfirmationAlertHandled(title: rejected).exists)
+        }
+    }
+}
+
+class StartOnboardingScreenTestsNoCheckIn: XCTestCase {
+    
+    @Propped
+    private var runner: ApplicationRunner<StartOnboardingNoCheckInScreenScenario>
+    
+    func testBasicsWithVenueCheckInTurnedOff() throws {
+        try runner.run { app in
+            let screen = StartOnboardingScreen(app: app)
+            
+            XCTAssertTrue(screen.stepTitle.exists)
+            
+            // We should NOT see venue check-in but SHOULD see everything else
+            XCTAssertFalse(screen.stepDescription2Header.exists)
+            XCTAssertFalse(screen.stepDescription2Body.exists)
+            
+            // ...but SHOULD see everything else
+            XCTAssertTrue(screen.stepDescription1Header.exists)
+            XCTAssertTrue(screen.stepDescription1Body.exists)
+            XCTAssertTrue(screen.stepDescription3Header.exists)
+            XCTAssertTrue(screen.stepDescription3Body.exists)
+            XCTAssertTrue(screen.stepDescription4Header.exists)
+            XCTAssertTrue(screen.stepDescription4Body.exists)
+            XCTAssertTrue(screen.continueButton.exists)
+            
         }
     }
 }

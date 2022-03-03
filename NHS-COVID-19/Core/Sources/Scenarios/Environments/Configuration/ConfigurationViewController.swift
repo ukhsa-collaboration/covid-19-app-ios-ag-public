@@ -37,10 +37,12 @@ class ConfigurationViewController: UIViewController {
         
         let newNoSymptomsScreenToggle = createToggle(feature: .newNoSymptomsScreen, isOn: featureToggleStorage.newNoSymptomsScreenToggle, action: #selector(toggleNewNoSymptomsScreen))
         let localStatsButtonToggle = createToggle(feature: .localStatistics, isOn: featureToggleStorage.localStatisticsToggle, action: #selector(toggleLocalStatistics))
+        let venueCheckInToggle = createToggle(feature: .venueCheckIn, isOn: featureToggleStorage.venueCheckInToggle, action: #selector(toggleVenueCheckIn))
         
         let stackView = UIStackView(arrangedSubviews: [
             newNoSymptomsScreenToggle,
             localStatsButtonToggle,
+            venueCheckInToggle,
             disclaimer,
         ])
         
@@ -77,6 +79,8 @@ class ConfigurationViewController: UIViewController {
             return "New \"No Symptoms\" Screen"
         case .localStatistics:
             return "Local statistics home screen button"
+        case .venueCheckIn:
+            return "Venue check-in home screen button"
         }
     }
     
@@ -86,6 +90,10 @@ class ConfigurationViewController: UIViewController {
     
     @objc private func toggleLocalStatistics() {
         featureToggleStorage.localStatisticsToggle.toggle()
+    }
+    
+    @objc private func toggleVenueCheckIn() {
+        featureToggleStorage.venueCheckInToggle.toggle()
     }
 }
 

@@ -111,7 +111,7 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>other</key>
-				<string>您需要进行自我隔离，直到%2$@的%3$@。还剩%1$ld天。</string>
+				<string>自我隔离至%2$@时%3$@，还剩%1$ld天。</string>
 			</dict>
 		</dict>
 		<key>isolation_days_subtitle %ld</key>

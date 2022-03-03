@@ -140,7 +140,7 @@ extension AcceptanceTestCase {
         try completeExposureNotificationActivation(authorizationStatus: .unknown)
         try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
         
-        guard case .onboarding(let complete, _) = coordinator.state else {
+        guard case .onboarding(let complete, _, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
@@ -170,7 +170,7 @@ extension AcceptanceTestCase {
     
     func completeReOnboarding() throws {
         
-        guard case .onboarding(let complete, _) = coordinator.state else {
+        guard case .onboarding(let complete, _, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         

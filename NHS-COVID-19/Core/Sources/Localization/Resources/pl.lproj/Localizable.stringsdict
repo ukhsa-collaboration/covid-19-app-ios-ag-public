@@ -153,13 +153,13 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>Proszę izolować się do %2$@ do godz. %3$@. został %1$ld dzień.</string>
+				<string>Izoluj się do %2$@ do godz. %3$@. Został jeszcze %1$ld dzień do końca.</string>
 				<key>few</key>
-				<string>Proszę izolować się do %2$@ do godz. %3$@. zostało %1$ld dni.</string>
+				<string>Izoluj się do  %2$@ do godz.  %3$@. Zostało jeszcze %1$ld dni do końca.</string>
 				<key>many</key>
-				<string>Proszę izolować się do %2$@ do godz. %3$@. zostało %1$ld dni.</string>
+				<string>Izoluj się do  %2$@ do godz.  %3$@. Zostało jeszcze %1$ld dni do końca.</string>
 				<key>other</key>
-				<string>Proszę izolować się do %2$@ do godz. %3$@. zostało %1$ld dni.</string>
+				<string>Izoluj się do  %2$@ do godz.  %3$@. Zostało jeszcze %1$ld dni do końca.</string>
 			</dict>
 		</dict>
 		<key>isolation_days_subtitle %ld</key>

@@ -37,13 +37,18 @@ extension CoordinatedAppController {
             let vc = UnrecoverableErrorViewController(interactor: interactor)
             return BaseNavigationController(rootViewController: vc)
             
-        case .onboarding(let complete, let openURL):
+        case .onboarding(
+            let complete,
+            let openURL,
+            let isFeatureEnabled
+        ):
             let interactor = OnboardingInteractor(
                 complete: complete,
                 openURL: openURL
             )
             return OnboardingFlowViewController(
-                interactor: interactor
+                interactor: interactor,
+                shouldShowVenueCheckIn: isFeatureEnabled(.venueCheckIn)
             )
             
         case .authorizationRequired(let requestPermissions, let country):

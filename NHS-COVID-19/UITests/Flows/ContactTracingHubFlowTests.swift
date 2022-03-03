@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -36,6 +36,7 @@ class ContactTracingHubFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: homeScreen.contactTracingHubButton)
             homeScreen.contactTracingHubButton.tap()
             
             let contactTracingHubScreen = ContactTracingHubScreen(app: app)
@@ -104,6 +105,7 @@ class ContactTracingHubFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: homeScreen.contactTracingHubButton)
             homeScreen.contactTracingHubButton.tap()
             
             let contactTracingHubScreen = ContactTracingHubScreen(app: app)
@@ -153,6 +155,7 @@ class ContactTracingHubFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: homeScreen.contactTracingHubButton)
             homeScreen.contactTracingHubButton.tap()
             
             let contactTracingHubScreen = ContactTracingHubScreen(app: app)
