@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Combine
@@ -32,7 +32,15 @@ class SandboxDistributeClient: HTTPClient {
 
 private let isolationConfig = """
 {
-  "durationDays": {
+  "england": {
+    "indexCaseSinceSelfDiagnosisOnset": \(Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisOnset),
+    "indexCaseSinceSelfDiagnosisUnknownOnset": \(Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset),
+    "contactCase": 3,
+    "maxIsolation": \(Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset),
+    "indexCaseSinceTestResultEndDate": 5,
+    "testResultPollingTokenRetentionPeriod": 28
+  },
+  "wales": {
     "indexCaseSinceSelfDiagnosisOnset": \(Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisOnset),
     "indexCaseSinceSelfDiagnosisUnknownOnset": \(Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset),
     "contactCase": 3,

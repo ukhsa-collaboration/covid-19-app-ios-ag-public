@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Common
@@ -46,6 +46,51 @@ class ExposureNotificationFlowTests: XCTestCase {
         $runner.initialState.localAuthorityId = "E08000019" // Sheffield
     }
     
+    func testReceiveExposureNotification() throws {
+        $runner.report(scenario: "Exposure Notification", "Happy path") {
+            """
+            User receives an exposure notification,
+            User acknowledges the notification and reaches Home screen again
+            """
+        }
+        $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.contact.rawValue
+        $runner.initialState.hasAcknowledgedStartOfIsolation = false
+        try runner.run { app in
+            
+            let contactCaseExposureInfoScreen = ContactCaseExposureInfoEnglandScreen(app: app, date: Self.exposureDate)
+            XCTAssertTrue(contactCaseExposureInfoScreen.continueButton.exists)
+            
+            runner.step("Exposure Notification screen") {
+                """
+                The user is presented the Exposure Notification screen.
+                The user presses the 'Continue' to continue.
+                """
+            }
+            
+            contactCaseExposureInfoScreen.continueButton.tap()
+            
+            let contactCaseNoIsolationAdviceScreen = ContactCaseNoIsolationAdviceScreen(app: app)
+            XCTAssertTrue(contactCaseNoIsolationAdviceScreen.contactsGuidanceLink.exists)
+            
+            runner.step("No Isolation Advice screen") {
+                """
+                The user is presented the No Isolation Advice screen.
+                They press the Read Guidance Button to continue.
+                """
+            }
+            
+            contactCaseNoIsolationAdviceScreen.contactsGuidanceLink.tap()
+            
+            runner.step("Home screen") {
+                """
+                The user is presented the Home screen.
+                """
+            }
+            
+            app.checkOnHomeScreenNotIsolating()
+        }
+    }
+    
     // MARK: - Currently user is not isolated
     
     func testReceiveExposureNotificationFullyVaccinated() throws {
@@ -60,11 +105,12 @@ class ExposureNotificationFlowTests: XCTestCase {
             User reaches Home screen
             """
         }
+        $runner.enable(\.$englandOptOutFlowToggle)
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.contact.rawValue
         $runner.initialState.hasAcknowledgedStartOfIsolation = false
         try runner.run { app in
             // Exposure Info
-            let contactCaseExposureInfoScreen = ContactCaseExposureInfoScreen(app: app, date: Self.exposureDate)
+            let contactCaseExposureInfoScreen = ContactCaseExposureInfoWalesScreen(app: app, date: Self.exposureDate)
             XCTAssertTrue(contactCaseExposureInfoScreen.allElements(isIndexCase: false).allExist)
             XCTAssertTrue(contactCaseExposureInfoScreen.continueButton.exists)
             
@@ -189,11 +235,12 @@ class ExposureNotificationFlowTests: XCTestCase {
             User reaches Home screen
             """
         }
+        $runner.enable(\.$englandOptOutFlowToggle)
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.contact.rawValue
         $runner.initialState.hasAcknowledgedStartOfIsolation = false
         try runner.run { app in
             // Exposure Info
-            let contactCaseExposureInfoScreen = ContactCaseExposureInfoScreen(app: app, date: Self.exposureDate)
+            let contactCaseExposureInfoScreen = ContactCaseExposureInfoWalesScreen(app: app, date: Self.exposureDate)
             XCTAssertTrue(contactCaseExposureInfoScreen.allElements(isIndexCase: false).allExist)
             XCTAssertTrue(contactCaseExposureInfoScreen.continueButton.exists)
             
@@ -332,11 +379,12 @@ class ExposureNotificationFlowTests: XCTestCase {
             User reaches Home screen
             """
         }
+        $runner.enable(\.$englandOptOutFlowToggle)
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.contact.rawValue
         $runner.initialState.hasAcknowledgedStartOfIsolation = false
         try runner.run { app in
             // Exposure Info
-            let contactCaseExposureInfoScreen = ContactCaseExposureInfoScreen(app: app, date: Self.exposureDate)
+            let contactCaseExposureInfoScreen = ContactCaseExposureInfoWalesScreen(app: app, date: Self.exposureDate)
             XCTAssertTrue(contactCaseExposureInfoScreen.allElements(isIndexCase: false).allExist)
             XCTAssertTrue(contactCaseExposureInfoScreen.continueButton.exists)
             
@@ -456,11 +504,12 @@ class ExposureNotificationFlowTests: XCTestCase {
             User reaches Home screen
             """
         }
+        $runner.enable(\.$englandOptOutFlowToggle)
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.contact.rawValue
         $runner.initialState.hasAcknowledgedStartOfIsolation = false
         try runner.run { app in
             // Exposure Info
-            let contactCaseExposureInfoScreen = ContactCaseExposureInfoScreen(app: app, date: Self.exposureDate)
+            let contactCaseExposureInfoScreen = ContactCaseExposureInfoWalesScreen(app: app, date: Self.exposureDate)
             XCTAssertTrue(contactCaseExposureInfoScreen.allElements(isIndexCase: false).allExist)
             XCTAssertTrue(contactCaseExposureInfoScreen.continueButton.exists)
             
@@ -551,11 +600,12 @@ class ExposureNotificationFlowTests: XCTestCase {
             User reaches Home screen
             """
         }
+        $runner.enable(\.$englandOptOutFlowToggle)
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.indexAndContact.rawValue
         $runner.initialState.hasAcknowledgedStartOfIsolation = false
         try runner.run { app in
             // Exposure Info
-            let contactCaseExposureInfoScreen = ContactCaseExposureInfoScreen(app: app, date: Self.exposureDate)
+            let contactCaseExposureInfoScreen = ContactCaseExposureInfoWalesScreen(app: app, date: Self.exposureDate)
             XCTAssertTrue(contactCaseExposureInfoScreen.allElements(isIndexCase: true).allExist)
             XCTAssertTrue(contactCaseExposureInfoScreen.continueButton.exists)
             
@@ -683,11 +733,12 @@ class ExposureNotificationFlowTests: XCTestCase {
             User reaches Home screen
             """
         }
+        $runner.enable(\.$englandOptOutFlowToggle)
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.indexAndContact.rawValue
         $runner.initialState.hasAcknowledgedStartOfIsolation = false
         try runner.run { app in
             // Exposure Info
-            let contactCaseExposureInfoScreen = ContactCaseExposureInfoScreen(app: app, date: Self.exposureDate)
+            let contactCaseExposureInfoScreen = ContactCaseExposureInfoWalesScreen(app: app, date: Self.exposureDate)
             XCTAssertTrue(contactCaseExposureInfoScreen.allElements(isIndexCase: true).allExist)
             XCTAssertTrue(contactCaseExposureInfoScreen.continueButton.exists)
             
@@ -820,11 +871,12 @@ class ExposureNotificationFlowTests: XCTestCase {
             User reaches Home screen
             """
         }
+        $runner.enable(\.$englandOptOutFlowToggle)
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.indexAndContact.rawValue
         $runner.initialState.hasAcknowledgedStartOfIsolation = false
         try runner.run { app in
             // Exposure Info
-            let contactCaseExposureInfoScreen = ContactCaseExposureInfoScreen(app: app, date: Self.exposureDate)
+            let contactCaseExposureInfoScreen = ContactCaseExposureInfoWalesScreen(app: app, date: Self.exposureDate)
             XCTAssertTrue(contactCaseExposureInfoScreen.allElements(isIndexCase: true).allExist)
             XCTAssertTrue(contactCaseExposureInfoScreen.continueButton.exists)
             
@@ -896,6 +948,41 @@ class ExposureNotificationFlowTests: XCTestCase {
                 The user is presented the Home screen and is isolating.
                 """
             }
+            
+            let endDate = GregorianDay.today.advanced(by: isolationDaysRemanining).startDate(in: .current)
+            
+            app.checkOnHomeScreenIsolating(date: endDate, days: isolationDaysRemanining)
+        }
+    }
+    
+    func testReceiveExposureNotificationWhenUserIsIsolatedAsAnIndexCaseInEngland() throws {
+        $runner.report(scenario: "Exposure Notification", "User is already isolated as an index case in England") {
+            """
+            Currently user is isolated as an index case
+            User's postcode is in England
+            User receives an exposure notification
+            User acknowledges the notification
+            User sees 'You are advised to continue to self-isolate' screen
+            User reaches Home screen
+            """
+        }
+        $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.indexAndContact.rawValue
+        $runner.initialState.hasAcknowledgedStartOfIsolation = false
+        
+        try runner.run { app in
+            // Exposure Info
+            let contactCaseExposureInfoScreen = ContactCaseExposureInfoEnglandScreen(app: app, date: Self.exposureDate)
+            XCTAssertTrue(contactCaseExposureInfoScreen.continueButton.exists)
+            
+            contactCaseExposureInfoScreen.continueButton.tap()
+            
+            // Continue to Isoalte
+            let continueToSelfIsolateScreen = ContactCaseContinueIsolationScreen(app: app)
+            XCTAssertTrue(continueToSelfIsolateScreen.backToHomeButton.exists)
+            
+            continueToSelfIsolateScreen.backToHomeButton.tap()
+            
+            // Home Screen
             
             let endDate = GregorianDay.today.advanced(by: isolationDaysRemanining).startDate(in: .current)
             

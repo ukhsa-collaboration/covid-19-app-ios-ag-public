@@ -294,7 +294,7 @@
 "negative_test_result_no_isolation_warning" = "જો તમને અસ્વસ્થ હોવાનું લાગતું હોય, તો જ્યાં સુધી તમને સારું ન લાગે ત્યાં સુધી ઘરે રહો";
 "link_test_result_thank_you_back_home_button" = "હોમ પર પાછા";
 "mydata_data_deletion_button_title" = "મારો તમામ ડેટા હટાવો";
-"about_this_app_how_this_app_works_description" = "તમને અને અન્યોની રક્ષા કરવા માટે આ એપ સંપર્ક ટ્રેસિંગ ટેક્નોલોજીનો ઉપયોગ કરે છે જેથી આપણે બધા આપણી ગમતી વસ્તુઓ તરફ પરત ફરી શકીએ.\n\nએપ વપરાશકર્તાની આસપાસના અન્યોને એપ શોધે છે અને લૉગ કરે છે. જો તેમાંથી કોઈ વપરાશકર્તા પછીથી કોરોનાવાયરસ પરીક્ષણ માટે સકારાત્મક નીકળે છે, તો તમે સલાહ સાથે એક ચેતવણી મેળવશો.\n\nએપ તમને પણ તમારા લક્ષણો રિપોર્ટ કરવાનું કહેશે અને તમને પરીક્ષણની જરૂરિયાત છે કે નહીં તે શોધી આપશે.\n\nતમે આ એપનો ઉપયોગ તમે જે સ્થળની મુલાકાત લો તેમાં ઝડપથી અને સરળતાથી ચેક-ઇન કરવા અધિકૃત NHS QR કોડ સ્કેન કરવા માટે કરી શકો.";
+"about_this_app_how_this_app_works_description" = "તમને અને અન્યોની રક્ષા કરવા માટે આ એપ સંપર્ક ટ્રેસિંગ ટેક્નોલોજીનો ઉપયોગ કરે છે જેથી આપણે બધા આપણી ગમતી વસ્તુઓ તરફ પરત ફરી શકીએ.\n\nએપ વપરાશકર્તાની આસપાસના અન્યોને એપ શોધે છે અને લૉગ કરે છે. જો તેમાંથી કોઈ વપરાશકર્તા પછીથી કોરોનાવાયરસ પરીક્ષણ માટે સકારાત્મક નીકળે છે, તો તમે સલાહ સાથે એક ચેતવણી મેળવશો.\n\nએપ તમને પણ તમારા લક્ષણો રિપોર્ટ કરવાનું કહેશે અને તમને પરીક્ષણની જરૂરિયાત છે કે નહીં તે શોધી આપશે.";
 "privacy_description_paragraph1" = "NHS તમારી ગોપનીયતાને મહત્ત્વ આપે છે, એટલે કે તમે કોણ છો, તમે ક્યાં છો અથવા તમારી સાથે કોણ છે તે એપ જણાવી શકતી નથી .\n\nજો તમારું કોરોનાવાયરસની ટેસ્ટ પોઝિટીવ, તો તમે NHS સાથે તમારા ડેટા શેર કરવાનું પસંદ કરી શકો છો જેથી અમે ઇંગ્લેન્ડ, વેલ્સ, સ્કોટલેન્ડ, ઉત્તરી આયરલેંડ, જર્સી અને જિબ્રાલ્ટરમાં બીજા એપ યૂઝરોને ચેતવણી આપી શકીએ. આગળ ચાલુ રાખવાનું પસંદ કરવાથી જેઓને આ સ્થાનો પર ચેતવણી આપવાની જરૂર છે તેઓને અમે તમારી સૂચનાઓ એપ યૂઝરોને માટે અવેલેબલ કરીશું.\n\nકયા એપ યૂઝરોને ચેતવણી આપવી જરૂરી છે તે નક્કી કરવા માટે અમે ઓટોમેટેડ સિસ્ટમનો  ઉપયોગ કરીએ છીએ.";
 "accessability_error_os_out_of_date" = "તમારું સોફ્ટવેર અપડેટ કરો";
 "accessability_error_update_the_app" = "એપ અપડેટ કરો";
@@ -461,7 +461,7 @@
 "positive_test_result_requires_follow_up_test_start_to_isolate_info" = "તમારા કોરોનાવાયરસનું ટેસ્ટ પરિણામ સકારાત્મક છે";
 "positive_test_result_requires_follow_up_test_explanation" = "સેલ્ફ આયસોલેશનનાં દિવસોનો એપ કેવી રીતે સરવાળો કરે છે એ જાણવા માટે પૂછાતા પ્રશ્નો જૂઓ.\n\nતમે રૅપિડ સ્વૅબ ટેસ્ટ લીધો હોવાથી તમારે હવે રિઝલ્ટ માટે લૅબમાં મોકલવામાં આવેલ અન્ય પ્રકારનો ટેસ્ટ કરાવવાની જરૂર છે.\n\nદરમિયાન, તમે અને તમે જેમની સાથે રહેતા હો એવી કોઈ પણ વ્યક્તિએ તાત્કાલિક સૅલ્ફ-આઇસોલેટ થવાનું રહેશે.";
 "positive_test_result_requires_follow_up_test_book_test_button" = "ફોલો-અપ ટેસ્ટ બૂક કરો";
-"positive_test_result_already_confirmed_positive_explanation" = "જો તમારી ઉંમર 18 વર્ષથી ઓછી હોય તો તમે આ સંદેશ કોઈ વિશ્વાસુ પુખ્ત વ્યક્તિને બતાવો એવી સલાહ આપવામાં આવે છે.";
+"positive_test_result_already_confirmed_positive_explanation" = "જો તમારી ઉંમર 18 વર્ષથી ઓછી છે, તો તમને વિશ્વાસપાત્ર વડીલને વ્યક્તિને આ સંદેશ બતાવવાની સલાહ આપવામાં આવે છે.";
 "positive_test_result_already_confirmed_positive_title" = "સેલ્ફ-આઇસોલેશનમાં રહેવાનું ચાલુ રાખો";
 "positive_test_result_already_confirmed_positive_info" = "તમારા કોરોનાવાયરસનું ટેસ્ટ પરિણામ સકારાત્મક છે";
 "positive_test_result_already_confirmed_positive_continue" = "ચાલુ રાખો";
@@ -649,7 +649,7 @@
 "book_a_follow_up_test_button" = "ફોલો-અપ ટેસ્ટ બૂક કરો";
 "book_a_follow_up_test_close_button" = "બંધ કરો";
 "link_test_result_thank_you_continue_to_book_a_test_button" = "ચાલુ રાખો";
-"local_information_banner_read_more" = "વધુ વાંચો";
+"local_information_banner_read_more" = "Read updated guidance";
 "home_animations_heading" = "તમારી હોમ સ્ક્રીન પર ફરતા સર્કલોને રોકો અથવા પ્રારંભ કરો.";
 "home_animations_description" = "આ તમારી એપ કેવી રીતે કાર્ય કરશે તે બદલશે નહીં. તે ફક્ત મોશન બદલશે.";
 "self_diagnosis_symptoms_after_positive_info" = "ટેસ્ટ પોઝિટીવ આવ્યા પછી તમને લક્ષણોનો અનુભવ થયો છે";
@@ -1024,3 +1024,19 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_social_distancing_england" = "તમારા ઘરમાં COVID-19 ધરાવતી કોઈપણ વ્યક્તિ સાથે નજીકના સંપર્કને મર્યાદિત કરો";
 "contact_case_no_isolation_fully_vaccinated_list_item_get_tested_before_meeting_vulnerable_people_england" = "જો તમને COVID-19 ના લક્ષણો હોય તો PCR ટેસ્ટ કરાવો";
 "contact_case_no_isolation_fully_vaccinated_list_item_wear_a_mask_england" = "ભીડવાળી, બંધ અથવા અપૂરતા વેન્ટિલેશનવાળી જગ્યાઓ પર ફેસ માસ્ક પહેરો";
+"risky_contact_opt_out_further_advice_link_url" = "https://www.gov.uk/government/publications/covid-19-people-with-covid-19-and-their-contacts/covid-19-people-with-covid-19-and-their-contacts#what-to-do-if-you-are-a-close-contact-of-someone-who-has-covid-19";
+"contact_case_exposure_info_screen_title_england" = "એપ્લિકેશને શોધ્યું  કે તમે એ વ્યક્તિની નજીક ગયેલા છો જેને કોરોનાવાયરસ (COVID-19) માટે પોઝીટીવ રિઝલ્ટ થયું હતું.";
+"contact_case_exposure_info_screen_information_england" = "જો તમારી ઉંમર 18 વર્ષથી ઓછી છે, તો તમને વિશ્વાસપાત્ર વડીલને વ્યક્તિને આ સંદેશ બતાવવાની સલાહ આપવામાં આવે છે";
+"contact_case_exposure_info_screen_continue_button_england" = "ચાલુ રાખો";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading_england" = "નજીકના કોન્ટેક્ટની ગણતરી કેવી રીતે કરવામાં આવે છે";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_body_england" = "તમારો ફોન અન્ય લોકો સાથે નજીક કૉન્ટેક્ટમાં આવ્યો છે કે કેમ તે ચકાસવા માટે એપ બ્લૂટૂથનો ઉપયોગ કરે છે.\n\nનજીકના કૉન્ટેક્ટનો અર્થ એ છે કે તમે 15 મિનિટ કે તેથી વધુ સમય માટે કોઈ સાથે 2 મીટરથી ઓછા અંતરમાં કૉન્ટેક્ટમાં રહ્યા છો.\n\nઆ ઍપ ગોપનીય છે અને તમારા સ્થાનને ટ્રૅક કરવા માટે ગ્લોબલ પોઝિશનિંગ સિસ્ટમનો (GPS) ઉપયોગ કરતી નથી, તેથી તમારી ગોપનીયતા જળવાઈ રહે છે.";
+"risky_contact_opt_out_advice_title" = "પોતાનું અને અન્યોનું રક્ષણ કરવા માટે COVID-19ના નવીનતમ નિર્દેશોનું પાલન કરો";
+"risky_contact_opt_out_advice_meeting_indoors" = "જો તમે ઘરની અંદર મળો તો તાજી હવા આવવા દો અથવા બહાર મળો";
+"risky_contact_opt_out_advice_mask" = "ગીચ અને બંધિયાર જગ્યાઓમાં માસ્ક પહેરો";
+"risky_contact_opt_out_advice_testing_hub" = "જો તમને COVID-19 લક્ષણો હોય તો ટેસ્ટ કરાવો અને જો તમારો ટેસ્ટ પૉઝિટિવ હોય તો ઘરે રહો";
+"risky_contact_opt_out_advice_wash_hands" = "નિયમિતપણે તમારા હાથ ધુઓ અને ખાંસી તથા છીંક વખતે મોઢું ઢાંકો";
+"risky_contact_opt_out_further_advice" = "જો તમારા ઘરમાં COVID-19 માટે કોઈ વ્યક્તિનો ટેસ્ટ પૉઝિટિવ આવે તો કૃપા કરીને અહીં મુલાકાત લો:";
+"risky_contact_opt_out_further_advice_link_text" = "ઘરેલુ સંપર્કો માટે માર્ગદર્શન";
+"risky_contact_opt_out_primary_button_title" = "નવીનતમ COVID-19 માર્ગદર્શન વાંચો";
+"risky_contact_opt_out_secondary_button_title" = "હોમ સ્ક્રીન પર પાછા";
+"contact_case_exposure_info_screen_exposure_date_england %@" = "%@ પર નજીકના કોન્ટેક્ટ થયો";

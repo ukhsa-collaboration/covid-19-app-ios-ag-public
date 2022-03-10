@@ -16,12 +16,16 @@ public struct FeatureToggleStorage {
     @UserDefault("scenario.toggle.venueCheckIn", defaultValue: Feature.productionEnabledFeatures.contains(.venueCheckIn))
     public var venueCheckInToggle: Bool
     
+    @UserDefault("scenario.toggle.englandOptOutFlow", defaultValue: Feature.productionEnabledFeatures.contains(.englandOptOutFlow))
+    public var englandOptOutFlowToggle: Bool
+    
     #warning("Retrieve key from UserDefault")
     public var allFeatureKeys: [String] {
         [
             $newNoSymptomsScreenToggle.key,
             $localStatisticsToggle.key,
             $venueCheckInToggle.key,
+            $englandOptOutFlowToggle.key,
         ]
     }
     
@@ -41,6 +45,10 @@ public struct FeatureToggleStorage {
         
         if store.venueCheckInToggle {
             enabledFeatures.append(.venueCheckIn)
+        }
+        
+        if store.englandOptOutFlowToggle {
+            enabledFeatures.append(.englandOptOutFlow)
         }
         
         return enabledFeatures

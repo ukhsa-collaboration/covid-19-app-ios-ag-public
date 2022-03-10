@@ -294,7 +294,7 @@
 "negative_test_result_no_isolation_warning" = "Dacă nu vă simțiți bine, rămâneți acasă până vă reveniți";
 "link_test_result_thank_you_back_home_button" = "Înapoi acasă";
 "mydata_data_deletion_button_title" = "Șterge toate datele mele";
-"about_this_app_how_this_app_works_description" = "Această aplicație folosește tehnologia de urmărire a contactelor pentru a vă ajuta la protejarea dvs. și a celorlalți, astfel încât să putem reveni cu toții la lucrurile care ne plac.\n\nAplicația notifică și înregistrează alți utilizatori ai aplicației din apropiere. Dacă vreunul dintre acești utilizatori este testat ulterior pozitiv pentru coronavirus, veți primi o alertă cu sfaturi.\n\nAplicația vă permite, de asemenea, să vă raportați simptomele și să aflați dacă aveți nevoie de un test.\n\nO mai puteți utiliza și pentru a scana coduri oficiale NHS QR pentru a vă înregistra rapid și ușor în locurile pe care le vizitați.";
+"about_this_app_how_this_app_works_description" = "Această aplicație folosește tehnologia de urmărire a contactelor pentru a vă ajuta la protejarea dvs. și a celorlalți, astfel încât să putem reveni cu toții la lucrurile care ne plac.\n\nAplicația notifică și înregistrează alți utilizatori ai aplicației din apropiere. Dacă vreunul dintre acești utilizatori este testat ulterior pozitiv pentru coronavirus, veți primi o alertă cu sfaturi.\n\nAplicația vă permite, de asemenea, să vă raportați simptomele și să aflați dacă aveți nevoie de un test.";
 "privacy_description_paragraph1" = "NHS vă apreciază confidențialitatea, ceea ce înseamnă că aplicația nu poate spune cine sunteți, unde sunteți sau cine se află alături de dvs.\n\nDacă sunteți testat/ ă pozitiv pentru coronavirus, puteți alege să partajați informațiile cu NHS, astfel încât să putem anunța alți utilizatori ai aplicației din Anglia, Țara Galilor, Scoția, Irlanda de Nord, Jersey și Gibraltar. Selectând continuare, vom face notificările dvs. disponibile altor utilizatori ai aplicației care trebuie să fie anunțați în aceste locații.\n\nFolosim luarea automată a deciziilor pentru a determina ce alți utilizatori trebuie să fie anunțați în mod anonim.";
 "accessability_error_os_out_of_date" = "Actualizați software-ul";
 "accessability_error_update_the_app" = "Actualizați aplicația";
@@ -649,7 +649,7 @@
 "book_a_follow_up_test_button" = "Rezervați un test de control";
 "book_a_follow_up_test_close_button" = "Închidere";
 "link_test_result_thank_you_continue_to_book_a_test_button" = "Continuare";
-"local_information_banner_read_more" = "Aflați mai multe";
+"local_information_banner_read_more" = "Read updated guidance";
 "home_animations_heading" = "Activați sau dezactivați cercurile în mișcare de pe ecranul de pornire.";
 "home_animations_description" = "Acest lucru nu va modifica modul în care funcționează aplicația. Se va modifica doar mișcarea.";
 "self_diagnosis_symptoms_after_positive_info" = "Ați raportat simptome după ce ați testat pozitiv";
@@ -1024,3 +1024,19 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_social_distancing_england" = "Limitați contactul apropiat cu orice persoană din gospodăria dvs. care are COVID-19";
 "contact_case_no_isolation_fully_vaccinated_list_item_get_tested_before_meeting_vulnerable_people_england" = "Efectuați un test PCR dacă aveți simptome de COVID-19";
 "contact_case_no_isolation_fully_vaccinated_list_item_wear_a_mask_england" = "Purtați mască facială în spații aglomerate, închise sau slab aerisite";
+"risky_contact_opt_out_further_advice_link_url" = "https://www.gov.uk/government/publications/covid-19-people-with-covid-19-and-their-contacts/covid-19-people-with-covid-19-and-their-contacts#what-to-do-if-you-are-a-close-contact-of-someone-who-has-covid-19";
+"contact_case_exposure_info_screen_title_england" = "Aplicația a detectat că v-ați aflat în apropierea unei persoane care a testat pozitiv pentru coronavirus (COVID-19)";
+"contact_case_exposure_info_screen_information_england" = "Dacă aveți sub 18 ani, vă recomandăm să arătați acest mesaj unui adult de încredere";
+"contact_case_exposure_info_screen_continue_button_england" = "Continuați";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading_england" = "Cum se calculează contactul apropiat";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_body_england" = "Aplicația utilizează Bluetooth pentru a verifica dacă telefonul dvs. a fost în contact strâns cu alții.\n\nContactul strâns înseamnă că ați fost la 2 metri de cineva timp de 15 minute sau mai mult.\n\nAplicația este anonimă și nu folosește GPS pentru a vă monitoriza locația, deci confidențialitatea dvs. este protejată.";
+"risky_contact_opt_out_advice_title" = "Respectați cele mai recente recomandări privind COVID-19 pentru a vă proteja pe dvs. și pe cei din jur";
+"risky_contact_opt_out_advice_meeting_indoors" = "Aerisiți încăperea atunci când socializați în spații interioare sau socializați în spații exterioare";
+"risky_contact_opt_out_advice_mask" = "Purtați masca de protecție în zone aglomerate sau spații închise";
+"risky_contact_opt_out_advice_testing_hub" = "Dacă prezentați simptome de COVID-19, efectuați un test și rămâneți acasă dacă testul este pozitiv";
+"risky_contact_opt_out_advice_wash_hands" = "Spălați-vă pe mâini în mod regulat și acoperiți gura și nasul când tușiți sau strănutați";
+"risky_contact_opt_out_further_advice" = "Dacă o persoană din locuința dvs. a fost testată pozitiv pentru COVID-19, vizitați:";
+"risky_contact_opt_out_further_advice_link_text" = "Recomandări pentru contacții din aceeași locuință";
+"risky_contact_opt_out_primary_button_title" = "Citiți cele mai recente instrucțiuni referitoare la COVID-19";
+"risky_contact_opt_out_secondary_button_title" = "Înapoi la ecranul de pornire";
+"contact_case_exposure_info_screen_exposure_date_england %@" = "Contactul strâns s-a întâmplat pe %@";

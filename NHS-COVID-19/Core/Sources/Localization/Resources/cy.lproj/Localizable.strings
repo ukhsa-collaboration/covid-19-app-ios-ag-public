@@ -294,7 +294,7 @@
 "negative_test_result_no_isolation_warning" = "Os ydych chi'n teimlo'n sâl, arhoswch adref nes eich bod yn teimlo’n well";
 "link_test_result_thank_you_back_home_button" = "Yn ôl i'r dudalen gartref";
 "mydata_data_deletion_button_title" = "Dileu fy holl ddata";
-"about_this_app_how_this_app_works_description" = "Mae'r ap hwn yn defnyddio technoleg olrhain cysylltiadau i helpu i ddiogelu eich hun ac eraill.\n\nMae'r ap yn canfod ac yn cofnodi defnyddwyr eraill yr ap sy'n gyfagos. Os bydd unrhyw un o'r defnyddwyr hynny yn profi'n bositif am y coronafeirws yn ddiweddarach, byddwch yn derbyn rhybudd gyda chyngor.\n\nMae'r ap hefyd yn gadael i chi roi gwybod am eich symptomau a chanfod a oes angen prawf arnoch.\n\nGallwch hefyd ddefnyddio'r ap hwn i sganio codau QR swyddogol y GIG er mwyn mewngofnodi i leoedd rydych yn ymweld â nhw.";
+"about_this_app_how_this_app_works_description" = "Mae'r ap hwn yn defnyddio technoleg olrhain cysylltiadau i helpu i ddiogelu eich hun ac eraill.\n\nMae'r ap yn canfod ac yn cofnodi defnyddwyr eraill yr ap sy'n gyfagos. Os bydd unrhyw un o'r defnyddwyr hynny yn profi'n bositif am y coronafeirws yn ddiweddarach, byddwch yn derbyn rhybudd gyda chyngor.\n\nMae'r ap hefyd yn gadael i chi roi gwybod am eich symptomau a chanfod a oes angen prawf arnoch.";
 "privacy_description_paragraph1" = "Mae'r GIG yn gwerthfawrogi eich preifatrwydd, sy'n golygu na all yr ap ddweud pwy ydych chi, ble rydych chi na phwy sydd gyda chi.\n\nOs profwch yn bositif am y coronafeirws, gallwch ddewis rhannu eich data gyda'r GIG er mwyn i ni allu rhybuddio defnyddwyr eraill yr ap yng Nghymru, Lloegr, yr Alban, Gogledd Iwerddon, Jersey a Gibraltar. Drwy ddewis parhau byddwn yn gallu anfon hysbysiadau, os oes angen, at ddefnyddwyr eraill yr ap yn y mannau hynny.\n\nRydym yn defnyddio penderfyniadau awtomataidd i helpu i benderfynu pa ddefnyddwyr eraill y mae angen eu rhybuddio yn ddienw.";
 "accessability_error_os_out_of_date" = "Diweddarwch eich meddalwedd";
 "accessability_error_update_the_app" = "Diweddarwch yr ap hwn";
@@ -649,7 +649,7 @@
 "book_a_follow_up_test_button" = "Archebwch brawf dilynol";
 "book_a_follow_up_test_close_button" = "Cau";
 "link_test_result_thank_you_continue_to_book_a_test_button" = "Parhau";
-"local_information_banner_read_more" = "Darllen mwy";
+"local_information_banner_read_more" = "Read updated guidance";
 "home_animations_heading" = "Stopio neu dechrau’r cylchoedd sy’n symud ar eich sgrin gartref.";
 "home_animations_description" = "Ni fydd hyn yn newid sut y mae eich ap yn gweithio. Dim ond newid y symudiadau a wnaiff.";
 "self_diagnosis_symptoms_after_positive_info" = "Rydych wedi dweud bod gennych symptomau ar ôl cael canlyniad prawf positif";
@@ -1024,3 +1024,19 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_social_distancing_england" = "Cyfyngwch gyswllt agos gydag unrhyw un yn eich aelwyd sydd â COVID-19";
 "contact_case_no_isolation_fully_vaccinated_list_item_get_tested_before_meeting_vulnerable_people_england" = "Cymerwch brawf PCR os oes gennych chi symptomau COVID-19";
 "contact_case_no_isolation_fully_vaccinated_list_item_wear_a_mask_england" = "Gwisgwch orchudd wyneb mewn lleoliadau prysur, amgaeedig neu sydd heb eu hawyru’n dda";
+"risky_contact_opt_out_further_advice_link_url" = "https://www.gov.uk/government/publications/covid-19-people-with-covid-19-and-their-contacts/covid-19-people-with-covid-19-and-their-contacts#what-to-do-if-you-are-a-close-contact-of-someone-who-has-covid-19";
+"contact_case_exposure_info_screen_title_england" = "Mae'r ap wedi darganfod y buoch yn ymyl rhywun a gafodd ganlyniad positif i brawf coronafeirws (COVID-19)";
+"contact_case_exposure_info_screen_information_england" = "Os ydych o dan 18, dylech ddangos y neges yma i oedolyn rydych chi’n ymddiried ynddo/ynddi";
+"contact_case_exposure_info_screen_continue_button_england" = "Parhau";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading_england" = "Sut mae dyddiau hunanynysu yn cael eu cyfrifo";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_body_england" = "Mae'r ap yn defnyddio Bluetooth i wirio a fu eich ffôn mewn cysylltiad agos ag eraill.\n\nMae cysylltiad agos yn golygu y buoch o fewn 2 fetr i rywun am 15 munud neu fwy.\n\nMae’r ap yn ddienw ac nid yw'n defnyddio GPS i olrhain eich lleoliad, felly mae'ch preifatrwydd wedi ei ddiogelu.";
+"risky_contact_opt_out_advice_title" = "Dilynwch y canllawiau COVID-19 diweddaraf i ddiogelu eich hun ac eraill";
+"risky_contact_opt_out_advice_meeting_indoors" = "Gadael awyr iach i mewn os byddwch chi'n cwrdd da do, neu gwrdd tu allan";
+"risky_contact_opt_out_advice_mask" = "Gwisgo gorchudd wyneb mewn lleoliadau prysur ac amgaeedig";
+"risky_contact_opt_out_advice_testing_hub" = "Cymryd prawf os bydd gennych chi symptomau COVID-19 ac aros gartref os byddwch chi'n cael canlyniad positif";
+"risky_contact_opt_out_advice_wash_hands" = "Golchi’ch dwylo’n rheolaidd a gorchuddio unrhyw beswch neu disian";
+"risky_contact_opt_out_further_advice" = "Os bydd rhywun yn eich cartref wedi cael prawf positif ar gyfer COVID-19, ewch i:";
+"risky_contact_opt_out_further_advice_link_text" = "Canllawiau ar gyfer cysylltiadau yn y cartref";
+"risky_contact_opt_out_primary_button_title" = "Darllenwch y canllaw COVID-19 diweddaraf";
+"risky_contact_opt_out_secondary_button_title" = "Yn ôl i’r sgrîn gartref";
+"contact_case_exposure_info_screen_exposure_date_england %@" = "Digwyddodd cyswllt agos ar %@";

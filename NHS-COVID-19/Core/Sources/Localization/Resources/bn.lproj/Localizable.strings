@@ -294,7 +294,7 @@
 "negative_test_result_no_isolation_warning" = "আপনি যদি অসুস্থ বোধ করেন, তাহলে ভাল বোধ না করা পর্যন্ত বাসায় থাকুন";
 "link_test_result_thank_you_back_home_button" = "হোমে ফিরে যান";
 "mydata_data_deletion_button_title" = "আমার সকল তথ্য মুছে ফেলুন";
-"about_this_app_how_this_app_works_description" = "নিজেকে এবং অন্যকে সুরক্ষিত রাখতে সহায়তা করার জন্য এই অ্যাপ কন্ট্যাক্ট ট্রেসিং প্রযুক্তি ব্যবহার করে যাতে আমরা যা ভালোবাসি তাতে ফিরে যেতে পারি।\n\nকাছাকাছি থাকা অন্যান্য অ্যাপ ব্যবহারকারীদের এই অ্যাপটি শনাক্ত এবং লগ করে। পরবর্তীতে করোনাভাইরাস পরীক্ষাতে যদি এই ব্যবহারকারীদের মধ্যে কোনো ব্যবহারকারীর ফলাফল পজিটিভ আসে তবে আপনি পরামর্শসহ একটি সতর্কবার্তা পাবেন।\n\nএই অ্যাপ আপনার উপসর্গ সম্পর্কে জানাতে এবং আপনার পরীক্ষা করানোর প্রয়োজন আছে কি না তা জানাতে দেয়।\n\nআপনি ঘুরতে যান এমন স্থানসমূহে দ্রুত ও সহজে প্রবেশ করতে এই অ্যাপ অফিসিয়াল NHS QR কোডগুলি স্ক্যান করার জন্যও আপনি তা ব্যবহার করতে পারেন।";
+"about_this_app_how_this_app_works_description" = "নিজেকে এবং অন্যকে সুরক্ষিত রাখতে সহায়তা করার জন্য এই অ্যাপ কন্ট্যাক্ট ট্রেসিং প্রযুক্তি ব্যবহার করে যাতে আমরা যা ভালোবাসি তাতে ফিরে যেতে পারি।\n\nকাছাকাছি থাকা অন্যান্য অ্যাপ ব্যবহারকারীদের এই অ্যাপটি শনাক্ত এবং লগ করে। পরবর্তীতে করোনাভাইরাস পরীক্ষাতে যদি এই ব্যবহারকারীদের মধ্যে কোনো ব্যবহারকারীর ফলাফল পজিটিভ আসে তবে আপনি পরামর্শসহ একটি সতর্কবার্তা পাবেন।\n\nএই অ্যাপ আপনার উপসর্গ সম্পর্কে জানাতে এবং আপনার পরীক্ষা করানোর প্রয়োজন আছে কি না তা জানাতে দেয়।";
 "privacy_description_paragraph1" = "NHS আপনার গোপনীয়তার উপর গুরুত্ব প্রদান করে থাকে যার অর্থ হল অ্যাপটি বলতে পারবে না আপনি কে, আপনি কোথায় বা আপনার সাথে আছেন।\n\nপরীক্ষায় যদি ধরা পড়ে যে আপনার করোনাভাইরাস আছে, তাহলে আপনি আপনার তথ্য এনএইচএসকে জানাতে পারেন, যাতে আমরা ইংল্যান্ড, ওয়েলস, স্কটল্যান্ড, নর্দার্ন আয়ারল্যান্ড, জার্সি ও জিব্রালটারে অ্যাপ ব্যবহারকারী লোকজনকে হুশিয়ার করতে পারি। ‘চালিয়ে যান’ বেছে নিয়ে আমরা আপনার নোটিফিকেশনগুলোকে এই সব জায়গা জুড়ে যেসব অ্যাপ ব্যবহারকারীকে হুশিয়ার করা দরকার তাদেরকে তা করতে পারব। \n\nঅন্যান্য কোন কোন ব্যবহারকারীকে বেনামি হুশিয়ারি দেওয়া দরকার তা ঠিক করতে সহায়তা করার জন্য আমরা স্বয়ংক্রিয় সিদ্ধান্তগ্রহণ ব্যবস্থা কাজে লাগাই।";
 "accessability_error_os_out_of_date" = "আপনার সফটওয়্যার আপডেট করুন";
 "accessability_error_update_the_app" = "এই অ্যাপ আপডেট করুন";
@@ -461,7 +461,7 @@
 "positive_test_result_requires_follow_up_test_start_to_isolate_info" = "আপনার করোনাভাইরাস পরীক্ষার ফলাফল পজিটিভ";
 "positive_test_result_requires_follow_up_test_explanation" = "স্ব-বিচ্ছিন্ন থাকার দিন সংখ্যা এই অ্যাপ কীভাবে গণনা করে তা বুঝতে নিচে প্রদত্ত প্রায়শই জিজ্ঞাসিত প্রশ্নাবলী দেখুন।\n\nআপনি যেহেতু একটি দ্রুত সোয়্যাব পরীক্ষা করিয়েছিলেন, তাই আপনাকে এখন আরেক ধরনের পরীক্ষা করাতে হবে যার ফলাফল যাচাই করার জন্য ল্যাবে পাঠানো হয়।\n\nমধ্যবর্তী সময়ে, আপনাকে এবং আপনার সঙ্গে বসবাসকারী যে কাউকে অবিলম্বে স্ব-বিচ্ছিন্ন হতে হবে।";
 "positive_test_result_requires_follow_up_test_book_test_button" = "একটি ফলো-আপ পরীক্ষা বুক করুন";
-"positive_test_result_already_confirmed_positive_explanation" = "যদি আপনি ১৮ বছরের কম বয়সী হয়ে থাকেন, তাহলে আপনাকে এই বার্তা কোনও বিশ্বস্ত প্রাপ্তবয়স্ককে দেখানোর পরামর্শ দেওয়া হচ্ছে।";
+"positive_test_result_already_confirmed_positive_explanation" = "আপনার বয়স ১৮ বছরের কম হলে, নির্ভরযোগ্য কোনো প্রাপ্তবয়ষ্ক ব্যক্তিকে এই বার্তা দেখানোর জন্য পরামর্শ দেওয়া হচ্ছে।";
 "positive_test_result_already_confirmed_positive_title" = "স্ব-বিচ্ছিন্ন থাকা বহাল রাখুন";
 "positive_test_result_already_confirmed_positive_info" = "আপনার করোনাভাইরাস পরীক্ষার ফলাফল পজিটিভ";
 "positive_test_result_already_confirmed_positive_continue" = "চালিয়ে যান";
@@ -649,7 +649,7 @@
 "book_a_follow_up_test_button" = "একটি ফলো-আপ পরীক্ষা বুক করুন";
 "book_a_follow_up_test_close_button" = "বন্ধ করুন";
 "link_test_result_thank_you_continue_to_book_a_test_button" = "চালিয়ে যান";
-"local_information_banner_read_more" = "আরো পড়ুন";
+"local_information_banner_read_more" = "Read updated guidance";
 "home_animations_heading" = "আপনার হোম স্ক্রিনে চলমান বৃত্তগুলো থামান বা চালু করুন।";
 "home_animations_description" = "এর দরুন আপনার অ্যাপ যেভাবে কাজ করে তা বদলাবে না। এতে কেবল মোশন বদলাবে।";
 "self_diagnosis_symptoms_after_positive_info" = "সংক্রমণ ধরা পড়ার পর আপনি উপসর্গের কথা জানিয়েছেন ";
@@ -1024,3 +1024,19 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_social_distancing_england" = "আপনার পরিবারের এমন যে কারোর সাথে ঘনিষ্ঠ যোগাযোগ সীমিত করুন যার COVID-19 আছে";
 "contact_case_no_isolation_fully_vaccinated_list_item_get_tested_before_meeting_vulnerable_people_england" = "আপনার COVID-19 এর লক্ষণ থাকলে একটি PCR পরীক্ষা করান";
 "contact_case_no_isolation_fully_vaccinated_list_item_wear_a_mask_england" = "জনবহুল, চারদিক ঘেরা বা দুর্বল বায়ুচলাচলযুক্ত স্থানে মুখ ঢাকার আবরণ পরে থাকুন";
+"risky_contact_opt_out_further_advice_link_url" = "https://www.gov.uk/government/publications/covid-19-people-with-covid-19-and-their-contacts/covid-19-people-with-covid-19-and-their-contacts#what-to-do-if-you-are-a-close-contact-of-someone-who-has-covid-19";
+"contact_case_exposure_info_screen_title_england" = "অ্যাপটি সনাক্ত করেছে যে  করোনাভাইরাসে (কোভিড-১৯) আক্রান্ত হিসাবে সনাক্ত হওয়া কারো সংস্পর্শে আপনি গিয়েছিলেন";
+"contact_case_exposure_info_screen_information_england" = "আপনার বয়স ১৮ বছরের কম হলে, নির্ভরযোগ্য কোনো প্রাপ্তবয়ষ্ক ব্যক্তিকে এই বার্তা দেখানোর জন্য পরামর্শ দেওয়া হচ্ছে";
+"contact_case_exposure_info_screen_continue_button_england" = "চালিয়ে যান";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading_england" = "নিকট সংস্পর্শ কীভাবে গণনা করা হয়";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_body_england" = "আপনার ফোন অন্যদের নিকট সংস্পর্শে ছিল কিনা তা যাচাই করতে এই অ্যাপ ব্লুটুথ ব্যবহার করে।\n\nনিকট সংস্পর্শে আসার অর্থ আপনি কারো ২ মিটার দূরত্বের মধ্যে ১৫ মিনিট বা তার বেশি সময় ছিলেন।\n\nঅ্যাপটি অজ্ঞাতপরিচয় এবং আপনার অবস্থান সনাক্ত করতে বিশ্বজনীন অবস্থান সনাক্তকারী ব্যবস্থা (GPS) ব্যবহার করে না, তাই আপনার গোপনীয়তা সুরক্ষিত।";
+"risky_contact_opt_out_advice_title" = "নিজেকে এবং অন্যদের রক্ষা করতে সর্বশেষ COVID-19 নির্দেশনা অনুসরণ করুন";
+"risky_contact_opt_out_advice_meeting_indoors" = "আপনি বাড়ির ভিতরে দেখা করলে তাজা বাতাস প্রবেশ করতে দিন, অথবা বাইরে দেখা করুন";
+"risky_contact_opt_out_advice_mask" = "জনবহুল এবং চারদিক ঘেরা জায়গায় মুখ ঢাকার আবরণ পরুন";
+"risky_contact_opt_out_advice_testing_hub" = "আপনার COVID-19 এর উপসর্গ থাকলে একটি পরীক্ষা করান এবং আপনার পরীক্ষার ফলাফল পজিটিভ হলে বাড়িতে থাকুন";
+"risky_contact_opt_out_advice_wash_hands" = "নিয়মিত আপনার হাত ধুয়ে নিন এবং কাশি ও হাঁচির সময় মুখ ঢেকে রাখুন";
+"risky_contact_opt_out_further_advice" = "আপনার পরিবারের কারও COVID-19 পরীক্ষার ফল পজিটিভ হয়ে থাকলে, অনুগ্রহ করে দেখুন:";
+"risky_contact_opt_out_further_advice_link_text" = "পরিবারের সংস্পর্শে থাকা ব্যক্তিদের জন্য নির্দেশনা";
+"risky_contact_opt_out_primary_button_title" = "COVID-19 সংক্রান্ত সর্বশেষ নির্দেশিকা পড়ুন";
+"risky_contact_opt_out_secondary_button_title" = "হোম স্ক্রিনে ফিরে যান";
+"contact_case_exposure_info_screen_exposure_date_england %@" = "নিকট সংস্পর্শে আসার ঘটনা %@ তারিখে ঘটেছিল";

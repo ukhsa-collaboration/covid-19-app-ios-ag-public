@@ -39,6 +39,7 @@ class MockServer: HTTPClient {
             IsolationPaymentUpdateHandler(),
             EmptyHandler(),
             LocalCovidStatsHandler(dataProvider: dataProvider),
+            IsolationConfigurationHandler(dataProvider: dataProvider),
         ]
     }
     

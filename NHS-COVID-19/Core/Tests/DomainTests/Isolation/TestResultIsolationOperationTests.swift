@@ -22,7 +22,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 indexCaseSinceSelfDiagnosisOnset: 8,
                 indexCaseSinceSelfDiagnosisUnknownOnset: 9,
                 housekeepingDeletionPeriod: 14,
-                indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis,
+                indexCaseSinceNPEXDayNoSelfDiagnosis: 11,
                 testResultPollingTokenRetentionPeriod: 28
             )
             

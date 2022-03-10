@@ -26,21 +26,33 @@ class IsolationContextTests: XCTestCase {
                 endpoint: IsolationConfigurationEndpoint(),
                 storage: FileStorage(forCachesOf: .random()),
                 name: "isolation_configuration",
-                initialValue: IsolationConfiguration(
-                    maxIsolation: 21,
-                    contactCase: 14,
-                    indexCaseSinceSelfDiagnosisOnset: 8,
-                    indexCaseSinceSelfDiagnosisUnknownOnset: 9,
-                    housekeepingDeletionPeriod: 14,
-                    indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis,
-                    testResultPollingTokenRetentionPeriod: 28
+                initialValue: EnglandAndWalesIsolationConfigurations(
+                    england: IsolationConfiguration(
+                        maxIsolation: 21,
+                        contactCase: 14,
+                        indexCaseSinceSelfDiagnosisOnset: 8,
+                        indexCaseSinceSelfDiagnosisUnknownOnset: 9,
+                        housekeepingDeletionPeriod: 14,
+                        indexCaseSinceNPEXDayNoSelfDiagnosis: 11,
+                        testResultPollingTokenRetentionPeriod: 28
+                    ),
+                    wales: IsolationConfiguration(
+                        maxIsolation: 21,
+                        contactCase: 14,
+                        indexCaseSinceSelfDiagnosisOnset: 8,
+                        indexCaseSinceSelfDiagnosisUnknownOnset: 9,
+                        housekeepingDeletionPeriod: 14,
+                        indexCaseSinceNPEXDayNoSelfDiagnosis: 11,
+                        testResultPollingTokenRetentionPeriod: 28
+                    )
                 )
             ),
             encryptedStore: MockEncryptedStore(),
             notificationCenter: NotificationCenter(),
             currentDateProvider: MockDateProvider { self.currentDate },
             removeExposureDetectionNotifications: { self.removedNotificaton = true },
-            scheduleSelfIsolationReminderNotification: { self.scheduledNotification = true }
+            scheduleSelfIsolationReminderNotification: { self.scheduledNotification = true },
+            country: Just(Country.england).domainProperty()
         )
     }
     
@@ -52,7 +64,7 @@ class IsolationContextTests: XCTestCase {
             contactCaseInfo: ContactCaseInfo(exposureDay: .today, isolationFromStartOfDay: .today, optOutOfIsolationDay: .today)
         )
         
-        isolationContext.isolationStateManager.state = IsolationLogicalState(stateInfo: IsolationStateInfo(isolationInfo: isoInfo, configuration: .default), day: .today)
+        isolationContext.isolationStateManager.state = IsolationLogicalState(stateInfo: IsolationStateInfo(isolationInfo: isoInfo, configuration: .defaultEngland), day: .today)
         
         let canBookALabTest = try isolationContext.canBookALabTest().await().get()
         XCTAssertTrue(canBookALabTest)
@@ -60,7 +72,7 @@ class IsolationContextTests: XCTestCase {
     
     func testCanBookALabTestIfNotInDateRangeAndNotIsolating() throws {
         let config = isolationContext.isolationConfiguration.value
-        let exposureDay = GregorianDay.today.advanced(by: -config.contactCase.days)
+        let exposureDay = GregorianDay.today.advanced(by: -config.england.contactCase.days)
         
         let isoInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: true,
@@ -73,7 +85,7 @@ class IsolationContextTests: XCTestCase {
             )
         )
         
-        isolationContext.isolationStateManager.state = IsolationLogicalState(stateInfo: IsolationStateInfo(isolationInfo: isoInfo, configuration: config), day: .today)
+        isolationContext.isolationStateManager.state = IsolationLogicalState(stateInfo: IsolationStateInfo(isolationInfo: isoInfo, configuration: config.england), day: .today)
         
         let canBookALabTest = try isolationContext.canBookALabTest().await().get()
         XCTAssertFalse(canBookALabTest)
@@ -81,7 +93,7 @@ class IsolationContextTests: XCTestCase {
     
     func testCanBookALabTestIfIsolationFinishedAndNotAcknowledged() throws {
         let config = isolationContext.isolationConfiguration.value
-        let exposureDay = GregorianDay.today.advanced(by: -config.contactCase.days)
+        let exposureDay = GregorianDay.today.advanced(by: -config.england.contactCase.days)
         
         let isoInfo = IsolationInfo(
             hasAcknowledgedEndOfIsolation: false,
@@ -94,7 +106,7 @@ class IsolationContextTests: XCTestCase {
             )
         )
         
-        isolationContext.isolationStateManager.state = IsolationLogicalState(stateInfo: IsolationStateInfo(isolationInfo: isoInfo, configuration: config), day: .today)
+        isolationContext.isolationStateManager.state = IsolationLogicalState(stateInfo: IsolationStateInfo(isolationInfo: isoInfo, configuration: config.england), day: .today)
         
         let canBookALabTest = try isolationContext.canBookALabTest().await().get()
         XCTAssertFalse(canBookALabTest)
@@ -115,7 +127,7 @@ class IsolationContextTests: XCTestCase {
             )
         )
         
-        isolationContext.isolationStateManager.state = IsolationLogicalState(stateInfo: IsolationStateInfo(isolationInfo: isoInfo, configuration: config), day: .today)
+        isolationContext.isolationStateManager.state = IsolationLogicalState(stateInfo: IsolationStateInfo(isolationInfo: isoInfo, configuration: config.england), day: .today)
         
         let canBookALabTest = try isolationContext.canBookALabTest().await().get()
         XCTAssertTrue(canBookALabTest)
@@ -443,7 +455,7 @@ class IsolationContextTests: XCTestCase {
     func testHandleSymptomsWithoutTest() {
         let onsetDay = GregorianDay.today
         let fromDay = LocalDay(gregorianDay: onsetDay, timeZone: .current)
-        let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.indexCaseSinceSelfDiagnosisOnset.days)
+        let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.england.indexCaseSinceSelfDiagnosisOnset.days)
         
         let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay)
         
@@ -466,7 +478,7 @@ class IsolationContextTests: XCTestCase {
         let receivedOnDay = GregorianDay.today
         let testEndDay = GregorianDay.today.advanced(by: -2)
         let fromDay = LocalDay(gregorianDay: onsetDay, timeZone: .current)
-        let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.indexCaseSinceSelfDiagnosisOnset.days)
+        let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.england.indexCaseSinceSelfDiagnosisOnset.days)
         
         isolationContext.isolationStateStore.set(
             IndexCaseInfo(
@@ -501,7 +513,7 @@ class IsolationContextTests: XCTestCase {
         let receivedOnDay = GregorianDay.today
         let testEndDay = GregorianDay.today.advanced(by: -11)
         let fromDay = LocalDay(gregorianDay: onsetDay, timeZone: .current)
-        let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.indexCaseSinceSelfDiagnosisOnset.days)
+        let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.england.indexCaseSinceSelfDiagnosisOnset.days)
         
         isolationContext.isolationStateStore.set(
             IndexCaseInfo(
@@ -536,7 +548,7 @@ class IsolationContextTests: XCTestCase {
         let receivedOnDay = GregorianDay.today
         let testEndDay = GregorianDay.today.advanced(by: -11)
         let fromDay = LocalDay(gregorianDay: onsetDay, timeZone: .current)
-        let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.contactCase.days)
+        let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.england.contactCase.days)
         
         isolationContext.isolationStateStore.set(
             IndexCaseInfo(
@@ -578,7 +590,7 @@ class IsolationContextTests: XCTestCase {
         let receivedOnDay = GregorianDay.today
         let testEndDay = GregorianDay.today
         let fromDay = LocalDay(gregorianDay: testEndDay, timeZone: .current)
-        let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.indexCaseSinceNPEXDayNoSelfDiagnosis.days)
+        let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.england.indexCaseSinceNPEXDayNoSelfDiagnosis.days)
         
         isolationContext.isolationStateStore.set(
             IndexCaseInfo(

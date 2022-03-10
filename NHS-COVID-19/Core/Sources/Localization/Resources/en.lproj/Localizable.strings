@@ -294,7 +294,7 @@
 "negative_test_result_no_isolation_warning" = "If you feel unwell, stay at home until you feel better";
 "link_test_result_thank_you_back_home_button" = "Back to home";
 "mydata_data_deletion_button_title" = "Delete all my data";
-"about_this_app_how_this_app_works_description" = "This app uses contact tracing technology to help protect yourself and others so we can all get back to the things we love.\n\nThe app notices and logs other nearby app users. If any of those users later test positive for coronavirus, you’ll receive an alert with advice.\n\nThe app also lets you report your symptoms and find out if you need a test.\n\nYou can also use it to scan official NHS QR codes to quickly and easily check in to places you visit.";
+"about_this_app_how_this_app_works_description" = "This app uses contact tracing technology to help protect yourself and others so we can all get back to the things we love.\n\nThe app notices and logs other nearby app users. If any of those users later test positive for coronavirus, you’ll receive an alert with advice.\n\nThe app also lets you report your symptoms and find out if you need a test.";
 "privacy_description_paragraph1" = "The NHS values your privacy, meaning the app cannot tell who you are, where you are or who is with you.\n\nIf you test positive for coronavirus, you can choose to share your data with the NHS so we can alert other app users in England, Wales, Scotland, Northern Ireland, Jersey and Gibraltar. By selecting continue we will be able to send notifications to other app users who need to be alerted across these locations.\n\nWe use automated decision making to help determine which other users need to be anonymously alerted.";
 "accessability_error_os_out_of_date" = "Update your software";
 "accessability_error_update_the_app" = "Update this app";
@@ -649,7 +649,7 @@
 "book_a_follow_up_test_button" = "Book a follow-up test";
 "book_a_follow_up_test_close_button" = "Close";
 "link_test_result_thank_you_continue_to_book_a_test_button" = "Continue";
-"local_information_banner_read_more" = "Read more";
+"local_information_banner_read_more" = "Read updated guidance";
 "home_animations_heading" = "Stop or start the moving circles on your home screen.";
 "home_animations_description" = "This will not change how your app works. It will only change the motion.";
 "self_diagnosis_symptoms_after_positive_info" = "You have reported symptoms after testing positive";
@@ -1024,3 +1024,19 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_social_distancing_england" = "Limit close contact with anyone in your household who has COVID-19";
 "contact_case_no_isolation_fully_vaccinated_list_item_get_tested_before_meeting_vulnerable_people_england" = "Take a PCR test if you have symptoms of COVID-19";
 "contact_case_no_isolation_fully_vaccinated_list_item_wear_a_mask_england" = "Wear a face covering in crowded, enclosed or poorly ventilated spaces";
+"risky_contact_opt_out_further_advice_link_url" = "https://www.gov.uk/government/publications/covid-19-people-with-covid-19-and-their-contacts/covid-19-people-with-covid-19-and-their-contacts#what-to-do-if-you-are-a-close-contact-of-someone-who-has-covid-19";
+"contact_case_exposure_info_screen_title_england" = "The app has detected that you have been near someone who tested positive for coronavirus (COVID-19)";
+"contact_case_exposure_info_screen_information_england" = "If you are under 18, you are advised to show this message to a trusted adult";
+"contact_case_exposure_info_screen_continue_button_england" = "Continue";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading_england" = "How close contact is calculated";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_body_england" = "The app uses Bluetooth to check if your phone has been in close contact with others.\n\nClose contact means you were within 2 metres of someone for 15 minutes or more.\n\nThe app is anonymous and does not use GPS to track your location, so your privacy is protected.";
+"risky_contact_opt_out_advice_title" = "Follow the latest COVID-19 guidance to protect yourself and others";
+"risky_contact_opt_out_advice_meeting_indoors" = "Let fresh air in if you meet indoors, or meet outside";
+"risky_contact_opt_out_advice_mask" = "Wear a face covering in crowded and enclosed spaces";
+"risky_contact_opt_out_advice_testing_hub" = "Take a test if you have COVID-19 symptoms and stay at home if your test is positive";
+"risky_contact_opt_out_advice_wash_hands" = "Wash your hands regularly and cover coughs and sneezes";
+"risky_contact_opt_out_further_advice" = "If someone in your household has tested positive for COVID-19, please visit:";
+"risky_contact_opt_out_further_advice_link_text" = "Guidance for household contacts";
+"risky_contact_opt_out_primary_button_title" = "Read latest COVID-19 guidance";
+"risky_contact_opt_out_secondary_button_title" = "Back to home screen";
+"contact_case_exposure_info_screen_exposure_date_england %@" = "Close contact happened on %@";

@@ -28,6 +28,7 @@ enum LogicalState: Equatable {
 public struct RunningAppContext {
     public var checkInContext: CheckInContext?
     public var shouldShowVenueCheckIn: Bool
+    public var shouldShowOldEnglandOptOutFlow: Bool
     public var postcodeInfo: DomainProperty<(postcode: Postcode, localAuthority: LocalAuthority?, risk: DomainProperty<RiskyPostcodeEndpointManager.PostcodeRisk?>)?>
     public var country: DomainProperty<Country>
     public var bluetoothOff: DomainProperty<Bool>

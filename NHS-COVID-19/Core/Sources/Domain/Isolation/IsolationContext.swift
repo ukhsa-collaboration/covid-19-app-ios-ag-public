@@ -16,7 +16,8 @@ struct IsolationContext {
     
     let isolationStateStore: IsolationStateStore
     let isolationStateManager: IsolationStateManager
-    let isolationConfiguration: CachedResponse<IsolationConfiguration>
+    let isolationConfiguration: CachedResponse<EnglandAndWalesIsolationConfigurations>
+    let country: DomainProperty<Country>
     
     private let notificationCenter: NotificationCenter
     private let currentDateProvider: DateProviding
@@ -26,34 +27,40 @@ struct IsolationContext {
     let shouldAskForSymptoms = CurrentValueSubject<Bool, Never>(false)
     
     init(
-        isolationConfiguration: CachedResponse<IsolationConfiguration>,
+        isolationConfiguration: CachedResponse<EnglandAndWalesIsolationConfigurations>,
         encryptedStore: EncryptedStoring,
         notificationCenter: NotificationCenter,
         currentDateProvider: DateProviding,
         removeExposureDetectionNotifications: @escaping () -> Void,
-        scheduleSelfIsolationReminderNotification: @escaping () -> Void
+        scheduleSelfIsolationReminderNotification: @escaping () -> Void,
+        country: DomainProperty<Country>
     ) {
         self.isolationConfiguration = isolationConfiguration
         self.notificationCenter = notificationCenter
         self.currentDateProvider = currentDateProvider
         self.removeExposureDetectionNotifications = removeExposureDetectionNotifications
         self.scheduleSelfIsolationReminderNotification = scheduleSelfIsolationReminderNotification
+        self.country = country
         
-        isolationStateStore = IsolationStateStore(store: encryptedStore, latestConfiguration: { isolationConfiguration.value }, currentDateProvider: currentDateProvider)
+        isolationStateStore = IsolationStateStore(
+            store: encryptedStore,
+            latestConfiguration: { isolationConfiguration.value.for(country.currentValue) },
+            currentDateProvider: currentDateProvider
+        )
         isolationStateManager = IsolationStateManager(stateStore: isolationStateStore, currentDateProvider: currentDateProvider)
     }
     
     func canBookALabTest() -> AnyPublisher<Bool, Never> {
         isolationStateManager.$state
-            .combineLatest(isolationConfiguration.$value)
-            .map { state, configuration in
+            .combineLatest(isolationConfiguration.$value, country)
+            .map { state, configuration, country in
                 switch state {
                 case .isolating:
                     return true
                 case .notIsolating(let isolation):
-                    return showOptOutLabTestBooking(isolation: isolation, duration: configuration.contactCase)
+                    return showOptOutLabTestBooking(isolation: isolation, duration: configuration.for(country).contactCase)
                 case .isolationFinishedButNotAcknowledged(let isolation):
-                    return showOptOutLabTestBooking(isolation: isolation, duration: configuration.contactCase)
+                    return showOptOutLabTestBooking(isolation: isolation, duration: configuration.for(country).contactCase)
                 }
             }.eraseToAnyPublisher()
     }
@@ -304,4 +311,15 @@ private extension NotificationCenter {
             .eraseToAnyPublisher()
     }
     
+}
+
+extension EnglandAndWalesIsolationConfigurations {
+    func `for`(_ country: Country) -> IsolationConfiguration {
+        switch country {
+        case .england:
+            return england
+        case .wales:
+            return wales
+        }
+    }
 }

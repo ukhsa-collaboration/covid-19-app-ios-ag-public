@@ -39,7 +39,6 @@ struct ContactCaseNoIsolationFullyVaccinatedEnglandScreen {
     var workFromHomeListItem: XCUIElement {
         app.staticTexts[localized: .contact_case_no_isolation_fully_vaccinated_list_item_work_from_home_england]
     }
-
     
     var readGuidanceLinkButton: XCUIElement {
         app.links[localized: .contact_case_no_isolation_fully_vaccinated_primary_button_title_read_guidance_england]

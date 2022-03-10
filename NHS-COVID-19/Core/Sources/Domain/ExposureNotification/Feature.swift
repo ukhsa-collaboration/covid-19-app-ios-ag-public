@@ -19,5 +19,9 @@ public enum Feature: CaseIterable {
     /// risky venue alerts for those.
     case venueCheckIn
     
+    // Shows contact cases in England a questionnaire to determine if they need to isolate or not.
+    // This is not changable in the scenarios app and is solely here to allow us to keep test coverage of the England opt out flow.
+    case englandOptOutFlow
+    
     public static let productionEnabledFeatures: [Feature] = []
 }

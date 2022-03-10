@@ -181,6 +181,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         return RunningAppContext(
             checkInContext: nil,
             shouldShowVenueCheckIn: false,
+            shouldShowOldEnglandOptOutFlow: false,
             postcodeInfo: .constant(nil),
             country: Just(.england).eraseToAnyPublisher().domainProperty(),
             bluetoothOff: .constant(false),

@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Scenarios
@@ -173,6 +173,7 @@ class CheckInFlowTests: XCTestCase {
     }
     
     func testDenyCameraAccess() throws {
+        throw XCTSkip("Venue check-in has been turned off in the app for now. This test case will remain (but won't run) until the feature is completely removed from the code.")
         $runner.report(scenario: "Venue check-in", "Deny Camera Access") {
             """
             Users denies camera access for venue check-in

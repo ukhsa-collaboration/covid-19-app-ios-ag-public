@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Common
@@ -11,23 +11,17 @@ struct IsolationConfigurationEndpoint: HTTPEndpoint {
         .get("/distribution/self-isolation")
     }
     
-    func parse(_ response: HTTPResponse) throws -> IsolationConfiguration {
+    func parse(_ response: HTTPResponse) throws -> EnglandAndWalesIsolationConfigurations {
         let payload = try JSONDecoder().decode(Payload.self, from: response.body.content)
-        let durations = payload.durationDays
-        return IsolationConfiguration(
-            maxIsolation: DayDuration(durations.maxIsolation),
-            contactCase: DayDuration(durations.contactCase),
-            indexCaseSinceSelfDiagnosisOnset: DayDuration(durations.indexCaseSinceSelfDiagnosisOnset),
-            indexCaseSinceSelfDiagnosisUnknownOnset: DayDuration(durations.indexCaseSinceSelfDiagnosisUnknownOnset),
-            housekeepingDeletionPeriod: DayDuration(durations.pendingTasksRetentionPeriod ?? 14),
-            indexCaseSinceNPEXDayNoSelfDiagnosis: DayDuration(durations.indexCaseSinceTestResultEndDate),
-            testResultPollingTokenRetentionPeriod: DayDuration(durations.testResultPollingTokenRetentionPeriod)
+        return EnglandAndWalesIsolationConfigurations(
+            england: .init(payload: payload.england),
+            wales: .init(payload: payload.wales)
         )
     }
 }
 
 private struct Payload: Codable {
-    struct DayDurations: Codable {
+    struct CountrySpecificValues: Codable {
         var maxIsolation: Int
         var contactCase: Int
         var indexCaseSinceSelfDiagnosisOnset: Int
@@ -37,5 +31,20 @@ private struct Payload: Codable {
         var testResultPollingTokenRetentionPeriod: Int
     }
     
-    var durationDays: DayDurations
+    var england: CountrySpecificValues
+    var wales: CountrySpecificValues
+}
+
+extension IsolationConfiguration {
+    fileprivate init(payload: Payload.CountrySpecificValues) {
+        self.init(
+            maxIsolation: DayDuration(payload.maxIsolation),
+            contactCase: DayDuration(payload.contactCase),
+            indexCaseSinceSelfDiagnosisOnset: DayDuration(payload.indexCaseSinceSelfDiagnosisOnset),
+            indexCaseSinceSelfDiagnosisUnknownOnset: DayDuration(payload.indexCaseSinceSelfDiagnosisUnknownOnset),
+            housekeepingDeletionPeriod: DayDuration(payload.pendingTasksRetentionPeriod ?? 14),
+            indexCaseSinceNPEXDayNoSelfDiagnosis: DayDuration(payload.indexCaseSinceTestResultEndDate),
+            testResultPollingTokenRetentionPeriod: DayDuration(payload.testResultPollingTokenRetentionPeriod)
+        )
+    }
 }

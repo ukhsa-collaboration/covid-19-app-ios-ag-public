@@ -294,7 +294,7 @@
 "negative_test_result_no_isolation_warning" = "اگر آپ علیل محسوس کرتے ہیں تو، جب تک آپ بہتر محسوس نہ کریں تب تک گھر پر رہیں";
 "link_test_result_thank_you_back_home_button" = "ہوم پر واپس جائیں";
 "mydata_data_deletion_button_title" = "میرا تمام ڈیٹا مٹا دیں";
-"about_this_app_how_this_app_works_description" = "آپ اور دیگر افراد کے تحفظ میں معاونت کے لئے یہ ایپ رابطے کے سراغ کی ٹیکنالوجی استعمال کرتی ہے تاکہ ہم سب اپنی پسندیدہ اشیاء کی طرف لوٹ سکیں۔\n\nیہ ایپ نزدیک موجود ایپ کے دیگر صارفین کا پتہ لگاتی ہے اور اندراج کرتی ہے۔ اگر بعد میں ان میں سے کسی صارف کا کوروناوائرس کا ٹیسٹ مثبت آ جائے تو آپ کو مشورے کے ساتھ اطلاع دی جائے گی۔\n\nیہ ایپ آپ کو اپنی علامات کی اطلاع دینے اور ٹیسٹ کی ضرورت معلوم کرنے کے بھی قابل بناتی ہے۔\n\nاسے استعمال کرتے ہوئے آپ اپنے دورہ کیے جانے والے مقامات پر تیزی اور آسانی سے چیک ان کرنے کے لئے آفیشل NHS کیو آر کوڈز اسکین کر سکتے ہیں۔";
+"about_this_app_how_this_app_works_description" = "آپ اور دیگر افراد کے تحفظ میں معاونت کے لئے یہ ایپ رابطے کے سراغ کی ٹیکنالوجی استعمال کرتی ہے تاکہ ہم سب اپنی پسندیدہ اشیاء کی طرف لوٹ سکیں۔\n\nیہ ایپ نزدیک موجود ایپ کے دیگر صارفین کا پتہ لگاتی ہے اور اندراج کرتی ہے۔ اگر بعد میں ان میں سے کسی صارف کا کوروناوائرس کا ٹیسٹ مثبت آ جائے تو آپ کو مشورے کے ساتھ اطلاع دی جائے گی۔\n\nیہ ایپ آپ کو اپنی علامات کی اطلاع دینے اور ٹیسٹ کی ضرورت معلوم کرنے کے بھی قابل بناتی ہے۔";
 "privacy_description_paragraph1" = "این ایچ ایس آپ کی رازداری کی قدر کرتا ہے ، مطلب ایپ یہ نہیں بتا سکتی کہ آپ کون ہیں ، آپ کہاں ہیں یا آپ کے ساتھ کون ہیں \n\nاگر آپ  کی جانچ کرونا وائرس کے لیے مثبت ہوتی ہے  تو، آپ اپنے ڈیٹا کا این ایچ ایس کے ساتھ اشتراک کرنے کا انتخاب کرسکتے ہیں تاکہ ہم انگلینڈ، ویلز، سکاٹ لینڈ، شمالی آئرلینڈ، جرزی اور جبرالٹر میں ایپ کا استعمال کرنے والے دوسرے لوگوں کو آگاہ کرسکیں۔ جاری رکھنے  (continue)کا انتخاب کرنے پر ہم آپ کی اطلاعات ایپ کا استعمال کرنے والے اُن دوسرے لوگوں کو دستیاب کردیں گے جن کو ان تمام مقامات پر باخبر کرنے کی ضرورت ہو گی۔\n\nہم یہ فیصلہ کرنے میں مدد کے لئے خود کار فیصلے کا استعمال کرتے ہیں کہ کون سے دوسرے صارفین کو گمنام طور پر متنبہہ  ہونا ضروری ہے۔";
 "accessability_error_os_out_of_date" = "اپنا سافٹ ویئر اپ ڈیٹ کریں";
 "accessability_error_update_the_app" = "ایپ اپ ڈیٹ کریں";
@@ -461,7 +461,7 @@
 "positive_test_result_requires_follow_up_test_start_to_isolate_info" = "آپ کے کوروناوائرس کے ٹیسٹ کا نتیجہ مثبت ہے۔";
 "positive_test_result_requires_follow_up_test_explanation" = "یہ سمجھنے کے لئے کہ ایپ خود کو تنہائی میں رکھنے  کے دنوں کا حساب کیسے دیتی ہے ، عمومی سوالنامہ دیکھیں۔\n\nچونکہ آپ نے ایک تیز رفتار سویب ٹیسٹ کروایا ہے، لہذا اب آپ کو دوسری قسم کا ٹیسٹ کروانے کی ضرورت ہے جو نتیجے کی تصدیق کرنے کے لیے لیب میں بھیجا گیا ہے۔\n\nاس بیچ، آپ کو اور جس کے ساتھ آپ رہتے ہیں اسے فوری طور پر خود کو  تنہا  کرنا ضروری ہے۔";
 "positive_test_result_requires_follow_up_test_book_test_button" = "ایک فالو اپ ٹیسٹ بک کروائیں ";
-"positive_test_result_already_confirmed_positive_explanation" = "اگر آپ کی عمر 18 سال سے کم ہے تو، آپ کو یہ پیغام کسی بھروسے مند بالغ کو دکھانے کی صلاح دی جاتی ہے۔";
+"positive_test_result_already_confirmed_positive_explanation" = "اگر آپ کی عمر 18 سال سے کم ہے تو، آپ کو یہ پیغام کسی قابل اعتماد بالغ فرد کو دکھانے کا مشورہ دیا جاتا ہے.";
 "positive_test_result_already_confirmed_positive_title" = "ذیل کے لئے ذاتی علیحدگی جاری رکھیں";
 "positive_test_result_already_confirmed_positive_info" = "آپ کے کوروناوائرس کے ٹیسٹ کا نتیجہ مثبت ہے۔";
 "positive_test_result_already_confirmed_positive_continue" = "جاری رکھیں";
@@ -649,7 +649,7 @@
 "book_a_follow_up_test_button" = "ایک فالو اپ ٹیسٹ بک کروائیں ";
 "book_a_follow_up_test_close_button" = "بند کریں";
 "link_test_result_thank_you_continue_to_book_a_test_button" = "جاری رکھیں";
-"local_information_banner_read_more" = "مزید پڑھیں";
+"local_information_banner_read_more" = "Read updated guidance";
 "home_animations_heading" = "اپنی ہوم اسکرین پر حرکت کرتے دائرے کو روکیں یا شروع کریں۔";
 "home_animations_description" = "اس سے آپ کی ایپ کے کام کرنے کا طریقہ تبدیل نہیں ہوگا۔ یہ صرف حرکت کو تبدیل کرے گا۔";
 "self_diagnosis_symptoms_after_positive_info" = "آپ نے جانچ مثبت آنے کے بعد علامات کی رپورٹ کی ہے";
@@ -1024,3 +1024,19 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_social_distancing_england" = "اپنے گھرانے میں کسی بھی ایسے شخص کے ساتھ رابطہ کو محدود کریں جسے COVID-19 ہو";
 "contact_case_no_isolation_fully_vaccinated_list_item_get_tested_before_meeting_vulnerable_people_england" = "اگر آپ میں COVID-19 کی علامات پائی جاتی ہیں تو PCR ٹیسٹ کریں";
 "contact_case_no_isolation_fully_vaccinated_list_item_wear_a_mask_england" = "بھیڑ بھاڑ والی، بند یا کم ہوادار جگہوں میں فیس کورنگ پہنیں";
+"risky_contact_opt_out_further_advice_link_url" = "https://www.gov.uk/government/publications/covid-19-people-with-covid-19-and-their-contacts/covid-19-people-with-covid-19-and-their-contacts#what-to-do-if-you-are-a-close-contact-of-someone-who-has-covid-19";
+"contact_case_exposure_info_screen_title_england" = "ایپ نے دریافت کیا ہے کہ آپ کسی ایسے شخص کے قریب رہے ہیں جس کے کورونا وائرس (COVID-19) کی جانچ کا نتیجہ مثبت آیا ہے";
+"contact_case_exposure_info_screen_information_england" = "اگر آپ کی عمر 18 سال سے کم ہے تو، آپ کو یہ پیغام کسی قابل اعتماد بالغ فرد کو دکھانے کا مشورہ دیا جاتا ہے";
+"contact_case_exposure_info_screen_continue_button_england" = "جاری رکھیں";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading_england" = "قریبی رابطہ کا حساب کیسے لگایا جاتا ہے";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_body_england" = "یہ ایپ یہ معلوم کرنے کے لیے کہ کیا آپ کا فون دوسروں کے ساتھ قریبی رابطے میں رہا ہے بلوٹوتھ استعمال کرتا ہے۔\n\nقریبی رابطے کا مطلب یہ ہے کہ آپ 15 منٹ یا اس سے زیادہ دیر کے لیے کسی شخص کے 2 میٹر کے اندر تھے۔\n\nیہ ایپ گمنام ہے اور آپ کی لوکیشن کا پتہ لگانے کے لیے گلوبل پوزیشننگ سسٹم (GPS) کا استعمال نہیں کرتا ہے، اس لیے آپ کی رازداری محفوظ ہے۔";
+"risky_contact_opt_out_advice_title" = "خود کو اور دوسروں کو محفوظ رکھنے کے لیے COVID-19 سے متعلق تازہ ترین رہنمائی پر عمل کریں";
+"risky_contact_opt_out_advice_meeting_indoors" = "اگر آپ اندرون خانہ ملتے ہیں تو تازہ ہوا اندر آنے دیں، یا باہر ملیں";
+"risky_contact_opt_out_advice_mask" = "بھیڑ بھاڑ والی یا بند جگہوں میں فیس کورنگ پہنیں";
+"risky_contact_opt_out_advice_testing_hub" = "اگر آپ میں COVID-19 کی علامات پائی جاتی ہیں تو جانچ کریں اور اگر آپ کی جانچ مثبت آتی ہے تو گھر پر ہی رہیں";
+"risky_contact_opt_out_advice_wash_hands" = "اپنے ہاتھوں کو برابر دھوئیں اور کھانسی اور چھینک آنے پر اسے ڈھک لیں";
+"risky_contact_opt_out_further_advice" = "اگر آپ کے گھرانے میں کسی کی COVID-19 کی جانچ مثبت آئی ہے تو برائے مہربانی اس سے رجوع کریں:";
+"risky_contact_opt_out_further_advice_link_text" = "گھرانے کے روابط سے متعلق رہنمائی";
+"risky_contact_opt_out_primary_button_title" = "COVID-19 سے متعلق تازہ ترین رہنمائی پڑھیں";
+"risky_contact_opt_out_secondary_button_title" = "ہوم اسکرین پر واپس جائیں";
+"contact_case_exposure_info_screen_exposure_date_england %@" = "قریبی رابطہ %@";

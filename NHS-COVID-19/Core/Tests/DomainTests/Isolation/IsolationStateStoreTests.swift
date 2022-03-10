@@ -20,7 +20,7 @@ class IsolationStateStoreTests: XCTestCase {
                 indexCaseSinceSelfDiagnosisOnset: 8,
                 indexCaseSinceSelfDiagnosisUnknownOnset: 9,
                 housekeepingDeletionPeriod: 14,
-                indexCaseSinceNPEXDayNoSelfDiagnosis: IsolationConfiguration.default.indexCaseSinceNPEXDayNoSelfDiagnosis,
+                indexCaseSinceNPEXDayNoSelfDiagnosis: 11,
                 testResultPollingTokenRetentionPeriod: 28
             )
             
@@ -30,7 +30,7 @@ class IsolationStateStoreTests: XCTestCase {
         let store: IsolationStateStore
         
         init(configuration: Configuration) {
-            store = IsolationStateStore(store: configuration.encryptedStore, latestConfiguration: { .default }, currentDateProvider: MockDateProvider())
+            store = IsolationStateStore(store: configuration.encryptedStore, latestConfiguration: { .defaultEngland }, currentDateProvider: MockDateProvider())
         }
     }
     
@@ -44,7 +44,7 @@ class IsolationStateStoreTests: XCTestCase {
     func testLoadingEmptyStore() throws {
         $instance.encryptedStore.stored["isolation_state_info"] = nil
         XCTAssertEqual(store.isolationInfo, IsolationInfo(indexCaseInfo: nil, contactCaseInfo: nil))
-        TS.assert(store.configuration, equals: IsolationConfiguration.default)
+        TS.assert(store.configuration, equals: IsolationConfiguration.defaultEngland)
     }
     
     func testLoadingConfigurationDefaultsTo10DaysNPEXIfValueMissing() {
@@ -841,7 +841,7 @@ class IsolationStateStoreTests: XCTestCase {
         
         let newStore = IsolationStateStore(
             store: $instance.encryptedStore,
-            latestConfiguration: { .default },
+            latestConfiguration: { .defaultEngland },
             currentDateProvider: MockDateProvider()
         )
         

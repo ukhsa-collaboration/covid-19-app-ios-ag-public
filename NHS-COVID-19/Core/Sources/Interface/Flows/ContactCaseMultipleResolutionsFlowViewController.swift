@@ -89,7 +89,7 @@ public class ContactCaseMultipleResolutionsFlowViewController: BaseNavigationCon
                     self?.state = .ageDeclaration
                 }
             )
-            return ContactCaseExposureInfoViewController(
+            return ContactCaseExposureInfoWalesViewController(
                 interactor: interactor,
                 exposureDate: exposureDate,
                 isIndexCase: isIndexCase
@@ -176,7 +176,7 @@ public class ContactCaseMultipleResolutionsFlowViewController: BaseNavigationCon
 
 // MARK: - Interactors
 
-private struct ContactCaseExposureInfoInteractor: ContactCaseExposureInfoViewController.Interacting {
+private struct ContactCaseExposureInfoInteractor: ContactCaseExposureInfoWalesViewController.Interacting {
     
     private let _didTapContinue: () -> Void
     

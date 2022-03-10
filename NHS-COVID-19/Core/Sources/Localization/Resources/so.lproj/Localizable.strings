@@ -294,7 +294,7 @@
 "negative_test_result_no_isolation_warning" = "Haddii aad dareento caafimaad darro, joog guriga ilaa aad ka dareento fiicnaan.";
 "link_test_result_thank_you_back_home_button" = "Ku noqo shaashada soo-dhoweynta";
 "mydata_data_deletion_button_title" = "Tirtir dhammaan xogtayda";
-"about_this_app_how_this_app_works_description" = "App-kan wuxuu adeegsadaa tiknooloojiyada raad-raacista shakhsi si uu kaaga caawiyo ilaalinta naftaada iyo dadka kale si aan dhamaanteen ugu laabano waxyaabihii aan jecelnahay.\n\nApp-ka wuxuu aqoonsada wuxuuna isku xiraa isticmalayaasha kale ee dhow ee app-ka isticmaalaa. Haddii mid ka mid ah dadkaas isticmaala ay mar dambe cudurka coronavirus ku dhaco, waxaad heli doontaa digniin talo bixin ah.\n\nApp-ka wuxuu sidoo kale kuu oggolaanayaa inaad ka warbixiso astaamahaaga oo aad ogaato haddii aad u baahan tahay baaritaan.\n\nWaxaad sidoo kale u adeegsan kartaa inaad iskaan-garayso koodhaadhka rasmiga ah ee NHS QR si aad si dhakhso leh oo fudud iskaga xaadiriso meelaha aad booqato.";
+"about_this_app_how_this_app_works_description" = "App-kan wuxuu adeegsadaa tiknooloojiyada raad-raacista shakhsi si uu kaaga caawiyo ilaalinta naftaada iyo dadka kale si aan dhamaanteen ugu laabano waxyaabihii aan jecelnahay.\n\nApp-ka wuxuu aqoonsada wuxuuna isku xiraa isticmalayaasha kale ee dhow ee app-ka isticmaalaa. Haddii mid ka mid ah dadkaas isticmaala ay mar dambe cudurka coronavirus ku dhaco, waxaad heli doontaa digniin talo bixin ah.\n\nApp-ka wuxuu sidoo kale kuu oggolaanayaa inaad ka warbixiso astaamahaaga oo aad ogaato haddii aad u baahan tahay baaritaan.";
 "privacy_description_paragraph1" = "Adeegga Caafimaadka Qaranka (NHS) ayaa qiimeeya asturnaantaada. App-ka ayaa dabagal ku haya fayraska, kumana raaci karo mana arki karo cidda aad tahay, meesha aad joogto ama cidda kula joogta. \n\nHaddii laga helo coronavirus, waxaad dooran kartaa inaad la wadaagto xogtaada NHS si aan ugu baraarujinno kuwa kale ee adeegsadayaasha kale ee barnaamijka ee guud ahaan England, Wales, Scotland, Northern Ireland, Jersey iyo Gibraltar. Markaad xulato sii wad waxaan ogeysiisyadaada ka dhigi doonnaa kuwa ay heli karaan adeegsadayaasha kale ee barnaamijka ee u baahan in loogu wargaliyo goobahaas.\n\nWaxaan u adeegsanaa go'aan qaadashada otomaatiga ah si aan uga caawino adeegsadayaasha kale ee u baahan in si qarsoodi ah loogu wargeliyo.";
 "accessability_error_os_out_of_date" = "Cusboonaysii software-kaaga";
 "accessability_error_update_the_app" = "Cusboonaysii barnaamijkan";
@@ -461,7 +461,7 @@
 "positive_test_result_requires_follow_up_test_start_to_isolate_info" = "Natiijada baaritaankaaga coronavirus waxay caddaynaysaa in aad qabtid cudurka";
 "positive_test_result_requires_follow_up_test_explanation" = "Si aad u ogaato qaabka uu app-ka u xisaabiyo maalmaha is-go'doominta, booqo su'aalaha badana la isweydiiya.\n\nMaadaama lagaa qaaday baaritaan suuf oo deg deg ah, waxaad hadda u baahan tahay in lagaa qaado baaritaan nooc kale oo loo dirayo shaybaar si loo xaqiijiyo natiijada.\n\nTaas ka hor, adiga iyo qof kasta oo aad la nooshahay waa inaad isla markaaba is-go'doomisaan.";
 "positive_test_result_requires_follow_up_test_book_test_button" = "Ballanso baaritaan dabagal ah";
-"positive_test_result_already_confirmed_positive_explanation" = "Haddii aad ka yar tahay 18, waxaa lagugula talinayaa inaad farriintan u tusiso qof weyn oo aad ku kalsoon tahay.";
+"positive_test_result_already_confirmed_positive_explanation" = "Haddii aad ka yar tahay 18, waxaa lagugula talinayaa inaad farriintan tustid qof weyn oo aad ku kalsoon tahay.";
 "positive_test_result_already_confirmed_positive_title" = "Sii wad inaad is-go'doomiso ilaa";
 "positive_test_result_already_confirmed_positive_info" = "Natiijada baaritaankaaga coronavirus waxay caddaynaysaa in aad qabtid cudurka";
 "positive_test_result_already_confirmed_positive_continue" = "Sii wad";
@@ -649,7 +649,7 @@
 "book_a_follow_up_test_button" = "Ballanso baaritaan dabagal ah";
 "book_a_follow_up_test_close_button" = "Xidh";
 "link_test_result_thank_you_continue_to_book_a_test_button" = "Sii wad";
-"local_information_banner_read_more" = "Akhri wax dheeraad ah";
+"local_information_banner_read_more" = "Read updated guidance";
 "home_animations_heading" = "Jooji ama billow in aad wareejiso goobooyinka  ku yaalla shaashaddaada soo-dhoweynta.";
 "home_animations_description" = "Tani ma beddeli doonto sida app-kaagu u shaqeeyo. Kaliya waxay beddeli doontaa dhaqdhaqaaqa.";
 "self_diagnosis_symptoms_after_positive_info" = "Waxaad isku aragtay calaamado marka lagaa helay cudurka";
@@ -1024,3 +1024,19 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_social_distancing_england" = "Xaddid isku dhawaanshaha dhow oo lala yeeshta qof kasta oo kamid ah qoyskiina oo qaba COVID-19";
 "contact_case_no_isolation_fully_vaccinated_list_item_get_tested_before_meeting_vulnerable_people_england" = "Qaado baaritaanka PCR haddii aad leedahay astaamaha COVID-19";
 "contact_case_no_isolation_fully_vaccinated_list_item_wear_a_mask_england" = "Ku xiro daboolaha wajiga meelaha dadka badan, goobaha xiran ama aadka u hawada yar";
+"risky_contact_opt_out_further_advice_link_url" = "https://www.gov.uk/government/publications/covid-19-people-with-covid-19-and-their-contacts/covid-19-people-with-covid-19-and-their-contacts#what-to-do-if-you-are-a-close-contact-of-someone-who-has-covid-19";
+"contact_case_exposure_info_screen_title_england" = "App-ka wuxuu ogaadey inaad u dhaweyd qof laga helay coronavirus (COVID-19)";
+"contact_case_exposure_info_screen_information_england" = "Haddii aad ka yar tahay 18, waxaa lagugula talinayaa inaad farriintan tustid qof weyn oo aad ku kalsoon tahay";
+"contact_case_exposure_info_screen_continue_button_england" = "Sii Wad";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading_england" = "Sida loo xisaabiyo maalmaha is-go'doominta";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_body_england" = "App-ka wuxuu adeegsadaa Bluetooth si uu u hubiyo haddii telefoonkaagu uu u dhowyahay dadka qaba cudurka.\n\nU dhawaanshaha qofka cudurka qaba waxaa laga wadaa inaad qiyaas ahaan 15 daqiiqo ama ka badan u jirtay 2 mitir qofkaas.\n\nApp-ka waa qarsoodi mana adeegsado GPS si uu ula socdo goobtaada, sidaa darteed xogtaada qarsoodiga waa la ilaaliyay.";
+"risky_contact_opt_out_advice_title" = "Raac tilmaanta ugu dambeeysay ee COVID-19 si aad u ilaaliso naftaada iyo dadka kale";
+"risky_contact_opt_out_advice_meeting_indoors" = "U oggolow in hawo saafi ah ay soo gasho haddii aad ku kulantaan gudaha, ama aad ku kulantaan dibadda";
+"risky_contact_opt_out_advice_mask" = "Ku xiro daboolaha wajiga meelaha dadku ku badan yahay oo xiran";
+"risky_contact_opt_out_advice_testing_hub" = "Samey baaritaan haddii aad leedahay calaamadaha COVID-19 oo guriga joog haddii baaritaankaagu yahay mid togan";
+"risky_contact_opt_out_advice_wash_hands" = "Si joogto ah u dhaq gacmahaaga oo dabool qufaca iyo hindhisada";
+"risky_contact_opt_out_further_advice" = "Haddii qof qoyskaaga ka tirsan oo laga helay COVID-19, fadlan booqo:";
+"risky_contact_opt_out_further_advice_link_text" = "Tilmaamaha xiriirka qoyska";
+"risky_contact_opt_out_primary_button_title" = "Akhri tilmaamaha ugu dambeeya ee COVID-19";
+"risky_contact_opt_out_secondary_button_title" = "Ku laabo shaashadda soo-dhoweynta";
+"contact_case_exposure_info_screen_exposure_date_england %@" = "Xiriir dhow ayaa dhacay %@";

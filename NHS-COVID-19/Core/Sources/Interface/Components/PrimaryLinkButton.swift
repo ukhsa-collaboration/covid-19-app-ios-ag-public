@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 NHSX. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Localization
@@ -43,6 +43,7 @@ public class PrimaryLinkButton: UIControl {
         titleLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         titleLabel.setContentHuggingPriority(.required, for: .vertical)
         titleLabel.setContentHuggingPriority(.required, for: .horizontal)
+        titleLabel.textAlignment = .center
         
         let image = UIImage(.externalLink)
         let imageView = UIImageView(image: image).color(.primaryButtonLabel)

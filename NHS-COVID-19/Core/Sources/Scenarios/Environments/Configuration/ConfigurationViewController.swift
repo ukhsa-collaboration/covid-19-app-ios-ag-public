@@ -81,6 +81,8 @@ class ConfigurationViewController: UIViewController {
             return "Local statistics home screen button"
         case .venueCheckIn:
             return "Venue check-in home screen button"
+        case .englandOptOutFlow:
+            return "Old England opt out flow"
         }
     }
     

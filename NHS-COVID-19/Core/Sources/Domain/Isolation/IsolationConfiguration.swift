@@ -1,9 +1,14 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Common
 import Foundation
+
+struct EnglandAndWalesIsolationConfigurations: Equatable {
+    var england: IsolationConfiguration
+    var wales: IsolationConfiguration
+}
 
 struct IsolationConfiguration: Equatable {
     var maxIsolation: DayDuration
@@ -39,11 +44,11 @@ extension IsolationConfiguration: Codable {
         // value of the "10" is the historical default value before we were persisting this field.
         indexCaseSinceNPEXDayNoSelfDiagnosis = try container.decodeIfPresent(DayDuration.self, forKey: .indexCaseSinceNPEXDayNoSelfDiagnosis) ?? 10
         
-        testResultPollingTokenRetentionPeriod = try container.decodeIfPresent(DayDuration.self, forKey: .testResultPollingTokenRetentionPeriod) ?? Self.default.testResultPollingTokenRetentionPeriod
-        
+        // value of the "28" is the historical default value before we were persisting this field.
+        testResultPollingTokenRetentionPeriod = try container.decodeIfPresent(DayDuration.self, forKey: .testResultPollingTokenRetentionPeriod) ?? 28
     }
     
-    static let `default` = IsolationConfiguration(
+    static let `defaultEngland` = IsolationConfiguration(
         maxIsolation: 21,
         contactCase: 11,
         indexCaseSinceSelfDiagnosisOnset: 11,
@@ -52,4 +57,18 @@ extension IsolationConfiguration: Codable {
         indexCaseSinceNPEXDayNoSelfDiagnosis: 11,
         testResultPollingTokenRetentionPeriod: 28
     )
+    
+    static let `defaultWales` = IsolationConfiguration(
+        maxIsolation: 16,
+        contactCase: 11,
+        indexCaseSinceSelfDiagnosisOnset: 6,
+        indexCaseSinceSelfDiagnosisUnknownOnset: 4,
+        housekeepingDeletionPeriod: 14,
+        indexCaseSinceNPEXDayNoSelfDiagnosis: 6,
+        testResultPollingTokenRetentionPeriod: 28
+    )
+}
+
+extension EnglandAndWalesIsolationConfigurations {
+    static let `default` = EnglandAndWalesIsolationConfigurations(england: .defaultEngland, wales: .defaultWales)
 }

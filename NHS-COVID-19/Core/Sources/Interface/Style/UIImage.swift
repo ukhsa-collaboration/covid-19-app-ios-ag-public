@@ -73,6 +73,7 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case swabTest = "ContactCaseOnly/Swab-test"
     case infoCircle = "ContactCaseOnly/InfoCircle"
     case socialDistancing = "ContactCaseOnly/SocialDistancing"
+    case washHands = "ContactCaseOnly/WashHands"
     
     // MARK: Key sharing
     

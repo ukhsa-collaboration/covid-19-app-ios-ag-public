@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Domain
@@ -231,80 +231,102 @@ extension CoordinatedAppController {
             )
             
         case .neededForStartOfIsolationExposureDetection(let acknowledge, let exposureDate, let birthThresholdDate, let vaccineThresholdDate, let secondTestAdviceDate, let isolationEndDate, let isIndexCase):
-            let interactor = ContactCaseMultipleResolutionsFlowViewControllerInteractor(
-                openURL: context.openURL,
-                didDeclareVaccinationStatus: { answers in
-                    let mappedAnswers = answers.mapAnswersToDomain()
-                    let result = context.contactCaseOptOutQuestionnaire.getResolution(with: mappedAnswers)
-                    
-                    switch result {
-                    case .notFinished:
-                        return .failure(ContactCaseVaccinationStatusNotEnoughAnswersError())
-                    case .optedOutOfIsolation(_, let questions):
-                        return .success(ContactCaseResolution(overAgeLimit: true, vaccinationStatusAnswers: answers.mapAnswersWithInterfaceQuestions(questions: questions)))
-                    case .needToIsolate(let questions):
-                        return .success(ContactCaseResolution(overAgeLimit: true, vaccinationStatusAnswers: answers.mapAnswersWithInterfaceQuestions(questions: questions)))
-                    }
-                }, nextVaccinationStatusQuestion: { answers in
-                    let mappedAnswers = answers.mapAnswersToDomain()
-                    return context.contactCaseOptOutQuestionnaire.nextQuestion(with: mappedAnswers).map(ContactCaseVaccinationStatusQuestion.init)
-                },
-                didReviewQuestions: { [showUIState] overAgeLimit, vaccinationStatusAnswers in
-                    if !overAgeLimit {
-                        acknowledge(true)
-                        if isIndexCase {
+            
+            if !context.shouldShowOldEnglandOptOutFlow, context.country.currentValue == .england {
+                if isIndexCase {
+                    return ContactCaseExposureInfoEnglandViewController(
+                        interactor: ContactCaseExposureInfoInteractor(acknowledge: { [showUIState] in
+                            acknowledge(true)
                             showUIState.value = .showContactCaseResult(.continueIsolation(endDate: isolationEndDate.currentValue, secondTestAdviceDate: secondTestAdviceDate))
-                        } else {
-                            showUIState.value = .showContactCaseResult(.underAgeLimit(secondTestAdviceDate: secondTestAdviceDate))
-                        }
-                    } else {
-                        let mappedAnswers = vaccinationStatusAnswers.mapAnswersToDomain()
+                        }),
+                        exposureDate: exposureDate
+                    )
+                } else {
+                    return ContactCaseImmediateAcknowledgementFlowViewController(
+                        interactor: ContactCaseImmediateAcknowledgementFlowViewControllerInteractor(acknowledge: {
+                            acknowledge(true)
+                        }),
+                        openURL: context.openURL,
+                        exposureDate: exposureDate
+                    )
+                }
+            } else {
+                let interactor = ContactCaseMultipleResolutionsFlowViewControllerInteractor(
+                    openURL: context.openURL,
+                    didDeclareVaccinationStatus: { answers in
+                        let mappedAnswers = answers.mapAnswersToDomain()
                         let result = context.contactCaseOptOutQuestionnaire.getResolution(with: mappedAnswers)
                         
-                        let didOptOut: Bool
-                        let optOutReason: ContactCaseOptOutReason?
                         switch result {
                         case .notFinished:
-                            assertionFailure("Should not be possible")
-                            didOptOut = false
-                            optOutReason = nil
-                        case .optedOutOfIsolation(let reason, _):
-                            didOptOut = true
-                            optOutReason = reason
-                        case .needToIsolate:
-                            didOptOut = false
-                            optOutReason = nil
+                            return .failure(ContactCaseVaccinationStatusNotEnoughAnswersError())
+                        case .optedOutOfIsolation(_, let questions):
+                            return .success(ContactCaseResolution(overAgeLimit: true, vaccinationStatusAnswers: answers.mapAnswersWithInterfaceQuestions(questions: questions)))
+                        case .needToIsolate(let questions):
+                            return .success(ContactCaseResolution(overAgeLimit: true, vaccinationStatusAnswers: answers.mapAnswersWithInterfaceQuestions(questions: questions)))
                         }
-                        
-                        acknowledge(didOptOut)
-                        if isIndexCase {
-                            showUIState.value = .showContactCaseResult(.continueIsolation(endDate: isolationEndDate.currentValue, secondTestAdviceDate: secondTestAdviceDate))
-                        } else if didOptOut {
-                            switch optOutReason {
-                            case .fullyVaccinated, .none:
-                                showUIState.value = .showContactCaseResult(.fullyVaccinated(secondTestAdviceDate: secondTestAdviceDate))
-                            case .medicallyExempt:
-                                showUIState.value = .showContactCaseResult(.medicallyExempt)
+                    }, nextVaccinationStatusQuestion: { answers in
+                        let mappedAnswers = answers.mapAnswersToDomain()
+                        return context.contactCaseOptOutQuestionnaire.nextQuestion(with: mappedAnswers).map(ContactCaseVaccinationStatusQuestion.init)
+                    },
+                    didReviewQuestions: { [showUIState] overAgeLimit, vaccinationStatusAnswers in
+                        if !overAgeLimit {
+                            acknowledge(true)
+                            if isIndexCase {
+                                showUIState.value = .showContactCaseResult(.continueIsolation(endDate: isolationEndDate.currentValue, secondTestAdviceDate: secondTestAdviceDate))
+                            } else {
+                                showUIState.value = .showContactCaseResult(.underAgeLimit(secondTestAdviceDate: secondTestAdviceDate))
                             }
                         } else {
-                            showUIState.value = .showContactCaseResult(
-                                .startIsolation(
-                                    endDate: isolationEndDate.currentValue,
-                                    exposureDate: exposureDate,
-                                    secondTestAdviceDate: secondTestAdviceDate
-                                ))
+                            let mappedAnswers = vaccinationStatusAnswers.mapAnswersToDomain()
+                            let result = context.contactCaseOptOutQuestionnaire.getResolution(with: mappedAnswers)
+                            
+                            let didOptOut: Bool
+                            let optOutReason: ContactCaseOptOutReason?
+                            switch result {
+                            case .notFinished:
+                                assertionFailure("Should not be possible")
+                                didOptOut = false
+                                optOutReason = nil
+                            case .optedOutOfIsolation(let reason, _):
+                                didOptOut = true
+                                optOutReason = reason
+                            case .needToIsolate:
+                                didOptOut = false
+                                optOutReason = nil
+                            }
+                            
+                            acknowledge(didOptOut)
+                            if isIndexCase {
+                                showUIState.value = .showContactCaseResult(.continueIsolation(endDate: isolationEndDate.currentValue, secondTestAdviceDate: secondTestAdviceDate))
+                            } else if didOptOut {
+                                switch optOutReason {
+                                case .fullyVaccinated, .none:
+                                    showUIState.value = .showContactCaseResult(.fullyVaccinated(secondTestAdviceDate: secondTestAdviceDate))
+                                case .medicallyExempt:
+                                    showUIState.value = .showContactCaseResult(.medicallyExempt)
+                                }
+                            } else {
+                                showUIState.value = .showContactCaseResult(
+                                    .startIsolation(
+                                        endDate: isolationEndDate.currentValue,
+                                        exposureDate: exposureDate,
+                                        secondTestAdviceDate: secondTestAdviceDate
+                                    ))
+                            }
                         }
                     }
-                }
-            )
-            
-            return ContactCaseMultipleResolutionsFlowViewController(
-                interactor: interactor,
-                isIndexCase: isIndexCase,
-                exposureDate: exposureDate,
-                birthThresholdDate: birthThresholdDate,
-                vaccineThresholdDate: vaccineThresholdDate
-            )
+                )
+                
+                return ContactCaseMultipleResolutionsFlowViewController(
+                    interactor: interactor,
+                    isIndexCase: isIndexCase,
+                    exposureDate: exposureDate,
+                    birthThresholdDate: birthThresholdDate,
+                    vaccineThresholdDate: vaccineThresholdDate
+                )
+                
+            }
             
         case .neededForRiskyVenue(let interactor, let venueName, let checkInDate):
             return RiskyVenueInformationViewController(
@@ -653,5 +675,29 @@ private extension ContactCaseVaccinationStatusAnswers {
             }
         }
         return questionsAnswers
+    }
+}
+
+private struct ContactCaseImmediateAcknowledgementFlowViewControllerInteractor: ContactCaseImmediateAcknowledgementFlowViewController.Interacting {
+    let _acknowledge: () -> Void
+    
+    init(acknowledge: @escaping () -> Void) {
+        _acknowledge = acknowledge
+    }
+    
+    func acknowledge() {
+        _acknowledge()
+    }
+}
+
+private struct ContactCaseExposureInfoInteractor: ContactCaseExposureInfoEnglandViewController.Interacting {
+    private let _acknowledge: () -> Void
+    
+    init(acknowledge: @escaping () -> Void) {
+        _acknowledge = acknowledge
+    }
+    
+    func didTapContinue() {
+        _acknowledge()
     }
 }

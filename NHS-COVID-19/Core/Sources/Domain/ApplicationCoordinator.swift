@@ -155,7 +155,8 @@ public class ApplicationCoordinator {
                     notificationManager: services.userNotificationsManager
                 )
                 .scheduleSelfIsolationReminderNotification()
-            }
+            },
+            country: country
         )
         let isolationContext = self.isolationContext
         
@@ -236,9 +237,10 @@ public class ApplicationCoordinator {
         let keySharingStore = KeySharingStore(store: services.encryptedStore)
         self.keySharingStore = keySharingStore
         
+        #warning("Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")
         exposureNotificationContext = ExposureNotificationContext(
             services: services,
-            isolationLength: isolationContext.isolationConfiguration.value.contactCase,
+            isolationLength: isolationContext.isolationConfiguration.value.for(country.currentValue).contactCase,
             interestedInExposureNotifications: interestedInExposureNotifications,
             getPostcode: { postcodeStore.postcode.currentValue },
             getLocalAuthority: { postcodeStore.localAuthorityId.currentValue }
@@ -280,12 +282,13 @@ public class ApplicationCoordinator {
             getHouseKeepingDayDuration: { isolationContext.isolationStateStore.configuration.housekeepingDeletionPeriod }
         )
         
+        #warning("Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")
         circuitBreaker = CircuitBreaker(
             client: CircuitBreakerClient(httpClient: services.apiClient, rateLimiter: ObfuscationRateLimiter()),
             exposureInfoProvider: exposureNotificationContext.exposureDetectionStore,
             riskyCheckinsProvider: checkInContext.checkInsStore,
             currentDateProvider: dateProvider,
-            contactCaseIsolationDuration: isolationContext.isolationConfiguration.value.contactCase,
+            contactCaseIsolationDuration: isolationContext.isolationConfiguration.value.for(country.currentValue).contactCase,
             handleContactCase: { riskInfo in
                 isolationContext.handleContactCase(riskInfo: riskInfo, sendContactCaseIsolationNotification: {
                     services.userNotificationsManager.removePending(type: .exposureDontWorry)
@@ -308,9 +311,10 @@ public class ApplicationCoordinator {
             getToday: { dateProvider.currentGregorianDay(timeZone: .current) }
         )
         
+        #warning("Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")
         keySharingContext = KeySharingContext(
             currentDateProvider: currentDateProvider,
-            contactCaseIsolationDuration: self.isolationContext.isolationConfiguration.value.contactCase,
+            contactCaseIsolationDuration: self.isolationContext.isolationConfiguration.value.for(country.currentValue).contactCase,
             onsetDay: { [isolationContext] in
                 isolationContext.isolationStateStore.isolationInfo.indexCaseInfo?.assumedOnsetDayForExposureKeys
             },
@@ -426,13 +430,15 @@ public class ApplicationCoordinator {
                 else if bluetoothOff { return true }
                 else { return false }
             }.eraseToAnyPublisher()
+            let country = self.country
             
             let isolationStateStore = isolationContext.isolationStateStore
-            
+            #warning("For `contactCaseIsolationDuration`: Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")
             return .runningExposureNotification(
                 RunningAppContext(
                     checkInContext: checkInContext,
                     shouldShowVenueCheckIn: isFeatureEnabled(.venueCheckIn),
+                    shouldShowOldEnglandOptOutFlow: isFeatureEnabled(.englandOptOutFlow),
                     postcodeInfo: postcodeInfo,
                     country: country,
                     bluetoothOff: bluetoothOff.domainProperty(),
@@ -486,7 +492,7 @@ public class ApplicationCoordinator {
                         ).removePendingOrUndelivered()
                     }, shouldShowBookALabTest: isolationContext.canBookALabTest().domainProperty(),
                     contactCaseOptOutQuestionnaire: ContactCaseOptOutQuestionnaire(country: country),
-                    contactCaseIsolationDuration: isolationContext.isolationConfiguration.$value.map { $0.contactCase }.domainProperty(),
+                    contactCaseIsolationDuration: isolationContext.isolationConfiguration.$value.map { $0.for(country.currentValue).contactCase }.domainProperty(),
                     shouldShowLocalStats: isFeatureEnabled(.localStatistics),
                     localCovidStatsManager: localCovidStatsManager
                 )
@@ -702,10 +708,12 @@ public class ApplicationCoordinator {
         let exposureWindowHousekeeper = ExposureWindowHousekeeper(
             deleteExpiredExposureWindows: exposureNotificationContext.deleteExpiredExposureWindows
         )
+        let country = self.country
+        #warning("Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")
         let virologyTokenHousekeeper = VirologyTokenHousekeeper(
             virologyTestingStateStore: virologyTestingStateStore,
             getTokenDeletionPeriod: {
-                isolationContext.isolationConfiguration.value.testResultPollingTokenRetentionPeriod
+                isolationContext.isolationConfiguration.value.for(country.currentValue).testResultPollingTokenRetentionPeriod
             },
             getToday: { self.currentDateProvider.currentGregorianDay(timeZone: .current) }
         )

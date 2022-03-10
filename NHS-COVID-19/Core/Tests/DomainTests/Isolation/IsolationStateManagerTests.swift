@@ -46,7 +46,7 @@ class IsolationStateManagerTests: XCTestCase {
     }
     
     func testRespondingToInitialBatchOfInfosReceived() {
-        var info = IsolationStateInfo(isolationInfo: IsolationInfo(), configuration: .default)
+        var info = IsolationStateInfo(isolationInfo: IsolationInfo(), configuration: .defaultEngland)
         info.configuration.indexCaseSinceSelfDiagnosisOnset = 18
         stateInfoSubject.send(info)
         daySubject.send(day)
@@ -57,7 +57,7 @@ class IsolationStateManagerTests: XCTestCase {
     }
     
     func testRespondingToChangesInInfosReceived() {
-        var info = IsolationStateInfo(isolationInfo: IsolationInfo(), configuration: .default)
+        var info = IsolationStateInfo(isolationInfo: IsolationInfo(), configuration: .defaultEngland)
         let day2 = day.advanced(by: 1)
         info.configuration.indexCaseSinceSelfDiagnosisOnset = 18
         stateInfoSubject.send(info)

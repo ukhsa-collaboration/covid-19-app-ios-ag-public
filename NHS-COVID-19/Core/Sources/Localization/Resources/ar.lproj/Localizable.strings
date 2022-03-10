@@ -294,7 +294,7 @@
 "negative_test_result_no_isolation_warning" = "إذا كنت لا تشعر بانك لست على ما يرام، أبقى في المنزل حتى تشعر بالتحسن";
 "link_test_result_thank_you_back_home_button" = "العودة إلى الشاشة الرئيسية";
 "mydata_data_deletion_button_title" = "حذف جميع بياناتي";
-"about_this_app_how_this_app_works_description" = "يستخدم هذا التطبيق تقنية تتبع الاتصال للمساعدة في حمايتك وحماية الأشخاص الآخرين لكي يتسنى لنا جميعًا العودة إلى ممارسة الأمور التي نحبها مرة أخرى.\n\nيعمل التطبيق على ملاحظة وتسجيل مُستخدمي التطبيق الآخرين الموجودين بالقرب منك. وعند تسجيل أحد هؤلاء المستخدمين لنتيجة إيجابية في اختبار لاحق للكشف عن الإصابة بفيروس كورونا، فستتلقى تنبيهًا مصحوبًا بالنصائح ذات الصلة للتعامل مع هذا الأمر.\n\nيساعدك التطبيق أيضًا في الإبلاغ عن الأعراض التي لديك ومعرفة ما إذا كنت تحتاج إلى إجراء اختبار.\n\nويمكنك أيضًا استخدامه في إجراء مسح ضوئي لرموز NHS QR الرسمية لتتمكن من تسجيل الدخول إلى الأماكن التي تزورها بكل سهولة ويسر.";
+"about_this_app_how_this_app_works_description" = "يستخدم هذا التطبيق تقنية تتبع الاتصال للمساعدة في حمايتك وحماية الأشخاص الآخرين لكي يتسنى لنا جميعًا العودة إلى ممارسة الأمور التي نحبها مرة أخرى.\n\nيعمل التطبيق على ملاحظة وتسجيل مُستخدمي التطبيق الآخرين الموجودين بالقرب منك. وعند تسجيل أحد هؤلاء المستخدمين لنتيجة إيجابية في اختبار لاحق للكشف عن الإصابة بفيروس كورونا، فستتلقى تنبيهًا مصحوبًا بالنصائح ذات الصلة للتعامل مع هذا الأمر.\n\nيساعدك التطبيق أيضًا في الإبلاغ عن الأعراض التي لديك ومعرفة ما إذا كنت تحتاج إلى إجراء اختبار.";
 "privacy_description_paragraph1" = "تُقدِّر هيئة الخدمات الصحية الوطنية \"NHS\" خصوصيتك أيّما تقدير؛ مما يعني أن التطبيق لا يستطيع الكشف عن هويتك أو مكان وجودك أو الأشخاص المرافقين لك.\n\nفي حال تسجيلك نتيجة إيجابية في اختبار الكشف عن الإصابة بفيروس كورونا، يمكنك اختيار مشاركة بياناتك مع هيئة الخدمات الصحية الوطنية (NHS) لكي يتسنى لنا تحذير مُستخدمي التطبيق الآخرين في إنجلترا وويلز وأسكتلندا وأيرلندا الشمالية وجيرسي وجبل طارق. وعند تحديد خيار المتابعة، فإننا سوف نعمل على إتاحة الإشعارات ذات الصلة بك لمُستخدمي التطبيق الآخرين الذي يجب تحذيرهم في مختلف أنحاء هذه المواقع.\n\nإننا نستخدم عملية تلقائية في اتخاذ القرارات للمساعدة في تحديد المُستخدمين الآخرين الذين يجب تحذيرهم دون الحاجة إلى كشف الهوية.";
 "accessability_error_os_out_of_date" = "تحديث البرنامج لديك";
 "accessability_error_update_the_app" = "تحديث التطبيق";
@@ -461,7 +461,7 @@
 "positive_test_result_requires_follow_up_test_start_to_isolate_info" = "نتيجة اختبار الكشف عن إصابتك بفيروس كورونا إيجابية";
 "positive_test_result_requires_follow_up_test_explanation" = "لفهم الطريقة التي يحسب بها التطبيق عدد أيام العزل الذاتي، يُرجى زيارة الأسئلة الشائعة.\n\nنظرًا لإجرائك اختبار مسحة سريع، فإنك تحتاج الآن إلى إجراء اختبارٍ من نوعٍ آخر يتم إرساله إلى أحد المُختبرات للتحقق من النتيجة.\n\nفي تلك الأثناء، يتعين عليك وعلى الأشخاص الآخرين الذين تعيش معهم الخضوع للعزل الذاتي على الفور.";
 "positive_test_result_requires_follow_up_test_book_test_button" = "حجز اختبار متابعة";
-"positive_test_result_already_confirmed_positive_explanation" = "إذا كنت دون سنِّ 18 عامًا، فيجب عليك عرض هذه الرسالة على أحد الأشخاص البالغين الموثوقين.";
+"positive_test_result_already_confirmed_positive_explanation" = "إذا كان عمرك أقل من 18 عامًا، فإننا نوصيك بعرض هذه الرسالة على شخصٍ بالغٍ محل ثقةٍ لديك.";
 "positive_test_result_already_confirmed_positive_title" = "الاستمرار في تطبيق العزل الذاتي لمدة";
 "positive_test_result_already_confirmed_positive_info" = "نتيجة اختبار الكشف عن إصابتك بفيروس كورونا إيجابية";
 "positive_test_result_already_confirmed_positive_continue" = "استمرار";
@@ -649,7 +649,7 @@
 "book_a_follow_up_test_button" = "حجز اختبار متابعة";
 "book_a_follow_up_test_close_button" = "إغلاق";
 "link_test_result_thank_you_continue_to_book_a_test_button" = "استمرار";
-"local_information_banner_read_more" = "قراءة المزيد";
+"local_information_banner_read_more" = "Read updated guidance";
 "home_animations_heading" = "إيقاف أو تشغيل الدوائر المتحركة في الشاشة الرئيسية لديك.";
 "home_animations_description" = "لن يؤدي ذلك إلى تغيير طريقة عمل التطبيق لديك، بل سيؤدي فقط إلى تغيير الحركة.";
 "self_diagnosis_symptoms_after_positive_info" = "لقد أبلغت عن ظهور الأعراض لديك بعد تسجيلك نتيجة إيجابية";
@@ -1024,3 +1024,19 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_social_distancing_england" = "الحد من الاتصال الوثيق مع أي شخص في منزلك مصاب بفيروس COVID-19";
 "contact_case_no_isolation_fully_vaccinated_list_item_get_tested_before_meeting_vulnerable_people_england" = "قم بإجراء اختبار PCR إذا كانت لديك أعراض COVID-19";
 "contact_case_no_isolation_fully_vaccinated_list_item_wear_a_mask_england" = "أرتدي غطاء الوجه في الأماكن المزدحمة أوالمغلقة أو سيئة التهوية";
+"risky_contact_opt_out_further_advice_link_url" = "https://www.gov.uk/government/publications/covid-19-people-with-covid-19-and-their-contacts/covid-19-people-with-covid-19-and-their-contacts#what-to-do-if-you-are-a-close-contact-of-someone-who-has-covid-19";
+"contact_case_exposure_info_screen_title_england" = "لقد اكتشف التطبيق أنك كنت مخالطًا لشخصٍ ما سجَّل نتيجة إيجابية في اختبار الكشف عن الإصابة بفيروس كورونا (كوفيد-19)";
+"contact_case_exposure_info_screen_information_england" = "إذا كان عمرك أقل من 18 عامًا، فإننا نوصيك بعرض هذه الرسالة على شخصٍ بالغٍ محل ثقةٍ لديك";
+"contact_case_exposure_info_screen_continue_button_england" = "أستمر";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading_england" = "كيفية حساب مسافة المخالطة عن كثب";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_body_england" = "يستخدم التطبيق خاصية البلوتوث لمعرفة ما إذا قد وُجد هاتفك متقاربًا عن كثب مع هواتف أخرى.\n\nتعني المخالطة عن كثب أنك كنت موجودًا على مسافة فاصلة في حدود 2 متر من شخصٍ ما لمدة 15 دقيقة أو أكثر.\n\nالتطبيق لا يكشف عن الهوية ولا يستخدم نظام تحديد المواقع العالمي (GPS) لتحديد موقعك، إذا خصوصيتك محمية. ";
+"risky_contact_opt_out_advice_title" = "أتبع أحدث إرشادات COVID-19 لحماية نفسك والآخرين";
+"risky_contact_opt_out_advice_meeting_indoors" = "دع الهواء النقي يدخل إذا تقابلت مع احد في الداخل وإلا يمكنك الإلتقاء معه في الهواء الطلق";
+"risky_contact_opt_out_advice_mask" = "ارتدي غطاء الوجه في الأماكن المزدحمة والمغلقة";
+"risky_contact_opt_out_advice_testing_hub" = "قم بإجراء اختبار إذا كانت لديك أعراض COVID-19 وابق في المنزل إذا كانت نتيجة اختبارك إيجابية";
+"risky_contact_opt_out_advice_wash_hands" = "أغسل يديك بانتظام وغطي وجهك أثناء السعال والعطس";
+"risky_contact_opt_out_further_advice" = "إذا كانت نتيجة اختبار أحد أفراد أسرتك بفيروس COVID-19 إيجابية، رجاء زيارة:";
+"risky_contact_opt_out_further_advice_link_text" = "إرشادات الأتصالات الأسرية";
+"risky_contact_opt_out_primary_button_title" = "اقرأ أحدث الإرشادات المتعلقة بـــــ COVID-19";
+"risky_contact_opt_out_secondary_button_title" = "الرجوع إلى الشاشة الرئيسية";
+"contact_case_exposure_info_screen_exposure_date_england %@" = "حدثت المخالطة عن كثب في %@";

@@ -294,7 +294,7 @@
 "negative_test_result_no_isolation_warning" = "Jeśli źle się czujesz, zostań w domu, dopóki nie poczujesz się lepiej";
 "link_test_result_thank_you_back_home_button" = "Powrót do strony głównej";
 "mydata_data_deletion_button_title" = "Usuń wszystkie moje dane";
-"about_this_app_how_this_app_works_description" = "Aplikacja korzysta z technologii śledzenia kontaktów, aby zapewnić ochronę użytkownikowi i innym osobom, abyśmy wszyscy mogli wrócić do rzeczy, które są dla nas ważne.\n\nAplikacja wyszukuje i rejestruje innych będących w pobliżu użytkowników aplikacji. Jeżeli którykolwiek z użytkowników aplikacji uzyska pozytywny wynik testu na koronawirusa, otrzymasz ostrzeżenie z wytycznymi.\n\nAplikacja umożliwia także zgłaszanie objawów i uzyskanie informacji, czy należy zamówić test.\n\nMożna także z niej korzystać do skanowania oficjalnych kodów QR NHS, aby szybko i łatwo meldować się w odwiedzanych przez siebie miejscach.";
+"about_this_app_how_this_app_works_description" = "Aplikacja korzysta z technologii śledzenia kontaktów, aby zapewnić ochronę użytkownikowi i innym osobom, abyśmy wszyscy mogli wrócić do rzeczy, które są dla nas ważne.\n\nAplikacja wyszukuje i rejestruje innych będących w pobliżu użytkowników aplikacji. Jeżeli którykolwiek z użytkowników aplikacji uzyska pozytywny wynik testu na koronawirusa, otrzymasz ostrzeżenie z wytycznymi.\n\nAplikacja umożliwia także zgłaszanie objawów i uzyskanie informacji, czy należy zamówić test.";
 "privacy_description_paragraph1" = "NHS dba o Twoją prywatność.  Aplikacja nie może zobaczyć, kim jest lub gdzie się znajduje użytkownik ani kto z nim przebywa.\n\nJeśli twój wynik testu na koronawirusa jest pozytywny, możesz udostępnić swoje dane dla NHS, abyśmy mogli powiadomić innych użytkowników aplikacji w Anglii, Walii, Szkocji, Irlandii Północnej, Jersey i Gibraltarze. Wybierając opcję Kontynuuj, pozwolisz nam na udostępnienie swojego powiadomienia innym użytkownikom aplikacji, którzy powinni zostać ostrzeżeni w tych lokalizacjach.\n\nUżywamy metody automatycznego podejmowania decyzji, aby pomóc określić, którzy inni użytkownicy wymagają anonimowego powiadomienia.";
 "accessability_error_os_out_of_date" = "Zaktualizuj oprogramowanie";
 "accessability_error_update_the_app" = "Zaktualizuj tę aplikację";
@@ -461,7 +461,7 @@
 "positive_test_result_requires_follow_up_test_start_to_isolate_info" = "Wynik Twojego testu na koronawirusa jest pozytywny.";
 "positive_test_result_requires_follow_up_test_explanation" = "Aby zrozumieć, w jaki sposób aplikacja liczy dni izolacji, zapoznaj się z najczęściej zadawanymi pytaniami (FAQ).\n\nPonieważ miałeś(-aś) szybki test wymazowy, musisz teraz poddać się innemu rodzajowi testu, który zostanie wysłany do laboratorium w celu weryfikacji wyniku.\n\nW międzyczasie musisz natychmiast odizolować się wraz ze swoimi domownikami.";
 "positive_test_result_requires_follow_up_test_book_test_button" = "Zamów test kontrolny";
-"positive_test_result_already_confirmed_positive_explanation" = "Jeżeli nie masz ukończonych 18 lat, radzimy, aby pokazać tę wiadomość zaufanej osobie dorosłej.";
+"positive_test_result_already_confirmed_positive_explanation" = "Jeżeli nie masz ukończonych 18 lat, radzimy pokazać tę wiadomość zaufanej osobie dorosłej.";
 "positive_test_result_already_confirmed_positive_title" = "Kontynuuj izolację przez";
 "positive_test_result_already_confirmed_positive_info" = "Wynik Twojego testu na koronawirusa jest pozytywny.";
 "positive_test_result_already_confirmed_positive_continue" = "Kontynuuj";
@@ -649,7 +649,7 @@
 "book_a_follow_up_test_button" = "Zamów test kontrolny";
 "book_a_follow_up_test_close_button" = "Zamknij";
 "link_test_result_thank_you_continue_to_book_a_test_button" = "Kontynuuj";
-"local_information_banner_read_more" = "Dowiedz się więcej";
+"local_information_banner_read_more" = "Read updated guidance";
 "home_animations_heading" = "Zatrzymaj lub włącz poruszające się okręgi na ekranie startowym.";
 "home_animations_description" = "Nie wpłynie to na sposób działania aplikacji. Zmieni się jedynie ruch.";
 "self_diagnosis_symptoms_after_positive_info" = "Zgłoszono objawy po otrzymaniu dodatniego wyniku testu.";
@@ -1024,3 +1024,19 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_social_distancing_england" = "Ogranicz bliski kontakt z ze wszystkimi członkami gospodarstwa domowego zarażonymi COVID-19";
 "contact_case_no_isolation_fully_vaccinated_list_item_get_tested_before_meeting_vulnerable_people_england" = "Jeśli masz objawy COVID-19 zamów bezpłatny test PCR";
 "contact_case_no_isolation_fully_vaccinated_list_item_wear_a_mask_england" = "Noś zakrycie twarzy w zatłoczonych, zamkniętych lub słabo wentylowanych pomieszczeniach";
+"risky_contact_opt_out_further_advice_link_url" = "https://www.gov.uk/government/publications/covid-19-people-with-covid-19-and-their-contacts/covid-19-people-with-covid-19-and-their-contacts#what-to-do-if-you-are-a-close-contact-of-someone-who-has-covid-19";
+"contact_case_exposure_info_screen_title_england" = "Aplikacja wykazała, że przebywałeś(-aś) w pobliżu osoby, która otrzymała dodatni wynik testu na koronawirusa (COVID-19)";
+"contact_case_exposure_info_screen_information_england" = "Jeżeli nie masz ukończonych 18 lat, radzimy pokazać tę wiadomość zaufanej osobie dorosłej";
+"contact_case_exposure_info_screen_continue_button_england" = "Kontynuuj";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading_england" = "W jaki sposób liczone są dni samoizolacji";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_body_england" = "Za pomocą technologii Bluetooth aplikacja sprawdza, czy Twój telefon był w bliskim kontakcie z innymi osobami.\n\nDo bliskiego kontaktu dochodzi w momencie przebywania w zasięgu 2 metrów od kogoś przez co najmniej 15 minut.\n\nAplikacja jest anonimowa i nie wykorzystuje systemu GPS do śledzenia Twojej lokalizacji, więc Twoja prywatność jest chroniona.";
+"risky_contact_opt_out_advice_title" = "Stosuj się do najnowszych wskazówek dotyczących COVID-19, aby chronić siebie i innych";
+"risky_contact_opt_out_advice_meeting_indoors" = "Przewietrz pomieszczenie przed spotkaniem z innymi lub spotkajcie się na świeżym powietrzu";
+"risky_contact_opt_out_advice_mask" = "Noś zakrycie twarzy w zatłoczonych, zamkniętych pomieszczeniach";
+"risky_contact_opt_out_advice_testing_hub" = "Zrób test, jeśli masz objawy COVID-19 i zostań w domu, jeśli wynik testu będzie pozytywny";
+"risky_contact_opt_out_advice_wash_hands" = "Regularnie myj ręce i zakrywaj twarz kiedy kaszlesz i kichasz";
+"risky_contact_opt_out_further_advice" = "Jeśli ktoś z Twojego gospodarstwa domowego uzyskał pozytywny wynik testu na COVID-19, odwiedź:";
+"risky_contact_opt_out_further_advice_link_text" = "Wskazówki dotyczące kontaktów domowych";
+"risky_contact_opt_out_primary_button_title" = "Przeczytaj najnowsze wytyczne dotyczące COVID-19";
+"risky_contact_opt_out_secondary_button_title" = "Powrót do strony głównej";
+"contact_case_exposure_info_screen_exposure_date_england %@" = "Bliski kontakt miał miejsce dnia %@";

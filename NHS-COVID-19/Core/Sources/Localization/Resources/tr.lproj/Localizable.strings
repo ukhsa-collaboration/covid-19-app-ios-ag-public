@@ -294,7 +294,7 @@
 "negative_test_result_no_isolation_warning" = "İyi hissetmiyorsanız, daha iyi hissedene kadar evde kalın";
 "link_test_result_thank_you_back_home_button" = "Ana sayfaya geri dön";
 "mydata_data_deletion_button_title" = "Tüm verilerimi sil";
-"about_this_app_how_this_app_works_description" = "Bu uygulama, kendinizi ve başkalarını korumanıza yardımcı olmak üzere temas takibi teknolojisini kullanmaktadır. Bu şekilde hepimiz sevdiğimiz şeyleri yapmaya geri dönebiliriz.\n\nUygulama yakındaki diğer kullanıcılara bildirim göndererek onları kaydeder. Bu kullanıcılardan herhangi birinin ilerleyen günlerde koronavirüs testinin pozitif çıkması halinde, tavsiyeler içeren bir uyarı alacaksınız.\n\nUygulama aynı zamanda belirtilerinizi bildirmenize ve teste ihtiyacınız olup olmadığını tespit etmenize olanak tanır.\n\nUygulamayı ayrıca resmi NHS QR kodlarını hızlı ve kolay bir biçimde taratarak ziyaret ettiğiniz yerlere giriş yapmak için kullanabilirsiniz.";
+"about_this_app_how_this_app_works_description" = "Bu uygulama, kendinizi ve başkalarını korumanıza yardımcı olmak üzere temas takibi teknolojisini kullanmaktadır. Bu şekilde hepimiz sevdiğimiz şeyleri yapmaya geri dönebiliriz.\n\nUygulama yakındaki diğer kullanıcılara bildirim göndererek onları kaydeder. Bu kullanıcılardan herhangi birinin ilerleyen günlerde koronavirüs testinin pozitif çıkması halinde, tavsiyeler içeren bir uyarı alacaksınız.\n\nUygulama aynı zamanda belirtilerinizi bildirmenize ve teste ihtiyacınız olup olmadığını tespit etmenize olanak tanır.";
 "privacy_description_paragraph1" = "NHS sizin kişisel gizliliğinize değer vermektedir, bu da uygulamanın sizin kim olduğunuzu, nerede bulunduğunuzu veya yanınızda kimin olduğunu bilemeyeceği anlamına gelmektedir.\n\nKoronavirüs testiniz pozitif çıkarsa, verilerinizi NHS ile paylaşmayı seçebilirsiniz; böylece İngiltere, Galler, İskoçya, Kuzey İrlanda, Jersey ve Cebelitarık'taki diğer uygulama kullanıcılarını uyarabiliriz. Devam et seçeneğini seçtiğinizde bildirimlerinizi, bu konumlarda uyarılması gereken diğer uygulama kullanıcılarına açık hale getireceğiz.\n\nDiğer kullanıcılardan hangilerinin anonim olarak uyarılması gerektiğini belirlemeye yardımcı olması için otomatik karar verme olanağını kullanıyoruz.";
 "accessability_error_os_out_of_date" = "Yazılımınızı güncelleyin";
 "accessability_error_update_the_app" = "Uygulamayı güncelle";
@@ -649,7 +649,7 @@
 "book_a_follow_up_test_button" = "Bir takip testi için randevu alın";
 "book_a_follow_up_test_close_button" = "Kapat";
 "link_test_result_thank_you_continue_to_book_a_test_button" = "Devam";
-"local_information_banner_read_more" = "Daha fazla bilgi";
+"local_information_banner_read_more" = "Read updated guidance";
 "home_animations_heading" = "Ana ekranınızda hareket eden daireleri durdurun veya başlatın.";
 "home_animations_description" = "Bu, uygulamanızın çalışma şeklini değiştirmeyecektir. Sadece hareketi değiştirecektir.";
 "self_diagnosis_symptoms_after_positive_info" = "Testinizin sonucu pozitif çıktıktan sonra belirtiler rapor ettiniz";
@@ -1024,3 +1024,19 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_social_distancing_england" = "Evde COVID-19 olan kimselerle yakın teması sınırlandırın";
 "contact_case_no_isolation_fully_vaccinated_list_item_get_tested_before_meeting_vulnerable_people_england" = "COVID-19 belirtileriniz varsa PCR testi yaptırın";
 "contact_case_no_isolation_fully_vaccinated_list_item_wear_a_mask_england" = "Kalabalık, kapalı veya iyi havalandırılmayan yerlerde maske takın";
+"risky_contact_opt_out_further_advice_link_url" = "https://www.gov.uk/government/publications/covid-19-people-with-covid-19-and-their-contacts/covid-19-people-with-covid-19-and-their-contacts#what-to-do-if-you-are-a-close-contact-of-someone-who-has-covid-19";
+"contact_case_exposure_info_screen_title_england" = "Uygulama, koronavirüs (COVID-19) test sonucu pozitif olan birisinin yakınında bulunduğunuzu tespit etti";
+"contact_case_exposure_info_screen_information_england" = "Eğer 18 yaşın altındaysanız bu mesajı güvendiğiniz bir yetişkine göstermeniz tavsiye edilir";
+"contact_case_exposure_info_screen_continue_button_england" = "Devam";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading_england" = "Yakın temas nasıl tespit edilir?";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_body_england" = "Uygulama, başkalarıyla yakın temasta bulunup bulunmadığınızı kontrol etmek için  telefonunuzun Bluetooth işlevini kullanır.\n\nYakın temas, birisinin 15 dakika boyunca ya da daha uzun bir süreyle 2 metre yakınında bulunmuş olmanız anlamına gelir.\n\nUygulama anonimdir ve GPS yardımıyla yerinizi tespit etmediği için gizliliğiniz koruma altındadır.";
+"risky_contact_opt_out_advice_title" = "Kendinizi ve başkalarını korumak için en güncel COVID-19 yönergelerine uyun ";
+"risky_contact_opt_out_advice_meeting_indoors" = "Kapalı alanda buluşacaksanız ortamı havalandırın";
+"risky_contact_opt_out_advice_mask" = "Kalabalık ve kapalı alanlarda maske takın";
+"risky_contact_opt_out_advice_testing_hub" = "COVID-19 belirtileriniz varsa test yaptırın ve test sonucu pozitif çıkarsa evde kalın";
+"risky_contact_opt_out_advice_wash_hands" = "Ellerinizi düzenli olarak yıkayın ve öksürük ve hapşırma esnasında ağzınızı kapatın";
+"risky_contact_opt_out_further_advice" = "Evden birinin COVID-19 testinin pozitif çıkması halinde lütfen ziyaret edin: ";
+"risky_contact_opt_out_further_advice_link_text" = "Ev temaslılarıyla ilgili yönerge";
+"risky_contact_opt_out_primary_button_title" = "Güncel COVID-19 yönergesini okuyun";
+"risky_contact_opt_out_secondary_button_title" = "Ana ekrana geri dön";
+"contact_case_exposure_info_screen_exposure_date_england %@" = "%@ tarihinde yakın temas meydana geldi";

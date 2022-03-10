@@ -19,7 +19,6 @@ class ContactCaseNoIsolationFullyVaccinatedEnglandScreenTests: XCTestCase {
         }
     }
     
-    
     func testReadGuidanceLinkButton() throws {
         try runner.run { app in
             let screen = ContactCaseNoIsolationFullyVaccinatedEnglandScreen(app: app)

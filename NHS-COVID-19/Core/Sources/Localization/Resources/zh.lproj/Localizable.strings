@@ -294,7 +294,7 @@
 "negative_test_result_no_isolation_warning" = "如果您感到不适，请待在家中，直至状况有所改善";
 "link_test_result_thank_you_back_home_button" = "返回主屏幕";
 "mydata_data_deletion_button_title" = "删除我的所有数据";
-"about_this_app_how_this_app_works_description" = "该应用程序使用联系人跟踪技术来帮助您保护自己和他人，这样我们所有人都可以回到自己喜欢的事物上。\n\n该应用会检测并记录附近的其他应用用户。 如果这些用户中的任何一个将来冠状病毒检测呈阳性，您就会收到警报和建议。\n\n该应用程序还可以让您报告症状并确定是否需要进行测试。\n\n您还可以使用它扫描 NHS官方QR码，快速轻松地签到您访问的地方。";
+"about_this_app_how_this_app_works_description" = "该应用程序使用联系人跟踪技术来帮助您保护自己和他人，这样我们所有人都可以回到自己喜欢的事物上。\n\n该应用会检测并记录附近的其他应用用户。 如果这些用户中的任何一个将来冠状病毒检测呈阳性，您就会收到警报和建议。\n\n该应用程序还可以让您报告症状并确定是否需要进行测试。";
 "privacy_description_paragraph1" = "国家卫生体系（NHS）重视您的隐私，这意味着本应用程序无法分辨您是谁、您在哪里以及您与谁在一起。\n\n如果您的冠状病毒检测结果呈阳性，您可以选择与NHS共享数据，以便我们可以提醒在英格兰、威尔士、苏格兰、北爱尔兰、泽西岛和直布罗陀的其他应用程序用户。通过选择继续，我们会将您的通知提供给这些地方的、需要得到警报的其他应用程序用户。\n\n我们使用自动决策来帮助确定需要匿名通知哪些其他用户。";
 "accessability_error_os_out_of_date" = "更新您的软件";
 "accessability_error_update_the_app" = "更新应用程序";
@@ -461,7 +461,7 @@
 "positive_test_result_requires_follow_up_test_start_to_isolate_info" = "您的冠状病毒测试结果为阳性";
 "positive_test_result_requires_follow_up_test_explanation" = "若要了解应用程序如何计算自我隔离天数，请访问\"常见问题解答\"。\n\n您之前做的是快速拭子检测，因此，您现在需要进行另一种检测，并将检测样本送到实验室去进行化验。\n\n同时，您同与您一起生活的任何人员必须立即自行隔离。";
 "positive_test_result_requires_follow_up_test_book_test_button" = "预定后续检测";
-"positive_test_result_already_confirmed_positive_explanation" = "即使您没有任何症状，您也有感染和传播冠状病毒的高风险。您应在规定的完整隔离期内进行自我隔离。";
+"positive_test_result_already_confirmed_positive_explanation" = "即使没有任何症状，您也极有可能感染和传播该病毒。如果您还未满 18 岁，建议您将此消息拿提供给您信任的成年人。";
 "positive_test_result_already_confirmed_positive_title" = "继续自我隔离";
 "positive_test_result_already_confirmed_positive_info" = "您的冠状病毒测试结果为阳性";
 "positive_test_result_already_confirmed_positive_continue" = "继续";
@@ -649,7 +649,7 @@
 "book_a_follow_up_test_button" = "预定后续检测";
 "book_a_follow_up_test_close_button" = "关闭";
 "link_test_result_thank_you_continue_to_book_a_test_button" = "继续";
-"local_information_banner_read_more" = "阅读更多";
+"local_information_banner_read_more" = "Read updated guidance";
 "home_animations_heading" = "停止或开始主屏幕的动态圆形";
 "home_animations_description" = "这不会改变应用程序的运行方式。这只会改变动作效果。";
 "self_diagnosis_symptoms_after_positive_info" = "您已在检测结果呈阳性后报告了您的症状。";
@@ -1024,3 +1024,19 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_social_distancing_england" = "限制与家中任何感染 COVID-19 之人的密切接触";
 "contact_case_no_isolation_fully_vaccinated_list_item_get_tested_before_meeting_vulnerable_people_england" = "如有 COVID-19 症状，则进行 PCR 检测";
 "contact_case_no_isolation_fully_vaccinated_list_item_wear_a_mask_england" = "在拥挤、封闭或通风不良的空间内佩戴面罩";
+"risky_contact_opt_out_further_advice_link_url" = "https://www.gov.uk/government/publications/covid-19-people-with-covid-19-and-their-contacts/covid-19-people-with-covid-19-and-their-contacts#what-to-do-if-you-are-a-close-contact-of-someone-who-has-covid-19";
+"contact_case_exposure_info_screen_title_england" = "本应用程序检测到您曾接触新冠病毒 (COVID-19) 阳性患者";
+"contact_case_exposure_info_screen_information_england" = "如果您未满 18 岁，我们建议您将此消息展示给可信任的成年人";
+"contact_case_exposure_info_screen_continue_button_england" = "继续";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading_england" = "如何监测密切接触";
+"contact_case_exposure_info_screen_how_close_contacts_are_calculated_body_england" = "该应用程序通过蓝牙检测您的手机是否与他人有过密切接触。\n\n密切接触是指您在 15 分钟或更长时间内，与某人保持 2 米以内的距离。\n\n该应用匿名使用，不使用全球定位系统 (GPS) 跟踪用户位置，从而保护个人隐私。";
+"risky_contact_opt_out_advice_title" = "遵循最新的 COVID-19 指南保护自己和他人";
+"risky_contact_opt_out_advice_meeting_indoors" = "室内会面时请保持室内通风，或者请考虑室外会面";
+"risky_contact_opt_out_advice_mask" = "在拥挤、封闭的空间内佩戴面罩";
+"risky_contact_opt_out_advice_testing_hub" = "若您有 COVID-19 症状，则进行相关检测；若检测结果为阳性，则请居家隔离";
+"risky_contact_opt_out_advice_wash_hands" = "经常洗手，咳嗽和打喷嚏时捂住口鼻";
+"risky_contact_opt_out_further_advice" = "若家中有人 COVID-19 检测呈阳性，请访问：";
+"risky_contact_opt_out_further_advice_link_text" = "家庭接触者指南";
+"risky_contact_opt_out_primary_button_title" = "阅读最新版 COVID-19 指南";
+"risky_contact_opt_out_secondary_button_title" = "返回主屏幕";
+"contact_case_exposure_info_screen_exposure_date_england %@" = "%@发生密切接触";

@@ -2,6 +2,7 @@
 // Copyright © 2021 DHSC. All rights reserved.
 //
 
+import Combine
 import Common
 import Scenarios
 import XCTest
@@ -29,7 +30,8 @@ class ExposureNotificationContextTests: XCTestCase {
             notificationCenter: services.notificationCenter,
             currentDateProvider: services.currentDateProvider,
             removeExposureDetectionNotifications: {},
-            scheduleSelfIsolationReminderNotification: {}
+            scheduleSelfIsolationReminderNotification: {},
+            country: Just(Country.england).domainProperty()
         )
     }
     

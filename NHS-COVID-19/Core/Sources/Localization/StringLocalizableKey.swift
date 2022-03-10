@@ -427,6 +427,7 @@ public enum StringLocalizableKey: String, CaseIterable {
     case link_isolation_note
     case contact_case_start_isolation_book_lfd_test_url
     case contact_case_guidance_for_contacts_in_england_url
+    case risky_contact_opt_out_further_advice_link_url
     
     case cancel
     case back
@@ -777,6 +778,18 @@ public enum StringLocalizableKey: String, CaseIterable {
     case contact_case_no_isolation_fully_vaccinated_list_item_lfd_wales
     case contact_case_no_isolation_fully_vaccinated_list_item_info_wales
     
+    // MARK: No isolation advice
+    
+    case risky_contact_opt_out_advice_title
+    case risky_contact_opt_out_advice_meeting_indoors
+    case risky_contact_opt_out_advice_mask
+    case risky_contact_opt_out_advice_testing_hub
+    case risky_contact_opt_out_advice_wash_hands
+    case risky_contact_opt_out_further_advice
+    case risky_contact_opt_out_further_advice_link_text
+    case risky_contact_opt_out_primary_button_title
+    case risky_contact_opt_out_secondary_button_title
+    
     // MARK: No isolation - person medically exempt
     
     case risky_contact_isolation_advice_medically_exempt
@@ -863,7 +876,18 @@ public enum StringLocalizableKey: String, CaseIterable {
     // this is only used to check remote localisation updates in the Scenarios app
     case this_is_just_a_test_message
     
-    // MARK: - New Contact Case screen (depending on your answer you might need to isolate)
+    // MARK: - New Contact Case exposure info screen for England
+    
+    // (please show this message to an adult if you're under 18)
+    case contact_case_exposure_info_screen_title_england
+    case contact_case_exposure_info_screen_information_england
+    case contact_case_exposure_info_screen_continue_button_england
+    case contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading_england
+    case contact_case_exposure_info_screen_how_close_contacts_are_calculated_body_england
+    
+    // MARK: - Contact Case exposure info screen for Wales
+    
+    // (depending on your answer you might need to isolate)
     
     case contact_case_exposure_info_screen_title
     case contact_case_exposure_info_screen_information
@@ -1041,6 +1065,7 @@ public enum ParameterisedStringLocalizable: Equatable {
         case age_declaration_yes_option_accessibility_text = "age_declaration_yes_option_accessibility_text %@"
         case age_declaration_no_option_accessibility_text = "age_declaration_no_option_accessibility_text %@"
         
+        case contact_case_exposure_info_screen_exposure_date_england = "contact_case_exposure_info_screen_exposure_date_england %@"
         case contact_case_exposure_info_screen_exposure_date = "contact_case_exposure_info_screen_exposure_date %@"
         
         case contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period = "contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld"
@@ -1129,6 +1154,7 @@ public enum ParameterisedStringLocalizable: Equatable {
     case age_declaration_yes_option_accessibility_text(date: Date)
     case age_declaration_no_option_accessibility_text(date: Date)
     
+    case contact_case_exposure_info_screen_exposure_date_england(date: Date)
     case contact_case_exposure_info_screen_exposure_date(date: Date)
     case local_statistics_main_screen_last_updated(date: Date)
     
@@ -1204,6 +1230,8 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .age_declaration_no_option_accessibility_text: return .age_declaration_no_option_accessibility_text
         case .contact_case_exposure_info_screen_exposure_date:
             return .contact_case_exposure_info_screen_exposure_date
+        case .contact_case_exposure_info_screen_exposure_date_england:
+            return .contact_case_exposure_info_screen_exposure_date_england
         case .contact_case_start_isolation_how_we_calculate_isolation_days_body:
             return .contact_case_start_isolation_how_we_calculate_isolation_days_body
         case .contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period:
@@ -1356,6 +1384,8 @@ public enum ParameterisedStringLocalizable: Equatable {
              .age_declaration_no_option_accessibility_text(let date):
             return [DateFormatter.dayOfYear(style: .full).string(from: date)]
         case .contact_case_exposure_info_screen_exposure_date(let date):
+            return [DateFormatter.dayOfYear(style: .full).string(from: date)]
+        case .contact_case_exposure_info_screen_exposure_date_england(date: let date):
             return [DateFormatter.dayOfYear(style: .full).string(from: date)]
         case .contact_case_start_isolation_how_we_calculate_isolation_days_body(let exposureDate):
             return [DateFormatter.dayOfYear(style: .full).string(from: exposureDate)]
