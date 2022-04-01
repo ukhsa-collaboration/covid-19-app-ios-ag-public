@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Combine
@@ -27,8 +27,7 @@ extension RiskLevelBanner {
             linkTitle: String,
             linkURL: URL?,
             footer: [String],
-            policies: [RiskLevelInfoViewController.Policy],
-            shouldShowMassTestingLink: InterfaceProperty<Bool>
+            policies: [RiskLevelInfoViewController.Policy]
         ) {
             self.postcode = postcode
             self.colorScheme = colorScheme
@@ -60,8 +59,7 @@ extension RiskLevelBanner {
                 linkTitle: linkTitle,
                 linkURL: linkURL,
                 footer: footer,
-                policies: policies,
-                shouldShowMassTestingLink: shouldShowMassTestingLink
+                policies: policies
             )
         }
     }

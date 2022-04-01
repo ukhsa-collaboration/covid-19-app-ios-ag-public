@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -160,8 +160,6 @@ public enum StringLocalizableKey: String, CaseIterable {
     case alert_postcode_risk_change_body
     case alert_venue_risk_change_title
     case alert_venue_risk_change_body
-    case alert_self_isolation_change_title
-    case alert_self_isolation_change_body
     case alert_isolation_state_change_title
     case alert_isolation_state_change_body
     case alert_exposure_detection_title
@@ -273,6 +271,7 @@ public enum StringLocalizableKey: String, CaseIterable {
     case no_symptoms_isolating_return_home_button
     
     case isolation_until_date_title
+    case be_careful_until_date_title
     
     case symptom_review_title
     case symptom_review_heading
@@ -418,7 +417,6 @@ public enum StringLocalizableKey: String, CaseIterable {
     case link_exposure_faq
     case link_visit_uk_gov
     case link_cant_run_this_app_faq
-    case link_find_test_center
     case link_nhs_get_tested
     case link_download_nhs_app
     case link_government_guidance
@@ -428,6 +426,7 @@ public enum StringLocalizableKey: String, CaseIterable {
     case contact_case_start_isolation_book_lfd_test_url
     case contact_case_guidance_for_contacts_in_england_url
     case risky_contact_opt_out_further_advice_link_url
+    case get_tested_wales_link_url
     
     case cancel
     case back
@@ -573,10 +572,6 @@ public enum StringLocalizableKey: String, CaseIterable {
     case settings_row_my_area_title
     case settings_row_my_data_title
     case settings_row_animations_title
-    
-    case risk_level_mass_testing_title
-    case risk_level_mass_testing_description
-    case risk_level_mass_testing_link_title
     
     case checkin_risky_venue_information_warn_and_book_a_test_close_button
     case checkin_risky_venue_information_warn_and_book_a_test_title
@@ -790,6 +785,17 @@ public enum StringLocalizableKey: String, CaseIterable {
     case risky_contact_opt_out_primary_button_title
     case risky_contact_opt_out_secondary_button_title
     
+    // MARK: No isolation advice Wales
+    
+    case risky_contact_opt_out_advice_title_wales
+    case risky_contact_opt_out_advice_meeting_indoors_wales
+    case risky_contact_opt_out_advice_mask_wales
+    case risky_contact_opt_out_advice_testing_hub_wales
+    case risky_contact_opt_out_advice_wash_hands_wales
+    case risky_contact_opt_out_primary_button_title_wales
+    case risky_contact_opt_out_secondary_button_title_wales
+    case risky_contact_opt_out_primary_button_url_wales
+    
     // MARK: No isolation - person medically exempt
     
     case risky_contact_isolation_advice_medically_exempt
@@ -807,6 +813,13 @@ public enum StringLocalizableKey: String, CaseIterable {
     case risky_contact_isolation_advice_medically_exempt_primary_button_title
     case risky_contact_isolation_advice_medically_exempt_primary_button_title_read_guidance_england
     case risky_contact_isolation_advice_medically_exempt_secondary_button_title
+    
+    // MARK: - Isolation Advice Symptomatic England
+    
+    case isolation_advice_symptomatic_title_england
+    case isolation_advice_symptomatic_info_england
+    case isolation_advice_symptomatic_description_england
+    case isolation_advice_symptomatic_primary_button_title_england
     
     // MARK: - Self-isolation Hub
     
@@ -1001,6 +1014,34 @@ public enum StringLocalizableKey: String, CaseIterable {
     case local_statistics_main_screen_about_data_footnote_2
     case local_statistics_main_screen_rolling_rate_100k_accessibility_text
     case local_statistics_error_loading_title
+    
+    case index_case_already_isolating_advice_heading_title
+    case index_case_already_isolating_advice_information_box_description
+    case index_case_already_isolating_advice_body
+    case index_case_already_isolating_advice_common_question_link_button
+    case index_case_already_isolating_advice_further_advice
+    case index_case_already_isolating_advice_nhs_onilne_link_button
+    case index_case_already_isolating_advice_primary_button_title
+    
+    // MARK: - Guidance for symptomatic Cases England
+    
+    case symptomatic_contact_guidance_title_england
+    case symptomatic_contact_guidance_mask_england
+    case symptomatic_contact_guidance_testing_hub_england
+    case symptomatic_contact_guidance_meeting_indoors_england
+    case symptomatic_contact_guidance_wash_hands_england
+    case symptomatic_contact_guidance_common_questions_link_england
+    case symptomatic_contact_guidance_further_advice_england
+    case symptomatic_contact_guidance_nhs_online_link_england
+    case symptomatic_contact_primary_button_title_england
+    
+    case index_case_isolation_advice_heading_title
+    case index_case_isolation_advice_information_box_description
+    case index_case_isolation_advice_body
+    case index_case_isolation_advice_common_question_link_button
+    case index_case_isolation_advice_further_advice
+    case index_case_isolation_advice_nhs_onilne_link_button
+    case index_case_isolation_advice_primary_button_title
 }
 
 public enum ParameterisedStringLocalizable: Equatable {
@@ -1043,6 +1084,8 @@ public enum ParameterisedStringLocalizable: Equatable {
         case symptom_review_button_accessibility_label = "symptom_review_button_accessibility_label %@"
         
         case isolation_indicator_accessiblity_label = "isolation_indicator_accessiblity_label days: %ld date: %@ time: %@"
+        case be_careful_indicator_accessibility_label = "be_careful_indicator_accessibility_label days: %ld date: %@ time: %@"
+
         
         case exposure_notification_reminder_sheet_hours = "%ld exposure_notification_reminder_sheet_hours"
         case exposure_notification_reminder_alert_title = "exposure_notification_reminder_alert_title %ld hours"
@@ -1098,6 +1141,7 @@ public enum ParameterisedStringLocalizable: Equatable {
     case isolation_until_date(date: Date)
     
     case isolation_indicator_accessiblity_label(date: Date, days: Int)
+    case be_careful_indicator_accessibility_label(date: Date, days: Int)
     
     case symptom_card_checkbox_accessibility_label(value: String, heading: String, content: String)
     case symptom_card_accessibility_label(heading: String, content: String)
@@ -1212,6 +1256,8 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .symptom_review_button_accessibility_label: return .symptom_review_button_accessibility_label
             
         case .isolation_indicator_accessiblity_label: return .isolation_indicator_accessiblity_label
+        case .be_careful_indicator_accessibility_label:
+            return .be_careful_indicator_accessibility_label
         case .exposure_notification_reminder_sheet_hours: return .exposure_notification_reminder_sheet_hours
         case .exposure_notification_reminder_alert_title: return .exposure_notification_reminder_alert_title
         case .positive_test_start_to_isolate_accessibility_label: return .positive_test_start_to_isolate_accessibility_label
@@ -1312,6 +1358,12 @@ public enum ParameterisedStringLocalizable: Equatable {
                 DateFormatter.time.string(from: date.advanced(by: -1)),
             ]
         case .isolation_indicator_accessiblity_label(let date, let days):
+            return [
+                days,
+                DateFormatter.dayOfYear().string(from: date.advanced(by: -1)),
+                DateFormatter.time.string(from: date.advanced(by: -1)),
+            ]
+        case .be_careful_indicator_accessibility_label(let date, let days):
             return [
                 days,
                 DateFormatter.dayOfYear().string(from: date.advanced(by: -1)),

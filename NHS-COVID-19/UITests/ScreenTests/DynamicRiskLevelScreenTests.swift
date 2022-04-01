@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -34,16 +34,6 @@ class DynamicRiskLevelScreenTests: XCTestCase {
             XCTAssert(screen.linktoWebsiteAlertTitle.exists)
         }
     }
-    
-    func testTapFindTestCenterLink() throws {
-        try runner.run { app in
-            let screen = DynamicRiskLevelInfoScreen(app: app)
-            
-            app.scrollTo(element: screen.linkFindTestCenter)
-            screen.linkFindTestCenter.tap()
-            XCTAssert(screen.linkFindTestCenterAlertTitle.exists)
-        }
-    }
 }
 
 private struct DynamicRiskLevelInfoScreen {
@@ -60,14 +50,6 @@ private struct DynamicRiskLevelInfoScreen {
     
     var linkToWebsiteLinkButton: XCUIElement {
         app.links[verbatim: DynamicRiskLevelScreenScenario.linkTitle]
-    }
-    
-    var linkFindTestCenterAlertTitle: XCUIElement {
-        app.staticTexts[DynamicRiskLevelScreenScenario.linkFindTestCenterTapped]
-    }
-    
-    var linkFindTestCenter: XCUIElement {
-        app.links[verbatim: DynamicRiskLevelScreenScenario.findTestCenterLinkTitle.applyCurrentLanguageDirection()]
     }
     
     var heading: [XCUIElement] {

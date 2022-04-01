@@ -7,14 +7,14 @@ import Localization
 import UIKit
 
 public protocol PositiveSymptomsViewControllerInteracting {
-    func didTapBookTest()
+    func didTapGetRapidLateralFlowTest()
     func didTapCancel()
     func furtherAdviceLinkTapped()
     func exposureFAQsLinkTapped()
 }
 
 extension PositiveSymptomsViewController {
-    private class Content: PrimaryButtonStickyFooterScrollingContent {
+    private class Content: PrimaryLinkButtonStickyFooterScrollingContent {
         
         init(interactor: Interacting, isolationEndDate: Date, currentDateProvider: DateProviding) {
             let daysToIsolate = currentDateProvider.currentLocalDay.daysRemaining(until: isolationEndDate)
@@ -66,9 +66,9 @@ extension PositiveSymptomsViewController {
                     ),
                     
                 ],
-                primaryButton: (
+                primaryLinkButton: (
                     title: localize(.positive_symptoms_corona_test_button),
-                    action: interactor.didTapBookTest
+                    action: interactor.didTapGetRapidLateralFlowTest
                 )
             )
         }

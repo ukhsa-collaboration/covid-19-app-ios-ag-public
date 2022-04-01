@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Integration
@@ -54,8 +54,6 @@ public class DynamicRiskLevelScreenScenario: Scenario {
     
     public static let linkButtonTapped = "Link to website tapped"
     public static let cancelTapped = "Cancel tapped"
-    public static let linkFindTestCenterTapped = "Find a test centre link tapped"
-    public static let findTestCenterLinkTitle = "Find a test site"
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
@@ -76,8 +74,7 @@ public class DynamicRiskLevelScreenScenario: Scenario {
                         heading: $0.1.0,
                         body: $0.1.1
                     )
-                },
-                shouldShowMassTestingLink: .constant(true)
+                }
             )
             return RiskLevelInfoViewController(viewModel: viewModel.riskLevelInfoViewModel, interactor: interactor)
         }
@@ -94,10 +91,6 @@ private class Interactor: RiskLevelInfoViewController.Interacting {
     
     func didTapWebsiteLink(url: URL) {
         viewController?.showAlert(title: DynamicRiskLevelScreenScenario.linkButtonTapped)
-    }
-    
-    func didTapFindTestCenterLink(url: URL) {
-        viewController?.showAlert(title: DynamicRiskLevelScreenScenario.linkFindTestCenterTapped)
     }
     
     func didTapCancel() {

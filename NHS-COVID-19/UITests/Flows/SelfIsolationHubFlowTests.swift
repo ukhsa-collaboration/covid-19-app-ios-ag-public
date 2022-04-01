@@ -20,6 +20,8 @@ class SelfIsolationHubFlowTests: XCTestCase {
         
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.contact.rawValue
         $runner.initialState.isolationPaymentState = Sandbox.Text.IsolationPaymentState.enabled.rawValue
+        $runner.enable(\.$selfIsolationHubToggleEngland)
+        $runner.enable(\.$selfIsolationHubToggleWales)
         
         $runner.report(scenario: "Apply for financial support", "Happy path") {
             """
@@ -81,6 +83,8 @@ class SelfIsolationHubFlowTests: XCTestCase {
     
     func testBookAFreeTest() throws {
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.contact.rawValue
+        $runner.enable(\.$selfIsolationHubToggleEngland)
+        $runner.enable(\.$selfIsolationHubToggleWales)
         
         $runner.report(scenario: "Book a free test", "Happy path") {
             """

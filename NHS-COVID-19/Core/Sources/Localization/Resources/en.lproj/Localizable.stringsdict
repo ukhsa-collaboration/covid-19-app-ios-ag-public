@@ -434,5 +434,21 @@
 				<string>%li positive tests in the last 7 days</string>
 			</dict>
 		</dict>
+		<key>be_careful_indicator_accessibility_label days: %ld date: %@ time: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Take extra care and protect others until %2$@ at %3$@. %1$ld day to go.</string>
+				<key>other</key>
+				<string>Take extra care and protect others until %2$@ at %3$@. %1$ld days to go.</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Combine
@@ -52,6 +52,7 @@ public protocol SelfDiagnosisFlowViewControllerInteracting: BookATestInfoViewCon
     func nhsGuidanceLinkTapped()
     func gettingTestedLinkTapped()
     func exposureFAQsLinkTapped()
+    func gettingTestedWalesLinkTapped()
 }
 
 public class SelfDiagnosisFlowViewController: BaseNavigationController {
@@ -67,6 +68,7 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
         case reviewing
         case advice(SelfDiagnosisAdvice)
         case bookATest
+        case guidance
     }
     
     @Published
@@ -79,15 +81,16 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
     )
     
     private let currentDateProvider: DateProviding
+    private let country: Country
     public var didCancel: (() -> Void)?
     public var finishFlow: (() -> Void)?
     
     private var cancellables = [AnyCancellable]()
     
-    public init(_ interactor: Interacting, currentDateProvider: DateProviding) {
+    public init(_ interactor: Interacting, currentDateProvider: DateProviding, country: Country) {
         self.interactor = interactor
         self.currentDateProvider = currentDateProvider
-        
+        self.country = country
         super.init()
         
         monitorState()
@@ -132,6 +135,9 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
             return viewController(for: advice)
         case .bookATest:
             return BookATestInfoViewController(interactor: interactor, shouldHaveCancelButton: false)
+        case .guidance:
+            let interactor = GuidanceForSymptomaticCasesEnglandViewControllerInteractor(controller: self)
+            return GuidanceForSymptomaticCasesEnglandViewController(interactor: interactor)
         }
     }
     
@@ -155,8 +161,14 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
             let interactor = NoSymptomsIsolatingViewControllerInteractor(navigationController: self, didTapOnlineServicesLink: self.interactor.nhs111LinkTapped)
             return NoSymptomsIsolatingViewController(interactor: interactor, isolationEndDate: endDate, dateProvider: currentDateProvider)
         case .hasSymptoms(.isolate(.hasNoTests, let isolationEndDate)):
-            let interactor = PositiveSymptomsViewControllerInteractor(controller: self)
-            return PositiveSymptomsViewController(interactor: interactor, isolationEndDate: isolationEndDate, currentDateProvider: currentDateProvider)
+            switch country {
+            case .england:
+                let interactor = IsolationAdviceForSymptomaticCasesEnglandViewControllerInteractor(controller: self)
+                return IsolationAdviceForSymptomaticCasesEnglandViewController(interactor: interactor)
+            case .wales:
+                let interactor = PositiveSymptomsViewControllerInteractor(controller: self)
+                return PositiveSymptomsViewController(interactor: interactor, isolationEndDate: isolationEndDate, currentDateProvider: currentDateProvider)
+            }
         case .hasSymptoms(.isolate(.hasTestsButShouldUseSymptoms, let isolationEndDate)):
             let interactor = SymptomsAfterPositiveTestViewControllerInteractor(
                 navigationController: self,
@@ -342,12 +354,50 @@ private struct PositiveSymptomsViewControllerInteractor: PositiveSymptomsViewCon
         controller?.interactor.nhs111LinkTapped()
     }
     
-    public func didTapBookTest() {
-        controller?.state = .bookATest
+    public func didTapGetRapidLateralFlowTest() {
+        controller?.interactor.gettingTestedWalesLinkTapped()
+        controller?.finishFlow?()
+        controller?.dismiss(animated: true, completion: nil)
     }
     
     public func exposureFAQsLinkTapped() {
         controller?.interactor.exposureFAQsLinkTapped()
+    }
+}
+
+private struct IsolationAdviceForSymptomaticCasesEnglandViewControllerInteractor: IsolationAdviceForSymptomaticCasesEnglandViewController.Interacting {
+    
+    private weak var controller: SelfDiagnosisFlowViewController?
+    
+    init(controller: SelfDiagnosisFlowViewController?) {
+        self.controller = controller
+    }
+    
+    func didTapContinue() {
+        controller?.state = .guidance
+    }
+    
+}
+
+private struct GuidanceForSymptomaticCasesEnglandViewControllerInteractor: GuidanceForSymptomaticCasesEnglandViewController.Interacting {
+    
+    private weak var controller: SelfDiagnosisFlowViewController?
+    
+    init(controller: SelfDiagnosisFlowViewController?) {
+        self.controller = controller
+    }
+    
+    func didTapCommonQuestionsLink() {
+        controller?.interactor.exposureFAQsLinkTapped()
+    }
+    
+    func didTapNHSOnlineLink() {
+        controller?.interactor.nhs111LinkTapped()
+    }
+    
+    func didTapBackToHome() {
+        controller?.finishFlow?()
+        controller?.dismiss(animated: true)
     }
 }
 

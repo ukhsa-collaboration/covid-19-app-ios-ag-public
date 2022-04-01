@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Localization
@@ -7,24 +7,62 @@ import SwiftUI
 
 public struct IsolatingIndicator: View {
     
+    public enum Style {
+        case informational
+        case warning
+        
+        /// - TODO: Refactor this so it's not part of `Style`
+        public var baseColor: ColorName {
+            switch self {
+            case .informational:
+                return .scanBlue
+            case .warning:
+                return .errorRed
+            }
+        }
+        
+        /// - TODO: Refactor this so it's not part of `Style`
+        public var title: String {
+            switch self {
+            case .informational:
+                return localize(.be_careful_until_date_title)
+            case .warning:
+                return localize(.isolation_until_date_title)
+            }
+        }
+        
+        /// - TODO: Refactor this so it's not part of `Style`
+        public func accessibilityLabel(date: Date, days: Int) -> String {
+            switch self {
+            case .informational:
+                return localize(.be_careful_indicator_accessibility_label(date: date, days: days))
+            case .warning:
+                return localize(.isolation_indicator_accessiblity_label(date: date, days: days))
+            }
+        }
+    }
+    
     private var animationDisabled: Bool
     private var isDetectionPaused: Bool
     private let remainingDays: Int
     private let date: Date
     private let percentRemaining: Double
+    private let style: Style
     
     fileprivate init(
         remainingDays: Int,
         percentRemaining: Double,
         date: Date,
         isDetectionPaused: Bool,
-        animationDisabled: Bool
+        animationDisabled: Bool,
+        style: Style
     ) {
         self.remainingDays = remainingDays
         self.date = date
         self.isDetectionPaused = isDetectionPaused
         self.percentRemaining = percentRemaining
         self.animationDisabled = animationDisabled
+        self.style = style
     }
     
     struct Arc: Shape {
@@ -68,8 +106,10 @@ public struct IsolatingIndicator: View {
     }
     
     public var body: some View {
+        
         VStack(alignment: .center, spacing: .standardSpacing) {
-            Text(verbatim: localize(.isolation_until_date_title))
+            
+            Text(verbatim: style.title)
                 .font(.title)
                 .bold()
                 .foregroundColor(Color(.primaryText))
@@ -85,21 +125,21 @@ public struct IsolatingIndicator: View {
             ZStack(alignment: .center) {
                 if animationDisabled || isDetectionPaused || shouldDegradeAnimation {
                     Circle()
-                        .foregroundColor(Color(.errorRed))
+                        .foregroundColor(Color(style.baseColor))
                         .opacity(0.05)
                 } else {
-                    PulsatingCircle(delay: 0, initialDiameter: badgeSize, color: Color(.errorRed))
-                    PulsatingCircle(delay: 1, initialDiameter: badgeSize, color: Color(.errorRed))
+                    PulsatingCircle(delay: 0, initialDiameter: badgeSize, color: Color(style.baseColor))
+                    PulsatingCircle(delay: 1, initialDiameter: badgeSize, color: Color(style.baseColor))
                 }
                 
                 Arc(percent: 1).foregroundColor(Color(.background))
-                Arc(percent: self.percentRemaining).foregroundColor(Color(.errorRed))
+                Arc(percent: self.percentRemaining).foregroundColor(Color(style.baseColor))
                 
                 Text("\(remainingDays)")
                     .font(Font(UIFont.boldSystemFont(ofSize: 48)))
                     .foregroundColor(Color(.background))
                     .padding(30)
-                    .background(Color(.errorRed))
+                    .background(Color(style.baseColor))
                     .clipShape(Circle())
                     .fixedSize()
                     .padding(10)
@@ -127,7 +167,7 @@ public struct IsolatingIndicator: View {
     }
     
     private var accessibilityLabel: String {
-        localize(.isolation_indicator_accessiblity_label(date: date, days: remainingDays))
+        self.style.accessibilityLabel(date: date, days: remainingDays)
     }
 }
 
@@ -137,7 +177,8 @@ extension RiskLevelIndicator {
         percentRemaining: Double,
         date: Date,
         isDetectionPaused: Bool,
-        animationDisabled: Bool
+        animationDisabled: Bool,
+        style: IsolatingIndicator.Style
     ) -> AnyView {
         AnyView(
             IsolatingIndicator(
@@ -145,7 +186,8 @@ extension RiskLevelIndicator {
                 percentRemaining: percentRemaining,
                 date: date,
                 isDetectionPaused: isDetectionPaused,
-                animationDisabled: animationDisabled
+                animationDisabled: animationDisabled,
+                style: style
             )
         )
     }

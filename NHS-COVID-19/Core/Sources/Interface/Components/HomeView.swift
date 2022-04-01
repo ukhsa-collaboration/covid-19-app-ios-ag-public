@@ -88,7 +88,7 @@ struct HomeView: View {
     
     private func buttons() -> some View {
         Group {
-            if isolationViewModel.isolationState != .notIsolating {
+            if isolationViewModel.isolationState != .notIsolating && interactor.shouldShowSelfIsolation {
                 NavigationButton(
                     imageName: .selfIsolation,
                     foregroundColor: Color(.background),
@@ -122,13 +122,15 @@ struct HomeView: View {
                 )
             }
             
-            NavigationButton(
-                imageName: .swab,
-                foregroundColor: Color(.background),
-                backgroundColor: Color(.bookFreeTest),
-                text: localize(.home_testing_hub_button_title),
-                action: interactor.didTapTestingHubButton
-            )
+            if interactor.shouldShowTestingForCOVID19 {
+                NavigationButton(
+                    imageName: .swab,
+                    foregroundColor: Color(.background),
+                    backgroundColor: Color(.bookFreeTest),
+                    text: localize(.home_testing_hub_button_title),
+                    action: interactor.didTapTestingHubButton
+                )
+            }
             
             NavigationButton(
                 imageName: .enterTestResult,

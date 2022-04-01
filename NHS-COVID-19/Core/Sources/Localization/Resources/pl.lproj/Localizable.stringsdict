@@ -542,5 +542,25 @@
 				<string>%li pozytywne testy w ciągu ostatnich 7 dni</string>
 			</dict>
 		</dict>
+		<key>be_careful_indicator_accessibility_label days: %ld date: %@ time: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string/>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Zachowaj szczególną ostrożność i chroń innych aż do %2$@ do godz %3$@. Został jeszcze %1$ld dzień do końca.</string>
+				<key>few</key>
+				<string>Zachowaj szczególną ostrożność i chroń innych aż do %2$@ do godz %3$@. Został jeszcze %1$ld dni do końca.</string>
+				<key>many</key>
+				<string>Zachowaj szczególną ostrożność i chroń innych aż do %2$@ do godz %3$@. Został jeszcze %1$ld dni do końca.</string>
+				<key>other</key>
+				<string>Zachowaj szczególną ostrożność i chroń innych aż do %2$@ do godz %3$@. Został jeszcze %1$ld dni do końca.</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

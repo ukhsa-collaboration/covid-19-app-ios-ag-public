@@ -19,9 +19,23 @@ public enum Feature: CaseIterable {
     /// risky venue alerts for those.
     case venueCheckIn
     
-    // Shows contact cases in England a questionnaire to determine if they need to isolate or not.
-    // This is not changable in the scenarios app and is solely here to allow us to keep test coverage of the England opt out flow.
-    case englandOptOutFlow
+    /// Shows contact cases in England a questionnaire to determine if they need to isolate or not.
+    case contactOptOutFlowEngland
     
-    public static let productionEnabledFeatures: [Feature] = []
+    /// Shows contact cases in Wales a questionnaire to determine if they need to isolate or not.
+    case contactOptOutFlowWales
+    
+    /// Allows people to find out about the different types of COVID-19 tests and how to get tested.
+    /// It's also possible to enter test results in form of a 8 character code received.
+    case testingForCOVID19
+    
+    /// Shows a button leading to the Self-Isolation Hub for people in England who are in isolation.
+    case selfIsolationHubEngland
+    
+    /// Shows a button leading to the Self-Isolation Hub for people in Wales who are in isolation.
+    case selfIsolationHubWales
+    
+    public static let productionEnabledFeatures: [Feature] = [
+        
+    ]
 }

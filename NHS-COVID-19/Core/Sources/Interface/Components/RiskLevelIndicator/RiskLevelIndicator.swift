@@ -1,8 +1,9 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Combine
+import Common
 import Localization
 import SwiftUI
 
@@ -21,17 +22,20 @@ public struct RiskLevelIndicator: View {
         @InterfaceProperty var paused: Bool
         @InterfaceProperty var animationDisabled: Bool
         @InterfaceProperty var bluetoothOff: Bool
+        @InterfaceProperty var country: Country
         
         public init(
             isolationState: InterfaceProperty<IsolationState>,
             paused: InterfaceProperty<Bool>,
             animationDisabled: InterfaceProperty<Bool>,
-            bluetoothOff: InterfaceProperty<Bool>
+            bluetoothOff: InterfaceProperty<Bool>,
+            country: InterfaceProperty<Country>
         ) {
             _isolationState = isolationState
             _paused = paused
             _animationDisabled = animationDisabled
             _bluetoothOff = bluetoothOff
+            _country = country
             
             anyCancellable = _animationDisabled.$wrappedValue.combineLatest(
                 isolationState.$wrappedValue,
@@ -66,7 +70,8 @@ public struct RiskLevelIndicator: View {
                 percentRemaining: percentRemaining,
                 date: endDate,
                 isDetectionPaused: viewModel.paused,
-                animationDisabled: viewModel.animationDisabled
+                animationDisabled: viewModel.animationDisabled,
+                style: viewModel.country.preferredIndicatorStyle
             )
         case (.notIsolating, true, _):
             return Self.makePausedIndicator(
@@ -82,6 +87,17 @@ public struct RiskLevelIndicator: View {
                 message: localize(.risk_level_indicator_contact_tracing_not_active),
                 buttonTitle: localize(.risk_level_indicator_contact_tracing_turn_back_on_button)
             )
+        }
+    }
+}
+
+private extension Country {
+    var preferredIndicatorStyle: IsolatingIndicator.Style {
+        switch self {
+        case .england:
+            return .informational
+        case .wales:
+            return .warning
         }
     }
 }

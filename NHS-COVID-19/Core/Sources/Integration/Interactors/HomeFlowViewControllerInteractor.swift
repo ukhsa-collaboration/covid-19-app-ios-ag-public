@@ -69,7 +69,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                 .map { state in
                     switch state {
                     case .selfDiagnosis(let interactor):
-                        return SelfDiagnosisFlowViewController(interactor, currentDateProvider: currentDateProvider)
+                        return SelfDiagnosisFlowViewController(interactor, currentDateProvider: currentDateProvider, country: context.country.currentValue)
                     case .testOrdering(let interactor):
                         return VirologyTestingFlowViewController(interactor)
                     }
@@ -185,7 +185,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                     .map { state in
                         switch state {
                         case .selfDiagnosis(let interactor):
-                            let selfDiagnosisFlowVC = SelfDiagnosisFlowViewController(interactor, currentDateProvider: self.context.currentDateProvider)
+                            let selfDiagnosisFlowVC = SelfDiagnosisFlowViewController(interactor, currentDateProvider: self.context.currentDateProvider, country: self.context.country.currentValue)
                             selfDiagnosisFlowVC.finishFlow = {
                                 flowController?.popViewController(animated: false)
                                 navigationVC.presentedViewController?.dismiss(animated: false, completion: nil)
@@ -396,6 +396,19 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     
     var shouldShowCheckIn: Bool {
         context.shouldShowVenueCheckIn && context.checkInContext != nil
+    }
+
+    var shouldShowSelfIsolation: Bool {
+        switch context.country.currentValue {
+        case .england:
+            return context.shouldShowSelfIsolationHubEngland
+        case .wales:
+            return context.shouldShowSelfIsolationHubWales
+        }
+    }
+    
+    var shouldShowTestingForCOVID19: Bool {
+        context.shouldShowTestingForCOVID19
     }
     
     func getMyAreaViewModel() -> MyAreaTableViewController.ViewModel {

@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Combine
@@ -22,7 +22,6 @@ struct IsolationContext {
     private let notificationCenter: NotificationCenter
     private let currentDateProvider: DateProviding
     private let removeExposureDetectionNotifications: () -> Void
-    private let scheduleSelfIsolationReminderNotification: () -> Void
     
     let shouldAskForSymptoms = CurrentValueSubject<Bool, Never>(false)
     
@@ -32,14 +31,12 @@ struct IsolationContext {
         notificationCenter: NotificationCenter,
         currentDateProvider: DateProviding,
         removeExposureDetectionNotifications: @escaping () -> Void,
-        scheduleSelfIsolationReminderNotification: @escaping () -> Void,
         country: DomainProperty<Country>
     ) {
         self.isolationConfiguration = isolationConfiguration
         self.notificationCenter = notificationCenter
         self.currentDateProvider = currentDateProvider
         self.removeExposureDetectionNotifications = removeExposureDetectionNotifications
-        self.scheduleSelfIsolationReminderNotification = scheduleSelfIsolationReminderNotification
         self.country = country
         
         isolationStateStore = IsolationStateStore(
@@ -86,9 +83,6 @@ struct IsolationContext {
                         isolationStateStore.acknowldegeStartOfIsolation()
                         if hasOptedOut {
                             optOutContactIsolationOnExposurerDay()
-                        } else if state.activeIsolation?.isContactCaseOnly ?? false {
-                            #warning("We can get the parameter isIndexCase into the acknowledge function and replace the above if condition.")
-                            scheduleSelfIsolationReminderNotification()
                         }
                         removeExposureDetectionNotifications()
                         Metrics.signpost(.acknowledgedStartOfIsolationDueToRiskyContact)
@@ -131,9 +125,6 @@ struct IsolationContext {
                                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: currentDateProvider.currentGregorianDay(timeZone: .utc), onsetDay: onsetDay),
                                 testInfo: nil
                             )
-                            if !isolationStateManager.isolationLogicalState.currentValue.isIsolating {
-                                scheduleSelfIsolationReminderNotification()
-                            }
                             self.isolationStateStore.set(info)
                             Metrics.signpost(.didRememberOnsetSymptomsDateBeforeReceivedTestResult)
                         }
@@ -186,7 +177,6 @@ struct IsolationContext {
                     }
                     
                     if !currentIsolationState.isIsolating, newIsolationState.isIsolating {
-                        scheduleSelfIsolationReminderNotification()
                         isolationStateStore.restartIsolationAcknowledgement()
                     }
                     
@@ -286,9 +276,6 @@ struct IsolationContext {
                 symptomaticInfo: symptomaticInfo,
                 testInfo: nil
             )
-            if !isolationStateManager.isolationLogicalState.currentValue.isIsolating {
-                scheduleSelfIsolationReminderNotification()
-            }
             let newIsolationLogicalState = isolationStateStore.set(info)
             let isolationState = IsolationState(logicalState: newIsolationLogicalState)
             return (isolationState, .hasNoTest)

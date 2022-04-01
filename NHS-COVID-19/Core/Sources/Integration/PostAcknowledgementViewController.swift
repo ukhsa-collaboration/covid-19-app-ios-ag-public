@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Combine
@@ -224,10 +224,6 @@ class PostAcknowledgementViewController: UIViewController {
             currentDateProvider: context.currentDateProvider
         )
         
-        let shouldShowMassTestingLink = context.country.map { country in
-            country == .england
-        }.interfaceProperty
-        
         let riskLevelBannerViewModel = context.postcodeInfo
             .map { postcodeInfo -> AnyPublisher<RiskLevelBanner.ViewModel?, Never> in
                 guard let postcodeInfo = postcodeInfo else { return Just(nil).eraseToAnyPublisher() }
@@ -237,8 +233,7 @@ class PostAcknowledgementViewController: UIViewController {
                         return RiskLevelBanner.ViewModel(
                             postcode: postcodeInfo.postcode,
                             localAuthority: postcodeInfo.localAuthority,
-                            risk: riskLevel,
-                            shouldShowMassTestingLink: shouldShowMassTestingLink
+                            risk: riskLevel
                         )
                     }
                     .eraseToAnyPublisher()
@@ -292,7 +287,7 @@ class PostAcknowledgementViewController: UIViewController {
                 .mapToInterface(with: context.currentDateProvider)
                 .property(initialValue: .notIsolating),
             paused: context.exposureNotificationStateController.isEnabledPublisher.map { !$0 }.property(initialValue: false),
-            animationDisabled: animationDisabled, bluetoothOff: context.bluetoothOff.interfaceProperty
+            animationDisabled: animationDisabled, bluetoothOff: context.bluetoothOff.interfaceProperty, country: context.country.interfaceProperty
         )
         
         let didRecentlyVisitSevereRiskyVenue = context.checkInContext?.recentlyVisitedSevereRiskyVenue ?? DomainProperty<GregorianDay?>.constant(nil)
@@ -344,7 +339,6 @@ class PostAcknowledgementViewController: UIViewController {
             shouldShowSelfDiagnosis: shouldShowSelfDiagnosis,
             userNotificationsEnabled: userNotificationEnabled,
             showFinancialSupportButton: showFinancialSupportButton,
-            didOpenSelfIsolationHub: context.didOpenSelfIsolationHub,
             recordSelectedIsolationPaymentsButton: { Metrics.signpost(.selectedIsolationPaymentsButton) },
             country: country,
             shouldShowLanguageSelectionScreen: shouldShowLanguageSelectionScreen,
@@ -414,7 +408,7 @@ class PostAcknowledgementViewController: UIViewController {
                     .map { state in
                         switch state {
                         case .selfDiagnosis(let interactor):
-                            let selfDiagnosisFlowVC = SelfDiagnosisFlowViewController(interactor, currentDateProvider: self.context.currentDateProvider)
+                            let selfDiagnosisFlowVC = SelfDiagnosisFlowViewController(interactor, currentDateProvider: self.context.currentDateProvider, country: self.context.country.currentValue)
                             selfDiagnosisFlowVC.finishFlow = { [weak self] in
                                 self?.showUIState.send(nil)
                             }

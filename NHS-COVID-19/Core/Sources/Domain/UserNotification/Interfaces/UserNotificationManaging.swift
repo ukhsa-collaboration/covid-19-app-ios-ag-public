@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -14,7 +14,6 @@ public enum UserNotificationType: Equatable {
     
     case postcode
     case venue(VenueMessageType)
-    case selfIsolation
     case isolationState
     case exposureDetection
     case testResultReceived
@@ -29,14 +28,15 @@ public enum UserNotificationType: Equatable {
         body: String
     )
     
+    @available(*, deprecated, message: "No longer in use. Here only to allow existing notifications of this type to be cancelled when people upgrade their app.")
+    case selfIsolation
+    
     public var identifier: String {
         switch self {
         case .postcode:
             return "postcode"
         case .venue:
             return "venue"
-        case .selfIsolation:
-            return "selfIsolation"
         case .isolationState:
             return "isolationState"
         case .exposureDetection:
@@ -57,6 +57,8 @@ public enum UserNotificationType: Equatable {
             return "shareKeysReminder"
         case .localMessage:
             return "localMessageUpdate"
+        case .selfIsolation:
+             return "selfIsolation"
         }
     }
 }

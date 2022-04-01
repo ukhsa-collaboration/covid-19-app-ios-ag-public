@@ -434,5 +434,21 @@
 				<string>پچھلے 7 دنوں میں مثبت جانچیں %li</string>
 			</dict>
 		</dict>
+		<key>be_careful_indicator_accessibility_label days: %ld date: %@ time: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string/>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>خود کو %2$@ تک %3$@ تک اضافی نگہداشت کریں اور دوسروں کی حفاظت کریں %1$ld  دن باقی ہے۔</string>
+				<key>other</key>
+				<string>خود کو %2$@ تک %3$@ تک اضافی نگہداشت کریں اور دوسروں کی حفاظت کریں %1$ld  دن باقی ہے۔</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

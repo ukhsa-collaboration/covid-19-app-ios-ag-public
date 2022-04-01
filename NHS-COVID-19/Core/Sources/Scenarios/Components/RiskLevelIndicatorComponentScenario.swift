@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Combine
@@ -30,7 +30,8 @@ public class RiskLevelIndicatorComponentScenario: Scenario {
                     ),
                     paused: .constant(false),
                     animationDisabled: .constant(false),
-                    bluetoothOff: .constant(true)
+                    bluetoothOff: .constant(true),
+                    country: .constant(.england)
                 )
             case .isolatingFourteenDays:
                 return RiskLevelIndicator.ViewModel(
@@ -38,15 +39,16 @@ public class RiskLevelIndicatorComponentScenario: Scenario {
                         .isolating(days: 14, percentRemaining: 0.2, endDate: Date(), hasPositiveTest: false)),
                     paused: .constant(false),
                     animationDisabled: .constant(false),
-                    bluetoothOff: .constant(true)
+                    bluetoothOff: .constant(true),
+                    country: .constant(.england)
                 )
             case .notIsolating:
                 return RiskLevelIndicator.ViewModel(
                     isolationState: .constant(
-                        .notIsolating), paused: .constant(false), animationDisabled: .constant(false), bluetoothOff: .constant(true)
+                        .notIsolating), paused: .constant(false), animationDisabled: .constant(false), bluetoothOff: .constant(true), country: .constant(.england)
                 )
             case .paused:
-                return RiskLevelIndicator.ViewModel(isolationState: .constant(.notIsolating), paused: .constant(true), animationDisabled: .constant(false), bluetoothOff: .constant(false))
+                return RiskLevelIndicator.ViewModel(isolationState: .constant(.notIsolating), paused: .constant(true), animationDisabled: .constant(false), bluetoothOff: .constant(false), country: .constant(.england))
             }
         }
     }

@@ -128,7 +128,8 @@ extension CoordinatedAppController {
         acknowledge: @escaping () -> Void,
         context: RunningAppContext,
         isolation: NonNegativeTestResultWithIsolationViewController.TestResultType.Isolation,
-        isolationEndDate: Date
+        isolationEndDate: Date,
+        testResultType: NonNegativeTestResultWithIsolationViewController.TestResultType
     ) -> UIViewController {
         let positiveTestResultWithIsolationInteractor = PositiveTestResultWithIsolationInteractor(
             openURL: context.openURL,
@@ -137,9 +138,64 @@ extension CoordinatedAppController {
         return NonNegativeTestResultWithIsolationViewController(
             interactor: positiveTestResultWithIsolationInteractor,
             isolationEndDate: isolationEndDate,
-            testResultType: .positive(isolation: isolation, requiresConfirmatoryTest: false),
+            testResultType: testResultType,
             currentDateProvider: context.currentDateProvider
         )
+    }
+    
+    private func createAdviceForAlreadyIsolatingInEngland(
+        acknowledge: @escaping () -> Void,
+        context: RunningAppContext
+    ) -> UIViewController {
+        let interactor = AdviceForIndexCasesEnglandAlreadyIsolatingInteractor(
+            openURL: context.openURL,
+            didTapPrimaryButton: acknowledge
+        )
+        return AdviceForIndexCasesEnglandAlreadyIsolatingViewController(interactor: interactor)
+    }
+    
+    private func createAdviceForIndexCaseEngland(
+        acknowledge: @escaping () -> Void,
+        context: RunningAppContext
+    ) -> UIViewController {
+        let adviceForIndexCaseInteractor = AdviceForIndexCasesEnglandInteractor(
+            openURL: context.openURL,
+            didTapPrimaryButton: acknowledge
+        )
+        return AdviceForIndexCasesEnglandViewController(interactor: adviceForIndexCaseInteractor)
+    }
+    
+    private func createAdviceOrIsolationController(
+        acknowledge: @escaping () -> Void,
+        context: RunningAppContext,
+        isolation: NonNegativeTestResultWithIsolationViewController.TestResultType.Isolation,
+        isolationEndDate: Date,
+        testResultType: NonNegativeTestResultWithIsolationViewController.TestResultType
+    ) -> UIViewController {
+        switch context.country.currentValue {
+        case .england:
+            switch isolation {
+            case .continue:
+                return createAdviceForAlreadyIsolatingInEngland(
+                    acknowledge: acknowledge,
+                    context: context
+                )
+            case .start:
+                return createAdviceForIndexCaseEngland(
+                    acknowledge: acknowledge,
+                    context: context
+                )
+            }
+            
+        case .wales:
+            return createNonNegativeTestResultWithIsolationAcknowledgement(
+                acknowledge: acknowledge,
+                context: context,
+                isolation: isolation,
+                isolationEndDate: isolationEndDate,
+                testResultType: testResultType
+            )
+        }
     }
     
     private func viewControllerForRunningApp(
@@ -172,32 +228,32 @@ extension CoordinatedAppController {
     ) -> UIViewController {
         switch state {
         case .neededForPositiveResultStartToIsolate(let acknowledge, let isolationEndDate):
-            return createNonNegativeTestResultWithIsolationAcknowledgement(
+            return createAdviceOrIsolationController(
                 acknowledge: acknowledge,
                 context: context,
                 isolation: .start,
-                isolationEndDate: isolationEndDate
+                isolationEndDate: isolationEndDate,
+                testResultType: .positive(isolation: .start, requiresConfirmatoryTest: false)
             )
             
         case .neededForPositiveResultContinueToIsolate(let acknowledge, let isolationEndDate, let requiresConfirmatoryTest):
             if case .isolate(let isolation) = context.isolationState.currentValue,
                 isolation.hasConfirmedPositiveTestResult, requiresConfirmatoryTest {
-                let positiveTestResultWithIsolationInteractor = PositiveTestResultWithIsolationInteractor(
-                    openURL: context.openURL,
-                    didTapPrimaryButton: acknowledge
-                )
-                return NonNegativeTestResultWithIsolationViewController(
-                    interactor: positiveTestResultWithIsolationInteractor,
+                return createAdviceOrIsolationController(
+                    acknowledge: acknowledge,
+                    context: context,
+                    isolation: .continue,
                     isolationEndDate: isolationEndDate,
-                    testResultType: .positiveButAlreadyConfirmedPositive,
-                    currentDateProvider: context.currentDateProvider
+                    testResultType: .positiveButAlreadyConfirmedPositive
                 )
             }
             
-            return createNonNegativeTestResultWithIsolationAcknowledgement(
+            return createAdviceOrIsolationController(
                 acknowledge: acknowledge,
-                context: context, isolation: .continue,
-                isolationEndDate: isolationEndDate
+                context: context,
+                isolation: .continue,
+                isolationEndDate: isolationEndDate,
+                testResultType: .positive(isolation: .continue, requiresConfirmatoryTest: false)
             )
             
         case .neededForPositiveResultNotIsolating(let acknowledge):
@@ -231,8 +287,17 @@ extension CoordinatedAppController {
             )
             
         case .neededForStartOfIsolationExposureDetection(let acknowledge, let exposureDate, let birthThresholdDate, let vaccineThresholdDate, let secondTestAdviceDate, let isolationEndDate, let isIndexCase):
+
+            var shouldShowOptOutFlow: Bool {
+                switch context.country.currentValue {
+                case .england:
+                    return context.shouldShowEnglandOptOutFlow
+                case .wales:
+                    return context.shouldShowWalesOptOutFlow
+                }
+            }
             
-            if !context.shouldShowOldEnglandOptOutFlow, context.country.currentValue == .england {
+            if !shouldShowOptOutFlow {
                 if isIndexCase {
                     return ContactCaseExposureInfoEnglandViewController(
                         interactor: ContactCaseExposureInfoInteractor(acknowledge: { [showUIState] in
@@ -245,7 +310,7 @@ extension CoordinatedAppController {
                     return ContactCaseImmediateAcknowledgementFlowViewController(
                         interactor: ContactCaseImmediateAcknowledgementFlowViewControllerInteractor(acknowledge: {
                             acknowledge(true)
-                        }),
+                        }), country: context.country.currentValue,
                         openURL: context.openURL,
                         exposureDate: exposureDate
                     )

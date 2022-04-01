@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Combine
@@ -28,7 +28,11 @@ enum LogicalState: Equatable {
 public struct RunningAppContext {
     public var checkInContext: CheckInContext?
     public var shouldShowVenueCheckIn: Bool
-    public var shouldShowOldEnglandOptOutFlow: Bool
+    public var shouldShowTestingForCOVID19: Bool
+    public var shouldShowSelfIsolationHubEngland: Bool
+    public var shouldShowSelfIsolationHubWales: Bool
+    public var shouldShowEnglandOptOutFlow: Bool
+    public var shouldShowWalesOptOutFlow: Bool
     public var postcodeInfo: DomainProperty<(postcode: Postcode, localAuthority: LocalAuthority?, risk: DomainProperty<RiskyPostcodeEndpointManager.PostcodeRisk?>)?>
     public var country: DomainProperty<Country>
     public var bluetoothOff: DomainProperty<Bool>
@@ -61,7 +65,6 @@ public struct RunningAppContext {
     public var diagnosisKeySharer: DomainProperty<DiagnosisKeySharer?>
     public var localInformation: DomainProperty<LocalInformationEndpointManager.LocalInfo?>
     public var userNotificationManaging: UserNotificationManaging
-    public var didOpenSelfIsolationHub: () -> Void
     public var shouldShowBookALabTest: DomainProperty<Bool>
     public var contactCaseOptOutQuestionnaire: ContactCaseOptOutQuestionnaire
     public var contactCaseIsolationDuration: DomainProperty<DayDuration>

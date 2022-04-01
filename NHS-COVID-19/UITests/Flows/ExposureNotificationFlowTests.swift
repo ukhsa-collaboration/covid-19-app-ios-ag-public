@@ -362,7 +362,7 @@ class ExposureNotificationFlowTests: XCTestCase {
             
             let endDate = GregorianDay.today.advanced(by: Sandbox.Config.Isolation.contactCaseSinceExposureDay).startDate(in: .current)
             
-            app.checkOnHomeScreenIsolating(date: endDate, days: Sandbox.Config.Isolation.contactCaseSinceExposureDay)
+            app.checkOnHomeScreenIsolatingInformational(date: endDate, days: Sandbox.Config.Isolation.contactCaseSinceExposureDay)
         }
     }
     
@@ -717,7 +717,7 @@ class ExposureNotificationFlowTests: XCTestCase {
             
             let endDate = GregorianDay.today.advanced(by: isolationDaysRemanining).startDate(in: .current)
             
-            app.checkOnHomeScreenIsolating(date: endDate, days: isolationDaysRemanining)
+            app.checkOnHomeScreenIsolatingInformational(date: endDate, days: isolationDaysRemanining)
         }
     }
     
@@ -856,7 +856,7 @@ class ExposureNotificationFlowTests: XCTestCase {
             
             let endDate = GregorianDay.today.advanced(by: Sandbox.Config.Isolation.contactCaseSinceExposureDay).startDate(in: .current)
             
-            app.checkOnHomeScreenIsolating(date: endDate, days: Sandbox.Config.Isolation.contactCaseSinceExposureDay)
+            app.checkOnHomeScreenIsolatingInformational(date: endDate, days: Sandbox.Config.Isolation.contactCaseSinceExposureDay)
         }
     }
     
@@ -951,7 +951,7 @@ class ExposureNotificationFlowTests: XCTestCase {
             
             let endDate = GregorianDay.today.advanced(by: isolationDaysRemanining).startDate(in: .current)
             
-            app.checkOnHomeScreenIsolating(date: endDate, days: isolationDaysRemanining)
+            app.checkOnHomeScreenIsolatingInformational(date: endDate, days: isolationDaysRemanining)
         }
     }
     
@@ -986,7 +986,7 @@ class ExposureNotificationFlowTests: XCTestCase {
             
             let endDate = GregorianDay.today.advanced(by: isolationDaysRemanining).startDate(in: .current)
             
-            app.checkOnHomeScreenIsolating(date: endDate, days: isolationDaysRemanining)
+            app.checkOnHomeScreenIsolatingInformational(date: endDate, days: isolationDaysRemanining)
         }
     }
 }

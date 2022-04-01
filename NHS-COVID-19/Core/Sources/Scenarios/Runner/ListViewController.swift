@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import UIKit
@@ -118,7 +118,7 @@ class SearchableListViewController: ListViewController, UISearchResultsUpdating,
     }
     
     override func row(at indexPath: IndexPath) -> ListRow {
-        if searchController.isActive, resultsTableController.sections.count > 0 {
+        if searchController.isActive, resultsTableController.sections.count > 0, resultsTableController.sections[indexPath.section].rows.count > 0 {
             return resultsTableController.sections[indexPath.section].rows[indexPath.row]
         } else {
             return super.row(at: indexPath)

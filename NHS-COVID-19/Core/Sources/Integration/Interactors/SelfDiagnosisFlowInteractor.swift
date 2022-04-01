@@ -76,7 +76,10 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
     
     func exposureFAQsLinkTapped() {
         openURL(ExternalLink.exposureFAQs.url)
-        
+    }
+    
+    func gettingTestedWalesLinkTapped() {
+        openURL(ExternalLink.getTestedWalesLink.url)
     }
 }
 

@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Combine
@@ -12,6 +12,8 @@ import UIKit
 internal protocol HomeScreenScenario: Scenario {
     static var riskyPostcodeEnabled: Bool { get }
     static var checkInEnabled: Bool { get }
+    static var testingForCOVID19Enabled: Bool { get }
+    static var selfIsolationEnabled: Bool { get }
     static var shouldShowSelfDiagnosis: Bool { get }
     static var localInformationEnabled: Bool { get }
 }
@@ -30,8 +32,7 @@ extension HomeScreenScenario {
                 linkTitle: "Restrictions in your area",
                 linkURL: nil,
                 footer: [],
-                policies: [],
-                shouldShowMassTestingLink: .constant(true)
+                policies: []
             )
         } else {
             return nil
@@ -53,11 +54,13 @@ extension HomeScreenScenario {
             return HomeViewController(
                 interactor: Interactor(
                     viewController: parent,
-                    checkInEnabled: checkInEnabled
+                    checkInEnabled: checkInEnabled,
+                    testingForCOVID19Enabled: testingForCOVID19Enabled,
+                    selfIsolationEnabled: selfIsolationEnabled
                 ),
                 riskLevelBannerViewModel: .constant(postcodeViewModel(parent: parent)),
                 localInfoBannerViewModel: .constant(localInfoBannerViewModel),
-                isolationViewModel: RiskLevelIndicator.ViewModel(isolationState: .constant(.notIsolating), paused: .constant(false), animationDisabled: .constant(false), bluetoothOff: .constant(false)),
+                isolationViewModel: RiskLevelIndicator.ViewModel(isolationState: .constant(.notIsolating), paused: .constant(false), animationDisabled: .constant(false), bluetoothOff: .constant(false), country: .constant(.england)),
                 exposureNotificationsEnabled: exposureNotificationsEnabled.property(initialValue: false),
                 exposureNotificationsToggleAction: { [weak parent] toggle in
                     parent?.showAlert(title: "Toggle state changed to \(toggle)")
@@ -81,6 +84,8 @@ public class SuccessHomeScreenScenario: HomeScreenScenario {
     public static var riskyPostcodeEnabled = true
     public static var selfDiagnosisEnabled: Bool = true
     public static var checkInEnabled: Bool = true
+    public static var testingForCOVID19Enabled: Bool = true
+    public static var selfIsolationEnabled: Bool = true
     public static var shouldShowSelfDiagnosis = true
     public static var localInformationEnabled = true
 }
@@ -93,6 +98,8 @@ public class DisabledFeaturesHomeScreenScenario: HomeScreenScenario {
     public static var riskyPostcodeEnabled = false
     public static var selfDiagnosisEnabled = false
     public static var checkInEnabled: Bool = false
+    public static var testingForCOVID19Enabled: Bool = false
+    public static var selfIsolationEnabled: Bool = false
     public static var shouldShowSelfDiagnosis = false
     public static var localInformationEnabled = false
 }
@@ -115,15 +122,21 @@ public class HomeScreenAlerts {
 private class Interactor: HomeViewController.Interacting {
     
     var checkInEnabled: Bool
+    var testingForCOVID19Enabled: Bool
+    var selfIsolationEnabled: Bool
     
     private weak var viewController: UIViewController?
     
     init(
         viewController: UIViewController,
-        checkInEnabled: Bool
+        checkInEnabled: Bool,
+        testingForCOVID19Enabled: Bool,
+        selfIsolationEnabled: Bool
     ) {
         self.viewController = viewController
         self.checkInEnabled = checkInEnabled
+        self.testingForCOVID19Enabled = testingForCOVID19Enabled
+        self.selfIsolationEnabled = selfIsolationEnabled
     }
     
     func didTapRiskLevelBanner(viewModel: RiskLevelInfoViewController.ViewModel) {
@@ -168,6 +181,14 @@ private class Interactor: HomeViewController.Interacting {
     
     var shouldShowCheckIn: Bool {
         checkInEnabled
+    }
+    
+    var shouldShowTestingForCOVID19: Bool {
+        testingForCOVID19Enabled
+    }
+    
+    var shouldShowSelfIsolation: Bool {
+        selfIsolationEnabled
     }
     
     func openSettings() {

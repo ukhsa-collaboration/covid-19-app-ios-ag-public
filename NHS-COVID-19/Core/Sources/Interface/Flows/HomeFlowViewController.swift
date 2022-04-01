@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Combine
@@ -11,7 +11,7 @@ import UIKit
 public enum NotificationInterfaceState {
     case contactTracingHub
     case localInfo
-    case selfIsolationHub
+    
 }
 
 public protocol HomeFlowViewControllerInteracting {
@@ -40,6 +40,8 @@ public protocol HomeFlowViewControllerInteracting {
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never>
     func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn)
     var shouldShowCheckIn: Bool { get }
+    var shouldShowTestingForCOVID19: Bool { get }
+    var shouldShowSelfIsolation: Bool { get }
     func openTearmsOfUseLink()
     func openPrivacyLink()
     func openFAQ()
@@ -96,7 +98,6 @@ public class HomeFlowViewController: BaseNavigationController {
         shouldShowSelfDiagnosis: InterfaceProperty<Bool>,
         userNotificationsEnabled: InterfaceProperty<Bool>,
         showFinancialSupportButton: InterfaceProperty<Bool>,
-        didOpenSelfIsolationHub: @escaping () -> Void,
         recordSelectedIsolationPaymentsButton: @escaping () -> Void,
         country: InterfaceProperty<Country>,
         shouldShowLanguageSelectionScreen: Bool,
@@ -133,7 +134,6 @@ public class HomeFlowViewController: BaseNavigationController {
             localInformationInteractor: localInformationInteractor,
             aboutThisAppInteractor: aboutThisAppInteractor,
             settingsInteractor: settingsInteractor,
-            didOpenSelfIsolationHub: didOpenSelfIsolationHub,
             recordSelectedIsolationPaymentsButton: recordSelectedIsolationPaymentsButton,
             userNotificationsEnabled: userNotificationsEnabled,
             exposureNotificationsEnabled: exposureNotificationsEnabled.property(initialValue: false),
@@ -152,13 +152,6 @@ public class HomeFlowViewController: BaseNavigationController {
             }
         }
         
-        let showSelfIsolationHubScreen: () -> Void = { [weak self] in
-            guard let self = self else { return }
-            showNotificationScreen.send(nil)
-            guard self.presentedViewController == nil, self.viewControllers.count == 1 else { return }
-            homeViewControllerInteractor.didTapSelfIsolationButton()
-        }
-        
         let rootViewController = HomeViewController(
             interactor: homeViewControllerInteractor,
             riskLevelBannerViewModel: riskLevelBannerViewModel,
@@ -175,7 +168,6 @@ public class HomeFlowViewController: BaseNavigationController {
                 switch showNotificationScreen.value {
                 case .contactTracingHub: self.checkAndShowContactTracingHub()
                 case .localInfo: self.checkAndShowLocalInfoScreen()
-                case .selfIsolationHub: showSelfIsolationHubScreen()
                 case .none: showNotificationScreen.send(nil)
                 }
             },
@@ -193,7 +185,6 @@ public class HomeFlowViewController: BaseNavigationController {
                 switch state {
                 case .contactTracingHub: self.checkAndShowContactTracingHub()
                 case .localInfo: self.checkAndShowLocalInfoScreen()
-                case .selfIsolationHub: showSelfIsolationHubScreen()
                 }
             }).store(in: &cancellables)
     }
@@ -261,7 +252,6 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     private let localInformationInteractor: LocalInformationViewController.Interacting
     private let aboutThisAppInteractor: AboutThisAppViewController.Interacting
     private let settingsInteractor: SettingsViewController.Interacting
-    private let didOpenSelfIsolationHub: () -> Void
     private let recordSelectedIsolationPaymentsButton: () -> Void
     private let userNotificationsEnabled: InterfaceProperty<Bool>
     private let exposureNotificationsEnabled: InterfaceProperty<Bool>
@@ -279,7 +269,6 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         localInformationInteractor: LocalInformationViewController.Interacting,
         aboutThisAppInteractor: AboutThisAppViewController.Interacting,
         settingsInteractor: SettingsViewController.Interacting,
-        didOpenSelfIsolationHub: @escaping () -> Void,
         recordSelectedIsolationPaymentsButton: @escaping () -> Void,
         userNotificationsEnabled: InterfaceProperty<Bool>,
         exposureNotificationsEnabled: InterfaceProperty<Bool>,
@@ -296,7 +285,6 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         self.localInformationInteractor = localInformationInteractor
         self.aboutThisAppInteractor = aboutThisAppInteractor
         self.settingsInteractor = settingsInteractor
-        self.didOpenSelfIsolationHub = didOpenSelfIsolationHub
         self.recordSelectedIsolationPaymentsButton = recordSelectedIsolationPaymentsButton
         self.userNotificationsEnabled = userNotificationsEnabled
         self.exposureNotificationsEnabled = exposureNotificationsEnabled
@@ -358,7 +346,6 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
             return
         }
         flowController?.pushViewController(viewController, animated: true)
-        didOpenSelfIsolationHub()
     }
     
     public func didTapAboutButton() {
@@ -417,6 +404,14 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     
     public var shouldShowCheckIn: Bool {
         flowInteractor.shouldShowCheckIn
+    }
+    
+    public var shouldShowTestingForCOVID19: Bool {
+        flowInteractor.shouldShowTestingForCOVID19
+    }
+    
+    public var shouldShowSelfIsolation: Bool {
+        flowInteractor.shouldShowSelfIsolation
     }
     
     func openSettings() {
@@ -481,10 +476,6 @@ private struct RiskLevelInfoInteractor: RiskLevelInfoViewController.Interacting 
     }
     
     public func didTapWebsiteLink(url: URL) {
-        interactor.openWebsiteLinkfromRisklevelInfoScreen(url: url)
-    }
-    
-    public func didTapFindTestCenterLink(url: URL) {
         interactor.openWebsiteLinkfromRisklevelInfoScreen(url: url)
     }
 }

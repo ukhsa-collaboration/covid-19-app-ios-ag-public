@@ -1,15 +1,13 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Common
 import Foundation
 import XCTest
 
-class LinkPositiveTestResultFlowTests: XCTestCase {
-    
-    private let postcode = "SW12"
-    
+class LinkPositiveTestResultEnglandFlowTests: XCTestCase {
+        
     @Propped
     private var runner: ApplicationRunner<SandboxedScenario>
     
@@ -17,12 +15,12 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = false
         $runner.initialState.cameraAuthorized = true
-        $runner.initialState.postcode = postcode
+        $runner.initialState.postcode = "SW12"
         $runner.initialState.localAuthorityId = "E09000022"
     }
     
     func testAskForSymptomsOnsetDayDidNotHaveSymptoms() throws {
-        $runner.report(scenario: "Positive Test Result", "Without symptoms") {
+        $runner.report(scenario: "Positive Test Result (England)", "Without symptoms") {
             """
             User taps on enter test result button on home screen,
             User enters a confirmed postive test result code,
@@ -73,8 +71,9 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
             
             testCheckSymptomsScreen.noButton.tap()
             
-            let positiveScreen = PositiveTestResultStartIsolationScreen(app: app)
-            XCTAssertTrue(positiveScreen.indicationLabel.exists)
+            let positiveScreen = AdviceForIndexCasesEnglandScreen(app: app)
+            XCTAssertTrue(positiveScreen.heading.exists)
+            XCTAssertTrue(positiveScreen.infoBox.exists)
             
             runner.step("Positive Test Result screen") {
                 """
@@ -118,7 +117,7 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
             }
             
             let date = GregorianDay.today.advanced(by: Sandbox.Config.Isolation.indexCaseSinceTestResultEndDate).startDate(in: .current)
-            app.checkOnHomeScreenIsolating(date: date, days: Sandbox.Config.Isolation.indexCaseSinceTestResultEndDate)
+            app.checkOnHomeScreenIsolatingInformational(date: date, days: Sandbox.Config.Isolation.indexCaseSinceTestResultEndDate)
             
             runner.step("Homescreen") {
                 """
@@ -129,7 +128,7 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
     }
     
     func testAskForSymptomsOnsetDayDidHaveSymptomsButDoesNotRememberOnsetDay() throws {
-        $runner.report(scenario: "Positive Test Result", "With symptoms but no OnsetDay") {
+        $runner.report(scenario: "Positive Test Result (England)", "With symptoms but no OnsetDay") {
             """
             User taps on enter test result button on home screen,
             User enters a confirmed postive test result code,
@@ -195,8 +194,10 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
             testSymptomsReviewScreen.noDate.tap()
             testSymptomsReviewScreen.continueButton.tap()
             
-            let positiveScreen = PositiveTestResultStartIsolationScreen(app: app)
-            XCTAssertTrue(positiveScreen.indicationLabel.exists)
+            let positiveScreen = AdviceForIndexCasesEnglandScreen(app: app)
+            XCTAssertTrue(positiveScreen.heading.exists)
+            XCTAssertTrue(positiveScreen.infoBox.exists)
+
             
             runner.step("Positive Test Result screen") {
                 """
@@ -240,7 +241,7 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
             }
             
             let date = GregorianDay.today.advanced(by: Sandbox.Config.Isolation.indexCaseSinceTestResultEndDate).startDate(in: .current)
-            app.checkOnHomeScreenIsolating(date: date, days: Sandbox.Config.Isolation.indexCaseSinceTestResultEndDate)
+            app.checkOnHomeScreenIsolatingInformational(date: date, days: Sandbox.Config.Isolation.indexCaseSinceTestResultEndDate)
             
             runner.step("Homescreen") {
                 """
@@ -250,8 +251,8 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
         }
     }
     
-    func testAskForSymptomsOnsetDayDidHaveSymptomsAndDoesRememberOnsetDay() throws {
-        $runner.report(scenario: "Positive Test Result", "With symptoms and OnsetDay") {
+    func testAskForSymptomsOnsetDayDidHaveSymptomsAndDoesRememberOnsetDayEngland() throws {
+        $runner.report(scenario: "Positive Test Result (England)", "With symptoms and OnsetDay") {
             """
             User taps on the enter test result button on home screen,
             User enters a confirmed postive test result code,
@@ -318,18 +319,17 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
             
             testSymptomsReviewScreen.continueButton.tap()
             
-            let positiveScreen = PositiveTestResultStartIsolationScreen(app: app)
-            XCTAssertTrue(positiveScreen.indicationLabel.exists)
+            let adviceScreeen = AdviceForIndexCasesEnglandAlreadyIsolatingScreen(app: app)
+            XCTAssertTrue(adviceScreeen.heading.exists)
             
-            runner.step("Positive Test Result screen") {
+            runner.step("Advice Screen") {
                 """
-                The user is presented with a screen containing information on their positive test result and that their
-                period of self-isloation is over.
+                The user is presented with a screen containing information on their positive test result and advice on next steps
                 The user taps on continue button to proceed.
                 """
             }
             
-            positiveScreen.continueButton.tap()
+            adviceScreeen.continueButton.tap()
             
             let shareScreen = ShareKeysScreen(app: app)
             XCTAssertTrue(shareScreen.heading.exists)
@@ -363,7 +363,7 @@ class LinkPositiveTestResultFlowTests: XCTestCase {
             }
             
             let date = GregorianDay.today.advanced(by: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisOnset).startDate(in: .current)
-            app.checkOnHomeScreenIsolating(date: date, days: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisOnset)
+            app.checkOnHomeScreenIsolatingInformational(date: date, days: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisOnset)
             
             runner.step("Homescreen") {
                 """

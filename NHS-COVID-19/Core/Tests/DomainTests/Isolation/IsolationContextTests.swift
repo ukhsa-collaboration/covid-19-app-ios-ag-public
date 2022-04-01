@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Combine
@@ -14,7 +14,6 @@ class IsolationContextTests: XCTestCase {
     private var currentDate: Date!
     private var client: MockHTTPClient!
     private var removedNotificaton = false
-    private var scheduledNotification = false
     
     override func setUp() {
         currentDate = Date()
@@ -51,7 +50,6 @@ class IsolationContextTests: XCTestCase {
             notificationCenter: NotificationCenter(),
             currentDateProvider: MockDateProvider { self.currentDate },
             removeExposureDetectionNotifications: { self.removedNotificaton = true },
-            scheduleSelfIsolationReminderNotification: { self.scheduledNotification = true },
             country: Just(Country.england).domainProperty()
         )
     }
@@ -620,25 +618,4 @@ class IsolationContextTests: XCTestCase {
         XCTAssertEqual(state.1, .hasTest(shouldChangeAdviceDueToSymptoms: false))
     }
     
-    func testScheduleNotificationAfterPositiveResult() throws {
-        let result = VirologyStateTestResult(
-            testResult: .positive,
-            testKitType: .labResult,
-            endDate: Date(),
-            diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random()),
-            requiresConfirmatoryTest: false,
-            shouldOfferFollowUpTest: false
-        )
-        
-        let state = try makeResultAcknowledgementState(result: result).await().get()
-        
-        if case TestResultAcknowledgementState.neededForPositiveResultStartToIsolate(let acknowledge, _) = state {
-            XCTAssertFalse(scheduledNotification)
-            acknowledge()
-            XCTAssertTrue(scheduledNotification)
-        } else {
-            XCTFail("Unexpected state \(state)")
-        }
-        
-    }
 }

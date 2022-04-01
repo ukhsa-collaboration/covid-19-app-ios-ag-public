@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Common
@@ -42,9 +42,9 @@ class PositiveTestResultsFlowTest: XCTestCase {
                 The user taps on continue
                 """
             }
-            let positiveScreen = PositiveTestResultStartIsolationScreen(app: app)
+            let positiveScreen = AdviceForIndexCasesEnglandScreen(app: app)
             
-            XCTAssertTrue(positiveScreen.indicationLabel.exists)
+            XCTAssertTrue(positiveScreen.heading.exists)
             
             positiveScreen.continueButton.tap()
             
@@ -91,8 +91,77 @@ class PositiveTestResultsFlowTest: XCTestCase {
         }
     }
     
-    func testWithIsolationIndexCase() throws {
+    func testWithIsolationIndexCaseEngland() throws {
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.index.rawValue
+        $runner.report(scenario: "Positive Test Result", "With Isolation - Index case") {
+            """
+            User opens the app after receiving a positive test result while currently being in isolation
+            as an index case
+            """
+        }
+        try runner.run { app in
+            runner.step("Positive Test Result") {
+                """
+                The user is presented with a screen containing information on their positive test result and that they
+                still should continue to self-isolate.
+                The user taps on continue
+                """
+            }
+            
+            let adviceScreen = AdviceForIndexCasesEnglandAlreadyIsolatingScreen(app: app)
+            XCTAssertTrue(adviceScreen.heading.exists)
+            XCTAssertTrue(adviceScreen.infoBox.exists)
+            adviceScreen.continueButton.tap()
+            
+            runner.step("Share random ids") {
+                """
+                The user is presented with a modal screen telling them to share their device random ids.
+                The user taps on continue
+                """
+            }
+            
+            let shareScreen = ShareKeysScreen(app: app)
+            
+            XCTAssertTrue(shareScreen.heading.exists)
+            
+            shareScreen.continueButton.tap()
+            
+            runner.step("Share random ids - System Alert") {
+                """
+                The user is asked by the system to confirm sharing the device random ids.
+                The user taps on Share
+                """
+            }
+            
+            let alertScreen = SimulatedShareRandomIdsScreen(app: app)
+            alertScreen.shareButton.tap()
+            
+            runner.step("Thank you screen") {
+                """
+                The user is presented the thank you message.
+                """
+            }
+            
+            let thankYouScreen = ThankYouScreen(app: app)
+            thankYouScreen.backHomeButtonText.tap()
+            
+            runner.step("Homescreen") {
+                """
+                The user is presented the homescreen and is still isolating
+                """
+            }
+            
+            app.checkOnHomeScreen(postcode: postcode)
+            
+        }
+    }
+    
+    func testWithIsolationIndexCaseWales() throws {
+        
+        let walesPostcode = "LD1"
+        $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.index.rawValue
+        $runner.initialState.postcode = walesPostcode
+        $runner.initialState.localAuthorityId = "W06000023"
         $runner.report(scenario: "Positive Test Result", "With Isolation - Index case") {
             """
             User opens the app after receiving a positive test result while currently being in isolation
@@ -150,12 +219,76 @@ class PositiveTestResultsFlowTest: XCTestCase {
                 """
             }
             
-            app.checkOnHomeScreen(postcode: postcode)
-            
+            let date = GregorianDay.today.advanced(by: Sandbox.Config.Isolation.indexCaseSinceTestResultEndDate - 1).startDate(in: .current)
+            app.checkOnHomeScreenIsolatingWarning(date: date, days: Sandbox.Config.Isolation.indexCaseSinceTestResultEndDate - 1)
         }
     }
     
-    func testWithIsolationContactCase() throws {
+    func testWithIsolationContactCaseEngland() throws {
+        $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.contact.rawValue
+        $runner.report(scenario: "Positive Test Result", "With Isolation - contact case") {
+            """
+            User opens the app after receiving a positive test result while currently being in isolation
+            as a contact case
+            """
+        }
+        try runner.run { app in
+            runner.step("Positive Test Result") {
+                """
+                The user is presented with a screen containing information on their positive test result and advice.
+                The user taps on continue
+                """
+            }
+            
+            let adviceScreen = AdviceForIndexCasesEnglandAlreadyIsolatingScreen(app: app)
+            
+            XCTAssertTrue(adviceScreen.heading.exists)
+            adviceScreen.continueButton.tap()
+            
+            runner.step("Share random ids") {
+                """
+                The user is presented with a modal screen telling them to share their device random ids.
+                The user taps on continue
+                """
+            }
+            
+            let shareScreen = ShareKeysScreen(app: app)
+            
+            XCTAssertTrue(shareScreen.heading.exists)
+            
+            shareScreen.continueButton.tap()
+            
+            runner.step("Share random ids - System Alert") {
+                """
+                The user is asked by the system to confirm sharing the device random ids.
+                The user taps on Share
+                """
+            }
+            
+            let alertScreen = SimulatedShareRandomIdsScreen(app: app)
+            alertScreen.shareButton.tap()
+            
+            runner.step("Thank you screen") {
+                """
+                The user is presented the thank you message.
+                """
+            }
+            
+            let thankYouScreen = ThankYouScreen(app: app)
+            thankYouScreen.backHomeButtonText.tap()
+            
+            runner.step("Homescreen") {
+                """
+                The user is presented the homescreen and is still isolating
+                """
+            }
+            
+            app.checkOnHomeScreen(postcode: postcode)
+        }
+    }
+    
+    func testWithIsolationContactCaseWales() throws {
+        $runner.initialState.localAuthorityId = "W06000023"
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.contact.rawValue
         $runner.report(scenario: "Positive Test Result", "With Isolation - contact case") {
             """

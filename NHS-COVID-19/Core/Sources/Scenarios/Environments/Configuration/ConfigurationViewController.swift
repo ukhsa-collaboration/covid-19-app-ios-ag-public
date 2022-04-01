@@ -38,11 +38,21 @@ class ConfigurationViewController: UIViewController {
         let newNoSymptomsScreenToggle = createToggle(feature: .newNoSymptomsScreen, isOn: featureToggleStorage.newNoSymptomsScreenToggle, action: #selector(toggleNewNoSymptomsScreen))
         let localStatsButtonToggle = createToggle(feature: .localStatistics, isOn: featureToggleStorage.localStatisticsToggle, action: #selector(toggleLocalStatistics))
         let venueCheckInToggle = createToggle(feature: .venueCheckIn, isOn: featureToggleStorage.venueCheckInToggle, action: #selector(toggleVenueCheckIn))
+        let contactOptOutFlowEnglandToggle = createToggle(feature: .contactOptOutFlowEngland, isOn: featureToggleStorage.englandOptOutFlowToggle, action: #selector(toggleContactOptOutFlowEngland))
+        let contactOptOutFlowWalesToggle = createToggle(feature: .contactOptOutFlowWales, isOn: featureToggleStorage.walesOptOutFlowToggle, action: #selector(toggleContactOptOutFlowWales))
+        let testingForCOVID19Toggle = createToggle(feature: .testingForCOVID19, isOn: featureToggleStorage.testingForCOVID19Toggle, action: #selector(toggleTestingForCOVID19))
+        let selfIsolationHubToggleEngland = createToggle(feature: .selfIsolationHubEngland, isOn: featureToggleStorage.selfIsolationHubToggleEngland, action: #selector(toggleSelfIsolationHubEngland))
+        let selfIsolationHubToggleWales = createToggle(feature: .selfIsolationHubWales, isOn: featureToggleStorage.selfIsolationHubToggleWales, action: #selector(toggleSelfIsolationHubWales))
         
         let stackView = UIStackView(arrangedSubviews: [
             newNoSymptomsScreenToggle,
             localStatsButtonToggle,
             venueCheckInToggle,
+            testingForCOVID19Toggle,
+            selfIsolationHubToggleEngland,
+            selfIsolationHubToggleWales,
+            contactOptOutFlowEnglandToggle,
+            contactOptOutFlowWalesToggle,
             disclaimer,
         ])
         
@@ -81,9 +91,17 @@ class ConfigurationViewController: UIViewController {
             return "Local statistics home screen button"
         case .venueCheckIn:
             return "Venue check-in home screen button"
-        case .englandOptOutFlow:
-            return "Old England opt out flow"
-        }
+        case .contactOptOutFlowEngland:
+            return "England opt out flow"
+        case .contactOptOutFlowWales:
+            return "Wales opt out flow"
+        case .testingForCOVID19:
+            return "Testing for COVID-19 Home Screen button"
+        case .selfIsolationHubEngland:
+            return "Self Isolation Home Screen button England"        
+        case .selfIsolationHubWales:
+            return "Self Isolation Home Screen button Wales"
+            }
     }
     
     @objc private func toggleNewNoSymptomsScreen() {
@@ -97,6 +115,27 @@ class ConfigurationViewController: UIViewController {
     @objc private func toggleVenueCheckIn() {
         featureToggleStorage.venueCheckInToggle.toggle()
     }
+    
+    @objc private func toggleContactOptOutFlowEngland() {
+        featureToggleStorage.englandOptOutFlowToggle.toggle()
+    }
+    
+    @objc private func toggleContactOptOutFlowWales() {
+        featureToggleStorage.walesOptOutFlowToggle.toggle()
+    }
+    
+    @objc private func toggleTestingForCOVID19() {
+        featureToggleStorage.testingForCOVID19Toggle.toggle()
+    }
+
+    @objc private func toggleSelfIsolationHubEngland() {
+        featureToggleStorage.selfIsolationHubToggleEngland.toggle()
+    }
+    
+    @objc private func toggleSelfIsolationHubWales() {
+        featureToggleStorage.selfIsolationHubToggleWales.toggle()
+    }
+    
 }
 
 extension CaseIterable where Self: Equatable {

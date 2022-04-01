@@ -23,13 +23,15 @@ public class ContactCaseImmediateAcknowledgementFlowViewController: BaseNavigati
     fileprivate let interactor: Interacting
     private let exposureDate: Date
     private let openURL: (URL) -> Void
+    private let country: Country
     
     @Published fileprivate var state: State
     private var cancellables: Set<AnyCancellable> = []
     
-    public init(interactor: Interacting, openURL: @escaping (URL) -> Void, exposureDate: Date) {
+    public init(interactor: Interacting, country: Country, openURL: @escaping (URL) -> Void, exposureDate: Date) {
         self.interactor = interactor
         self.exposureDate = exposureDate
+        self.country = country
         self.openURL = openURL
         state = .exposureInfo
         super.init()
@@ -62,12 +64,24 @@ public class ContactCaseImmediateAcknowledgementFlowViewController: BaseNavigati
             )
             
         case .advice:
-            return ContactCaseNoIsolationAdviceViewController(
-                interactor: ContactCaseNoIsolationAdviceViewControllerInteractor(
-                    viewController: self,
-                    openURL: openURL
+            
+            switch self.country {
+            case .england:
+                return ContactCaseNoIsolationAdviceViewController(
+                    interactor: ContactCaseNoIsolationAdviceViewControllerInteractor(
+                        viewController: self,
+                        openURL: openURL
+                    )
                 )
-            )
+            case .wales:
+                return ContactCaseNoIsolationAdviceWalesViewController(
+                    interactor: ContactCaseNoIsolationAdviceWalesViewControllerInteractor(
+                        viewController: self,
+                        openURL: openURL
+                    )
+                )
+            }
+            
         }
     }
 }
@@ -106,6 +120,25 @@ private struct ContactCaseNoIsolationAdviceViewControllerInteractor: ContactCase
     
     func didTapReadGuidanceForContacts() {
         openURL(ExternalLink.guidanceForContactsInEngland.url)
+        viewController?.interactor.acknowledge()
+    }
+}
+
+private struct ContactCaseNoIsolationAdviceWalesViewControllerInteractor: ContactCaseNoIsolationAdviceWalesViewController.Interacting {
+    private weak var viewController: ContactCaseImmediateAcknowledgementFlowViewController?
+    private let openURL: (URL) -> Void
+    
+    init(viewController: ContactCaseImmediateAcknowledgementFlowViewController?, openURL: @escaping (URL) -> Void) {
+        self.viewController = viewController
+        self.openURL = openURL
+    }
+    
+    func didTapBackToHome() {
+        viewController?.interactor.acknowledge()
+    }
+    
+    func didTapReadGuidanceForContacts() {
+        openURL(ExternalLink.guidanceForContactsInWales.url)
         viewController?.interactor.acknowledge()
     }
 }

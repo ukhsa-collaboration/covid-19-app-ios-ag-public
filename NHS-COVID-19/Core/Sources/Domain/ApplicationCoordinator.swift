@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Combine
@@ -148,13 +148,6 @@ public class ApplicationCoordinator {
             currentDateProvider: currentDateProvider,
             removeExposureDetectionNotifications: {
                 services.userNotificationsManager.removeAllDelivered(for: .exposureDetection)
-            },
-            scheduleSelfIsolationReminderNotification: {
-                SelfIsolationChangeNotifier(
-                    currentDateProviding: services.currentDateProvider,
-                    notificationManager: services.userNotificationsManager
-                )
-                .scheduleSelfIsolationReminderNotification()
             },
             country: country
         )
@@ -363,6 +356,8 @@ public class ApplicationCoordinator {
         
         metricReporter.monitorHousekeeping()
         
+        services.userNotificationsManager.removePending(type: .selfIsolation)
+        
     }
     
     private func monitorRawState() {
@@ -438,7 +433,11 @@ public class ApplicationCoordinator {
                 RunningAppContext(
                     checkInContext: checkInContext,
                     shouldShowVenueCheckIn: isFeatureEnabled(.venueCheckIn),
-                    shouldShowOldEnglandOptOutFlow: isFeatureEnabled(.englandOptOutFlow),
+                    shouldShowTestingForCOVID19: isFeatureEnabled(.testingForCOVID19),
+                    shouldShowSelfIsolationHubEngland: isFeatureEnabled(.selfIsolationHubEngland),
+                    shouldShowSelfIsolationHubWales: isFeatureEnabled(.selfIsolationHubWales),
+                    shouldShowEnglandOptOutFlow: isFeatureEnabled(.contactOptOutFlowEngland),
+                    shouldShowWalesOptOutFlow: isFeatureEnabled(.contactOptOutFlowWales),
                     postcodeInfo: postcodeInfo,
                     country: country,
                     bluetoothOff: bluetoothOff.domainProperty(),
@@ -484,13 +483,7 @@ public class ApplicationCoordinator {
                     diagnosisKeySharer: diagnosisKeySharer,
                     localInformation: localInformation,
                     userNotificationManaging: userNotificationManager,
-                    didOpenSelfIsolationHub: { [weak self] in
-                        guard let self = self else { return }
-                        SelfIsolationChangeNotifier(
-                            currentDateProviding: self.currentDateProvider,
-                            notificationManager: self.userNotificationManager
-                        ).removePendingOrUndelivered()
-                    }, shouldShowBookALabTest: isolationContext.canBookALabTest().domainProperty(),
+                    shouldShowBookALabTest: isolationContext.canBookALabTest().domainProperty(),
                     contactCaseOptOutQuestionnaire: ContactCaseOptOutQuestionnaire(country: country),
                     contactCaseIsolationDuration: isolationContext.isolationConfiguration.$value.map { $0.for(country.currentValue).contactCase }.domainProperty(),
                     shouldShowLocalStats: isFeatureEnabled(.localStatistics),
@@ -898,13 +891,6 @@ public class ApplicationCoordinator {
                 }
             )
             .store(in: &cancellables)
-        
-        SelfIsolationChangeNotifier(
-            currentDateProviding: currentDateProvider,
-            notificationManager: userNotificationsManager
-        )
-        .removesNotificationsForChanges(in: isolationContext.isolationStateManager.$state)
-        .store(in: &cancellables)
         
         IsolationStateChangeNotifier(notificationManager: userNotificationsManager)
             .alertUserToChanges(in: isolationContext.isolationStateManager.$state)

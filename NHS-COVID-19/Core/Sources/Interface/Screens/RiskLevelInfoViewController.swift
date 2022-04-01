@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Common
@@ -9,7 +9,6 @@ import SwiftUI
 
 public protocol RiskLevelInfoInteracting {
     func didTapWebsiteLink(url: URL)
-    func didTapFindTestCenterLink(url: URL)
 }
 
 extension RiskLevelInfoViewController {
@@ -23,7 +22,6 @@ extension RiskLevelInfoViewController {
         var linkURL: URL?
         var footer: [String]
         var policies: [Policy]
-        var shouldShowMassTestingLink: InterfaceProperty<Bool>
     }
     
     public struct Policy {
@@ -95,19 +93,6 @@ extension RiskLevelInfoViewController {
                     )
                 },
             ]
-            
-            if viewModel.shouldShowMassTestingLink.wrappedValue {
-                stackedViews.append(contentsOf: [
-                    BaseLabel().set(text: localize(.risk_level_mass_testing_title)).styleAsTertiaryTitle(),
-                    BaseLabel().set(text: localize(.risk_level_mass_testing_description)).styleAsBody(),
-                    LinkButton(
-                        title: localize(.risk_level_mass_testing_link_title),
-                        action: {
-                            interactor.didTapFindTestCenterLink(url: ExternalLink.findTestCenter.url)
-                        }
-                    ),
-                ])
-            }
             
             stackedViews.append(contentsOf:
                 viewModel.footer.map {

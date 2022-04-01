@@ -21,8 +21,8 @@ struct PositiveSymptomsScreen {
         app.staticTexts[localized: .positive_symptoms_explanation]
     }
     
-    var bookTestButton: XCUIElement {
-        app.buttons[localized: .positive_symptoms_corona_test_button]
+    var getRapidLateralFlowTestButton: XCUIElement {
+        app.links[localized: .positive_symptoms_corona_test_button]
     }
     
     var furtherAdviceButton: XCUIElement {

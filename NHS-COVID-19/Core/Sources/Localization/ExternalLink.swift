@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Foundation
@@ -25,7 +25,6 @@ public enum ExternalLink: CaseIterable {
     case financialSupportWales
     case financialSupportPrivacyNotice
     case cantRunThisAppFAQs
-    case findTestCenter
     case getTested
     case reportLFDResultsOnGovDotUK
     case downloadNHSApp
@@ -38,6 +37,8 @@ public enum ExternalLink: CaseIterable {
     case getRapidTestsAsymptomaticWales
     case guidanceForContactsInEngland
     case guidanceForHouseholdContactsInEngland
+    case guidanceForContactsInWales
+    case getTestedWalesLink
     
     public var url: URL {
         switch self {
@@ -81,8 +82,6 @@ public enum ExternalLink: CaseIterable {
             return localizeURL(.financial_support_privacy_notice_link)
         case .cantRunThisAppFAQs:
             return localizeURL(.link_cant_run_this_app_faq)
-        case .findTestCenter:
-            return localizeURL(.link_find_test_center)
         case .getTested:
             return localizeURL(.link_nhs_get_tested)
         case .reportLFDResultsOnGovDotUK:
@@ -107,6 +106,10 @@ public enum ExternalLink: CaseIterable {
             return localizeURL(.contact_case_guidance_for_contacts_in_england_url)
         case .guidanceForHouseholdContactsInEngland:
             return localizeURL(.risky_contact_opt_out_further_advice_link_url)
+        case .guidanceForContactsInWales:
+            return localizeURL(.risky_contact_opt_out_primary_button_url_wales)
+        case .getTestedWalesLink:
+            return localizeURL(.get_tested_wales_link_url)
         }
     }
 }

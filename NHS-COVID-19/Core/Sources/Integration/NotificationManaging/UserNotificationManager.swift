@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Common
@@ -42,11 +42,6 @@ class UserNotificationManager {
                 $0.title = localize(.alert_venue_risk_change_title)
                 $0.body = localize(.alert_venue_risk_change_body)
                 $0.userInfo = [UserNotificationUserInfoKeys.VenueMessageType: messageType.rawValue]
-            }
-        case .selfIsolation:
-            return configuring(UNMutableNotificationContent()) {
-                $0.title = localize(.alert_self_isolation_change_title)
-                $0.body = localize(.alert_self_isolation_change_body)
             }
         case .isolationState:
             return configuring(UNMutableNotificationContent()) {
@@ -94,6 +89,9 @@ class UserNotificationManager {
                 $0.title = title.applyCurrentLanguageDirection()
                 $0.body = body.applyCurrentLanguageDirection()
             }
+        case .selfIsolation:
+            assertionFailure("`UserNotificationType.selfIsolation` is deprecated and we should not be scheduling any more of them.")
+            return UNMutableNotificationContent()
         }
     }
 }

@@ -17,7 +17,7 @@ class PositiveSymptomsScreenTests: XCTestCase {
             XCTAssert(screen.pleaseIsolateLabel.exists)
             XCTAssert(screen.indicationLabel.exists)
             XCTAssert(screen.explanationLabel.allExist)
-            XCTAssert(screen.bookTestButton.exists)
+            XCTAssert(screen.getRapidLateralFlowTestButton.exists)
             XCTAssert(screen.furtherAdviceButton.exists)
             XCTAssert(screen.exposureFAQLink.exists)
         }
@@ -27,7 +27,7 @@ class PositiveSymptomsScreenTests: XCTestCase {
         try runner.run { app in
             let screen = PositiveSymptomsScreen(app: app)
             
-            screen.bookTestButton.tap()
+            screen.getRapidLateralFlowTestButton.tap()
             XCTAssert(screen.returnHomeAlertTitle.exists)
         }
     }
@@ -52,7 +52,7 @@ class PositiveSymptomsScreenTests: XCTestCase {
 
 private extension PositiveSymptomsScreen {
     var returnHomeAlertTitle: XCUIElement {
-        app.staticTexts[PositiveSymptomsScreenScenario.bookTestTapped]
+        app.staticTexts[PositiveSymptomsScreenScenario.getAFreeRapidLateralFlowTestTapped]
     }
     
     var furtherAdviceAlertTitle: XCUIElement {

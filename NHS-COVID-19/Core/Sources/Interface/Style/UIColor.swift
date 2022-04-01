@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import SwiftUI
@@ -16,6 +16,7 @@ public enum ColorName: String, CaseIterable, Identifiable {
     case tertiaryText = "Tertiary Text"
     case surface = "Surface"
     case errorRed = "Error Red"
+    case scanBlue = "Scan Blue"
     case amber = "Amber"
     case primaryButtonLabel = "Primary Button Label"
     

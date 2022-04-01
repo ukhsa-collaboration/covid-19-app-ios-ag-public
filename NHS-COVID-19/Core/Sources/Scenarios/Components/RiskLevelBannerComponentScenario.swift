@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Combine
@@ -33,8 +33,7 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     linkTitle: "",
                     linkURL: nil,
                     footer: [],
-                    policies: [],
-                    shouldShowMassTestingLink: .constant(true)
+                    policies: []
                 )
             case .green:
                 return RiskLevelBanner.ViewModel(
@@ -47,8 +46,7 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     linkTitle: "",
                     linkURL: nil,
                     footer: [],
-                    policies: [],
-                    shouldShowMassTestingLink: .constant(true)
+                    policies: []
                 )
             case .yellow:
                 return RiskLevelBanner.ViewModel(
@@ -61,8 +59,7 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     linkTitle: "",
                     linkURL: nil,
                     footer: [],
-                    policies: [],
-                    shouldShowMassTestingLink: .constant(true)
+                    policies: []
                 )
             case .amber:
                 return RiskLevelBanner.ViewModel(
@@ -75,8 +72,7 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     linkTitle: "",
                     linkURL: nil,
                     footer: [],
-                    policies: [],
-                    shouldShowMassTestingLink: .constant(true)
+                    policies: []
                 )
             case .red:
                 return RiskLevelBanner.ViewModel(
@@ -89,8 +85,7 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     linkTitle: "",
                     linkURL: nil,
                     footer: [],
-                    policies: [],
-                    shouldShowMassTestingLink: .constant(true)
+                    policies: []
                 )
             }
         }

@@ -11,7 +11,7 @@ public class PositiveSymptomsScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name: String = "Self-Diagnosis - Positive symptoms"
     
-    public static let bookTestTapped: String = "Book test button tapped"
+    public static let getAFreeRapidLateralFlowTestTapped: String = "Get a free rapid lateral flow test kit"
     public static let cancelTapped: String = "Cancel tapped"
     public static let furtherAdviceTapped: String = "Further advice tapped"
     public static let exposureFAQstapped = "Exposure FAQs tapped"
@@ -32,8 +32,8 @@ private class Interactor: PositiveSymptomsViewController.Interacting {
         self.viewController = viewController
     }
     
-    func didTapBookTest() {
-        viewController?.showAlert(title: PositiveSymptomsScreenScenario.bookTestTapped)
+    func didTapGetRapidLateralFlowTest() {
+        viewController?.showAlert(title: PositiveSymptomsScreenScenario.getAFreeRapidLateralFlowTestTapped)
     }
     
     func didTapCancel() {

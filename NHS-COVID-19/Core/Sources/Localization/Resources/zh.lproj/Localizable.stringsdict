@@ -380,5 +380,19 @@
 				<string>%li 过去7天内的阳性检测结果</string>
 			</dict>
 		</dict>
+		<key>be_careful_indicator_accessibility_label days: %ld date: %@ time: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string/>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>加倍小心和保护他人，直至 %2$@ 时 %3$@ 。还剩%1$ld天。</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

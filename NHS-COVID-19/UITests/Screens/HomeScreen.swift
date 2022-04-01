@@ -32,9 +32,14 @@ struct HomeScreen {
         app.buttons[localized: .home_about_the_app_button_title]
     }
     
-    func isolatingIndicator(date: Date, days: Int) -> XCUIElement {
+    func isolatingIndicatorWarning(date: Date, days: Int) -> XCUIElement {
         app.staticTexts[localized: .isolation_indicator_accessiblity_label(date: date, days: days)]
     }
+    
+    func isolatingIndicatorInformational(date: Date, days: Int) -> XCUIElement {
+        app.staticTexts[localized: .be_careful_indicator_accessibility_label(date: date, days: days)]
+    }
+
     
     var notIsolatingIndicator: XCUIElement {
         app.staticTexts[localized: .risk_level_indicator_contact_tracing_active]

@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Domain
@@ -12,8 +12,7 @@ extension RiskLevelBanner.ViewModel {
     public init(
         postcode: Postcode,
         localAuthority: Domain.LocalAuthority?,
-        risk: RiskyPostcodeEndpointManager.PostcodeRisk,
-        shouldShowMassTestingLink: InterfaceProperty<Bool>
+        risk: RiskyPostcodeEndpointManager.PostcodeRisk
     ) {
         let colorScheme: ColorScheme
         
@@ -58,8 +57,7 @@ extension RiskLevelBanner.ViewModel {
                         heading: policy.policyHeading.localizedString(),
                         body: policy.policyContent.localizedString()
                     )
-                },
-                shouldShowMassTestingLink: shouldShowMassTestingLink
+                }
             )
         } else {
             let title = risk.style.name.localizedString().stringByReplacing(postcode: postcode.value)
@@ -74,8 +72,7 @@ extension RiskLevelBanner.ViewModel {
                 linkTitle: risk.style.linkTitle.localizedString(),
                 linkURL: URL(string: risk.style.linkUrl.localizedString(contentType: .url)),
                 footer: [],
-                policies: [],
-                shouldShowMassTestingLink: shouldShowMassTestingLink
+                policies: []
             )
         }
     }

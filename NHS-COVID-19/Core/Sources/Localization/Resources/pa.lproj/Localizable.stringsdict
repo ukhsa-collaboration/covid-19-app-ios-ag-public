@@ -434,5 +434,21 @@
 				<string>ਪਿਛਲੇ 7 ਦਿਨਾਂ ਵਿੱਚ ਪਾਜ਼ੀਟਿਵ ਟੈਸਟ %li</string>
 			</dict>
 		</dict>
+		<key>be_careful_indicator_accessibility_label days: %ld date: %@ time: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string/>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>ਤੱਕ ਵਾਧੂ ਧਿਆਨ ਰੱਖੋ ਅਤੇ ਦੂਜਿਆਂ ਦੀ ਰੱਖਿਆ ਕਰੋ %3$@ ਨੂੰ %2$@। %1$ld ਦਿਨ ਬਾਕੀ ਹੈ।</string>
+				<key>other</key>
+				<string>ਤੱਕ ਵਾਧੂ ਧਿਆਨ ਰੱਖੋ ਅਤੇ ਦੂਜਿਆਂ ਦੀ ਰੱਖਿਆ ਕਰੋ %3$@ ਨੂੰ %2$@। %1$ld ਦਿਨ ਬਾਕੀ ਹੈ।</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

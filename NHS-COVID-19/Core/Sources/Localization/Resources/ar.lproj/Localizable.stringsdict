@@ -650,5 +650,29 @@
 				<string>الاختبارات الإيجابية في أخر 7 أيام %li</string>
 			</dict>
 		</dict>
+		<key>be_careful_indicator_accessibility_label days: %ld date: %@ time: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string/>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>zero</key>
+				<string>توخى المزيد من الحرص وأحمي الأخرين حتى %2$@ الساعة %3$@. متبقي %1$ld أيام.</string>
+				<key>one</key>
+				<string>توخى المزيد من الحرص وأحمي الأخرين حتى %2$@ الساعة %3$@. متبقي %1$ld يوم.</string>
+				<key>two</key>
+				<string>توخى المزيد من الحرص وأحمي الأخرين حتى %2$@ الساعة %3$@. متبقي %1$ld أيام.</string>
+				<key>few</key>
+				<string>توخى المزيد من الحرص وأحمي الأخرين حتى %2$@ الساعة %3$@. متبقي %1$ld أيام.</string>
+				<key>many</key>
+				<string>توخى المزيد من الحرص وأحمي الأخرين حتى %2$@ الساعة %3$@. متبقي %1$ld أيام.</string>
+				<key>other</key>
+				<string>توخى المزيد من الحرص وأحمي الأخرين حتى %2$@ الساعة %3$@. متبقي %1$ld أيام.</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Common
@@ -97,10 +97,11 @@ class RiskyVenueNotificationFlowTests: XCTestCase {
         }
     }
     
-    func testShowWarnAndCheckSymptomsAndBookATestRiskyVenueNotification() throws {
+    func testShowWarnAndCheckSymptomsAndBookATestRiskyVenueNotificationWales() throws {
         $runner.initialState.riskyVenueMessageType = Sandbox.Text.RiskyVenueMessageType.warnAndBookATest.rawValue
-        
-        $runner.report(scenario: "Risky venue notification", "Warn and enter symptoms and book a test") {
+        $runner.initialState.postcode = "LL44"
+        $runner.initialState.localAuthorityId = "W06000002"
+        $runner.report(scenario: "Risky venue notification Wales", "Warn and enter symptoms and book a test") {
             """
             User receives a warn and book a test risky venue notification,
             User taps on has symptoms,
@@ -183,21 +184,10 @@ class RiskyVenueNotificationFlowTests: XCTestCase {
             
             runner.step("Positive Symptoms screen") {
                 """
-                The user is asked to isolate, and given the option to book a test
+                The user is asked to isolate, and given the option to get a free rapid lateral flow test
                 """
             }
-            positiveSymptomsScreen.bookTestButton.firstMatch.tap()
-            
-            let bookATestScreen = BookATestScreen(app: app)
-            XCTAssert(bookATestScreen.title.exists)
-            
-            runner.step("Positive Symptoms screen") {
-                """
-                The user is presented with information about booking a test
-                """
-            }
-            
-            bookATestScreen.button.tap()
+            positiveSymptomsScreen.getRapidLateralFlowTestButton.firstMatch.tap()
             
             runner.step("Positive Symptoms screen") {
                 """
@@ -207,7 +197,120 @@ class RiskyVenueNotificationFlowTests: XCTestCase {
             
             let date = GregorianDay.today.advanced(by: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset).startDate(in: .current)
             
-            app.checkOnHomeScreenIsolating(date: date, days: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset)
+            app.checkOnHomeScreenIsolatingWarning(date: date, days: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset)
+        }
+    }
+    
+    func testShowWarnAndCheckSymptomsAndBookATestRiskyVenueNotificationEngland() throws {
+        $runner.initialState.riskyVenueMessageType = Sandbox.Text.RiskyVenueMessageType.warnAndBookATest.rawValue
+        
+        $runner.report(scenario: "Risky venue notification England", "Warn and enter symptoms and book a test") {
+            """
+            User in England receives a warn and book a test risky venue notification,
+            User taps on has symptoms,
+            User selects symptoms and is notified of corona symptoms,
+            User is presented with the isolation advice,
+            User continues to the latest guidance screen and comes back to home screen.
+            """
+        }
+        
+        try runner.run { app in
+            
+            let riskyVenueInformationBookATestScreen = RiskyVenueInformationBookATestScreen(app: app)
+            XCTAssertTrue(riskyVenueInformationBookATestScreen.bookATestButton.exists)
+            
+            runner.step("Risky Venue Notification screen") {
+                """
+                The user is presented the warn and book a test risky venue notification.
+                The user taps on book a free test button.
+                """
+            }
+            
+            riskyVenueInformationBookATestScreen.bookATestButton.tap()
+            
+            let warnAndTestCheckSymptomsScreen = WarnAndTestCheckSymptomsScreen(app: app)
+            XCTAssertTrue(warnAndTestCheckSymptomsScreen.submitButton.exists)
+            
+            runner.step("Do you have symptoms? screen") {
+                """
+                The user is presented the Do you have symptoms? screen.
+                The user taps on no button.
+                The user gets redirected to order a free test screen.
+                """
+            }
+            
+            warnAndTestCheckSymptomsScreen.submitButton.tap()
+            
+            runner.step("Symptom List") {
+                """
+                The user is presented a list of symptoms
+                """
+            }
+            
+            let symptomsListScreen = SymptomsListScreen(app: app)
+            
+            symptomsListScreen.symptomCard(
+                value: localize(.symptom_card_unchecked, applyCurrentLanguageDirection: false),
+                heading: Sandbox.Text.SymptomsList.cardHeading.rawValue.apply(direction: currentLanguageDirection()),
+                content: Sandbox.Text.SymptomsList.cardContent.rawValue.apply(direction: currentLanguageDirection())
+            ).tap()
+            
+            runner.step("Symptom selected") {
+                """
+                The user selects a symptom and confirms the screen
+                """
+            }
+            
+            symptomsListScreen.reportButton.tap()
+            
+            let reviewSymptomsScreen = SymptomsReviewScreen(app: app)
+            XCTAssert(reviewSymptomsScreen.heading.exists)
+            
+            runner.step("Review Symptoms") {
+                """
+                The user is presented a list of the selected symptoms for review
+                """
+            }
+            
+            reviewSymptomsScreen.noDate.tap()
+            
+            runner.step("No Date") {
+                """
+                The can specify an onset date or tick that they don't remember the onset date, before confirming
+                """
+            }
+            
+            reviewSymptomsScreen.confirmButton.tap()
+            
+            let isolationAdviceForSymptomaticCasesEnglandScreen = IsolationAdviceForSymptomaticCasesEnglandScreen(app: app)
+            XCTAssert(isolationAdviceForSymptomaticCasesEnglandScreen.heading.exists)
+            
+            runner.step("Isolation Advice screen for symptomatic cases England") {
+                """
+                The user in England is adviced to isolate, and given the option to continue to the guidance screen
+                """
+            }
+            isolationAdviceForSymptomaticCasesEnglandScreen.continueButton.tap()
+            
+            let guidanceForSymptomaticCasesEnglandScreen = GuidanceForSymptomaticCasesEnglandScreen(app: app)
+            XCTAssert(guidanceForSymptomaticCasesEnglandScreen.heading.exists)
+            
+            runner.step("Guidance screen for symptomatic cases England") {
+                """
+                The user in England is presented the latest COVID-19 guidance screen with an option to go back to home screen
+                """
+            }
+            app.scrollTo(element: guidanceForSymptomaticCasesEnglandScreen.backToHomeButton)
+            guidanceForSymptomaticCasesEnglandScreen.backToHomeButton.tap()
+            
+            runner.step("Home screen") {
+                """
+                The user is returned to the homescreen, which presents risk level indicator and different menu options.
+                """
+            }
+            
+            let date = GregorianDay.today.advanced(by: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset).startDate(in: .current)
+            app.checkOnHomeScreenIsolatingInformational(date: date, days: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset)
         }
     }
     

@@ -20,6 +20,8 @@ public protocol HomeViewControllerInteracting {
     func didTapTestingHubButton()
     func didTapStatsButton()
     var shouldShowCheckIn: Bool { get }
+    var shouldShowTestingForCOVID19: Bool { get }
+    var shouldShowSelfIsolation: Bool { get }
     func openSettings()
 }
 

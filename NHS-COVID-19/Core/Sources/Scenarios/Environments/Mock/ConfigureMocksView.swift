@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Common
@@ -69,6 +69,8 @@ struct ConfigureMocksView: View {
     var showDevView: Bool
     var adjustableDateProvider: AdjustableDateProvider
     
+    @State private var hasCopiedToClipboard = false
+    
     var body: some View {
         NavigationView {
             List {
@@ -135,31 +137,94 @@ struct ConfigureMocksView: View {
                         )
                     }
                     BackwardsCompatibleDisclosureGroup(
-                        title: "Virology Test Results",
-                        systemImage: "heart.text.square"
+                        title: "Virology Test Result",
+                        systemImage: "heart.text.square",
+                        accessoryBadge: {
+                            TestResultBadge(
+                                testResult: MockDataProvider.testResults[dataProvider.receivedTestResult],
+                                testKitType: MockDataProvider.testKitType[dataProvider.testKitType],
+                                requiresConfirmatoryTest: dataProvider.requiresConfirmatoryTest,
+                                diagnosisKeySubmissionSupported: dataProvider.keySubmissionSupported
+                            )
+                        }
                     ) {
+                        VStack(alignment: .leading) {
+                            Text("Use this on the Enter Test Result screen by entering")
+                            HStack {
+                                Text("testendd")
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: .halfHairSpacing).stroke(Color(.nhsLightBlue), lineWidth: 1)
+                                    )
+                                    .font(.system(.caption, design: .monospaced))
+                                Image(systemName: "doc.on.doc")
+                                Text(hasCopiedToClipboard ? "Copied to clipboard" : "Tap to copy to clipboard")
+                            }
+                        }
+                        .font(.caption)
+                        .onTapGesture {
+                            let pasteboard = UIPasteboard.general
+                            pasteboard.string = "testendd"
+                            hasCopiedToClipboard = true
+                        }
+                        Picker(selection: $dataProvider.receivedTestResult, label: Text("Result")) {
+                            ForEach(0 ..< MockDataProvider.testResults.count) {
+                                Text(verbatim: MockDataProvider.testResults[$0])
+                            }
+                        }
                         Picker(selection: $dataProvider.testKitType, label: Text("Test kit type")) {
                             ForEach(0 ..< MockDataProvider.testKitType.count) {
                                 Text(verbatim: MockDataProvider.testKitType[$0])
                             }
                         }
-                        Toggle("Key submission supported", isOn: $dataProvider.keySubmissionSupported)
-                        Toggle("Requires confirmatory test", isOn: $dataProvider.requiresConfirmatoryTest)
-                        TextFieldRow(label: "Website", text: $dataProvider.orderTestWebsite)
-                        TextFieldRow(label: "Reference Code", text: $dataProvider.testReferenceCode)
                         StepperNumericInput(
                             value: $dataProvider.testResultEndDateDaysAgo,
                             title: "Days since test result end date",
                             range: 0 ... 60,
                             step: 1
                         )
-                        TextFieldRow(label: "Confirmatory day limit", text: $dataProvider.confirmatoryDayLimitString)
-                        Toggle("Should offer follow-up test", isOn: $dataProvider.shouldOfferFollowUpTest)
-                        Picker(selection: $dataProvider.receivedTestResult, label: Text("Result")) {
-                            ForEach(0 ..< MockDataProvider.testResults.count) {
-                                Text(verbatim: MockDataProvider.testResults[$0])
+                        
+                        Toggle(isOn: $dataProvider.keySubmissionSupported, label: {
+                            VStack(alignment: .leading) {
+                                Text("Key submission supported")
+                                if dataProvider.keySubmissionSupported {
+                                    Text("Will invite you to notify contacts if positive.").font(.caption)
+                                } else {
+                                    Text("Will NOT invite you to notify contacts.").font(.caption)
+                                }
+                            }
+                        })
+                        VStack {
+                            Toggle(
+                                "Requires confirmatory test",
+                                isOn: $dataProvider.requiresConfirmatoryTest
+                            )
+                            Toggle("Should offer follow-up test", isOn: $dataProvider.shouldOfferFollowUpTest)
+                            TextFieldRow(label: "Confirmatory day limit (empty = no limit)", text: $dataProvider.confirmatoryDayLimitString)
+                            
+                        }
+                        if dataProvider.requiresConfirmatoryTest {
+                            HStack(alignment: .top) {
+                                Image(systemName: "xmark.seal")
+                                VStack(alignment: .leading) {
+                                    Text("Unconfirmed result")
+                                        .fontWeight(.bold)
+                                    Text("If positive, can be overruled by a later negative confirmed result \(dataProvider.confirmatoryDayLimit.map { "with a test end date within \($0) day(s)" } ?? "at any time")")
+                                    Text("Can not overrule any previous positive results.")
+                                }.font(.caption)
+                            }
+                        } else {
+                            HStack(alignment: .top) {
+                                Image(systemName: "checkmark.seal.fill")
+                                VStack(alignment: .leading) {
+                                    Text("Confirmed result")
+                                        .fontWeight(.bold)
+                                    Text("If positive, can not be overruled by any later result.")
+                                    Text("If negative, can overrule a positive unconfirmed result (as long as it is within the unconfirmed test's confirmatory day limit, if it had one.)")
+                                }.font(.caption)
                             }
                         }
+                        TextFieldRow(label: "Website", text: $dataProvider.orderTestWebsite)
+                        TextFieldRow(label: "Reference Code", text: $dataProvider.testReferenceCode)
                     }
                     BackwardsCompatibleDisclosureGroup(
                         title: "Local Covid Stats",
@@ -286,22 +351,44 @@ struct ConfigureMocksView: View {
         .navigationViewStyle(StackNavigationViewStyle())
     }
     
-    private struct BackwardsCompatibleDisclosureGroup<Content>: View where Content: View {
+    private struct BackwardsCompatibleDisclosureGroup<Content, Badge>: View where Content: View, Badge: View {
         var title: String
         var systemImage: String
-        var accessoryText: String?
-        var accessoryColor: Color?
+        var accessoryBadge: () -> Badge
         var content: () -> Content
         
         init(title: String,
              systemImage: String,
-             accessoryText: String? = nil,
-             accessoryColor: Color? = nil,
+             accessoryText: String,
+             accessoryColor: Color,
+             @ViewBuilder content: @escaping () -> Content) where Badge == TextAccessoryBadge {
+            self.title = title
+            self.systemImage = systemImage
+            accessoryBadge = {
+                TextAccessoryBadge(
+                    text: accessoryText,
+                    color: accessoryColor
+                )
+            }
+            self.content = content
+        }
+        
+        init(title: String,
+             systemImage: String,
+             accessoryBadge: @escaping () -> Badge,
              @ViewBuilder content: @escaping () -> Content) {
             self.title = title
             self.systemImage = systemImage
-            self.accessoryText = accessoryText
-            self.accessoryColor = accessoryColor
+            self.accessoryBadge = accessoryBadge
+            self.content = content
+        }
+        
+        init(title: String,
+             systemImage: String,
+             @ViewBuilder content: @escaping () -> Content) where Badge == EmptyView {
+            self.title = title
+            self.systemImage = systemImage
+            accessoryBadge = { EmptyView() }
             self.content = content
         }
         
@@ -316,12 +403,8 @@ struct ConfigureMocksView: View {
                         HStack {
                             Label(title, systemImage: systemImage)
                             Spacer()
-                            if let accessoryText = accessoryText,
-                                let accessoryColor = accessoryColor {
-                                AccessoryBadge(
-                                    text: accessoryText,
-                                    color: accessoryColor
-                                )
+                            if let accessoryBadge = accessoryBadge {
+                                accessoryBadge()
                             }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -337,31 +420,28 @@ struct ConfigureMocksView: View {
                 Section(header: HStack {
                     Text(verbatim: title)
                     Spacer()
-                    if let accessoryText = accessoryText,
-                        let accessoryColor = accessoryColor {
-                        AccessoryBadge(
-                            text: accessoryText,
-                            color: accessoryColor
-                        )
+                    if let accessoryBadge = accessoryBadge {
+                        accessoryBadge()
                     }
                     
                 }, content: content)
             }
         }
         
-        private struct AccessoryBadge: View {
-            var text: String
-            var color: Color
+    }
+    
+    struct TextAccessoryBadge: View {
+        var text: String
+        var color: Color
+        
+        var body: some View {
+            Text(text)
+                .font(.caption)
+                .foregroundColor(Color(.background))
+                .padding(.horizontal, .halfSpacing)
+                .background(color)
+                .cornerRadius(.halfSpacing)
             
-            var body: some View {
-                Text(text)
-                    .font(.caption)
-                    .foregroundColor(Color(.background))
-                    .padding(.horizontal, .halfSpacing)
-                    .background(color)
-                    .cornerRadius(.halfSpacing)
-                
-            }
         }
     }
 }
@@ -487,4 +567,70 @@ private struct DateOffsetRow: View {
         Date().addingTimeInterval(TimeInterval(offset.wrappedValue * 60 * 60 * 24))
     }
     
+}
+
+// TODO: Improve this (and the upstream test kit/result types) to make it less reliant on string comparisons.
+private struct TestResultBadge: View {
+    var testResult: String
+    var testKitType: String
+    var requiresConfirmatoryTest: Bool
+    var diagnosisKeySubmissionSupported: Bool
+    
+    var body: some View {
+        HStack {
+            if diagnosisKeySubmissionSupported {
+                Image(systemName: "square.and.arrow.up")
+            }
+            
+            if requiresConfirmatoryTest {
+                Image(systemName: "xmark.seal")
+            } else {
+                Image(systemName: "checkmark.seal.fill")
+            }
+            
+            switch testKitType {
+            case "LAB_RESULT":
+                if #available(iOS 14.0, *) {
+                    Image(systemName: "testtube.2")
+                } else {
+                    Text("LAB")
+                        .font(.caption)
+                }
+            case "RAPID_RESULT":
+                Image(systemName: "person.2")
+            case "RAPID_SELF_REPORTED":
+                Image(systemName: "person")
+            default:
+                Image(systemName: "questionmark")
+            }
+            
+            switch testResult {
+            case "POSITIVE":
+                Image(systemName: "plus.circle")
+            case "NEGATIVE":
+                Image(systemName: "minus.circle")
+            case "VOID":
+                Image(systemName: "xmark.circle")
+            case "PLOD":
+                Image(systemName: "plusminus.circle")
+            default:
+                Image(systemName: "questionmark.circle")
+            }
+            
+        }
+        .foregroundColor(preferredColor())
+    }
+    
+    func preferredColor() -> Color {
+        switch testResult {
+        case "POSITIVE":
+            return Color(.errorRed)
+        case "NEGATIVE":
+            return Color(.nhsBlue)
+        case "VOID":
+            return Color(.amber)
+        default:
+            return Color(.primaryText)
+        }
+    }
 }

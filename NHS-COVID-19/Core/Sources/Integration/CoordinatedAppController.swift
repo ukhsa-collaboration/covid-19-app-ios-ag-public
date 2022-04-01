@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Combine
@@ -84,9 +84,6 @@ public class CoordinatedAppController: AppController {
                     return
                 }
                 Metrics.signpost(.didAccessRiskyVenueM2Notification)
-                
-            case UserNotificationType.selfIsolation.identifier:
-                showNotificationScreen.send(.selfIsolationHub)
             default:
                 break
             }

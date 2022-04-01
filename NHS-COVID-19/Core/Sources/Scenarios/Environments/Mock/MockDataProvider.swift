@@ -1,5 +1,5 @@
 //
-// Copyright © 2021 DHSC. All rights reserved.
+// Copyright © 2022 DHSC. All rights reserved.
 //
 
 import Combine
@@ -356,7 +356,7 @@ class MockDataProvider: ObservableObject {
         }
     }
     
-    @UserDefault("mocks.shouldOfferFollowUpTest", defaultValue: true)
+    @UserDefault("mocks.shouldOfferFollowUpTest", defaultValue: false)
     var shouldOfferFollowUpTest: Bool {
         didSet {
             _objectWillChange.send()
