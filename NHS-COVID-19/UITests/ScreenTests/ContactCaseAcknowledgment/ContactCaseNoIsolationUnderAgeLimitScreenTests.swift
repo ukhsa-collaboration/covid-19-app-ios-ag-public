@@ -32,6 +32,7 @@ class ContactCaseNoIsolationUnderAgeLimitEnglandScreenTests: XCTestCase {
     func testBackToHomeButton() throws {
         try runner.run { app in
             let screen = ContactCaseNoIsolationUnderAgeLimitEnglandScreen(app: app)
+            app.scrollTo(element: screen.backToHomeButton)
             screen.backToHomeButton.tap()
             
             XCTAssertTrue(app.staticTexts[runner.scenario.backToHomeTapped].exists)
@@ -59,6 +60,7 @@ class ContactCaseNoIsolationUnderAgeLimitWalesScreenTests: XCTestCase {
     func testGuidanceLinkButton() throws {
         try runner.run { app in
             let screen = ContactCaseNoIsolationUnderAgeLimitWalesScreen(app: app)
+            app.scrollTo(element: screen.guidanceLink)
             screen.guidanceLink.tap()
             
             XCTAssertTrue(app.staticTexts[runner.scenario.guidanceLinkTapped].exists)
@@ -68,6 +70,7 @@ class ContactCaseNoIsolationUnderAgeLimitWalesScreenTests: XCTestCase {
     func testCommonQuestionsLinkButton() throws {
         try runner.run { app in
             let screen = ContactCaseNoIsolationUnderAgeLimitWalesScreen(app: app)
+            app.scrollTo(element: screen.commonQuestionsLink)
             screen.commonQuestionsLink.tap()
             
             XCTAssertTrue(app.staticTexts[runner.scenario.commonQuestionsLinkTapped].exists)
@@ -87,6 +90,7 @@ class ContactCaseNoIsolationUnderAgeLimitWalesScreenTests: XCTestCase {
     func testBackToHomeButton() throws {
         try runner.run { app in
             let screen = ContactCaseNoIsolationUnderAgeLimitWalesScreen(app: app)
+            app.scrollTo(element: screen.backToHomeButton)
             screen.backToHomeButton.tap()
             
             XCTAssertTrue(app.staticTexts[runner.scenario.backToHomeTapped].exists)

@@ -15,7 +15,7 @@ enum AcknowledgementNeededState {
     case neededForNegativeResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
     case neededForNegativeAfterPositiveResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
     case neededForNegativeResultNotIsolating(interactor: NegativeTestResultNoIsolationViewControllerInteractor)
-    case neededForEndOfIsolation(interactor: EndOfIsolationViewControllerInteractor, isolationEndDate: Date, isIndexCase: Bool)
+    case neededForEndOfIsolation(interactor: EndOfIsolationViewControllerInteractor, isolationEndDate: Date, isIndexCase: Bool, numberOfIsolationDaysForIndexCaseFromConfiguration: Int?)
     case neededForStartOfIsolationExposureDetection(acknowledge: (Bool) -> Void, exposureDate: Date, birthThresholdDate: Date, vaccineThresholdDate: Date, secondTestAdviceDate: Date?, isolationEndDate: DomainProperty<Date>, isIndexCase: Bool)
     case neededForRiskyVenue(interactor: RiskyVenueInformationInteractor, venueName: String, checkInDate: Date)
     case neededForRiskyVenueWarnAndBookATest(acknowledge: () -> Void, venueName: String, checkInDate: Date)
@@ -66,7 +66,7 @@ enum AcknowledgementNeededState {
                     switch isolationResultAckState {
                     case .neededForEnd(let isolation, let acknowledge):
                         let interactor = EndOfIsolationViewControllerInteractor(acknowledge: acknowledge, openURL: context.openURL)
-                        return .neededForEndOfIsolation(interactor: interactor, isolationEndDate: isolation.endDate, isIndexCase: isolation.isIndexCase)
+                        return .neededForEndOfIsolation(interactor: interactor, isolationEndDate: isolation.endDate, isIndexCase: isolation.isIndexCase, numberOfIsolationDaysForIndexCaseFromConfiguration: isolation.numberOfIsolationDaysForIndexCaseFromConfiguration)
                     case .neededForStartContactIsolation(let isolation, let acknowledge):
                         guard let vaccineThresholdDate = isolation.vaccineThresholdDate,
                             let birthThresholdDate = isolation.birthThresholdDate(country: context.country.currentValue) else {

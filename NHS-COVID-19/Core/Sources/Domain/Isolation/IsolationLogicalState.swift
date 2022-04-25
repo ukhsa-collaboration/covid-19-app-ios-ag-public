@@ -297,11 +297,14 @@ enum IsolationLogicalState: Equatable {
             var selfDiagnosed = false
             var testType: TestKitType?
             var isPendingConfirmation = false
+            var numberOfIsolationDaysForIndexCaseFromConfiguration: Int?
+            
             if let indexCaseInfo = i.reason.indexCaseInfo {
                 positiveTestResult = indexCaseInfo.hasPositiveTestResult
                 selfDiagnosed = indexCaseInfo.isSelfDiagnosed
                 testType = indexCaseInfo.testKitType
                 isPendingConfirmation = indexCaseInfo.isPendingConfirmation
+                numberOfIsolationDaysForIndexCaseFromConfiguration = indexCaseInfo.numberOfIsolationDaysForIndexCaseFromConfiguration
             }
             
             if i.untilStartOfDay <= today.gregorianDay && c.untilStartOfDay > today.gregorianDay {
@@ -317,7 +320,8 @@ enum IsolationLogicalState: Equatable {
                             hasPositiveTestResult: positiveTestResult,
                             testKitType: testType,
                             isSelfDiagnosed: selfDiagnosed,
-                            isPendingConfirmation: isPendingConfirmation
+                            isPendingConfirmation: isPendingConfirmation,
+                            numberOfIsolationDaysForIndexCaseFromConfiguration: numberOfIsolationDaysForIndexCaseFromConfiguration
                         ),
                         contactCaseInfo: c.reason.contactCaseInfo
                     )
@@ -489,31 +493,31 @@ extension _Isolation {
             self.init(
                 fromDay: indexCaseInfo.startDay,
                 untilStartOfDay: indexCaseInfo.testInfo!.receivedOnDay,
-                reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true, isPendingConfirmation: isPendingConfirmation), contactCaseInfo: nil)
+                reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true, isPendingConfirmation: isPendingConfirmation, numberOfIsolationDaysForIndexCaseFromConfiguration: nil), contactCaseInfo: nil)
             )
         case (.none, _, .selfDiagnosis(let selfDiagnosisDay)):
             self.init(
                 fromDay: selfDiagnosisDay,
                 untilStartOfDay: selfDiagnosisDay + configuration.indexCaseSinceSelfDiagnosisUnknownOnset,
-                reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true, isPendingConfirmation: isPendingConfirmation), contactCaseInfo: nil)
+                reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true, isPendingConfirmation: isPendingConfirmation, numberOfIsolationDaysForIndexCaseFromConfiguration: configuration.indexCaseSinceNPEXDayNoSelfDiagnosis.days), contactCaseInfo: nil)
             )
         case (.none, _, .manualTestEntry(let npexDay)):
             self.init(
                 fromDay: npexDay,
                 untilStartOfDay: npexDay + configuration.indexCaseSinceNPEXDayNoSelfDiagnosis,
-                reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: false, isPendingConfirmation: isPendingConfirmation), contactCaseInfo: nil)
+                reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: false, isPendingConfirmation: isPendingConfirmation, numberOfIsolationDaysForIndexCaseFromConfiguration: configuration.indexCaseSinceNPEXDayNoSelfDiagnosis.days), contactCaseInfo: nil)
             )
         case (.some(let day), _, .manualTestEntry(npexDay: _)):
             self.init(
                 fromDay: indexCaseInfo.startDay,
                 untilStartOfDay: day + configuration.indexCaseSinceSelfDiagnosisOnset,
-                reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: false, isPendingConfirmation: isPendingConfirmation), contactCaseInfo: nil)
+                reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: false, isPendingConfirmation: isPendingConfirmation, numberOfIsolationDaysForIndexCaseFromConfiguration: configuration.indexCaseSinceNPEXDayNoSelfDiagnosis.days), contactCaseInfo: nil)
             )
         case (.some(let day), _, .selfDiagnosis(_)):
             self.init(
                 fromDay: indexCaseInfo.startDay,
                 untilStartOfDay: day + configuration.indexCaseSinceSelfDiagnosisOnset,
-                reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true, isPendingConfirmation: isPendingConfirmation), contactCaseInfo: nil)
+                reason: Isolation.Reason(indexCaseInfo: IsolationIndexCaseInfo(hasPositiveTestResult: indexCaseInfo.testInfo?.result == .positive, testKitType: indexCaseInfo.testInfo?.testKitType, isSelfDiagnosed: true, isPendingConfirmation: isPendingConfirmation, numberOfIsolationDaysForIndexCaseFromConfiguration: configuration.indexCaseSinceNPEXDayNoSelfDiagnosis.days), contactCaseInfo: nil)
             )
         }
     }

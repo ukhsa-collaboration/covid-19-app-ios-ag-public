@@ -454,6 +454,7 @@ class IsolationContextTests: XCTestCase {
         let onsetDay = GregorianDay.today
         let fromDay = LocalDay(gregorianDay: onsetDay, timeZone: .current)
         let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.england.indexCaseSinceSelfDiagnosisOnset.days)
+        let numberOfIsolationDaysForIndexCaseFromConfiguration = isolationContext.isolationConfiguration.value.england.indexCaseSinceNPEXDayNoSelfDiagnosis.days
         
         let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay)
         
@@ -462,7 +463,7 @@ class IsolationContextTests: XCTestCase {
                 fromDay: fromDay,
                 untilStartOfDay: untilStartOfDay,
                 reason: .init(
-                    indexCaseInfo: .init(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false),
+                    indexCaseInfo: .init(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false, numberOfIsolationDaysForIndexCaseFromConfiguration: numberOfIsolationDaysForIndexCaseFromConfiguration),
                     contactCaseInfo: nil
                 )
             )
@@ -477,6 +478,7 @@ class IsolationContextTests: XCTestCase {
         let testEndDay = GregorianDay.today.advanced(by: -2)
         let fromDay = LocalDay(gregorianDay: onsetDay, timeZone: .current)
         let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.england.indexCaseSinceSelfDiagnosisOnset.days)
+        let numberOfIsolationDaysForIndexCaseFromConfiguration = isolationContext.isolationConfiguration.value.england.indexCaseSinceNPEXDayNoSelfDiagnosis.days
         
         isolationContext.isolationStateStore.set(
             IndexCaseInfo(
@@ -497,7 +499,7 @@ class IsolationContextTests: XCTestCase {
                 fromDay: fromDay,
                 untilStartOfDay: untilStartOfDay,
                 reason: .init(
-                    indexCaseInfo: .init(hasPositiveTestResult: true, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false),
+                    indexCaseInfo: .init(hasPositiveTestResult: true, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false, numberOfIsolationDaysForIndexCaseFromConfiguration: numberOfIsolationDaysForIndexCaseFromConfiguration),
                     contactCaseInfo: nil
                 )
             )
@@ -512,6 +514,7 @@ class IsolationContextTests: XCTestCase {
         let testEndDay = GregorianDay.today.advanced(by: -11)
         let fromDay = LocalDay(gregorianDay: onsetDay, timeZone: .current)
         let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.england.indexCaseSinceSelfDiagnosisOnset.days)
+        let numberOfIsolationDaysForIndexCaseFromConfiguration = isolationContext.isolationConfiguration.value.england.indexCaseSinceNPEXDayNoSelfDiagnosis.days
         
         isolationContext.isolationStateStore.set(
             IndexCaseInfo(
@@ -532,7 +535,7 @@ class IsolationContextTests: XCTestCase {
                 fromDay: fromDay,
                 untilStartOfDay: untilStartOfDay,
                 reason: .init(
-                    indexCaseInfo: .init(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false),
+                    indexCaseInfo: .init(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false, numberOfIsolationDaysForIndexCaseFromConfiguration: numberOfIsolationDaysForIndexCaseFromConfiguration),
                     contactCaseInfo: nil
                 )
             )
@@ -547,6 +550,7 @@ class IsolationContextTests: XCTestCase {
         let testEndDay = GregorianDay.today.advanced(by: -11)
         let fromDay = LocalDay(gregorianDay: onsetDay, timeZone: .current)
         let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.england.contactCase.days)
+        let numberOfIsolationDaysForIndexCaseFromConfiguration = isolationContext.isolationConfiguration.value.england.indexCaseSinceNPEXDayNoSelfDiagnosis.days
         
         isolationContext.isolationStateStore.set(
             IndexCaseInfo(
@@ -574,7 +578,7 @@ class IsolationContextTests: XCTestCase {
                 fromDay: fromDay,
                 untilStartOfDay: untilStartOfDay,
                 reason: .init(
-                    indexCaseInfo: .init(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false),
+                    indexCaseInfo: .init(hasPositiveTestResult: false, testKitType: nil, isSelfDiagnosed: true, isPendingConfirmation: false, numberOfIsolationDaysForIndexCaseFromConfiguration: numberOfIsolationDaysForIndexCaseFromConfiguration),
                     contactCaseInfo: .init(exposureDay: .today)
                 )
             )
@@ -589,6 +593,7 @@ class IsolationContextTests: XCTestCase {
         let testEndDay = GregorianDay.today
         let fromDay = LocalDay(gregorianDay: testEndDay, timeZone: .current)
         let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.england.indexCaseSinceNPEXDayNoSelfDiagnosis.days)
+        let numberOfIsolationDaysForIndexCaseFromConfiguration = isolationContext.isolationConfiguration.value.england.indexCaseSinceNPEXDayNoSelfDiagnosis.days
         
         isolationContext.isolationStateStore.set(
             IndexCaseInfo(
@@ -609,7 +614,7 @@ class IsolationContextTests: XCTestCase {
                 fromDay: fromDay,
                 untilStartOfDay: untilStartOfDay,
                 reason: .init(
-                    indexCaseInfo: .init(hasPositiveTestResult: true, testKitType: nil, isSelfDiagnosed: false, isPendingConfirmation: false),
+                    indexCaseInfo: .init(hasPositiveTestResult: true, testKitType: nil, isSelfDiagnosed: false, isPendingConfirmation: false, numberOfIsolationDaysForIndexCaseFromConfiguration: numberOfIsolationDaysForIndexCaseFromConfiguration),
                     contactCaseInfo: nil
                 )
             )

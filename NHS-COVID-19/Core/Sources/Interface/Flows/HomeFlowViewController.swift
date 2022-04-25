@@ -26,6 +26,8 @@ public protocol HomeFlowViewControllerInteracting {
         showWarnAndBookATestFlow: InterfaceProperty<Bool>,
         recordSelectedIsolationPaymentsButton: @escaping () -> Void
     ) -> UIViewController?
+    func makeGuidanceHubEnglandViewController(flowController: UINavigationController?) -> UIViewController?
+    func makeGuidanceHubWalesViewController(flowController: UINavigationController?) -> UIViewController?
     func makeTestingInformationViewController(flowController: UINavigationController?, showWarnAndBookATestFlow: InterfaceProperty<Bool>) -> UIViewController?
     func makeFinancialSupportViewController(flowController: UINavigationController?) -> UIViewController?
     func makeLinkTestResultViewController() -> UIViewController?
@@ -42,6 +44,7 @@ public protocol HomeFlowViewControllerInteracting {
     var shouldShowCheckIn: Bool { get }
     var shouldShowTestingForCOVID19: Bool { get }
     var shouldShowSelfIsolation: Bool { get }
+    var shouldShowGuidanceHub: Bool { get }
     func openTearmsOfUseLink()
     func openPrivacyLink()
     func openFAQ()
@@ -63,6 +66,20 @@ public protocol HomeFlowViewControllerInteracting {
     func openFindYourLocalAuthorityLink()
     func didTapGetIsolationNoteLink()
     func openSettings()
+    func openGuidanceForCovid19EnglandLink()
+    func openGuidanceForCheckSymptomsEnglandLink()
+    func openLatestGuidanceCovid19EnglandLink()
+    func openGuidancePositiveCovid19TestResultEnglandLink()
+    func openGuidanceTravillingAbroadEnglandLink()
+    func openGuidanceClaimSSPEnglandLink()
+    func openGuidanceGetHelpCovid19EnquiriesEnglandLink()
+    func openGuidanceHubWalesLink1()
+    func openGuidanceHubWalesLink2()
+    func openGuidanceHubWalesLink3()
+    func openGuidanceHubWalesLink4()
+    func openGuidanceHubWalesLink5()
+    func openGuidanceHubWalesLink6()
+    func openGuidanceHubWalesLink7()
 }
 
 public enum ExposureNotificationReminderIn: Int, CaseIterable {
@@ -348,6 +365,20 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         flowController?.pushViewController(viewController, animated: true)
     }
     
+    public func didTapGuidanceHubEnglandButton() {
+        guard let viewController = flowInteractor.makeGuidanceHubEnglandViewController(flowController: flowController) else {
+            return
+        }
+        flowController?.pushViewController(viewController, animated: true)
+    }
+    
+    public func didTapGuidanceHubWalesButton() {
+        guard let viewController = flowInteractor.makeGuidanceHubWalesViewController(flowController: flowController) else {
+            return
+        }
+        flowController?.pushViewController(viewController, animated: true)
+    }
+    
     public func didTapAboutButton() {
         let appName = Bundle.main.infoDictionary?["CFBundleDisplayName"] as! String
         let appVersion = Bundle.main.infoDictionary!["CFBundleShortVersionString"]!
@@ -412,6 +443,10 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     
     public var shouldShowSelfIsolation: Bool {
         flowInteractor.shouldShowSelfIsolation
+    }
+    
+    public var shouldShowGuidanceHub: Bool {
+        flowInteractor.shouldShowGuidanceHub
     }
     
     func openSettings() {

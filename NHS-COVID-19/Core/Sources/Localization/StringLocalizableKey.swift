@@ -90,6 +90,7 @@ public enum StringLocalizableKey: String, CaseIterable {
     
     case home_diagnosis_button_title
     case home_checkin_button_title
+    case home_covid19_guidance_button_title
     case home_toggle_exposure_notification_title
     case home_about_the_app_button_title
     case home_settings_button_title
@@ -1042,6 +1043,62 @@ public enum StringLocalizableKey: String, CaseIterable {
     case index_case_isolation_advice_further_advice
     case index_case_isolation_advice_nhs_onilne_link_button
     case index_case_isolation_advice_primary_button_title
+    
+    //MARK: - Guidance for COVID-19 England Only
+    
+    case covid_guidance_hub_for_england_title
+    case covid_guidance_hub_for_england_description
+    case covid_guidance_hub_check_symptoms_title
+    case covid_guidance_hub_check_symptoms_description
+    case covid_guidance_hub_latest_title
+    case covid_guidance_hub_latest_description
+    case covid_guidance_hub_positive_test_result_title
+    case covid_guidance_hub_positive_test_result_description
+    case covid_guidance_hub_travelling_abroad_title
+    case covid_guidance_hub_travelling_abroad_description
+    case covid_guidance_hub_check_ssp_title
+    case covid_guidance_hub_check_ssp_description
+    case covid_guidance_hub_covid_enquiries_title
+    case covid_guidance_hub_covid_enquiries_description
+    case covid_guidance_hub_for_england_url
+    case covid_guidance_hub_check_symptoms_url
+    case covid_guidance_hub_latest_url
+    case covid_guidance_hub_positive_test_result_url
+    case covid_guidance_hub_travelling_abroad_url
+    case covid_guidance_hub_check_ssp_url
+    case covid_guidance_hub_enquiries_url
+    
+    // MARK: - Guidance for COVID-19 Wales Only
+    case covid_guidance_hub_wales_button_one_title
+    case covid_guidance_hub_wales_button_one_description
+    case covid_guidance_hub_wales_button_one_url
+    case covid_guidance_hub_wales_button_two_title
+    case covid_guidance_hub_wales_button_two_description
+    case covid_guidance_hub_wales_button_two_url
+    case covid_guidance_hub_wales_button_three_title
+    case covid_guidance_hub_wales_button_three_description
+    case covid_guidance_hub_wales_button_three_url
+    case covid_guidance_hub_wales_button_four_title
+    case covid_guidance_hub_wales_button_four_description
+    case covid_guidance_hub_wales_button_four_url
+    case covid_guidance_hub_wales_button_five_title
+    case covid_guidance_hub_wales_button_five_description
+    case covid_guidance_hub_wales_button_five_url
+    case covid_guidance_hub_wales_button_six_title
+    case covid_guidance_hub_wales_button_six_description
+    case covid_guidance_hub_wales_button_six_url
+    case covid_guidance_hub_wales_button_seven_title
+    case covid_guidance_hub_wales_button_seven_description
+    case covid_guidance_hub_wales_button_seven_url
+
+    //MARK: - Guidance for Index Cases on ending/ended isolation
+    case end_of_isolation_index_case_isolation_ended_callout_wales
+    case expiration_notification_link_button_title_wales
+    case expiration_notification_description_passed_wales
+    case expiration_notification_testing_advice_wales_after_isolation_ended_wales
+    case your_isolation_are_ending_soon_wales
+    case expiration_notification_callout_advice_wales
+    case expiration_notification_testing_advice_wales_before_isolation_ended_wales
 }
 
 public enum ParameterisedStringLocalizable: Equatable {
@@ -1063,7 +1120,6 @@ public enum ParameterisedStringLocalizable: Equatable {
         case positive_test_please_isolate_accessibility_label = "positive_test_please_isolate_accessibility_label %ld"
         case end_of_isolation_has_passed_description = "end_of_isolation_has_passed_description date: %@ time: %@"
         case end_of_isolation_is_near_description = "end_of_isolation_is_near_description date: %@ time: %@"
-        
         case exposure_acknowledgement_days = "exposure_acknowledgement_days %ld"
         case exposure_acknowledgement_please_isolate_accessibility_label = "exposure_acknowledgement_please_isolate_accessibility_label %ld"
         
@@ -1236,7 +1292,6 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .positive_test_please_isolate_accessibility_label: return .positive_test_please_isolate_accessibility_label
         case .end_of_isolation_has_passed_description: return .end_of_isolation_has_passed_description
         case .end_of_isolation_is_near_description: return .end_of_isolation_is_near_description
-            
         case .exposure_acknowledgement_days: return .exposure_acknowledgement_days
         case .exposure_acknowledgement_please_isolate_accessibility_label: return .exposure_acknowledgement_please_isolate_accessibility_label
             

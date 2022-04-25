@@ -14,6 +14,7 @@ public struct Isolation: Equatable {
         var testKitType: TestKitType?
         var isSelfDiagnosed: Bool
         var isPendingConfirmation: Bool
+        var numberOfIsolationDaysForIndexCaseFromConfiguration: Int?
     }
     
     struct ContactCaseInfo: Equatable {
@@ -106,5 +107,9 @@ extension Isolation {
     
     var isSelfDiagnosed: Bool {
         return reason.indexCaseInfo?.isSelfDiagnosed ?? false
+    }
+    
+    public var numberOfIsolationDaysForIndexCaseFromConfiguration: Int? {
+        return reason.indexCaseInfo?.numberOfIsolationDaysForIndexCaseFromConfiguration
     }
 }

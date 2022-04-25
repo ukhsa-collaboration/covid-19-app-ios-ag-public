@@ -35,6 +35,7 @@ class ContactCaseStartIsolationScreenEnglandTests: XCTestCase {
     func testGuidanceLinkButton() throws {
         try runner.run { app in
             let screen = screen(for: app)
+            app.scrollTo(element: screen.guidanceLink)
             screen.guidanceLink.tap()
             
             XCTAssertTrue(app.staticTexts[runner.scenario.guidanceLinkTapped].exists)
@@ -44,6 +45,7 @@ class ContactCaseStartIsolationScreenEnglandTests: XCTestCase {
     func testBookAFreeTestButton() throws {
         try runner.run { app in
             let screen = screen(for: app)
+            app.scrollTo(element: screen.bookAFreeTestButton)
             screen.bookAFreeTestButton.tap()
             
             XCTAssertTrue(app.staticTexts[runner.scenario.bookAFreeTestTapped].exists)
@@ -53,6 +55,7 @@ class ContactCaseStartIsolationScreenEnglandTests: XCTestCase {
     func testBackToHomeButton() throws {
         try runner.run { app in
             let screen = screen(for: app)
+            app.scrollTo(element: screen.backToHomeButton)
             screen.backToHomeButton.tap()
             
             XCTAssertTrue(app.staticTexts[runner.scenario.backToHomeTapped].exists)
@@ -93,6 +96,7 @@ class ContactCaseStartIsolationScreenWalesTests: XCTestCase {
     func testGuidanceLinkButton() throws {
         try runner.run { app in
             let screen = screen(for: app)
+            app.scrollTo(element: screen.guidanceLink)
             screen.guidanceLink.tap()
             
             XCTAssertTrue(app.staticTexts[runner.scenario.guidanceLinkTapped].exists)
@@ -102,6 +106,7 @@ class ContactCaseStartIsolationScreenWalesTests: XCTestCase {
     func testBookAFreeTestButton() throws {
         try runner.run { app in
             let screen = screen(for: app)
+            app.scrollTo(element: screen.getTestedButton)
             screen.getTestedButton.tap()
             
             XCTAssertTrue(app.staticTexts[runner.scenario.bookAFreeTestTapped].exists)
@@ -111,6 +116,7 @@ class ContactCaseStartIsolationScreenWalesTests: XCTestCase {
     func testBackToHomeButton() throws {
         try runner.run { app in
             let screen = screen(for: app)
+            app.scrollTo(element: screen.backToHomeButton)
             screen.backToHomeButton.tap()
             
             XCTAssertTrue(app.staticTexts[runner.scenario.backToHomeTapped].exists)

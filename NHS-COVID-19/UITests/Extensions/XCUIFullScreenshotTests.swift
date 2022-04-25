@@ -4,8 +4,6 @@
 
 import XCTest
 
-@testable import XCUIFullScreenshot
-
 final class XCUIFullScreenshotTests: XCTestCase {
     
     // Maybe add test for calculator init? e.g. it could throw an error if wrong value is passed

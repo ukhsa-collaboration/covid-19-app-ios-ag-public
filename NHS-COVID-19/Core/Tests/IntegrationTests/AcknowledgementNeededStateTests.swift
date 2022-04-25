@@ -82,7 +82,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
         )
         
         let state = try AcknowledgementNeededState.makeAcknowledgementState(context: context).await().get()
-        guard case .neededForEndOfIsolation(_, let isolationEndDate, let showAdvisory) = state else {
+        guard case .neededForEndOfIsolation(_, let isolationEndDate, let showAdvisory, _) = state else {
             XCTFail("Wrong state: got \(String(describing: state))")
             return
         }
@@ -186,6 +186,8 @@ class AcknowledgementNeededStateTests: XCTestCase {
             shouldShowSelfIsolationHubWales: false,
             shouldShowEnglandOptOutFlow: false,
             shouldShowWalesOptOutFlow: false,
+            shouldShowGuidanceHubEngland: false,
+            shouldShowGuidanceHubWales: false,
             postcodeInfo: .constant(nil),
             country: Just(.england).eraseToAnyPublisher().domainProperty(),
             bluetoothOff: .constant(false),

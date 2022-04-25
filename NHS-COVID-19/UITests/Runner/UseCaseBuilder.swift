@@ -3,7 +3,6 @@
 //
 
 import XCTest
-import XCUIFullScreenshot
 
 class UseCaseBuilder {
     private(set) var useCase: UseCase

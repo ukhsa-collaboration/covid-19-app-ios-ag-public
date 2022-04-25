@@ -33,6 +33,8 @@ public struct RunningAppContext {
     public var shouldShowSelfIsolationHubWales: Bool
     public var shouldShowEnglandOptOutFlow: Bool
     public var shouldShowWalesOptOutFlow: Bool
+    public var shouldShowGuidanceHubEngland: Bool
+    public var shouldShowGuidanceHubWales: Bool
     public var postcodeInfo: DomainProperty<(postcode: Postcode, localAuthority: LocalAuthority?, risk: DomainProperty<RiskyPostcodeEndpointManager.PostcodeRisk?>)?>
     public var country: DomainProperty<Country>
     public var bluetoothOff: DomainProperty<Bool>

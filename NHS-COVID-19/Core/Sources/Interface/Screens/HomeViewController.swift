@@ -12,6 +12,8 @@ public protocol HomeViewControllerInteracting {
     func didTapLocalInfoBanner(viewModel: LocalInformationViewController.ViewModel)
     func didTapDiagnosisButton()
     func didTapSelfIsolationButton()
+    func didTapGuidanceHubEnglandButton()
+    func didTapGuidanceHubWalesButton()
     func didTapCheckInButton()
     func didTapSettingsButton()
     func didTapAboutButton()
@@ -22,6 +24,7 @@ public protocol HomeViewControllerInteracting {
     var shouldShowCheckIn: Bool { get }
     var shouldShowTestingForCOVID19: Bool { get }
     var shouldShowSelfIsolation: Bool { get }
+    var shouldShowGuidanceHub: Bool { get }
     func openSettings()
 }
 

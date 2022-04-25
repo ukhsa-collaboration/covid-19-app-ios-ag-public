@@ -35,7 +35,14 @@ public enum Feature: CaseIterable {
     /// Shows a button leading to the Self-Isolation Hub for people in Wales who are in isolation.
     case selfIsolationHubWales
     
+    /// Shows a button leading to the Guidance Hub for people in England.
+    case guidanceHubEngland
+    
+    /// Shows a button leading to the Guidance Hub for people in Wales.
+    case guidanceHubWales
+    
     public static let productionEnabledFeatures: [Feature] = [
-        
+        .guidanceHubEngland,
+        .guidanceHubWales
     ]
 }

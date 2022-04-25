@@ -214,7 +214,7 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
                 We see the positive test result screen, telling the person they need to continue isolation
                 """
             }
-            let positiveScreen = AdviceForIndexCasesEnglandScreen(app: app)
+            let positiveScreen = AdviceForIndexCasesEnglandAlreadyIsolatingScreen(app: app)
             XCTAssertTrue(positiveScreen.heading.exists)
             XCTAssertTrue(positiveScreen.infoBox.exists)
             positiveScreen.continueButton.tap()

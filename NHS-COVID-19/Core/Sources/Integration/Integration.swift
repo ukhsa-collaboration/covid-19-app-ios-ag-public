@@ -278,12 +278,14 @@ extension CoordinatedAppController {
                 viewModel: .init(isolationEndDate: isolationEndDate, testResultType: .afterPositive), currentDateProvider: context.currentDateProvider
             )
             
-        case .neededForEndOfIsolation(let interactor, let isolationEndDate, let isIndexCase):
+        case .neededForEndOfIsolation(let interactor, let isolationEndDate, let isIndexCase, let numberOfIsolationDaysForIndexCase):
             return EndOfIsolationViewController(
                 interactor: interactor,
                 isolationEndDate: isolationEndDate,
                 isIndexCase: isIndexCase,
-                currentDateProvider: context.currentDateProvider
+                numberOfIsolationDaysForIndexCase: numberOfIsolationDaysForIndexCase,
+                currentDateProvider: context.currentDateProvider,
+                currentCountry: context.country.currentValue
             )
             
         case .neededForStartOfIsolationExposureDetection(let acknowledge, let exposureDate, let birthThresholdDate, let vaccineThresholdDate, let secondTestAdviceDate, let isolationEndDate, let isIndexCase):

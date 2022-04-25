@@ -438,6 +438,8 @@ public class ApplicationCoordinator {
                     shouldShowSelfIsolationHubWales: isFeatureEnabled(.selfIsolationHubWales),
                     shouldShowEnglandOptOutFlow: isFeatureEnabled(.contactOptOutFlowEngland),
                     shouldShowWalesOptOutFlow: isFeatureEnabled(.contactOptOutFlowWales),
+                    shouldShowGuidanceHubEngland: isFeatureEnabled(.guidanceHubEngland),
+                    shouldShowGuidanceHubWales: isFeatureEnabled(.guidanceHubWales),
                     postcodeInfo: postcodeInfo,
                     country: country,
                     bluetoothOff: bluetoothOff.domainProperty(),

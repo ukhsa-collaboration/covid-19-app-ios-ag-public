@@ -136,7 +136,8 @@ struct IsolationModelAdapter {
                     hasPositiveTestResult: false,
                     testKitType: nil,
                     isSelfDiagnosed: true,
-                    isPendingConfirmation: false
+                    isPendingConfirmation: false,
+                    numberOfIsolationDaysForIndexCaseFromConfiguration: 10
                 ),
                 contactCaseInfo: nil
             ),
@@ -165,7 +166,8 @@ struct IsolationModelAdapter {
                     hasPositiveTestResult: hasPositiveTestResult,
                     testKitType: hasPositiveTestResult ? .labResult : nil,
                     isSelfDiagnosed: isSelfDiagnosed,
-                    isPendingConfirmation: isPendingConfirmation
+                    isPendingConfirmation: isPendingConfirmation,
+                    numberOfIsolationDaysForIndexCaseFromConfiguration: 10
                 ),
                 contactCaseInfo: Isolation.ContactCaseInfo(exposureDay: contactCase.exposureDay)
             )
@@ -196,7 +198,8 @@ struct IsolationModelAdapter {
                     hasPositiveTestResult: true,
                     testKitType: .labResult,
                     isSelfDiagnosed: isSelfDiagnosed,
-                    isPendingConfirmation: isPendingConfirmation
+                    isPendingConfirmation: isPendingConfirmation,
+                    numberOfIsolationDaysForIndexCaseFromConfiguration: 10
                 ),
                 contactCaseInfo: nil
             ),

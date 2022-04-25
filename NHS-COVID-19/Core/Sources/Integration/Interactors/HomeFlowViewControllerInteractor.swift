@@ -259,6 +259,22 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         )
     }
     
+    public func makeGuidanceHubEnglandViewController(flowController: UINavigationController?) -> UIViewController? {
+        let interactor = GuidanceHubEnglandInteractor(
+            flowController: flowController,
+            flowInteractor: self
+        )
+        return GuidanceHubEnglandViewController(interactor: interactor)
+    }
+    
+    public func makeGuidanceHubWalesViewController(flowController: UINavigationController?) -> UIViewController? {
+        let interactor = GuidanceHubWalesInteractor(
+            flowController: flowController,
+            flowInteractor: self
+        )
+        return GuidanceHubWalesViewController(interactor: interactor)
+    }
+    
     func makeLinkTestResultViewController() -> UIViewController? {
         
         let baseNavigationController = BaseNavigationController()
@@ -411,6 +427,15 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         context.shouldShowTestingForCOVID19
     }
     
+    var shouldShowGuidanceHub: Bool {
+        switch context.country.currentValue {
+        case .england:
+            return context.shouldShowGuidanceHubEngland
+        case .wales:
+            return context.shouldShowGuidanceHubWales
+        }
+    }
+    
     func getMyAreaViewModel() -> MyAreaTableViewController.ViewModel {
         MyAreaTableViewController.ViewModel(
             postcode: context.postcodeInfo.map { $0?.postcode.value }.interfaceProperty,
@@ -561,6 +586,64 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     func openSettings() {
         context.openSettings()
     }
+    
+    func openGuidanceForCovid19EnglandLink() {
+        context.openURL(ExternalLink.guidanceHubEnglandLink.url)
+    }
+    
+    func openGuidanceForCheckSymptomsEnglandLink() {
+        context.openURL(ExternalLink.guidanceHubCheckSymptomsLink.url)
+    }
+    
+    func openLatestGuidanceCovid19EnglandLink() {
+        context.openURL(ExternalLink.guidanceHubLatestLink.url)
+    }
+    
+    func openGuidancePositiveCovid19TestResultEnglandLink() {
+        context.openURL(ExternalLink.guidanceHubPositiveTestLink.url)
+    }
+    
+    func openGuidanceTravillingAbroadEnglandLink() {
+        context.openURL(ExternalLink.guidanceHubTravellingAbroadLink.url)
+    }
+    
+    func openGuidanceClaimSSPEnglandLink() {
+        context.openURL(ExternalLink.guidanceHubSSPLink.url)
+    }
+    
+    func openGuidanceGetHelpCovid19EnquiriesEnglandLink() {
+        context.openURL(ExternalLink.guidanceHubEnquiriesLink.url)
+    }
+    
+    func openGuidanceHubWalesLink1() {
+        context.openURL(ExternalLink.guidanceHubWalesLink1.url)
+    }
+    
+    func openGuidanceHubWalesLink2() {
+        context.openURL(ExternalLink.guidanceHubWalesLink2.url)
+    }
+    
+    func openGuidanceHubWalesLink3() {
+        context.openURL(ExternalLink.guidanceHubWalesLink3.url)
+    }
+    
+    func openGuidanceHubWalesLink4() {
+        context.openURL(ExternalLink.guidanceHubWalesLink4.url)
+    }
+    
+    func openGuidanceHubWalesLink5() {
+        context.openURL(ExternalLink.guidanceHubWalesLink5.url)
+    }
+    
+    func openGuidanceHubWalesLink6() {
+        context.openURL(ExternalLink.guidanceHubWalesLink6.url)
+    }
+    
+    func openGuidanceHubWalesLink7() {
+        context.openURL(ExternalLink.guidanceHubWalesLink7.url)
+    }
+
+    
 }
 
 private struct TestCheckSymptomsInteractor: TestCheckSymptomsViewController.Interacting {
@@ -637,6 +720,89 @@ private struct SelfIsolationInteractor: SelfIsolationHubViewController.Interacti
         Metrics.signpost(.didAccessSelfIsolationNoteLink)
     }
     
+}
+
+private struct GuidanceHubEnglandInteractor: GuidanceHubEnglandViewController.Interacting {
+    
+    private weak var flowController: UINavigationController?
+    private let flowInteractor: HomeFlowViewControllerInteracting
+    
+    init(
+        flowController: UINavigationController?,
+        flowInteractor: HomeFlowViewControllerInteracting
+    ) {
+        self.flowController = flowController
+        self.flowInteractor = flowInteractor
+    }
+    
+    func didTapGuidanceForCovid19EnglandLink() {
+        flowInteractor.openGuidanceForCovid19EnglandLink()
+    }
+    
+    func didTapGuidanceForCheckSymptomsEnglandLink() {
+        flowInteractor.openGuidanceForCheckSymptomsEnglandLink()
+    }
+    
+    func didTapLatestGuidanceCovid19EnglandLink() {
+        flowInteractor.openLatestGuidanceCovid19EnglandLink()
+    }
+    
+    func didTapGuidancePositiveCovid19TestResultEnglandLink() {
+        flowInteractor.openGuidancePositiveCovid19TestResultEnglandLink()
+    }
+    
+    func didTapGuidanceTravillingAbroadEnglandLink() {
+        flowInteractor.openGuidanceTravillingAbroadEnglandLink()
+    }
+    
+    func didTapGuidanceClaimSSPEnglandLink() {
+        flowInteractor.openGuidanceClaimSSPEnglandLink()
+    }
+    
+    func didTapGuidanceGetHelpCovid19EnquiriesEnglandLink() {
+        flowInteractor.openGuidanceGetHelpCovid19EnquiriesEnglandLink()
+    }
+}
+
+private struct GuidanceHubWalesInteractor: GuidanceHubWalesViewController.Interacting {
+    private weak var flowController: UINavigationController?
+    private let flowInteractor: HomeFlowViewControllerInteracting
+    
+    init(
+        flowController: UINavigationController?,
+        flowInteractor: HomeFlowViewControllerInteracting
+    ) {
+        self.flowController = flowController
+        self.flowInteractor = flowInteractor
+    }
+    
+    func didTapLink1() {
+        flowInteractor.openGuidanceHubWalesLink1()
+    }
+    
+    func didTapLink2() {
+        flowInteractor.openGuidanceHubWalesLink2()
+    }
+    
+    func didTapLink3() {
+        flowInteractor.openGuidanceHubWalesLink3()
+    }
+    
+    func didTapLink4() {
+        flowInteractor.openGuidanceHubWalesLink4()
+    }
+    
+    func didTapLink5() {
+        flowInteractor.openGuidanceHubWalesLink5()
+    }
+    
+    func didTapLink6() {
+        flowInteractor.openGuidanceHubWalesLink6()
+    }
+    
+    func didTapLink7() {
+        flowInteractor.openGuidanceHubWalesLink7()
+    }
 }
 
 private struct BluetoothDisabledWarningInteractor: BluetoothDisabledWarningViewController.Interacting {

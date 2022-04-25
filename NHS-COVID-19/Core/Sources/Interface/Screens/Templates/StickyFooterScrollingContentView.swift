@@ -39,13 +39,7 @@ class BasicStickyFooterScrollingContent: StickyFooterScrollingContent {
 class PrimaryButtonStickyFooterScrollingContent: BasicStickyFooterScrollingContent {
     init(scrollingViews: [StackViewContentProvider], primaryButton: (title: String, action: () -> Void), secondaryButton: (title: String, action: () -> Void)? = nil) {
         
-        let bottomView: SecondaryButton? = {
-            if secondaryButton != nil {
-                return SecondaryButton(title: secondaryButton!.title, action: secondaryButton!.action)
-            } else {
-                return nil
-            }
-        }()
+        let bottomView = secondaryButton.map(SecondaryButton.init)
         
         super.init(
             scrollingViews: scrollingViews,
@@ -58,12 +52,15 @@ class PrimaryButtonStickyFooterScrollingContent: BasicStickyFooterScrollingConte
 }
 
 class PrimaryLinkButtonStickyFooterScrollingContent: BasicStickyFooterScrollingContent {
-    init(scrollingViews: [StackViewContentProvider], primaryLinkButton: (title: String, action: () -> Void)) {
+    init(scrollingViews: [StackViewContentProvider], primaryLinkButton: (title: String, action: () -> Void), secondaryButton: (title: String, action: () -> Void)? = nil) {
+        
+        let bottomView = secondaryButton.map(SecondaryButton.init)
+        
         super.init(
             scrollingViews: scrollingViews,
             footerViews: (
                 top: PrimaryLinkButton(title: primaryLinkButton.title, action: primaryLinkButton.action),
-                bottom: nil
+                bottom: bottomView
             )
         )
     }

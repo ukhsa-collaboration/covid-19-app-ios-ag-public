@@ -14,6 +14,7 @@ internal protocol HomeScreenScenario: Scenario {
     static var checkInEnabled: Bool { get }
     static var testingForCOVID19Enabled: Bool { get }
     static var selfIsolationEnabled: Bool { get }
+    static var guidanceHubEnabled: Bool { get }
     static var shouldShowSelfDiagnosis: Bool { get }
     static var localInformationEnabled: Bool { get }
 }
@@ -56,7 +57,8 @@ extension HomeScreenScenario {
                     viewController: parent,
                     checkInEnabled: checkInEnabled,
                     testingForCOVID19Enabled: testingForCOVID19Enabled,
-                    selfIsolationEnabled: selfIsolationEnabled
+                    selfIsolationEnabled: selfIsolationEnabled,
+                    guidanceHubEnabled: guidanceHubEnabled
                 ),
                 riskLevelBannerViewModel: .constant(postcodeViewModel(parent: parent)),
                 localInfoBannerViewModel: .constant(localInfoBannerViewModel),
@@ -88,6 +90,7 @@ public class SuccessHomeScreenScenario: HomeScreenScenario {
     public static var selfIsolationEnabled: Bool = true
     public static var shouldShowSelfDiagnosis = true
     public static var localInformationEnabled = true
+    public static var guidanceHubEnabled = true
 }
 
 public class DisabledFeaturesHomeScreenScenario: HomeScreenScenario {
@@ -102,6 +105,7 @@ public class DisabledFeaturesHomeScreenScenario: HomeScreenScenario {
     public static var selfIsolationEnabled: Bool = false
     public static var shouldShowSelfDiagnosis = false
     public static var localInformationEnabled = false
+    public static var guidanceHubEnabled = false
 }
 
 public class HomeScreenAlerts {
@@ -117,6 +121,8 @@ public class HomeScreenAlerts {
     public static let selfIsolationAlertTitle = "Self-isolation button tapped"
     public static let openSettingAlertTitle = "Open phone settings button tapped"
     public static let statsTappedAlertTitle = "Stats button tapped"
+    public static let openGuidanceHubEnglandAlertTitle = "Guidance Hub England button tapped"
+    public static let openGuidanceHubWalesAlertTitle = "Guidance Hub Wales button tapped"
 }
 
 private class Interactor: HomeViewController.Interacting {
@@ -124,6 +130,7 @@ private class Interactor: HomeViewController.Interacting {
     var checkInEnabled: Bool
     var testingForCOVID19Enabled: Bool
     var selfIsolationEnabled: Bool
+    var guidanceHubEnabled: Bool
     
     private weak var viewController: UIViewController?
     
@@ -131,12 +138,14 @@ private class Interactor: HomeViewController.Interacting {
         viewController: UIViewController,
         checkInEnabled: Bool,
         testingForCOVID19Enabled: Bool,
-        selfIsolationEnabled: Bool
+        selfIsolationEnabled: Bool,
+        guidanceHubEnabled: Bool
     ) {
         self.viewController = viewController
         self.checkInEnabled = checkInEnabled
         self.testingForCOVID19Enabled = testingForCOVID19Enabled
         self.selfIsolationEnabled = selfIsolationEnabled
+        self.guidanceHubEnabled = guidanceHubEnabled
     }
     
     func didTapRiskLevelBanner(viewModel: RiskLevelInfoViewController.ViewModel) {
@@ -191,6 +200,10 @@ private class Interactor: HomeViewController.Interacting {
         selfIsolationEnabled
     }
     
+    var shouldShowGuidanceHub: Bool {
+        guidanceHubEnabled
+    }
+    
     func openSettings() {
         viewController?.showAlert(title: HomeScreenAlerts.openSettingAlertTitle)
     }
@@ -198,4 +211,13 @@ private class Interactor: HomeViewController.Interacting {
     func didTapStatsButton() {
         viewController?.showAlert(title: HomeScreenAlerts.statsTappedAlertTitle)
     }
+    
+    func didTapGuidanceHubEnglandButton() {
+        viewController?.showAlert(title: HomeScreenAlerts.openGuidanceHubEnglandAlertTitle)
+    }
+    
+    func didTapGuidanceHubWalesButton() {
+        viewController?.showAlert(title: HomeScreenAlerts.openGuidanceHubWalesAlertTitle)
+    }
+
 }

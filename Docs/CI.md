@@ -149,4 +149,6 @@ The project id for this project on Lokalise.
 
 ### `LOKALISE_API_TOKEN`
 
-The API token from Lokalise to get access to the copy for this project
+The API token from Lokalise to get access to the copy for this project.
+
+**Note:** Lokalise API tokens are created by user, not by project. So if the "Update Translations" job has recently failed, it might be because the user who created the current Lokalise API token has left, or been removed from our Lokalise account. [Generate a new API token](https://docs.lokalise.com/en/articles/1929556-api-tokens) and update the secret to fix the problem.

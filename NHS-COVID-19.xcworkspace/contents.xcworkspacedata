@@ -17,9 +17,6 @@
       location = "group:Scripts">
    </FileRef>
    <FileRef
-      location = "group:XCUIFullScreenshot">
-   </FileRef>
-   <FileRef
       location = "group:postcodesLA.playground">
    </FileRef>
 </Workspace>

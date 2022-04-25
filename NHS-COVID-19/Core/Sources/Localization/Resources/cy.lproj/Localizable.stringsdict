@@ -109,15 +109,15 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>zero</key>
-				<string/>
+				<string>%ld diwrnod</string>
 				<key>one</key>
 				<string>%ld diwrnod</string>
 				<key>two</key>
-				<string/>
+				<string>%ld diwrnod</string>
 				<key>few</key>
-				<string/>
+				<string>%ld diwrnod</string>
 				<key>many</key>
-				<string/>
+				<string>%ld diwrnod</string>
 				<key>other</key>
 				<string>%ld diwrnod</string>
 			</dict>

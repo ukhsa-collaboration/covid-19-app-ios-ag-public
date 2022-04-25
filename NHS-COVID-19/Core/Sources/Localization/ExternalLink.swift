@@ -39,6 +39,21 @@ public enum ExternalLink: CaseIterable {
     case guidanceForHouseholdContactsInEngland
     case guidanceForContactsInWales
     case getTestedWalesLink
+    case guidanceHubEnglandLink
+    case guidanceHubCheckSymptomsLink
+    case guidanceHubLatestLink
+    case guidanceHubPositiveTestLink
+    case guidanceHubTravellingAbroadLink
+    case guidanceHubSSPLink
+    case guidanceHubEnquiriesLink
+    case guidanceHubWalesLink1
+    case guidanceHubWalesLink2
+    case guidanceHubWalesLink3
+    case guidanceHubWalesLink4
+    case guidanceHubWalesLink5
+    case guidanceHubWalesLink6
+    case guidanceHubWalesLink7
+
     
     public var url: URL {
         switch self {
@@ -110,6 +125,34 @@ public enum ExternalLink: CaseIterable {
             return localizeURL(.risky_contact_opt_out_primary_button_url_wales)
         case .getTestedWalesLink:
             return localizeURL(.get_tested_wales_link_url)
+        case .guidanceHubEnglandLink:
+            return localizeURL(.covid_guidance_hub_for_england_url)
+        case .guidanceHubCheckSymptomsLink:
+            return localizeURL(.covid_guidance_hub_check_symptoms_url)
+        case .guidanceHubLatestLink:
+            return localizeURL(.covid_guidance_hub_latest_url)
+        case.guidanceHubPositiveTestLink:
+            return localizeURL(.covid_guidance_hub_positive_test_result_url)
+        case.guidanceHubTravellingAbroadLink:
+            return localizeURL(.covid_guidance_hub_travelling_abroad_url)
+        case.guidanceHubSSPLink:
+            return localizeURL(.covid_guidance_hub_check_ssp_url)
+        case.guidanceHubEnquiriesLink:
+            return localizeURL(.covid_guidance_hub_enquiries_url)
+        case .guidanceHubWalesLink1:
+            return localizeURL(.covid_guidance_hub_wales_button_one_url)
+        case .guidanceHubWalesLink2:
+            return localizeURL(.covid_guidance_hub_wales_button_two_url)
+        case .guidanceHubWalesLink3:
+            return localizeURL(.covid_guidance_hub_wales_button_three_url)
+        case .guidanceHubWalesLink4:
+            return localizeURL(.covid_guidance_hub_wales_button_four_url)
+        case .guidanceHubWalesLink5:
+            return localizeURL(.covid_guidance_hub_wales_button_five_url)
+        case .guidanceHubWalesLink6:
+            return localizeURL(.covid_guidance_hub_wales_button_six_url)
+        case .guidanceHubWalesLink7:
+            return localizeURL(.covid_guidance_hub_wales_button_seven_url)
         }
     }
 }

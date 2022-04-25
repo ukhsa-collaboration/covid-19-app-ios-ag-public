@@ -43,6 +43,8 @@ class ConfigurationViewController: UIViewController {
         let testingForCOVID19Toggle = createToggle(feature: .testingForCOVID19, isOn: featureToggleStorage.testingForCOVID19Toggle, action: #selector(toggleTestingForCOVID19))
         let selfIsolationHubToggleEngland = createToggle(feature: .selfIsolationHubEngland, isOn: featureToggleStorage.selfIsolationHubToggleEngland, action: #selector(toggleSelfIsolationHubEngland))
         let selfIsolationHubToggleWales = createToggle(feature: .selfIsolationHubWales, isOn: featureToggleStorage.selfIsolationHubToggleWales, action: #selector(toggleSelfIsolationHubWales))
+        let guidanceHubEnglandToggle = createToggle(feature: .guidanceHubEngland, isOn: featureToggleStorage.guidanceHubEnglandToggle, action: #selector(toggleGuidanceHubEngland))
+        let guidanceHubWalesToggle = createToggle(feature: .guidanceHubWales, isOn: featureToggleStorage.guidanceHubWalesToggle, action: #selector(toggleGuidanceHubWales))
         
         let stackView = UIStackView(arrangedSubviews: [
             newNoSymptomsScreenToggle,
@@ -53,6 +55,8 @@ class ConfigurationViewController: UIViewController {
             selfIsolationHubToggleWales,
             contactOptOutFlowEnglandToggle,
             contactOptOutFlowWalesToggle,
+            guidanceHubEnglandToggle,
+            guidanceHubWalesToggle,
             disclaimer,
         ])
         
@@ -101,7 +105,11 @@ class ConfigurationViewController: UIViewController {
             return "Self Isolation Home Screen button England"        
         case .selfIsolationHubWales:
             return "Self Isolation Home Screen button Wales"
-            }
+        case .guidanceHubEngland:
+            return "COVID-19 Guidance Home Screen button England"
+        case .guidanceHubWales:
+            return "COVID-19 Guidance Home Screen button Wales"
+        }
     }
     
     @objc private func toggleNewNoSymptomsScreen() {
@@ -136,6 +144,13 @@ class ConfigurationViewController: UIViewController {
         featureToggleStorage.selfIsolationHubToggleWales.toggle()
     }
     
+    @objc private func toggleGuidanceHubEngland() {
+        featureToggleStorage.guidanceHubEnglandToggle.toggle()
+    }
+    
+    @objc private func toggleGuidanceHubWales() {
+        featureToggleStorage.guidanceHubWalesToggle.toggle()
+    }
 }
 
 extension CaseIterable where Self: Equatable {

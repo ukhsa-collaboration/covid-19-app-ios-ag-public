@@ -23,6 +23,7 @@ class ContactCaseContinueIsolationScreenTests: XCTestCase {
     func testGuidanceLinkButton() throws {
         try runner.run { app in
             let screen = ContactCaseContinueIsolationScreen(app: app)
+            app.scrollTo(element: screen.guidanceLink)
             screen.guidanceLink.tap()
             
             XCTAssertTrue(app.staticTexts[runner.scenario.guidanceLinkTapped].exists)
@@ -32,6 +33,7 @@ class ContactCaseContinueIsolationScreenTests: XCTestCase {
     func testGetBackToHomeButton() throws {
         try runner.run { app in
             let screen = ContactCaseContinueIsolationScreen(app: app)
+            app.scrollTo(element: screen.backToHomeButton)
             screen.backToHomeButton.tap()
             
             XCTAssertTrue(app.staticTexts[runner.scenario.backToHomeTapped].exists)

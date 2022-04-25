@@ -86,87 +86,109 @@ struct HomeView: View {
         .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }
     
+    // Two Groups are within the function "buttons" because a view only can have 10 subviews.
+    
     private func buttons() -> some View {
         Group {
-            if isolationViewModel.isolationState != .notIsolating && interactor.shouldShowSelfIsolation {
+            Group {
+                if interactor.shouldShowGuidanceHub {
+                    NavigationButton(
+                        imageName: .read,
+                        foregroundColor: Color(.background),
+                        backgroundColor: Color(.styleTurquoise),
+                        text: localize(.home_covid19_guidance_button_title),
+                        action: {
+                            switch self.country.wrappedValue {
+                            case .england:
+                                interactor.didTapGuidanceHubEnglandButton()
+                            case .wales:
+                                interactor.didTapGuidanceHubWalesButton()
+                            }
+                        })
+                }
+                
+                if isolationViewModel.isolationState != .notIsolating && interactor.shouldShowSelfIsolation {
+                    NavigationButton(
+                        imageName: .selfIsolation,
+                        foregroundColor: Color(.background),
+                        backgroundColor: Color(.styleRed),
+                        text: localize(.home_self_isolation_button_title),
+                        action: interactor.didTapSelfIsolationButton
+                    )
+                }
+                
+                if interactor.shouldShowCheckIn {
+                    NavigationButton(
+                        imageName: .read,
+                        foregroundColor: Color(.background),
+                        backgroundColor: Color(.stylePurple),
+                        text: localize(.home_checkin_button_title),
+                        action: interactor.didTapCheckInButton
+                    )
+                }
+            }
+            Group {
+                
+                if isolationViewModel.isolationState == .notIsolating && shouldShowLocalStats {
+                    statsButton()
+                }
+                
+                if shouldShowSelfDiagnosis.wrappedValue {
+                    NavigationButton(
+                        imageName: .thermometer,
+                        foregroundColor: Color(.background),
+                        backgroundColor: Color(.styleOrange),
+                        text: localize(.home_diagnosis_button_title),
+                        action: interactor.didTapDiagnosisButton
+                    )
+                }
+                
+                if interactor.shouldShowTestingForCOVID19 {
+                    NavigationButton(
+                        imageName: .swab,
+                        foregroundColor: Color(.background),
+                        backgroundColor: Color(.bookFreeTest),
+                        text: localize(.home_testing_hub_button_title),
+                        action: interactor.didTapTestingHubButton
+                    )
+                }
+                
                 NavigationButton(
-                    imageName: .selfIsolation,
+                    imageName: .enterTestResult,
                     foregroundColor: Color(.background),
-                    backgroundColor: Color(.styleRed),
-                    text: localize(.home_self_isolation_button_title),
-                    action: interactor.didTapSelfIsolationButton
+                    backgroundColor: Color(.nhsLightBlue),
+                    text: localize(.home_link_test_result_button_title),
+                    action: interactor.didTapLinkTestResultButton
+                )
+                
+                if isolationViewModel.isolationState != .notIsolating && shouldShowLocalStats {
+                    statsButton()
+                }
+                
+                NavigationButton(
+                    imageName: .settings,
+                    foregroundColor: Color(.background),
+                    backgroundColor: Color(.amber),
+                    text: localize(.home_settings_button_title),
+                    action: interactor.didTapSettingsButton
+                )
+                
+                NavigationButton(
+                    imageName: .info,
+                    foregroundColor: Color(.background),
+                    backgroundColor: Color(.styleTurquoise),
+                    text: localize(.home_about_the_app_button_title),
+                    action: interactor.didTapAboutButton
+                )
+                
+                NavigationButton(
+                    imageName: .bluetooth,
+                    foregroundColor: Color(.background),
+                    backgroundColor: Color(.contactTracingHubButton),
+                    text: localize(.home_contact_tracing_hub_button_title),
+                    action: interactor.didTapContactTracingHubButton
                 )
             }
-            
-            if interactor.shouldShowCheckIn {
-                NavigationButton(
-                    imageName: .qrCode,
-                    foregroundColor: Color(.background),
-                    backgroundColor: Color(.stylePurple),
-                    text: localize(.home_checkin_button_title),
-                    action: interactor.didTapCheckInButton
-                )
-            }
-            
-            if isolationViewModel.isolationState == .notIsolating && shouldShowLocalStats {
-                statsButton()
-            }
-            
-            if shouldShowSelfDiagnosis.wrappedValue {
-                NavigationButton(
-                    imageName: .thermometer,
-                    foregroundColor: Color(.background),
-                    backgroundColor: Color(.styleOrange),
-                    text: localize(.home_diagnosis_button_title),
-                    action: interactor.didTapDiagnosisButton
-                )
-            }
-            
-            if interactor.shouldShowTestingForCOVID19 {
-                NavigationButton(
-                    imageName: .swab,
-                    foregroundColor: Color(.background),
-                    backgroundColor: Color(.bookFreeTest),
-                    text: localize(.home_testing_hub_button_title),
-                    action: interactor.didTapTestingHubButton
-                )
-            }
-            
-            NavigationButton(
-                imageName: .enterTestResult,
-                foregroundColor: Color(.background),
-                backgroundColor: Color(.nhsLightBlue),
-                text: localize(.home_link_test_result_button_title),
-                action: interactor.didTapLinkTestResultButton
-            )
-            
-            if isolationViewModel.isolationState != .notIsolating && shouldShowLocalStats {
-                statsButton()
-            }
-            
-            NavigationButton(
-                imageName: .settings,
-                foregroundColor: Color(.background),
-                backgroundColor: Color(.amber),
-                text: localize(.home_settings_button_title),
-                action: interactor.didTapSettingsButton
-            )
-            
-            NavigationButton(
-                imageName: .info,
-                foregroundColor: Color(.background),
-                backgroundColor: Color(.styleTurquoise),
-                text: localize(.home_about_the_app_button_title),
-                action: interactor.didTapAboutButton
-            )
-            
-            NavigationButton(
-                imageName: .bluetooth,
-                foregroundColor: Color(.background),
-                backgroundColor: Color(.contactTracingHubButton),
-                text: localize(.home_contact_tracing_hub_button_title),
-                action: interactor.didTapContactTracingHubButton
-            )
         }
     }
     

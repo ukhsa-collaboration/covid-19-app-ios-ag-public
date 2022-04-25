@@ -10,6 +10,8 @@ import UIKit
 
 public protocol EndOfIsolationScreenScenario {
     static var isIndexCase: Bool { get }
+    static var currentCountry: Country { get }
+    static var numberOfIsolationDaysForIndexCase: Int? { get }
 }
 
 extension EndOfIsolationScreenScenario {
@@ -17,7 +19,7 @@ extension EndOfIsolationScreenScenario {
     
     public static var onlineServicesLinkTapped: String { "Online services link tapped" }
     public static var returnHomeTapped: String { "Back to home button tapped" }
-    public static var furtherAdviceLinkTapped: String { "Further advice link tapped" }
+    public static var primaryLinkTapped: String { "Primary link button tapped" }
     
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
@@ -26,20 +28,41 @@ extension EndOfIsolationScreenScenario {
                 interactor: interactor,
                 isolationEndDate: Date(timeIntervalSinceNow: 7 * 86400),
                 isIndexCase: isIndexCase,
-                currentDateProvider: DateProvider()
+                numberOfIsolationDaysForIndexCase: numberOfIsolationDaysForIndexCase,
+                currentDateProvider: DateProvider(),
+                currentCountry: currentCountry
             )
         }
     }
 }
 
-public class EndOfIsolationWithAdvisoryScreenScenario: EndOfIsolationScreenScenario, Scenario {
+public class EndOfIsolationForIndexCaseEnglandScreenScenario: EndOfIsolationScreenScenario, Scenario {
     public static let isIndexCase = true
-    public static let name: String = "End of Isolation – Index Case"
+    public static let currentCountry = Country.england
+    public static let numberOfIsolationDaysForIndexCase: Int? = 6
+    public static let name: String = "End of Isolation – Index Case (England)"
 }
 
-public class EndOfIsolationWithoutAdvisoryScreenScenario: EndOfIsolationScreenScenario, Scenario {
+public class EndOfIsolationForContactCaseEnglandScreenScenario: EndOfIsolationScreenScenario, Scenario {
     public static let isIndexCase = false
-    public static let name: String = "End of Isolation – Contact Case"
+    public static let currentCountry = Country.england
+    public static let numberOfIsolationDaysForIndexCase: Int? = nil
+    public static let name: String = "End of Isolation – Contact Case (England)"
+    
+}
+
+public class EndOfIsolationForIndexCaseWalesScreenScenario: EndOfIsolationScreenScenario, Scenario {
+    public static let isIndexCase = true
+    public static let currentCountry = Country.wales
+    public static let numberOfIsolationDaysForIndexCase: Int? = 6
+    public static let name: String = "End of Isolation – Index Case (Wales)"
+}
+
+public class EndOfIsolationForContactCaseWalesScreenScenario: EndOfIsolationScreenScenario, Scenario {
+    public static let isIndexCase = false
+    public static let currentCountry = Country.wales
+    public static let numberOfIsolationDaysForIndexCase: Int? = nil
+    public static let name: String = "End of Isolation – Contact Case (Wales)"
     
 }
 
@@ -52,14 +75,14 @@ private class Interactor: EndOfIsolationViewController.Interacting {
     }
     
     func didTapOnlineServicesLink() {
-        viewController?.showAlert(title: EndOfIsolationWithAdvisoryScreenScenario.onlineServicesLinkTapped)
+        viewController?.showAlert(title: EndOfIsolationForIndexCaseWalesScreenScenario.onlineServicesLinkTapped)
     }
     
     func didTapReturnHome() {
-        viewController?.showAlert(title: EndOfIsolationWithAdvisoryScreenScenario.returnHomeTapped)
+        viewController?.showAlert(title: EndOfIsolationForIndexCaseWalesScreenScenario.returnHomeTapped)
     }
     
-    func didTapFurtherAdviceLink() {
-        viewController?.showAlert(title: EndOfIsolationWithAdvisoryScreenScenario.furtherAdviceLinkTapped)
+    func didTapPrimaryLinkButton() {
+        viewController?.showAlert(title: EndOfIsolationForIndexCaseWalesScreenScenario.primaryLinkTapped)
     }
 }

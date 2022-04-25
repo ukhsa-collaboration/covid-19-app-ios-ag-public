@@ -16,7 +16,7 @@ struct HomeScreen {
         app.buttons.element(containing: text)
     }
     
-    var diagnoisButton: XCUIElement {
+    var selfDiagnosisButton: XCUIElement {
         app.buttons[localized: .home_diagnosis_button_title]
     }
     
@@ -81,4 +81,7 @@ struct HomeScreen {
         app.buttons[localized: .bluetooth_activate]
     }
     
+    var guidanceHubButton: XCUIElement {
+        app.buttons[localized: .home_covid19_guidance_button_title]
+    }
 }

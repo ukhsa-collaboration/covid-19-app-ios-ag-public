@@ -54,7 +54,6 @@ extension PositiveSymptomsViewController {
                     localizeAndSplit(.positive_symptoms_explanation).map {
                         BaseLabel().set(text: $0).styleAsBody()
                     },
-                    BaseLabel().set(text: localize(.exposure_faqs_link_label)).styleAsBody(),
                     LinkButton(
                         title: localize(.exposure_faqs_link_button_title),
                         action: interactor.exposureFAQsLinkTapped

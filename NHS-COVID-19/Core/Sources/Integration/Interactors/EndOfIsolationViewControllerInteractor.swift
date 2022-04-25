@@ -20,6 +20,8 @@ struct EndOfIsolationViewControllerInteractor: EndOfIsolationViewController.Inte
         acknowledge()
     }
     
-    func didTapFurtherAdviceLink() {}
+    func didTapPrimaryLinkButton() {
+        openURL(ExternalLink.governmentGuidance.url)
+    }
     
 }

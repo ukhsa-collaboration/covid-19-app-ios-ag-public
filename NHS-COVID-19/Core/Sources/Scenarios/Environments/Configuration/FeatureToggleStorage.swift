@@ -31,6 +31,12 @@ public struct FeatureToggleStorage {
     @UserDefault("scenario.toggle.selfIsolationToggleWales", defaultValue: Feature.productionEnabledFeatures.contains(.selfIsolationHubWales))
     public var selfIsolationHubToggleWales: Bool
     
+    @UserDefault("scenario.toggle.guidanceHubEnglandToggle", defaultValue: Feature.productionEnabledFeatures.contains(.guidanceHubEngland))
+    public var guidanceHubEnglandToggle: Bool
+    
+    @UserDefault("scenario.toggle.guidanceHubWalesToggle", defaultValue: Feature.productionEnabledFeatures.contains(.guidanceHubWales))
+    public var guidanceHubWalesToggle: Bool
+    
     #warning("Retrieve key from UserDefault")
     public var allFeatureKeys: [String] {
         [
@@ -42,6 +48,8 @@ public struct FeatureToggleStorage {
             $testingForCOVID19Toggle.key,
             $selfIsolationHubToggleEngland.key,
             $selfIsolationHubToggleWales.key,
+            $guidanceHubEnglandToggle.key,
+            $guidanceHubWalesToggle.key,
         ]
     }
     
@@ -81,6 +89,14 @@ public struct FeatureToggleStorage {
         
         if store.selfIsolationHubToggleWales {
             enabledFeatures.append(.selfIsolationHubWales)
+        }
+        
+        if store.guidanceHubEnglandToggle {
+            enabledFeatures.append(.guidanceHubEngland)
+        }
+        
+        if store.guidanceHubWalesToggle {
+            enabledFeatures.append(.guidanceHubWales)
         }
         
         return enabledFeatures
