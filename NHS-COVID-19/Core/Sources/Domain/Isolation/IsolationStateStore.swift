@@ -256,7 +256,6 @@ class IsolationStateStore: SymptomsOnsetDateAndExposureDetailsProviding {
             }
         }
         if let indexCaseInfo = isolationStateInfo?.isolationInfo.indexCaseInfo {
-            Metrics.signpost(.indexCaseBackgroundTick)
             if indexCaseInfo.testInfo?.result == .positive {
                 if let testKit = indexCaseInfo.testInfo?.testKitType {
                     switch testKit {

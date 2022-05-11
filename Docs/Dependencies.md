@@ -3,7 +3,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Retrieving dependencies](#retrieving-dependencies)
 - [List of dependencies](#list-of-dependencies)
   - [Used in the production app](#used-in-the-production-app)

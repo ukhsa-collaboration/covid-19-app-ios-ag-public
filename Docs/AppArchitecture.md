@@ -32,7 +32,6 @@ This diagrams below shows a summary of the application architecture. The rest of
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Apps](#apps)
 - [Modules](#modules)
   - [Common](#common)

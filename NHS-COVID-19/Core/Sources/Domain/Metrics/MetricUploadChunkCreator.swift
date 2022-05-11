@@ -16,18 +16,24 @@ struct MetricUploadChunkCreator {
     private let appInfo: AppInfo
     private let getPostcode: () -> String?
     private let getLocalAuthority: () -> String?
+    private let getCountry: () -> Country
     private let currentDateProvider: DateProviding
+    private let isFeatureEnabled: (Feature) -> Bool
     
     init(collector: MetricCollector,
          appInfo: AppInfo,
          getPostcode: @escaping () -> String?,
          getLocalAuthority: @escaping () -> String?,
-         currentDateProvider: DateProviding) {
+         getCountry: @escaping () -> Country,
+         currentDateProvider: DateProviding,
+         isFeatureEnabled: @escaping (Feature) -> Bool) {
         self.collector = collector
         self.appInfo = appInfo
         self.getPostcode = getPostcode
         self.getLocalAuthority = getLocalAuthority
+        self.getCountry = getCountry
         self.currentDateProvider = currentDateProvider
+        self.isFeatureEnabled = isFeatureEnabled
     }
     
     func consumeMetricsInfoForNextWindow() -> MetricsInfo? {
@@ -42,11 +48,19 @@ struct MetricUploadChunkCreator {
         
         let recordedMetrics = collector.consumeMetrics(for: uploadInterval)
         
+        var metricsToBeStripped = Feature.allCases.filter { !isFeatureEnabled($0) }
+            .filter { $0.countriesOfRelevance.contains(self.getCountry()) }
+            .map { $0.associatedMetrics }
+            .reduce([], +)
+            
+        metricsToBeStripped.append(contentsOf: Metric.nonFeatureRelatedMetricsToBeStripped)
+        
         let info = MetricsInfo(
             payload: .triggeredPayload(createTriggeredPayload(dateInterval: uploadInterval)),
             postalDistrict: getPostcode() ?? "",
             localAuthority: getLocalAuthority() ?? "",
-            recordedMetrics: recordedMetrics
+            recordedMetrics: recordedMetrics,
+            excludedMetrics: metricsToBeStripped
         )
         
         return info

@@ -59,6 +59,7 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
+            assertField.isPresent(\.askedToShareExposureKeysInTheInitialFlow)
         }
         
         // Dates: 5th-13th Jan -> Analytics packets for: 4th-13th Jan
@@ -189,6 +190,8 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
             
             assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
             assertField.isPresent(\.hasTestedSelfRapidPositiveBackgroundTick)
+            
+            assertField.isPresent(\.askedToShareExposureKeysInTheInitialFlow)
         }
         
         // As long as the user is in isolation

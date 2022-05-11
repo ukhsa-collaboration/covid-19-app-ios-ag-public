@@ -38,6 +38,7 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.hasTestedPositiveBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
             assertField.equals(expected: 1, \.didAskForSymptomsOnPositiveTestEntry)
+            assertField.isPresent(\.askedToShareExposureKeysInTheInitialFlow)
         }
         
         // Dates: 4th-13th Jan -> Analytics packets for: 3rd-12th Jan
@@ -106,6 +107,7 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.hasTestedPositiveBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
+            assertField.isPresent(\.askedToShareExposureKeysInTheInitialFlow)
         }
         
         // Dates: 6th-13th Jan -> Analytics packets for: 5rd-12th Jan
@@ -151,6 +153,8 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.hasTestedPositiveBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
+            
+            assertField.isPresent(\.askedToShareExposureKeysInTheInitialFlow)
         }
     }
     
@@ -192,6 +196,7 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             assertField.equals(expected: 1, \.receivedPositiveSelfRapidTestResultEnteredManually)
             
             assertField.isPresent(\.hasTestedSelfRapidPositiveBackgroundTick)
+            assertField.isPresent(\.askedToShareExposureKeysInTheInitialFlow)
         }
         
         // The day after, until end of isolation

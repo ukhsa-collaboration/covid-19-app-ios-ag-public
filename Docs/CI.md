@@ -9,12 +9,13 @@ Since this document is manually updated, parts of it may be out of date. If you 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Workflows](#workflows)
   - [test](#test)
   - [deploy](#deploy)
   - [monitor-version](#monitor-version)
   - [report](#report)
+  - [update_translations](#update_translations)
+    - [Troubleshooting](#troubleshooting)
 - [Secrets](#secrets)
   - [Access to other repos](#access-to-other-repos)
     - [`REPOS_ACCESS_ACTOR`](#repos_access_actor)
@@ -42,6 +43,14 @@ Since this document is manually updated, parts of it may be out of date. If you 
 
 Runs all automated tests when there is a PR against `master`.
 
+* **Test**: The default test plan `AllTests` runs all our unit tests and UI tests in English on the Simulator. This happens for all PRs.
+  * Generally these tests **must** pass before GitHub will allow you to merge the PR.
+* **Language Tests**: There is an additional test plan, `LanguageTests`, which runs a subset of the UI tests in all the languages the app supports. This is run when the pull request contains changes in the localisation files.
+  * Because `LanguageTests` takes a long time to run (up to 6 hours), the chance of a spurious failure (or a 'flake') is quite high.
+  * You don't need to wait for it to complete to merge the pull request, and can even merge your pull request if it failed.
+  * **However,** you should not do this unless you can positively be sure that the failure was a flake (i.e. you have failed to reproduce it locally and the pull request doesn't touch the area where the failure happened.) Otherwise you could miss legitimate failures that might highlight a bug in the app.
+  * In particular, **do not ignore these tests** if they fail on a pull request raised by the [update_translations](#update_translations) workflow. This could show that there's a problem with the imported copy. This means you shouldn't turn on auto-merge for these pull requests, because it will automatically merge as soon as the shorter `AllTests` plan is run.
+
 ## deploy
 
 This job is triggered after a push to master. It does two things:
@@ -60,7 +69,7 @@ The build tags are in the form `$variant-v$version-$build`. For example:
 
 This jobs runs periodically. It checks the build number on `master`. If there’s a tag for the build number, but there has been new commits since then, it will increment the build number and commits to `master`.
 
-The script looks for tags of the currect shape, with correct `variant` set to `scenarios` and `build` set to the current build number, but ignores the version. For example, these would both match as a tag for build 5:
+The script looks for tags of the correct shape, with correct `variant` set to `scenarios` and `build` set to the current build number, but ignores the version. For example, these would both match as a tag for build 5:
 
 * `scenarios-v1.0-5`
 * `scenarios-somethingelse-5`
@@ -79,7 +88,42 @@ This jobs runs periodically. It
 * creates an archive of the app and uses it to generate artefact reports.
 * generates static web content from these reports and uploads them as artefacts.
 
+## update_translations
+
+Runs on demand. It requests an updated set of `Localizable.strings` and `Localizable.stringsdict` files from our localisation tool, moves them into place and creates a pull request for this change.
+
+If you like, you can specify a 'slug' to put at the front of the commit message - e.g. if you want to include ticket numbers, etc.
+
+You should always wait to see if the localisation tests (the test plan that runs our UI tests in all languages) pass before approving and merging this change. This can take a while - up to 5 hours.
+
+### Troubleshooting
+
+If the "Update Translations" job has recently started failing with an error that looks like this:
+
+```
+Requesting translations...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100   306    0    44  100   262     69    415 --:--:-- --:--:-- --:--:--   487
+Downloading translations...
+curl: no URL specified!
+```
+
+...it might be because the person who created the current Lokalise API token has left, or been removed from our Lokalise team. For context, Lokalise API keys are specific to individual users, and **not** shared between everyone on the project.
+
+To fix it:
+
+1. Get a person who has Lokalise access and will be on the project for a while to [generate a new API token on Lokalise](https://docs.lokalise.com/en/articles/1929556-api-tokens) under their user name;
+2. Update the `LOKALISE_API_TOKEN` secret;
+3. Re-run the "Update Translations" job to see if it worked.
+
+
 # Secrets
+
+These are configured in the repository settings on GitHub. You need to be an admin to update them and might need to enter sudo mode.
 
 ## Access to other repos
 
@@ -151,4 +195,5 @@ The project id for this project on Lokalise.
 
 The API token from Lokalise to get access to the copy for this project.
 
-**Note:** Lokalise API tokens are created by user, not by project. So if the "Update Translations" job has recently failed, it might be because the user who created the current Lokalise API token has left, or been removed from our Lokalise account. [Generate a new API token](https://docs.lokalise.com/en/articles/1929556-api-tokens) and update the secret to fix the problem.
+**Note:** Lokalise API tokens are specific to individual people, not shared amongst teams/projects. If the `update_translations` job has started failing, it might be because the user who created the Lokalise API token has left. Create a new token and update this secret to fix the problem.
+

@@ -14,28 +14,29 @@ import XCTest
 @available(iOS 13.7, *)
 extension AnalyticsTests {
     struct FieldAsserter {
-        private var fieldAssertions: [KeyPath<SubmissionPayload.Metrics, SubmissionPayload.MetricField>: FieldAssertion] = [
-            \.hasSelfDiagnosedPositiveBackgroundTick: Ignore(path: \.hasSelfDiagnosedPositiveBackgroundTick),
+        private var fieldAssertions: [KeyPath<SubmissionPayload.Metrics, Int?>: FieldAssertion] = [
             \.runningNormallyBackgroundTick: Ignore(path: \.runningNormallyBackgroundTick),
             \.totalBackgroundTasks: Ignore(path: \.totalBackgroundTasks),
             \.appIsContactTraceableBackgroundTick: Ignore(path: \.appIsContactTraceableBackgroundTick),
             \.appIsUsableBackgroundTick: Ignore(path: \.appIsUsableBackgroundTick),
             \.appIsUsableBluetoothOffBackgroundTick: Ignore(path: \.appIsUsableBluetoothOffBackgroundTick),
+             \.hasRiskyContactNotificationsEnabledBackgroundTick: Ignore(path: \.hasRiskyContactNotificationsEnabledBackgroundTick),
+             \.totalShareExposureKeysReminderNotifications: Ignore(path: \.totalShareExposureKeysReminderNotifications),
         ]
         
-        mutating func equals(expected: SubmissionPayload.MetricField, _ path: WritableKeyPath<SubmissionPayload.Metrics, SubmissionPayload.MetricField>) {
+        mutating func equals(expected: Int?, _ path: WritableKeyPath<SubmissionPayload.Metrics, Int?>) {
             fieldAssertions[path] = AssertEquals(expected: expected, path: path)
         }
         
-        mutating func isPresent(_ path: WritableKeyPath<SubmissionPayload.Metrics, SubmissionPayload.MetricField>) {
+        mutating func isPresent(_ path: WritableKeyPath<SubmissionPayload.Metrics, Int?>) {
             fieldAssertions[path] = AssertPresent(path: path)
         }
         
-        mutating func isNotPresent(_ path: WritableKeyPath<SubmissionPayload.Metrics, SubmissionPayload.MetricField>) {
+        mutating func isNotPresent(_ path: WritableKeyPath<SubmissionPayload.Metrics, Int?>) {
             fieldAssertions[path] = AssertNotPresent(path: path)
         }
         
-        mutating func isLessThanTotalBackgroundTasks(_ path: WritableKeyPath<SubmissionPayload.Metrics, SubmissionPayload.MetricField>) {
+        mutating func isLessThanTotalBackgroundTasks(_ path: WritableKeyPath<SubmissionPayload.Metrics, Int?>) {
             fieldAssertions[path] = AssertLessThanTotalBackgroundTasks(path: path)
         }
         
@@ -59,15 +60,15 @@ extension AnalyticsTests {
     }
     
     private struct Ignore: FieldAssertion {
-        let expected: SubmissionPayload.MetricField = -1
-        let path: WritableKeyPath<SubmissionPayload.Metrics, SubmissionPayload.MetricField>
+        let expected: Int? = -1
+        let path: WritableKeyPath<SubmissionPayload.Metrics, Int?>
         
         func assert(metrics: SubmissionPayload.Metrics, day: Int?) -> Bool { true }
     }
     
     private struct AssertEquals: FieldAssertion {
-        let expected: SubmissionPayload.MetricField
-        let path: WritableKeyPath<SubmissionPayload.Metrics, SubmissionPayload.MetricField>
+        let expected: Int?
+        let path: WritableKeyPath<SubmissionPayload.Metrics, Int?>
         
         func assert(metrics: SubmissionPayload.Metrics, day: Int?) -> Bool {
             return expected == metrics[keyPath: path]
@@ -75,17 +76,21 @@ extension AnalyticsTests {
     }
     
     private struct AssertPresent: FieldAssertion {
-        let expected: SubmissionPayload.MetricField = .notZero
-        let path: WritableKeyPath<SubmissionPayload.Metrics, SubmissionPayload.MetricField>
+        let expected: Int? = nil
+        let path: WritableKeyPath<SubmissionPayload.Metrics, Int?>
         
         func assert(metrics: SubmissionPayload.Metrics, day: Int?) -> Bool {
-            return metrics[keyPath: path].value > 0
+            if let metricsValue: Int = metrics[keyPath: path] {
+                return metricsValue > 0
+            } else {
+                return false
+            }
         }
     }
     
     private struct AssertNotPresent: FieldAssertion {
-        let expected: SubmissionPayload.MetricField = 0
-        let path: WritableKeyPath<SubmissionPayload.Metrics, SubmissionPayload.MetricField>
+        let expected: Int? = 0
+        let path: WritableKeyPath<SubmissionPayload.Metrics, Int?>
         
         func assert(metrics: SubmissionPayload.Metrics, day: Int?) -> Bool {
             return metrics[keyPath: path] == 0
@@ -93,20 +98,24 @@ extension AnalyticsTests {
     }
     
     private struct AssertLessThanTotalBackgroundTasks: FieldAssertion {
-        let expected: SubmissionPayload.MetricField = .lessThanTotalBackgroundTasks
-        let path: WritableKeyPath<SubmissionPayload.Metrics, SubmissionPayload.MetricField>
+        let expected: Int? = nil
+        let path: WritableKeyPath<SubmissionPayload.Metrics, Int?>
         
         func assert(metrics: SubmissionPayload.Metrics, day: Int?) -> Bool {
-            let actual = metrics[keyPath: path]
+            let actualValue = metrics[keyPath: path]
             let totalBackgroundTasks = metrics[keyPath: \.totalBackgroundTasks]
-            return actual.value < totalBackgroundTasks.value
+            if let actualValue = actualValue, let totalBackgroundTasksValue = totalBackgroundTasks {
+                return actualValue < totalBackgroundTasksValue
+            } else {
+                return false
+            }
         }
     }
 }
 
 protocol FieldAssertion {
-    var path: WritableKeyPath<SubmissionPayload.Metrics, SubmissionPayload.MetricField> { get }
-    var expected: SubmissionPayload.MetricField { get }
+    var path: WritableKeyPath<SubmissionPayload.Metrics, Int?> { get }
+    var expected: Int? { get }
     
     func assert(metrics: SubmissionPayload.Metrics, day: Int?) -> Bool
 }

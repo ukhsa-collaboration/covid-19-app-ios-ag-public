@@ -11,6 +11,7 @@ struct MetricsInfo {
     var postalDistrict: String
     var localAuthority: String?
     var recordedMetrics: [Metric: Int]
+    var excludedMetrics: [Metric]
 }
 
 enum MetricsInfoPayload {
@@ -61,131 +62,130 @@ private struct SubmissionPayload: Codable {
     
     struct Metrics: Codable {
         // Networking
-        var cumulativeWifiUploadBytes = 0
-        var cumulativeWifiDownloadBytes = 0
-        var cumulativeCellularUploadBytes = 0
-        var cumulativeCellularDownloadBytes = 0
-        var cumulativeDownloadBytes = 0
-        var cumulativeUploadBytes = 0
+        var cumulativeWifiUploadBytes: Int? = 0
+        var cumulativeWifiDownloadBytes: Int? = 0
+        var cumulativeCellularUploadBytes: Int? = 0
+        var cumulativeCellularDownloadBytes: Int? = 0
+        var cumulativeDownloadBytes: Int? = 0
+        var cumulativeUploadBytes: Int? = 0
         
         // Events triggered
-        var completedOnboarding = 0
-        var checkedIn = 0
-        var canceledCheckIn = 0
-        var completedQuestionnaireAndStartedIsolation = 0
-        var completedQuestionnaireButDidNotStartIsolation = 0
-        var receivedPositiveTestResult = 0
-        var receivedNegativeTestResult = 0
-        var receivedVoidTestResult = 0
-        var receivedVoidTestResultEnteredManually = 0
-        var receivedPositiveTestResultEnteredManually = 0
-        var receivedNegativeTestResultEnteredManually = 0
-        var receivedVoidTestResultViaPolling = 0
-        var receivedPositiveTestResultViaPolling = 0
-        var receivedNegativeTestResultViaPolling = 0
-        var receivedRiskyContactNotification = 0
-        var startedIsolation = 0
-        var acknowledgedStartOfIsolationDueToRiskyContact = 0
+        var completedOnboarding: Int? = 0
+        var checkedIn: Int? = 0
+        var canceledCheckIn: Int? = 0
+        var completedQuestionnaireAndStartedIsolation: Int? = 0
+        var completedQuestionnaireButDidNotStartIsolation: Int? = 0
+        var receivedPositiveTestResult: Int? = 0
+        var receivedNegativeTestResult: Int? = 0
+        var receivedVoidTestResult: Int? = 0
+        var receivedVoidTestResultEnteredManually: Int? = 0
+        var receivedPositiveTestResultEnteredManually: Int? = 0
+        var receivedNegativeTestResultEnteredManually: Int? = 0
+        var receivedVoidTestResultViaPolling: Int? = 0
+        var receivedPositiveTestResultViaPolling: Int? = 0
+        var receivedNegativeTestResultViaPolling: Int? = 0
+        var receivedRiskyContactNotification: Int? = 0
+        var startedIsolation: Int? = 0
+        var acknowledgedStartOfIsolationDueToRiskyContact: Int? = 0
         
-        var totalExposureWindowsNotConsideredRisky = 0
-        var totalExposureWindowsConsideredRisky = 0
-        var totalRiskyContactReminderNotifications = 0
+        var totalExposureWindowsNotConsideredRisky: Int? = 0
+        var totalExposureWindowsConsideredRisky: Int? = 0
+        var totalRiskyContactReminderNotifications: Int? = 0
         
         // How many times background tasks ran
-        var totalBackgroundTasks = 0
+        var totalBackgroundTasks: Int? = 0
         
         // How many times background tasks ran when app was running normally (max: totalBackgroundTasks)
-        var runningNormallyBackgroundTick = 0
+        var runningNormallyBackgroundTick: Int? = 0
         
         // Background ticks (max: runningNormallyBackgroundTick)
-        var isIsolatingBackgroundTick = 0
-        var hasHadRiskyContactBackgroundTick = 0
-        var hasSelfDiagnosedBackgroundTick = 0
-        var hasTestedPositiveBackgroundTick = 0
-        var isIsolatingForSelfDiagnosedBackgroundTick = 0
-        var isIsolatingForTestedPositiveBackgroundTick = 0
-        var isIsolatingForHadRiskyContactBackgroundTick = 0
-        var isIsolatingForUnconfirmedTestBackgroundTick = 0
-        var hasSelfDiagnosedPositiveBackgroundTick = 0
-        var encounterDetectionPausedBackgroundTick = 0
-        var hasRiskyContactNotificationsEnabledBackgroundTick = 0
+        var isIsolatingBackgroundTick: Int? = 0
+        var hasHadRiskyContactBackgroundTick: Int? = 0
+        var hasSelfDiagnosedBackgroundTick: Int? = 0
+        var hasTestedPositiveBackgroundTick: Int? = 0
+        var isIsolatingForSelfDiagnosedBackgroundTick: Int? = 0
+        var isIsolatingForTestedPositiveBackgroundTick: Int? = 0
+        var isIsolatingForHadRiskyContactBackgroundTick: Int? = 0
+        var isIsolatingForUnconfirmedTestBackgroundTick: Int? = 0
+        var encounterDetectionPausedBackgroundTick: Int? = 0
+        var hasRiskyContactNotificationsEnabledBackgroundTick: Int? = 0
         
         // Isolation payment
-        var receivedActiveIpcToken = 0
-        var selectedIsolationPaymentsButton = 0
-        var launchedIsolationPaymentsApplication = 0
-        var haveActiveIpcTokenBackgroundTick = 0
+        var receivedActiveIpcToken: Int? = 0
+        var selectedIsolationPaymentsButton: Int? = 0
+        var launchedIsolationPaymentsApplication: Int? = 0
+        var haveActiveIpcTokenBackgroundTick: Int? = 0
         
-        var receivedPositiveLFDTestResultViaPolling = 0
-        var receivedNegativeLFDTestResultViaPolling = 0
-        var receivedVoidLFDTestResultViaPolling = 0
-        var receivedPositiveLFDTestResultEnteredManually = 0
-        var receivedNegativeLFDTestResultEnteredManually = 0
-        var receivedVoidLFDTestResultEnteredManually = 0
-        var receivedUnconfirmedPositiveTestResult = 0
+        var receivedPositiveLFDTestResultViaPolling: Int? = 0
+        var receivedNegativeLFDTestResultViaPolling: Int? = 0
+        var receivedVoidLFDTestResultViaPolling: Int? = 0
+        var receivedPositiveLFDTestResultEnteredManually: Int? = 0
+        var receivedNegativeLFDTestResultEnteredManually: Int? = 0
+        var receivedVoidLFDTestResultEnteredManually: Int? = 0
+        var receivedUnconfirmedPositiveTestResult: Int? = 0
         
-        var receivedPositiveSelfRapidTestResultEnteredManually = 0
-        var isIsolatingForTestedSelfRapidPositiveBackgroundTick = 0
-        var hasTestedSelfRapidPositiveBackgroundTick = 0
+        var receivedPositiveSelfRapidTestResultEnteredManually: Int? = 0
+        var isIsolatingForTestedSelfRapidPositiveBackgroundTick: Int? = 0
+        var hasTestedSelfRapidPositiveBackgroundTick: Int? = 0
         
-        var hasTestedLFDPositiveBackgroundTick = 0
-        var isIsolatingForTestedLFDPositiveBackgroundTick = 0
+        var hasTestedLFDPositiveBackgroundTick: Int? = 0
+        var isIsolatingForTestedLFDPositiveBackgroundTick: Int? = 0
         
-        var launchedTestOrdering = 0
+        var launchedTestOrdering: Int? = 0
         
-        var didAskForSymptomsOnPositiveTestEntry = 0
-        var didHaveSymptomsBeforeReceivedTestResult = 0
-        var didRememberOnsetSymptomsDateBeforeReceivedTestResult = 0
+        var didAskForSymptomsOnPositiveTestEntry: Int? = 0
+        var didHaveSymptomsBeforeReceivedTestResult: Int? = 0
+        var didRememberOnsetSymptomsDateBeforeReceivedTestResult: Int? = 0
         
-        var didAccessSelfIsolationNoteLink = 0
+        var didAccessSelfIsolationNoteLink: Int? = 0
         
         // MARK: - Risky venue warning
         
-        var receivedRiskyVenueM1Warning = 0
-        var receivedRiskyVenueM2Warning = 0
-        var hasReceivedRiskyVenueM2WarningBackgroundTick = 0
-        var didAccessRiskyVenueM2Notification = 0
-        var selectedTakeTestM2Journey = 0
-        var selectedTakeTestLaterM2Journey = 0
-        var selectedHasSymptomsM2Journey = 0
-        var selectedHasNoSymptomsM2Journey = 0
-        var selectedLFDTestOrderingM2Journey = 0
-        var selectedHasLFDTestM2Journey = 0
+        var receivedRiskyVenueM1Warning: Int? = 0
+        var receivedRiskyVenueM2Warning: Int? = 0
+        var hasReceivedRiskyVenueM2WarningBackgroundTick: Int? = 0
+        var didAccessRiskyVenueM2Notification: Int? = 0
+        var selectedTakeTestM2Journey: Int? = 0
+        var selectedTakeTestLaterM2Journey: Int? = 0
+        var selectedHasSymptomsM2Journey: Int? = 0
+        var selectedHasNoSymptomsM2Journey: Int? = 0
+        var selectedLFDTestOrderingM2Journey: Int? = 0
+        var selectedHasLFDTestM2Journey: Int? = 0
         
         // MARK: Key Sharing
         
-        var askedToShareExposureKeysInTheInitialFlow = 0
-        var consentedToShareExposureKeysInTheInitialFlow = 0
-        var totalShareExposureKeysReminderNotifications = 0
-        var consentedToShareExposureKeysInReminderScreen = 0
-        var successfullySharedExposureKeys = 0
+        var askedToShareExposureKeysInTheInitialFlow: Int? = 0
+        var consentedToShareExposureKeysInTheInitialFlow: Int? = 0
+        var totalShareExposureKeysReminderNotifications: Int? = 0
+        var consentedToShareExposureKeysInReminderScreen: Int? = 0
+        var successfullySharedExposureKeys: Int? = 0
         
         // MARK: - Local Information / VOC
         
-        var didSendLocalInfoNotification = 0
-        var didAccessLocalInfoScreenViaNotification = 0
-        var didAccessLocalInfoScreenViaBanner = 0
-        var isDisplayingLocalInfoBackgroundTick = 0
+        var didSendLocalInfoNotification: Int? = 0
+        var didAccessLocalInfoScreenViaNotification: Int? = 0
+        var didAccessLocalInfoScreenViaBanner: Int? = 0
+        var isDisplayingLocalInfoBackgroundTick: Int? = 0
         
         // MARK: - Lab test result after rapid result
         
-        var positiveLabResultAfterPositiveLFD = 0
-        var negativeLabResultAfterPositiveLFDWithinTimeLimit = 0
-        var negativeLabResultAfterPositiveLFDOutsideTimeLimit = 0
-        var positiveLabResultAfterPositiveSelfRapidTest = 0
-        var negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit = 0
-        var negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit = 0
+        var positiveLabResultAfterPositiveLFD: Int? = 0
+        var negativeLabResultAfterPositiveLFDWithinTimeLimit: Int? = 0
+        var negativeLabResultAfterPositiveLFDOutsideTimeLimit: Int? = 0
+        var positiveLabResultAfterPositiveSelfRapidTest: Int? = 0
+        var negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit: Int? = 0
+        var negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit: Int? = 0
         
         // MARK: - Contact case opt-out
         
-        var optedOutForContactIsolation = 0
-        var optedOutForContactIsolationBackgroundTick = 0
+        var optedOutForContactIsolation: Int? = 0
+        var optedOutForContactIsolationBackgroundTick: Int? = 0
         
         // MARK: - New app state metrics
         
-        var appIsUsableBackgroundTick = 0
-        var appIsUsableBluetoothOffBackgroundTick = 0
-        var appIsContactTraceableBackgroundTick = 0
+        var appIsUsableBackgroundTick: Int? = 0
+        var appIsUsableBluetoothOffBackgroundTick: Int? = 0
+        var appIsContactTraceableBackgroundTick: Int? = 0
         
     }
     
@@ -221,7 +221,11 @@ private struct SubmissionPayload: Codable {
                 $0.cumulativeUploadBytes = 0
                 
                 for metric in Metric.allCases {
-                    $0[keyPath: metric.property] = metricsInfo.recordedMetrics[metric] ?? 0
+                    if metricsInfo.excludedMetrics.contains(metric) {
+                        $0[keyPath: metric.property] = nil
+                    } else {
+                        $0[keyPath: metric.property] = metricsInfo.recordedMetrics[metric] ?? 0
+                    }
                 }
             }
         }
@@ -238,7 +242,7 @@ private extension Measurement where UnitType: Dimension {
 
 private extension Metric {
     
-    var property: WritableKeyPath<SubmissionPayload.Metrics, Int> {
+    var property: WritableKeyPath<SubmissionPayload.Metrics, Int?> {
         switch self {
         case .backgroundTasks: return \.totalBackgroundTasks
         case .completedOnboarding: return \.completedOnboarding
@@ -256,7 +260,6 @@ private extension Metric {
         case .isolatedForTestedPositiveBackgroundTick: return \.isIsolatingForTestedPositiveBackgroundTick
         case .isolatedForHadRiskyContactBackgroundTick: return \.isIsolatingForHadRiskyContactBackgroundTick
         case .isolatedForUnconfirmedTestBackgroundTick: return \.isIsolatingForUnconfirmedTestBackgroundTick
-        case .indexCaseBackgroundTick: return \.hasSelfDiagnosedPositiveBackgroundTick
         case .isolationBackgroundTick: return \.isIsolatingBackgroundTick
         case .pauseTick: return \.encounterDetectionPausedBackgroundTick
         case .runningNormallyTick: return \.runningNormallyBackgroundTick

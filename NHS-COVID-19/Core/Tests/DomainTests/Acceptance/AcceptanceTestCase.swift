@@ -34,20 +34,26 @@ class AcceptanceTestCase: XCTestCase {
             var appInfo = AppInfo(bundleId: .random(), version: "4.16", buildNumber: "1")
             
             var currentDateProvider = AcceptanceTestMockDateProvider()
+            
+            var postcode = Postcode("S1")
+            var localAuthority = LocalAuthority(name: "Sheffield", id: .init("E08000019"))
         }
         
         var coordinator: ApplicationCoordinator
         var exposureNotificationContext: ExposureNotificationContext
-        let postcode = Postcode("S1")
-        let localAuthority = LocalAuthority(name: "Sheffield", id: .init("E08000019"))
+        let postcode: Postcode
+        let localAuthority: LocalAuthority
         
         init(configuration: Configuration) {
             configuration.encryptedStore.stored["activation"] = """
             { "isActivated": true }
             """.data(using: .utf8)!
             
-            let postcode = self.postcode
-            let localAuthority = self.localAuthority
+            let postcode = configuration.postcode
+            let localAuthority = configuration.localAuthority
+            
+            self.postcode = postcode
+            self.localAuthority = localAuthority
             
             let services = ApplicationServices(
                 application: configuration.application,
@@ -136,7 +142,7 @@ extension AcceptanceTestCase {
         _instance.reset()
     }
     
-    func completeRunning() throws {
+    func completeRunning(postcode: String = "B44", localAuthority: LocalAuthority = LocalAuthority(name: "Local Authority 1", id: .init("LA1"), country: .england)) throws {
         try completeExposureNotificationActivation(authorizationStatus: .unknown)
         try completeUserNotificationsAuthorization(authorizationStatus: .notDetermined)
         
@@ -150,7 +156,7 @@ extension AcceptanceTestCase {
             throw TestError("Unexpected state \(coordinator.state)")
         }
         
-        try savePostcode(.init("B44"), LocalAuthority(name: "Local Authority 1", id: .init("LA1"), country: .england)).get()
+        try savePostcode(.init(postcode), localAuthority).get()
         
         guard case .authorizationRequired(let requestPermissions, _) = coordinator.state else {
             throw TestError("Unexpected state \(coordinator.state)")

@@ -317,7 +317,7 @@
 "checkin_information_help_scanning_section_description" = "We advise you to speak to a member of staff at the venue to see if there are other ways of checking in.";
 "checkin_information_whats_a_qr_code_section_title" = "How to recognise an NHS QR code poster";
 "checkin_information_whats_a_qr_code_section_description_new" = "Here are what the official NHS QR code posters look like. You need to scan the code, which is the square in the middle.";
-"about_this_app_software_information_date_of_release_description" = "04/2022";
+"about_this_app_software_information_date_of_release_description" = "05/2022";
 "link_test_result_enter_code_example" = "Example: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Test code";
 "link_test_result_button_title" = "Continue";
@@ -1130,5 +1130,5 @@
 "expiration_notification_description_passed_wales" = "Your 5 full days of self-isolation have ended";
 "expiration_notification_testing_advice_wales_before_isolation_ended_wales" = "It is safe to leave self-isolation if you have negative lateral flow tests on day 5 and day 6. \n\nYou do not need to enter your negative test results into the app.";
 "expiration_notification_testing_advice_wales_after_isolation_ended_wales" = "It is safe to leave self-isolation if you had negative lateral flow tests on day 5 and 6. \n\nYou do not need to enter your negative test results into the app.";
-"expiration_notification_callout_advice_wales" = "Take lateral flow tests on day 5 and 6";
+"expiration_notification_callout_advice_wales" = "Take lateral flow tests on day 5 and day 6";
 "your_isolation_are_ending_soon_wales" = "Your 5 full days of self-isolation are ending soon";

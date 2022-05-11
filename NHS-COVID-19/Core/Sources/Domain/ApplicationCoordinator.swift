@@ -272,7 +272,9 @@ public class ApplicationCoordinator {
             appInfo: services.appInfo,
             getPostcode: { postcodeStore.postcode.currentValue?.value },
             getLocalAuthority: { postcodeStore.localAuthorityId.currentValue?.value },
-            getHouseKeepingDayDuration: { isolationContext.isolationStateStore.configuration.housekeepingDeletionPeriod }
+            getHouseKeepingDayDuration: { isolationContext.isolationStateStore.configuration.housekeepingDeletionPeriod },
+            isFeatureEnabled: { enabledFeatures.contains($0) },
+            getCountry: { country.currentValue }
         )
         
         #warning("Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")

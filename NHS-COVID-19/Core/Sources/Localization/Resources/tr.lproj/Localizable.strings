@@ -317,7 +317,7 @@
 "checkin_information_help_scanning_section_description" = "Mekana giriş yapmanın diğer yolları olup olmadığıyla ilgili olarak bir personelle konuşmanızı tavsiye ederiz.";
 "checkin_information_whats_a_qr_code_section_title" = "Bir NHS QR kodu posteri nasıl tanınır";
 "checkin_information_whats_a_qr_code_section_description_new" = "Resmi NHS QR kodu posterlerinin neye benzediğine dair bir örneği burada görebilirsiniz. Ortasında kare olan kodu taratmanız gerekir.";
-"about_this_app_software_information_date_of_release_description" = "04/2022";
+"about_this_app_software_information_date_of_release_description" = "05/2022";
 "link_test_result_enter_code_example" = "Örnek: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Test kodu";
 "link_test_result_button_title" = "Devam";
@@ -1130,5 +1130,5 @@
 "expiration_notification_description_passed_wales" = "5 günlük karantina süreniz sona ermiştir";
 "expiration_notification_testing_advice_wales_before_isolation_ended_wales" = "5 ve 6. günlerde yapacağınız hızlı antijen testleri negatif çıkarsa karantinayı güvenle sona erdirebilirsiniz.\n\nNegatif test sonuçlarınızı uygulamaya  girmenize gerek yoktur.";
 "expiration_notification_testing_advice_wales_after_isolation_ended_wales" = "5 ve 6. günlerde yapacağınız hızlı antijen testleri negatif çıkarsa karantinayı güvenle sona erdirebilirsiniz.\n\nNegatif test sonuçlarınızı uygulamaya  girmenize gerek yoktur.";
-"expiration_notification_callout_advice_wales" = "5 ve 6. günlerde hızlı antijen testi yapın";
+"expiration_notification_callout_advice_wales" = "5 ve 6 günlerde hızlı antijen testi yapın";
 "your_isolation_are_ending_soon_wales" = "5 günlük karantina süreniz yakında sona eriyor";

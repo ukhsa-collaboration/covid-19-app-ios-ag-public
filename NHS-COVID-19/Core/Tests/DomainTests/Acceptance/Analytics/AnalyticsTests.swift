@@ -71,7 +71,9 @@ extension AnalyticsTests {
             do {
                 let metricsPayload = try decoder.decode(SubmissionPayload.self, from: body.content)
                 self.metricsPayloads.append(metricsPayload)
-            } catch {}
+            } catch let error {
+                print(error.localizedDescription)
+            }
         }
         .store(in: &cancellables)
     }
@@ -108,33 +110,7 @@ extension AnalyticsTests {
 
 // Copy of SubmissionPayload from MetricSubmissionEndpoint.swift
 struct SubmissionPayload: Decodable {
-    enum MetricField: Decodable, Equatable, ExpressibleByIntegerLiteral {
-        case exact(value: Int)
-        case notZero
-        case lessThanTotalBackgroundTasks
-        
-        init(from decoder: Decoder) throws {
-            self = .exact(value: try decoder.singleValueContainer().decode(Int.self))
-        }
-        
-        var value: Int {
-            switch self {
-            case .exact(let value):
-                return value
-            case .notZero, .lessThanTotalBackgroundTasks:
-                // Ideally, we'd structure our types so that values decoded would not be representable with these cases
-                // (see our implementation of `init(from: Decoder)`).
-                //
-                // For now, we know that to be the case, so assert that a value exists if we ask for it.
-                preconditionFailure("We should never be in a scenario where this is used.")
-            }
-        }
-        
-        init(integerLiteral value: Int) {
-            self = .exact(value: value)
-        }
-    }
-    
+
     struct Period: Codable {
         var startDate: String
         var endDate: String
@@ -149,88 +125,132 @@ struct SubmissionPayload: Decodable {
     
     struct Metrics: Decodable, Equatable {
         // Networking
-        var cumulativeWifiUploadBytes: MetricField = 0
-        var cumulativeWifiDownloadBytes: MetricField = 0
-        var cumulativeCellularUploadBytes: MetricField = 0
-        var cumulativeCellularDownloadBytes: MetricField = 0
-        var cumulativeDownloadBytes: MetricField = 0
-        var cumulativeUploadBytes: MetricField = 0
+        var cumulativeWifiUploadBytes: Int? = 0
+        var cumulativeWifiDownloadBytes: Int? = 0
+        var cumulativeCellularUploadBytes: Int? = 0
+        var cumulativeCellularDownloadBytes: Int? = 0
+        var cumulativeDownloadBytes: Int? = 0
+        var cumulativeUploadBytes: Int? = 0
         
         // Events triggered
-        var completedOnboarding: MetricField = 0
-        var checkedIn: MetricField = 0
-        var canceledCheckIn: MetricField = 0
-        var completedQuestionnaireAndStartedIsolation: MetricField = 0
-        var completedQuestionnaireButDidNotStartIsolation: MetricField = 0
-        var receivedPositiveTestResult: MetricField = 0
-        var receivedNegativeTestResult: MetricField = 0
-        var receivedVoidTestResult: MetricField = 0
-        var receivedVoidTestResultEnteredManually: MetricField = 0
-        var receivedPositiveTestResultEnteredManually: MetricField = 0
-        var receivedNegativeTestResultEnteredManually: MetricField = 0
-        var receivedVoidTestResultViaPolling: MetricField = 0
-        var receivedPositiveTestResultViaPolling: MetricField = 0
-        var receivedNegativeTestResultViaPolling: MetricField = 0
-        var receivedRiskyContactNotification: MetricField = 0
-        var receivedUnconfirmedPositiveTestResult: MetricField = 0
-        var startedIsolation: MetricField = 0
+        var completedOnboarding: Int? = 0
+        var checkedIn: Int? = 0
+        var canceledCheckIn: Int? = 0
+        var completedQuestionnaireAndStartedIsolation: Int? = 0
+        var completedQuestionnaireButDidNotStartIsolation: Int? = 0
+        var receivedPositiveTestResult: Int? = 0
+        var receivedNegativeTestResult: Int? = 0
+        var receivedVoidTestResult: Int? = 0
+        var receivedVoidTestResultEnteredManually: Int? = 0
+        var receivedPositiveTestResultEnteredManually: Int? = 0
+        var receivedNegativeTestResultEnteredManually: Int? = 0
+        var receivedVoidTestResultViaPolling: Int? = 0
+        var receivedPositiveTestResultViaPolling: Int? = 0
+        var receivedNegativeTestResultViaPolling: Int? = 0
+        var receivedRiskyContactNotification: Int? = 0
+        var startedIsolation: Int? = 0
+        var acknowledgedStartOfIsolationDueToRiskyContact: Int? = 0
+        
+        var totalExposureWindowsNotConsideredRisky: Int? = 0
         
         // How many times background tasks ran
-        var totalBackgroundTasks: MetricField = 0
+        var totalBackgroundTasks: Int? = 0
         
         // How many times background tasks ran when app was running normally (max: totalBackgroundTasks)
-        var runningNormallyBackgroundTick: MetricField = 0
+        var runningNormallyBackgroundTick: Int? = 0
         
         // Background ticks (max: runningNormallyBackgroundTick)
-        var isIsolatingBackgroundTick: MetricField = 0
-        var hasHadRiskyContactBackgroundTick: MetricField = 0
-        var hasSelfDiagnosedBackgroundTick: MetricField = 0
-        var hasTestedPositiveBackgroundTick: MetricField = 0
-        var isIsolatingForSelfDiagnosedBackgroundTick: MetricField = 0
-        var isIsolatingForTestedPositiveBackgroundTick: MetricField = 0
-        var isIsolatingForHadRiskyContactBackgroundTick: MetricField = 0
-        var isIsolatingForUnconfirmedTestBackgroundTick: MetricField = 0
-        var hasSelfDiagnosedPositiveBackgroundTick: MetricField = 0
-        var encounterDetectionPausedBackgroundTick: MetricField = 0
+        var isIsolatingBackgroundTick: Int? = 0
+        var hasHadRiskyContactBackgroundTick: Int? = 0
+        var hasSelfDiagnosedBackgroundTick: Int? = 0
+        var hasTestedPositiveBackgroundTick: Int? = 0
+        var isIsolatingForSelfDiagnosedBackgroundTick: Int? = 0
+        var isIsolatingForTestedPositiveBackgroundTick: Int? = 0
+        var isIsolatingForHadRiskyContactBackgroundTick: Int? = 0
+        var isIsolatingForUnconfirmedTestBackgroundTick: Int? = 0
+        var encounterDetectionPausedBackgroundTick: Int? = 0
+        var hasRiskyContactNotificationsEnabledBackgroundTick: Int? = 0
         
-        var receivedActiveIpcToken: MetricField = 0
-        var selectedIsolationPaymentsButton: MetricField = 0
-        var launchedIsolationPaymentsApplication: MetricField = 0
-        var haveActiveIpcTokenBackgroundTick: MetricField = 0
+        // Isolation payment
+        var receivedActiveIpcToken: Int? = 0
+        var selectedIsolationPaymentsButton: Int? = 0
+        var launchedIsolationPaymentsApplication: Int? = 0
+        var haveActiveIpcTokenBackgroundTick: Int? = 0
         
-        var didAskForSymptomsOnPositiveTestEntry: MetricField = 0
-        var didHaveSymptomsBeforeReceivedTestResult: MetricField = 0
-        var didRememberOnsetSymptomsDateBeforeReceivedTestResult: MetricField = 0
+        var receivedPositiveLFDTestResultViaPolling: Int? = 0
+        var receivedNegativeLFDTestResultViaPolling: Int? = 0
+        var receivedVoidLFDTestResultViaPolling: Int? = 0
+        var receivedPositiveLFDTestResultEnteredManually: Int? = 0
+        var receivedNegativeLFDTestResultEnteredManually: Int? = 0
+        var receivedVoidLFDTestResultEnteredManually: Int? = 0
+        var receivedUnconfirmedPositiveTestResult: Int? = 0
         
-        var receivedPositiveSelfRapidTestResultEnteredManually: MetricField = 0
-        var isIsolatingForTestedSelfRapidPositiveBackgroundTick: MetricField = 0
-        var hasTestedSelfRapidPositiveBackgroundTick: MetricField = 0
+        var receivedPositiveSelfRapidTestResultEnteredManually: Int? = 0
+        var isIsolatingForTestedSelfRapidPositiveBackgroundTick: Int? = 0
+        var hasTestedSelfRapidPositiveBackgroundTick: Int? = 0
         
-        var optedOutForContactIsolation: MetricField = 0
-        var optedOutForContactIsolationBackgroundTick: MetricField = 0
+        var hasTestedLFDPositiveBackgroundTick: Int? = 0
+        var isIsolatingForTestedLFDPositiveBackgroundTick: Int? = 0
         
-        var appIsUsableBackgroundTick: MetricField = 0
-        var appIsUsableBluetoothOffBackgroundTick: MetricField = 0
-        var appIsContactTraceableBackgroundTick: MetricField = 0
+        var launchedTestOrdering: Int? = 0
+        
+        var didAskForSymptomsOnPositiveTestEntry: Int? = 0
+        var didHaveSymptomsBeforeReceivedTestResult: Int? = 0
+        var didRememberOnsetSymptomsDateBeforeReceivedTestResult: Int? = 0
+        
+        var didAccessSelfIsolationNoteLink: Int? = 0
+        
+        // MARK: - Risky venue warning
+        
+        var receivedRiskyVenueM1Warning: Int? = 0
+        var receivedRiskyVenueM2Warning: Int? = 0 //
+        var hasReceivedRiskyVenueM2WarningBackgroundTick: Int? = 0
+        var didAccessRiskyVenueM2Notification: Int? = 0
+        var selectedTakeTestM2Journey: Int? = 0
+        var selectedTakeTestLaterM2Journey: Int? = 0
+        var selectedHasSymptomsM2Journey: Int? = 0
+        var selectedHasNoSymptomsM2Journey: Int? = 0
+        var selectedLFDTestOrderingM2Journey: Int? = 0
+        var selectedHasLFDTestM2Journey: Int? = 0
+        
+        // MARK: Key Sharing
+        
+        var askedToShareExposureKeysInTheInitialFlow: Int? = 0
+        var consentedToShareExposureKeysInTheInitialFlow: Int? = 0
+        var totalShareExposureKeysReminderNotifications: Int? = 0
+        var consentedToShareExposureKeysInReminderScreen: Int? = 0
+        var successfullySharedExposureKeys: Int? = 0
+        
+        // MARK: - Local Information / VOC
+        
+        var didSendLocalInfoNotification: Int? = 0
+        var didAccessLocalInfoScreenViaNotification: Int? = 0
+        var didAccessLocalInfoScreenViaBanner: Int? = 0
+        var isDisplayingLocalInfoBackgroundTick: Int? = 0
+        
+        // MARK: - Lab test result after rapid result
+        
+        var positiveLabResultAfterPositiveLFD: Int? = 0
+        var negativeLabResultAfterPositiveLFDWithinTimeLimit: Int? = 0
+        var negativeLabResultAfterPositiveLFDOutsideTimeLimit: Int? = 0
+        var positiveLabResultAfterPositiveSelfRapidTest: Int? = 0
+        var negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit: Int? = 0
+        var negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit: Int? = 0
+        
+        // MARK: - Contact case opt-out
+        
+        var optedOutForContactIsolation: Int? = 0
+        var optedOutForContactIsolationBackgroundTick: Int? = 0
+        
+        // MARK: - New app state metrics
+        
+        var appIsUsableBackgroundTick: Int? = 0
+        var appIsUsableBluetoothOffBackgroundTick: Int? = 0
+        var appIsContactTraceableBackgroundTick: Int? = 0
     }
     
     var includesMultipleApplicationVersions: Bool
     var analyticsWindow: Period
     var metadata: Metadata
     var metrics: Metrics
-}
-
-extension SubmissionPayload.MetricField: CustomDescriptionConvertible {
-    
-    var descriptionObject: Description {
-        switch self {
-        case .exact(let value):
-            return .string("\(value)")
-        case .notZero:
-            return .string("not-zero")
-        case .lessThanTotalBackgroundTasks:
-            return .string("less-than-totalBackgroundTasks")
-        }
-    }
-    
 }

@@ -21,7 +21,6 @@ public enum Metric: String, CaseIterable {
     case isolatedForTestedPositiveBackgroundTick
     case isolatedForHadRiskyContactBackgroundTick
     case isolatedForUnconfirmedTestBackgroundTick
-    case indexCaseBackgroundTick
     case isolationBackgroundTick
     case pauseTick
     case runningNormallyTick
@@ -116,6 +115,8 @@ public enum Metric: String, CaseIterable {
     case appIsUsableBluetoothOffBackgroundTick
     case appIsContactTraceableBackgroundTick
     
+    public static let nonFeatureRelatedMetricsToBeStripped: [Metric] = [
+    ]
 }
 
 public enum Metrics {

@@ -21,6 +21,8 @@ class MetricReporter: NSObject {
     private var cancellables = [AnyCancellable]()
     private let currentDateProvider: DateProviding
     private let getHouseKeepingDayDuration: () -> DayDuration
+    private let isFeatureEnabled: (Feature) -> Bool
+    private let getCountry: () -> Country
     
     init(
         client: HTTPClient,
@@ -31,18 +33,23 @@ class MetricReporter: NSObject {
         getLocalAuthority: @escaping () -> String?,
         getHouseKeepingDayDuration: @escaping () -> DayDuration,
         metricCollector: MetricCollector? = nil,
-        metricChunkCreator: MetricUploadChunkCreator? = nil
+        metricChunkCreator: MetricUploadChunkCreator? = nil,
+        isFeatureEnabled: @escaping (Feature) -> Bool,
+        getCountry: @escaping () -> Country
+        
     ) {
         self.client = client
         self.getPostcode = getPostcode
         self.getLocalAuthority = getLocalAuthority
         self.currentDateProvider = currentDateProvider
         self.getHouseKeepingDayDuration = getHouseKeepingDayDuration
+        self.isFeatureEnabled = isFeatureEnabled
+        self.getCountry = getCountry
         
         let enabled = MetricsState()
         
         let collector = metricCollector ?? MetricCollector(encryptedStore: encryptedStore, currentDateProvider: currentDateProvider, enabled: enabled)
-        let chunkCreator = metricChunkCreator ?? MetricUploadChunkCreator(collector: collector, appInfo: appInfo, getPostcode: getPostcode, getLocalAuthority: getLocalAuthority, currentDateProvider: currentDateProvider)
+        let chunkCreator = metricChunkCreator ?? MetricUploadChunkCreator(collector: collector, appInfo: appInfo, getPostcode: getPostcode, getLocalAuthority: getLocalAuthority, getCountry: getCountry, currentDateProvider: currentDateProvider, isFeatureEnabled: isFeatureEnabled)
         
         self.enabled = enabled
         self.collector = collector
@@ -82,11 +89,20 @@ class MetricReporter: NSObject {
         // send the onboarding packet
         let today = GregorianDay.today.startDate(in: .utc)
         let payload = chunkCreator.createTriggeredPayload(dateInterval: DateInterval(start: today, end: today))
+        
+        var metricsToBeStripped = Feature.allCases.filter { !isFeatureEnabled($0) }
+            .filter { $0.countriesOfRelevance.contains(self.getCountry()) }
+            .map { $0.associatedMetrics }
+            .reduce([], +)
+            
+        metricsToBeStripped.append(contentsOf: Metric.nonFeatureRelatedMetricsToBeStripped)
+        
         let info = MetricsInfo(
             payload: MetricsInfoPayload.triggeredPayload(payload),
             postalDistrict: getPostcode() ?? "",
             localAuthority: getLocalAuthority() ?? "",
-            recordedMetrics: [.completedOnboarding: 1]
+            recordedMetrics: [.completedOnboarding: 1],
+            excludedMetrics: metricsToBeStripped
         )
         client.fetch(MetricSubmissionEndpoint(), with: info).replaceError(with: ()).sink { _ in }.store(in: &cancellables)
     }

@@ -3,7 +3,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Role of `Domain`](#role-of-domain)
 - [Application Coordinator](#application-coordinator)
 - [Deriving the Application State](#deriving-the-application-state)

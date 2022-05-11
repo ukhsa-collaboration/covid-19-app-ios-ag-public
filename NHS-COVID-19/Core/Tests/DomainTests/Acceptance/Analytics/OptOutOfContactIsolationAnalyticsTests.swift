@@ -45,6 +45,7 @@ class OptOutOfContactIsolationAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.optedOutForContactIsolation)
             assertField.isPresent(\.optedOutForContactIsolationBackgroundTick)
             assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isPresent(\.acknowledgedStartOfIsolationDueToRiskyContact)
         }
         
         // Dates: 5th-16th Jan -> Analytics packets for: 4th-15th Jan

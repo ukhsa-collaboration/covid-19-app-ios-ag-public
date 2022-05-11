@@ -14,6 +14,7 @@ class MetricUploadChunkCreatorTests: XCTestCase {
     private var enabled: MetricsState!
     private var creator: MetricUploadChunkCreator!
     private static let appVersion = "3.0.0"
+    private var country: Country!
     
     override func setUp() {
         currentDate = Date()
@@ -23,6 +24,8 @@ class MetricUploadChunkCreatorTests: XCTestCase {
         enabled = MetricsState()
         enabled.set(rawState: RawState.onboardedRawState.domainProperty())
         
+        country = Bool.random() ? .england : .wales
+        
         let currentDateProvider = MockDateProvider { self.currentDate }
         collector = MetricCollector(encryptedStore: store, currentDateProvider: currentDateProvider, enabled: enabled)
         creator = MetricUploadChunkCreator(
@@ -30,7 +33,9 @@ class MetricUploadChunkCreatorTests: XCTestCase {
             appInfo: AppInfo(bundleId: .random(), version: Self.appVersion, buildNumber: "1"),
             getPostcode: { String.random() },
             getLocalAuthority: { String.random() },
-            currentDateProvider: currentDateProvider
+            getCountry: { self.country },
+            currentDateProvider: currentDateProvider,
+            isFeatureEnabled: { _ in false }
         )
     }
     

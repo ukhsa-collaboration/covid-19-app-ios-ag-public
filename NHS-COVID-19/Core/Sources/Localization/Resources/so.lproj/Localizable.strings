@@ -317,7 +317,7 @@
 "checkin_information_help_scanning_section_description" = "Waxaannu kugula talineynaa inaad la hadasho xubin ka mid ah shaqaalaha goobta jooga si aad u ogaato inay jiraan siyaabo kale aad isku soo xaadirin karto.";
 "checkin_information_whats_a_qr_code_section_title" = "Qaabka loo aqoonsado warqadda  koodhka NHS QR";
 "checkin_information_whats_a_qr_code_section_description_new" = "Waa kuwan sida ay u eg yihiin warqadaha rasmiga ah ee NHS QR. Waxaad u baahantahay inaad iskaan-garayso koodhka, oo ah afar-geeska dhex-bartanka ku yaalla.";
-"about_this_app_software_information_date_of_release_description" = "04/2022";
+"about_this_app_software_information_date_of_release_description" = "05/2022";
 "link_test_result_enter_code_example" = "Tusaale: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Koodhka baaritaanka";
 "link_test_result_button_title" = "Sii wad";

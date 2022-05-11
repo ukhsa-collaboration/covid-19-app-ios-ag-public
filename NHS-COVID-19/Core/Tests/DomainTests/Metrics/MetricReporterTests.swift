@@ -70,6 +70,8 @@ class MetricReporterTests: XCTestCase {
         let appInfo = AppInfo(bundleId: .random(), version: Self.appVersion, buildNumber: "1")
         let postcode = "CF71"
         let authority = "W06000014"
+        let country: Country = .wales
+        let isFeatureEnabled = true
         
         collector = MetricCollector(
             encryptedStore: encryptedStore,
@@ -82,7 +84,9 @@ class MetricReporterTests: XCTestCase {
             appInfo: appInfo,
             getPostcode: { postcode },
             getLocalAuthority: { authority },
-            currentDateProvider: currentDateProvider
+            getCountry: { country },
+            currentDateProvider: currentDateProvider,
+            isFeatureEnabled: { _ in isFeatureEnabled }
         )
         
         reporter = MetricReporter(
@@ -94,7 +98,9 @@ class MetricReporterTests: XCTestCase {
             getLocalAuthority: { authority },
             getHouseKeepingDayDuration: { DayDuration(14) },
             metricCollector: collector,
-            metricChunkCreator: creator
+            metricChunkCreator: creator,
+            isFeatureEnabled: { _ in isFeatureEnabled },
+            getCountry: { country }
         )
         
         // reset the onboarding completed flag

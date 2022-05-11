@@ -3,6 +3,7 @@
 //
 
 import Foundation
+import Common
 
 public enum Feature: CaseIterable {
     
@@ -45,4 +46,86 @@ public enum Feature: CaseIterable {
         .guidanceHubEngland,
         .guidanceHubWales
     ]
+}
+
+extension Feature {
+    
+    var associatedMetrics: [Metric] {
+        switch self {
+        case .newNoSymptomsScreen:
+            return []
+        case .localStatistics:
+            return []
+        case .venueCheckIn:
+            return [
+                .receivedRiskyVenueM2Warning,
+                .hasReceivedRiskyVenueM2WarningBackgroundTick,
+                .didAccessRiskyVenueM2Notification,
+                .selectedTakeTestM2Journey,
+                .selectedTakeTestLaterM2Journey,
+                .selectedHasSymptomsM2Journey,
+                .selectedHasNoSymptomsM2Journey,
+                .selectedLFDTestOrderingM2Journey,
+                .selectedHasLFDTestM2Journey,
+                .receivedRiskyVenueM1Warning,
+            ]
+        case .contactOptOutFlowEngland:
+            return [
+                .acknowledgedStartOfIsolationDueToRiskyContact,
+                .isolatedForHadRiskyContactBackgroundTick,
+            ]
+        case .contactOptOutFlowWales:
+            return [
+                .acknowledgedStartOfIsolationDueToRiskyContact,
+                .isolatedForHadRiskyContactBackgroundTick,
+            ]
+        case .testingForCOVID19:
+            return []
+        case .selfIsolationHubEngland:
+            return [
+                .didAccessSelfIsolationNoteLink,
+                .receivedActiveIpcToken,
+                .haveActiveIpcTokenBackgroundTick,
+                .selectedIsolationPaymentsButton,
+                .launchedIsolationPaymentsApplication,
+            ]
+        case .selfIsolationHubWales:
+            return [
+                .didAccessSelfIsolationNoteLink,
+                .receivedActiveIpcToken,
+                .haveActiveIpcTokenBackgroundTick,
+                .selectedIsolationPaymentsButton,
+                .launchedIsolationPaymentsApplication,
+            ]
+        case .guidanceHubEngland:
+            return []
+        case .guidanceHubWales:
+            return []
+        }
+    }
+    
+    var countriesOfRelevance: [Country] {
+        switch self {
+        case .newNoSymptomsScreen:
+            return [.england, .wales]
+        case .localStatistics:
+            return [.england, .wales]
+        case .venueCheckIn:
+            return [.england, .wales]
+        case .contactOptOutFlowEngland:
+            return [.england]
+        case .contactOptOutFlowWales:
+            return [.wales]
+        case .testingForCOVID19:
+            return [.england, .wales]
+        case .selfIsolationHubEngland:
+            return [.england]
+        case .selfIsolationHubWales:
+            return [.wales]
+        case .guidanceHubEngland:
+            return [.england]
+        case .guidanceHubWales:
+            return [.wales]
+        }
+    }
 }
