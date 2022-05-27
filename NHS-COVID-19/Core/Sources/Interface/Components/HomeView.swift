@@ -139,6 +139,7 @@ struct HomeView: View {
                         foregroundColor: Color(.background),
                         backgroundColor: Color(.styleOrange),
                         text: localize(.home_diagnosis_button_title),
+                        showNewLabel: interactor.shouldShowNewLabelForEnglandSC,
                         action: interactor.didTapDiagnosisButton
                     )
                 }

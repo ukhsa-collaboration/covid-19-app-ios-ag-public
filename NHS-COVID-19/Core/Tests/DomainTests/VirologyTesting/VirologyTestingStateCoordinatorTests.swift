@@ -27,7 +27,8 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
             isInterestedInAskingForSymptomsOnsetDay: {
                 self.isInterestedInAskingForSymptomsOnsetDay
             },
-            setRequiresOnsetDay: {}
+            setRequiresOnsetDay: {},
+            country: { .england }
         )
     }
     

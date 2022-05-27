@@ -30,7 +30,7 @@ class IsolationConfigurationEndpointTests: XCTestCase {
             "indexCaseSinceTestResultEndDate": 5,
             "testResultPollingTokenRetentionPeriod": 28
           },
-          "wales": {
+          "wales_v2": {
             "indexCaseSinceSelfDiagnosisOnset": 2,
             "indexCaseSinceSelfDiagnosisUnknownOnset": 3,
             "contactCase": 4,
@@ -78,7 +78,7 @@ class IsolationConfigurationEndpointTests: XCTestCase {
             "indexCaseSinceTestResultEndDate": 5,
             "testResultPollingTokenRetentionPeriod": 60
           },
-          "wales": {
+          "wales_v2": {
             "indexCaseSinceSelfDiagnosisOnset": 2,
             "indexCaseSinceSelfDiagnosisUnknownOnset": 3,
             "contactCase": 4,

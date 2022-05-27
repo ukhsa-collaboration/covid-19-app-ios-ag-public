@@ -5,6 +5,7 @@
 import Foundation
 
 public enum StringLocalizableKey: String, CaseIterable {
+    
     case onboarding_strapline_title
     case onboarding_strapline_accessiblity_label
     
@@ -97,6 +98,8 @@ public enum StringLocalizableKey: String, CaseIterable {
     case home_contact_tracing_hub_button_title
     case home_testing_hub_button_title
     case home_self_isolation_button_title
+    case home_new_label
+    case home_new_label_accessibility_text
     case status_option_local_data
     
     case risk_level_indicator_contact_tracing_active
@@ -632,6 +635,17 @@ public enum StringLocalizableKey: String, CaseIterable {
     case age_declaration_error_title
     case age_declaration_error_description
     
+    case how_you_feel_error_title
+    case how_you_feel_error_description
+    case how_you_feel_yes_option
+    case how_you_feel_no_option
+    case how_you_feel_header
+    case how_you_feel_description
+    case how_you_feel_yes_option_accessibility_text
+    case how_you_feel_no_option_accessibility_text
+    case do_you_feel_well_description_accessibility_text
+    case how_you_feel_continue_button
+    
     // MARK: - Testing Hub
     
     case testing_hub_title
@@ -690,6 +704,21 @@ public enum StringLocalizableKey: String, CaseIterable {
     case self_diagnosis_no_symptoms_after_positive_link
     case self_diagnosis_no_symptoms_after_positive_button_title
     
+    //MARK: - Self Diagnosis England - Your symptoms
+    case your_symptoms_title
+    case your_symptoms_first_yes_option
+    case your_symptoms_first_yes_option_accessibility_text
+    case your_symptoms_first_no_option
+    case your_symptoms_first_no_option_accessibility_text
+    case your_symptoms_second_yes_option
+    case your_symptoms_second_yes_option_accessibility_text
+    case your_symptoms_second_no_option
+    case your_symptoms_second_no_option_accessibility_text
+    case your_symptoms_continue_button
+    
+    case your_symptoms_error_title
+    case your_symptoms_no_questions_answerd_error_description
+    
     case about_this_app_vaccination_status_disclaimer_heading
     case about_this_app_vaccination_status_disclaimer_description
     case about_this_app_vaccination_status_disclaimer_link
@@ -705,6 +734,24 @@ public enum StringLocalizableKey: String, CaseIterable {
     case warn_and_test_check_symptoms_confirm_alert_stay
     
     case link_nhs_guidance
+    
+    case symptom_checker_advice_stay_at_home_header
+    case try_to_stay_home_advice_accesibility
+    case symptom_checker_advice_notice_header
+    case symptom_checker_advice_notice_stay_at_home_link_text
+    case summary_page_go_home
+    case nhs_111_online_service
+    case symptom_checker_advice_emergency_contact_body
+    case try_to_stay_home_back_to_home_button
+    case symptom_checker_advice_notice_stay_at_home_link_url
+    case symptom_checker_advice_continue_normal_activities_header
+    case symptom_checker_advice_notice_body_one
+    case symptom_checker_advice_notice_body_two
+    case symptom_checker_advice_notice_continue_normal_activities_link_text
+    case symptom_checker_advice_icon_header
+    case symptom_checker_advice_bulleted_paragraph_header
+    case symptom_checker_advice_bulleted_paragraph_body
+    case symptom_checker_advice_notice_continue_normal_activities_link_url
     
     // MARK: - Contact case resolutions
     
@@ -1099,6 +1146,10 @@ public enum StringLocalizableKey: String, CaseIterable {
     case your_isolation_are_ending_soon_wales
     case expiration_notification_callout_advice_wales
     case expiration_notification_testing_advice_wales_before_isolation_ended_wales
+    
+    case check_answers_heading
+    case check_answers_change_button
+    case check_answers_submit_button
 }
 
 public enum ParameterisedStringLocalizable: Equatable {
@@ -1186,6 +1237,8 @@ public enum ParameterisedStringLocalizable: Equatable {
         case local_statistics_main_screen_england_rate_100k_accessibility_text = "local_statistics_main_screen_england_rate_100k_accessibility_text rollingRate: %ld"
         case local_statistics_main_screen_wales_rate_100k_accessibility_text = "local_statistics_main_screen_wales_rate_100k_accessibility_text rollingRate: %ld"
         case local_statistics_main_screen_about_data_footnote_1 = "local_statistics_main_screen_about_data_footnote_1 startDate: %@, endDate: %@"
+        
+        case your_symptoms_error_description = "your_symptoms_error_description %@"
     }
     
     case checkin_confirmation_date(date: Date)
@@ -1274,6 +1327,8 @@ public enum ParameterisedStringLocalizable: Equatable {
     case local_statistics_main_screen_england_rate_100k_accessibility_text(rollingRate: Double)
     case local_statistics_main_screen_wales_rate_100k_accessibility_text(rollingRate: Double)
     case local_statistics_main_screen_about_data_footnote_1(startDate: Date, endDate: Date)
+    
+    case your_symptoms_error_description(question: String)
     
     var key: Key {
         switch self {
@@ -1371,6 +1426,8 @@ public enum ParameterisedStringLocalizable: Equatable {
             return .local_statistics_main_screen_wales_rate_100k_accessibility_text
         case .local_statistics_main_screen_about_data_footnote_1:
             return .local_statistics_main_screen_about_data_footnote_1
+        case .your_symptoms_error_description:
+            return .your_symptoms_error_description
         }
     }
     
@@ -1538,6 +1595,8 @@ public enum ParameterisedStringLocalizable: Equatable {
                 DateFormatter.dayOfYear(style: .full).string(from: startDate),
                 DateFormatter.dayOfYear(style: .full).string(from: endDate),
             ]
+        case .your_symptoms_error_description(question: let question):
+            return [question]
         }
     }
     

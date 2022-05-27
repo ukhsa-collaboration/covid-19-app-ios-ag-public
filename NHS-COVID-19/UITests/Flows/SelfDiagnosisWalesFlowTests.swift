@@ -36,7 +36,7 @@ class SelfDiagnosisWalesFlowTests: XCTestCase {
                 """
             }
             
-            homeScreen.selfDiagnosisButton.tap()
+            homeScreen.selfDiagnosisButton().tap()
             
             runner.step("Symptom List") {
                 """

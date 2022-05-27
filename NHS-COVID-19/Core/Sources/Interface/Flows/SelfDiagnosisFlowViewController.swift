@@ -10,6 +10,9 @@ import UIKit
 
 public enum UIValidationError: Error {
     case noSymptomSelected
+    case noCardinalSymptomSelected
+    case noNonCardinalSymptomSelected
+    case neitherCardinalNorNonCardinalSymptomsSelected
     case neitherDateNorNoDateCheckSet
 }
 
@@ -77,6 +80,8 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
     fileprivate var symptomsQuestionnaire = InterfaceSymptomsQuestionnaire(
         riskThreshold: 0.0,
         symptoms: [SymptomInfo](),
+        cardinal: CardinalSymptomInfo(),
+        noncardinal: CardinalSymptomInfo(),
         dateSelectionWindow: 0
     )
     

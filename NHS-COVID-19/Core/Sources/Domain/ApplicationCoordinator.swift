@@ -26,6 +26,7 @@ public class ApplicationCoordinator {
     private let postcodeStore: PostcodeStore
     private let distributeClient: HTTPClient
     private let selfDiagnosisManager: SelfDiagnosisManager
+    private let symptomsCheckerManager: SymptomsCheckerManager
     private let exposureNotificationContext: ExposureNotificationContext
     private let checkInContext: CheckInContext
     private let isolationContext: IsolationContext
@@ -43,6 +44,7 @@ public class ApplicationCoordinator {
     private let circuitBreaker: CircuitBreaker
     private let isolationHousekeeper: IsolationHousekeeper
     private let riskyVenueHousekeeper: RiskyVenueHousekeeper
+    private let symptomsCheckerHousekeeper: SymptomsCheckerHousekeeper
     private let exposureNotificationReminder: ExposureNotificationReminder
     private let completedOnboardingForCurrentSession = CurrentValueSubject<Bool, Never>(false)
     private let appReviewPresenter: AppReviewPresenting
@@ -159,6 +161,14 @@ public class ApplicationCoordinator {
             shouldShowNewNoSymptomsScreen: { enabledFeatures.contains(.newNoSymptomsScreen) }
         )
         
+        let symptomsCheckerStore = SymptomsCheckerStore(store: services.encryptedStore)
+        
+        symptomsCheckerManager = SymptomsCheckerManager(
+            symptomsCheckerStore: symptomsCheckerStore,
+            currentDateProvider: currentDateProvider,
+            httpClient: distributeClient
+        )
+        
         localCovidStatsManager = LocalCovidStatsManager(
             httpClient: distributeClient
         )
@@ -208,7 +218,8 @@ public class ApplicationCoordinator {
                 setRequiresOnsetDay: {
                     isolationContext.shouldAskForSymptoms.send(true)
                     Metrics.signpost(.didAskForSymptomsOnPositiveTestEntry)
-                }
+                },
+                country: { country.currentValue }
             ),
             ctaTokenValidator: CTATokenValidator(),
             country: { country.currentValue }
@@ -303,6 +314,11 @@ public class ApplicationCoordinator {
         
         riskyVenueHousekeeper = RiskyVenueHousekeeper(
             checkInsStore: checkInContext.checkInsStore,
+            getToday: { dateProvider.currentGregorianDay(timeZone: .current) }
+        )
+        
+        symptomsCheckerHousekeeper = SymptomsCheckerHousekeeper(
+            symptomsCheckerStore: symptomsCheckerManager.symptomsCheckerStore,
             getToday: { dateProvider.currentGregorianDay(timeZone: .current) }
         )
         
@@ -453,6 +469,7 @@ public class ApplicationCoordinator {
                     openAppStore: application.openAppStore,
                     openURL: application.open,
                     selfDiagnosisManager: selfDiagnosisManager,
+                    symptomsCheckerManager: symptomsCheckerManager,
                     isolationState: isolationContext.isolationStateManager.$state
                         .map(IsolationState.init)
                         .domainProperty(),
@@ -780,6 +797,16 @@ public class ApplicationCoordinator {
             contentsOf: checkInContext.makeBackgroundJobs()
         )
         
+        let symptomsCheckerHousekeepingJob = BackgroundTaskAggregator.Job(
+            work: symptomsCheckerHousekeeper.executeHousekeeping
+        )
+        
+        enabledJobs.append(symptomsCheckerHousekeepingJob)
+        
+        enabledJobs.append(
+            contentsOf: symptomsCheckerManager.makeBackgroundJobs()
+        )
+        
         enabledJobs.append(
             BackgroundTaskAggregator.Job(
                 work: exposureNotificationContext.exposureNotificationStateController.recordMetrics
@@ -950,6 +977,9 @@ public class ApplicationCoordinator {
         riskyPostcodeEndpointManager.reload()
         homeAnimationsStore.delete()
         localInformationEndpointManager.deleteCurrentInfo()
+        symptomsCheckerManager.deleteAll()
+        
+        UserDefaults.standard.removeObject(forKey: "OpenedNewSymptomCheckerInEnglandV4_29")
     }
     
     private func deleteCheckIn(with id: String) {

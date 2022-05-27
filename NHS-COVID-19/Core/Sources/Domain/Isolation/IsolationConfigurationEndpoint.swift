@@ -15,7 +15,7 @@ struct IsolationConfigurationEndpoint: HTTPEndpoint {
         let payload = try JSONDecoder().decode(Payload.self, from: response.body.content)
         return EnglandAndWalesIsolationConfigurations(
             england: .init(payload: payload.england),
-            wales: .init(payload: payload.wales)
+            wales: .init(payload: payload.wales_v2)
         )
     }
 }
@@ -32,7 +32,7 @@ private struct Payload: Codable {
     }
     
     var england: CountrySpecificValues
-    var wales: CountrySpecificValues
+    var wales_v2: CountrySpecificValues
 }
 
 extension IsolationConfiguration {

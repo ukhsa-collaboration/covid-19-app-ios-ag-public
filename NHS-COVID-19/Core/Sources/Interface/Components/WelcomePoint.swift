@@ -8,13 +8,19 @@ public class WelcomePoint: UIView {
     public init(image: ImageName,
                 header: String? = nil,
                 body: String,
+                setBoldText: Bool = false,
+                hStackAlignment: UIStackView.Alignment = .top,
                 link: (title: String, action: () -> Void)? = nil) {
         super.init(frame: .zero)
         
         let bodyLabel = BaseLabel()
         bodyLabel.text = body
-        bodyLabel.styleAsBody()
-        
+        if setBoldText {
+            bodyLabel.styleAsHeading()
+        } else {
+            bodyLabel.styleAsBody()
+        }
+
         let imageView = UIImageView(image)
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = UIColor(.surface)
@@ -58,7 +64,7 @@ public class WelcomePoint: UIView {
             vStack,
         ])
         hStack.spacing = .bigSpacing
-        hStack.alignment = .top
+        hStack.alignment = hStackAlignment
         
         addFillingSubview(hStack)
     }

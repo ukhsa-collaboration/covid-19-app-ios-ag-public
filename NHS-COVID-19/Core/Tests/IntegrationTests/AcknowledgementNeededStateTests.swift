@@ -197,6 +197,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
             openAppStore: {},
             openURL: { _ in },
             selfDiagnosisManager: MockSelfDiagnosisManager(),
+            symptomsCheckerManager: MockSymptomsCheckerManager(),
             isolationState: Just(.noNeedToIsolate()).domainProperty(), testInfo: Just(nil).domainProperty(),
             isolationAcknowledgementState: Result.success(isolationAckState).publisher.eraseToAnyPublisher(),
             exposureNotificationStateController: ExposureNotificationStateController(
@@ -263,6 +264,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
     }
     
     private class MockSelfDiagnosisManager: SelfDiagnosisManaging {
+        
         func shouldShowNewNoSymptomsScreen() -> Bool {
             false
         }
@@ -271,7 +273,12 @@ class AcknowledgementNeededStateTests: XCTestCase {
         
         func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError> {
             return Future<SymptomsQuestionnaire, NetworkRequestError> { promise in
-                promise(.success(SymptomsQuestionnaire(symptoms: [], riskThreshold: 0.0, dateSelectionWindow: 0)))
+                promise(.success(SymptomsQuestionnaire(
+                    symptoms: [],
+                    cardinal: CardinalSymptom(title: LocaleString(dictionaryLiteral: (.current, ""))),
+                    noncardinal: NonCardinalSymptom(title: LocaleString(dictionaryLiteral: (.current, "")), description: LocaleString(dictionaryLiteral: (.current, ""))),
+                    riskThreshold: 0.0,
+                    dateSelectionWindow: 0)))
             }.eraseToAnyPublisher()
         }
         
@@ -279,6 +286,32 @@ class AcknowledgementNeededStateTests: XCTestCase {
             .noSymptoms
         }
         
+    }
+    
+    private class MockSymptomsCheckerManager: SymptomsCheckerManaging {
+
+        let symptomsCheckerStore = SymptomsCheckerStore(store: MockEncryptedStore())
+        private let symptomCheckerAdviceHandler = SymptomCheckerAdviceHandler()
+        
+        func store(shouldTryToStayAtHome: Bool) {
+            let currentDay: GregorianDay = .today
+            symptomsCheckerStore.save(lastCompletedSymptomsQuestionnaireDay: currentDay, toldToStayHome: shouldTryToStayAtHome)
+        }
+        
+        func invoke(symptomCheckerQuestions: SymptomCheckerQuestions) -> SymptomCheckerAdviceResult? {
+            symptomCheckerAdviceHandler.invoke(symptomCheckerQuestions: symptomCheckerQuestions)
+        }
+        
+        func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError> {
+            return Future<SymptomsQuestionnaire, NetworkRequestError> { promise in
+                promise(.success(SymptomsQuestionnaire(
+                    symptoms: [],
+                    cardinal: CardinalSymptom(title: LocaleString(dictionaryLiteral: (.current, ""))),
+                    noncardinal: NonCardinalSymptom(title: LocaleString(dictionaryLiteral: (.current, "")), description: LocaleString(dictionaryLiteral: (.current, ""))),
+                    riskThreshold: 0.0,
+                    dateSelectionWindow: 0)))
+            }.eraseToAnyPublisher()
+        }
     }
     
     private class MockAppReviewPresenter: AppReviewPresenting {

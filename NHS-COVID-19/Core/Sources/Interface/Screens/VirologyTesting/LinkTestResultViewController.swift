@@ -22,9 +22,8 @@ public class LinkTestResultViewController: UIViewController {
     
     public typealias Interacting = LinkTestResultViewControllerInteracting
     
-    private let interactor: Interacting
+    private let interactor: Interacting 
     private var cancellable: AnyCancellable?
-    
     private lazy var titleLabel: UILabel = {
         let label = BaseLabel()
         label.styleAsPageHeader()

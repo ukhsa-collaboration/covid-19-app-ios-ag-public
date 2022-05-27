@@ -105,7 +105,8 @@ struct IsolationContext {
         result: VirologyStateTestResult?,
         completionHandler: @escaping (AcknowledgementCompletionActions) -> Void
     ) -> AnyPublisher<TestResultAcknowledgementState, Never> {
-        isolationStateStore.$isolationStateInfo
+        var didRememberOnsetSymptomsDateBeforeReceivedTestResult = false
+        return isolationStateStore.$isolationStateInfo
             .combineLatest(currentDateProvider.today, shouldAskForSymptoms)
             .map { isolationStateInfo, _, shouldAskForSymptoms in
                 guard let result = result else {
@@ -125,13 +126,16 @@ struct IsolationContext {
                                 symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: currentDateProvider.currentGregorianDay(timeZone: .utc), onsetDay: onsetDay),
                                 testInfo: nil
                             )
+                            didRememberOnsetSymptomsDateBeforeReceivedTestResult = true
                             self.isolationStateStore.set(info)
                             Metrics.signpost(.didRememberOnsetSymptomsDateBeforeReceivedTestResult)
                         }
                     )
                 }
                 
-                let currentIsolationState = IsolationLogicalState(stateInfo: isolationStateInfo, day: self.currentDateProvider.currentLocalDay)
+                let currentIsolationState = didRememberOnsetSymptomsDateBeforeReceivedTestResult
+                ? .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil)
+                : IsolationLogicalState(stateInfo: isolationStateInfo, day: self.currentDateProvider.currentLocalDay)
                 
                 let testResultIsolationOperation = TestResultIsolationOperation(
                     currentIsolationState: currentIsolationState,

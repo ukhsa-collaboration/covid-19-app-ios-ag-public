@@ -55,6 +55,9 @@ public struct NavigationButton: View {
     var font: Font
     var fontWeight: Font.Weight?
     var colorScheme: ColorScheme
+    var showNewLabel: Bool
+    
+    @State private var didTapButton: Bool = false
     
     public init(
         imageName: ImageName,
@@ -64,6 +67,7 @@ public struct NavigationButton: View {
         text: String,
         font: Font = .body,
         fontWeight: Font.Weight? = nil,
+        showNewLabel: Bool = false,
         action: @escaping () -> Void
     ) {
         self.init(
@@ -73,6 +77,7 @@ public struct NavigationButton: View {
             font: font,
             fontWeight: fontWeight,
             colorScheme: ColorScheme.standard(foregroundColor: foregroundColor, imageBackgroundColor: backgroundColor),
+            showNewLabel: showNewLabel,
             action: action
         )
     }
@@ -84,6 +89,7 @@ public struct NavigationButton: View {
         font: Font = .body,
         fontWeight: Font.Weight? = nil,
         colorScheme: ColorScheme,
+        showNewLabel: Bool = false,
         action: @escaping () -> Void
     ) {
         self.action = action
@@ -93,10 +99,16 @@ public struct NavigationButton: View {
         self.font = font
         self.fontWeight = fontWeight
         self.colorScheme = colorScheme
+        self.showNewLabel = showNewLabel
     }
     
     public var body: some View {
-        Button(action: action) {
+        Button(action: {
+            if showNewLabel {
+                didTapButton = true
+            }
+            action()
+        }) {
             ZStack(alignment: .leading) {
                 colorScheme.imageBackgroundColor
                     .frame(width: .menuButtonColorWidth)
@@ -117,6 +129,20 @@ public struct NavigationButton: View {
                             .fixedSize(horizontal: false, vertical: true)
                             .multilineTextAlignment(.leading)
                         Spacer()
+                        if showNewLabel && !didTapButton {
+                            Text(localize(.home_new_label))
+                                .font(font)
+                                .fontWeight(.bold)
+                                .foregroundColor(Color.white)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.2)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .multilineTextAlignment(.center)
+                                .padding([.all], 4)
+                                .background(Rectangle().fill(Color(red: 188 / 255, green: 90 / 255, blue: 0 / 255)))
+                                .cornerRadius(5)
+                                .accessibility(label: Text(verbatim: localize(.home_new_label_accessibility_text)))
+                        }
                         Image(iconName)
                             .resizable()
                             .scaledToFit()

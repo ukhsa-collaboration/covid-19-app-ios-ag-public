@@ -45,6 +45,7 @@ public protocol HomeFlowViewControllerInteracting {
     var shouldShowTestingForCOVID19: Bool { get }
     var shouldShowSelfIsolation: Bool { get }
     var shouldShowGuidanceHub: Bool { get }
+    var shouldShowNewLabelForEnglandSC: Bool { get }
     func openTearmsOfUseLink()
     func openPrivacyLink()
     func openFAQ()
@@ -447,6 +448,10 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     
     public var shouldShowGuidanceHub: Bool {
         flowInteractor.shouldShowGuidanceHub
+    }
+    
+    public var shouldShowNewLabelForEnglandSC: Bool {
+        flowInteractor.shouldShowNewLabelForEnglandSC
     }
     
     func openSettings() {

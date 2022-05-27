@@ -11,10 +11,16 @@ import XCTest
 class IsolationReasonAnalyticsTests: AnalyticsTests {
     private var questionnaire: Questionnaire!
     private var riskyContact: RiskyContact!
+    private var symptomsCheckerManager: SymptomsCheckerManaging!
     
     override func setUpFunctionalities() {
-        questionnaire = Questionnaire(context: try! context())
-        riskyContact = RiskyContact(configuration: $instance)
+        do {
+            questionnaire = Questionnaire(context: try context())
+            riskyContact = RiskyContact(configuration: $instance)
+            symptomsCheckerManager = try context().symptomsCheckerManager
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
     }
     
     // hasSelfDiagnosedBackgroundTick
@@ -225,4 +231,60 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
         // Previous isolation reason no longer stored
         assertAnalyticsPacketIsNormal()
     }
+    
+    // hasCompletedV2SymptomsQuestionnaireBackgroundTick
+    // >0 if the app is aware that the user has completed questionnaire
+    // this should happens for a period of 14 days after the questionnaire is completed.
+    func testHasCompletedV2SymptomsQuestionnaireBackgroundTickIsPresentWhenCompletedQuestionnaireAndFor14DaysAfter() throws {
+        // Current date: 2nd Jan -> Analytics packet for: 1st Jan
+        assertAnalyticsPacketIsNormal()
+        
+        // Complete questionnaire with result try to stay at home on 2nd Jan
+        symptomsCheckerManager.store(shouldTryToStayAtHome: false)
+        
+        // Current date: 3rd Jan -> Analytics packet for: 2nd Jan
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.completedV2SymptomsQuestionnaire)
+            assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
+        }
+        
+        // Dates: 4th-16th Jan -> Analytics packets for: 3rd-15th Jan
+        assertOnFieldsForDateRange(dateRange: 4 ... 16) { assertField in
+            assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
+        }
+
+        // Current date: 17th Jan -> Analytics packet for: 16th Jan
+        // longer stored
+        assertAnalyticsPacketIsNormal()
+    }
+    
+    // hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick
+    // >0 if the app is aware that the user has completed the questionnaire and told to stay at home
+    // should happens for a period of 14 days after the "stay at home" screen is shown.
+    func testHasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTickIsPresentWhenCompletedQuestionnaireAndFor14DaysAfter() throws {
+        // Current date: 2nd Jan -> Analytics packet for: 1st Jan
+        assertAnalyticsPacketIsNormal()
+        
+        // Complete questionnaire with result try to stay at home on 2nd Jan
+        symptomsCheckerManager.store(shouldTryToStayAtHome: true)
+        
+        // Current date: 3rd Jan -> Analytics packet for: 2nd Jan
+        assertOnFields { assertField in
+            assertField.equals(expected: 1, \.completedV2SymptomsQuestionnaire)
+            assertField.equals(expected: 1, \.completedV2SymptomsQuestionnaireAndStayAtHome)
+            assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
+            assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick)
+        }
+        
+        // Dates: 4th-16th Jan -> Analytics packets for: 3rd-15th Jan
+        assertOnFieldsForDateRange(dateRange: 4 ... 16) { assertField in
+            assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
+            assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick)
+        }
+
+        // Current date: 17th Jan -> Analytics packet for: 16th Jan
+        // longer stored
+        assertAnalyticsPacketIsNormal()
+    }
+    
 }

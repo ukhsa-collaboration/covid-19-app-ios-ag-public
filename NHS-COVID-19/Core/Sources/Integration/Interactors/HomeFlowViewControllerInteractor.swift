@@ -64,16 +64,27 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     }
     
     func makeDiagnosisViewController() -> UIViewController? {
-        WrappingViewController {
-            SelfDiagnosisOrderFlowState.makeState(context: context)
-                .map { state in
-                    switch state {
-                    case .selfDiagnosis(let interactor):
-                        return SelfDiagnosisFlowViewController(interactor, currentDateProvider: currentDateProvider, country: context.country.currentValue)
-                    case .testOrdering(let interactor):
-                        return VirologyTestingFlowViewController(interactor)
-                    }
-                }
+        if context.country.currentValue == .wales {
+            let testOrdering = CurrentValueSubject<Bool, Never>(false)
+            let interactor = SelfDiagnosisFlowInteractor(
+                selfDiagnosisManager: context.selfDiagnosisManager,
+                orderTest: {
+                    testOrdering.send(true)
+                },
+                openURL: context.openURL,
+                initialIsolationState: context.isolationState.currentValue
+            )
+            return SelfDiagnosisFlowViewController(interactor, currentDateProvider: currentDateProvider, country: context.country.currentValue)
+        } else {
+            UserDefaults.standard.set(true, forKey: "OpenedNewSymptomCheckerInEnglandV4_29")
+
+            let interactor = SymptomsCheckerFlowInteractor(symptomsCheckerManager: context.symptomsCheckerManager)
+            return SymptomCheckerFlowViewController(
+                interactor,
+                currentDateProvider: currentDateProvider,
+                country: context.country.currentValue,
+                openURL: context.openURL
+            )
         }
     }
     
@@ -433,6 +444,15 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             return context.shouldShowGuidanceHubEngland
         case .wales:
             return context.shouldShowGuidanceHubWales
+        }
+    }
+    
+    var shouldShowNewLabelForEnglandSC: Bool {
+        switch context.country.currentValue {
+        case .england:
+            return !UserDefaults.standard.bool(forKey: "OpenedNewSymptomCheckerInEnglandV4_29")
+        case .wales:
+            return false
         }
     }
     

@@ -44,6 +44,7 @@ public struct RunningAppContext {
     public var openAppStore: () -> Void
     public var openURL: (URL) -> Void
     public var selfDiagnosisManager: SelfDiagnosisManaging
+    public var symptomsCheckerManager: SymptomsCheckerManaging
     public var isolationState: DomainProperty<IsolationState>
     public var testInfo: DomainProperty<IndexCaseInfo.TestInfo?>
     public var isolationAcknowledgementState: AnyPublisher<IsolationAcknowledgementState, Never>

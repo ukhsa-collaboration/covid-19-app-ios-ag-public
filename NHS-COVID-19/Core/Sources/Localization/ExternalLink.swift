@@ -53,6 +53,8 @@ public enum ExternalLink: CaseIterable {
     case guidanceHubWalesLink5
     case guidanceHubWalesLink6
     case guidanceHubWalesLink7
+    case didTapSymptomaticCase
+    case didTapSymptomCheckerNormalActivities
 
     
     public var url: URL {
@@ -153,6 +155,10 @@ public enum ExternalLink: CaseIterable {
             return localizeURL(.covid_guidance_hub_wales_button_six_url)
         case .guidanceHubWalesLink7:
             return localizeURL(.covid_guidance_hub_wales_button_seven_url)
+        case.didTapSymptomaticCase:
+            return localizeURL(.symptom_checker_advice_notice_continue_normal_activities_link_url)
+        case.didTapSymptomCheckerNormalActivities:
+            return localizeURL(.symptom_checker_advice_notice_stay_at_home_link_url)
         }
     }
 }

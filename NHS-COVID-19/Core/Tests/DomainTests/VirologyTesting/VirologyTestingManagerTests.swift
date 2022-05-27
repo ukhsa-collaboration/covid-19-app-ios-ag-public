@@ -29,7 +29,8 @@ class VirologyTestingManagerTests: XCTestCase {
                 virologyTestingStateStore: virologyStore,
                 userNotificationsManager: notificationManager,
                 isInterestedInAskingForSymptomsOnsetDay: { false },
-                setRequiresOnsetDay: {}
+                setRequiresOnsetDay: {},
+                country: { .england }
             ),
             ctaTokenValidator: validator,
             country: { .england }

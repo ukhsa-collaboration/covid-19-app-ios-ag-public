@@ -127,6 +127,7 @@ public class HomeScreenAlerts {
 
 private class Interactor: HomeViewController.Interacting {
     
+    var shouldShowNewLabelForEnglandSC: Bool = false
     var checkInEnabled: Bool
     var testingForCOVID19Enabled: Bool
     var selfIsolationEnabled: Bool

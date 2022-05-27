@@ -16,8 +16,8 @@ struct HomeScreen {
         app.buttons.element(containing: text)
     }
     
-    var selfDiagnosisButton: XCUIElement {
-        app.buttons[localized: .home_diagnosis_button_title]
+    func selfDiagnosisButton() -> XCUIElement {
+        app.buttons.element(containing: localize(.home_diagnosis_button_title))
     }
     
     var settingsButton: XCUIElement {

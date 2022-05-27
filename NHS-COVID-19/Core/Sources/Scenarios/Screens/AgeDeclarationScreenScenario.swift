@@ -29,7 +29,7 @@ public class AgeDeclarationScreenScenario: Scenario {
 
 private class Interactor: AgeDeclarationViewController.Interacting {
     
-    private weak var viewController: UIViewController?
+    private weak var viewController: UIViewController? 
     
     init(viewController: UIViewController) {
         self.viewController = viewController

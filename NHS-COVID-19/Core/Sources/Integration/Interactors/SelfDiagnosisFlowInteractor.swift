@@ -25,6 +25,8 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
                 return InterfaceSymptomsQuestionnaire(
                     riskThreshold: questionnaire.riskThreshold,
                     symptoms: symptomInfos,
+                    cardinal: CardinalSymptomInfo(),
+                    noncardinal: CardinalSymptomInfo(),
                     dateSelectionWindow: questionnaire.dateSelectionWindow
                 )
             }

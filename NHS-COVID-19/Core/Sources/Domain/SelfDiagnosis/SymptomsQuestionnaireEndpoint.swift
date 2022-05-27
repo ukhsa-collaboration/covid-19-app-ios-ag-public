@@ -16,6 +16,8 @@ struct SymptomsQuestionnaireEndpoint: HTTPEndpoint {
         
         return SymptomsQuestionnaire(
             symptoms: payload.symptoms,
+            cardinal: payload.cardinal,
+            noncardinal: payload.noncardinal,
             riskThreshold: payload.riskThreshold,
             dateSelectionWindow: payload.symptomsOnsetWindowDays
         )
@@ -24,6 +26,8 @@ struct SymptomsQuestionnaireEndpoint: HTTPEndpoint {
 
 private struct Payload: Decodable {
     public var symptoms: [Symptom]
+    public var cardinal: CardinalSymptom
+    public var noncardinal: NonCardinalSymptom
     public var riskThreshold: Double
     public var symptomsOnsetWindowDays: Int
 }

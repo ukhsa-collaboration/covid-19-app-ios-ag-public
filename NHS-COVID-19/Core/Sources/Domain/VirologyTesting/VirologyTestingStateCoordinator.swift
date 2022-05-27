@@ -7,6 +7,7 @@ import Common
 protocol VirologyTestingStateCoordinating {
     var virologyTestTokens: [VirologyTestTokens] { get }
     var didReceiveUnknownTestResult: Bool { get }
+    var country: () -> Country { get }
     
     func saveOrderTestKitResponse(_ orderTestKitResponse: OrderTestkitResponse)
     func handlePollingTestResult(_ testResult: VirologyTestResponse, virologyTestTokens: VirologyTestTokens)
@@ -17,10 +18,10 @@ protocol VirologyTestingStateCoordinating {
 }
 
 class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
+    
     var virologyTestTokens: [VirologyTestTokens] {
         virologyTestingStateStore.virologyTestTokens ?? []
     }
-    
     var didReceiveUnknownTestResult: Bool {
         get {
             virologyTestingStateStore.didReceiveUnknownTestResult
@@ -30,16 +31,19 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         }
     }
     
+    var country: () -> Country
+    
     private let virologyTestingStateStore: VirologyTestingStateStore
     private let userNotificationsManager: UserNotificationManaging
     private let isInterestedInAskingForSymptomsOnsetDay: () -> Bool
     private var setRequiresOnsetDay: () -> Void
     
-    init(virologyTestingStateStore: VirologyTestingStateStore, userNotificationsManager: UserNotificationManaging, isInterestedInAskingForSymptomsOnsetDay: @escaping () -> Bool, setRequiresOnsetDay: @escaping () -> Void) {
+    init(virologyTestingStateStore: VirologyTestingStateStore, userNotificationsManager: UserNotificationManaging, isInterestedInAskingForSymptomsOnsetDay: @escaping () -> Bool, setRequiresOnsetDay: @escaping () -> Void, country: @escaping () -> Country) {
         self.virologyTestingStateStore = virologyTestingStateStore
         self.userNotificationsManager = userNotificationsManager
         self.isInterestedInAskingForSymptomsOnsetDay = isInterestedInAskingForSymptomsOnsetDay
         self.setRequiresOnsetDay = setRequiresOnsetDay
+        self.country = country
     }
     
     func saveOrderTestKitResponse(_ orderTestKitResponse: OrderTestkitResponse) {
@@ -119,7 +123,13 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
     }
     
     func requiresOnsetDay(_ result: VirologyTestResult, requiresConfirmatoryTest: Bool) -> Bool {
-        guard requiresConfirmatoryTest == false, result.testKitType == .labResult, result.testResult == .positive else {
+        guard requiresConfirmatoryTest == false else {
+            return false
+        }
+        guard result.testKitType == .labResult || ((result.testKitType == .rapidSelfReported || result.testKitType == .rapidResult) && country() == .wales) else {
+            return false
+        }
+        guard result.testResult == .positive else {
             return false
         }
         

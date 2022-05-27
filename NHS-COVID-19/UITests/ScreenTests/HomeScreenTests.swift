@@ -60,8 +60,8 @@ class SuccessHomeScreenTests: XCTestCase {
             let screen = HomeScreen(app: app)
             
             let diagnosisButtonAction = app.staticTexts[HomeScreenAlerts.diagnosisAlertTitle]
-            app.scrollTo(element: screen.selfDiagnosisButton)
-            screen.selfDiagnosisButton.tap()
+            app.scrollTo(element: screen.selfDiagnosisButton())
+            screen.selfDiagnosisButton().tap()
             XCTAssert(diagnosisButtonAction.displayed)
         }
     }
@@ -109,7 +109,7 @@ class DisabledFeaturesHomeScreenTests: XCTestCase {
         try runner.run { app in
             let screen = HomeScreen(app: app)
             XCTAssertFalse(screen.riskLevelBanner(for: "SW12", title: "[postcode] is in Local Alert Level 1").exists)
-            XCTAssertFalse(screen.selfDiagnosisButton.exists)
+            XCTAssertFalse(screen.selfDiagnosisButton().exists)
             XCTAssertFalse(screen.localInfoBanner(text: "A new variant of concern is in your area.").exists)
         }
     }

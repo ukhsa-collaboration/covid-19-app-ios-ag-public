@@ -74,6 +74,52 @@ private let questionnaire = """
       "riskWeight": 1
     }
   ],
+  "cardinal": {
+    "title": {
+      "ar": "",
+      "bn": "",
+      "cy": "",
+      "en": "Do you have a high temperature?",
+      "gu": "",
+      "pa": "",
+      "pl": "",
+      "ro": "",
+      "so": "",
+      "tr": "",
+      "ur": "",
+      "zh": ""
+    }
+  },
+  "noncardinal": {
+    "title": {
+      "ar": "",
+      "bn": "",
+      "cy": "",
+      "en": "Do you have any of these symptoms?",
+      "gu": "",
+      "pa": "",
+      "pl": "",
+      "ro": "",
+      "so": "",
+      "tr": "",
+      "ur": "",
+      "zh": ""
+    },
+    "description": {
+      "ar": "",
+      "bn": "",
+      "cy": "",
+      "en": "Shivering or chills\\n\\nA new, continuous cough\\n\\nA loss or change to your sense of smell or taste\\n\\nShortness of breath\\n\\nFeeling tired or exhausted\\n\\nAn aching body\\n\\nA headache\\n\\nA sore throat\\n\\nA blocked or runny nose\\n\\nLoss of appetite\\n\\nDiarrhoea\\n\\nFeeling sick or being sick",
+      "gu": "",
+      "pa": "",
+      "pl": "",
+      "ro": "",
+      "so": "",
+      "tr": "",
+      "ur": "",
+      "zh": ""
+    }
+  },
   "riskThreshold": 0.5,
   "symptomsOnsetWindowDays": 6
 }

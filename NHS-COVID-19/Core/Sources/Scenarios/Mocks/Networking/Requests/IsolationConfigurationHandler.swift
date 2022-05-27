@@ -21,7 +21,7 @@ struct IsolationConfigurationHandler: RequestHandler {
               "indexCaseSinceTestResultEndDate": 11,
               "testResultPollingTokenRetentionPeriod": 28
             },
-            "wales": {
+            "wales_v2": {
               "indexCaseSinceSelfDiagnosisOnset": 11,
               "indexCaseSinceSelfDiagnosisUnknownOnset": 9,
               "contactCase": 11,

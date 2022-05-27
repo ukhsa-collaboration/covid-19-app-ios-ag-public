@@ -3,6 +3,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 private class BulletPoint: UIView {
     
@@ -51,14 +52,18 @@ private class BulletPoint: UIView {
         }
     }
     
-    init(text: String, symbolProperties: SymbolProperties) {
+    init(text: String, symbolProperties: SymbolProperties, boldText: Bool = false) {
         self.text = text
         self.symbolProperties = symbolProperties
         super.init(frame: .zero)
         
         let contentLabel = BaseLabel()
         contentLabel.text = text
-        contentLabel.styleAsBody()
+        if boldText {
+            contentLabel.styleAsBoldBody()
+        } else {
+            contentLabel.styleAsBody()
+        }
         contentLabel.isAccessibilityElement = false
         
         mainStack.addArrangedSubview(contentLabel)
@@ -103,6 +108,7 @@ extension BulletPoint {
 
 public class BulletedList: UIView {
     private let symbolProperties: SymbolProperties
+    private let boldText: Bool
     
     private lazy var stackView: UIStackView = {
         let stack = UIStackView()
@@ -113,13 +119,18 @@ public class BulletedList: UIView {
     
     public init(
         symbolProperties: SymbolProperties = SymbolProperties(type: .fullCircle, size: .halfSpacing, color: .nhsBlue),
-        rows: [String] = []
+        rows: [String] = [],
+        stackSpaceing: CGFloat = .standardSpacing,
+        boldText: Bool = false
     ) {
         self.symbolProperties = symbolProperties
+        self.boldText = boldText
         super.init(frame: .zero)
         
+        stackView.spacing = stackSpaceing
+        
         rows.forEach {
-            let bulletRow = BulletPoint(text: $0, symbolProperties: symbolProperties)
+            let bulletRow = BulletPoint(text: $0, symbolProperties: symbolProperties, boldText: boldText)
             stackView.addArrangedSubview(bulletRow)
         }
         
@@ -127,7 +138,7 @@ public class BulletedList: UIView {
     }
     
     public func addRow(with text: String) {
-        stackView.addArrangedSubview(BulletPoint(text: text, symbolProperties: symbolProperties))
+        stackView.addArrangedSubview(BulletPoint(text: text, symbolProperties: symbolProperties, boldText: boldText))
     }
     
     required init?(coder: NSCoder) {

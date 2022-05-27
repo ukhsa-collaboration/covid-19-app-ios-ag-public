@@ -26,6 +26,8 @@ public class SymptomsReviewViewControllerScenario: Scenario {
                         SymptomInfo(isConfirmed: false, heading: deniedForFeverish, content: ""),
                         SymptomInfo(isConfirmed: true, heading: confirmedForCough, content: ""),
                     ],
+                    cardinal: CardinalSymptomInfo(),
+                    noncardinal: CardinalSymptomInfo(),
                     dateSelectionWindow: 14
                 ),
                 currentDateProvider: DateProvider(),

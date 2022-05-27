@@ -23,6 +23,19 @@ class SymptomsQuestionnaireEndpointTests: XCTestCase {
         let response = HTTPResponse.ok(with: .json(#"""
         {
             "symptoms": [],
+            "cardinal": {
+              "title": {
+                "en": "Do you have a high temperature?",
+              }
+            },
+            "noncardinal": {
+              "title": {
+                "en": "Do you have any of these symptoms?",
+              },
+              "description": {
+                "en": "Shivering or chills",
+              }
+            },
             "riskThreshold": 0.5,
             "symptomsOnsetWindowDays": 14
         }
@@ -67,6 +80,19 @@ class SymptomsQuestionnaireEndpointTests: XCTestCase {
                 "riskWeight": 0
               }
             ],
+            "cardinal": {
+              "title": {
+                "en": "",
+              }
+            },
+            "noncardinal": {
+              "title": {
+                "en": "",
+              },
+              "description": {
+                "en": "",
+              }
+            },
             "riskThreshold": 0.8,
             "symptomsOnsetWindowDays": 14
         }
@@ -85,6 +111,11 @@ class SymptomsQuestionnaireEndpointTests: XCTestCase {
                     riskWeight: 0
                 ),
             ],
+            cardinal: CardinalSymptom(title: LocaleString(dictionaryLiteral: (Locale(identifier: "en"), ""))),
+            noncardinal: NonCardinalSymptom(
+                title: LocaleString(dictionaryLiteral: (Locale(identifier: "en"), "")),
+                description: LocaleString(dictionaryLiteral: (Locale(identifier: "en"), ""))
+            ),
             riskThreshold: 0.8,
             dateSelectionWindow: 14
         )
