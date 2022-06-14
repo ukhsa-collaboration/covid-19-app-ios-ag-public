@@ -157,8 +157,7 @@ public class ApplicationCoordinator {
         
         selfDiagnosisManager = SelfDiagnosisManager(
             httpClient: distributeClient,
-            calculateIsolationState: isolationContext.handleSymptomsIsolationState,
-            shouldShowNewNoSymptomsScreen: { enabledFeatures.contains(.newNoSymptomsScreen) }
+            calculateIsolationState: isolationContext.handleSymptomsIsolationState
         )
         
         let symptomsCheckerStore = SymptomsCheckerStore(store: services.encryptedStore)
@@ -241,7 +240,7 @@ public class ApplicationCoordinator {
         let keySharingStore = KeySharingStore(store: services.encryptedStore)
         self.keySharingStore = keySharingStore
         
-        #warning("Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")
+#warning("Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")
         exposureNotificationContext = ExposureNotificationContext(
             services: services,
             isolationLength: isolationContext.isolationConfiguration.value.for(country.currentValue).contactCase,
@@ -288,7 +287,7 @@ public class ApplicationCoordinator {
             getCountry: { country.currentValue }
         )
         
-        #warning("Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")
+#warning("Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")
         circuitBreaker = CircuitBreaker(
             client: CircuitBreakerClient(httpClient: services.apiClient, rateLimiter: ObfuscationRateLimiter()),
             exposureInfoProvider: exposureNotificationContext.exposureDetectionStore,
@@ -322,7 +321,7 @@ public class ApplicationCoordinator {
             getToday: { dateProvider.currentGregorianDay(timeZone: .current) }
         )
         
-        #warning("Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")
+#warning("Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")
         keySharingContext = KeySharingContext(
             currentDateProvider: currentDateProvider,
             contactCaseIsolationDuration: self.isolationContext.isolationConfiguration.value.for(country.currentValue).contactCase,
@@ -434,7 +433,7 @@ public class ApplicationCoordinator {
                     return .postcodeAndLocalAuthorityRequired(openURL: application.open, getLocalAuthorities: localAuthorityManager.localAuthorities, storeLocalAuthority: localAuthorityManager.store)
                 }
             }
-            #warning("What should be done if this happens?")
+#warning("What should be done if this happens?")
             preconditionFailure("This constellation should never happen")
         case .fullyOnboarded:
             let bluetoothOff = exposureNotificationContext.exposureNotificationManager.exposureNotificationStatusPublisher.map { $0 == .bluetoothOff }.eraseToAnyPublisher()
@@ -446,7 +445,7 @@ public class ApplicationCoordinator {
             let country = self.country
             
             let isolationStateStore = isolationContext.isolationStateStore
-            #warning("For `contactCaseIsolationDuration`: Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")
+#warning("For `contactCaseIsolationDuration`: Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")
             return .runningExposureNotification(
                 RunningAppContext(
                     checkInContext: checkInContext,
@@ -569,7 +568,7 @@ public class ApplicationCoordinator {
                         openAppStore: self.application.openAppStore
                     )
                     )
-                    .eraseToAnyPublisher()
+                        .eraseToAnyPublisher()
                 }
                 
                 guard let virologyTestResult = virologyTestResult else {
@@ -676,18 +675,18 @@ public class ApplicationCoordinator {
         
         switch state {
         case .runningExposureNotification,
-             .policyAcceptanceRequired,
-             .localAuthorityRequired,
-             .postcodeAndLocalAuthorityRequired where postcodeStore.postcode.currentValue != nil,
-             .recommendedUpdate:
+                .policyAcceptanceRequired,
+                .localAuthorityRequired,
+                .postcodeAndLocalAuthorityRequired where postcodeStore.postcode.currentValue != nil,
+                .recommendedUpdate:
             enabledJobs.append(contentsOf: makeBackgroundJobsForRunningState())
         case .appUnavailable,
-             .authorizationRequired,
-             .canNotRunExposureNotification,
-             .failedToStart,
-             .onboarding,
-             .postcodeAndLocalAuthorityRequired,
-             .starting:
+                .authorizationRequired,
+                .canNotRunExposureNotification,
+                .failedToStart,
+                .onboarding,
+                .postcodeAndLocalAuthorityRequired,
+                .starting:
             // We're not in a state where we can do background jobs,
             // including exposure detections.
             break
@@ -723,7 +722,7 @@ public class ApplicationCoordinator {
             deleteExpiredExposureWindows: exposureNotificationContext.deleteExpiredExposureWindows
         )
         let country = self.country
-        #warning("Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")
+#warning("Should be using whatever the most recent isolationConfiguration's value for contact case isolation, not the value at the time of initialisation.")
         let virologyTokenHousekeeper = VirologyTokenHousekeeper(
             virologyTestingStateStore: virologyTestingStateStore,
             getTokenDeletionPeriod: {
@@ -737,11 +736,11 @@ public class ApplicationCoordinator {
                     circuitBreaker.showDontWorryNotificationIfNeeded = true
                 }
             )
-            .append(Deferred(createPublisher: { exposureNotificationContext.resendExposureDetectionNotificationIfNeeded(isolationContext: isolationContext) }))
-            .append(Deferred(createPublisher: circuitBreaker.processExposureNotificationApproval))
-            .append(Deferred(createPublisher: isolationPaymentContext.processCanApplyForFinancialSupport))
-            .append(Deferred(createPublisher: exposureWindowHousekeeper.executeHousekeeping))
-            .eraseToAnyPublisher()
+                .append(Deferred(createPublisher: { exposureNotificationContext.resendExposureDetectionNotificationIfNeeded(isolationContext: isolationContext) }))
+                .append(Deferred(createPublisher: circuitBreaker.processExposureNotificationApproval))
+                .append(Deferred(createPublisher: isolationPaymentContext.processCanApplyForFinancialSupport))
+                .append(Deferred(createPublisher: exposureWindowHousekeeper.executeHousekeeping))
+                .eraseToAnyPublisher()
         }
         enabledJobs.append(expsoureNotificationJob)
         
@@ -772,9 +771,9 @@ public class ApplicationCoordinator {
         enabledJobs.append(matchRiskyVenuesJob)
         
         let virologyTokenCleanupAndPollingJob = BackgroundTaskAggregator.Job { virologyTokenHousekeeper
-            .executeHousekeeping()
-            .append(Deferred(createPublisher: self.virologyTestingManager.evaulateTestResults))
-            .eraseToAnyPublisher()
+                .executeHousekeeping()
+                .append(Deferred(createPublisher: self.virologyTestingManager.evaulateTestResults))
+                .eraseToAnyPublisher()
         }
         
         enabledJobs.append(virologyTokenCleanupAndPollingJob)
@@ -838,95 +837,95 @@ public class ApplicationCoordinator {
     }
     
     private func setupChangeNotifiers(using userNotificationsManager: UserNotificationManaging,
-                                      localAuthority: AnyPublisher<LocalAuthority?, Never>,
-                                      languageCode: AnyPublisher<String?, Never>,
-                                      postcode: AnyPublisher<Postcode?, Never>,
-                                      localAuthorityValidator: LocalAuthoritiesValidator) {
-        let changeNotifier = ChangeNotifier(notificationManager: userNotificationsManager)
-        
-        let risk = postcodeInfo
-            .compactMap { $0?.risk }
-            .switchToLatest()
-            .map { $0?.id }
-            .filterNil()
-        
-        changeNotifier
-            .alertUserToChanges(in: risk, type: .postcode)
-            .store(in: &cancellables)
-        
-        RiskyCheckInsChangeNotifier(notificationManager: userNotificationsManager)
-            .alertUserToChanges(
-                in: checkInContext.checkInsStore.$mostRecentAndSevereUnacknowledgedRiskyCheckIn
-                    .map { $0?.venueMessageType }
-            )
-            .store(in: &cancellables)
-        
-        LocalInformationChangeNotifier(notificationManager: userNotificationsManager)
-            .alertUserToChanges(
-                in: localInformation,
-                localAuthority: localAuthority,
-                languageCode: languageCode,
-                postcode: postcode,
-                localAuthorityValidator: localAuthorityValidator
-            )
-            .store(in: &cancellables)
-        
-        changeNotifier
-            .alertUserToChanges(
-                in: appAvailabilityManager.$metadata.map { $0.state },
-                type: .appAvailability,
-                shouldSend: {
-                    switch $0 {
-                    case .recommending: return false
-                    default: return true
-                    }
+localAuthority: AnyPublisher<LocalAuthority?, Never>,
+languageCode: AnyPublisher<String?, Never>,
+postcode: AnyPublisher<Postcode?, Never>,
+localAuthorityValidator: LocalAuthoritiesValidator) {
+    let changeNotifier = ChangeNotifier(notificationManager: userNotificationsManager)
+    
+    let risk = postcodeInfo
+        .compactMap { $0?.risk }
+        .switchToLatest()
+        .map { $0?.id }
+        .filterNil()
+    
+    changeNotifier
+        .alertUserToChanges(in: risk, type: .postcode)
+        .store(in: &cancellables)
+    
+    RiskyCheckInsChangeNotifier(notificationManager: userNotificationsManager)
+        .alertUserToChanges(
+            in: checkInContext.checkInsStore.$mostRecentAndSevereUnacknowledgedRiskyCheckIn
+                .map { $0?.venueMessageType }
+        )
+        .store(in: &cancellables)
+    
+    LocalInformationChangeNotifier(notificationManager: userNotificationsManager)
+        .alertUserToChanges(
+            in: localInformation,
+            localAuthority: localAuthority,
+            languageCode: languageCode,
+            postcode: postcode,
+            localAuthorityValidator: localAuthorityValidator
+        )
+        .store(in: &cancellables)
+    
+    changeNotifier
+        .alertUserToChanges(
+            in: appAvailabilityManager.$metadata.map { $0.state },
+            type: .appAvailability,
+            shouldSend: {
+                switch $0 {
+                case .recommending: return false
+                default: return true
                 }
-            )
-            .store(in: &cancellables)
-        
-        let initialState = appAvailabilityManager.metadata.state
-        
-        let theLastTwoStatesNextToEachOther = appAvailabilityManager
-            .$metadata
-            .map { $0.state }
-            .scan((old: initialState, new: initialState)) { result, state in
-                (old: result.new, new: state)
             }
-        
-        let stateThatNeverDowngradesRecommendedVersion = theLastTwoStatesNextToEachOther.map { old, new -> AppAvailabilityLogicalState in
-            switch (old, new) {
-            case (
-                .recommending(reason: .appOlderThanRecommended(let oldVersion)),
-                .recommending(reason: .appOlderThanRecommended(let newVersion))
-            ):
-                return .recommending(reason: .appOlderThanRecommended(version: max(oldVersion, newVersion)))
-            case (
-                .recommending(reason: .iOSOlderThanRecommended(let oldVersion)),
-                .recommending(reason: .iOSOlderThanRecommended(let newVersion))
-            ):
-                return .recommending(reason: .iOSOlderThanRecommended(version: max(oldVersion, newVersion)))
-            default:
-                return new
-            }
+        )
+        .store(in: &cancellables)
+    
+    let initialState = appAvailabilityManager.metadata.state
+    
+    let theLastTwoStatesNextToEachOther = appAvailabilityManager
+        .$metadata
+        .map { $0.state }
+        .scan((old: initialState, new: initialState)) { result, state in
+            (old: result.new, new: state)
         }
-        
-        changeNotifier
-            .alertUserToChanges(
-                in: stateThatNeverDowngradesRecommendedVersion,
-                type: .latestAppVersionAvailable,
-                shouldSend: {
-                    switch $0 {
-                    case .recommending: return true
-                    default: return false
-                    }
-                }
-            )
-            .store(in: &cancellables)
-        
-        IsolationStateChangeNotifier(notificationManager: userNotificationsManager)
-            .alertUserToChanges(in: isolationContext.isolationStateManager.$state)
-            .store(in: &cancellables)
+    
+    let stateThatNeverDowngradesRecommendedVersion = theLastTwoStatesNextToEachOther.map { old, new -> AppAvailabilityLogicalState in
+        switch (old, new) {
+        case (
+            .recommending(reason: .appOlderThanRecommended(let oldVersion)),
+            .recommending(reason: .appOlderThanRecommended(let newVersion))
+        ):
+            return .recommending(reason: .appOlderThanRecommended(version: max(oldVersion, newVersion)))
+        case (
+            .recommending(reason: .iOSOlderThanRecommended(let oldVersion)),
+            .recommending(reason: .iOSOlderThanRecommended(let newVersion))
+        ):
+            return .recommending(reason: .iOSOlderThanRecommended(version: max(oldVersion, newVersion)))
+        default:
+            return new
+        }
     }
+    
+    changeNotifier
+        .alertUserToChanges(
+            in: stateThatNeverDowngradesRecommendedVersion,
+            type: .latestAppVersionAvailable,
+            shouldSend: {
+                switch $0 {
+                case .recommending: return true
+                default: return false
+                }
+            }
+        )
+        .store(in: &cancellables)
+    
+    IsolationStateChangeNotifier(notificationManager: userNotificationsManager)
+        .alertUserToChanges(in: isolationContext.isolationStateManager.$state)
+        .store(in: &cancellables)
+}
     
     private func requestPermissions() {
         exposureNotificationContext.exposureNotificationStateController.enable {
@@ -979,7 +978,7 @@ public class ApplicationCoordinator {
         localInformationEndpointManager.deleteCurrentInfo()
         symptomsCheckerManager.deleteAll()
         
-        UserDefaults.standard.removeObject(forKey: "OpenedNewSymptomCheckerInEnglandV4_29")
+        UserDefaults.standard.removeObject(forKey: "OpenedNewSymptomCheckerInEnglandV4_29") // MARK: Was used in v4.29 to display NEW label for symptom checker in England
     }
     
     private func deleteCheckIn(with id: String) {

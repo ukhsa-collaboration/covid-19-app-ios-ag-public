@@ -109,7 +109,6 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
                 country: .wales
             ),
             enabledFeatures: [
-                .newNoSymptomsScreen,
                 .localStatistics,
                 .venueCheckIn,
                 .contactOptOutFlowEngland,
@@ -136,7 +135,6 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
                 country: .england
             ),
             enabledFeatures: [
-                .newNoSymptomsScreen,
                 .localStatistics,
                 .venueCheckIn,
                 .contactOptOutFlowEngland,
@@ -164,7 +162,6 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
                 country: .wales
             ),
             enabledFeatures: [
-                .newNoSymptomsScreen,
                 .localStatistics,
                 .venueCheckIn,
                 .contactOptOutFlowEngland,
@@ -199,7 +196,6 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
                 country: .england
             ),
             enabledFeatures: [
-                .newNoSymptomsScreen,
                 .localStatistics,
                 .venueCheckIn,
                 .contactOptOutFlowWales,

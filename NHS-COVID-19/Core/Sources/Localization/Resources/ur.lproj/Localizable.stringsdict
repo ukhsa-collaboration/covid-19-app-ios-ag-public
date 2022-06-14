@@ -45,9 +45,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>%ld دن تک ذاتی علیحدگی جاری رکھیں</string>
+				<string>%ld گھر پر رہنے کی کوشش کرنا جاری رکھیں برائے</string>
 				<key>other</key>
-				<string> %ld دن تک ذاتی علیحدگی جاری رکھیں</string>
+				<string>%ld گھر پر رہنے کی کوشش کرنا جاری رکھیں برائے</string>
 			</dict>
 		</dict>
 		<key>isolation_days_accessibility_label %ld</key>

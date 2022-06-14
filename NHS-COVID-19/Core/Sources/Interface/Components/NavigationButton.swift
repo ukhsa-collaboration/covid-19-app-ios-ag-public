@@ -119,6 +119,7 @@ public struct NavigationButton: View {
                             .scaledToFit()
                             .foregroundColor(colorScheme.foregroundColor)
                             .frame(width: 30, height: 30)
+                            .accessibility(hidden: true)
                     }
                     .frame(width: .menuButtonColorWidth)
                     HStack(spacing: .standardSpacing) {

@@ -104,6 +104,8 @@ public enum Sandbox {
         
         public var bluetootOff: Bool = false
         
+        public var isSymptomaticSelfIsolationForWalesEnabled: Bool = false
+        
         public init() {}
         
         public mutating func set(testResultEndDate: Date) throws {

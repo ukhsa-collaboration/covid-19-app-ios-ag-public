@@ -38,7 +38,8 @@ public class SymptomCheckerFlowViewController: BaseNavigationController {
         symptoms: [SymptomInfo](),
         cardinal: CardinalSymptomInfo(),
         noncardinal: CardinalSymptomInfo(),
-        dateSelectionWindow: 0
+        dateSelectionWindow: 0,
+        isSymptomaticSelfIsolationForWalesEnabled: false
     )
     
     fileprivate var doYouFeelWell: Bool? = nil

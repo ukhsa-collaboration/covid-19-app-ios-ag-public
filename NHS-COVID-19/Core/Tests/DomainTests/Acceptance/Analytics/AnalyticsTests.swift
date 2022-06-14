@@ -176,13 +176,9 @@ struct SubmissionPayload: Decodable {
         var selectedIsolationPaymentsButton: Int? = 0
         var launchedIsolationPaymentsApplication: Int? = 0
         var haveActiveIpcTokenBackgroundTick: Int? = 0
-        
-        var receivedPositiveLFDTestResultViaPolling: Int? = 0
-        var receivedNegativeLFDTestResultViaPolling: Int? = 0
-        var receivedVoidLFDTestResultViaPolling: Int? = 0
+ 
         var receivedPositiveLFDTestResultEnteredManually: Int? = 0
-        var receivedNegativeLFDTestResultEnteredManually: Int? = 0
-        var receivedVoidLFDTestResultEnteredManually: Int? = 0
+       
         var receivedUnconfirmedPositiveTestResult: Int? = 0
         
         var receivedPositiveSelfRapidTestResultEnteredManually: Int? = 0

@@ -48,7 +48,7 @@ private extension ApplicationServices {
             userNotificationsManager: SandboxUserNotificationsManager(host: host),
             processingTaskRequestManager: MockProcessingTaskRequestManager(),
             notificationCenter: notificationCenter,
-            distributeClient: SandboxDistributeClient(),
+            distributeClient: SandboxDistributeClient(host: host),
             apiClient: SandboxSubmissionClient(initialState: host.initialState),
             iTunesClient: MockHTTPClient(),
             cameraManager: SandboxCameraManager(host: host),

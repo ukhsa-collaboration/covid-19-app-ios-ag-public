@@ -19,7 +19,8 @@ struct SymptomsQuestionnaireEndpoint: HTTPEndpoint {
             cardinal: payload.cardinal,
             noncardinal: payload.noncardinal,
             riskThreshold: payload.riskThreshold,
-            dateSelectionWindow: payload.symptomsOnsetWindowDays
+            dateSelectionWindow: payload.symptomsOnsetWindowDays,
+            isSymptomaticSelfIsolationForWalesEnabled: payload.isSymptomaticSelfIsolationForWalesEnabled
         )
     }
 }
@@ -30,4 +31,5 @@ private struct Payload: Decodable {
     public var noncardinal: NonCardinalSymptom
     public var riskThreshold: Double
     public var symptomsOnsetWindowDays: Int
+    public var isSymptomaticSelfIsolationForWalesEnabled: Bool
 }

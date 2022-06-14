@@ -10,7 +10,6 @@ public protocol BookATestInfoViewControllerInteracting {
     func didTapAppPrivacyNotice()
     func didTapBookATestForSomeoneElse()
     func didTapBookATest()
-    func didTapBookAPCRTest()
 }
 
 extension BookATestInfoViewController {

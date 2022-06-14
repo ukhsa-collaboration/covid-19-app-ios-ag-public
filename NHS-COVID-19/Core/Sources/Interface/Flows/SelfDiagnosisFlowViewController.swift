@@ -26,6 +26,7 @@ public enum SelfDiagnosisAdvice: Equatable {
     public enum HasSymptomsAdviceDetails: Equatable {
         case followAdviceForExistingPositiveTest
         case isolate(ExistingPositiveTestState, endDate: Date)
+        case followAdviceButNoIsolationNeeded(endDate: Date)
     }
     
     public enum NoSymptomsAdviceDetails: Equatable {
@@ -41,11 +42,7 @@ public enum SelfDiagnosisAdvice: Equatable {
 public protocol SelfDiagnosisFlowViewControllerInteracting: BookATestInfoViewControllerInteracting {
     func fetchQuestionnaire() -> AnyPublisher<InterfaceSymptomsQuestionnaire, Error>
     
-    #warning("Refine this signature")
-    // `riskThreshold` should be removed as the interactor should already know these (these aren’t UI state)
-    func advice(basedOn symptoms: [SymptomInfo], onsetDay: GregorianDay?, riskThreshold: Double) -> SelfDiagnosisAdvice
-    
-    var shouldShowNewNoSymptomsScreen: Bool { get }
+    func advice(basedOn symptomsQuestionnaire: InterfaceSymptomsQuestionnaire, onsetDay: GregorianDay?, country: Country) -> SelfDiagnosisAdvice
     
     var adviceWhenNoSymptomsAreReported: SelfDiagnosisAdvice { get }
     
@@ -82,11 +79,12 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
         symptoms: [SymptomInfo](),
         cardinal: CardinalSymptomInfo(),
         noncardinal: CardinalSymptomInfo(),
-        dateSelectionWindow: 0
+        dateSelectionWindow: 0,
+        isSymptomaticSelfIsolationForWalesEnabled: false
     )
     
     private let currentDateProvider: DateProviding
-    private let country: Country
+    fileprivate let country: Country
     public var didCancel: (() -> Void)?
     public var finishFlow: (() -> Void)?
     
@@ -100,7 +98,6 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
         
         monitorState()
         executeFetchQuestionnaire()
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -149,13 +146,8 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
     private func viewController(for advice: SelfDiagnosisAdvice) -> UIViewController {
         switch advice {
         case .noSymptoms(.noNeedToIsolate):
-            if interactor.shouldShowNewNoSymptomsScreen {
-                let interactor = NewNoSymptomsViewControllerInteractor(controller: self)
-                return NewNoSymptomsViewController(interactor: interactor)
-            } else {
                 let interactor = NoSymptomsViewControllerInteractor(controller: self)
                 return NoSymptomsViewController(interactor: interactor)
-            }
         case .noSymptoms(.isolateForExistingPositiveTest):
             let interactor = SelfDiagnosisAfterPositiveTestIsolatingViewControllerInteractor(
                 navigationController: self,
@@ -186,6 +178,9 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
                 didTapOnlineServicesLink: self.interactor.nhs111LinkTapped
             )
             return SelfDiagnosisAfterPositiveTestIsolatingViewController(interactor: interactor, symptomState: .discardSymptoms)
+        case .hasSymptoms(.followAdviceButNoIsolationNeeded(endDate: let isolationEndDate)):
+            let interactor = PositiveSymptomsViewControllerInteractor(controller: self)
+            return PositiveSymptomsViewController(interactor: interactor, isolationEndDate: isolationEndDate, currentDateProvider: currentDateProvider)
         }
     }
     
@@ -320,28 +315,6 @@ private struct NoSymptomsViewControllerInteractor: NoSymptomsViewController.Inte
     }
 }
 
-private struct NewNoSymptomsViewControllerInteractor: NewNoSymptomsViewController.Interacting {
-    func didTapReturnHome() {
-        controller?.finishFlow?()
-        controller?.dismiss(animated: true, completion: nil)
-    }
-    
-    func didTapNHSGuidanceLink() {
-        controller?.interactor.nhsGuidanceLinkTapped()
-    }
-    
-    func didTapBookAPCRTestLink() {
-        controller?.interactor.didTapBookAPCRTest()
-        
-    }
-    
-    private weak var controller: SelfDiagnosisFlowViewController?
-    
-    init(controller: SelfDiagnosisFlowViewController?) {
-        self.controller = controller
-    }
-}
-
 private struct PositiveSymptomsViewControllerInteractor: PositiveSymptomsViewController.Interacting {
     
     private weak var controller: SelfDiagnosisFlowViewController?
@@ -426,9 +399,9 @@ private struct SymptomsReviewViewControllerInteractor: SymptomsReviewViewControl
             return .failure(.neitherDateNorNoDateCheckSet)
         } else {
             let advice = controller.interactor.advice(
-                basedOn: controller.symptomsQuestionnaire.symptoms,
+                basedOn: controller.symptomsQuestionnaire,
                 onsetDay: selectedDay,
-                riskThreshold: riskThreshold
+                country: controller.country
             )
             controller.state = .advice(advice)
             return .success(())

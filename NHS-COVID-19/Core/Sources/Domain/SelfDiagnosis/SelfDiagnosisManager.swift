@@ -19,35 +19,39 @@ public enum SelfDiagnosisEvaluation: Equatable {
 public protocol SelfDiagnosisManaging {
     func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError>
     
-    func evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double) -> SelfDiagnosisEvaluation
-    
-    func shouldShowNewNoSymptomsScreen() -> Bool
+    func evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double, symptomaticSelfIsolationEnabled: Bool) -> SelfDiagnosisEvaluation
 }
 
 class SelfDiagnosisManager: SelfDiagnosisManaging {
     private let httpClient: HTTPClient
-    private let calculateIsolationState: (GregorianDay?) -> (IsolationState, SelfDiagnosisEvaluation.ExistingPositiveTestState)
-    private let _shouldShowNewNoSymptomsScreen: () -> Bool
+    private let calculateIsolationState: (GregorianDay?, _ symptomaticSelfIsolationEnabled: Bool) -> (IsolationState, SelfDiagnosisEvaluation.ExistingPositiveTestState)
     
     init(httpClient: HTTPClient,
-         calculateIsolationState: @escaping (GregorianDay?) -> (IsolationState, SelfDiagnosisEvaluation.ExistingPositiveTestState),
-         shouldShowNewNoSymptomsScreen: @escaping () -> Bool) {
+         calculateIsolationState: @escaping (GregorianDay?, _ symptomaticSelfIsolationEnabled: Bool) -> (IsolationState, SelfDiagnosisEvaluation.ExistingPositiveTestState)) {
         self.httpClient = httpClient
         self.calculateIsolationState = calculateIsolationState
-        _shouldShowNewNoSymptomsScreen = shouldShowNewNoSymptomsScreen
     }
     
     func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError> {
         httpClient.fetch(SymptomsQuestionnaireEndpoint())
     }
     
-    func evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double) -> SelfDiagnosisEvaluation {
-        let evaluation = _evaluate(selectedSymptoms: selectedSymptoms, onsetDay: onsetDay, threshold: threshold)
-        Metrics.signpost(evaluation)
+    func evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double, symptomaticSelfIsolationEnabled: Bool) -> SelfDiagnosisEvaluation {
+        let evaluation = _evaluate(
+            selectedSymptoms: selectedSymptoms,
+            onsetDay: onsetDay,
+            threshold: threshold,
+            symptomaticSelfIsolationEnabled: symptomaticSelfIsolationEnabled
+        )
+        
+        if symptomaticSelfIsolationEnabled {
+            Metrics.signpost(evaluation)
+        }
+
         return evaluation
     }
     
-    private func _evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double) -> SelfDiagnosisEvaluation {
+    private func _evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double, symptomaticSelfIsolationEnabled: Bool) -> SelfDiagnosisEvaluation {
         let sum = selectedSymptoms
             .map { $0.riskWeight }
             .reduce(0, +)
@@ -56,7 +60,7 @@ class SelfDiagnosisManager: SelfDiagnosisManaging {
             return .noSymptoms
         }
         
-        let state = calculateIsolationState(onsetDay)
+        let state = calculateIsolationState(onsetDay, symptomaticSelfIsolationEnabled)
         switch state.0 {
         case .noNeedToIsolate:
             assertionFailure("This should not happen.")
@@ -67,9 +71,5 @@ class SelfDiagnosisManager: SelfDiagnosisManaging {
         case .isolate(let isolation):
             return .hasSymptoms(isolation, state.1)
         }
-    }
-    
-    func shouldShowNewNoSymptomsScreen() -> Bool {
-        _shouldShowNewNoSymptomsScreen()
     }
 }

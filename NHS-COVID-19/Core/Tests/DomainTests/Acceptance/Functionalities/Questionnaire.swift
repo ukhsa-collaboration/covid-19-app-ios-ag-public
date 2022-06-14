@@ -13,8 +13,8 @@ struct Questionnaire {
         manager = context.selfDiagnosisManager
     }
     
-    func selfDiagnosePositive(onsetDay: GregorianDay) throws {
-        _ = manager.evaluate(selectedSymptoms: riskySymptoms, onsetDay: onsetDay, threshold: 0.5)
+    func selfDiagnosePositive(onsetDay: GregorianDay, symptomaticSelfIsolationEnabled: Bool = true) throws {
+        _ = manager.evaluate(selectedSymptoms: riskySymptoms, onsetDay: onsetDay, threshold: 0.5, symptomaticSelfIsolationEnabled: symptomaticSelfIsolationEnabled)
     }
 }
 

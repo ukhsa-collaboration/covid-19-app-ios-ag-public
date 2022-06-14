@@ -35,7 +35,6 @@ class ConfigurationViewController: UIViewController {
         the feature toggle is changed after onboarding.
         """
         
-        let newNoSymptomsScreenToggle = createToggle(feature: .newNoSymptomsScreen, isOn: featureToggleStorage.newNoSymptomsScreenToggle, action: #selector(toggleNewNoSymptomsScreen))
         let localStatsButtonToggle = createToggle(feature: .localStatistics, isOn: featureToggleStorage.localStatisticsToggle, action: #selector(toggleLocalStatistics))
         let venueCheckInToggle = createToggle(feature: .venueCheckIn, isOn: featureToggleStorage.venueCheckInToggle, action: #selector(toggleVenueCheckIn))
         let contactOptOutFlowEnglandToggle = createToggle(feature: .contactOptOutFlowEngland, isOn: featureToggleStorage.englandOptOutFlowToggle, action: #selector(toggleContactOptOutFlowEngland))
@@ -47,7 +46,6 @@ class ConfigurationViewController: UIViewController {
         let guidanceHubWalesToggle = createToggle(feature: .guidanceHubWales, isOn: featureToggleStorage.guidanceHubWalesToggle, action: #selector(toggleGuidanceHubWales))
         
         let stackView = UIStackView(arrangedSubviews: [
-            newNoSymptomsScreenToggle,
             localStatsButtonToggle,
             venueCheckInToggle,
             testingForCOVID19Toggle,
@@ -89,8 +87,6 @@ class ConfigurationViewController: UIViewController {
     
     func getFeatureString(feature: Feature) -> String {
         switch feature {
-        case .newNoSymptomsScreen:
-            return "New \"No Symptoms\" Screen"
         case .localStatistics:
             return "Local statistics home screen button"
         case .venueCheckIn:
@@ -110,10 +106,6 @@ class ConfigurationViewController: UIViewController {
         case .guidanceHubWales:
             return "COVID-19 Guidance Home Screen button Wales"
         }
-    }
-    
-    @objc private func toggleNewNoSymptomsScreen() {
-        featureToggleStorage.newNoSymptomsScreenToggle.toggle()
     }
     
     @objc private func toggleLocalStatistics() {

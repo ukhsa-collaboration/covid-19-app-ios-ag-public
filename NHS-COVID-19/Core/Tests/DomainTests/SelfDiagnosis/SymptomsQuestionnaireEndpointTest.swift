@@ -37,7 +37,8 @@ class SymptomsQuestionnaireEndpointTests: XCTestCase {
               }
             },
             "riskThreshold": 0.5,
-            "symptomsOnsetWindowDays": 14
+            "symptomsOnsetWindowDays": 14,
+            "isSymptomaticSelfIsolationForWalesEnabled": false
         }
         """#))
         
@@ -94,7 +95,8 @@ class SymptomsQuestionnaireEndpointTests: XCTestCase {
               }
             },
             "riskThreshold": 0.8,
-            "symptomsOnsetWindowDays": 14
+            "symptomsOnsetWindowDays": 14,
+            "isSymptomaticSelfIsolationForWalesEnabled": false
         }
         """#))
         
@@ -117,7 +119,8 @@ class SymptomsQuestionnaireEndpointTests: XCTestCase {
                 description: LocaleString(dictionaryLiteral: (Locale(identifier: "en"), ""))
             ),
             riskThreshold: 0.8,
-            dateSelectionWindow: 14
+            dateSelectionWindow: 14,
+            isSymptomaticSelfIsolationForWalesEnabled: false
         )
         
         let actual = try endpoint.parse(response)

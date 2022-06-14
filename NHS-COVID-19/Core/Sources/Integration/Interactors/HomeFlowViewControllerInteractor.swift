@@ -76,8 +76,6 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             )
             return SelfDiagnosisFlowViewController(interactor, currentDateProvider: currentDateProvider, country: context.country.currentValue)
         } else {
-            UserDefaults.standard.set(true, forKey: "OpenedNewSymptomCheckerInEnglandV4_29")
-
             let interactor = SymptomsCheckerFlowInteractor(symptomsCheckerManager: context.symptomsCheckerManager)
             return SymptomCheckerFlowViewController(
                 interactor,
@@ -444,15 +442,6 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             return context.shouldShowGuidanceHubEngland
         case .wales:
             return context.shouldShowGuidanceHubWales
-        }
-    }
-    
-    var shouldShowNewLabelForEnglandSC: Bool {
-        switch context.country.currentValue {
-        case .england:
-            return !UserDefaults.standard.bool(forKey: "OpenedNewSymptomCheckerInEnglandV4_29")
-        case .wales:
-            return false
         }
     }
     

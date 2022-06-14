@@ -985,28 +985,7 @@ public enum StringLocalizableKey: String, CaseIterable {
     case exposure_notification_medically_exempt_no
     case exposure_notification_medically_exempt_yes_content_description
     case exposure_notification_medically_exempt_no_content_description
-    
-    // MARK: - New 'no symptoms' screen
-    
-    case new_no_symptoms_screen_header
-    case new_no_symptoms_screen_introduction_line
-    case new_no_symptoms_screen_block1_heading
-    case new_no_symptoms_screen_block1_body
-    case new_no_symptoms_screen_block2_heading
-    case new_no_symptoms_screen_block2_body
-    case new_no_symptoms_screen_block3_heading
-    case new_no_symptoms_screen_block3_body
-    case new_no_symptoms_screen_block4_heading
-    case new_no_symptoms_screen_block4_body
-    case new_no_symptoms_screen_pcr_testing_header
-    case new_no_symptoms_screen_pcr_testing_text
-    case new_no_symptoms_screen_pcr_testing_link_title
-    case new_no_symptoms_screen_pcr_testing_link_url
-    case new_no_symptoms_screen_general_guidance_header
-    case new_no_symptoms_screen_general_guidance_text
-    case new_no_symptoms_screen_general_guidance_link_title
-    case new_no_symptoms_screen_back_home_button
-    
+  
     // MARK: - Age and vaccination status summary screen
     
     case contact_case_summary_change_age_button

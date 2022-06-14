@@ -121,6 +121,7 @@ private let questionnaire = """
     }
   },
   "riskThreshold": 0.5,
-  "symptomsOnsetWindowDays": 6
+  "symptomsOnsetWindowDays": 6,
+  "isSymptomaticSelfIsolationForWalesEnabled": false
 }
 """

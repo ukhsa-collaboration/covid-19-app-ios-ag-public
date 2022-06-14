@@ -319,7 +319,7 @@ class LinkPositiveTestResultEnglandFlowTests: XCTestCase {
             
             testSymptomsReviewScreen.continueButton.tap()
             
-            let adviceScreeen = AdviceForIndexCasesEnglandAlreadyIsolatingScreen(app: app)
+            let adviceScreeen = AdviceForIndexCasesEnglandScreen(app: app)
             XCTAssertTrue(adviceScreeen.heading.exists)
             
             runner.step("Advice Screen") {

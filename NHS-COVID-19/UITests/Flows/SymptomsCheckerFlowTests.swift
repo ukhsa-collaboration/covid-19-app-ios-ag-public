@@ -12,16 +12,17 @@ class SymptomsCheckerFlowTests: XCTestCase {
     private var runner: ApplicationRunner<SandboxedScenario>
     
     override func setUp() {
+        $runner.enable(\.$guidanceHubEnglandToggle)
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = true
         $runner.initialState.postcode = "SW12"
         $runner.initialState.localAuthorityId = "E09000022"
     }
         
-    func testEnglandPositiveSymptomsPath() throws {
-        $runner.report(scenario: "Symptoms Checker", "Positive symptoms path") {
+    func testEnglandSymptomCheckerTryStayAtHomePath() throws {
+        $runner.report(scenario: "Symptoms Checker", "Try stay at home path") {
             """
-            User selects symptoms and gets advice.
+            User selects symptoms and gets advice to try to stay at home.
             """
         }
         
@@ -36,7 +37,7 @@ class SymptomsCheckerFlowTests: XCTestCase {
                 """
             }
             
-            homeScreen.selfDiagnosisButton().tap()
+            homeScreen.selfDiagnosisButton.tap()
             
             runner.step("Symptoms questions") {
                 """
@@ -55,6 +56,7 @@ class SymptomsCheckerFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: symptomsListScreen.reportButton)
             symptomsListScreen.reportButton.tap()
             
             runner.step("How do you feel question") {
@@ -65,6 +67,7 @@ class SymptomsCheckerFlowTests: XCTestCase {
             
             let howDoYouFeelScreen = HowDoYouFeelScreen(app: app)
             
+            app.scrollTo(element: howDoYouFeelScreen.noRadioButton(selected: false))
             howDoYouFeelScreen.noRadioButton(selected: false).tap()
             
             runner.step("How do you feel answered") {
@@ -73,6 +76,7 @@ class SymptomsCheckerFlowTests: XCTestCase {
                 """
             }
             
+            app.scrollTo(element: howDoYouFeelScreen.continueButton)
             howDoYouFeelScreen.continueButton.tap()
             
             runner.step("Check your answers") {
@@ -82,6 +86,8 @@ class SymptomsCheckerFlowTests: XCTestCase {
             }
             
             let checkYourAnswers = CheckYourAnswersScreen(app: app)
+            
+            app.scrollTo(element: checkYourAnswers.submitButton)
             checkYourAnswers.submitButton.tap()
             
             runner.step("Try to stay at home") {
@@ -92,8 +98,8 @@ class SymptomsCheckerFlowTests: XCTestCase {
             
             let tryToStayHomeScreen = SymptomaticCaseSummaryTryStayHomeScreen(app: app)
             tryToStayHomeScreen.backToHomeButton.tap()
-            
-            runner.step("Home screen") {
+
+            runner.step("Home screen (via Back to home button)") {
                 """
                 The user is returned to the Home screen.
                 """
@@ -101,8 +107,8 @@ class SymptomsCheckerFlowTests: XCTestCase {
         }
     }
     
-    func testEnglandNoSymptomsPath() throws {
-        $runner.report(scenario: "Symptoms Checker", "No symptoms path") {
+    func testEnglandSymptomCheckerContinueWithNormalActivitiesPath() throws {
+        $runner.report(scenario: "Symptoms Checker", "Continue with normal activities path") {
             """
             User selects symptoms and gets advice.
             """
@@ -119,7 +125,7 @@ class SymptomsCheckerFlowTests: XCTestCase {
                 """
             }
             
-            homeScreen.selfDiagnosisButton().tap()
+            homeScreen.selfDiagnosisButton.tap()
             
             runner.step("Symptoms questions") {
                 """
@@ -175,8 +181,8 @@ class SymptomsCheckerFlowTests: XCTestCase {
             
             let normalActivitiesScreen = SymptomaticCaseBackToNormalActivitiesScreen(app: app)
             normalActivitiesScreen.backToHomeButton.tap()
-            
-            runner.step("Home screen") {
+
+            runner.step("Home screen (via Back to home button)") {
                 """
                 The user is returned to the Home screen.
                 """

@@ -14,19 +14,19 @@ struct IsolationConfigurationHandler: RequestHandler {
         let response = HTTPResponse.ok(with: .json(#"""
           {
             "england": {
-              "indexCaseSinceSelfDiagnosisOnset": 11,
-              "indexCaseSinceSelfDiagnosisUnknownOnset": 9,
+              "indexCaseSinceSelfDiagnosisOnset": 6,
+              "indexCaseSinceSelfDiagnosisUnknownOnset": 4,
               "contactCase": 11,
-              "maxIsolation": 21,
-              "indexCaseSinceTestResultEndDate": 11,
+              "maxIsolation": 16,
+              "indexCaseSinceTestResultEndDate": 6,
               "testResultPollingTokenRetentionPeriod": 28
             },
             "wales_v2": {
-              "indexCaseSinceSelfDiagnosisOnset": 11,
-              "indexCaseSinceSelfDiagnosisUnknownOnset": 9,
+              "indexCaseSinceSelfDiagnosisOnset": 6,
+              "indexCaseSinceSelfDiagnosisUnknownOnset": 6,
               "contactCase": 11,
-              "maxIsolation": 21,
-              "indexCaseSinceTestResultEndDate": 11,
+              "maxIsolation": 16,
+              "indexCaseSinceTestResultEndDate": 6,
               "testResultPollingTokenRetentionPeriod": 28
             }
         }

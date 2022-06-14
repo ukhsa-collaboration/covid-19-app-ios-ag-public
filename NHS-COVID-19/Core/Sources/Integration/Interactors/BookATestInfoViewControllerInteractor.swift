@@ -33,7 +33,4 @@ public struct BookATestInfoViewControllerInteractor: BookATestInfoViewController
         _openURL(ExternalLink.bookATestForSomeoneElse.url)
     }
     
-    public func didTapBookAPCRTest() {
-        _openURL(ExternalLink.bookPCRTest.url)
-    }
 }

@@ -129,7 +129,6 @@ class MetricCollectorTests: XCTestCase {
             "entries": [
                 { "name": "checkedIn", "date": 1000 },
                 { "name": "deletedLastCheckIn", "date": 1999 },
-        
                 { "name": "completedOnboarding", "date": 2000 },
                 { "name": "deletedLastCheckIn", "date": 2000 },
                 { "name": "deletedLastCheckIn", "date": 2500 },
@@ -182,13 +181,7 @@ class MetricCollectorTests: XCTestCase {
         store.stored["metrics"] = """
         {
             "entries": [
-                { "name": "receivedPositiveLFDTestResultViaPolling", "date": 2800 },
-                { "name": "receivedNegativeLFDTestResultViaPolling", "date": 2800 },
-                { "name": "receivedVoidLFDTestResultViaPolling", "date": 2800 },
-                { "name": "receivedVoidLFDTestResultViaPolling", "date": 2500 },
                 { "name": "receivedPositiveLFDTestResultEnteredManually", "date": 2800 },
-                { "name": "receivedNegativeLFDTestResultEnteredManually", "date": 2800 },
-                { "name": "receivedVoidLFDTestResultEnteredManually", "date": 2800 },
             ]
         }
         """.normalizedJSON()
@@ -201,15 +194,9 @@ class MetricCollectorTests: XCTestCase {
         let actual = collector.recordedMetrics(in: interval)
         
         let expected: [Metric: Int] = [
-            .receivedPositiveLFDTestResultViaPolling: 1,
-            .receivedNegativeLFDTestResultViaPolling: 1,
-            .receivedVoidLFDTestResultViaPolling: 2,
             .receivedPositiveLFDTestResultEnteredManually: 1,
-            .receivedNegativeLFDTestResultEnteredManually: 1,
-            .receivedVoidLFDTestResultEnteredManually: 1,
         ]
         
         TS.assert(actual, equals: expected)
     }
-    
 }

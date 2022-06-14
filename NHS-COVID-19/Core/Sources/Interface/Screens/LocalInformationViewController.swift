@@ -133,7 +133,6 @@ public final class LocalInformationViewController: StickyFooterScrollingContentV
         super.viewWillAppear(animated)
         
         navigationController?.setNavigationBarHidden(false, animated: animated)
-        navigationController?.navigationBar.tintColor = UIColor(.nhsBlue)
         setNavigationBarTransparent(true)
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             title: localize(.cancel),

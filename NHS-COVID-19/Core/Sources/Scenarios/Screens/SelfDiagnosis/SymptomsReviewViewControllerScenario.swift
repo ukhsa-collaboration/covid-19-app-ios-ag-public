@@ -28,7 +28,8 @@ public class SymptomsReviewViewControllerScenario: Scenario {
                     ],
                     cardinal: CardinalSymptomInfo(),
                     noncardinal: CardinalSymptomInfo(),
-                    dateSelectionWindow: 14
+                    dateSelectionWindow: 14,
+                    isSymptomaticSelfIsolationForWalesEnabled: false
                 ),
                 currentDateProvider: DateProvider(),
                 interactor: Interactor(viewController: parent)

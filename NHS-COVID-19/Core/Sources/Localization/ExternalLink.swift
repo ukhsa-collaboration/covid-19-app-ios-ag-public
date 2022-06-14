@@ -30,7 +30,6 @@ public enum ExternalLink: CaseIterable {
     case downloadNHSApp
     case governmentGuidance
     case findLocalAuthority
-    case bookPCRTest
     case approvedVaccinesInfo
     case isolationNote
     case localCovidStatsInfo
@@ -109,8 +108,6 @@ public enum ExternalLink: CaseIterable {
             return localizeURL(.link_government_guidance)
         case .findLocalAuthority:
             return localizeURL(.link_find_local_authority)
-        case .bookPCRTest:
-            return localizeURL(.new_no_symptoms_screen_pcr_testing_link_url)
         case .approvedVaccinesInfo:
             return localizeURL(.link_approved_vaccines_info)
         case .isolationNote:

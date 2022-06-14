@@ -6,11 +6,7 @@ import Foundation
 import Common
 
 public enum Feature: CaseIterable {
-    
-    /// Shows the new 'no symptoms' screen with more information if someone picks none of the
-    /// symptoms in the symptoms questionnaire.
-    case newNoSymptomsScreen
-    
+        
     /// Puts a button on the home screen that allows people to see the local COVID statistics
     /// for their area and for the whole country.
     case localStatistics
@@ -52,8 +48,6 @@ extension Feature {
     
     var associatedMetrics: [Metric] {
         switch self {
-        case .newNoSymptomsScreen:
-            return []
         case .localStatistics:
             return []
         case .venueCheckIn:
@@ -106,8 +100,6 @@ extension Feature {
     
     var countriesOfRelevance: [Country] {
         switch self {
-        case .newNoSymptomsScreen:
-            return [.england, .wales]
         case .localStatistics:
             return [.england, .wales]
         case .venueCheckIn:

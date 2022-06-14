@@ -18,6 +18,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
             questionnaire = Questionnaire(context: try context())
             riskyContact = RiskyContact(configuration: $instance)
             symptomsCheckerManager = try context().symptomsCheckerManager
+            
         } catch {
             XCTFail(error.localizedDescription)
         }
@@ -252,7 +253,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
         assertOnFieldsForDateRange(dateRange: 4 ... 16) { assertField in
             assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
         }
-
+        
         // Current date: 17th Jan -> Analytics packet for: 16th Jan
         // longer stored
         assertAnalyticsPacketIsNormal()
@@ -281,10 +282,35 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
             assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick)
         }
-
+        
         // Current date: 17th Jan -> Analytics packet for: 16th Jan
         // longer stored
         assertAnalyticsPacketIsNormal()
     }
     
+    // Given that the feature toggle countdown timer for Wales is disabled and
+    // a Wales user completes the symmptom questionaiare and have symptoms
+    // there is no longer need for self isolation.
+    // isIsolatingBackgroundTick, isIsolatingForSelfDiagnosedBackgroundTick and startedIsolation should not increment.
+    func testWalesUserHasCompletedSymptomsQuestionaireAndHaveSymptomsNoNeedForSelfIsolation() throws {
+        
+        assertAnalyticsPacketIsNormal()
+        
+        try questionnaire.selfDiagnosePositive(onsetDay: currentDateProvider.currentGregorianDay(timeZone: .utc), symptomaticSelfIsolationEnabled: false)
+        
+        //Tests that the Background Tick for isolating is not present when the feature toggle is disabled (symptomaticSelfIsolationEnabled: false).
+        assertOnFields { assertField in
+            assertField.equals(expected: 0, \.startedIsolation)
+            assertField.isNotPresent(\.isIsolatingBackgroundTick)
+            assertField.isNotPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+        }
+        
+        // Tests that the Background tick for islating is not present for 14 days after completing the questionnaire, when the feature toggle is disabled (symptomaticSelfIsolationEnabled: false).
+        assertOnFieldsForDateRange(dateRange: 4 ... 16) { assertField in
+            assertField.isNotPresent(\.isIsolatingBackgroundTick)
+            assertField.isNotPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
+        }
+        
+        assertAnalyticsPacketIsNormal()
+    }
 }

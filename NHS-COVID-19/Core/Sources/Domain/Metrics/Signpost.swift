@@ -41,12 +41,7 @@ public enum Metric: String, CaseIterable {
     case hasTestedLFDPositiveBackgroundTick
     case isIsolatingForTestedLFDPositiveBackgroundTick
     
-    case receivedPositiveLFDTestResultViaPolling
-    case receivedNegativeLFDTestResultViaPolling
-    case receivedVoidLFDTestResultViaPolling
     case receivedPositiveLFDTestResultEnteredManually
-    case receivedNegativeLFDTestResultEnteredManually
-    case receivedVoidLFDTestResultEnteredManually
     case receivedUnconfirmedPositiveTestResult
     
     case receivedPositiveSelfRapidTestResultEnteredManually
@@ -178,11 +173,8 @@ public enum Metrics {
             switch testResult {
             case .positive:
                 signpost(.receivedPositiveLFDTestResultEnteredManually)
-            case .negative:
-                signpost(.receivedNegativeLFDTestResultEnteredManually)
-            case .void:
-                signpost(.receivedVoidLFDTestResultEnteredManually)
-            case .plod: break
+            case .negative, .void, .plod:
+                break
             }
         case .rapidSelfReported:
             switch testResult {
@@ -225,19 +217,10 @@ public enum Metrics {
             case .plod: break
             }
         case .rapidResult:
-            switch testResult {
-            case .positive:
-                signpost(.receivedPositiveLFDTestResultViaPolling)
-            case .negative:
-                signpost(.receivedNegativeLFDTestResultViaPolling)
-            case .void:
-                signpost(.receivedVoidLFDTestResultViaPolling)
-            case .plod: break
-            }
+            break
         case .rapidSelfReported:
             break
         }
-        
     }
     
     static func signpostNegativeLabResultAfterRapidResult(

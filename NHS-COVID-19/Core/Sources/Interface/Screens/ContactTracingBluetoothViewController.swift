@@ -21,7 +21,7 @@ extension ContactTracingBluetoothViewController {
             bulletItemsController.view.backgroundColor = .clear
             
             views = [
-                LogoStrapline(.nhsBlue, style: .home(country.wrappedValue)),
+                LogoStrapline(.primaryText, style: .home(country.wrappedValue)),
                 UIImageView(.onboardingPermissions)
                     .styleAsDecoration(),
                 BaseLabel()

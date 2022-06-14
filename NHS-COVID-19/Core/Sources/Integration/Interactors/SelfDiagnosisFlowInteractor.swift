@@ -27,29 +27,40 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
                     symptoms: symptomInfos,
                     cardinal: CardinalSymptomInfo(),
                     noncardinal: CardinalSymptomInfo(),
-                    dateSelectionWindow: questionnaire.dateSelectionWindow
+                    dateSelectionWindow: questionnaire.dateSelectionWindow,
+                    isSymptomaticSelfIsolationForWalesEnabled: questionnaire.isSymptomaticSelfIsolationForWalesEnabled
                 )
             }
             .mapError { $0 }
             .eraseToAnyPublisher()
     }
     
-    func advice(basedOn symptoms: [SymptomInfo], onsetDay: GregorianDay?, riskThreshold: Double) -> SelfDiagnosisAdvice {
+    func advice(basedOn symptomsQuestionnaire: InterfaceSymptomsQuestionnaire, onsetDay: GregorianDay?, country: Country) -> SelfDiagnosisAdvice {
+        let riskThreshold: Double = symptomsQuestionnaire.riskThreshold
+        let symptoms: [SymptomInfo] = symptomsQuestionnaire.symptoms
         let selectedSymptoms = symptoms
             .filter(\.isConfirmed)
             .map(symptomMapper.domainSymptomFrom)
+        let symptomaticSelfIsolationEnabled = !(country == .wales && !symptomsQuestionnaire.isSymptomaticSelfIsolationForWalesEnabled)
         
-        let evaluation = selfDiagnosisManager.evaluate(selectedSymptoms: selectedSymptoms, onsetDay: onsetDay, threshold: riskThreshold)
+        let evaluation = selfDiagnosisManager.evaluate(
+            selectedSymptoms: selectedSymptoms,
+            onsetDay: onsetDay,
+            threshold: riskThreshold,
+            symptomaticSelfIsolationEnabled: symptomaticSelfIsolationEnabled
+        )
         switch evaluation {
         case .noSymptoms:
             return .noSymptoms(.init(initialIsolationState))
         case .hasSymptoms(let isolation, let testState):
-            return .hasSymptoms(.init(isolation: isolation, testState: testState))
+            let adviceDetails: SelfDiagnosisAdvice.HasSymptomsAdviceDetails = .init(isolation: isolation, testState: testState)
+            if !symptomaticSelfIsolationEnabled
+                && adviceDetails == .isolate(SelfDiagnosisAdvice.ExistingPositiveTestState.hasNoTests, endDate: isolation.endDate) {
+                return .hasSymptoms(.followAdviceButNoIsolationNeeded(endDate: isolation.endDate))
+            } else {
+                return .hasSymptoms(adviceDetails)
+            }
         }
-    }
-    
-    var shouldShowNewNoSymptomsScreen: Bool {
-        selfDiagnosisManager.shouldShowNewNoSymptomsScreen()
     }
     
     var adviceWhenNoSymptomsAreReported: SelfDiagnosisAdvice {
@@ -102,10 +113,6 @@ extension SelfDiagnosisFlowInteractor: BookATestInfoViewControllerInteracting {
     public func didTapBookATestForSomeoneElse() {
         openURL(ExternalLink.bookATestForSomeoneElse.url)
     }
-    
-    public func didTapBookAPCRTest() {
-        openURL(ExternalLink.bookPCRTest.url)
-    }
 }
 
 private extension SelfDiagnosisAdvice.NoSymptomsAdviceDetails {
@@ -134,6 +141,5 @@ private extension SelfDiagnosisAdvice.HasSymptomsAdviceDetails {
         case .hasTest(shouldChangeAdviceDueToSymptoms: false):
             self = .followAdviceForExistingPositiveTest
         }
-    }
-    
+    }    
 }

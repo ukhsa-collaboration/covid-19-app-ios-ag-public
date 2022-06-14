@@ -189,15 +189,13 @@ class RiskyVenueNotificationFlowTests: XCTestCase {
             }
             positiveSymptomsScreen.getRapidLateralFlowTestButton.firstMatch.tap()
             
-            runner.step("Positive Symptoms screen") {
+            runner.step("Home screen") {
                 """
-                The user is returned to the homescreen, which presents their isolation countdown and different menu options.
+                The user is returned to the homescreen.
                 """
             }
             
-            let date = GregorianDay.today.advanced(by: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset).startDate(in: .current)
-            
-            app.checkOnHomeScreenIsolatingWarning(date: date, days: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisUnknownOnset)
+            app.checkOnHomeScreenNotIsolating()
         }
     }
     

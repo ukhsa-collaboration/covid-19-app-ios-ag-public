@@ -88,7 +88,7 @@ class SymptomaticCaseSummaryContent {
 
             let emergencyText = BaseLabel().set(text: localize(.symptom_checker_advice_emergency_contact_body)).styleAsBody()
             
-            let primaryButton = PrimaryButton(title: localize(.no_symptoms_return_home_button), action: interactor.didTapReturnHome)
+            let primaryButton = PrimaryButton(title: localize(.summary_page_go_home), action: interactor.didTapReturnHome)
             
             return [image, heading, box, imageInfo, infoText, bulletList, externalLinkButtonNHS, emergencyText, primaryButton].compactMap { $0 }
         }

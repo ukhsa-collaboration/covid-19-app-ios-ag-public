@@ -34,7 +34,8 @@ public class CheckYourAnswersViewControllerScenario: Scenario {
                     symptoms: [],
                     cardinal: CardinalSymptomInfo(heading: cardinalSymptomsHeading),
                     noncardinal: CardinalSymptomInfo(heading: nonCardinalSymptomsHeading, content: [nonCardinalSymptomsContent, nonCardinalSymptomsContent2, nonCardinalSymptomsContent3]),
-                    dateSelectionWindow: 0
+                    dateSelectionWindow: 0,
+                    isSymptomaticSelfIsolationForWalesEnabled: false
                 ),
                 doYouFeelWell: nil,
                 interactor: interactor

@@ -36,7 +36,8 @@ struct SymptomsCheckerFlowInteractor: SymptomCheckerFlowViewController.Interacti
                     symptoms: symptomInfos,
                     cardinal: cardinalInfo,
                     noncardinal: nonCardinalInfo,
-                    dateSelectionWindow: questionnaire.dateSelectionWindow
+                    dateSelectionWindow: questionnaire.dateSelectionWindow,
+                    isSymptomaticSelfIsolationForWalesEnabled: questionnaire.isSymptomaticSelfIsolationForWalesEnabled
                 )
             }
             .mapError { $0 }

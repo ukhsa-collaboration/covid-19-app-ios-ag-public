@@ -456,7 +456,7 @@ class IsolationContextTests: XCTestCase {
         let untilStartOfDay = fromDay.advanced(by: isolationContext.isolationConfiguration.value.england.indexCaseSinceSelfDiagnosisOnset.days)
         let numberOfIsolationDaysForIndexCaseFromConfiguration = isolationContext.isolationConfiguration.value.england.indexCaseSinceNPEXDayNoSelfDiagnosis.days
         
-        let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay)
+        let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay, symptomaticSelfIsolationEnabled: false)
         
         let expectedIsolationState = IsolationState.isolate(
             Isolation(
@@ -493,7 +493,7 @@ class IsolationContextTests: XCTestCase {
             )
         )
         
-        let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay)
+        let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay, symptomaticSelfIsolationEnabled: false)
         let expectedIsolationState = IsolationState.isolate(
             Isolation(
                 fromDay: fromDay,
@@ -529,7 +529,7 @@ class IsolationContextTests: XCTestCase {
             )
         )
         
-        let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay)
+        let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay, symptomaticSelfIsolationEnabled: false)
         let expectedIsolationState = IsolationState.isolate(
             Isolation(
                 fromDay: fromDay,
@@ -572,7 +572,7 @@ class IsolationContextTests: XCTestCase {
             )
         )
         
-        let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay)
+        let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay, symptomaticSelfIsolationEnabled: false)
         let expectedIsolationState = IsolationState.isolate(
             Isolation(
                 fromDay: fromDay,
@@ -608,7 +608,7 @@ class IsolationContextTests: XCTestCase {
             )
         )
         
-        let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay)
+        let state = isolationContext.handleSymptomsIsolationState(onsetDay: onsetDay, symptomaticSelfIsolationEnabled: false)
         let expectedIsolationState = IsolationState.isolate(
             Isolation(
                 fromDay: fromDay,

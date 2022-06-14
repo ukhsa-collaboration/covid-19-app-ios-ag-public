@@ -248,7 +248,7 @@ struct IsolationContext {
         Metrics.signpost(.optedOutForContactIsolation)
     }
     
-    func handleSymptomsIsolationState(onsetDay: GregorianDay?) -> (IsolationState, SelfDiagnosisEvaluation.ExistingPositiveTestState) {
+    func handleSymptomsIsolationState(onsetDay: GregorianDay?, symptomaticSelfIsolationEnabled: Bool) -> (IsolationState, SelfDiagnosisEvaluation.ExistingPositiveTestState) {
         let currentIsolationLogicalState = IsolationLogicalState(
             stateInfo: isolationStateStore.isolationStateInfo,
             day: currentDateProvider.currentLocalDay
@@ -280,7 +280,20 @@ struct IsolationContext {
                 symptomaticInfo: symptomaticInfo,
                 testInfo: nil
             )
-            let newIsolationLogicalState = isolationStateStore.set(info)
+            let isolationInfo = mutating(isolationStateStore.isolationInfo) {
+                $0.indexCaseInfo = info
+                $0.hasAcknowledgedEndOfIsolation = false
+            }
+            var newIsolationLogicalState = IsolationLogicalState(
+                today: currentDateProvider.currentLocalDay,
+                info: isolationInfo,
+                configuration: isolationStateStore.configuration
+            )
+
+            if symptomaticSelfIsolationEnabled {
+                newIsolationLogicalState = isolationStateStore.set(info)
+            }
+            
             let isolationState = IsolationState(logicalState: newIsolationLogicalState)
             return (isolationState, .hasNoTest)
         }

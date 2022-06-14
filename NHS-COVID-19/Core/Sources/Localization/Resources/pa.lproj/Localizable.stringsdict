@@ -45,9 +45,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>%ld ਦਿਨ ਤੱਕ ਸੈਲਫ-ਆਈਸੋਲੇਸ਼ਨ ਵਿੱਚ ਰਹਿਣਾ ਜਾਰੀ ਰੱਖੋ</string>
+				<string>%ld ਦਿਨ ਤੱਕ ਸਵੈ ਇਕਾਂਤ ਵਿੱਚ ਰਹਿਣਾ ਜਾਰੀ ਰੱਖੋ</string>
 				<key>other</key>
-				<string>%ld ਦਿਨਾਂ ਤੱਕ ਸੈਲਫ-ਆਈਸੋਲੇਸ਼ਨ ਵਿੱਚ ਰਹਿਣਾ ਜਾਰੀ ਰੱਖੋ</string>
+				<string>%ld ਦਿਨ ਤੱਕ ਸਵੈ ਇਕਾਂਤ ਵਿੱਚ ਰਹਿਣਾ ਜਾਰੀ ਰੱਖੋ</string>
 			</dict>
 		</dict>
 		<key>isolation_days_accessibility_label %ld</key>

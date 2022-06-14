@@ -11,6 +11,7 @@ public struct SymptomsQuestionnaire: Equatable {
     public var noncardinal: NonCardinalSymptom
     public var riskThreshold: Double
     public var dateSelectionWindow: Int
+    public var isSymptomaticSelfIsolationForWalesEnabled: Bool
 }
 
 public struct Symptom: Decodable, Equatable {

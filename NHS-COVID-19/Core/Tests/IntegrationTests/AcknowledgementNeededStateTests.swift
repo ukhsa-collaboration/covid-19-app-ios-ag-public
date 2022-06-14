@@ -265,10 +265,6 @@ class AcknowledgementNeededStateTests: XCTestCase {
     
     private class MockSelfDiagnosisManager: SelfDiagnosisManaging {
         
-        func shouldShowNewNoSymptomsScreen() -> Bool {
-            false
-        }
-        
         var threshold: Double?
         
         func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError> {
@@ -278,11 +274,12 @@ class AcknowledgementNeededStateTests: XCTestCase {
                     cardinal: CardinalSymptom(title: LocaleString(dictionaryLiteral: (.current, ""))),
                     noncardinal: NonCardinalSymptom(title: LocaleString(dictionaryLiteral: (.current, "")), description: LocaleString(dictionaryLiteral: (.current, ""))),
                     riskThreshold: 0.0,
-                    dateSelectionWindow: 0)))
+                    dateSelectionWindow: 0,
+                    isSymptomaticSelfIsolationForWalesEnabled: false)))
             }.eraseToAnyPublisher()
         }
         
-        func evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double) -> SelfDiagnosisEvaluation {
+        func evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double, symptomaticSelfIsolationEnabled: Bool) -> SelfDiagnosisEvaluation {
             .noSymptoms
         }
         
@@ -309,7 +306,8 @@ class AcknowledgementNeededStateTests: XCTestCase {
                     cardinal: CardinalSymptom(title: LocaleString(dictionaryLiteral: (.current, ""))),
                     noncardinal: NonCardinalSymptom(title: LocaleString(dictionaryLiteral: (.current, "")), description: LocaleString(dictionaryLiteral: (.current, ""))),
                     riskThreshold: 0.0,
-                    dateSelectionWindow: 0)))
+                    dateSelectionWindow: 0,
+                    isSymptomaticSelfIsolationForWalesEnabled: false)))
             }.eraseToAnyPublisher()
         }
     }

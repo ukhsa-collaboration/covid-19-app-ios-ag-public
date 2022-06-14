@@ -115,13 +115,8 @@ private struct SubmissionPayload: Codable {
         var selectedIsolationPaymentsButton: Int? = 0
         var launchedIsolationPaymentsApplication: Int? = 0
         var haveActiveIpcTokenBackgroundTick: Int? = 0
-        
-        var receivedPositiveLFDTestResultViaPolling: Int? = 0
-        var receivedNegativeLFDTestResultViaPolling: Int? = 0
-        var receivedVoidLFDTestResultViaPolling: Int? = 0
+ 
         var receivedPositiveLFDTestResultEnteredManually: Int? = 0
-        var receivedNegativeLFDTestResultEnteredManually: Int? = 0
-        var receivedVoidLFDTestResultEnteredManually: Int? = 0
         var receivedUnconfirmedPositiveTestResult: Int? = 0
         
         var receivedPositiveSelfRapidTestResultEnteredManually: Int? = 0
@@ -281,12 +276,7 @@ private extension Metric {
         case .launchedIsolationPaymentsApplication: return \.launchedIsolationPaymentsApplication
         case .totalExposureWindowsNotConsideredRisky: return \.totalExposureWindowsNotConsideredRisky
         case .totalExposureWindowsConsideredRisky: return \.totalExposureWindowsConsideredRisky
-        case .receivedPositiveLFDTestResultViaPolling: return \.receivedPositiveLFDTestResultViaPolling
-        case .receivedNegativeLFDTestResultViaPolling: return \.receivedNegativeLFDTestResultViaPolling
-        case .receivedVoidLFDTestResultViaPolling: return \.receivedVoidLFDTestResultViaPolling
         case .receivedPositiveLFDTestResultEnteredManually: return \.receivedPositiveLFDTestResultEnteredManually
-        case .receivedNegativeLFDTestResultEnteredManually: return \.receivedNegativeLFDTestResultEnteredManually
-        case .receivedVoidLFDTestResultEnteredManually: return \.receivedVoidLFDTestResultEnteredManually
         case .receivedUnconfirmedPositiveTestResult: return \.receivedUnconfirmedPositiveTestResult
         case .hasTestedLFDPositiveBackgroundTick: return \.hasTestedLFDPositiveBackgroundTick
         case .isIsolatingForTestedLFDPositiveBackgroundTick: return \.isIsolatingForTestedLFDPositiveBackgroundTick

@@ -32,7 +32,8 @@ public class YourSymptomsViewControllerScenario: Scenario {
                     symptoms: [],
                     cardinal: CardinalSymptomInfo(heading: cardinalSymptomsHeading),
                     noncardinal: CardinalSymptomInfo(heading: nonCardinalSymptomsHeading, content: [nonCardinalSymptomsContent]),
-                    dateSelectionWindow: 0
+                    dateSelectionWindow: 0,
+                    isSymptomaticSelfIsolationForWalesEnabled: false
                 ),
                 interactor: interactor
             )

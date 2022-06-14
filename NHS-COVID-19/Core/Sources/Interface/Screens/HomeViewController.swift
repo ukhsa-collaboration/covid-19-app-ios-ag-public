@@ -25,7 +25,6 @@ public protocol HomeViewControllerInteracting {
     var shouldShowTestingForCOVID19: Bool { get }
     var shouldShowSelfIsolation: Bool { get }
     var shouldShowGuidanceHub: Bool { get }
-    var shouldShowNewLabelForEnglandSC: Bool { get }
     func openSettings()
 }
 

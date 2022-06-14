@@ -10,13 +10,22 @@ public struct InterfaceSymptomsQuestionnaire {
     public var cardinal: CardinalSymptomInfo
     public var noncardinal: CardinalSymptomInfo
     public var dateSelectionWindow: Int
+    public var isSymptomaticSelfIsolationForWalesEnabled: Bool
     
-    public init(riskThreshold: Double, symptoms: [SymptomInfo], cardinal: CardinalSymptomInfo, noncardinal: CardinalSymptomInfo, dateSelectionWindow: Int) {
+    public init(
+        riskThreshold: Double,
+        symptoms: [SymptomInfo],
+        cardinal: CardinalSymptomInfo,
+        noncardinal: CardinalSymptomInfo,
+        dateSelectionWindow: Int,
+        isSymptomaticSelfIsolationForWalesEnabled: Bool
+    ) {
         self.riskThreshold = riskThreshold
         self.symptoms = symptoms
         self.cardinal = cardinal
         self.noncardinal = noncardinal
         self.dateSelectionWindow = dateSelectionWindow
+        self.isSymptomaticSelfIsolationForWalesEnabled = isSymptomaticSelfIsolationForWalesEnabled
     }
 }
 
