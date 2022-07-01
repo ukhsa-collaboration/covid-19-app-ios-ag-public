@@ -7,11 +7,11 @@ import SwiftUI
 import UIKit
 
 private struct TestingHubView: View {
-    
+
     private let interactor: TestingHubViewController.Interacting
     @ObservedObject private var showOrderTestButton: InterfaceProperty<Bool>
     @ObservedObject private var showFindOutAboutTestingButton: InterfaceProperty<Bool>
-    
+
     init(
         interactor: TestingHubViewController.Interacting,
         showOrderTestButton: InterfaceProperty<Bool>,
@@ -21,7 +21,7 @@ private struct TestingHubView: View {
         self.showOrderTestButton = showOrderTestButton
         self.showFindOutAboutTestingButton = showFindOutAboutTestingButton
     }
-    
+
     var body: some View {
         ScrollView {
             VStack(spacing: .halfHairSpacing) {
@@ -56,7 +56,7 @@ private struct TestingHubView: View {
         .padding(.bottom, .bigSpacing)
         .background(Color(.background))
     }
-    
+
 }
 
 public protocol TestingHubViewControllerInteracting {
@@ -67,13 +67,13 @@ public protocol TestingHubViewControllerInteracting {
 }
 
 public class TestingHubViewController: RootViewController {
-    
+
     public typealias Interacting = TestingHubViewControllerInteracting
-    
+
     private let interactor: Interacting
     private let showOrderTestButton: InterfaceProperty<Bool>
     private let showFindOutAboutTestingButton: InterfaceProperty<Bool>
-    
+
     public init(
         interactor: Interacting,
         showOrderTestButton: InterfaceProperty<Bool>,
@@ -84,25 +84,25 @@ public class TestingHubViewController: RootViewController {
         self.showFindOutAboutTestingButton = showFindOutAboutTestingButton
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewDidLoad() {
         super.viewDidLoad()
-        
+
         title = localize(.testing_hub_title)
-        
+
         let testingHubView = TestingHubView(
             interactor: interactor,
             showOrderTestButton: showOrderTestButton,
             showFindOutAboutTestingButton: showFindOutAboutTestingButton
         )
         .edgesIgnoringSafeArea(.bottom)
-        
+
         let contentViewController = UIHostingController(rootView: testingHubView)
         addFilling(contentViewController)
     }
-    
+
 }

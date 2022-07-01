@@ -8,22 +8,22 @@ import XCTest
 @testable import Domain
 
 class CircuitBreakerApprovalEndpointTests: XCTestCase {
-    
+
     private let riskInfo = RiskInfo(riskScore: 8, riskScoreVersion: 1, day: GregorianDay.today.advanced(by: -2))
     private let endpoint = CircuitBreakerApprovalEndpoint()
     typealias Response = CircuitBreakerApprovalEndpoint.Response
-    
+
     func testEncodingRiskyVenue() throws {
         let expected = HTTPRequest.post("/circuit-breaker/venue/request", body: .json(#"""
         {
         }
         """#))
             .withCanonicalJSONBody()
-        
+
         let actual = try endpoint.request(for: .riskyVenue).withCanonicalJSONBody()
         TS.assert(actual, equals: expected)
     }
-    
+
     func testEncodingExposureNotification() throws {
         let expected = HTTPRequest.post("/circuit-breaker/exposure-notification/request", body: .json(#"""
         {
@@ -34,14 +34,14 @@ class CircuitBreakerApprovalEndpointTests: XCTestCase {
         }
         """#))
             .withCanonicalJSONBody()
-        
+
         let actual = try endpoint.request(for: .exposureNotification(riskInfo)).withCanonicalJSONBody()
         TS.assert(actual, equals: expected)
     }
-    
+
     func testDecodingApproved() throws {
         let approvalTokenString = UUID().uuidString
-        
+
         let httpResponse = HTTPResponse(
             statusCode: 200,
             body: .json("""
@@ -51,16 +51,16 @@ class CircuitBreakerApprovalEndpointTests: XCTestCase {
             }
             """)
         )
-        
+
         let expected = Response(approvalToken: .init(approvalTokenString), approval: .yes)
         let actual = try endpoint.parse(httpResponse)
-        
+
         TS.assert(expected, equals: actual)
     }
-    
+
     func testDecodingNotApproved() throws {
         let approvalTokenString = UUID().uuidString
-        
+
         let httpResponse = HTTPResponse(
             statusCode: 200,
             body: .json("""
@@ -70,16 +70,16 @@ class CircuitBreakerApprovalEndpointTests: XCTestCase {
             }
             """)
         )
-        
+
         let expected = Response(approvalToken: .init(approvalTokenString), approval: .no)
         let actual = try endpoint.parse(httpResponse)
-        
+
         TS.assert(expected, equals: actual)
     }
-    
+
     func testDecodingPending() throws {
         let approvalTokenString = UUID().uuidString
-        
+
         let httpResponse = HTTPResponse(
             statusCode: 200,
             body: .json("""
@@ -89,11 +89,11 @@ class CircuitBreakerApprovalEndpointTests: XCTestCase {
             }
             """)
         )
-        
+
         let expected = Response(approvalToken: .init(approvalTokenString), approval: .pending)
         let actual = try endpoint.parse(httpResponse)
-        
+
         TS.assert(expected, equals: actual)
     }
-    
+
 }

@@ -15,36 +15,36 @@ public protocol LocalStatisticsFlowViewControllerInteracting {
 
 public class LocalStatisticsFlowViewController: UIViewController {
     public typealias Interacting = LocalStatisticsFlowViewControllerInteracting
-    
+
     fileprivate let interactor: Interacting
-    
+
     fileprivate enum State: Equatable {
         case loading
         case localCovidStats(InterfaceLocalCovidStatsDaily)
         case failed
     }
-    
+
     @Published
     fileprivate var state: State = .loading
-    
+
     private var cancellables = [AnyCancellable]()
-    
+
     public init(_ interactor: Interacting) {
         self.interactor = interactor
         super.init(nibName: nil, bundle: nil)
         monitorState()
         fetchLocalStatsData()
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func monitorState() {
         $state
             .regulate(as: .modelChange)
@@ -54,11 +54,11 @@ public class LocalStatisticsFlowViewController: UIViewController {
             }
             .store(in: &cancellables)
     }
-    
+
     private func update(for state: State) {
         content = rootViewController(for: state)
     }
-    
+
     private var content: UIViewController? {
         didSet {
             oldValue?.remove()
@@ -68,7 +68,7 @@ public class LocalStatisticsFlowViewController: UIViewController {
             }
         }
     }
-    
+
     private func rootViewController(for state: State) -> UIViewController {
         switch state {
         case .loading:
@@ -85,7 +85,7 @@ public class LocalStatisticsFlowViewController: UIViewController {
             return LoadingErrorViewController(interacting: interactor, title: "")
         }
     }
-    
+
     func fetchLocalStatsData() {
         state = .loading
         interactor.fetchLocalDailyStats()
@@ -102,11 +102,11 @@ public class LocalStatisticsFlowViewController: UIViewController {
 
 private class LoadingViewControllerInteractor: LoadingViewController.Interacting {
     private weak var navigationController: LocalStatisticsFlowViewController?
-    
+
     init(navigationController: LocalStatisticsFlowViewController?) {
         self.navigationController = navigationController
     }
-    
+
     func didTapCancel() {
         navigationController?.dismiss(animated: true, completion: nil)
     }
@@ -114,31 +114,31 @@ private class LoadingViewControllerInteractor: LoadingViewController.Interacting
 
 private struct LoadingErrorControllerInteractor: LoadingErrorViewController.Interacting {
     private weak var navigationController: LocalStatisticsFlowViewController?
-    
+
     init(navigationController: LocalStatisticsFlowViewController?) {
         self.navigationController = navigationController
     }
-    
+
     func didTapCancel() {
         navigationController?.dismiss(animated: true, completion: nil)
     }
-    
+
     public func didTapRetry() {
         navigationController?.fetchLocalStatsData()
     }
 }
 
 private struct LocalStatisticsControllerInteractor: LocalStatisticsViewController.Interacting {
-    
+
     var openURL: (URL) -> Void
-    
+
     private weak var navigationController: LocalStatisticsFlowViewController?
-    
+
     init(navigationController: LocalStatisticsFlowViewController, openURL: @escaping (URL) -> Void) {
         self.navigationController = navigationController
         self.openURL = openURL
     }
-    
+
     func didTapdashboardLinkButton() {
         openURL(ExternalLink.localCovidStatsInfo.url)
     }

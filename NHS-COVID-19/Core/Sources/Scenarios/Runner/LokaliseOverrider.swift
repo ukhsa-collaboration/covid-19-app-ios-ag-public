@@ -6,11 +6,11 @@ import Foundation
 import Localization
 
 class LokaliseOverrider: LocalizationOverrider {
-    
+
     private let lokaliseBundle: Bundle?
     private var languageBundles: [String: Bundle] = [:]
     private let queue = DispatchQueue(label: "LokaliseOverrider")
-    
+
     private static func lookupLokaliseBundle() -> Bundle? {
         let lokaliseURL = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first?.appendingPathComponent("Lokalise")
         if let path = lokaliseURL?.path,
@@ -25,11 +25,11 @@ class LokaliseOverrider: LocalizationOverrider {
         }
         return nil
     }
-    
+
     init() {
         lokaliseBundle = Self.lookupLokaliseBundle()
     }
-    
+
     private func languageBundle(for language: String) -> Bundle? {
         queue.sync {
             // todo; when the user updates strings we advise them to restart the app to clear any in-memory state,
@@ -43,17 +43,17 @@ class LokaliseOverrider: LocalizationOverrider {
             return languageBundles[language]
         }
     }
-    
+
     func localize(_ key: String, languageCode: String, tableName: String?, bundle: Bundle, value: String, comment: String) -> String? {
-        
+
         // if this flag is set we just return the key
         if MockDataProvider.shared.lokaliseShowKeysOnly {
             return key
         }
-        
+
         // if there is a downloaded Lokalise bundle, use that
         if MockDataProvider.shared.lokaliseShowDownloadedStrings, let lokaliseBundle = lokaliseBundle {
-            
+
             // if we have a non-en language code, point at the specific language bundle
             let actualBundle: Bundle = {
                 if languageCode != "en",
@@ -62,11 +62,11 @@ class LokaliseOverrider: LocalizationOverrider {
                 }
                 return lokaliseBundle
             }()
-            
+
             let result = NSLocalizedString(key, tableName: tableName, bundle: actualBundle, value: value, comment: "")
             return result
         }
-        
+
         // otherwise there's no override, let normal handling proceed
         return nil
     }

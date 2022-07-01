@@ -6,11 +6,11 @@ import Common
 import Foundation
 
 struct LocalCovidStatsDailyEndpoint: HTTPEndpoint {
-    
+
     func request(for input: Void) throws -> HTTPRequest {
         .get("/distribution/v1/local-covid-stats-daily")
     }
-    
+
     func parse(_ response: HTTPResponse) throws -> LocalCovidStatsDaily {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .appNetworking
@@ -55,11 +55,11 @@ private enum Direction: String, Codable {
 
 private struct Updated: Codable {
     let lastUpdate: GregorianDay
-    
+
     enum CodingKeys: String, CodingKey {
         case lastUpdate
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let value = try container.decode(String.self, forKey: .lastUpdate)
@@ -72,7 +72,7 @@ private struct Updated: Codable {
             throw DecodingError.dataCorruptedError(forKey: .lastUpdate, in: container, debugDescription: "Date couldn't be created from string")
         }
     }
-    
+
 }
 
 private struct NewCases: Codable {
@@ -88,7 +88,7 @@ private extension LocalCovidStatsDaily {
         lastFetch = payload.lastFetch
         england = CountryStats(newCasesBySpecimenDateRollingRate: payload.england.newCasesBySpecimenDateRollingRate, lastUpdate: payload.metadata.england.newCasesBySpecimenDateRollingRate.lastUpdate)
         wales = CountryStats(newCasesBySpecimenDateRollingRate: payload.wales.newCasesBySpecimenDateRollingRate, lastUpdate: payload.metadata.wales.newCasesBySpecimenDateRollingRate.lastUpdate)
-        
+
         lowerTierLocalAuthorities = try Dictionary(uniqueKeysWithValues: payload.lowerTierLocalAuthorities.map { key, value in
             let localAuthorityId = LocalAuthorityId(key)
             let localAuthorityStats = try LocalAuthorityStats(id: localAuthorityId, stats: value, localAuthoritiesMetadata: payload.metadata.lowerTierLocalAuthorities)
@@ -111,11 +111,11 @@ private extension LocalCovidStatsDaily.Direction {
 private extension LocalCovidStatsDaily.LocalAuthorityStats {
     typealias StatsValue = LocalCovidStatsDaily.LocalAuthorityStats.Value
     typealias Direction = LocalCovidStatsDaily.Direction
-    
+
     init(id: LocalAuthorityId, stats: LowerTierLocalAuthorities, localAuthoritiesMetadata metadata: [String: Updated]) throws {
         self.id = id
         name = stats.name
-        
+
         if let lastUpdate = metadata["newCasesByPublishDateRollingSum"]?.lastUpdate {
             newCasesByPublishDateRollingSum = StatsValue(
                 value: stats.newCasesByPublishDateRollingSum,
@@ -124,7 +124,7 @@ private extension LocalCovidStatsDaily.LocalAuthorityStats {
         } else {
             throw LocalCovidStatsDailyError.mappingError("newCasesByPublishDateRollingSum")
         }
-        
+
         if let lastUpdate = metadata["newCasesByPublishDateChange"]?.lastUpdate {
             newCasesByPublishDateChange = StatsValue(
                 value: stats.newCasesByPublishDateChange,
@@ -133,7 +133,7 @@ private extension LocalCovidStatsDaily.LocalAuthorityStats {
         } else {
             throw LocalCovidStatsDailyError.mappingError("newCasesByPublishDateChange")
         }
-        
+
         if let lastUpdate = metadata["newCasesByPublishDateDirection"]?.lastUpdate {
             newCasesByPublishDateDirection = StatsValue(
                 value: Direction(rawValue: stats.newCasesByPublishDateDirection),
@@ -142,7 +142,7 @@ private extension LocalCovidStatsDaily.LocalAuthorityStats {
         } else {
             throw LocalCovidStatsDailyError.mappingError("newCasesByPublishDateDirection")
         }
-        
+
         if let lastUpdate = metadata["newCasesByPublishDate"]?.lastUpdate {
             newCasesByPublishDate = StatsValue(
                 value: stats.newCasesByPublishDate,
@@ -151,7 +151,7 @@ private extension LocalCovidStatsDaily.LocalAuthorityStats {
         } else {
             throw LocalCovidStatsDailyError.mappingError("newCasesByPublishDate")
         }
-        
+
         if let lastUpdate = metadata["newCasesByPublishDateChangePercentage"]?.lastUpdate {
             newCasesByPublishDateChangePercentage = StatsValue(
                 value: stats.newCasesByPublishDateChangePercentage,
@@ -160,7 +160,7 @@ private extension LocalCovidStatsDaily.LocalAuthorityStats {
         } else {
             throw LocalCovidStatsDailyError.mappingError("newCasesByPublishDateChangePercentage")
         }
-        
+
         if let lastUpdate = metadata["newCasesBySpecimenDateRollingRate"]?.lastUpdate {
             newCasesBySpecimenDateRollingRate = StatsValue(
                 value: stats.newCasesBySpecimenDateRollingRate,
@@ -169,6 +169,6 @@ private extension LocalCovidStatsDaily.LocalAuthorityStats {
         } else {
             throw LocalCovidStatsDailyError.mappingError("newCasesBySpecimenDateRollingRate")
         }
-        
+
     }
 }

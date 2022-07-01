@@ -10,22 +10,22 @@ struct TestResultIsolationOperation {
     let storedIsolationInfo: IsolationInfo?
     let result: VirologyStateTestResult
     let configuration: IsolationConfiguration
-    
+
     private func storeOperationGivenSymptomaticAfterPositive() -> IsolationStateStore.Operation {
         guard let indexCaseInfo = storedIsolationInfo?.indexCaseInfo,
             let symptomaticInfo = indexCaseInfo.symptomaticInfo,
             let testInfo = indexCaseInfo.testInfo else {
             preconditionFailure("No exisiting test found for symptomatic after positive")
         }
-        
+
         let testOlderThanAssumedOnsetDay = result.endDay < symptomaticInfo.assumedOnsetDay
-        
+
         switch result.testResult {
         case .void, .plod: return .nothing
         case .negative:
             let existingTestEndDay = indexCaseInfo.assumedTestEndDay ?? testInfo.receivedOnDay
             let testOlderThanAssumedOnsetDay = result.endDay < symptomaticInfo.assumedOnsetDay
-            
+
             switch testInfo.confirmationStatus {
             case .pending:
                 if result.endDay < existingTestEndDay {
@@ -48,7 +48,7 @@ struct TestResultIsolationOperation {
                     return .update
                 }
             }
-            
+
             // The new result is newer than the already stored result but older than symptoms
             if testOlderThanAssumedOnsetDay {
                 if !result.requiresConfirmatoryTest, testInfo.confirmationStatus == .pending {
@@ -57,7 +57,7 @@ struct TestResultIsolationOperation {
                     return .nothing
                 }
             }
-            
+
             // The new result is newer than symptoms
             if result.requiresConfirmatoryTest {
                 if currentIsolationState.activeIsolation?.isIndexCase ?? false {
@@ -70,7 +70,7 @@ struct TestResultIsolationOperation {
             }
         }
     }
-    
+
     func storeOperation() -> IsolationStateStore.Operation {
         switch result.testResult {
         case .void, .plod: return .nothing
@@ -78,11 +78,11 @@ struct TestResultIsolationOperation {
             guard let indexCaseInfo = storedIsolationInfo?.indexCaseInfo else {
                 return .overwrite
             }
-            
+
             if indexCaseInfo.hasBecomeSymptomaticAfterPositive {
                 return storeOperationGivenSymptomaticAfterPositive()
             }
-            
+
             switch indexCaseInfo.testInfo?.result {
             case .none:
                 if let onsetDay = indexCaseInfo.symptomaticInfo?.assumedOnsetDay, result.endDay < onsetDay {
@@ -101,12 +101,12 @@ struct TestResultIsolationOperation {
                     existingEndDate.advanced(by: dayLimit) < result.endDay {
                     // The negative test result we got is too late, and outside
                     // the `confirmatoryDayLimit` to store the negative result.
-                    
+
                     return .complete
                 } else {
                     // The test result was within the time limit, so we store
                     // the negative test.
-                    
+
                     return .update
                 }
             case .positive: return .nothing
@@ -116,15 +116,15 @@ struct TestResultIsolationOperation {
                 result.endDay.advanced(by: configuration.indexCaseSinceNPEXDayNoSelfDiagnosis.days) <= isolationStartDay {
                 return .ignore
             }
-            
+
             guard let indexCaseInfo = storedIsolationInfo?.indexCaseInfo else {
                 return .overwrite
             }
-            
+
             if indexCaseInfo.hasBecomeSymptomaticAfterPositive {
                 return storeOperationGivenSymptomaticAfterPositive()
             }
-            
+
             // The new test is before symptoms and before stored test
             if let onsetDay = indexCaseInfo.symptomaticInfo?.assumedOnsetDay,
                 result.endDay < onsetDay,
@@ -135,7 +135,7 @@ struct TestResultIsolationOperation {
                     return .update
                 }
             }
-            
+
             if let endDay = indexCaseInfo.assumedTestEndDay,
                 indexCaseInfo.testInfo?.result == .positive,
                 result.endDay < endDay {
@@ -154,7 +154,7 @@ struct TestResultIsolationOperation {
                     }
                 }
             }
-            
+
             if let endDay = indexCaseInfo.assumedTestEndDay,
                 indexCaseInfo.testInfo?.result == .negative,
                 result.endDay < endDay {
@@ -176,7 +176,7 @@ struct TestResultIsolationOperation {
                     }
                 }
             }
-            
+
             if result.requiresConfirmatoryTest {
                 if currentIsolationState.activeIsolation?.isIndexCase ?? false {
                     return .nothing

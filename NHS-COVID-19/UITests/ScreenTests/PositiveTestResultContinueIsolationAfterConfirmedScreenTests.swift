@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class PositiveTestResultContinueIsolationAfterConfirmedScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<PositiveTestResultContinueIsolationAfterConfirmedScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = PositiveTestResultContinueIsolationAfterConfirmedScreen(app: app)
@@ -21,29 +21,29 @@ class PositiveTestResultContinueIsolationAfterConfirmedScreenTests: XCTestCase {
             XCTAssert(screen.continueButton.exists)
         }
     }
-    
+
     func testTapOnlineServices() throws {
         try runner.run { app in
             let screen = PositiveTestResultContinueIsolationAfterConfirmedScreen(app: app)
-            
+
             screen.onlineServicesLink.tap()
             XCTAssert(screen.onlineServicesLinkAlertTitle.exists)
         }
     }
-    
+
     func testTapExposureFAQ() throws {
         try runner.run { app in
             let screen = PositiveTestResultContinueIsolationAfterConfirmedScreen(app: app)
-            
+
             screen.exposureFAQLink.tap()
             XCTAssert(screen.exposureFAQLinkAlertTitle.exists)
         }
     }
-    
+
     func testShareKeys() throws {
         try runner.run { app in
             let screen = PositiveTestResultContinueIsolationAfterConfirmedScreen(app: app)
-            
+
             screen.continueButton.tap()
             XCTAssert(screen.continueAlertTitle.exists)
         }
@@ -51,21 +51,21 @@ class PositiveTestResultContinueIsolationAfterConfirmedScreenTests: XCTestCase {
 }
 
 private extension PositiveTestResultContinueIsolationAfterConfirmedScreen {
-    
+
     var onlineServicesLinkAlertTitle: XCUIElement {
         app.staticTexts[PositiveTestResultContinueIsolationScreenScenario.onlineServicesLinkTapped]
     }
-    
+
     var exposureFAQLinkAlertTitle: XCUIElement {
         app.staticTexts[PositiveTestResultStartIsolationScreenScenario.exposureFAQLinkTapped]
     }
-    
+
     var continueAlertTitle: XCUIElement {
         app.staticTexts[PositiveTestResultContinueIsolationScreenScenario.primaryButtonTapped]
     }
-    
+
     var noThanksAlertTitle: XCUIElement {
         app.staticTexts[PositiveTestResultContinueIsolationScreenScenario.noThanksLinkTapped]
     }
-    
+
 }

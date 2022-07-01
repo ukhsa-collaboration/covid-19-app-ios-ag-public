@@ -10,11 +10,11 @@ public struct Venue: Codable, Equatable, Hashable {
         case organisation = "opn"
         case postcode = "pc"
     }
-    
+
     var id: String
     var organisation: String
     var postcode: String?
-    
+
     public init(
         id: String,
         organisation: String,

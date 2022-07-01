@@ -6,7 +6,7 @@ import Common
 import Foundation
 
 public class ApplicationServices {
-    
+
     let application: Application
     let exposureNotificationManager: ExposureNotificationManaging
     let userNotificationsManager: UserNotificationManaging
@@ -24,7 +24,7 @@ public class ApplicationServices {
     let currentDateProvider: DateProviding
     let storeReviewController: StoreReviewControlling
     let riskyPostcodeUpdateIntervalProvider: MinimumUpdateIntervalProviding
-    
+
     public init(
         application: Application,
         exposureNotificationManager: ExposureNotificationManaging,
@@ -62,5 +62,5 @@ public class ApplicationServices {
         self.storeReviewController = storeReviewController
         self.riskyPostcodeUpdateIntervalProvider = riskyPostcodeUpdateIntervalProvider
     }
-    
+
 }

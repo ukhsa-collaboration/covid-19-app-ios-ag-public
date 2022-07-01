@@ -9,13 +9,13 @@ import XCTest
 
 class IsolationPaymentStoreTests: XCTestCase {
     private var encryptedStore: MockEncryptedStore!
-    
+
     override func setUp() {
         super.setUp()
-        
+
         encryptedStore = MockEncryptedStore()
     }
-    
+
     func testLoad() throws {
         encryptedStore.stored["isolation_payment_store"] = """
         {
@@ -27,7 +27,7 @@ class IsolationPaymentStoreTests: XCTestCase {
         let isolationPaymentState = IsolationPaymentRawState.disabled
         XCTAssertEqual(storedIsolationPaymentState, isolationPaymentState)
     }
-    
+
     func testLoadWithToken() throws {
         let token = UUID().uuidString
         encryptedStore.stored["isolation_payment_store"] = """
@@ -41,7 +41,7 @@ class IsolationPaymentStoreTests: XCTestCase {
         let isolationPaymentState = IsolationPaymentRawState.ipcToken(token)
         XCTAssertEqual(storedIsolationPaymentState, isolationPaymentState)
     }
-    
+
     func testSave() throws {
         let isolationPaymentStore = IsolationPaymentStore(store: encryptedStore)
         isolationPaymentStore.save(.disabled)
@@ -49,7 +49,7 @@ class IsolationPaymentStoreTests: XCTestCase {
         let isolationPaymentState = IsolationPaymentRawState.disabled
         XCTAssertEqual(storedIsolationPaymentState, isolationPaymentState)
     }
-    
+
     func testSaveWithToken() throws {
         let isolationPaymentStore = IsolationPaymentStore(store: encryptedStore)
         let token = UUID().uuidString
@@ -58,14 +58,14 @@ class IsolationPaymentStoreTests: XCTestCase {
         let isolationPaymentState = IsolationPaymentRawState.ipcToken(token)
         XCTAssertEqual(storedIsolationPaymentState, isolationPaymentState)
     }
-    
+
     func testDelete() throws {
         encryptedStore.stored["isolation_payment_store"] = """
         {
             "isEnabled": false
         }
         """.data(using: .utf8)
-        
+
         let isolationPaymentStore = IsolationPaymentStore(store: encryptedStore)
         XCTAssertNotNil(isolationPaymentStore.load())
         isolationPaymentStore.delete()

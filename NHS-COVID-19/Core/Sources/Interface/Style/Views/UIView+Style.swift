@@ -7,11 +7,11 @@ import Localization
 import UIKit
 
 extension UIView {
-    
+
     public func styleAsScreenBackground(with traitCollection: UITraitCollection) {
         backgroundColor = UIColor(.background)
     }
-    
+
     public func applySemanticContentAttribute(configuration: LocaleConfiguration? = nil) {
         switch currentLanguageDirection(localeConfiguration: configuration) {
         case .leftToRight:
@@ -22,5 +22,5 @@ extension UIView {
             break
         }
     }
-    
+
 }

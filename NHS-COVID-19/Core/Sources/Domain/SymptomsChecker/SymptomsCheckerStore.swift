@@ -12,35 +12,35 @@ private struct SymptomsCheckerInfo: Codable, DataConvertible, Equatable {
 }
 
 class SymptomsCheckerStore {
-    
+
     @PublishedEncrypted private var symptomsCheckerInfo: SymptomsCheckerInfo?
 
     var configuration: SymptomsCheckerConfiguration { .default }
-    
+
     private(set) lazy var lastCompletedSymptomsQuestionnaireDay: DomainProperty<GregorianDay?> = {
         $symptomsCheckerInfo.map { $0?.lastCompletedSymptomsQuestionnaireDay }
     }()
-    
+
     private(set) lazy var toldToStayHome: DomainProperty<Bool?> = {
         $symptomsCheckerInfo.map { $0?.toldToStayHome }
     }()
-    
+
     init(store: EncryptedStoring) {
         _symptomsCheckerInfo = store.encrypted("symptoms_checker_store")
     }
-    
+
     func save(lastCompletedSymptomsQuestionnaireDay: GregorianDay, toldToStayHome: Bool) {
         symptomsCheckerInfo = SymptomsCheckerInfo(
             lastCompletedSymptomsQuestionnaireDay: lastCompletedSymptomsQuestionnaireDay,
             toldToStayHome: toldToStayHome
         )
-        
+
         Metrics.signpost(.completedV2SymptomsQuestionnaire)
         if toldToStayHome {
             Metrics.signpost(.completedV2SymptomsQuestionnaireAndStayAtHome)
         }
     }
-    
+
     func delete() {
         symptomsCheckerInfo = nil
     }

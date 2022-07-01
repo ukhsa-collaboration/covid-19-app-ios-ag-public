@@ -6,7 +6,7 @@ import Integration
 import XCTest
 
 class BGTaskSchedulerPermittedIdentifiersTests: XCTestCase {
-    
+
     func testBGTaskSchedulerPermittedIdentifierRetrieval() {
         let bundle = Bundle(for: BackgroundTaskIdentifiers.self)
         let backgroundTaskIdentifiers = BackgroundTaskIdentifiers(in: bundle)

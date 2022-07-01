@@ -64,9 +64,9 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case accordionCollapsedIcon = "AccordionCollapsedIcon"
     case accordionExpandedIcon = "AccordionExpandedIcon"
     case statsChart = "StatsChart"
-    
+
     // MARK: Contact case only
-    
+
     case adultChild = "ContactCaseOnly/AdultChild"
     case groupOfPeople = "ContactCaseOnly/GroupOfPeople"
     case isolation = "ContactCaseOnly/Isolation"
@@ -74,13 +74,13 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case infoCircle = "ContactCaseOnly/InfoCircle"
     case socialDistancing = "ContactCaseOnly/SocialDistancing"
     case washHands = "ContactCaseOnly/WashHands"
-    
+
     // MARK: Key sharing
-    
+
     case shareKeys = "ShareKeys"
-    
+
     // MARK: Risk levels
-    
+
     case riskLevelNeutral = "RiskLevel/Neutral"
     case riskLevelGreen = "RiskLevel/Green"
     case riskLevelYellow = "RiskLevel/Yellow"
@@ -88,7 +88,7 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case riskLevelRed = "RiskLevel/Red"
     case riskLevelMaroon = "RiskLevel/Maroon"
     case riskLevelBlack = "RiskLevel/Black"
-    
+
     case riskLevelDefaultIcon = "RiskLevel/Icons/DefaultIcon"
     case riskLevelBarsAndPubsIcon = "RiskLevel/Icons/BarsAndPubs"
     case riskLevelEducationIcon = "RiskLevel/Icons/Education"
@@ -110,7 +110,7 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case riskLevelMeetingIndoorsIcon = "RiskLevel/Icons/MeetingIndoors"
     case riskLevelWorkIcon = "RiskLevel/Icons/Work"
     case riskLevelInternationalTravelIcon = "RiskLevel/Icons/InternationalTravel"
-    
+
     case symbolRef = "Symbols/Ref"
     case symbolinfo = "Symbols/Info"
     case symbolRelease = "Symbols/Release"
@@ -118,20 +118,20 @@ public enum ImageName: String, CaseIterable, Identifiable {
     case symbolUKCA = "Symbols/UKCA"
     case symbolInstructionForUse = "Symbols/InstructionForUse"
     case appUpdateImage = "AppUpdateImage"
-    
+
     case settingInfo = "SettingInfo"
     case privacyIcon = "PrivacyIcon"
     case shareKeysReview = "ShareKeysReview"
-    
+
     case isolatingCircles = "IsolationIndicatorCircles/IsolatingCircles"
     case notIsolatingCircles = "IsolationIndicatorCircles/NotIsolatingCircles"
-    
+
     // MARK: Contact Tracing
-    
+
     case contactTracingBatteryLife = "ContactTracing/BatteryLife"
     case contactTracingNoTracking = "ContactTracing/NoTracking"
     case contactTracingPrivacy = "ContactTracing/Privacy"
-    
+
     public var id: ImageName {
         self
     }
@@ -139,30 +139,30 @@ public enum ImageName: String, CaseIterable, Identifiable {
 
 extension Image {
     public static var bundle = Bundle.main
-    
+
     public init(_ name: ImageName) {
         self.init(name.rawValue, bundle: Image.bundle)
     }
-    
+
 }
 
 extension UIImageView {
-    
+
     public convenience init(_ name: ImageName) {
         self.init(image: UIImage(name))
     }
-    
+
 }
 
 extension UIImage {
     public static var bundle = Bundle.main
-    
+
     public convenience init(_ name: ImageName) {
         self.init(named: name.rawValue, in: UIImage.bundle, compatibleWith: .current)!
     }
-    
+
     static func hasImage(for name: ImageName) -> Bool {
         Self(named: name.rawValue, in: UIImage.bundle, compatibleWith: .current) != nil
     }
-    
+
 }

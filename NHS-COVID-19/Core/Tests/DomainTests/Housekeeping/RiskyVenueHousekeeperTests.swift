@@ -8,13 +8,13 @@ import XCTest
 @testable import Domain
 
 class RiskyVenueHousekeeperTests: XCTestCase {
-    
+
     var cleared = false
-    
+
     override func setUp() {
         cleared = false
     }
-    
+
     private func createHouseKeeper(
         deletionPeriod: Int,
         today: GregorianDay,
@@ -27,7 +27,7 @@ class RiskyVenueHousekeeperTests: XCTestCase {
             clearData: { self.cleared = true }
         )
     }
-    
+
     func testHousekeeperDoesNothingIfNoRiskyVenueInfo() throws {
         let housekeeper = createHouseKeeper(
             deletionPeriod: 5,
@@ -35,10 +35,10 @@ class RiskyVenueHousekeeperTests: XCTestCase {
             mostRecentCheckInDay: nil
         )
         _ = housekeeper.executeHousekeeping()
-        
+
         XCTAssertFalse(cleared)
     }
-    
+
     func testHousekeeperDoesNothingIfUnderDeletionPeriod() throws {
         let housekeeper = createHouseKeeper(
             deletionPeriod: 5,
@@ -46,10 +46,10 @@ class RiskyVenueHousekeeperTests: XCTestCase {
             mostRecentCheckInDay: GregorianDay(year: 2020, month: 7, day: 24)
         )
         _ = housekeeper.executeHousekeeping()
-        
+
         XCTAssertFalse(cleared)
     }
-    
+
     func testHousekeeperClearsIfOverDeletionPeriod() throws {
         let housekeeper = createHouseKeeper(
             deletionPeriod: 5,
@@ -57,7 +57,7 @@ class RiskyVenueHousekeeperTests: XCTestCase {
             mostRecentCheckInDay: GregorianDay(year: 2020, month: 7, day: 24)
         )
         _ = housekeeper.executeHousekeeping()
-        
+
         XCTAssertTrue(cleared)
     }
 }

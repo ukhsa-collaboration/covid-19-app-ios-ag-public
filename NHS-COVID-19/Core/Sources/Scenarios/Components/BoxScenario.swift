@@ -7,14 +7,14 @@ import Interface
 import SwiftUI
 
 public class BoxScenario: Scenario {
-    
+
     public static let name = "Box"
     public static let kind = ScenarioKind.component
-    
+
     static var appController: AppController {
         let navigation = UINavigationController()
         let hostingVC = UIHostingController(rootView: BoxViewScenario())
-        
+
         navigation.pushViewController(hostingVC, animated: false)
         return BasicAppController(rootViewController: navigation)
     }
@@ -41,7 +41,7 @@ private struct BoxViewScenario: View {
                         Text("Yes")
                     }
                 }
-                
+
             }
             Spacer()
         }

@@ -15,11 +15,11 @@ import XCTest
 class MetricsFieldFilterTests: AcceptanceTestCase {
     private var cancellables = [AnyCancellable]()
     private var metricsPayloads: [SubmissionPayload] = []
-    
+
     override func setUpWithError() throws {
         subscribeToMetricsRequests()
     }
-    
+
     func testPayloadWalesFeaturesOff() throws {
         configure(
             postcode: "CF71",
@@ -30,11 +30,11 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
             ),
             enabledFeatures: []
         )
-        
+
         advanceToEndOfAnalyticsWindow()
-        
+
         assertOnLastFields { assertField in
-            
+
             // Venue check in
             assertField.equals(expected: nil, \.receivedRiskyVenueM2Warning)
             assertField.equals(expected: nil, \.hasReceivedRiskyVenueM2WarningBackgroundTick)
@@ -46,11 +46,11 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
             assertField.equals(expected: nil, \.selectedLFDTestOrderingM2Journey)
             assertField.equals(expected: nil, \.selectedHasLFDTestM2Journey)
             assertField.equals(expected: nil, \.receivedRiskyVenueM1Warning)
-            
+
             // Contact opt out flow
             assertField.equals(expected: nil, \.acknowledgedStartOfIsolationDueToRiskyContact)
             assertField.equals(expected: nil, \.isIsolatingForHadRiskyContactBackgroundTick)
-            
+
             // Self isolation hub
             assertField.equals(expected: nil, \.didAccessSelfIsolationNoteLink)
             assertField.equals(expected: nil, \.receivedActiveIpcToken)
@@ -59,7 +59,7 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
             assertField.equals(expected: nil, \.launchedIsolationPaymentsApplication)
         }
     }
-    
+
     func testPayloadEnglandFeaturesOff() throws {
         configure(
             postcode: "B44",
@@ -70,9 +70,9 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
             ),
             enabledFeatures: []
         )
-        
+
         advanceToEndOfAnalyticsWindow()
-        
+
         assertOnLastFields { assertField in
             // Venue check in
             assertField.equals(expected: nil, \.receivedRiskyVenueM2Warning)
@@ -85,11 +85,11 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
             assertField.equals(expected: nil, \.selectedLFDTestOrderingM2Journey)
             assertField.equals(expected: nil, \.selectedHasLFDTestM2Journey)
             assertField.equals(expected: nil, \.receivedRiskyVenueM1Warning)
-            
+
             // Contact opt out flow
             assertField.equals(expected: nil, \.acknowledgedStartOfIsolationDueToRiskyContact)
             assertField.equals(expected: nil, \.isIsolatingForHadRiskyContactBackgroundTick)
-            
+
             // Self isolation hub
             assertField.equals(expected: nil, \.didAccessSelfIsolationNoteLink)
             assertField.equals(expected: nil, \.receivedActiveIpcToken)
@@ -97,9 +97,9 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
             assertField.equals(expected: nil, \.selectedIsolationPaymentsButton)
             assertField.equals(expected: nil, \.launchedIsolationPaymentsApplication)
         }
-        
+
     }
-    
+
     func testPayloadWalesFeaturesOn() throws {
         configure(
             postcode: "CF71",
@@ -120,12 +120,12 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
                 .guidanceHubWales,
             ]
         )
-        
+
         advanceToEndOfAnalyticsWindow()
-        
+
         assertOnLastFields { _ in }
     }
-    
+
     func testPayloadEnglandFeaturesOn() throws {
         configure(
             postcode: "B44",
@@ -146,13 +146,13 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
                 .guidanceHubWales,
             ]
         )
-        
+
         advanceToEndOfAnalyticsWindow()
-        
+
         assertOnLastFields { _ in }
-        
+
     }
-    
+
     func testPayloadWithWalesFeaturesOffAndEnglandFeatureOn() throws {
         configure(
             postcode: "CF71",
@@ -170,14 +170,14 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
                 .guidanceHubEngland,
             ]
         )
-        
+
         advanceToEndOfAnalyticsWindow()
-        
+
         assertOnLastFields { assertField in
             // Contact opt out flow
             assertField.equals(expected: nil, \.acknowledgedStartOfIsolationDueToRiskyContact)
             assertField.equals(expected: nil, \.isIsolatingForHadRiskyContactBackgroundTick)
-            
+
             // Self isolation hub
             assertField.equals(expected: nil, \.didAccessSelfIsolationNoteLink)
             assertField.equals(expected: nil, \.receivedActiveIpcToken)
@@ -186,7 +186,7 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
             assertField.equals(expected: nil, \.launchedIsolationPaymentsApplication)
         }
     }
-    
+
     func testPayloadWithEnglandFeaturesOffAndWalesFeatureOn() throws {
         configure(
             postcode: "B44",
@@ -204,14 +204,14 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
                 .guidanceHubWales,
             ]
         )
-        
+
         advanceToEndOfAnalyticsWindow()
-        
+
         assertOnLastFields { assertField in
             // Contact opt out flow
             assertField.equals(expected: nil, \.acknowledgedStartOfIsolationDueToRiskyContact)
             assertField.equals(expected: nil, \.isIsolatingForHadRiskyContactBackgroundTick)
-            
+
             // Self isolation hub
             assertField.equals(expected: nil, \.didAccessSelfIsolationNoteLink)
             assertField.equals(expected: nil, \.receivedActiveIpcToken)
@@ -227,7 +227,7 @@ extension MetricsFieldFilterTests {
     var lastMetricsPayload: SubmissionPayload? {
         metricsPayloads.last
     }
-    
+
     func subscribeToMetricsRequests() {
         apiClient.$lastRequest.sink { request in
             guard let request = request,
@@ -235,7 +235,7 @@ extension MetricsFieldFilterTests {
                 request.path == "/submission/mobile-analytics" else {
                 return
             }
-            
+
             let decoder = JSONDecoder()
             do {
                 let metricsPayload = try decoder.decode(SubmissionPayload.self, from: body.content)
@@ -246,29 +246,29 @@ extension MetricsFieldFilterTests {
         }
         .store(in: &cancellables)
     }
-    
+
     func assertOnLastFields(assertions: (inout FieldAsserter) -> Void) {
         assertOnLastPacket(assertions: assertions)
     }
-    
+
     private func assertOnLastPacket(assertions: (inout FieldAsserter) -> Void, day: Int? = nil) {
         var fieldAsserter = FieldAsserter()
         assertions(&fieldAsserter)
         fieldAsserter.runAllAssertions(metrics: lastMetricsPayload!.metrics, day: day)
     }
-    
+
     private func configure(postcode: String, localAuthority: LocalAuthority, enabledFeatures: [Feature]) {
         $instance.postcode = Postcode(postcode)
         $instance.localAuthority = localAuthority
         $instance.enabledFeatures = enabledFeatures
-        
+
         try! completeRunning(postcode: postcode, localAuthority: localAuthority)
     }
-    
+
     private func performBackgroundTask() {
         coordinator.performBackgroundTask(task: NoOpBackgroundTask())
     }
-    
+
     private func advanceToEndOfAnalyticsWindow() {
         currentDateProvider.advanceToEndOfAnalyticsWindow(
             steps: 12,
@@ -288,18 +288,18 @@ extension MetricsFieldFilterTests {
             \.appIsUsableBluetoothOffBackgroundTick: Ignore(path: \.appIsUsableBluetoothOffBackgroundTick),
              \.hasRiskyContactNotificationsEnabledBackgroundTick: Ignore(path: \.hasRiskyContactNotificationsEnabledBackgroundTick)
         ]
-        
+
         mutating func equals(expected: Int?, _ path: WritableKeyPath<SubmissionPayload.Metrics, Int?>) {
             fieldAssertions[path] = AssertEquals(expected: expected, path: path)
         }
-        
+
         mutating func isPresent(_ path: WritableKeyPath<SubmissionPayload.Metrics, Int?>) {
             fieldAssertions[path] = AssertPresent(path: path)
         }
 
         func runAllAssertions(metrics: SubmissionPayload.Metrics, day: Int? = nil) {
             var expected = SubmissionPayload.Metrics()
-            
+
             for field in fieldAssertions.values {
                 if field.assert(metrics: metrics, day: day) {
                     expected[keyPath: field.path] = metrics[keyPath: field.path]
@@ -307,7 +307,7 @@ extension MetricsFieldFilterTests {
                     expected[keyPath: field.path] = field.expected
                 }
             }
-            
+
             if let day = day {
                 TS.assert(metrics, equals: expected, "Failed on day \(day)")
             } else {
@@ -315,27 +315,27 @@ extension MetricsFieldFilterTests {
             }
         }
     }
-    
+
     private struct Ignore: FieldAssertion {
         let expected: Int? = -1
         let path: WritableKeyPath<SubmissionPayload.Metrics, Int?>
 
         func assert(metrics: SubmissionPayload.Metrics, day: Int?) -> Bool { true }
     }
-    
+
     private struct AssertEquals: FieldAssertion {
         let expected: Int?
         let path: WritableKeyPath<SubmissionPayload.Metrics, Int?>
-        
+
         func assert(metrics: SubmissionPayload.Metrics, day: Int?) -> Bool {
             return expected == metrics[keyPath: path]
         }
     }
-    
+
     private struct AssertPresent: FieldAssertion {
         let expected: Int? = nil
         let path: WritableKeyPath<SubmissionPayload.Metrics, Int?>
-        
+
         func assert(metrics: SubmissionPayload.Metrics, day: Int?) -> Bool {
             if let metricsValue: Int = metrics[keyPath: path] {
                 return metricsValue > 0

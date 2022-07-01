@@ -7,11 +7,11 @@ import Foundation
 
 struct LookUpHandler: RequestHandler {
     var paths = ["/lookup"]
-    
+
     var dataProvider: MockDataProvider
-    
+
     private let productionAppBundleId = "uk.nhs.covid19.production"
-    
+
     var response: Result<HTTPResponse, HTTPRequestError> {
         let response = HTTPResponse.ok(with: .json(#"""
         {

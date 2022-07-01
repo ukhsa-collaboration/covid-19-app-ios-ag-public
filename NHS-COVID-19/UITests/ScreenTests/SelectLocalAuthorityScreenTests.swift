@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class SelectLocalAuthorityScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<SelectLocalAuthorityScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = SelectLocalAuthorityScreen(app: app)
@@ -32,16 +32,16 @@ class SelectLocalAuthorityScreenTests: XCTestCase {
             XCTAssertTrue(screen.button.exists)
         }
     }
-    
+
     func testTapLinkBtn() throws {
         try runner.run { app in
             let screen = SelectLocalAuthorityScreen(app: app)
-            
+
             screen.linkBtn.tap()
             XCTAssert(app.staticTexts[runner.scenario.linkAlertTitle].exists)
         }
     }
-    
+
     func testLocalAuthoritySelection() throws {
         try runner.run { app in
             let screen = SelectLocalAuthorityScreen(app: app)
@@ -49,7 +49,7 @@ class SelectLocalAuthorityScreenTests: XCTestCase {
             XCTAssert(screen.localAuthorityCard(checked: true, title: SelectLocalAuthorityScreenScenario.supportedLocalAuthority.name).exists)
         }
     }
-    
+
     func testTapConfirmBtn() throws {
         try runner.run { app in
             let screen = SelectLocalAuthorityScreen(app: app)
@@ -58,7 +58,7 @@ class SelectLocalAuthorityScreenTests: XCTestCase {
             XCTAssert(app.staticTexts[runner.scenario.confirmAlertTitle].exists)
         }
     }
-    
+
     func testNoSelectionError() throws {
         try runner.run { app in
             let screen = SelectLocalAuthorityScreen(app: app)
@@ -66,7 +66,7 @@ class SelectLocalAuthorityScreenTests: XCTestCase {
             XCTAssert(screen.noSelectionError.exists)
         }
     }
-    
+
     func testUnsupportedCountryError() throws {
         try runner.run { app in
             let screen = SelectLocalAuthorityScreen(app: app)
@@ -75,5 +75,5 @@ class SelectLocalAuthorityScreenTests: XCTestCase {
             XCTAssert(screen.unsupportedCountryError.exists)
         }
     }
-    
+
 }

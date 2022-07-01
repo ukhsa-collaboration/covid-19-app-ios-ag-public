@@ -8,18 +8,18 @@ import UIKit
 
 class LocalExperimentActions {
     typealias Row = ExposureNotificationViewController.Row
-    
+
     private var manager: EnabledExposureManager
     private var device: DeviceManager
     private weak var host: UIViewController?
     private var cancellables = [AnyCancellable]()
-    
+
     init(manager: EnabledExposureManager, device: DeviceManager, host: UIViewController) {
         self.manager = manager
         self.device = device
         self.host = host
     }
-    
+
     var rows: [Row] {
         [
             Row(title: "View keys", value: "", action: { self.showKeys(.normal) }),
@@ -28,7 +28,7 @@ class LocalExperimentActions {
             Row(title: "Detect exposure for experiment", value: "", action: detectExposureForExperiment),
         ]
     }
-    
+
     private func showKeys(_ mode: EnabledExposureManager.Mode) {
         manager.getDiagnosisKeys(mode: mode) { [weak host] result in
             switch result {
@@ -47,7 +47,7 @@ class LocalExperimentActions {
             }
         }
     }
-    
+
     private func exportExperimentData() {
         manager.getDiagnosisKeys(mode: .testing) { [weak host] result in
             switch result {
@@ -61,20 +61,20 @@ class LocalExperimentActions {
                 host?.present(alert, animated: true, completion: nil)
             case .success(let keys):
                 let payload = ExperimentKeysPayload(keys: keys, deviceManager: self.device)
-                
+
                 let tempFolder = try! FileManager().url(for: .itemReplacementDirectory, in: .userDomainMask, appropriateFor: Bundle.main.bundleURL, create: true)
                 let file = tempFolder.appendingPathComponent("\(self.device.experimentName)-\(self.device.deviceName).json")
-                
+
                 let encoder = JSONEncoder()
                 encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
                 try! encoder.encode(payload).write(to: file)
-                
+
                 let viewController = UIActivityViewController(activityItems: [file], applicationActivities: nil)
                 host?.present(viewController, animated: true, completion: nil)
             }
         }
     }
-    
+
     private func detectExposureForExperiment() {
         let url = URL(string: "https://example.com/path/\(device.experimentName)-collected-keys.json")!
         let cancellable = URLSession.shared
@@ -103,12 +103,12 @@ class LocalExperimentActions {
                 receiveValue: { [weak host] collectedResult in
                     let tempFolder = try! FileManager().url(for: .itemReplacementDirectory, in: .userDomainMask, appropriateFor: Bundle.main.bundleURL, create: true)
                     let file = tempFolder.appendingPathComponent("\(self.device.experimentName)-\(self.device.deviceName)-result.json")
-                    
+
                     let encoder = JSONEncoder()
                     encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
                     encoder.dateEncodingStrategy = .iso8601
                     try! encoder.encode(collectedResult).write(to: file)
-                    
+
                     let viewController = UIActivityViewController(activityItems: [file], applicationActivities: nil)
                     host?.present(viewController, animated: true, completion: nil)
                 }

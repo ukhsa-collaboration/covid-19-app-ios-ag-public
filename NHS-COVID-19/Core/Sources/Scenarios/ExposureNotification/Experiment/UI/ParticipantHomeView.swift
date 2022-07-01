@@ -8,11 +8,11 @@ import SwiftUI
 import UIKit
 
 struct ParticipantHomeView: View {
-    
+
     enum Sheet: Identifiable {
         case joinExperiment(ExperimentJoiner)
         case inspectExperiment(ExperimentInspector)
-        
+
         var id: ObjectIdentifier {
             switch self {
             case .joinExperiment(let object):
@@ -21,14 +21,14 @@ struct ParticipantHomeView: View {
                 return object.id
             }
         }
-        
+
         var experimentJoiner: ExperimentJoiner? {
             guard case .joinExperiment(let object) = self else {
                 return nil
             }
             return object
         }
-        
+
         var experimentInspector: ExperimentInspector? {
             guard case .inspectExperiment(let object) = self else {
                 return nil
@@ -36,13 +36,13 @@ struct ParticipantHomeView: View {
             return object
         }
     }
-    
+
     @ObservedObject
     var experimentManager: ExperimentManager
-    
+
     @State
     var sheet: Sheet?
-    
+
     var body: some View {
         NavigationView {
             VStack(spacing: 16) {
@@ -84,7 +84,7 @@ struct ParticipantHomeView: View {
             }
         }
     }
-    
+
     private var experimentNameTitle: String {
         if experimentManager.experimentName.isEmpty {
             return "Not part of any experiments."
@@ -97,7 +97,7 @@ struct ParticipantHomeView: View {
             return "Experiment: \(experimentManager.experimentName)"
         }
     }
-    
+
     private var processingButtonDisabled: Bool {
         guard !experimentManager.experimentName.isEmpty else { return true }
         if experimentManager.automaticDetectionFrequency > 0 {
@@ -106,7 +106,7 @@ struct ParticipantHomeView: View {
             return experimentManager.isProcessingResults
         }
     }
-    
+
     private var processingTitle: String {
         if experimentManager.automaticDetectionFrequency > 0 {
             if experimentManager.isProcessingResults {
@@ -118,7 +118,7 @@ struct ParticipantHomeView: View {
             return experimentManager.isProcessingResults ? "Processing…" : "Process experiment results"
         }
     }
-    
+
     private func startProcessing() {
         if experimentManager.automaticDetectionFrequency > 0 {
             if experimentManager.isProcessingResults {
@@ -138,5 +138,5 @@ struct ParticipantHomeView: View {
             }
         }
     }
-    
+
 }

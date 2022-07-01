@@ -12,7 +12,7 @@ import XCTest
 class IsolationPaymentManagerTests: XCTestCase {
     var httpClient: MockHTTPClient!
     var infoProvider: IsolationPaymentInfoProvider!
-    
+
     override func setUp() {
         httpClient = MockHTTPClient()
         httpClient.response = .success(HTTPResponse.ok(with: .json("""
@@ -23,7 +23,7 @@ class IsolationPaymentManagerTests: XCTestCase {
         """)))
         infoProvider = MockIsolationPaymentInfoProvider()
     }
-    
+
     func testBasic() throws {
         var toggle: Bool = true
         let manager = IsolationPaymentManager(
@@ -32,11 +32,11 @@ class IsolationPaymentManagerTests: XCTestCase {
             country: { .england },
             isInCorrectIsolationStateToApplyForFinancialSupport: { toggle }
         )
-        
+
         XCTAssertNil(infoProvider.load())
         _ = try manager.processCanApplyForFinancialSupport().await()
         XCTAssertNotNil(infoProvider.load())
-        
+
         toggle = false
         _ = try manager.processCanApplyForFinancialSupport().await()
         XCTAssertNil(infoProvider.load())
@@ -45,15 +45,15 @@ class IsolationPaymentManagerTests: XCTestCase {
 
 private class MockIsolationPaymentInfoProvider: IsolationPaymentInfoProvider {
     private var savedState: IsolationPaymentRawState?
-    
+
     func load() -> IsolationPaymentRawState? {
         return savedState
     }
-    
+
     func save(_ state: IsolationPaymentRawState) {
         savedState = state
     }
-    
+
     func delete() {
         savedState = nil
     }

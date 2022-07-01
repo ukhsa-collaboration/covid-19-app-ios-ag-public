@@ -16,14 +16,14 @@ public protocol ContactCaseStartIsolationInteracting {
 extension ContactCaseStartIsolationEnglandViewController {
     private struct Content {
         let views: [StackViewContentProvider]
-        
+
         init(interactor: Interacting,
              isolationEndDate: Date,
              exposureDate: Date,
              isolationPeriod: DayDuration,
              currentDateProvider: DateProviding) {
             let duration = currentDateProvider.currentLocalDay.daysRemaining(until: isolationEndDate)
-            
+
             let pleaseIsolateStack =
                 UIStackView(arrangedSubviews: [
                     BaseLabel()
@@ -35,12 +35,12 @@ extension ContactCaseStartIsolationEnglandViewController {
                         .set(text: localize(.contact_case_start_isolation_days(days: duration)))
                         .centralized(),
                 ])
-            
+
             pleaseIsolateStack.accessibilityLabel = localize(.contact_case_start_isolation_accessibility_label(days: duration))
             pleaseIsolateStack.axis = .vertical
             pleaseIsolateStack.isAccessibilityElement = true
             pleaseIsolateStack.accessibilityTraits = [.header, .staticText]
-            
+
             views = [
                 UIImageView(.isolationStartContact)
                     .styleAsDecoration(),
@@ -71,7 +71,7 @@ extension ContactCaseStartIsolationEnglandViewController {
 public class ContactCaseStartIsolationEnglandViewController: ScrollingContentViewController {
     public typealias Interacting = ContactCaseStartIsolationInteracting
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting,
                 isolationEndDate: Date,
                 exposureDate: Date,
@@ -94,15 +94,15 @@ public class ContactCaseStartIsolationEnglandViewController: ScrollingContentVie
             )
         }
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc func didTapCancel() {
         interactor.didTapCancel()
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
@@ -112,16 +112,16 @@ public class ContactCaseStartIsolationEnglandViewController: ScrollingContentVie
 extension ContactCaseStartIsolationWalesViewController {
     private struct Content {
         let views: [StackViewContentProvider]
-        
+
         init(interactor: Interacting,
              isolationEndDate: Date,
              exposureDate: Date,
              secondTestAdviceDate: Date?,
              isolationPeriod: DayDuration,
              currentDateProvider: DateProviding) {
-            
+
             let duration = currentDateProvider.currentLocalDay.daysRemaining(until: isolationEndDate)
-            
+
             let pleaseIsolateStack =
                 UIStackView(arrangedSubviews: [
                     BaseLabel()
@@ -133,19 +133,19 @@ extension ContactCaseStartIsolationWalesViewController {
                         .set(text: localize(.contact_case_start_isolation_days(days: duration)))
                         .centralized(),
                 ])
-            
+
             pleaseIsolateStack.accessibilityLabel = localize(.contact_case_start_isolation_accessibility_label(days: duration))
             pleaseIsolateStack.axis = .vertical
             pleaseIsolateStack.isAccessibilityElement = true
             pleaseIsolateStack.accessibilityTraits = [.header, .staticText]
-            
+
             var views = [
                 UIImageView(.isolationStartContact)
                     .styleAsDecoration(),
                 pleaseIsolateStack,
                 InformationBox.indication.warning(localize(.contact_case_start_isolation_info_box)),
             ]
-            
+
             if let secondTestAdviceDate = secondTestAdviceDate {
                 views.append(
                     WelcomePoint(image: .swabTest, body: localize(.contact_case_start_isolation_list_item_testing_with_date(date: secondTestAdviceDate)))
@@ -155,7 +155,7 @@ extension ContactCaseStartIsolationWalesViewController {
                     WelcomePoint(image: .swabTest, body: localize(.contact_case_start_isolation_list_item_testing_once_asap_wales))
                 )
             }
-            
+
             views.append(contentsOf: [
                 WelcomePoint(image: .isolation, body: localize(.contact_case_start_isolation_list_item_isolation)),
                 BaseLabel()
@@ -174,9 +174,9 @@ extension ContactCaseStartIsolationWalesViewController {
                     action: interactor.didTapBackToHome
                 ),
             ])
-            
+
             self.views = views
-            
+
         }
     }
 }
@@ -184,7 +184,7 @@ extension ContactCaseStartIsolationWalesViewController {
 public class ContactCaseStartIsolationWalesViewController: ScrollingContentViewController {
     public typealias Interacting = ContactCaseStartIsolationInteracting
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting,
                 isolationEndDate: Date,
                 exposureDate: Date,
@@ -209,15 +209,15 @@ public class ContactCaseStartIsolationWalesViewController: ScrollingContentViewC
             )
         }
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc func didTapCancel() {
         interactor.didTapCancel()
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)

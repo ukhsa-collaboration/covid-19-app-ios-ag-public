@@ -29,30 +29,30 @@ public protocol HomeViewControllerInteracting {
 }
 
 public class HomeViewController: UIViewController {
-    
+
     public typealias Interacting = HomeViewControllerInteracting
-    
+
     private var cancellables = [AnyCancellable]()
     private let interactor: Interacting
     private let riskLevelBannerViewModel: InterfaceProperty<RiskLevelBanner.ViewModel?>
     private let localInfoBannerViewModel: InterfaceProperty<LocalInformationBanner.ViewModel?>
     private let isolationViewModel: RiskLevelIndicator.ViewModel
-    
+
     private let exposureNotificationsEnabled: InterfaceProperty<Bool>
     private let exposureNotificationsToggleAction: (Bool) -> Void
     private let userNotificationsEnabled: InterfaceProperty<Bool>
-    
+
     private let shouldShowSelfDiagnosis: InterfaceProperty<Bool>
     private let showFinancialSupportButton: InterfaceProperty<Bool>
     private let shouldShowLocalStats: Bool
-    
+
     private let country: InterfaceProperty<Country>
     let showLanguageSelectionScreen: (() -> Void)?
     let showNotificationScreen: (() -> Void)?
     private var didShowLanguageSelectionScreen = false
     private var didShowNotificationScreen = false
     private var removeSnapshot: (() -> Void)?
-    
+
     public init(
         interactor: Interacting,
         riskLevelBannerViewModel: InterfaceProperty<RiskLevelBanner.ViewModel?>,
@@ -74,28 +74,28 @@ public class HomeViewController: UIViewController {
         self.isolationViewModel = isolationViewModel
         self.exposureNotificationsEnabled = exposureNotificationsEnabled
         self.exposureNotificationsToggleAction = exposureNotificationsToggleAction
-        
+
         self.userNotificationsEnabled = userNotificationsEnabled
-        
+
         self.shouldShowSelfDiagnosis = shouldShowSelfDiagnosis
         self.showFinancialSupportButton = showFinancialSupportButton
-        
+
         self.country = country
         self.showNotificationScreen = showNotificationScreen
         self.showLanguageSelectionScreen = showLanguageSelectionScreen
         self.shouldShowLocalStats = shouldShowLocalStats
-        
+
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewDidLoad() {
         super.viewDidLoad()
         view.styleAsScreenBackground(with: traitCollection)
-        
+
         let homeView = HomeView(
             interactor: interactor,
             riskLevelBannerViewModel: riskLevelBannerViewModel,
@@ -107,33 +107,33 @@ public class HomeViewController: UIViewController {
             country: country,
             shouldShowLocalStats: shouldShowLocalStats
         )
-        
+
         let controller = UIHostingController(rootView: homeView)
         controller.view.backgroundColor = UIColor(.background)
         view.addAutolayoutSubview(controller.view)
-        
+
         NSLayoutConstraint.activate([
             controller.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             controller.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             controller.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
         ])
-        
+
         if showLanguageSelectionScreen != nil, let snapshot = LanguageSelectionViewController.snapshotBeforeChangingLanguage {
             view.addFillingSubview(snapshot)
             LanguageSelectionViewController.snapshotBeforeChangingLanguage = nil
             removeSnapshot = snapshot.removeFromSuperview
         }
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
-    
+
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         // This if statement would run if we've just changed the language, and therefore we need to re-render all views
         // with the new language and navigate back to where we were.
         //
@@ -169,27 +169,27 @@ public class HomeViewController: UIViewController {
             }
         }
     }
-    
+
     private func performAccessibilityHackForOlderOS() {
         // Scroll a small amount to trigger accessibility frame relayout
         let scrollView: UIScrollView? = view.getFirstSubview()
         scrollView?.setContentOffset(CGPoint(x: 0, y: 1), animated: false)
         scrollView?.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
     }
-    
+
     private var isTryingToFixAccessibility = false
-    
+
     private func performAccessibilityHackForIOS14() {
         // Push and pop a view controller; this solves the problem _somehow_ 🤷‍♀️
         if isTryingToFixAccessibility {
             isTryingToFixAccessibility = false
         } else {
             isTryingToFixAccessibility = true
-            
+
             let viewController = UIViewController()
             viewController.view = view.snapshotView(afterScreenUpdates: false)
             navigationController?.pushViewController(viewController, animated: false)
-            
+
             DispatchQueue.main.async {
                 self.navigationController?.popViewController(animated: false)
             }

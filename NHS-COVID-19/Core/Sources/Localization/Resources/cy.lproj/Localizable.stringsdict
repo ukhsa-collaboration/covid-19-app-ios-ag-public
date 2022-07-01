@@ -674,5 +674,77 @@
 				<string>Byddwch yn ofalus iawn a diogelu eraill tan %2$@ am %3$@. %1$ld diwrnod yn weddill.</string>
 			</dict>
 		</dict>
+		<key>contact_case_continue_isolation_days %ld_wls</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string/>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>zero</key>
+				<string/>
+				<key>one</key>
+				<string/>
+				<key>two</key>
+				<string/>
+				<key>few</key>
+				<string/>
+				<key>many</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>contact_case_continue_isolation_accessibility_label %ld_wls</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>zero</key>
+				<string/>
+				<key>one</key>
+				<string/>
+				<key>two</key>
+				<string/>
+				<key>few</key>
+				<string/>
+				<key>many</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>negative_test_result_with_isolation_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>zero</key>
+				<string/>
+				<key>one</key>
+				<string/>
+				<key>two</key>
+				<string/>
+				<key>few</key>
+				<string/>
+				<key>many</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
 	</dict>
 </plist>

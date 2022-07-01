@@ -15,28 +15,28 @@ import XCTest
 @testable import Integration
 
 class BackendIntegrationTests: XCTestCase {
-    
+
     private var distributionClient: HTTPClient!
     private var submissionclient: HTTPClient!
-    
+
     override func setUp() {
         super.setUp()
-        
+
         let configuration = EnvironmentConfiguration.test
         distributionClient = AppHTTPClient(for: configuration.distributionRemote, kind: .distribution)
         submissionclient = AppHTTPClient(for: configuration.submissionRemote, kind: .submission(userAgentHeaderValue: "p=iOS,o=14.0.1,v=3.8,b=229"))
     }
-    
+
     fileprivate func runDistributionTest<T: HTTPEndpoint, ResultType>(with endpoint: T, expectedType: ResultType.Type) throws where T.Input == Void, T.Output == ResultType {
         let result = try distributionClient.fetch(endpoint).await(timeout: 5).get()
         print(result)
     }
-    
+
     fileprivate func runSubmissionTest<T: HTTPEndpoint, InputType, ResultType>(with endpoint: T, input: InputType, expectedType: ResultType.Type) throws where T.Input == InputType, T.Output == ResultType {
         let result = try submissionclient.fetch(endpoint, with: input).await(timeout: 5).get()
         print(result)
     }
-    
+
     fileprivate func runSubmissionTest<T: HTTPEndpoint, ResultType>(with endpoint: T, expectedType: ResultType.Type) throws where T.Input == Void, T.Output == ResultType {
         let result = try submissionclient.fetch(endpoint).await(timeout: 5).get()
         print(result)
@@ -85,7 +85,7 @@ extension BackendIntegrationTests {
             distributionClient: distributionClient,
             fileStorage: FileStorage(forCachesOf: .random())
         )
-        
+
         let zipManager = try detectionClient.getExposureKeys(for: .daily(.today)).await(timeout: 5).get()
         let fileManager = FileManager()
         let handler = try zipManager.extract(fileManager: fileManager)
@@ -96,7 +96,7 @@ extension BackendIntegrationTests {
         XCTAssert(urls.contains { $0.hasSuffix("export.bin") })
         XCTAssert(urls.contains { $0.hasSuffix("export.sig") })
     }
-    
+
     func _testHourlyKeysDownload() throws {
         let detectionClient = ExposureDetectionEndpointManager(
             distributionClient: distributionClient,
@@ -119,7 +119,7 @@ private extension Data {
         guard let object = try? JSONSerialization.jsonObject(with: self, options: []),
             let data = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]),
             let prettyPrintedString = NSString(data: data, encoding: String.Encoding.utf8.rawValue) else { return nil }
-        
+
         return prettyPrintedString
     }
 }

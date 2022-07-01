@@ -11,7 +11,7 @@ import UIKit
 public enum NotificationInterfaceState {
     case contactTracingHub
     case localInfo
-    
+
 }
 
 public protocol HomeFlowViewControllerInteracting {
@@ -89,12 +89,12 @@ public enum ExposureNotificationReminderIn: Int, CaseIterable {
 }
 
 public class HomeFlowViewController: BaseNavigationController {
-    
+
     public typealias Interacting = HomeFlowViewControllerInteracting
-    
+
     private let interactor: Interacting
     private var cancellables = [AnyCancellable]()
-    
+
     // Allows the UI to update immediately until a genuine value has been published by the model
     private let optimisiticExposureNotificationsEnabled = CurrentValueSubject<Bool?, Never>(nil)
     private let exposureNotificationsEnabled: InterfaceProperty<Bool>
@@ -102,7 +102,7 @@ public class HomeFlowViewController: BaseNavigationController {
     private let showNotificationScreen: CurrentValueSubject<NotificationInterfaceState?, Never>
     private var localInformationInteractor: LocalInformationInteractor?
     private var localInfoBannerViewModel: InterfaceProperty<LocalInformationBanner.ViewModel?>?
-    
+
     public init(
         interactor: Interacting,
         bluetoothOff: AnyPublisher<Bool, Never>,
@@ -122,27 +122,27 @@ public class HomeFlowViewController: BaseNavigationController {
         shouldShowLocalStats: Bool
     ) {
         self.interactor = interactor
-        
+
         self.exposureNotificationsEnabled = optimisiticExposureNotificationsEnabled
             .combineLatest(exposureNotificationsEnabled) { $0 ?? $1 }
             .removeDuplicates()
             .property(initialValue: false)
-        
+
         self.userNotificationsEnabled = userNotificationsEnabled
         self.showNotificationScreen = showNotificationScreen
-        
+
         super.init()
-        
+
         let aboutThisAppInteractor = AboutThisAppInteractor(flowController: self, interactor: interactor)
         let settingsInteractor = SettingsInteractor(flowController: self, interactor: interactor)
         let riskLevelInteractor = RiskLevelInfoInteractor(interactor: interactor)
         let localInformationInteractor = LocalInformationInteractor(flowController: self, flowInteractor: interactor)
-        
+
         self.localInformationInteractor = localInformationInteractor
         self.localInfoBannerViewModel = localInfoBannerViewModel
-        
+
         let showFindOutAboutTestingButton = showOrderTestButton.map { !$0 }
-        
+
         let homeViewControllerInteractor = HomeViewControllerInteractor(
             flowController: self,
             flowInteractor: interactor,
@@ -160,7 +160,7 @@ public class HomeFlowViewController: BaseNavigationController {
             showWarnAndBookATestFlow: showWarnAndBookATestFlow,
             showFinancialSupportButton: showFinancialSupportButton
         )
-        
+
         let showLanguageSelectionScreen: () -> Void = {
             let viewController = SettingsViewController(viewModel: SettingsViewController.ViewModel(), interacting: settingsInteractor)
             self.pushViewController(viewController, animated: false)
@@ -168,7 +168,7 @@ public class HomeFlowViewController: BaseNavigationController {
                 self.pushViewController(languageViewController, animated: false)
             }
         }
-        
+
         let rootViewController = HomeViewController(
             interactor: homeViewControllerInteractor,
             riskLevelBannerViewModel: riskLevelBannerViewModel,
@@ -190,9 +190,9 @@ public class HomeFlowViewController: BaseNavigationController {
             },
             shouldShowLocalStats: shouldShowLocalStats
         )
-        
+
         viewControllers = [rootViewController]
-        
+
         showNotificationScreen
             .removeDuplicates()
             .filterNil()
@@ -205,11 +205,11 @@ public class HomeFlowViewController: BaseNavigationController {
                 }
             }).store(in: &cancellables)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func exposureNotificationSwitchValueChanged(_ isOn: Bool) {
         optimisiticExposureNotificationsEnabled.send(isOn)
         interactor.setExposureNotifcationEnabled(isOn)
@@ -219,11 +219,11 @@ public class HomeFlowViewController: BaseNavigationController {
             }, receiveValue: {})
             .store(in: &cancellables)
     }
-    
+
     private func checkAndShowContactTracingHub() {
         showNotificationScreen.send(nil)
         guard presentedViewController == nil, viewControllers.count == 1 else { return }
-        
+
         let vc = interactor.makeContactTracingHubViewController(
             flowController: self,
             exposureNotificationsEnabled: exposureNotificationsEnabled,
@@ -232,7 +232,7 @@ public class HomeFlowViewController: BaseNavigationController {
         )
         pushViewController(vc, animated: true)
     }
-    
+
     private func checkAndShowLocalInfoScreen() {
         showNotificationScreen.send(nil)
         localInfoBannerViewModel?.$wrappedValue
@@ -241,20 +241,20 @@ public class HomeFlowViewController: BaseNavigationController {
             .receive(on: UIScheduler.shared)
             .sink { [weak self] viewModel in
                 guard let self = self else { return }
-                
+
                 guard self.presentedViewController == nil, self.viewControllers.count == 1 else { return }
-                
+
                 guard let localInformationInteractor = self.localInformationInteractor else { return }
-                
+
                 let vc = self.interactor.makeLocalInfoScreenViewController(
                     viewModel: viewModel,
                     interactor: localInformationInteractor
                 )
                 let navigationController = BaseNavigationController(rootViewController: vc)
                 navigationController.modalPresentationStyle = .overFullScreen
-                
+
                 self.interactor.removeDeliveredLocalInfoNotifications()
-                
+
                 self.present(navigationController, animated: true)
             }
             .store(in: &cancellables)
@@ -277,7 +277,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
     private let showFindOutAboutTestingButton: InterfaceProperty<Bool>
     private let showWarnAndBookATestFlow: InterfaceProperty<Bool>
     private let showFinancialSupportButton: InterfaceProperty<Bool>
-    
+
     init(
         flowController: UINavigationController,
         flowInteractor: HomeFlowViewController.Interacting,
@@ -311,17 +311,17 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         self.showWarnAndBookATestFlow = showWarnAndBookATestFlow
         self.showFinancialSupportButton = showFinancialSupportButton
     }
-    
+
     public func didTapRiskLevelBanner(viewModel: RiskLevelInfoViewController.ViewModel) {
         let viewController = RiskLevelInfoViewController(viewModel: viewModel, interactor: riskLevelInteractor)
         let navigationController = BaseNavigationController(rootViewController: viewController)
         navigationController.modalPresentationStyle = .overFullScreen
-        
+
         flowController?.present(navigationController, animated: true)
     }
-    
+
     public func didTapLocalInfoBanner(viewModel: LocalInformationViewController.ViewModel) {
-        
+
         // todo; this is identical to the code in HomeFlowViewController
         let viewController = flowInteractor.makeLocalInfoScreenViewController(
             viewModel: viewModel,
@@ -329,13 +329,13 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         )
         let navigationController = BaseNavigationController(rootViewController: viewController)
         navigationController.modalPresentationStyle = .overFullScreen
-        
+
         flowInteractor.removeDeliveredLocalInfoNotifications()
-        
+
         flowController?.present(navigationController, animated: true)
         flowInteractor.recordDidTapLocalInfoBannerMetric()
     }
-    
+
     public func didTapDiagnosisButton() {
         guard let viewController = flowInteractor.makeDiagnosisViewController() else {
             return
@@ -343,7 +343,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         viewController.modalPresentationStyle = .overFullScreen
         flowController?.present(viewController, animated: true)
     }
-    
+
     public func didTapCheckInButton() {
         guard let viewController = flowInteractor.makeCheckInViewController() else {
             return
@@ -351,7 +351,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         viewController.modalPresentationStyle = .overFullScreen
         flowController?.present(viewController, animated: true)
     }
-    
+
     public func didTapSelfIsolationButton() {
         guard let viewController = flowInteractor.makeSelfIsolationHubViewController(
             flowController: flowController,
@@ -364,46 +364,46 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         }
         flowController?.pushViewController(viewController, animated: true)
     }
-    
+
     public func didTapGuidanceHubEnglandButton() {
         guard let viewController = flowInteractor.makeGuidanceHubEnglandViewController(flowController: flowController) else {
             return
         }
         flowController?.pushViewController(viewController, animated: true)
     }
-    
+
     public func didTapGuidanceHubWalesButton() {
         guard let viewController = flowInteractor.makeGuidanceHubWalesViewController(flowController: flowController) else {
             return
         }
         flowController?.pushViewController(viewController, animated: true)
     }
-    
+
     public func didTapAboutButton() {
         let appName = Bundle.main.infoDictionary?["CFBundleDisplayName"] as! String
         let appVersion = Bundle.main.infoDictionary!["CFBundleShortVersionString"]!
         let buildNumber = Bundle.main.infoDictionary!["CFBundleVersion"]!
         let version = "\(appVersion) (\(buildNumber))"
-        
+
         let viewController = AboutThisAppViewController(interactor: aboutThisAppInteractor, appName: appName, version: version)
         flowController?.pushViewController(viewController, animated: true)
     }
-    
+
     func didTapSettingsButton() {
         let viewController = SettingsViewController(viewModel: SettingsViewController.ViewModel(), interacting: settingsInteractor)
         flowController?.pushViewController(viewController, animated: true)
     }
-    
+
     public func didTapLinkTestResultButton() {
         guard let viewController = flowInteractor.makeLinkTestResultViewController() else {
             return
         }
-        
+
         flowController?.present(viewController, animated: true)
     }
-    
+
     public func didTapContactTracingHubButton() {
-        
+
         let vc = WrappingViewController {
             bluetoothOff
                 .regulate(as: .modelChange)
@@ -422,7 +422,7 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         }
         flowController?.pushViewController(vc, animated: true)
     }
-    
+
     public func didTapTestingHubButton() {
         let testingHubViewController = flowInteractor.makeTestingHubViewController(
             flowController: flowController,
@@ -432,72 +432,72 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         )
         flowController?.pushViewController(testingHubViewController, animated: true)
     }
-    
+
     public var shouldShowCheckIn: Bool {
         flowInteractor.shouldShowCheckIn
     }
-    
+
     public var shouldShowTestingForCOVID19: Bool {
         flowInteractor.shouldShowTestingForCOVID19
     }
-    
+
     public var shouldShowSelfIsolation: Bool {
         flowInteractor.shouldShowSelfIsolation
     }
-    
+
     public var shouldShowGuidanceHub: Bool {
         flowInteractor.shouldShowGuidanceHub
     }
-    
+
     func openSettings() {
         flowInteractor.openSettings()
     }
-    
+
     func didTapStatsButton() {
         let localStatsFlowContorller = flowInteractor.makeLocalCovidStatsViewController(flowController: flowController)
         flowController?.pushViewController(localStatsFlowContorller, animated: true)
     }
-    
+
 }
 
 private struct AboutThisAppInteractor: AboutThisAppViewController.Interacting {
     func didTapProvideFeedback() {
         interactor.openProvideFeedbackLink()
     }
-    
+
     private let interactor: HomeFlowViewController.Interacting
     private weak var flowController: HomeFlowViewController?
-    
+
     init(flowController: HomeFlowViewController, interactor: HomeFlowViewController.Interacting) {
         self.flowController = flowController
         self.interactor = interactor
     }
-    
+
     public func didTapHowThisAppWorks() {
         interactor.openHowThisAppWorksLink()
     }
-    
+
     public func didTapCommonQuestions() {
         interactor.openFAQ()
     }
-    
+
     public func didTapTermsOfUse() {
         interactor.openTearmsOfUseLink()
     }
-    
+
     public func didTapPrivacyNotice() {
         interactor.openPrivacyLink()
     }
-    
+
     public func didTapAccessibilityStatement() {
         interactor.openAccessibilityStatementLink()
     }
-    
+
     public func didTapSeeData() {
         let viewController = MyDataViewController(viewModel: interactor.getMyDataViewModel())
         flowController?.pushViewController(viewController, animated: true)
     }
-    
+
     public func didTapDownloadNHSApp() {
         interactor.openDownloadNHSAppLink()
     }
@@ -505,11 +505,11 @@ private struct AboutThisAppInteractor: AboutThisAppViewController.Interacting {
 
 private struct RiskLevelInfoInteractor: RiskLevelInfoViewController.Interacting {
     private var interactor: HomeFlowViewController.Interacting
-    
+
     init(interactor: HomeFlowViewController.Interacting) {
         self.interactor = interactor
     }
-    
+
     public func didTapWebsiteLink(url: URL) {
         interactor.openWebsiteLinkfromRisklevelInfoScreen(url: url)
     }
@@ -518,54 +518,57 @@ private struct RiskLevelInfoInteractor: RiskLevelInfoViewController.Interacting 
 private struct LocalInformationInteractor: LocalInformationViewController.Interacting {
     private let flowInteractor: HomeFlowViewController.Interacting
     private weak var flowController: UIViewController?
-    
+
     init(flowController: UIViewController, flowInteractor: HomeFlowViewController.Interacting) {
         self.flowController = flowController
         self.flowInteractor = flowInteractor
     }
-    
+
     func didTapExternalLink(url: URL) {
         flowInteractor.openWebsiteLinkfromLocalInfoScreen(url: url)
     }
-    
+
     func didTapPrimaryButton() {
         flowController?.presentedViewController?.dismiss(animated: true)
     }
-    
+
     func didTapCancel() {
         flowController?.presentedViewController?.dismiss(animated: true)
     }
 }
 
 private struct SettingsInteractor: SettingsViewController.Interacting {
-    
+
     private weak var flowController: HomeFlowViewController?
     private var interactor: HomeFlowViewControllerInteracting
-    
+
+    var shouldShowVenueHistory: Bool
+
     init(flowController: HomeFlowViewController, interactor: HomeFlowViewControllerInteracting) {
         self.flowController = flowController
         self.interactor = interactor
+        self.shouldShowVenueHistory = interactor.shouldShowCheckIn
     }
-    
+
     func didTapLanguage() {
         guard let viewController = makeLanguageSelectionViewController() else { return }
         flowController?.pushViewController(viewController, animated: true)
     }
-    
+
     func didTapManageMyData() {
         let manageMyDataVC = makeManageMyDataViewController()
         flowController?.pushViewController(manageMyDataVC, animated: true)
     }
-    
+
     private func makeMyAreaViewController() -> UIViewController? {
         let interactor = MyAreaTableViewControllerInteractor(flowController: flowController, interactor: self.interactor)
         return MyAreaTableViewController(viewModel: self.interactor.getMyAreaViewModel(), interactor: interactor)
     }
-    
+
     func didTapDeleteAppData() {
         interactor.deleteAppData()
     }
-    
+
     func didTapVenueHistory() {
         let venueHistoryVC = VenueHistoryViewController(
             viewModel: interactor.getVenueHistoryViewModel(),
@@ -573,17 +576,17 @@ private struct SettingsInteractor: SettingsViewController.Interacting {
         )
         flowController?.pushViewController(venueHistoryVC, animated: true)
     }
-    
+
     func didTapAnimations() {
         let vc = HomeAnimationsViewController(viewModel: interactor.getHomeAnimationsViewModel())
         flowController?.pushViewController(vc, animated: true)
     }
-    
+
     func didTapMyArea() {
         guard let viewController = makeMyAreaViewController() else { return }
         flowController?.pushViewController(viewController, animated: true)
     }
-    
+
     func makeLanguageSelectionViewController() -> UIViewController? {
         let interactor = LanguageSelectionViewControllerInteractor(_didSelectLanguage: { localeConfiguration in
             self.interactor.storeNewLanguage(localeConfiguration)
@@ -607,7 +610,7 @@ private struct SettingsInteractor: SettingsViewController.Interacting {
         )
         return viewController
     }
-    
+
     func makeManageMyDataViewController() -> UIViewController {
         return MyDataViewController(viewModel: interactor.getMyDataViewModel())
     }
@@ -615,7 +618,7 @@ private struct SettingsInteractor: SettingsViewController.Interacting {
 
 struct LanguageSelectionViewControllerInteractor: LanguageSelectionViewController.Interacting {
     public var _didSelectLanguage: (LocaleConfiguration) -> Void
-    
+
     public func didSelect(configuration: LocaleConfiguration) {
         _didSelectLanguage(configuration)
     }
@@ -623,10 +626,10 @@ struct LanguageSelectionViewControllerInteractor: LanguageSelectionViewControlle
 
 struct MyAreaTableViewControllerInteractor: MyAreaTableViewController.Interacting {
     var _didTapEditPostcode: () -> Void
-    
+
     internal init(flowController: HomeFlowViewController?, interactor: HomeFlowViewController.Interacting) {
         _didTapEditPostcode = { [weak flowController] in
-            
+
             let localAuthorityFlowVC = LocalAuthorityFlowViewController(
                 interactor.makeLocalAuthorityOnboardingInteractor(),
                 isEditMode: true
@@ -635,16 +638,16 @@ struct MyAreaTableViewControllerInteractor: MyAreaTableViewController.Interactin
             flowController?.present(localAuthorityFlowVC, animated: true)
         }
     }
-    
+
     func didTapEditPostcode() {
         _didTapEditPostcode()
     }
-    
+
 }
 
 struct VenueHistoryViewControllerInteractor: VenueHistoryViewController.Interacting {
     var updateVenueHistories: (VenueHistory) -> [VenueHistory]
-    
+
     init(homeFlowInteractor: HomeFlowViewController.Interacting) {
         updateVenueHistories = homeFlowInteractor.updateVenueHistories
     }

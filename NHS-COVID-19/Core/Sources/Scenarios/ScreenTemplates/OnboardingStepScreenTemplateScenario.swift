@@ -9,7 +9,7 @@ import UIKit
 public class OnboardingStepScreenTemplateScenario: Scenario {
     public static let name = "Onboarding Step"
     public static let kind = ScenarioKind.screenTemplate
-    
+
     public static let straplineTitle = "NHS Covid 19"
     public static let stepTitle = "We are telling you something important"
     public static let actionTitle = "Act now"
@@ -19,7 +19,7 @@ public class OnboardingStepScreenTemplateScenario: Scenario {
     public static let customViewContent3 = """
     If the content is too long to fit on the screen, you should be able to scroll to see them.
     """
-    
+
     static var appController: AppController {
         let navigation = UINavigationController()
         navigation.isNavigationBarHidden = true
@@ -29,7 +29,7 @@ public class OnboardingStepScreenTemplateScenario: Scenario {
         navigation.pushViewController(content, animated: false)
         return BasicAppController(rootViewController: navigation)
     }
-    
+
     private static func viewController(act: @escaping () -> Void) -> UIViewController {
         let content = [stepTitle, customViewContent, customViewContent2, customViewContent3].map { text -> UIView in
             let label = UILabel()
@@ -37,11 +37,11 @@ public class OnboardingStepScreenTemplateScenario: Scenario {
             label.text = text
             return label
         }
-        
+
         let step = Step(actionTitle: actionTitle, content: content, _act: act)
         return OnboardingStepViewController(step: step)
     }
-    
+
     private struct Step: OnboardingStep {
         var strapLineStyle: LogoStrapline.Style? = .onboarding
         var footerContent = [UIView]()
@@ -51,10 +51,10 @@ public class OnboardingStepScreenTemplateScenario: Scenario {
         var image: UIImage? {
             UIImage(named: "Onboarding/Protect")
         }
-        
+
         func act() {
             _act()
         }
     }
-    
+
 }

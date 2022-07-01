@@ -6,7 +6,7 @@ import Common
 import Foundation
 
 extension PublisherEventKind {
-    
+
     public static let modelChange = PublisherEventKind.receive(on: RunLoop.main)
-    
+
 }

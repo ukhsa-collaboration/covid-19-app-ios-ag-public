@@ -20,7 +20,7 @@ extension InterfaceLocalCovidStatsDaily {
     ) throws {
         // Check if local authority is missing in the payload
         guard let lowerTierLocalAuthority = domainState.lowerTierLocalAuthorities[localAuthorityId].map(LocalAuthorityStats.init) else { throw InterfaceLocalCovidStatsDailyError() }
-        
+
         // All of these values are mandatory as stated in the ACs
         let currentCountry = country == .england ? domainState.england : domainState.wales
         if lowerTierLocalAuthority.newCasesByPublishDate.value == nil,
@@ -29,7 +29,7 @@ extension InterfaceLocalCovidStatsDaily {
             currentCountry.newCasesBySpecimenDateRollingRate == nil {
             throw InterfaceLocalCovidStatsDailyError()
         }
-        
+
         self.init(
             lastFetch: domainState.lastFetch,
             country: CountryStats(
@@ -39,14 +39,14 @@ extension InterfaceLocalCovidStatsDaily {
             ),
             lowerTierLocalAuthority: lowerTierLocalAuthority
         )
-        
+
     }
-    
+
 }
 
 private extension LocalAuthorityStats {
     init(_ domainState: Domain.LocalCovidStatsDaily.LocalAuthorityStats) {
-        
+
         self.init(
             id: domainState.id.value,
             name: domainState.name,
@@ -62,10 +62,10 @@ private extension LocalAuthorityStats {
 
 private extension LocalAuthorityStats.Value {
     init(_ domainState: Domain.LocalCovidStatsDaily.LocalAuthorityStats.Value<T>) {
-        
+
         self.init(value: domainState.value, lastUpdate: domainState.lastUpdate)
     }
-    
+
     #warning("Think of a better way when saving custom types such as Direction - avoid force unwrapping")
     init(direction: Domain.LocalCovidStatsDaily.Direction?, lastUpdate: GregorianDay) {
         self.init(value: InterfaceDirection(direction) as! T, lastUpdate: lastUpdate)
@@ -73,7 +73,7 @@ private extension LocalAuthorityStats.Value {
 }
 
 private extension InterfaceDirection {
-    
+
     init?(_ domainState: Domain.LocalCovidStatsDaily.Direction?) {
         switch domainState {
         case .down: self = .down

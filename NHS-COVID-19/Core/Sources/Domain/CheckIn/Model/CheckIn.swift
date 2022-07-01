@@ -10,7 +10,7 @@ public struct CheckIn: Codable, Equatable, Identifiable {
     var isRisky: Bool
     var circuitBreakerApproval: CircuitBreakerApproval
     var venueMessageType: RiskyVenue.MessageType?
-    
+
     // var as checkedOut is modified from CheckInsStore, should probably make let
     public var venueId: String
     public var venueName: String
@@ -18,11 +18,11 @@ public struct CheckIn: Codable, Equatable, Identifiable {
     public var checkedIn: UTCHour
     public var checkedOut: UTCHour
     public var id: String
-    
+
     var checkedInInterval: DateInterval {
         DateInterval(start: checkedIn.date, end: checkedOut.date)
     }
-    
+
     private init(
         venueId: String,
         venueName: String,
@@ -42,7 +42,7 @@ public struct CheckIn: Codable, Equatable, Identifiable {
         id = UUID().uuidString
         circuitBreakerApproval = .pending
     }
-    
+
     init(venue: Venue, checkedIn: UTCHour, checkedOut: UTCHour, isRisky: Bool, venueMessageType: RiskyVenue.MessageType? = nil) {
         self.init(
             venueId: venue.id,
@@ -54,7 +54,7 @@ public struct CheckIn: Codable, Equatable, Identifiable {
             venueMessageType: venueMessageType
         )
     }
-    
+
     private enum CodingKeys: String, CodingKey {
         case isRisky
         case circuitBreakerApproval
@@ -66,7 +66,7 @@ public struct CheckIn: Codable, Equatable, Identifiable {
         case id
         case venueMessageType
     }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         isRisky = try container.decode(Bool.self, forKey: .isRisky)
@@ -79,7 +79,7 @@ public struct CheckIn: Codable, Equatable, Identifiable {
         id = try container.decodeIfPresent(String.self, forKey: .id) ?? UUID().uuidString
         venueMessageType = try container.decodeIfPresent(RiskyVenue.MessageType.self, forKey: .venueMessageType)
     }
-    
+
 }
 
 extension CheckIn {

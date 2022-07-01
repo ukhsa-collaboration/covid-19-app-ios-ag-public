@@ -12,17 +12,17 @@ enum MessageType: String, Codable {
 
 struct RiskyVenueHandler: RequestHandler {
     var paths = ["/distribution/risky-venues"]
-    
+
     var dataProvider: MockDataProvider
-    
+
     var response: Result<HTTPResponse, HTTPRequestError> {
         var riskyVenues = ""
-        
+
         let mockedRiskyVenues: [MessageType: String] = [
             MessageType.m1: dataProvider.riskyVenueIDsWarnAndInform,
             MessageType.m2: dataProvider.riskyVenueIDsWarnAndBookTest,
         ]
-        
+
         for (messageType, venues) in mockedRiskyVenues {
             if !riskyVenues.isEmpty {
                 riskyVenues.append(",")

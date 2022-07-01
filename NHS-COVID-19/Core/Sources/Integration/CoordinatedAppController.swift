@@ -11,16 +11,16 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 public class CoordinatedAppController: AppController {
-    
+
     private let coordinator: ApplicationCoordinator
-    
+
     private var cancellable: [AnyCancellable] = []
-    
+
     public var rootViewController: UIViewController = RootViewController()
-    
+
     let showUIState = CurrentValueSubject<PostAcknowledgementViewController.UITriggeredInterfaceState?, Never>(nil)
     let showNotificationScreen = CurrentValueSubject<NotificationInterfaceState?, Never>(nil)
-    
+
     private var content: UIViewController? {
         didSet {
             #warning("Use WrappingViewController")
@@ -33,7 +33,7 @@ public class CoordinatedAppController: AppController {
             }
         }
     }
-    
+
     fileprivate init(coordinator: ApplicationCoordinator) {
         self.coordinator = coordinator
         coordinator.$state
@@ -41,29 +41,29 @@ public class CoordinatedAppController: AppController {
             .sink { [weak self] state in
                 self?.update(for: state)
             }.store(in: &cancellable)
-        
+
         coordinator.country.sink {
             Localization.country = $0
         }.store(in: &cancellable)
-        
+
         coordinator.localeConfiguration.sink { config in
             UIView.appearance().applySemanticContentAttribute(configuration: config)
-            
+
             UIApplication.shared.accessibilityLanguage = currentLocaleIdentifier(
                 localeConfiguration: config
             )
-            
+
             // The root view controller will be refreshed by this so do UIVIew stuff before this line.
             config.becomeCurrent()
         }.store(in: &cancellable)
-        
+
         setupUI()
     }
-    
+
     public func performBackgroundTask(task: BackgroundTask) {
         coordinator.performBackgroundTask(task: task)
     }
-    
+
     public func handleUserNotificationResponse(_ response: UNNotificationResponse, completionHandler: @escaping () -> Void) {
         coordinator.bluetoothOffAcknowledged.send(true)
         if let action = UserNotificationAction(rawValue: response.actionIdentifier) {
@@ -73,11 +73,11 @@ public class CoordinatedAppController: AppController {
             case UserNotificationType.exposureNotificationReminder.identifier,
                  UserNotificationType.exposureNotificationSecondReminder.identifier:
                 showNotificationScreen.send(.contactTracingHub)
-                
+
             case UserNotificationType.localMessage(title: "", body: "").identifier:
                 showNotificationScreen.send(.localInfo)
                 Metrics.signpost(.didAccessLocalInfoScreenViaNotification)
-                
+
             case UserNotificationType.venue(.warnAndBookATest).identifier:
                 guard let messageType = response.notification.request.content.userInfo[UserNotificationUserInfoKeys.VenueMessageType] as? String,
                     messageType == UserNotificationType.VenueMessageType.warnAndBookATest.rawValue else {
@@ -87,15 +87,15 @@ public class CoordinatedAppController: AppController {
             default:
                 break
             }
-            
+
             completionHandler()
         }
     }
-    
+
     private func update(for state: ApplicationState) {
         content = makeContent(for: state)
     }
-    
+
     private func setupUI() {
         if #available(iOS 15, *) {
             let appearance = UINavigationBarAppearance()
@@ -115,18 +115,18 @@ public class CoordinatedAppController: AppController {
             appearance.isTranslucent = false
         }
     }
-    
+
 }
 
 @available(iOSApplicationExtension, unavailable)
 extension CoordinatedAppController {
-    
+
     /// Convenience initialiser; primarily to be used internally with modified services
     public convenience init(services: ApplicationServices, enabledFeatures: [Feature]) {
         let coordinator = ApplicationCoordinator(services: services, enabledFeatures: enabledFeatures)
         self.init(coordinator: coordinator)
     }
-    
+
     /// Convenience initialiser used by the main app
     /// - Parameters:
     ///   - environment: Defaults to standard production environment.
@@ -135,5 +135,5 @@ extension CoordinatedAppController {
         let services = ApplicationServices(standardServicesFor: environment)
         self.init(services: services, enabledFeatures: enabledFeatures)
     }
-    
+
 }

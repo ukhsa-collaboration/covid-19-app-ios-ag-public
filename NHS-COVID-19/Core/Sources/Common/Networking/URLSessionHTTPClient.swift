@@ -17,17 +17,17 @@ public protocol URLRequestProviding {
 extension URLSession: URLSessionProtocol {}
 
 public final class URLSessionHTTPClient: HTTPClient {
-    
+
     private static let logger = Logger(label: "HTTPClient")
-    
+
     private let remote: URLRequestProviding
     private let session: URLSessionProtocol
-    
+
     public init(remote: URLRequestProviding, session: URLSessionProtocol = URLSession.shared) {
         self.remote = remote
         self.session = session
     }
-    
+
     public func perform(_ request: HTTPRequest) -> AnyPublisher<HTTPResponse, HTTPRequestError> {
         let id = UUID()
         Self.logger.debug("starting request \(id)", metadata: .describing(request))
@@ -42,5 +42,5 @@ public final class URLSessionHTTPClient: HTTPClient {
             .handleEvents().log(into: Self.logger, level: .debug, "ending request \(id) - \(request.path)")
             .eraseToAnyPublisher()
     }
-    
+
 }

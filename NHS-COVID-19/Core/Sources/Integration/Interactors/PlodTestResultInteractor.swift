@@ -8,6 +8,6 @@ struct PlodTestResultInteractor: PlodTestResultViewControllerInteracting {
     func didTapReturnHome() {
         acknowledge()
     }
-    
+
     var acknowledge: () -> Void
 }

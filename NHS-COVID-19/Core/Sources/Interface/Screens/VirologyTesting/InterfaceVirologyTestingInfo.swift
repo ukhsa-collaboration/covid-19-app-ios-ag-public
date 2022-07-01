@@ -4,7 +4,7 @@
 
 public struct InterfaceVirologyTestingInfo {
     var referenceCode: String
-    
+
     public init(referenceCode: String) {
         self.referenceCode = referenceCode
     }

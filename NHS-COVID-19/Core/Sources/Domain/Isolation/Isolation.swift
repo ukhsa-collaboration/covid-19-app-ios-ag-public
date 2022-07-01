@@ -14,30 +14,29 @@ public struct Isolation: Equatable {
         var testKitType: TestKitType?
         var isSelfDiagnosed: Bool
         var isPendingConfirmation: Bool
-        var numberOfIsolationDaysForIndexCaseFromConfiguration: Int?
     }
-    
+
     struct ContactCaseInfo: Equatable {
         var exposureDay: GregorianDay
     }
-    
+
     public struct Reason: Equatable {
         var indexCaseInfo: IsolationIndexCaseInfo?
         var contactCaseInfo: Isolation.ContactCaseInfo?
     }
-    
+
     public struct OptOutOfContactIsolationInfo: Equatable {
         var optOutDay: GregorianDay
         // This day would've been the potential end day for the contact isolation
         var untilStartOfDay: LocalDay
     }
-    
+
     public var fromDay: LocalDay
     public var untilStartOfDay: LocalDay
     public var reason: Isolation.Reason
-    
+
     public var optOutOfContactIsolationInfo: OptOutOfContactIsolationInfo?
-    
+
     init(fromDay: LocalDay, untilStartOfDay: LocalDay, reason: Isolation.Reason, optOutOfContactIsolationInfo: OptOutOfContactIsolationInfo?) {
         self.fromDay = fromDay
         self.untilStartOfDay = untilStartOfDay
@@ -50,22 +49,22 @@ extension Isolation {
     public var endDate: Date {
         untilStartOfDay.startOfDay
     }
-    
+
     public var vaccineThresholdDate: Date? {
         reason.contactCaseInfo?.exposureDay.advanced(by: -15).startDate(in: .current)
     }
-    
+
     public func birthThresholdDate(country: Country) -> Date? {
         switch country {
         case .england: return reason.contactCaseInfo?.exposureDay.advanced(by: -183).startDate(in: .current)
         case .wales: return reason.contactCaseInfo?.exposureDay.startDate(in: .current)
         }
     }
-    
+
     public var exposureDate: Date? {
         reason.contactCaseInfo?.exposureDay.startDate(in: .current)
     }
-    
+
     public func secondTestAdvice(dateProvider: DateProviding, country: Country) -> Date? {
         switch country {
         case .england: return nil
@@ -83,33 +82,29 @@ extension Isolation {
     public var canFillQuestionnaire: Bool {
         !isSelfDiagnosed
     }
-    
+
     public var hasConfirmedPositiveTestResult: Bool {
         guard let indexCaseInfo = reason.indexCaseInfo else { return false }
         return indexCaseInfo.hasPositiveTestResult && !indexCaseInfo.isPendingConfirmation
     }
-    
+
     public var isIndexCase: Bool {
         return reason.indexCaseInfo != nil
     }
-    
+
     var isContactCase: Bool {
         return reason.contactCaseInfo != nil
     }
-    
+
     var isContactCaseOnly: Bool {
         return isContactCase && !isIndexCase
     }
-    
+
     public var hasPositiveTestResult: Bool {
         return reason.indexCaseInfo?.hasPositiveTestResult ?? false
     }
-    
+
     var isSelfDiagnosed: Bool {
         return reason.indexCaseInfo?.isSelfDiagnosed ?? false
-    }
-    
-    public var numberOfIsolationDaysForIndexCaseFromConfiguration: Int? {
-        return reason.indexCaseInfo?.numberOfIsolationDaysForIndexCaseFromConfiguration
     }
 }

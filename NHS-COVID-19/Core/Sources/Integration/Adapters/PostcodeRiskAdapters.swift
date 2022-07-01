@@ -8,14 +8,14 @@ import Interface
 import Localization
 
 extension RiskLevelBanner.ViewModel {
-    
+
     public init(
         postcode: Postcode,
         localAuthority: Domain.LocalAuthority?,
         risk: RiskyPostcodeEndpointManager.PostcodeRisk
     ) {
         let colorScheme: ColorScheme
-        
+
         if let colorName = risk.style.colorSchemeV2 {
             colorScheme = ColorScheme(rawValue: colorName) ?? .neutral
         } else {
@@ -28,7 +28,7 @@ extension RiskLevelBanner.ViewModel {
             case .neutral: colorScheme = .neutral
             }
         }
-        
+
         if let policyData = risk.style.policyData {
             let localAuthorityTitle: String = {
                 if let localAuthority = localAuthority,
@@ -40,7 +40,7 @@ extension RiskLevelBanner.ViewModel {
                         .stringByReplacing(postcode: postcode.value)
                 }
             }()
-            
+
             self.init(
                 postcode: postcode.value,
                 colorScheme: colorScheme,
@@ -61,7 +61,7 @@ extension RiskLevelBanner.ViewModel {
             )
         } else {
             let title = risk.style.name.localizedString().stringByReplacing(postcode: postcode.value)
-            
+
             self.init(
                 postcode: postcode.value,
                 colorScheme: colorScheme,

@@ -14,7 +14,7 @@ struct RiskyContact {
     private let distributeClient: MockHTTPClient
     private let currentDateProvider: AcceptanceTestMockDateProvider
     private let windowsExposureNotificationManager: MockWindowsExposureNotificationManager
-    
+
     init(
         configuration: AcceptanceTestCase.Instance.Configuration
     ) {
@@ -23,14 +23,14 @@ struct RiskyContact {
         currentDateProvider = configuration.currentDateProvider
         windowsExposureNotificationManager = configuration.exposureNotificationManager as! MockWindowsExposureNotificationManager
     }
-    
+
     func trigger(exposureDate: Date, runBeforeTeardown: () -> Void) {
         setupMockAPIsForRiskyContact()
         setupMockExposureNotification(exposureDate)
         runBeforeTeardown()
         teardown()
     }
-    
+
     private func setupMockAPIsForRiskyContact() {
         distributeClient.response(for: "/distribution/exposure-configuration", response: .success(.ok(with: .json(exposureConfiguration))))
         let day = GregorianDay(date: currentDateProvider.currentDate, timeZone: .utc)
@@ -38,19 +38,19 @@ struct RiskyContact {
         distributeClient.response(for: "/distribution/two-hourly/\(increment.parse()).zip", response: .success(.ok(with: .untyped(zipFile))))
         apiClient.response(for: "/circuit-breaker/exposure-notification/request", response: .success(.ok(with: .json(circuitBreakerResponse))))
     }
-    
+
     private func setupMockExposureNotification(_ exposureDate: Date) {
         windowsExposureNotificationManager.exposureWindows = [
             StubExposureWindow(exposureDate: exposureDate),
         ]
     }
-    
+
     private func teardown() {
         windowsExposureNotificationManager.exposureWindows = []
         apiClient.reset()
         distributeClient.reset()
     }
-    
+
 }
 
 @available(iOS 13.7, *)

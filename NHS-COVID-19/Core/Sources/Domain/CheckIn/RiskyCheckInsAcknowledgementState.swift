@@ -12,7 +12,7 @@ public enum RiskyCheckInsAcknowledgementState {
 public enum RiskyVenueResolution {
     case warnAndInform
     case warnAndBookATest
-    
+
     init(_ messageType: RiskyVenue.MessageType) {
         switch messageType {
         case .warnAndInform:

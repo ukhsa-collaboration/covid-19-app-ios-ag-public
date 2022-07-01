@@ -7,17 +7,17 @@ import XCTest
 
 final class LocalizableStringDictParserTests: XCTestCase {
     private var parser: LocalizableStringDictParser!
-    
+
     override func setUpWithError() throws {
         try super.setUpWithError()
-        
+
         parser = try LocalizableStringDictParser(
             file: MockFile.localizableStringDict.url
         )
     }
-    
+
     func testKeys() {
-        
+
         let expectedSet: Set<LocalizableKey> = [
             LocalizableKey(
                 key: "%ld exposure_notification_reminder_sheet_hours",
@@ -36,8 +36,8 @@ final class LocalizableStringDictParserTests: XCTestCase {
                 keyWithSuffix: nil
             ),
         ]
-        
+
         XCTAssertEqual(expectedSet, parser.keys)
     }
-    
+
 }

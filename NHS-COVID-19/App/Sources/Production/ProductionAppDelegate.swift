@@ -11,7 +11,7 @@ class ProductionAppDelegate: BaseAppDelegate {
     override func makeAppController() -> AppController {
         CoordinatedAppController()
     }
-    
+
     override func makeLogHandler(label: String) -> LogHandler {
         SwiftLogNoOpLogHandler()
     }

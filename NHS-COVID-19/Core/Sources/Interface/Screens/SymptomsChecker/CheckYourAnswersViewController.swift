@@ -12,7 +12,7 @@ public protocol CheckYourAnswersInteracting {
     func changeHowYouFeel()
     func confirmAnswers()
     func didTapBackButton()
-    
+
     var firstChangeButtonId: String { get }
     var secondChangeButtonId: String { get }
 }
@@ -21,7 +21,7 @@ public class SummaryCardInfo {
     let questionTitle: String
     let listRows: [String]?
     let hasSymptoms: Bool?
-    
+
     public init(questionTitle: String, listRows: [String]? = nil, hasSymptoms: Bool?) {
         self.questionTitle = questionTitle
         self.listRows = listRows
@@ -31,11 +31,11 @@ public class SummaryCardInfo {
 
 public class CheckYourAnswersViewController: UIViewController {
     public typealias Interacting = CheckYourAnswersInteracting
-    
+
     private let symptomsQuestionnaire: InterfaceSymptomsQuestionnaire
     private let interactor: Interacting
     private let doYouFeelWell: Bool?
-    
+
     public init(symptomsQuestionnaire: InterfaceSymptomsQuestionnaire, doYouFeelWell: Bool?, interactor: Interacting) {
         self.symptomsQuestionnaire = symptomsQuestionnaire
         self.interactor = interactor
@@ -43,11 +43,11 @@ public class CheckYourAnswersViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         title = localize(.check_answers_heading)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func summaryCard(changeAction: Selector, changeButtonIdentifier: String, title: String, sectionInfo: [SummaryCardInfo]) -> UIView {
         let yourSymptomsChangeButton = UIButton()
         yourSymptomsChangeButton.setTitle(localize(.check_answers_change_button), for: .normal)
@@ -56,18 +56,18 @@ public class CheckYourAnswersViewController: UIViewController {
         yourSymptomsChangeButton.setContentHuggingPriority(.almostRequest, for: .horizontal)
         yourSymptomsChangeButton.setContentCompressionResistancePriority(.almostRequest, for: .horizontal)
         yourSymptomsChangeButton.accessibilityIdentifier = changeButtonIdentifier
-        
+
         var cardContent: [UIView] = []
-        
+
         let cardHeading = UIStackView(arrangedSubviews: [
             BaseLabel().styleAsTertiaryTitle().set(text: title),
             yourSymptomsChangeButton
         ])
         cardHeading.axis = .horizontal
-        
+
         cardContent.append(cardHeading)
         cardContent.append(divider())
-        
+
         for (i, info) in sectionInfo.enumerated() {
             cardContent.append(BaseLabel().styleAsBoldBody().set(text: info.questionTitle))
             if let rows = info.listRows {
@@ -88,39 +88,39 @@ public class CheckYourAnswersViewController: UIViewController {
                 cardContent.append(divider())
             }
         }
-        
+
         let yourSymptomsCard = UIView()
         yourSymptomsCard.backgroundColor = UIColor(.surface)
         yourSymptomsCard.layer.cornerRadius = .buttonCornerRadius
-        
+
         yourSymptomsCard.addFillingSubview(layoutStack(children: cardContent))
-        
+
         return yourSymptomsCard
     }
-    
+
     func divider() -> UIView {
         let divider = UIView()
         divider.backgroundColor = UIColor(.background)
         divider.heightAnchor.constraint(equalToConstant: 1).isActive = true
         return divider
     }
-    
+
     func answerView(hasSymptoms: Bool?) -> UIStackView {
         let hasSymptoms: Bool = hasSymptoms ?? false
         let image = UIImageView(image: UIImage(systemName: hasSymptoms ? "checkmark" : "xmark"))
         image.tintColor = UIColor(hasSymptoms ? .nhsButtonGreen : .errorRed)
         image.contentMode = .scaleAspectFit
         let text = BaseLabel().styleAsBody().set(text: localize(hasSymptoms ? .your_symptoms_first_yes_option : .your_symptoms_first_no_option))
-        
+
         let stack = UIStackView(arrangedSubviews: [image, text])
         stack.axis = .horizontal
         stack.spacing = .halfSpacing
         stack.alignment = .leading
         stack.distribution = .fillProportionally
-        
+
         return stack
     }
-    
+
     private lazy var confirmButton: UIButton = {
         let confirmButton = UIButton()
         confirmButton.styleAsPrimary()
@@ -128,7 +128,7 @@ public class CheckYourAnswersViewController: UIViewController {
         confirmButton.addTarget(self, action: #selector(confirmAnswers), for: .touchUpInside)
         return confirmButton
     }()
-    
+
     let scrollView = UIScrollView()
 
     func layoutStack(children: [UIView]) -> UIStackView {
@@ -139,9 +139,9 @@ public class CheckYourAnswersViewController: UIViewController {
             $0.layoutMargins = .standard
         }
     }
-    
+
     private var symptomCardHeightConstraints = [(UIView, NSLayoutConstraint)]()
-    
+
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         symptomCardHeightConstraints.forEach { view, constraint in
@@ -149,20 +149,20 @@ public class CheckYourAnswersViewController: UIViewController {
             constraint.constant = view.bounds.height
         }
     }
-    
+
     override public func viewDidLoad() {
         super.viewDidLoad()
-        
+
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: self, action: #selector(didTapBackButton))
-        
+
         let view = self.view!
         view.styleAsScreenBackground(with: traitCollection)
-        
+
         let stepLabel = BaseLabel().styleAsCaption().set(text: localize(.step_label(index: 3, count: 3)))
         stepLabel.accessibilityLabel = localize(.step_accessibility_label(index: 3, count: 3))
-        
+
         let heading = BaseLabel().styleAsPageHeader().set(text: localize(.check_answers_heading))
-        
+
         let yourSymptomsCard = summaryCard(
             changeAction: #selector(changeYourSymptoms),
             changeButtonIdentifier: interactor.firstChangeButtonId,
@@ -179,7 +179,7 @@ public class CheckYourAnswersViewController: UIViewController {
                 )
             ]
         )
-        
+
         let howYouFeelCard = summaryCard(
             changeAction: #selector(changeHowYouFeel),
             changeButtonIdentifier: interactor.secondChangeButtonId,
@@ -191,22 +191,22 @@ public class CheckYourAnswersViewController: UIViewController {
                 )
             ]
         )
-        
+
         let headingStack = layoutStack(children: [stepLabel, heading])
         let answerCards = layoutStack(children: [yourSymptomsCard, howYouFeelCard])
         let buttonStack = layoutStack(children: [confirmButton])
-        
+
         let stack = UIStackView(arrangedSubviews: [
             headingStack,
             answerCards,
             buttonStack
         ])
         stack.axis = .vertical
-        
+
         scrollView.addFillingSubview(stack)
-        
+
         view.addAutolayoutSubview(scrollView)
-        
+
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -219,15 +219,15 @@ public class CheckYourAnswersViewController: UIViewController {
     @objc func confirmAnswers() {
         interactor.confirmAnswers()
     }
-    
+
     @objc func changeYourSymptoms() {
         interactor.changeYourSymptoms()
     }
-    
+
     @objc func changeHowYouFeel() {
         interactor.changeHowYouFeel()
     }
-    
+
     @objc func didTapBackButton() {
         interactor.didTapBackButton()
     }

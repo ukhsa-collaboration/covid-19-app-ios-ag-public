@@ -13,17 +13,17 @@ public enum IsolationState: Equatable {
 }
 
 public struct RiskLevelIndicator: View {
-    
+
     public class ViewModel: ObservableObject {
-        
+
         var anyCancellable: AnyCancellable?
-        
+
         @InterfaceProperty var isolationState: IsolationState
         @InterfaceProperty var paused: Bool
         @InterfaceProperty var animationDisabled: Bool
         @InterfaceProperty var bluetoothOff: Bool
         @InterfaceProperty var country: Country
-        
+
         public init(
             isolationState: InterfaceProperty<IsolationState>,
             paused: InterfaceProperty<Bool>,
@@ -36,7 +36,7 @@ public struct RiskLevelIndicator: View {
             _animationDisabled = animationDisabled
             _bluetoothOff = bluetoothOff
             _country = country
-            
+
             anyCancellable = _animationDisabled.$wrappedValue.combineLatest(
                 isolationState.$wrappedValue,
                 paused.$wrappedValue,
@@ -47,21 +47,21 @@ public struct RiskLevelIndicator: View {
             })
         }
     }
-    
+
     @ObservedObject private var viewModel: ViewModel
     private let turnContactTracingOnTapAction: () -> Void
     private let openSettings: () -> Void
-    
+
     public init(viewModel: ViewModel, turnContactTracingOnTapAction: @escaping () -> Void, openSettings: @escaping () -> Void) {
         self.viewModel = viewModel
         self.turnContactTracingOnTapAction = turnContactTracingOnTapAction
         self.openSettings = openSettings
     }
-    
+
     public var body: some View {
         containedView()
     }
-    
+
     private func containedView() -> AnyView {
         switch (viewModel.isolationState, viewModel.bluetoothOff, viewModel.paused) {
         case (let .isolating(days, percentRemaining, endDate, _), _, _):
@@ -97,7 +97,7 @@ private extension Country {
         case .england:
             return .informational
         case .wales:
-            return .warning
+            return .informational
         }
     }
 }

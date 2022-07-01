@@ -7,11 +7,11 @@ import Foundation
 import RiskScore
 
 struct ExposureNotificationConfigurationEndPoint: HTTPEndpoint {
-    
+
     func request(for input: Void) throws -> HTTPRequest {
         .get("/distribution/exposure-configuration")
     }
-    
+
     func parse(_ response: HTTPResponse) throws -> ExposureDetectionConfiguration {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .appNetworking
@@ -23,11 +23,11 @@ struct ExposureNotificationConfigurationEndPoint: HTTPEndpoint {
             riskScore: configuration.riskScore
         )
     }
-    
+
 }
 
 private struct Payload: Codable {
-    
+
     struct ExposureNotification: Codable {
         var transmissionRiskWeight: Double
         var attenuationLevelValues: [Int]
@@ -40,20 +40,19 @@ private struct Payload: Codable {
         var daysSinceLastExposureWeight: Double
         var transmissionRiskLevelValues: [Int]
     }
-    
+
     struct RiskCalculation: Codable {
         var durationBucketWeights: [Double]
         var riskThreshold: Double
     }
-    
+
     struct V2RiskCalculation: Codable {
         var daysSinceOnsetToInfectiousness: [Int]
         var infectiousnessWeights: [Double]
         var reportTypeWhenMissing: Int
         var riskThreshold: Double
     }
-    
-    
+
     var exposureNotification: ExposureNotification
     var riskCalculation: RiskCalculation
     var v2RiskCalculation: V2RiskCalculation
@@ -64,14 +63,13 @@ struct RiskScore: Codable {
     var sampleResolution: Double
     var expectedDistance: Double
     var minimumDistance: Double
-    
+
     var rssiParameters: RssiParameters
     var powerLossParameters: PowerLossParameters
     var observationType: ObservationType
     var initialData: InitialData
     var smootherParameters: SmootherParameters
-    
-    
+
     struct RssiParameters: Codable {
         var weightCoefficient: Double
         var intercept: Double
@@ -100,7 +98,6 @@ struct RiskScore: Codable {
         var kappa: Double
     }
 }
-
 
 private extension RiskScoreCalculatorConfiguration {
     init(riskScore: RiskScore) {
@@ -132,9 +129,8 @@ private extension RiskScoreCalculatorConfiguration {
     }
 }
 
-
 private extension ExposureDetectionConfiguration {
-    
+
     init(exposureNotification: Payload.ExposureNotification, riskCalculation: Payload.RiskCalculation, v2RiskCalculation: Payload.V2RiskCalculation, riskScore: RiskScore) {
         self.init(
             transmitionWeight: exposureNotification.transmissionRiskWeight,
@@ -155,5 +151,5 @@ private extension ExposureDetectionConfiguration {
             riskScoreCalculatorConfig: RiskScoreCalculatorConfiguration(riskScore: riskScore)
         )
     }
-    
+
 }

@@ -14,7 +14,7 @@ struct AccessibilityElement: Equatable, Encodable {
 enum AccessibilityNode: Equatable {
     case container(children: [AccessibilityNode])
     case element(AccessibilityElement)
-    
+
     static func element(configure: (inout AccessibilityElement) -> Void) -> AccessibilityNode {
         var element = AccessibilityElement()
         configure(&element)
@@ -23,7 +23,7 @@ enum AccessibilityNode: Equatable {
 }
 
 extension AccessibilityNode: CustomDescriptionConvertible {
-    
+
     var descriptionObject: Description {
         switch self {
         case .container(let children):
@@ -32,11 +32,11 @@ extension AccessibilityNode: CustomDescriptionConvertible {
             return .encodable(element)
         }
     }
-    
+
 }
 
 extension UIView {
-    
+
     var accessibilitySnapshot: AccessibilityNode {
         if shouldTreatAsAccessibilityElement {
             return .element {
@@ -50,15 +50,15 @@ extension UIView {
             return .container(children: Array(children))
         }
     }
-    
+
     private var shouldTreatAsAccessibilityElement: Bool {
         isAccessibilityElement || (accessibilityLabel != nil)
     }
-    
+
 }
 
 private extension AccessibilityNode {
-    
+
     var nodes: [AccessibilityNode] {
         switch self {
         case .container(let children):
@@ -67,7 +67,7 @@ private extension AccessibilityNode {
             return [self]
         }
     }
-    
+
 }
 
 extension UIAccessibilityTraits: Encodable {

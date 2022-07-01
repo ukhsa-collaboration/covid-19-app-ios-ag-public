@@ -9,17 +9,17 @@ import Foundation
 import Interface
 
 extension Publisher where Output == Domain.IsolationState, Failure == Never {
-    
+
     func mapToInterface(with currentDateProvider: DateProviding) -> AnyPublisher<Interface.IsolationState, Never> {
         combineLatest(currentDateProvider.today)
             .map(Interface.IsolationState.init)
             .eraseToAnyPublisher()
     }
-    
+
 }
 
 extension Interface.IsolationState {
-    
+
     init(domainState: Domain.IsolationState, today: LocalDay) {
         switch domainState {
         case .noNeedToIsolate:
@@ -31,7 +31,7 @@ extension Interface.IsolationState {
             self = .isolating(days: daysRemaining, percentRemaining: percentRemaining, endDate: isolation.endDate, hasPositiveTest: isolation.hasPositiveTestResult)
         }
     }
-    
+
     private static func percentRemaining(duration: Int, daysRemaining: Int) -> Double {
         if duration <= 0 { return 0 }
         let percentRemaining = Double(daysRemaining) / Double(duration)

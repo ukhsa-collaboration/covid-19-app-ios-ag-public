@@ -11,7 +11,7 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 public class Runner {
-    
+
     public static let activeScenarioDefaultKey = "activeScenario"
     public static let devViewDefaultKey = "devView"
     public static let interfaceStyleDefaultKey = "interfaceStyle"
@@ -19,25 +19,25 @@ public class Runner {
     public static let disableHardwareKeyboard = "disable_hardware_keyboard"
     public static let shouldResetScenarioAfterEnteringBackground = "shouldResetScenarioAfterEnteringBackground"
     public static let showStringLocalizableKeysOnly = "showStringLocalizableKeysOnly"
-    
+
     private let loggingManager: LoggingManager
     private let appController = WrappingAppController()
     private var cancellables = [AnyCancellable]()
-    
+
     @UserDefault(Runner.activeScenarioDefaultKey)
     private var activeScenarioId: ScenarioId? {
         didSet {
             updateContent()
         }
     }
-    
+
     @UserDefault(Runner.devViewDefaultKey, defaultValue: false)
     private var showDevView: Bool? {
         didSet {
             updateContent()
         }
     }
-    
+
     private lazy var shortcuts: [ApplicationShort] = [
         ApplicationShort(
             type: "resetActiveScenario",
@@ -80,34 +80,34 @@ public class Runner {
             }
         ),
     ]
-    
+
     public init(loggingManager: LoggingManager) {
         self.loggingManager = loggingManager
         UIApplication.shared.shortcutItems = shortcuts.map { $0.item }
         prepareLocalizationOverriderIfNeeded()
         updateContent()
-        
+
         if
             let shouldResetScenarioAfterEnteringBackground = Int(ProcessInfo.processInfo.environment[Self.shouldResetScenarioAfterEnteringBackground] ?? ""),
             shouldResetScenarioAfterEnteringBackground > 0 {
             setUpScenarioResettingListeners()
         }
     }
-    
+
     private func setUpScenarioResettingListeners() {
         var stashedScenarioId: ScenarioId?
         NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification, object: nil).sink { [weak self] _ in
             stashedScenarioId = self?.activeScenarioId
             self?.activeScenarioId = nil
         }.store(in: &cancellables)
-        
+
         NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification, object: nil).sink { [weak self] _ in
             if let stashedScenarioId = stashedScenarioId {
                 self?.activeScenarioId = stashedScenarioId
             }
         }.store(in: &cancellables)
     }
-    
+
     public func prepare(_ window: UIWindow) {
         window.accessibilityLabel = "MainWindow"
         if
@@ -116,7 +116,7 @@ public class Runner {
             UIView.setAnimationsEnabled(false)
             window.layer.speed = 2000
         }
-        
+
         if
             let disableHardwareKeyboard = Int(ProcessInfo.processInfo.environment[Self.disableHardwareKeyboard] ?? ""),
             disableHardwareKeyboard > 0 {
@@ -126,7 +126,7 @@ public class Runner {
                 .filter { $0.responds(to: setHardwareLayout) }
                 .forEach { $0.perform(setHardwareLayout, with: nil) }
         }
-        
+
         if #available(iOS 13.0, *) {
             switch UserDefaults.standard.string(forKey: Self.interfaceStyleDefaultKey) {
             case "dark":
@@ -138,14 +138,14 @@ public class Runner {
             }
         }
     }
-    
+
     private func prepareLocalizationOverriderIfNeeded() {
         if let showStringLocalizableKeysOnly = Int(ProcessInfo.processInfo.environment[Self.showStringLocalizableKeysOnly] ?? ""),
             showStringLocalizableKeysOnly > 0 {
             Localization.current.overrider = ShowLocalizableKeysOnlyOverrider()
         }
     }
-    
+
     public func performAction(for shortcutItem: UIApplicationShortcutItem) -> Bool {
         for shortcut in shortcuts where shortcut.item.type == shortcutItem.type {
             shortcut.action()
@@ -153,11 +153,11 @@ public class Runner {
         }
         return false
     }
-    
+
     public func makeAppController() -> AppController {
         appController
     }
-    
+
     private func updateContent() {
         if let activeScenarioId = activeScenarioId {
             appController.content = activeScenarioId.scenarioType.appController
@@ -184,10 +184,10 @@ public class Runner {
             }
         }
     }
-    
+
     private func performBackgroundTasks() {
         let viewController = appController.rootViewController
-        
+
         let alert = UIAlertController(title: "Run background tasks", message: "When should the tasks start?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Immediately", style: .default) { _ in self.startTasks() })
         alert.addAction(UIAlertAction(title: "When app enters background", style: .default) { _ in self.startTasksWhenEnteringBackground() })
@@ -197,7 +197,7 @@ public class Runner {
             viewController.present(alert, animated: true, completion: nil)
         }
     }
-    
+
     private func startTasksWhenEnteringBackground() {
         NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification).first()
             .sink { [weak self] _ in
@@ -205,7 +205,7 @@ public class Runner {
             }
             .store(in: &cancellables)
     }
-    
+
     private func startTasks() {
         let task = MockBackgroundTask()
         let identifier = UIApplication.shared.beginBackgroundTask(withName: "ScenarioTriggeredTask") {
@@ -216,7 +216,7 @@ public class Runner {
         }
         appController.performBackgroundTask(task: task)
     }
-    
+
     private func showDebugUI(showFeatureGuard: Bool = false) {
         let tabBar = UITabBarController()
         let mocks = UIHostingController(
@@ -232,17 +232,17 @@ public class Runner {
         )
         mocks.title = "Mocks"
         mocks.tabBarItem.image = UIImage(systemName: "doc.text")
-        
+
         var viewControllers = [
             mocks,
             UINavigationController(rootViewController: LogsViewController(loggingManager: loggingManager)),
             UINavigationController(rootViewController: FilesViewController()),
         ]
-        
+
         if showFeatureGuard {
             viewControllers.append(UINavigationController(rootViewController: ConfigurationViewController()))
         }
-        
+
         tabBar.setViewControllers(viewControllers, animated: false)
         appController.rootViewController.present(tabBar, animated: true, completion: nil)
     }

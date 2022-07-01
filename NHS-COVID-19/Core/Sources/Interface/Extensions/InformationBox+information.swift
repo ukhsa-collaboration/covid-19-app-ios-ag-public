@@ -13,7 +13,7 @@ extension InformationBox {
         case view(UIView)
         case linkButton(String, UIImage?, () -> Void)
     }
-    
+
     public static func information(color: Style.InformationColor = .darkBlue, _ views: [UIView]) -> InformationBox {
         InformationBox(
             views: views,
@@ -21,7 +21,7 @@ extension InformationBox {
             backgroundColor: .clear
         )
     }
-    
+
     public static var information: (
         purple: ([Content]) -> InformationBox,
         orange: ([Content]) -> InformationBox,
@@ -40,21 +40,21 @@ extension InformationBox {
             { .information(color: .pink, $0) },
             { .information(color: .yellow, $0) }
         )
-        
+
     }
-    
+
     public static func information(_ text: String) -> InformationBox {
         .information([BaseLabel().styleAsBody().set(text: text)])
     }
-    
+
     public static func information(title: String, body: [String]) -> InformationBox {
         .information([.heading(title)] + body.map { .body($0) })
     }
-    
+
     public static func information(_ content: Content...) -> InformationBox {
         .information(content)
     }
-    
+
     public static func information(color: Style.InformationColor = .darkBlue, _ content: [Content]) -> InformationBox {
         .information(color: color, content.map { content -> UIView in
             switch content {

@@ -11,7 +11,7 @@ public struct InterfaceSymptomsQuestionnaire {
     public var noncardinal: CardinalSymptomInfo
     public var dateSelectionWindow: Int
     public var isSymptomaticSelfIsolationForWalesEnabled: Bool
-    
+
     public init(
         riskThreshold: Double,
         symptoms: [SymptomInfo],
@@ -33,13 +33,13 @@ public class SymptomInfo: ObservableObject, Identifiable {
     @Published public var isConfirmed: Bool
     public var heading: String
     public var content: String
-    
+
     public init(isConfirmed: Bool, heading: String, content: String) {
         self.isConfirmed = isConfirmed
         self.heading = heading
         self.content = content
     }
-    
+
     public convenience init() {
         self.init(isConfirmed: false, heading: "-", content: "-")
     }
@@ -49,7 +49,7 @@ public class CardinalSymptomInfo: ObservableObject, Identifiable {
     @Published public var hasSymptoms: Bool?
     public var heading: String
     public var content: [String]
-    
+
     public init(hasSymptoms: Bool? = nil, heading: String = "", content: [String] = []) {
         self.hasSymptoms = hasSymptoms
         self.heading = heading

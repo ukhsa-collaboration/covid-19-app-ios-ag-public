@@ -6,11 +6,11 @@ import Foundation
 
 class ActionsInvocationRecord: Codable {
     var actions: [ActionRecord] // Interested in first one
-    
+
     private enum CodingKeys: String, CodingKey {
         case actions
     }
-    
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         actions = try container.decode(XCResultArrayValue<ActionRecord>.self, forKey: .actions).values
@@ -27,11 +27,11 @@ class ActionResult: Codable {
 
 class Reference: Codable {
     var id: String
-    
+
     private enum CodingKeys: String, CodingKey {
         case id
     }
-    
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(XCResultValueType.self, forKey: .id).value
@@ -40,7 +40,7 @@ class Reference: Codable {
 
 class XCResultType: Codable {
     let name: String
-    
+
     private enum CodingKeys: String, CodingKey {
         case name = "_name"
     }
@@ -49,12 +49,12 @@ class XCResultType: Codable {
 class XCResultObjectType: Codable {
     let name: String
     let supertype: XCResultObjectType?
-    
+
     private enum CodingKeys: String, CodingKey {
         case name = "_name"
         case supertype = "_supertype"
     }
-    
+
     func getType() -> AnyObject.Type {
         if let type = XCResultTypeFamily(rawValue: name) {
             return type.getType()
@@ -68,7 +68,7 @@ class XCResultObjectType: Codable {
 
 class XCResultObject: Codable {
     let type: XCResultObjectType
-    
+
     private enum CodingKeys: String, CodingKey {
         case type = "_type"
     }
@@ -76,11 +76,11 @@ class XCResultObject: Codable {
 
 class XCResultArrayValue<T: Codable>: Codable {
     let values: [T]
-    
+
     private enum CodingKeys: String, CodingKey {
         case values = "_values"
     }
-    
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         values = try container.decode(family: XCResultTypeFamily.self, forKey: .values)
@@ -90,7 +90,7 @@ class XCResultArrayValue<T: Codable>: Codable {
 class XCResultValueType: Codable {
     let type: XCResultType
     let value: String
-    
+
     private enum CodingKeys: String, CodingKey {
         case type = "_type"
         case value = "_value"
@@ -99,11 +99,11 @@ class XCResultValueType: Codable {
 
 class ActionTestPlanRunSummaries: Codable {
     let summaries: [ActionTestPlanRunSummary]
-    
+
     private enum CodingKeys: String, CodingKey {
         case summaries
     }
-    
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         summaries = try container.decode(XCResultArrayValue<ActionTestPlanRunSummary>.self, forKey: .summaries).values
@@ -112,11 +112,11 @@ class ActionTestPlanRunSummaries: Codable {
 
 class ActionTestPlanRunSummary: Codable {
     let testableSummaries: [ActionTestableSummary]
-    
+
     private enum CodingKeys: String, CodingKey {
         case testableSummaries
     }
-    
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         testableSummaries = try container.decode(XCResultArrayValue<ActionTestableSummary>.self, forKey: .testableSummaries).values
@@ -125,11 +125,11 @@ class ActionTestPlanRunSummary: Codable {
 
 class ActionAbstractTestSummary: Codable {
     let name: String
-    
+
     private enum CodingKeys: String, CodingKey {
         case name
     }
-    
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(XCResultValueType.self, forKey: .name).value
@@ -139,49 +139,49 @@ class ActionAbstractTestSummary: Codable {
 // AppTests, DomainTests, IntegrationTests, InterfaceTests, CommonTests
 class ActionTestableSummary: ActionAbstractTestSummary {
     let tests: [ActionTestSummaryIdentifiableObject]
-    
+
     private enum CodingKeys: String, CodingKey {
         case tests
     }
-    
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         tests = try container.decode(XCResultArrayValue<ActionTestSummaryIdentifiableObject>.self, forKey: .tests).values
-        
+
         try super.init(from: decoder)
     }
 }
 
 class ActionTestSummaryIdentifiableObject: ActionAbstractTestSummary {
     let identifier: String
-    
+
     private enum CodingKeys: String, CodingKey {
         case identifier
     }
-    
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         identifier = try container.decode(XCResultValueType.self, forKey: .identifier).value
-        
+
         try super.init(from: decoder)
     }
-    
+
 }
 
 class ActionTestSummaryGroup: ActionTestSummaryIdentifiableObject {
     var duration: String
     var subtests: [ActionTestSummaryIdentifiableObject]
-    
+
     private enum CodingKeys: String, CodingKey {
         case duration
         case subtests
     }
-    
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         subtests = try container.decode(XCResultArrayValue<ActionTestSummaryIdentifiableObject>.self, forKey: .subtests).values
         duration = try container.decode(XCResultValueType.self, forKey: .duration).value
-        
+
         try super.init(from: decoder)
     }
 }
@@ -189,17 +189,17 @@ class ActionTestSummaryGroup: ActionTestSummaryIdentifiableObject {
 class ActionTestMetadata: ActionTestSummaryIdentifiableObject {
     var duration: String
     var testStatus: String
-    
+
     private enum CodingKeys: String, CodingKey {
         case duration
         case testStatus
     }
-    
+
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         testStatus = try container.decode(XCResultValueType.self, forKey: .testStatus).value
         duration = try container.decode(XCResultValueType.self, forKey: .duration).value
-        
+
         try super.init(from: decoder)
     }
 }
@@ -216,7 +216,7 @@ class ActionTestMetadata: ActionTestSummaryIdentifiableObject {
 protocol ClassFamily: Decodable {
     /// The discriminator key.
     static var discriminator: Discriminator { get }
-    
+
     /// Returns the class type of the object coresponding to the value.
     func getType() -> AnyObject.Type
 }
@@ -237,9 +237,9 @@ enum XCResultTypeFamily: String, ClassFamily {
     case actionTestableSummary = "ActionTestableSummary"
     case actionsInvocationRecord = "ActionsInvocationRecord"
     case actionRecord = "ActionRecord"
-    
+
     static var discriminator: Discriminator = .type
-    
+
     func getType() -> AnyObject.Type {
         switch self {
         case .actionAbstractTestSummary:
@@ -267,7 +267,7 @@ enum XCResultTypeFamily: String, ClassFamily {
 }
 
 extension KeyedDecodingContainer {
-    
+
     /// Decode a heterogeneous list of objects for a given family.
     /// - Parameters:
     ///     - family: The ClassFamily enum for the type family.
@@ -285,5 +285,5 @@ extension KeyedDecodingContainer {
         }
         return list
     }
-    
+
 }

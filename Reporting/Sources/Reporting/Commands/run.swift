@@ -26,7 +26,7 @@ struct ReportCommand: ParsableCommand {
             TestResultsSummaryCommand.self,
         ]
     )
-    
+
     func run() throws {
         print("running")
     }

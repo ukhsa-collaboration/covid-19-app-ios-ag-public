@@ -7,7 +7,7 @@ import UIKit
 
 struct NavigationAppController: AppController {
     var rootViewController: UIViewController
-    
+
     init(makeChild: (UINavigationController) -> UIViewController) {
         let navigationController = UINavigationController()
         navigationController.pushViewController(makeChild(navigationController), animated: false)

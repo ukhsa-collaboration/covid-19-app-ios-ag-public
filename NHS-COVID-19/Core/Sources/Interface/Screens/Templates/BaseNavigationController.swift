@@ -6,23 +6,23 @@ import Localization
 import UIKit
 
 public class BaseNavigationController: UINavigationController {
-    
+
     public init() {
         super.init(nibName: nil, bundle: nil)
-        
+
         view.applySemanticContentAttribute()
     }
-    
+
     override public init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
-        
+
         view.applySemanticContentAttribute()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func pushViewController(
         _ viewController: UIViewController,
         animated: Bool

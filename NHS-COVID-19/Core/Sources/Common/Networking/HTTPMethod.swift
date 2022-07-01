@@ -18,13 +18,13 @@ public enum HTTPMethod: String, Equatable {
 
 extension HTTPMethod {
     // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
-    
+
     private enum BodyRequirment {
         case mustHave
         case mustNotHave
         case mayHave
     }
-    
+
     private var bodyRequirement: BodyRequirment {
         switch self {
         case .get: return .mustNotHave
@@ -38,13 +38,13 @@ extension HTTPMethod {
         case .trace: return .mustNotHave
         }
     }
-    
+
     var mustHaveBody: Bool {
         bodyRequirement == .mustHave
     }
-    
+
     var mustNotHaveBody: Bool {
         bodyRequirement == .mustNotHave
     }
-    
+
 }

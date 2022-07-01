@@ -12,24 +12,24 @@ public protocol ExposureRiskCalculating {
 public struct ExposureRiskCalculator: ExposureRiskCalculating {
     private static let riskScoreVersion = 1
     private let infectiousnessFactorCalculator: InfectiousnessFactorCalculating
-    
+
     init(
         infectiousnessFactorCalculator: InfectiousnessFactorCalculating = InfectiousnessFactorCalculator()
     ) {
         self.infectiousnessFactorCalculator = infectiousnessFactorCalculator
     }
-    
+
     func risk(for exposureInfo: ExposureNotificationExposureInfo, durationBucketWeights: [Double]) -> Double {
         let durations = exposureInfo.attenuationDurations.map { $0.doubleValue }
         let weightedDurations = zip(durations, durationBucketWeights).map(*)
         let weightedAttenuationScore = weightedDurations.reduce(0, +)
-        
+
         let daysFromOnset: Int = ENTemporaryExposureKey.maxTransmissionRiskLevel - Int(exposureInfo.transmissionRiskLevel)
         let infectiousnessFactor = infectiousnessFactorCalculator.infectiousnessFactor(for: daysFromOnset)
-        
+
         return weightedAttenuationScore * infectiousnessFactor
     }
-    
+
     public func riskInfo(for exposureInfo: [ExposureNotificationExposureInfo], configuration: ExposureDetectionConfiguration) -> ExposureRiskInfo? {
         return exposureInfo
             .map {

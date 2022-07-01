@@ -14,7 +14,7 @@ extension IsolationAdviceForSymptomaticCasesEnglandViewController {
 
     private struct Content {
         let views: [StackViewContentProvider]
-        
+
         init(interactor: Interacting) {
             views = [
                 UIImageView(.shareKeysReview)
@@ -40,7 +40,7 @@ extension IsolationAdviceForSymptomaticCasesEnglandViewController {
 public class IsolationAdviceForSymptomaticCasesEnglandViewController: ScrollingContentViewController {
     public typealias Interacting = IsolationAdviceForSymptomaticCasesEnglandViewControllerInteracting
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting) {
         self.interactor = interactor
         super.init(views: Content(interactor: interactor).views)
@@ -49,12 +49,12 @@ public class IsolationAdviceForSymptomaticCasesEnglandViewController: ScrollingC
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
-        
+
     }
-    
+
 }
 

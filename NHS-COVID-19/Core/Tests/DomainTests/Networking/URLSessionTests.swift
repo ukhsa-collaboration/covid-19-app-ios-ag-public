@@ -12,7 +12,7 @@ class URLSessionTests: XCTestCase {
         realm: nil,
         authenticationMethod: NSURLAuthenticationMethodServerTrust
     )
-    
+
     private lazy var challenge = URLAuthenticationChallenge(
         protectionSpace: protectionSpace,
         proposedCredential: nil,
@@ -21,27 +21,27 @@ class URLSessionTests: XCTestCase {
         error: nil,
         sender: MockURLAuthenticationChallengeSender()
     )
-    
+
     func test_has_correct_security_configuration() throws {
         let configuration = URLSession(trustValidator: MockTrustValidator(canAccept: true)).configuration
-        
+
         XCTAssertEqual(configuration.tlsMinimumSupportedProtocolVersion, .TLSv12)
         XCTAssertEqual(configuration.httpCookieAcceptPolicy, .never)
         XCTAssertFalse(configuration.httpShouldSetCookies)
         XCTAssertNil(configuration.httpCookieStorage)
         XCTAssertEqual(configuration.requestCachePolicy, .reloadRevalidatingCacheData)
     }
-    
+
     func test_trust_validtor_is_used_to_configure_delegate() throws {
         let session = URLSession(trustValidator: MockTrustValidator(canAccept: false))
-        
+
         var disposition: URLSession.AuthChallengeDisposition?
         var credential: URLCredential?
         session.delegate?.urlSession?(session, didReceive: challenge) {
             disposition = $0
             credential = $1
         }
-        
+
         XCTAssertNil(credential)
         XCTAssertEqual(disposition, .cancelAuthenticationChallenge)
     }

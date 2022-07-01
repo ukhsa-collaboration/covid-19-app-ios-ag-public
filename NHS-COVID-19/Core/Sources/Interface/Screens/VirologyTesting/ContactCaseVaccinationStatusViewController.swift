@@ -33,14 +33,14 @@ public class ContactCaseVaccinationStatusNotEnoughAnswersError: Error {
 
 class ContactCaseVaccinationStatusContent {
     public typealias Interacting = ContactCaseVaccinationStatusViewControllerInteracting
-    
+
     var scrollTo: (UIView) -> Void = { _ in }
-    
+
     private let interactor: Interacting
     private let vaccineThresholdDate: Date
     private let isIndexCase: Bool
     private var cancellables: Set<AnyCancellable> = []
-    
+
     private var hasReceivedAllVaccineDosesSubject: Bool?
     private var isLastVaccineDoseTimeValid: Bool?
     private var clinicalTrial: Bool?
@@ -53,7 +53,7 @@ class ContactCaseVaccinationStatusContent {
             return medicallyExemptEnd ?? false || medicallyExemptMiddle ?? false
         }
     }
-    
+
     private lazy var allApprovedDosesRadioButtonGroup: UIHostingController<RadioButtonGroup> = makeRadioButtonView(
         yesTitle: localize(.contact_case_vaccination_status_all_doses_of_vaccine_yes_option),
         yesAccessibility: localize(.contact_case_vaccination_status_all_doses_of_vaccine_yes_option_accessibility_text),
@@ -74,7 +74,7 @@ class ContactCaseVaccinationStatusContent {
             self?.resetMedicallyExemptMiddle()
         }
     )
-    
+
     private lazy var lastDoseDateRadioButtonGroup: UIHostingController<RadioButtonGroup> = makeRadioButtonView(
         yesTitle: localize(.contact_case_vaccination_status_last_dose_of_vaccine_yes_option),
         yesAccessibility: localize(.contact_case_vaccination_status_last_dose_of_vaccine_yes_option_accessibility_text(date: vaccineThresholdDate)),
@@ -93,7 +93,7 @@ class ContactCaseVaccinationStatusContent {
             self?.resetMedicallyExemptMiddle()
         }
     )
-    
+
     private lazy var medicallyExemptMiddleRadioButtonGroup: UIHostingController<RadioButtonGroup> = makeRadioButtonView(
         yesTitle: localize(.exposure_notification_medically_exempt_yes),
         yesAccessibility: localize(.exposure_notification_medically_exempt_yes_content_description),
@@ -110,7 +110,7 @@ class ContactCaseVaccinationStatusContent {
             self?.resetMedicallyExemptEnd()
         }
     )
-    
+
     private lazy var clinicalTrialRadioButtonGroup: UIHostingController<RadioButtonGroup> = makeRadioButtonView(
         yesTitle: localize(.exposure_notification_clinical_trial_yes),
         yesAccessibility: localize(.exposure_notification_clinical_trial_yes_content_description),
@@ -125,7 +125,7 @@ class ContactCaseVaccinationStatusContent {
             self?.resetMedicallyExemptEnd()
         }
     )
-    
+
     private lazy var medicallyExemptEndRadioButtonGroup: UIHostingController<RadioButtonGroup> = makeRadioButtonView(
         yesTitle: localize(.exposure_notification_medically_exempt_yes),
         yesAccessibility: localize(.exposure_notification_medically_exempt_yes_content_description),
@@ -134,49 +134,49 @@ class ContactCaseVaccinationStatusContent {
         noAccessibility: localize(.exposure_notification_medically_exempt_no_content_description),
         noAction: { [weak self] in self?.medicallyExemptEnd = false }
     )
-    
+
     private lazy var lastDoseDateQuestionHeading: BaseLabel = {
         BaseLabel()
             .styleAsSecondaryTitle()
             .set(text: localize(.contact_case_vaccination_status_last_dose_of_vaccine_question(date: vaccineThresholdDate)))
             .isHidden(true)
     }()
-    
+
     private lazy var medicallyExemptMiddleQuestionHeading: BaseLabel = {
         BaseLabel()
             .styleAsSecondaryTitle()
             .set(text: localize(.exposure_notification_medically_exempt_question))
             .isHidden(true)
     }()
-    
+
     private lazy var medicallyExemptMiddleQuestionDescription: BaseLabel = {
         BaseLabel()
             .styleAsBody()
             .set(text: localize(.exposure_notification_medically_exempt_description))
             .isHidden(true)
     }()
-    
+
     private lazy var clinicalTrialQuestionHeading: BaseLabel = {
         BaseLabel()
             .styleAsSecondaryTitle()
             .set(text: localize(.exposure_notification_clinical_trial_question))
             .isHidden(true)
     }()
-    
+
     private lazy var medicallyExemptEndQuestionHeading: BaseLabel = {
         BaseLabel()
             .styleAsSecondaryTitle()
             .set(text: localize(.exposure_notification_medically_exempt_question))
             .isHidden(true)
     }()
-    
+
     private lazy var medicallyExemptEndQuestionDescription: BaseLabel = {
         BaseLabel()
             .styleAsBody()
             .set(text: localize(.exposure_notification_medically_exempt_description))
             .isHidden(true)
     }()
-    
+
     private lazy var emptyError: UIHostingController<ErrorBox> = {
         let emptyError = UIHostingController(
             rootView: ErrorBox(
@@ -188,18 +188,18 @@ class ContactCaseVaccinationStatusContent {
         emptyError.view.isHidden(true)
         return emptyError
     }()
-    
+
     init(interactor: Interacting, vaccineThresholdDate: Date, isIndexCase: Bool) {
         self.interactor = interactor
         self.vaccineThresholdDate = vaccineThresholdDate
         self.isIndexCase = isIndexCase
     }
-    
+
     func makeViews() -> [StackViewContentProvider] {
-        
+
         // Always show the first question
         allApprovedDosesRadioButtonGroup.view.isHidden = false
-        
+
         var stackedViews: [UIView] = [
             UIImageView(.isolationContinue)
                 .styleAsDecoration(),
@@ -208,7 +208,7 @@ class ContactCaseVaccinationStatusContent {
                 .set(text: localize(.contact_case_vaccination_status_heading))
                 .centralized(),
         ]
-        
+
         if !isIndexCase {
             stackedViews.append(contentsOf: [
                 BaseLabel()
@@ -216,7 +216,7 @@ class ContactCaseVaccinationStatusContent {
                     .set(text: localize(.contact_case_vaccination_status_description)),
             ])
         }
-        
+
         stackedViews.append(contentsOf: [
             emptyError.view,
             BaseLabel()
@@ -241,11 +241,11 @@ class ContactCaseVaccinationStatusContent {
             medicallyExemptEndQuestionDescription,
             medicallyExemptEndRadioButtonGroup.view,
         ])
-        
+
         let contentStack = UIStackView(arrangedSubviews: stackedViews.flatMap { $0.content })
         contentStack.axis = .vertical
         contentStack.spacing = .standardSpacing
-        
+
         let button = PrimaryButton(
             title: localize(.contact_case_vaccination_status_confirm_button_title),
             action: { [weak self] in
@@ -257,7 +257,7 @@ class ContactCaseVaccinationStatusContent {
                     medicallyExempt: self.medicallyExempt
                 )
                 let result = self.interactor.didTapConfirm(answers: answers)
-                
+
                 if case .failure = result {
                     self.emptyError.view.isHidden = false
                     self.scrollTo(self.emptyError.view)
@@ -267,16 +267,16 @@ class ContactCaseVaccinationStatusContent {
                 }
             }
         )
-        
+
         let stackContent = [contentStack, button]
         let stackView = UIStackView(arrangedSubviews: stackContent)
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
         stackView.spacing = .bigSpacing
-        
+
         return [stackView]
     }
-    
+
     private func nextQuestion() {
         let answers = ContactCaseVaccinationStatusAnswers(
             fullyVaccinated: hasReceivedAllVaccineDosesSubject,
@@ -285,14 +285,14 @@ class ContactCaseVaccinationStatusContent {
             medicallyExempt: medicallyExempt
         )
         let newQuestions = interactor.didAnswerQuestion(answers: answers)
-        
+
         let shouldShowLastDose = newQuestions.contains(.lastDose)
         let shouldShowClinicalTrial = newQuestions.contains(.clinicalTrial)
         let shouldShowMedicallyExempt = newQuestions.contains(.medicallyExempt)
-        
+
         setLastDoseVisibility(visible: shouldShowLastDose)
         setClinicalTrialVisibility(visible: shouldShowClinicalTrial)
-        
+
         if shouldShowMedicallyExempt {
             if let lastQuestion = newQuestions.last, lastQuestion == .medicallyExempt, shouldShowClinicalTrial {
                 setMedicallyExemptEndVisibility(visible: true)
@@ -305,9 +305,9 @@ class ContactCaseVaccinationStatusContent {
             setMedicallyExemptEndVisibility(visible: false)
             setMedicallyExemptMiddleVisibility(visible: false)
         }
-        
+
     }
-    
+
     private func setLastDoseVisibility(visible: Bool) {
         if visible {
             lastDoseDateQuestionHeading.isHidden = false
@@ -317,12 +317,12 @@ class ContactCaseVaccinationStatusContent {
             lastDoseDateRadioButtonGroup.view.isHidden = true
         }
     }
-    
+
     private func resetLastDose() {
         lastDoseDateRadioButtonGroup.rootView.state.selectedID = nil
         isLastVaccineDoseTimeValid = nil
     }
-    
+
     private func setClinicalTrialVisibility(visible: Bool) {
         if visible {
             clinicalTrialQuestionHeading.isHidden = false
@@ -332,12 +332,12 @@ class ContactCaseVaccinationStatusContent {
             clinicalTrialRadioButtonGroup.view.isHidden = true
         }
     }
-    
+
     private func resetClinicalTrial() {
         clinicalTrialRadioButtonGroup.rootView.state.selectedID = nil
         clinicalTrial = nil
     }
-    
+
     private func setMedicallyExemptMiddleVisibility(visible: Bool) {
         if visible {
             medicallyExemptMiddleQuestionHeading.isHidden = false
@@ -349,12 +349,12 @@ class ContactCaseVaccinationStatusContent {
             medicallyExemptMiddleRadioButtonGroup.view.isHidden = true
         }
     }
-    
+
     func resetMedicallyExemptMiddle() {
         medicallyExemptMiddleRadioButtonGroup.rootView.state.selectedID = nil
         medicallyExemptMiddle = nil
     }
-    
+
     private func setMedicallyExemptEndVisibility(visible: Bool) {
         if visible {
             medicallyExemptEndQuestionHeading.isHidden = false
@@ -366,12 +366,12 @@ class ContactCaseVaccinationStatusContent {
             medicallyExemptEndRadioButtonGroup.view.isHidden = true
         }
     }
-    
+
     func resetMedicallyExemptEnd() {
         medicallyExemptEndRadioButtonGroup.rootView.state.selectedID = nil
         medicallyExemptEnd = nil
     }
-    
+
     private func makeRadioButtonView(
         yesTitle: String,
         yesAccessibility: String,
@@ -403,14 +403,14 @@ class ContactCaseVaccinationStatusContent {
         vc.view.isHidden = true
         return vc
     }
-    
+
 }
 
 public class ContactCaseVaccinationStatusViewController: ScrollingContentViewController {
     public typealias Interacting = ContactCaseVaccinationStatusViewControllerInteracting
-    
+
     private let content: ContactCaseVaccinationStatusContent
-    
+
     public init(interactor: Interacting, vaccineThresholdDate: Date, isIndexCase: Bool) {
         let content = ContactCaseVaccinationStatusContent(
             interactor: interactor,
@@ -421,11 +421,11 @@ public class ContactCaseVaccinationStatusViewController: ScrollingContentViewCon
         super.init(views: content.makeViews())
         content.scrollTo = scroll
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         title = localize(.contact_case_vaccination_status_title)

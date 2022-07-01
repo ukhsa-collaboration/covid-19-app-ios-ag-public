@@ -15,7 +15,7 @@ extension RiskyVenueInformationBookATestViewController {
     private class Content: PrimaryButtonStickyFooterScrollingContent {
         init(interactor: Interacting) {
             let title = localize(.checkin_risky_venue_information_warn_and_book_a_test_title)
-            
+
             let scrollingViews: [UIView] = [
                 UIImageView(.coronaVirus).styleAsDecoration(),
                 BaseLabel().set(text: title).styleAsPageHeader().centralized(),
@@ -31,7 +31,7 @@ extension RiskyVenueInformationBookATestViewController {
                 )
                 .styleAsBody(),
             ]
-            
+
             super.init(
                 scrollingViews: scrollingViews,
                 primaryButton: (
@@ -44,33 +44,33 @@ extension RiskyVenueInformationBookATestViewController {
                 )
             )
         }
-        
+
     }
 }
 
 public class RiskyVenueInformationBookATestViewController: StickyFooterScrollingContentViewController {
     public typealias Interacting = RiskyVenueInformationBookATestViewControllerInteracting
-    
+
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting) {
         self.interactor = interactor
         super.init(content: Content(interactor: interactor))
     }
-    
+
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupNavigationBar()
     }
-    
+
     @objc private func didTapClose() {
         interactor.closeTapped()
     }
-    
+
     private func setupNavigationBar() {
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.navigationBar.shadowImage = UIImage()

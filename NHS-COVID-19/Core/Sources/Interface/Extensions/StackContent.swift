@@ -38,7 +38,7 @@ struct FooterContent: StackContent {
     var views: [StackViewContentProvider] {
         [topView, bottomView].compactMap { $0 }
     }
-    
+
     var spacing: CGFloat
     var margins: UIEdgeInsets
 }
@@ -58,9 +58,9 @@ extension UIStackView {
 extension UIScrollView {
     convenience init(stackView: UIStackView) {
         self.init(frame: .zero)
-        
+
         addAutolayoutSubview(stackView)
-        
+
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: contentLayoutGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: contentLayoutGuide.trailingAnchor),

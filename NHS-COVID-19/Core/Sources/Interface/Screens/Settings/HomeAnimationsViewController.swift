@@ -12,7 +12,7 @@ public class HomeAnimationsViewModel: ObservableObject {
     private var subscriptions = Set<AnyCancellable>()
     private var homeAnimationEnabled: InterfaceProperty<Bool>
     private var homeAnimationEnabledAction: (Bool) -> Void
-    
+
     public init(
         homeAnimationEnabled: InterfaceProperty<Bool>,
         homeAnimationEnabledAction: @escaping (Bool) -> Void,
@@ -20,10 +20,10 @@ public class HomeAnimationsViewModel: ObservableObject {
     ) {
         self.homeAnimationEnabled = homeAnimationEnabled
         self.homeAnimationEnabledAction = homeAnimationEnabledAction
-        
+
         reduceMotionPublisher.sink(receiveValue: { [weak self] reduceMotionOn in
             guard let self = self else { return }
-            
+
             if reduceMotionOn {
                 self.isReducedMotionEnabled = true
                 self.toggleState = false
@@ -31,34 +31,34 @@ public class HomeAnimationsViewModel: ObservableObject {
                 self.isReducedMotionEnabled = false
                 self.toggleState = self.homeAnimationEnabled.wrappedValue
             }
-            
+
         }).store(in: &subscriptions)
-        
+
         $toggleState
             .filter { [weak self] in self?.toggleState != $0 } // skip if the new value and the current value are the same
             .filter { [weak self] _ in self?.isReducedMotionEnabled == false } // ignore if reduce motion is enabled
             .sink { [weak self] isOn in
                 self?.homeAnimationEnabledAction(isOn)
             }.store(in: &subscriptions)
-        
+
     }
 }
 
 private struct HomeAnimationStateContentView: View {
-    
+
     @Binding var toggleBinding: Bool
     @Binding var shouldAlertViewBePresented: Bool
     @State var shouldShowAlert: Bool = false
-    
+
     private var toggleTitle: String {
         toggleBinding ?
             localize(.home_animations_toggle_description_on) :
             localize(.home_animations_toggle_description_off)
     }
-    
+
     var body: some View {
         VStack(alignment: .leading) {
-            
+
             if shouldAlertViewBePresented {
                 Button {
                     shouldShowAlert = true
@@ -74,16 +74,16 @@ private struct HomeAnimationStateContentView: View {
                     text: toggleTitle
                 ).padding(.bottom)
             }
-            
+
             Text(localize(.home_animations_heading))
                 .styleAsHeading()
                 .padding()
-            
+
             Text(localize(.home_animations_description))
                 .styleAsBody()
                 .padding()
                 .layoutPriority(1)
-            
+
         }
         .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
         .alert(isPresented: $shouldShowAlert, content: {
@@ -100,11 +100,11 @@ private struct HomeAnimationStateContentView: View {
 
 private struct HomeAnimationStateView: View {
     @ObservedObject private var homeAnimationState: HomeAnimationsViewModel
-    
+
     init(homeAnimationState: HomeAnimationsViewModel) {
         self.homeAnimationState = homeAnimationState
     }
-    
+
     var body: some View {
         ScrollView(.vertical) {
             HomeAnimationStateContentView(
@@ -112,31 +112,31 @@ private struct HomeAnimationStateView: View {
                 shouldAlertViewBePresented: $homeAnimationState.isReducedMotionEnabled
             )
             .padding()
-            
+
         }
         .background(Color(.background))
         .edgesIgnoringSafeArea(.bottom)
     }
-    
+
 }
 
 public class HomeAnimationsViewController: RootViewController {
     private let viewModel: HomeAnimationsViewModel
-    
+
     public init(viewModel: HomeAnimationsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
-        
+
         title = localize(.home_animations_title)
-        
+
         let content = UIHostingController(
             rootView: HomeAnimationStateView(homeAnimationState: viewModel)
         )
         addFilling(content)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 }

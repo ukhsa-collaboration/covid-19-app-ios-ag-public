@@ -19,7 +19,7 @@ class InfectiousnessFactorCalculatorTests: XCTestCase {
             (6, 0.09253528115842204),
             (7, 0.03917684398136177),
         ]
-        
+
         parameters.forEach { daysFromOnset, infectiousnessFactor in
             XCTAssertEqual(
                 infectiousnessFactor,

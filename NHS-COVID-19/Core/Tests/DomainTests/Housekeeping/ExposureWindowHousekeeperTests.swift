@@ -8,15 +8,15 @@ import XCTest
 @testable import Domain
 
 class ExposureWindowHousekeeperTests: XCTestCase {
-    
+
     // we're just checking that the hosekeeping function is called, not that
     // the windows are deleted - that's done ExposureNotificationContextTests
     var deleteExpiredExposureWindowsCalled = false
-    
+
     override func setUp() {
         deleteExpiredExposureWindowsCalled = false
     }
-    
+
     private func createHouseKeeper(
         isolationLogicalState: IsolationLogicalState,
         isWaitingForExposureApproval: Bool
@@ -25,18 +25,18 @@ class ExposureWindowHousekeeperTests: XCTestCase {
             deleteExpiredExposureWindows: { self.deleteExpiredExposureWindowsCalled = true }
         )
     }
-    
+
     func testHousekeeperClearesDataIfNotIsolatingAndNotWaitingForApproval() throws {
         let housekeeper = createHouseKeeper(
             isolationLogicalState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             isWaitingForExposureApproval: false
         )
-        
+
         _ = housekeeper.executeHousekeeping()
-        
+
         XCTAssertTrue(deleteExpiredExposureWindowsCalled)
     }
-    
+
     func testHousekeeperStillWorksIfInIsolation() throws {
         let housekeeper = createHouseKeeper(
             isolationLogicalState: IsolationLogicalState.isolating(
@@ -44,20 +44,20 @@ class ExposureWindowHousekeeperTests: XCTestCase {
             ),
             isWaitingForExposureApproval: false
         )
-        
+
         _ = housekeeper.executeHousekeeping()
-        
+
         XCTAssert(deleteExpiredExposureWindowsCalled)
     }
-    
+
     func testHousekeeperStillWorksIfNotInIsolationButIsWaitingForExposureApproval() throws {
         let housekeeper = createHouseKeeper(
             isolationLogicalState: .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil),
             isWaitingForExposureApproval: true
         )
-        
+
         _ = housekeeper.executeHousekeeping()
-        
+
         XCTAssert(deleteExpiredExposureWindowsCalled)
     }
 }

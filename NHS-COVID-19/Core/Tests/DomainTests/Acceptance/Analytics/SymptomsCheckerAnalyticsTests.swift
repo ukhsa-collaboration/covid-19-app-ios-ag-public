@@ -10,11 +10,11 @@ import XCTest
 class SymptomsCheckerAnalyticsTests: AnalyticsTests {
 
     private var symptomsCheckerManager: SymptomsCheckerManaging!
-    
+
     override func setUpFunctionalities() {
         symptomsCheckerManager = try! context().symptomsCheckerManager
     }
-    
+
     func testCountsNumberOfCompletedQuestionnaires() throws {
         symptomsCheckerManager.store(shouldTryToStayAtHome: false)
 
@@ -24,10 +24,10 @@ class SymptomsCheckerAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
         }
     }
-    
+
     func testCountsNumberOfCompletedQuestionnairesWithResultTryToStayAtHome() throws {
         symptomsCheckerManager.store(shouldTryToStayAtHome: true)
-        
+
         assertOnFields { assertField in
             assertField.equals(expected: 1, \.completedV2SymptomsQuestionnaire)
             assertField.equals(expected: 1, \.completedV2SymptomsQuestionnaireAndStayAtHome)

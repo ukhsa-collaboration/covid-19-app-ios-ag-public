@@ -15,7 +15,7 @@ enum AcknowledgementNeededState {
     case neededForNegativeResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
     case neededForNegativeAfterPositiveResultContinueToIsolate(interactor: NegativeTestResultWithIsolationViewControllerInteractor, isolationEndDate: Date)
     case neededForNegativeResultNotIsolating(interactor: NegativeTestResultNoIsolationViewControllerInteractor)
-    case neededForEndOfIsolation(interactor: EndOfIsolationViewControllerInteractor, isolationEndDate: Date, isIndexCase: Bool, numberOfIsolationDaysForIndexCaseFromConfiguration: Int?)
+    case neededForEndOfIsolation(interactor: EndOfIsolationViewControllerInteractor, isolationEndDate: Date, isIndexCase: Bool)
     case neededForStartOfIsolationExposureDetection(acknowledge: (Bool) -> Void, exposureDate: Date, birthThresholdDate: Date, vaccineThresholdDate: Date, secondTestAdviceDate: Date?, isolationEndDate: DomainProperty<Date>, isIndexCase: Bool)
     case neededForRiskyVenue(interactor: RiskyVenueInformationInteractor, venueName: String, checkInDate: Date)
     case neededForRiskyVenueWarnAndBookATest(acknowledge: () -> Void, venueName: String, checkInDate: Date)
@@ -23,7 +23,7 @@ enum AcknowledgementNeededState {
     case neededForVoidResultNotIsolating(interactor: VoidTestResultFlowInteracting)
     case neededForPlodResult(interactor: PlodTestResultInteractor)
     case neededForUnknownResult(interactor: UnknownTestResultInteractor)
-    
+
     static func makeAcknowledgementState(context: RunningAppContext) -> AnyPublisher<AcknowledgementNeededState?, Never> {
         context.testResultAcknowledgementState
             .combineLatest(context.isolationAcknowledgementState, context.riskyCheckInsAcknowledgementState)
@@ -66,22 +66,22 @@ enum AcknowledgementNeededState {
                     switch isolationResultAckState {
                     case .neededForEnd(let isolation, let acknowledge):
                         let interactor = EndOfIsolationViewControllerInteractor(acknowledge: acknowledge, openURL: context.openURL)
-                        return .neededForEndOfIsolation(interactor: interactor, isolationEndDate: isolation.endDate, isIndexCase: isolation.isIndexCase, numberOfIsolationDaysForIndexCaseFromConfiguration: isolation.numberOfIsolationDaysForIndexCaseFromConfiguration)
+                        return .neededForEndOfIsolation(interactor: interactor, isolationEndDate: isolation.endDate, isIndexCase: isolation.isIndexCase)
                     case .neededForStartContactIsolation(let isolation, let acknowledge):
                         guard let vaccineThresholdDate = isolation.vaccineThresholdDate,
                             let birthThresholdDate = isolation.birthThresholdDate(country: context.country.currentValue) else {
                             return nil
                         }
-                        
+
                         guard let exposureDate = isolation.exposureDate else {
                             return nil
                         }
-                        
+
                         let secondTestAdviceDate = isolation.secondTestAdvice(
                             dateProvider: context.currentDateProvider,
                             country: context.country.currentValue
                         )
-                        
+
                         return .neededForStartOfIsolationExposureDetection(
                             acknowledge: acknowledge,
                             exposureDate: exposureDate,
@@ -111,9 +111,9 @@ enum AcknowledgementNeededState {
                             return nil
                         }
                     }
-                    
+
                 case .neededForVoidResultContinueToIsolate(acknowledge: let acknowledge, isolationEndDate: let isolationEndDate):
-                    
+
                     let interactor = VoidTestResultFlowInteractor(
                         acknowledge: acknowledge
                     )
@@ -125,13 +125,13 @@ enum AcknowledgementNeededState {
                     return .neededForVoidResultNotIsolating(interactor: interactor)
                 case .askForSymptomsOnsetDay(let testEndDay, let didFinishAskForSymptomsOnsetDay, let didConfirmSymptoms, let setOnsetDay):
                     return .askForSymptomsOnsetDay(testEndDay: testEndDay, didFinishAskForSymptomsOnsetDay: didFinishAskForSymptomsOnsetDay, didConfirmSymptoms: didConfirmSymptoms, setOnsetDay: setOnsetDay)
-                    
+
                 case .neededForPlodResult(acknowledge: let acknowledge):
                     let interactor = PlodTestResultInteractor(
                         acknowledge: acknowledge
                     )
                     return .neededForPlodResult(interactor: interactor)
-                    
+
                 case .neededForUnknownResult(acknowledge: let acknowledge, openAppStore: let openAppStore):
                     let interactor = UnknownTestResultInteractor(
                         acknowledge: acknowledge,
@@ -142,5 +142,5 @@ enum AcknowledgementNeededState {
             }
             .eraseToAnyPublisher()
     }
-    
+
 }

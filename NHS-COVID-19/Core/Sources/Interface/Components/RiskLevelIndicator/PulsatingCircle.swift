@@ -9,7 +9,7 @@ struct PulsatingCircle: View {
     let delay: Double
     let initialDiameter: CGFloat
     let color: Color
-    
+
     var body: some View {
         if #available(iOS 14.0, *) {
             return AnyView(PulsatingCircleIOS14(delay: delay, initialDiameter: initialDiameter, color: color))
@@ -21,22 +21,22 @@ struct PulsatingCircle: View {
 
 private struct PulsatingCircleIOS14: View {
     @State private var animationProgress: Double = 0
-    
+
     let delay: Double
     let initialDiameter: CGFloat
     let color: Color
-    
+
     var scale: CGFloat {
         .indicatorPulseMaxSize / initialDiameter
     }
-    
+
     private var animation: Animation {
         Animation
             .easeOut(duration: 3)
             .repeatForever(autoreverses: false)
             .delay(delay)
     }
-    
+
     var body: some View {
         Circle()
             .foregroundColor(color)
@@ -54,22 +54,22 @@ private struct PulsatingCircleIOS14: View {
 
 private struct PulsatingCircleIOS13: View {
     @State private var animationProgress: Bool = false
-    
+
     let delay: Double
     let initialDiameter: CGFloat
     let color: Color
-    
+
     var scale: CGFloat {
         .indicatorPulseMaxSize / initialDiameter
     }
-    
+
     private var animation: Animation {
         Animation
             .easeOut(duration: 3)
             .repeatForever(autoreverses: false)
             .delay(delay)
     }
-    
+
     var body: some View {
         Circle()
             .foregroundColor(color)

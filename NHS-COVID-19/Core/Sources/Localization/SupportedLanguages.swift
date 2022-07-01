@@ -10,9 +10,9 @@ public struct SupportedLanguage {
         currentLocaleIdentifier: String,
         supportedLocalizations: [String] = Bundle.main.supportedLocalizations
     ) -> [SelectableLanguage?] {
-        
+
         let currentLocale = Locale(identifier: currentLocaleIdentifier)
-        
+
         return supportedLocalizations.map {
             guard let (exonym, endonym) = Self.getLanguageTermsFrom(localeIdentifier: $0) else {
                 return nil
@@ -25,7 +25,7 @@ public struct SupportedLanguage {
             return lhs.exonym.compare(rhs.exonym, locale: currentLocale) == .orderedAscending
         }
     }
-    
+
     public static func getLanguageTermsFrom(localeIdentifier: String) -> (exonym: String, endonym: String)? {
         switch localeIdentifier {
         case "en": return (exonym: localize(.settings_language_en), endonym: localize(.settings_language_en, localeConfiguration: LocaleConfiguration.custom(localeIdentifier: localeIdentifier)))
@@ -52,13 +52,13 @@ public struct SelectableLanguage: Equatable {
     public var isoCode: String
     public var exonym: String
     public var endonym: String
-    
+
     public init(isoCode: String, exonym: String, endonym: String) {
         self.isoCode = isoCode
         self.exonym = exonym
         self.endonym = endonym
     }
-    
+
     public static func == (firstLanguage: Self, secondLanguage: Self) -> Bool {
         firstLanguage.isoCode == secondLanguage.isoCode
     }

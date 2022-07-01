@@ -10,17 +10,17 @@ import XCTest
 
 class QRCodeScannerTests: XCTestCase {
     private var cancellables = [AnyCancellable]()
-    
+
     struct Instance: TestProp {
         struct Configuration: TestPropConfiguration {
             var cameraManager = MockCameraManager()
             var notificationCenter = NotificationCenter()
-            
+
         }
-        
+
         var scanner: QRCodeScanner
         var cameraStateController: CameraStateController
-        
+
         init(configuration: Configuration) {
             cameraStateController = CameraStateController(
                 manager: configuration.cameraManager,
@@ -32,26 +32,26 @@ class QRCodeScannerTests: XCTestCase {
             )
         }
     }
-    
+
     @Propped
     private var instance: Instance
-    
+
     private var scanner: QRCodeScanner {
         instance.scanner
     }
-    
+
     private var cameraManager: MockCameraManager {
         $instance.cameraManager
     }
-    
+
     private var cameraStateController: CameraStateController {
         instance.cameraStateController
     }
-    
+
     func testInitialState() {
         XCTAssertEqual(QRCodeScannerState.starting, scanner.state)
     }
-    
+
     func testStates() throws {
 //        cameraManager.instanceAuthorizationStatus = .authorized
 //        scanner.startScanner(targetView: UIView(), scanViewBounds: CGRect(), resultHandler: {_ in })

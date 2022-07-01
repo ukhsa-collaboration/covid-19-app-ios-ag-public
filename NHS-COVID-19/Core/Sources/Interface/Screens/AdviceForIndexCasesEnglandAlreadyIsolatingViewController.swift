@@ -15,9 +15,9 @@ public protocol AdviceForIndexCasesEnglandAlreadyIsolatingViewControllerInteract
 extension AdviceForIndexCasesEnglandAlreadyIsolatingViewController {
     private struct Content {
         let views: [StackViewContentProvider]
-        
+
         init(interactor: Interacting) {
-            
+
             views = [
                 UIImageView(.isolationStartIndex)
                     .styleAsDecoration(),
@@ -25,12 +25,12 @@ extension AdviceForIndexCasesEnglandAlreadyIsolatingViewController {
                     .styleAsPageHeader()
                     .centralized()
                     .set(text: localize(.index_case_already_isolating_advice_heading_title)),
-                
+
                 InformationBox.indication.warning(localize(.index_case_already_isolating_advice_information_box_description)),
                 BaseLabel()
                     .styleAsBody()
                     .set(text: localize(.index_case_already_isolating_advice_body)),
-                
+
                 LinkButton(
                     title: localize(.index_case_already_isolating_advice_common_question_link_button),
                     action: interactor.didTapCommonQuestions
@@ -55,13 +55,13 @@ extension AdviceForIndexCasesEnglandAlreadyIsolatingViewController {
 public class AdviceForIndexCasesEnglandAlreadyIsolatingViewController: ScrollingContentViewController {
     public typealias Interacting = AdviceForIndexCasesEnglandAlreadyIsolatingViewControllerInteracting
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting) {
         self.interactor = interactor
         super.init(views: Content(interactor: interactor).views)
-        
+
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

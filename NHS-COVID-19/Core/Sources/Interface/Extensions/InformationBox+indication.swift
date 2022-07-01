@@ -12,7 +12,7 @@ extension InformationBox {
             backgroundColor: UIColor(.surface)
         )
     }
-    
+
     public static var indication: (
         goodNews: (String) -> InformationBox,
         badNews: (String) -> InformationBox,

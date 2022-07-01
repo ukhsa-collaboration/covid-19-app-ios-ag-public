@@ -31,7 +31,7 @@ protocol NonNegativeTestResultWithIsolationScreenScenario: NonNegativeTestResult
 }
 
 extension NonNegativeTestResultWithIsolationScreenScenario {
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent, buttonAlertText: primaryButtonTapped, cancelTappedAlertText: nil, onlineServicesTappedText: Self.onlineServicesLinkTapped, exposureFAQTappedText: Self.exposureFAQLinkTapped, nhsGuidanceTappedText: Self.nhsGuidanceLinkTapped)
@@ -66,24 +66,24 @@ private class Interactor: NonNegativeTestResultWithIsolationViewController.Inter
     var didTapNHSGuidanceLink: () -> Void
     var didTapPrimaryButton: () -> Void
     var didTapCancel: (() -> Void)?
-    
+
     init(viewController: UIViewController, buttonAlertText: String, cancelTappedAlertText: String?, onlineServicesTappedText: String, exposureFAQTappedText: String, nhsGuidanceTappedText: String) {
         didTapOnlineServicesLink = { [weak viewController] in
             viewController?.showAlert(title: onlineServicesTappedText)
         }
-        
+
         didTapExposureFAQLink = { [weak viewController] in
             viewController?.showAlert(title: exposureFAQTappedText)
         }
-        
+
         didTapNHSGuidanceLink = { [weak viewController] in
             viewController?.showAlert(title: nhsGuidanceTappedText)
         }
-        
+
         didTapPrimaryButton = { [weak viewController] in
             viewController?.showAlert(title: buttonAlertText)
         }
-        
+
         didTapCancel = cancelTappedAlertText.map { cancelTappedAlertText in
             { [weak viewController] in
                 viewController?.showAlert(title: cancelTappedAlertText)

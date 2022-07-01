@@ -7,9 +7,9 @@ import Foundation
 
 struct LocalMessagesHandler: RequestHandler {
     var dataProvider: MockDataProvider
-    
+
     var paths: [String] = ["/distribution/local-messages"]
-    
+
     var response: Result<HTTPResponse, HTTPRequestError> {
         Self.response(
             for: dataProvider.vocLocalAuthorities.commaSeparatedComponents,
@@ -19,7 +19,7 @@ struct LocalMessagesHandler: RequestHandler {
             notificationBody: dataProvider.vocMessageNotificationBody
         )
     }
-    
+
     static func response(for localAuthorities: Set<String>,
                          messageId: String,
                          contentVersion: Int,
@@ -30,9 +30,9 @@ struct LocalMessagesHandler: RequestHandler {
                 "\"\($0)\": [\"\(messageId)\"]"
             }.joined(separator: ", ")
             + "}"
-        
+
         let dateString = ISO8601DateFormatter.string(from: Date(), timeZone: .current, formatOptions: [.withInternetDateTime])
-        
+
         return Result.success(HTTPResponse.ok(with: .json(#"""
         {
             "las" : \#(localAuthorityMappings),
@@ -63,7 +63,7 @@ struct LocalMessagesHandler: RequestHandler {
 }
 
 private extension String {
-    
+
     var commaSeparatedComponents: Set<String> {
         Set(
             components(separatedBy: ",")
@@ -72,5 +72,5 @@ private extension String {
                 .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
         )
     }
-    
+
 }

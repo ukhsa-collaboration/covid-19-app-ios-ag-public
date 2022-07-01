@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class QRCodeScannerScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<QRCodeScannerScreenScenario>
-    
+
     func testPermissionRequest() throws {
         try runner.run { app in
             let screen = QRCodeScannerScreen(app: app)
@@ -18,7 +18,7 @@ class QRCodeScannerScreenTests: XCTestCase {
             XCTAssert(screen.descriptionLabel.exists)
         }
     }
-    
+
     func testShowVenueCheckInInformation() throws {
         try runner.run { app in
             let screen = QRCodeScannerScreen(app: app)

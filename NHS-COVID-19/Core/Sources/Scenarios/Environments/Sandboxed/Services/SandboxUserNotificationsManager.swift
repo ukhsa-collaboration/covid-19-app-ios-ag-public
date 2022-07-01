@@ -10,21 +10,21 @@ import UserNotifications
 
 class SandboxUserNotificationsManager: UserNotificationManaging {
     typealias AlertText = Sandbox.Text.UserNotification
-    
+
     private let host: SandboxHost
     var authorizationStatus: AuthorizationStatus
-    
+
     init(host: SandboxHost) {
         self.host = host
-        
+
         if let allowed = host.initialState.userNotificationsAuthorized {
             authorizationStatus = allowed ? .authorized : .denied
         } else {
             authorizationStatus = .notDetermined
         }
-        
+
     }
-    
+
     func requestAuthorization(options: AuthorizationOptions, completionHandler: @escaping (Bool, Error?) -> Void) {
         let alert = UIAlertController(
             title: AlertText.authorizationAlertTitle.rawValue,
@@ -39,14 +39,14 @@ class SandboxUserNotificationsManager: UserNotificationManaging {
         }))
         host.container?.show(alert, sender: nil)
     }
-    
+
     func getAuthorizationStatus(completionHandler: @escaping AuthorizationStatusHandler) {
         completionHandler(authorizationStatus)
     }
-    
+
     func add(type: UserNotificationType, at: DateComponents?, withCompletionHandler completionHandler: ((Error?) -> Void)?) {}
-    
+
     func removePending(type: UserNotificationType) {}
-    
+
     func removeAllDelivered(for type: UserNotificationType) {}
 }

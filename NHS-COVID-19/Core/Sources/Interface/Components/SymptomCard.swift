@@ -8,11 +8,11 @@ import SwiftUI
 
 public struct SymptomCard: View {
     @ObservedObject private var viewModel: SymptomInfo
-    
+
     public init(viewModel: SymptomInfo) {
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
         Button(action: {
             withAnimation {

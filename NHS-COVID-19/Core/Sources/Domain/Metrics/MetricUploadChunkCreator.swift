@@ -11,7 +11,7 @@ struct MetricUploadChunkCreator {
         [
             .init(0, 24),
         ]
-    
+
     private let collector: MetricCollector
     private let appInfo: AppInfo
     private let getPostcode: () -> String?
@@ -19,7 +19,7 @@ struct MetricUploadChunkCreator {
     private let getCountry: () -> Country
     private let currentDateProvider: DateProviding
     private let isFeatureEnabled: (Feature) -> Bool
-    
+
     init(collector: MetricCollector,
          appInfo: AppInfo,
          getPostcode: @escaping () -> String?,
@@ -35,26 +35,26 @@ struct MetricUploadChunkCreator {
         self.currentDateProvider = currentDateProvider
         self.isFeatureEnabled = isFeatureEnabled
     }
-    
+
     func consumeMetricsInfoForNextWindow() -> MetricsInfo? {
         guard let earliestEntryDate = collector.earliestEntryDate() else { return nil }
-        
+
         let earliestBeginDateUTC = UTCHour(containing: earliestEntryDate)
         let uploadWindow = calculateUploadWindow(from: earliestBeginDateUTC)
-        
+
         let uploadInterval = uploadWindow.interval(on: earliestBeginDateUTC.day)
-        
+
         if uploadInterval.end > currentDateProvider.currentDate { return nil }
-        
+
         let recordedMetrics = collector.consumeMetrics(for: uploadInterval)
-        
+
         var metricsToBeStripped = Feature.allCases.filter { !isFeatureEnabled($0) }
             .filter { $0.countriesOfRelevance.contains(self.getCountry()) }
             .map { $0.associatedMetrics }
             .reduce([], +)
-            
+
         metricsToBeStripped.append(contentsOf: Metric.nonFeatureRelatedMetricsToBeStripped)
-        
+
         let info = MetricsInfo(
             payload: .triggeredPayload(createTriggeredPayload(dateInterval: uploadInterval)),
             postalDistrict: getPostcode() ?? "",
@@ -62,10 +62,10 @@ struct MetricUploadChunkCreator {
             recordedMetrics: recordedMetrics,
             excludedMetrics: metricsToBeStripped
         )
-        
+
         return info
     }
-    
+
     func createTriggeredPayload(dateInterval: DateInterval) -> TriggeredPayload {
         TriggeredPayload(
             startDate: dateInterval.start,
@@ -76,7 +76,7 @@ struct MetricUploadChunkCreator {
             includesMultipleApplicationVersions: false
         )
     }
-    
+
     private func calculateUploadWindow(from date: UTCHour) -> UploadWindow {
         for uploadWindow in Self.uploadWindows {
             if uploadWindow.range.contains(date.hour) {
@@ -85,25 +85,25 @@ struct MetricUploadChunkCreator {
         }
         return Self.uploadWindows.first!
     }
-    
+
 }
 
 private struct UploadWindow {
     var startHour: Int
     var endHour: Int
-    
+
     var range: Range<Int> {
         (startHour ..< endHour)
     }
-    
+
     init(_ startHour: Int, _ endHour: Int) {
         self.startHour = startHour
         self.endHour = endHour
     }
-    
+
     func interval(on day: GregorianDay) -> DateInterval {
         let startDate = UTCHour(day: day, hour: startHour, minutes: 0).date
-        
+
         let endDate: Date
         if endHour == 24 {
             let nextDay = day.advanced(by: 1)
@@ -111,16 +111,16 @@ private struct UploadWindow {
         } else {
             endDate = UTCHour(day: day, hour: endHour, minutes: 0).date
         }
-        
+
         return DateInterval(start: startDate, end: endDate)
     }
 }
 
 private extension MetricCollector {
-    
+
     func consumeMetrics(for interval: DateInterval) -> [Metric: Int] {
         defer { consumeMetrics(notAfter: interval.end) }
         return recordedMetrics(in: interval)
     }
-    
+
 }

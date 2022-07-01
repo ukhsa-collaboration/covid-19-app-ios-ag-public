@@ -11,7 +11,7 @@ import Interface
 enum BookATestFlowState {
     case bookATest(BookATestInfoViewController.Interacting)
     case testOrdering(VirologyTestingFlowViewController.Interacting)
-    
+
     static func makeState(context: RunningAppContext) -> AnyPublisher<BookATestFlowState, Never> {
         let testOrdering = CurrentValueSubject<Bool, Never>(false)
         return testOrdering

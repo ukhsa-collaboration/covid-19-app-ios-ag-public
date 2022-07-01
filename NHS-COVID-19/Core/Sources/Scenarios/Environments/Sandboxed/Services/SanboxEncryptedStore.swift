@@ -7,13 +7,13 @@ import Domain
 import Foundation
 
 class SandboxEncryptedStore: EncryptedStoring {
-    
+
     fileprivate var stored = [String: Data]()
     private let host: SandboxHost
-    
+
     init(host: SandboxHost) {
         self.host = host
-        
+
         if let postcode = host.initialState.postcode,
             let localAuthorityId = host.initialState.localAuthorityId {
             stored["postcode"] = """
@@ -27,9 +27,9 @@ class SandboxEncryptedStore: EncryptedStoring {
             { "postcode": "\(postcode)" }
             """.data(using: .utf8)!
         }
-        
+
         let endDate = host.initialState.testResultEndDateString ?? "610531200"
-        
+
         if let testResult = host.initialState.testResult {
             if testResult == "positive" {
                 stored["virology_testing"] = #"""
@@ -58,23 +58,23 @@ class SandboxEncryptedStore: EncryptedStoring {
                 """# .data(using: .utf8)
             }
         }
-        
+
         stored["policy_version"] = """
         { "lastAcceptedWithAppVersion": "\(host.initialState.lastAcceptedWithAppVersion)" }
         """.data(using: .utf8)!
-        
+
         saveIsolationState()
         saveIsolationPaymentState()
-        
+
         if host.initialState.riskyVenueMessageType != nil {
             saveRiskyVenue()
         }
-        
+
         if host.initialState.hasCheckIns {
             saveCheckIns()
         }
     }
-    
+
     func saveIsolationState() {
         guard let isolationCase = Sandbox.Text.IsolationCase(rawValue: host.initialState.isolationCase) else { return }
         switch isolationCase {
@@ -165,7 +165,7 @@ class SandboxEncryptedStore: EncryptedStoring {
             """# .data(using: .utf8)!
         case .indexAndContact:
             let startOfIsolationday = GregorianDay.today.advanced(by: -Sandbox.Config.Isolation.daysSinceReceivingExposureNotification)
-            
+
             stored["isolation_state_info"] = #"""
             {
                 "configuration" : {
@@ -202,7 +202,7 @@ class SandboxEncryptedStore: EncryptedStoring {
             """# .data(using: .utf8)!
         }
     }
-    
+
     func saveIsolationPaymentState() {
         guard let isolationPaymentState = Sandbox.Text.IsolationPaymentState(rawValue: host.initialState.isolationPaymentState) else { return }
         switch isolationPaymentState {
@@ -216,12 +216,12 @@ class SandboxEncryptedStore: EncryptedStoring {
             """# .data(using: .utf8)!
         }
     }
-    
+
     func saveRiskyVenue() {
         guard let messageType = host.initialState.riskyVenueMessageType else {
             return
         }
-        
+
         let checkInDay = GregorianDay.today
         let venueId = UUID().uuidString
         stored["checkins"] = #"""
@@ -259,10 +259,10 @@ class SandboxEncryptedStore: EncryptedStoring {
         }
         """# .data(using: .utf8)!
     }
-    
+
     func saveCheckIns() {
         let checkInDay = GregorianDay.today
-        
+
         stored["checkins"] = #"""
         {
             "checkIns": [
@@ -298,18 +298,18 @@ class SandboxEncryptedStore: EncryptedStoring {
         }
         """# .data(using: .utf8)!
     }
-    
+
     func dataEncryptor(_ name: String) -> DataEncrypting {
         SandboxEncryptor(store: self, name: name)
     }
-    
+
 }
 
 private struct SandboxEncryptor: DataEncrypting {
-    
+
     var store: SandboxEncryptedStore
     var name: String
-    
+
     var wrappedValue: Data? {
         get {
             store.stored[name]
@@ -318,9 +318,9 @@ private struct SandboxEncryptor: DataEncrypting {
             store.stored[name] = newValue
         }
     }
-    
+
     var hasValue: Bool {
         wrappedValue != nil
     }
-    
+
 }

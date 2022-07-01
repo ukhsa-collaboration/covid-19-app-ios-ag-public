@@ -19,11 +19,11 @@ public enum ColorName: String, CaseIterable, Identifiable {
     case scanBlue = "Scan Blue"
     case amber = "Amber"
     case primaryButtonLabel = "Primary Button Label"
-    
+
     case lightSurface = "Light Surface"
     case sectionHeaderText = "Section Header Text"
     case navigationBar = "Navigation Bar"
-    
+
     case styleTurquoise = "Style/Turquoise"
     case styleGreen = "Style/Green"
     case styleGold = "Style/Gold"
@@ -33,7 +33,7 @@ public enum ColorName: String, CaseIterable, Identifiable {
     case styleRed = "Style/Red"
     case styleBlue = "Style/Blue"
     case styleYellow = "Style/Yellow"
-    
+
     case riskLevelBackgroundNeutral = "RiskLevel/Background/Neutral"
     case riskLevelBackgroundGreen = "RiskLevel/Background/Green"
     case riskLevelBackgroundYellow = "RiskLevel/Background/Yellow"
@@ -49,13 +49,13 @@ public enum ColorName: String, CaseIterable, Identifiable {
     case riskLevelIconBlack = "RiskLevel/Icon/Black"
     case riskLevelBorderNeutral = "RiskLevel/Border/Neutral"
     case riskLevelBorderBlack = "RiskLevel/Border/Black"
-    
+
     case borderColor = "Border color"
     case bookFreeTest = "Book Free Test"
     case contactTracingHubButton = "Contact Tracing Hub Button"
-    
+
     case accessibleButtonOutline = "Accessible Button Outline"
-    
+
     public var id: ColorName {
         self
     }
@@ -63,20 +63,20 @@ public enum ColorName: String, CaseIterable, Identifiable {
 
 extension Color {
     public static var bundle: Bundle = Bundle.main
-    
+
     public init(_ name: ColorName) {
         self.init(name.rawValue, bundle: Color.bundle)
     }
-    
+
 }
 
 extension UIColor {
     public static var bundle: Bundle = Bundle.main
-    
+
     public convenience init(_ name: ColorName) {
         self.init(named: name.rawValue, in: UIColor.bundle, compatibleWith: .current)!
     }
-    
+
     static func hasColor(for name: ColorName) -> Bool {
         Self(named: name.rawValue, in: UIColor.bundle, compatibleWith: .current) != nil
     }

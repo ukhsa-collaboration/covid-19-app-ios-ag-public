@@ -7,11 +7,11 @@ import Common
 import Foundation
 
 enum LogicalState: Equatable {
-    
+
     enum ExposureDetectionDisabledReason {
         case authorizationDenied
     }
-    
+
     case starting
     case appUnavailable(AppAvailabilityLogicalState.UnavailabilityReason, descriptions: LocaleString)
     case recommendingUpdate(AppAvailabilityLogicalState.RecommendationReason, titles: LocaleString, descriptions: LocaleString)
@@ -79,64 +79,64 @@ public typealias GetLocalAuthorities = (_ postcode: Postcode) -> Result<Set<Loca
 public typealias StoreLocalAuthorities = (_ postcode: Postcode, _ localAuthority: LocalAuthority) -> Result<Void, LocalAuthorityUnsupportedCountryError>
 
 public enum ApplicationState {
-    
+
     public enum AppUnavailabilityReason {
         /// OS version is too old for this app
         case iOSTooOld(descriptions: LocaleString)
-        
+
         /// App version is too old
         case appTooOld(updateAvailable: Bool, descriptions: LocaleString)
     }
-    
+
     public enum RecommendedUpdateReason {
         /// Recommended App update is availbale
         case newRecommendedAppUpdate(title: LocaleString, descriptions: LocaleString, dismissAction: () -> Void)
-        
+
         /// Recommended iOS update is available
         case newRecommendedOSupdate(title: LocaleString, descriptions: LocaleString, dismissAction: () -> Void)
     }
-    
+
     public enum ExposureDetectionDisabledReason {
         /// Authorization is denied by the user.
         case authorizationDenied(openSettings: () -> Void)
     }
-    
+
     /// Application is starting. This should normally be very quick.
     case starting
-    
+
     /// Application is disabled.
     case appUnavailable(AppUnavailabilityReason)
-    
+
     /// RecommendedUpdate
     case recommendedUpdate(RecommendedUpdateReason)
-    
+
     /// Application can’t finish starting. There’s no standard way for the user to recover from this.
     ///
     /// This can happen, for example, if certain authorization is restricted, or if another app is using ExposureNotification API.
     case failedToStart(openURL: (URL) -> Void)
-    
+
     /// Application needs to show onboarding.
     case onboarding(
         complete: () -> Void,
         openURL: (URL) -> Void,
         isFeatureEnabled: (Feature) -> Bool
     )
-    
+
     /// Application requires onboarding.
     case authorizationRequired(requestPermissions: () -> Void, country: DomainProperty<Country>)
-    
+
     /// Application is set up, but can not run exposure detection. See `reason`.
     ///
     /// The user can help the app recover from this.
     case canNotRunExposureNotification(reason: ExposureDetectionDisabledReason, country: Country)
-    
+
     /// Application requires postcode and local authority
     case postcodeAndLocalAuthorityRequired(
         openURL: (URL) -> Void,
         getLocalAuthorities: GetLocalAuthorities,
         storeLocalAuthority: StoreLocalAuthorities
     )
-    
+
     /// Application already has a postcode and requires a local Authority
     case localAuthorityRequired(
         postcode: Postcode,
@@ -144,10 +144,10 @@ public enum ApplicationState {
         openURL: (URL) -> Void,
         storeLocalAuthority: StoreLocalAuthorities
     )
-    
+
     /// Application requires user acknowledge/acceptance of new policies
     case policyAcceptanceRequired(saveCurrentVersion: () -> Void, openURL: (URL) -> Void)
-    
+
     /// Application is properly set up and is running exposure detection
     case runningExposureNotification(RunningAppContext)
 }

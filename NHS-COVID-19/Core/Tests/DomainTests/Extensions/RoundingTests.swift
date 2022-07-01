@@ -14,7 +14,7 @@ class RoundingTests: XCTestCase {
         XCTAssertEqual(0, 1.rounded(.down, toNearest: 2))
         XCTAssertTrue(18.rounded(.down, toNearest: 0).isNaN)
     }
-    
+
     func testRoundingUp() {
         XCTAssertEqual(8, 7.rounded(.up, toNearest: 2))
         XCTAssertEqual(-3, (-3.2).rounded(.up, toNearest: 1))
@@ -23,7 +23,7 @@ class RoundingTests: XCTestCase {
         XCTAssertEqual(2, 1.rounded(.up, toNearest: 2))
         XCTAssertTrue(18.rounded(.up, toNearest: 0).isNaN)
     }
-    
+
     func testRoundingToNearestOrAwayFromZero() {
         XCTAssertEqual(8, 7.rounded(.toNearestOrAwayFromZero, toNearest: 2))
         XCTAssertEqual(-3, (-3.2).rounded(.toNearestOrAwayFromZero, toNearest: 1))

@@ -8,9 +8,9 @@ import Foundation
 import UserNotifications
 
 struct RiskyCheckInsChangeNotifier {
-    
+
     var notificationManager: UserNotificationManaging
-    
+
     func alertUserToChanges<P: Publisher>(in risk: P) -> AnyCancellable where P.Output == RiskyVenue.MessageType?, P.Failure == Never {
         risk.removeDuplicates()
             .dropFirst()
@@ -28,5 +28,5 @@ struct RiskyCheckInsChangeNotifier {
                 }
             }
     }
-    
+
 }

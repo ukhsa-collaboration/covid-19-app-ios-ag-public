@@ -11,7 +11,7 @@ class DiagnosisKeyCacheHousekeeper {
     private let fileStorage: FileStoring
     private let nextIncrementIdentifiers: () -> [String]
     private let currentDateProvider: DateProviding
-    
+
     init(
         fileStorage: FileStoring,
         exposureDetectionStore: ExposureDetectionStore,
@@ -32,14 +32,14 @@ class DiagnosisKeyCacheHousekeeper {
         }
         self.currentDateProvider = currentDateProvider
     }
-    
+
     func deleteFilesOlderThanADay() -> AnyPublisher<Void, Never> {
         Future<Void, Never> { [weak self] promise in
             guard let self = self else {
                 promise(.success(()))
                 return
             }
-            
+
             let allFiles = self.fileStorage.allFileNames()
             let validUntil = self.currentDateProvider.currentDate.advanced(by: -Self.twentyFourHours)
             allFiles?.forEach { fileName in
@@ -54,18 +54,18 @@ class DiagnosisKeyCacheHousekeeper {
                 }
             }
             promise(.success(()))
-            
+
         }
         .eraseToAnyPublisher()
     }
-    
+
     func deleteNotNeededFiles() -> AnyPublisher<Void, Never> {
         Future<Void, Never> { [weak self] promise in
             guard let self = self else {
                 promise(.success(()))
                 return
             }
-            
+
             let nextIncrementIdentifiers = self.nextIncrementIdentifiers()
             let allFiles = self.fileStorage.allFileNames()
             allFiles?.forEach { fileName in

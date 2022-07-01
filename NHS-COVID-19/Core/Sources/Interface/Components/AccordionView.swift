@@ -9,15 +9,15 @@ import UIKit
 // MARK: - Accordion Group
 
 public struct AccordionGroup<Content>: View where Content: View {
-    
+
     private let title: String
     private let content: () -> Content
-    
+
     public init(_ title: String, @ViewBuilder content: @escaping () -> Content) {
         self.title = title
         self.content = content
     }
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: .standardSpacing) {
             Text(title)
@@ -26,7 +26,7 @@ public struct AccordionGroup<Content>: View where Content: View {
             content()
         }
     }
-    
+
 }
 
 // MARK: - Accordion View
@@ -34,7 +34,7 @@ public struct AccordionGroup<Content>: View where Content: View {
 public enum AccordionViewDisplayMode {
     case singleWithChevron
     case multipleWithPlusMinus
-    
+
     var expandedImageName: ImageName {
         switch self {
         case .singleWithChevron:
@@ -43,7 +43,7 @@ public enum AccordionViewDisplayMode {
             return .accordionMinusIcon
         }
     }
-    
+
     var collapsedImageName: ImageName {
         switch self {
         case .singleWithChevron:
@@ -60,11 +60,11 @@ public struct AccordionView<Content>: View where Content: View {
     private let displayMode: AccordionViewDisplayMode
     @State private var isExpanded: Bool = false
     private var onSizeChanged: ((CGSize) -> Void)?
-    
+
     public mutating func onSizeChanged(_ perform: @escaping (CGSize) -> Void) {
         onSizeChanged = perform
     }
-    
+
     public init(_ text: String,
                 displayMode: AccordionViewDisplayMode = .multipleWithPlusMinus,
                 @ViewBuilder content: @escaping () -> Content) {
@@ -72,7 +72,7 @@ public struct AccordionView<Content>: View where Content: View {
         self.displayMode = displayMode
         self.content = content
     }
-    
+
     public var body: some View {
         VStack(alignment: .leading) {
             Button(
@@ -112,7 +112,7 @@ public struct AccordionView<Content>: View where Content: View {
                         : localize(.accordion_collapsed_accessibility_hint)
                 )
             )
-            
+
             if isExpanded {
                 Spacer(minLength: .standardSpacing)
                     .fixedSize()
@@ -124,7 +124,7 @@ public struct AccordionView<Content>: View where Content: View {
         }
         .onSizeChanged { onSizeChanged?($0) }
     }
-    
+
 }
 
 // MARK: - Private extensions

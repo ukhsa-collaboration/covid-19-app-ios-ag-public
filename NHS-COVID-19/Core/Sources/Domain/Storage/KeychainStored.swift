@@ -13,7 +13,7 @@ extension DataConvertible where Self: Codable {
     var data: Data {
         try! JSONEncoder().encode(self)
     }
-    
+
     init(data: Data) throws {
         self = try JSONDecoder().decode(Self.self, from: data)
     }
@@ -23,7 +23,7 @@ extension Data: DataConvertible {
     var data: Data {
         self
     }
-    
+
     init(data: Data) throws {
         self = data
     }
@@ -47,21 +47,21 @@ extension KeychainStored {
 struct KeychainStored<Wrapped: DataConvertible> {
     private var keychain: Keychain
     private var key: String
-    
+
     init(keychain: Keychain, key: String) {
         self.keychain = keychain
         self.key = key
     }
-    
+
     var projectedValue: KeychainStored {
         self
     }
-    
+
     var wrappedValue: Wrapped? {
         get {
             get()
         }
-        
+
         nonmutating set {
             if let value = newValue {
                 set(value)
@@ -70,7 +70,7 @@ struct KeychainStored<Wrapped: DataConvertible> {
             }
         }
     }
-    
+
     var hasValue: Bool {
         do {
             _ = try keychain.get([
@@ -83,7 +83,7 @@ struct KeychainStored<Wrapped: DataConvertible> {
             return false
         }
     }
-    
+
     private func set(_ value: Wrapped) {
         do {
             try keychain.add([
@@ -104,17 +104,17 @@ struct KeychainStored<Wrapped: DataConvertible> {
             }
         }
     }
-    
+
     private func get() -> Wrapped? {
         let data = try? keychain.get([
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,
             kSecReturnData as String: true,
         ], as: Data.self)
-        
+
         return data.flatMap { try? Wrapped(data: $0) }
     }
-    
+
     private func delete() {
         try? keychain.delete([
             kSecClass as String: kSecClassGenericPassword,

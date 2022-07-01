@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class PolicyUpdateScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<PolicyUpdateScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = PolicyUpdateScreen(app: app)
@@ -19,7 +19,7 @@ class PolicyUpdateScreenTests: XCTestCase {
             XCTAssertTrue(screen.button.exists)
         }
     }
-    
+
     func testTermsOfUse() throws {
         try runner.run { app in
             let screen = PolicyUpdateScreen(app: app)
@@ -27,7 +27,7 @@ class PolicyUpdateScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.termsOfUseTapped].exists)
         }
     }
-    
+
     func testContinue() throws {
         try runner.run { app in
             let screen = PolicyUpdateScreen(app: app)

@@ -6,32 +6,32 @@ import Common
 import Foundation
 
 struct RiskyPostcodesEndpointV2: HTTPEndpoint {
-    
+
     func request(for input: Void) throws -> HTTPRequest {
         .get("/distribution/risky-post-districts-v2")
     }
-    
+
     func parse(_ response: HTTPResponse) throws -> RiskyPostcodes {
         return try JSONDecoder().decode(RiskyPostcodes.self, from: response.body.content)
     }
-    
+
 }
 
 public struct RiskyPostcodes: Decodable {
     var postDistricts: PostDistricts
     var localAuthorities: LocalAuthorities?
     var riskLevels: RiskLevels
-    
+
     func riskStyle(for postcode: Postcode) -> (id: String, style: RiskStyle)? {
         guard let riskIndicator = postDistricts[postcode] else { return nil }
         return riskLevels[riskIndicator].map { (riskIndicator.value, $0) }
     }
-    
+
     func riskStyle(for localAuthority: LocalAuthorityId) -> (id: String, style: RiskStyle)? {
         guard let riskIndicator = localAuthorities?[localAuthority] else { return nil }
         return riskLevels[riskIndicator].map { (riskIndicator.value, $0) }
     }
-    
+
     var isEmpty: Bool {
         return postDistricts.isEmpty && riskLevels.isEmpty
     }
@@ -40,31 +40,31 @@ public struct RiskyPostcodes: Decodable {
 extension RiskyPostcodes {
     public struct PostDistricts: ExpressibleByDictionaryLiteral {
         private var values: [Postcode: RiskIndicator]
-        
+
         public init(dictionaryLiteral elements: (Postcode, RiskyPostcodes.RiskIndicator)...) {
             values = Dictionary(elements, uniquingKeysWith: { $1 })
         }
-        
+
         subscript(_ postcode: Postcode) -> RiskIndicator? {
             values[postcode]
         }
-        
+
         var isEmpty: Bool {
             values.isEmpty
         }
     }
-    
+
     public struct LocalAuthorities: ExpressibleByDictionaryLiteral {
         private var values: [LocalAuthorityId: RiskIndicator]
-        
+
         public init(dictionaryLiteral elements: (LocalAuthorityId, RiskyPostcodes.RiskIndicator)...) {
             values = Dictionary(elements, uniquingKeysWith: { $1 })
         }
-        
+
         subscript(_ localAuthority: LocalAuthorityId) -> RiskIndicator? {
             values[localAuthority]
         }
-        
+
         var isEmpty: Bool {
             values.isEmpty
         }
@@ -96,15 +96,15 @@ extension RiskyPostcodes.LocalAuthorities: Decodable {
 extension RiskyPostcodes {
     struct RiskLevels: ExpressibleByDictionaryLiteral {
         private var values: [RiskIndicator: RiskStyle]
-        
+
         public init(dictionaryLiteral elements: (RiskIndicator, RiskStyle)...) {
             values = Dictionary(elements, uniquingKeysWith: { $1 })
         }
-        
+
         subscript(_ riskIndicator: RiskIndicator) -> RiskStyle? {
             values[riskIndicator]
         }
-        
+
         var isEmpty: Bool {
             values.isEmpty
         }
@@ -140,7 +140,7 @@ extension RiskyPostcodes {
         public enum ColorScheme: String, Codable {
             case green, amber, yellow, red, neutral
         }
-        
+
         public var colorScheme: ColorScheme
         #warning("Make non-optional after the backend is deployed")
         public var colorSchemeV2: String?
@@ -151,7 +151,7 @@ extension RiskyPostcodes {
         public var linkUrl: LocaleString
         public var policyData: PolicyData?
     }
-    
+
     public struct PolicyData: Decodable, Equatable {
         public var localAuthorityRiskTitle: LocaleString
         public var heading: LocaleString
@@ -159,7 +159,7 @@ extension RiskyPostcodes {
         public var footer: LocaleString
         public var policies: [Policy]
     }
-    
+
     public struct Policy: Decodable, Equatable {
         public var policyIcon: String
         public var policyHeading: LocaleString

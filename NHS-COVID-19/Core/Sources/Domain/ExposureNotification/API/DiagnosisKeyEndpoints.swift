@@ -6,7 +6,7 @@ import Common
 import Foundation
 
 struct DiagnosisKeyDailyEndpoint: HTTPEndpoint {
-    
+
     func request(for input: Increment) throws -> HTTPRequest {
         HTTPRequest(
             method: .get,
@@ -14,14 +14,14 @@ struct DiagnosisKeyDailyEndpoint: HTTPEndpoint {
             body: nil
         )
     }
-    
+
     func parse(_ response: HTTPResponse) throws -> Data {
         response.body.content
     }
 }
 
 struct DiagnosisKeyTwoHourlyEndpoint: HTTPEndpoint {
-    
+
     func request(for input: Increment) throws -> HTTPRequest {
         HTTPRequest(
             method: .get,
@@ -29,7 +29,7 @@ struct DiagnosisKeyTwoHourlyEndpoint: HTTPEndpoint {
             body: nil
         )
     }
-    
+
     func parse(_ response: HTTPResponse) throws -> Data {
         response.body.content
     }

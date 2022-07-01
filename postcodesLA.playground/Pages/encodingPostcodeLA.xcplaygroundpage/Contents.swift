@@ -56,13 +56,13 @@ let localAuthorities = arr.map { _, id, name -> (String, LA) in
         default: fatalError()
         }
     }()
-    
+
     let la = LA(name: name, country: country)
     return (id, la)
 }
 
 let postcodes = arr.map { postcodeID, id, _ -> (String, Set<String>) in
-    
+
     (postcodeID, [id])
 }
 

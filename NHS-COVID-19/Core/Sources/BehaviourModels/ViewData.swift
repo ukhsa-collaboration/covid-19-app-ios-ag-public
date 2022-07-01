@@ -12,18 +12,18 @@ public struct StateCollection: Hashable, Identifiable {
         case isolationFinished
         case isolationFinishedAndHasNegativeTest
     }
-    
+
     struct Condition: Hashable {
         var label: String
         var caption: String = ""
         var status: Status
     }
-    
+
     var contact: Condition
     var symptomatic: Condition
     var positiveTest: Condition
     var counter: Int = 1
-    
+
     public var id = UUID()
 }
 
@@ -31,20 +31,20 @@ struct Transition: Hashable, Identifiable {
     var from: StateCollection
     var label: String
     var to: StateCollection
-    
+
     var id = UUID()
 }
 
 extension IsolationRuleSet {
-    
+
     public static var unreachableStateCollections: [StateCollection] {
         unreachableStatePredicates.flatMap { $0.coveredStates(excludeStates: []) }
     }
-    
+
 }
 
 extension IsolationModel.Rule {
-    
+
     func transitions(excludeStates: [IsolationModel.State]) -> [Transition] {
         predicates.flatMap { $0.coveredStates(excludeStates: excludeStates) }.map { initialState in
             Transition(
@@ -54,11 +54,11 @@ extension IsolationModel.Rule {
             )
         }
     }
-    
+
 }
 
 private extension IsolationModel.StatePredicate {
-    
+
     func coveredStates(excludeStates: [IsolationModel.State]) -> [StateCollection] {
         contact.statuses.flatMap { contact in
             symptomatic.statuses.flatMap { symptomatic in
@@ -81,15 +81,15 @@ private extension IsolationModel.StatePredicate {
             }
         }
     }
-    
+
 }
 
 private extension StateCollection.Condition {
-    
+
     init<T>(_ group: StatusGroup<T>) {
         self.init(label: group.label, caption: group.caption, status: group.status)
     }
-    
+
 }
 
 private func hasOneReachableState(
@@ -113,7 +113,7 @@ private func hasOneReachableState(
 }
 
 private extension IsolationModel.StateMutations {
-    
+
     func update(_ stateCollection: StateCollection) -> StateCollection {
         mutating(stateCollection) {
             $0.counter = 1
@@ -134,19 +134,19 @@ private extension IsolationModel.StateMutations {
             }
         }
     }
-    
+
 }
 
 private protocol StateCollectionCollectionConvertible: CaseIterable {
-    
+
     static var defaultLabel: String { get }
-    
+
     var label: String { get }
-    
+
     var caption: String { get }
-    
+
     var status: StateCollection.Status { get }
-    
+
 }
 
 extension StateCollectionCollectionConvertible {
@@ -165,7 +165,7 @@ private struct StatusGroup<Value> {
 }
 
 private extension Set where Element: StateCollectionCollectionConvertible {
-    
+
     var statuses: [StatusGroup<Element>] {
         if self == Set(Element.allCases) {
             return [StatusGroup(label: Element.defaultLabel, caption: "", values: Array(Element.allCases), status: .any)]
@@ -176,13 +176,13 @@ private extension Set where Element: StateCollectionCollectionConvertible {
                 .map { StatusGroup(label: $0.label, caption: $0.caption, values: [$0], status: $0.status) }
         }
     }
-    
+
 }
 
 extension IsolationModel.ContactCaseState: StateCollectionCollectionConvertible {
-    
+
     static var defaultLabel: String { "C" }
-    
+
     var caption: String {
         switch self {
         case .notIsolatingAndHadRiskyContactIsolationTerminatedEarly:
@@ -191,7 +191,7 @@ extension IsolationModel.ContactCaseState: StateCollectionCollectionConvertible 
             return ""
         }
     }
-    
+
     fileprivate var status: StateCollection.Status {
         switch self {
         case .noIsolation:
@@ -204,13 +204,13 @@ extension IsolationModel.ContactCaseState: StateCollectionCollectionConvertible 
             return .isolationFinishedAndHasNegativeTest
         }
     }
-    
+
 }
 
 extension IsolationModel.SymptomaticCaseState: StateCollectionCollectionConvertible {
-    
+
     static var defaultLabel: String { "S" }
-    
+
     fileprivate var status: StateCollection.Status {
         switch self {
         case .noIsolation:
@@ -221,13 +221,13 @@ extension IsolationModel.SymptomaticCaseState: StateCollectionCollectionConverti
             return .isolationFinished
         }
     }
-    
+
 }
 
 extension IsolationModel.PositiveTestCaseState: StateCollectionCollectionConvertible {
-    
+
     static var defaultLabel: String { "P" }
-    
+
     var label: String {
         switch self {
         case .notIsolatingAndHasNegativeTest:
@@ -236,7 +236,7 @@ extension IsolationModel.PositiveTestCaseState: StateCollectionCollectionConvert
             return Self.defaultLabel
         }
     }
-    
+
     var caption: String {
         switch self {
         case .isolatingWithConfirmedTest, .notIsolatingAndHadConfirmedTestPreviously:
@@ -247,7 +247,7 @@ extension IsolationModel.PositiveTestCaseState: StateCollectionCollectionConvert
             return ""
         }
     }
-    
+
     fileprivate var status: StateCollection.Status {
         switch self {
         case .noIsolation:
@@ -260,5 +260,5 @@ extension IsolationModel.PositiveTestCaseState: StateCollectionCollectionConvert
             return .isolationFinishedAndHasNegativeTest
         }
     }
-    
+
 }

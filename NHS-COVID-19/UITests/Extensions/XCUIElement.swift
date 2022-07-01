@@ -5,20 +5,20 @@
 import XCTest
 
 extension XCUIElement {
-    
+
     var hasKeyboardFocus: Bool {
         value(forKey: "hasKeyboardFocus") as! Bool
     }
-    
+
     var loosingFocus: XCTestExpectation {
         let lostFocus = NSPredicate(format: "hasKeyboardFocus == false")
         return XCTNSPredicateExpectation(predicate: lostFocus, object: self)
     }
-    
+
     var stringValue: String {
         (value as? String) ?? ""
     }
-    
+
     func waitForDisappearance(timeout: TimeInterval = 0.5, file: StaticString = #file, line: UInt = #line) {
         let deadline = CACurrentMediaTime() + timeout
         while CACurrentMediaTime() < deadline, exists {
@@ -29,18 +29,18 @@ extension XCUIElement {
         }
         XCTAssert(!exists, file: file, line: line)
     }
-    
+
     // Note: Exists doesn't guarantee that the element is visible in the viewport.
     var displayed: Bool {
         guard exists, !frame.isEmpty else { return false }
         return exists && XCUIApplication().windows.element(boundBy: 0).frame.contains(frame)
     }
-    
+
     var existsAndNotEmpty: Bool {
         guard exists, !frame.isEmpty else { return false }
         return true
     }
-    
+
     func scrollTo(element: XCUIElement) {
         var counter = 0
         while !element.displayed, counter < 10 {
@@ -49,7 +49,7 @@ extension XCUIElement {
             counter += 1
         }
     }
-    
+
     func scrollToHittable(element: XCUIElement) {
         var counter = 0
         while !element.isHittable, counter < 10 {

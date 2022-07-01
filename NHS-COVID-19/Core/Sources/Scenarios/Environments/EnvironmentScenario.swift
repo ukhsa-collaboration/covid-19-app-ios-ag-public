@@ -14,14 +14,14 @@ protocol EnvironmentScenario: Scenario {
 @available(iOSApplicationExtension, unavailable)
 extension EnvironmentScenario {
     static var kind: ScenarioKind { .environment }
-    
+
     static var description: String? {
         """
         Distribution domain: \(configuration.distributionRemote.host)
         Submission domain: \(configuration.submissionRemote.host)
         """
     }
-    
+
     static var appController: AppController {
         CoordinatedAppController(developmentWith: .standard(with: configuration))
     }

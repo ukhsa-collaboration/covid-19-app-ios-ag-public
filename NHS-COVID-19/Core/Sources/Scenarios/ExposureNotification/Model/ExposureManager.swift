@@ -7,35 +7,35 @@ import ExposureNotification
 import Foundation
 
 class ExposureManager: ObservableObject {
-    
+
     enum AuthorizationState {
         case notDetermined(enable: () -> Void)
         case notAuthorized(isRestricted: Bool)
         case authorized(EnabledExposureManager)
     }
-    
+
     enum ActivationState {
         case activating
         case activated
         case activationFailed(Error)
     }
-    
+
     private let manager = ENManager()
-    
+
     @Published
     private(set) var activationState = ActivationState.activating
-    
+
     @Published
     private(set) var authorizationState = AuthorizationState.notDetermined(enable: {})
-    
+
     @Published
     private(set) var isEnabled = false
-    
+
     init() {
         activate()
         updateAuthorizationState()
     }
-    
+
     private func activate() {
         manager.activate { error in
             if let error = error {
@@ -46,19 +46,19 @@ class ExposureManager: ObservableObject {
             }
         }
     }
-    
+
     private func didActivate() {
         updateAuthorizationState()
         if case .authorized = authorizationState, !isEnabled {
             enable()
         }
     }
-    
+
     private func updateAuthorizationState() {
         authorizationState = determineAuthorizationState()
         isEnabled = manager.exposureNotificationEnabled
     }
-    
+
     private func determineAuthorizationState() -> AuthorizationState {
         switch ENManager.authorizationStatus {
         case .unknown:
@@ -73,21 +73,21 @@ class ExposureManager: ObservableObject {
             fatalError()
         }
     }
-    
+
     private func enable() {
         manager.setExposureNotificationEnabled(true) { _ in
             self.updateAuthorizationState()
         }
     }
-    
+
     deinit {
         manager.invalidate()
     }
-    
+
 }
 
 extension ExposureManager {
-    
+
     private func completeActivation() -> AnyPublisher<Void, Error> {
         $activationState
             .setFailureType(to: Error.self)
@@ -105,12 +105,12 @@ extension ExposureManager {
             .first()
             .eraseToAnyPublisher()
     }
-    
+
     private func completeAuthorization() -> AnyPublisher<EnabledExposureManager, Error> {
         if case .notDetermined(let enable) = authorizationState {
             enable()
         }
-        
+
         return $authorizationState
             .setFailureType(to: Error.self)
             .compactMap { state -> Result<EnabledExposureManager, Error>? in
@@ -127,18 +127,18 @@ extension ExposureManager {
             .first()
             .eraseToAnyPublisher()
     }
-    
+
     private func completeEnabling() -> AnyPublisher<Void, Error> {
         if !isEnabled {
             enable()
         }
-        
+
         return $isEnabled.first { $0 }
             .map { _ in }
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
-    
+
     func enabledManager() -> AnyPublisher<EnabledExposureManager, Error> {
         completeActivation()
             .flatMap { self.completeAuthorization() }
@@ -148,5 +148,5 @@ extension ExposureManager {
             }
             .eraseToAnyPublisher()
     }
-    
+
 }

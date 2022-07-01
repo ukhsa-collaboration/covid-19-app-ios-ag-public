@@ -17,20 +17,20 @@ public protocol HomeAnimationsEnabledProtocol {
 
 class HomeAnimationsStore: HomeAnimationsEnabledProtocol {
     @PublishedEncrypted private var homeAnimationsEnabledInfo: HomeAnimationsEnabledInfo?
-    
+
     private(set) lazy var homeAnimationsEnabled: DomainProperty<Bool> = {
         $homeAnimationsEnabledInfo
             .map { $0?.homeAnimationsEnabled ?? true }
     }()
-    
+
     init(store: EncryptedStoring) {
         _homeAnimationsEnabledInfo = store.encrypted("userSettingsInfo")
     }
-    
+
     func save(enabled: Bool) {
         homeAnimationsEnabledInfo = HomeAnimationsEnabledInfo(homeAnimationsEnabled: enabled)
     }
-    
+
     func delete() {
         homeAnimationsEnabledInfo = nil
     }

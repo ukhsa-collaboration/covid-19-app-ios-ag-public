@@ -5,9 +5,9 @@
 import Combine
 
 extension AnyCancellable {
-    
+
     func store(in collection: inout [AnyCancellable]) {
         collection.append(self)
     }
-    
+
 }

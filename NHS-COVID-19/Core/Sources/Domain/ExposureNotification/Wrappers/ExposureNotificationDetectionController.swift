@@ -8,15 +8,15 @@ import ExposureNotification
 import Logging
 
 public class ExposureNotificationDetectionController {
-    
+
     private static let logger = Logger(label: "ExposureNotification")
-    
+
     private let manager: ExposureNotificationManaging
-    
+
     public init(manager: ExposureNotificationManaging) {
         self.manager = manager
     }
-    
+
     public func detectExposures(
         configuration: ENExposureConfiguration,
         diagnosisKeyURLs: [URL]
@@ -35,7 +35,7 @@ public class ExposureNotificationDetectionController {
             }
         }.eraseToAnyPublisher()
     }
-    
+
     public func getExposureInfo(
         summary: ENExposureDetectionSummary
     ) -> AnyPublisher<[ENExposureInfo], Error> {
@@ -53,7 +53,7 @@ public class ExposureNotificationDetectionController {
             }
         }.eraseToAnyPublisher()
     }
-    
+
     @available(iOS 13.7, *)
     public func getExposureWindows(
         summary: ENExposureDetectionSummary
@@ -72,7 +72,7 @@ public class ExposureNotificationDetectionController {
             }
         }.eraseToAnyPublisher()
     }
-    
+
     public func getDiagnosisKeys() -> AnyPublisher<[ENTemporaryExposureKey], Error> {
         Future { [weak self] promise in
             Self.logger.debug("getting diagnosis keys")

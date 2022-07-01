@@ -8,17 +8,17 @@ import XCTest
 @testable import Domain
 
 class AppStoreVersionLookupEndpointTests: XCTestCase {
-    
+
     private let endpoint = AppStoreVersionLookupEndpoint(bundleId: .random())
-    
+
     func testEncoding() throws {
         let expected = HTTPRequest.get("/lookup", queryParameters: ["bundleId": endpoint.bundleId])
-        
+
         let actual = try endpoint.request(for: ())
-        
+
         TS.assert(actual, equals: expected)
     }
-    
+
     func testDecoding() throws {
         let response = HTTPResponse.ok(with: .json(#"""
         {
@@ -30,12 +30,12 @@ class AppStoreVersionLookupEndpointTests: XCTestCase {
             ]
         }
         """#))
-        
+
         let expected = Version(major: 3, patch: 1)
-        
+
         TS.assert(try endpoint.parse(response), equals: expected)
     }
-    
+
     func testDecodingChoosesTheRightApp() throws {
         let response = HTTPResponse.ok(with: .json(#"""
         {
@@ -55,12 +55,12 @@ class AppStoreVersionLookupEndpointTests: XCTestCase {
             ]
         }
         """#))
-        
+
         let expected = Version(major: 2, patch: 1)
-        
+
         TS.assert(try endpoint.parse(response), equals: expected)
     }
-    
+
     func testDecodingToleratesNonSemanticVersionOnOtherApps() throws {
         let response = HTTPResponse.ok(with: .json(#"""
         {
@@ -76,12 +76,12 @@ class AppStoreVersionLookupEndpointTests: XCTestCase {
             ]
         }
         """#))
-        
+
         let expected = Version(major: 2, patch: 1)
-        
+
         TS.assert(try endpoint.parse(response), equals: expected)
     }
-    
+
     func testDecodingThrowsIfCanNotFindApp() throws {
         let response = HTTPResponse.ok(with: .json(#"""
         {
@@ -97,8 +97,8 @@ class AppStoreVersionLookupEndpointTests: XCTestCase {
             ]
         }
         """#))
-        
+
         XCTAssertThrowsError(try endpoint.parse(response))
     }
-    
+
 }

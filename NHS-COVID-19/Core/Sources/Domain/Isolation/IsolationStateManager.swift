@@ -8,9 +8,9 @@ import Foundation
 import UIKit
 
 class IsolationStateManager {
-    
+
     private var cancellable: AnyCancellable?
-    
+
     @Published
     var state: IsolationLogicalState {
         didSet {
@@ -19,9 +19,9 @@ class IsolationStateManager {
             }
         }
     }
-    
+
     var isolationLogicalState: DomainProperty<IsolationLogicalState>
-    
+
     init<InfoPublisher: Publisher, TodayPublisher: Publisher>(
         isolationStateInfo: InfoPublisher,
         day: TodayPublisher,
@@ -37,7 +37,7 @@ class IsolationStateManager {
                 self?.state = state
             }
     }
-    
+
     func recordMetrics() -> AnyPublisher<Void, Never> {
         switch state {
         case .isolating(let isolation, _, _):
@@ -70,14 +70,14 @@ class IsolationStateManager {
         default:
             break
         }
-        
+
         return Empty().eraseToAnyPublisher()
     }
-    
+
 }
 
 extension IsolationStateManager {
-    
+
     convenience init(stateStore: IsolationStateStore, currentDateProvider: DateProviding) {
         self.init(
             isolationStateInfo: stateStore.$isolationStateInfo,
@@ -85,5 +85,5 @@ extension IsolationStateManager {
             calculateState: IsolationLogicalState.init
         )
     }
-    
+
 }

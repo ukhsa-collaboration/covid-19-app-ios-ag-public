@@ -10,29 +10,29 @@ import XCTest
 import Foundation
 
 class LocalizationStringFormatTests: XCTestCase {
-    
+
     enum LocalizationKey: String {
         case numericArgument
     }
-    
+
     // This makes sure locale injected is used for formating
     func testLocalizeForArabic() throws {
-        
+
         try FileManager().makeTemporaryDirectory { tmpFolder in
-            
+
             let bundle = Bundle(url: tmpFolder)!
             let locale = Locale(identifier: "ar")
             let localization = Localization(bundle: bundle, locale: locale)
-            
+
             try arabicDict.write(to: tmpFolder.appendingPathComponent("Localizable.stringsdict"), atomically: true, encoding: .utf8)
-            
+
             XCTAssertEqual("few".apply(direction: currentLanguageDirection()), localization.localize(LocalizationKey.numericArgument, arguments: [3]))
         }
     }
 }
 
 extension FileManager {
-    
+
     /// Creates a temporary directory and calls the `operation` with it.
     ///
     /// The directory is automatically deleted after `operation` returns.
@@ -43,10 +43,10 @@ extension FileManager {
     public func makeTemporaryDirectory<Output>(perform operation: (URL) throws -> Output) throws -> Output {
         let directory = try url(for: .itemReplacementDirectory, in: .userDomainMask, appropriateFor: temporaryDirectory, create: true)
         defer { try? removeItem(at: directory) }
-        
+
         return try operation(directory)
     }
-    
+
 }
 
 let arabicDict = """

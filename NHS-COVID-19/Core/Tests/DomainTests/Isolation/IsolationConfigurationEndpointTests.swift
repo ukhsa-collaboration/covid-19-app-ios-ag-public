@@ -8,17 +8,17 @@ import XCTest
 @testable import Domain
 
 class IsolationConfigurationEndpointTests: XCTestCase {
-    
+
     private let endpoint = IsolationConfigurationEndpoint()
-    
+
     func testEncoding() throws {
         let expected = HTTPRequest.get("/distribution/self-isolation")
-        
+
         let actual = try endpoint.request(for: ())
-        
+
         TS.assert(actual, equals: expected)
     }
-    
+
     func testDecoding() throws {
         let response = HTTPResponse.ok(with: .json("""
         {
@@ -41,7 +41,7 @@ class IsolationConfigurationEndpointTests: XCTestCase {
           }
         }
         """))
-        
+
         let expected = EnglandAndWalesIsolationConfigurations(
             england: IsolationConfiguration(
                 maxIsolation: 4,
@@ -62,10 +62,10 @@ class IsolationConfigurationEndpointTests: XCTestCase {
                 testResultPollingTokenRetentionPeriod: 29
             )
         )
-        
+
         TS.assert(try endpoint.parse(response), equals: expected)
     }
-    
+
     func testDecodingWithHousekeepingPeriodProvided() throws {
         let response = HTTPResponse.ok(with: .json("""
         {
@@ -89,7 +89,7 @@ class IsolationConfigurationEndpointTests: XCTestCase {
           }
         }
         """))
-        
+
         let expected = EnglandAndWalesIsolationConfigurations(
             england: IsolationConfiguration(
                 maxIsolation: 4,
@@ -110,7 +110,7 @@ class IsolationConfigurationEndpointTests: XCTestCase {
                 testResultPollingTokenRetentionPeriod: 61
             )
         )
-        
+
         TS.assert(try endpoint.parse(response), equals: expected)
     }
 }

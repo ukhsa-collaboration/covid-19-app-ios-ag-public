@@ -7,9 +7,9 @@ import Foundation
 
 struct AppAvailabilityHandler: RequestHandler {
     var paths = ["/distribution/availability-ios"]
-    
+
     var dataProvider: MockDataProvider
-    
+
     var response: Result<HTTPResponse, HTTPRequestError> {
         let response = HTTPResponse.ok(with: .json(#"""
         {

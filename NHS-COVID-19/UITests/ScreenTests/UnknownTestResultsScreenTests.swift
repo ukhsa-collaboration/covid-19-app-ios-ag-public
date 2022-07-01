@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class UnknownTestResultsScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<UnknownTestResultsScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = UnknownTestResultsScreen(app: app)
@@ -18,7 +18,7 @@ class UnknownTestResultsScreenTests: XCTestCase {
             XCTAssert(screen.openStoreButton.exists)
         }
     }
-    
+
     func testPrimaryButtonTap() throws {
         try runner.run { app in
             let screen = UnknownTestResultsScreen(app: app)
@@ -29,7 +29,7 @@ class UnknownTestResultsScreenTests: XCTestCase {
 }
 
 private extension UnknownTestResultsScreen {
-    
+
     var openStoreAlertTitle: XCUIElement {
         app.staticTexts[UnknownTestResultsScreenScenario.openStoreTapped]
     }

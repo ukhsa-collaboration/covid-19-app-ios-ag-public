@@ -5,14 +5,14 @@
 import Foundation
 
 public extension Thread {
-    
+
     /// How a thread exitted.
     enum ExitManner {
         case normal
         case assertion
         case fatalError
     }
-    
+
     /// A thread specific variant of `precondition()`.
     ///
     /// - SeeAlso: `Thread.fatalError`.
@@ -21,7 +21,7 @@ public extension Thread {
             trap(message(), file: file, line: line)
         }
     }
-    
+
     /// A thread specific variant of `assert()`.
     ///
     /// - SeeAlso: `Thread.fatalError`.
@@ -30,14 +30,14 @@ public extension Thread {
             debuggingTrap(message(), file: file, line: line)
         }
     }
-    
+
     /// A thread specific variant of `preconditionFailure()`.
     ///
     /// - SeeAlso: `Thread.fatalError`.
     static func preconditionFailure(_ message: @autoclosure () -> String = "", file: StaticString = #file, line: UInt = #line) -> Never {
         trap(message(), file: file, line: line)
     }
-    
+
     /// A thread specific variant of `fatalError`.
     ///
     /// If this method was called as part of the `work` passed to `detachSyncSupervised()`, this exits the thread.
@@ -45,7 +45,7 @@ public extension Thread {
     static func fatalError(_ message: @autoclosure () -> String = "", file: StaticString = #file, line: UInt = #line) -> Never {
         trap(message(), file: file, line: line)
     }
-    
+
     /// Performs `work` one a new thread and waits for it to complete.
     ///
     /// Calls to `Thread.fatalError()` inside `work` will not terminate the app and instead only exit the thread.
@@ -70,19 +70,19 @@ public extension Thread {
         sema.wait()
         return reason
     }
-    
+
 }
 
 private extension Thread {
-    
+
     typealias TrapHandler = (_ debugging: Bool) -> Never
-    
+
     private struct Box {
         var trapHandler: TrapHandler?
     }
-    
+
     private static let trapHandlerKey = UUID().uuidString
-    
+
     var trapHandler: TrapHandler? {
         get {
             Thread.current.threadDictionary[type(of: self).trapHandlerKey] as? TrapHandler
@@ -91,7 +91,7 @@ private extension Thread {
             Thread.current.threadDictionary[type(of: self).trapHandlerKey] = newValue
         }
     }
-    
+
     static func trap(_ message: @autoclosure () -> String, file: StaticString, line: UInt) -> Never {
         if let trapHandler = Thread.current.trapHandler {
             trapHandler(false)
@@ -99,7 +99,7 @@ private extension Thread {
             Swift.fatalError(message(), file: file, line: line)
         }
     }
-    
+
     static func debuggingTrap(_ message: @autoclosure () -> String, file: StaticString, line: UInt) {
         if let trapHandler = Thread.current.trapHandler {
             trapHandler(true)
@@ -107,5 +107,5 @@ private extension Thread {
             Swift.assertionFailure(message(), file: file, line: line)
         }
     }
-    
+
 }

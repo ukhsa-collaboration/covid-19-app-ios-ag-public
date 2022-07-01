@@ -6,49 +6,49 @@ import Scenarios
 import XCTest
 
 class AboutThisAppScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<AboutThisAppScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = AboutThisAppScreen(app: app)
-            
+
             XCTAssert(screen.vaccinationStatusDisclaimerHeadingLabel.exists)
             XCTAssert(screen.vaccinationStatusDisclaimerParagraphs.allExist)
             XCTAssert(screen.downloadNHSAppLink.exists)
-            
+
             XCTAssert(screen.aboutThisAppHeadingLabel.exists)
             XCTAssert(screen.aboutThisAppParagraphs.allExist)
             XCTAssert(screen.aboutThisAppInstructonForUse.exists)
             XCTAssert(screen.aboutThisAppButton.exists)
-            
+
             XCTAssert(screen.commonQuestionsHeading.exists)
             XCTAssert(screen.commonQuestionsDescription.exists)
             XCTAssert(screen.commonQuestionsButton.exists)
-            
+
             XCTAssert(screen.ourPoliciesHeading.exists)
             XCTAssert(screen.ourPoliciesDescription.exists)
             XCTAssert(screen.termsOfUseButton.exists)
             XCTAssert(screen.privacyNoticeButton.exists)
             XCTAssert(screen.accessibilityStatementButton.exists)
-            
+
             XCTAssert(screen.showMyDataHeading.exists)
             XCTAssert(screen.showMyDataDescription.exists)
             XCTAssert(screen.seeDataDescription.exists)
-            
+
             XCTAssert(screen.softwareInformationHeading.exists)
             XCTAssert(screen.appName.exists)
             XCTAssert(screen.version.exists)
             XCTAssert(screen.dateOfRelease.exists)
             XCTAssert(screen.manufacturer.exists)
-            
+
             XCTAssert(screen.feedbackInformationTitle.exists)
             XCTAssert(screen.feedbackInformationDescription.exists)
             XCTAssert(screen.feedbackInformationButton.exists)
         }
     }
-    
+
     func testDownloadNHSAppAction() throws {
         try runner.run { app in
             let screen = AboutThisAppScreen(app: app)
@@ -56,7 +56,7 @@ class AboutThisAppScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.downloadNHSAppTapped].exists)
         }
     }
-    
+
     func testCommonQuestionsLinkAction() throws {
         try runner.run { app in
             let screen = AboutThisAppScreen(app: app)
@@ -64,7 +64,7 @@ class AboutThisAppScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.commonQuestionsTapped].exists)
         }
     }
-    
+
     func testTermsOfUseLinkAction() throws {
         try runner.run { app in
             let screen = AboutThisAppScreen(app: app)
@@ -72,7 +72,7 @@ class AboutThisAppScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.termsOfUseTapped].exists)
         }
     }
-    
+
     func testPrivacyNoticeLinkAction() throws {
         try runner.run { app in
             let screen = AboutThisAppScreen(app: app)
@@ -80,7 +80,7 @@ class AboutThisAppScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.privacyNoticeTapped].exists)
         }
     }
-    
+
     func testAccessibilityStatementinkAction() throws {
         try runner.run { app in
             let screen = AboutThisAppScreen(app: app)
@@ -88,7 +88,7 @@ class AboutThisAppScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.accessibilityStatementTapped].exists)
         }
     }
-    
+
     func testProvideFeedbackLinkAction() throws {
         try runner.run { app in
             let screen = AboutThisAppScreen(app: app)
@@ -96,5 +96,5 @@ class AboutThisAppScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.provideFeedbackTapped].exists)
         }
     }
-    
+
 }

@@ -7,15 +7,15 @@ import Foundation
 extension Increment {
     static func nextIncrement(lastCheckDate: Date, now: Date) -> (increment: Increment, checkDate: Date)? {
         let difference = Calendar.utc.dateComponents([.day, .hour], from: lastCheckDate, to: now)
-        
+
         let period: Period.Type = difference.day! * 24 + difference.hour! > 26 ? Increment.Day.self : Increment.TwoHour.self
         var dateComponents = Calendar.utc.dateComponents([.year, .month, .day, .hour], from: lastCheckDate)
         let endOfPeriod = Int(Double(dateComponents.hour!).rounded(.down, toNearest: Double(period.hours))) + period.hours
         dateComponents.setValue(endOfPeriod, for: .hour)
-        
+
         let checkDate = Calendar.utc.date(from: dateComponents)!
         if checkDate > now { return nil }
-        
+
         let incrementDateComponents = Calendar.utc.dateComponents([.year, .month, .day, .hour], from: checkDate)
         return (period.createIncrement(dateComponents: incrementDateComponents), checkDate)
     }
@@ -30,7 +30,7 @@ extension Increment.Day: Period {
     fileprivate static func createIncrement(dateComponents: DateComponents) -> Increment {
         .daily(Increment.Day(from: dateComponents)!)
     }
-    
+
     fileprivate static var hours: Int { 24 }
 }
 
@@ -38,7 +38,7 @@ extension Increment.TwoHour: Period {
     fileprivate static func createIncrement(dateComponents: DateComponents) -> Increment {
         .twoHourly(Increment.Day(from: dateComponents)!, Increment.TwoHour(from: dateComponents)!)
     }
-    
+
     fileprivate static var hours: Int { 2 }
 }
 

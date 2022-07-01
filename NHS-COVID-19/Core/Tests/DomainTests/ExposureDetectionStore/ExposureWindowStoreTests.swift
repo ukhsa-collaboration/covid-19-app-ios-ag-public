@@ -11,14 +11,14 @@ import XCTest
 class ExposureWindowStoreTests: XCTestCase {
     private var encryptedStore: MockEncryptedStore!
     private var exposureWindowStore: ExposureWindowStore!
-    
+
     override func setUp() {
         super.setUp()
-        
+
         encryptedStore = MockEncryptedStore()
         exposureWindowStore = ExposureWindowStore(store: encryptedStore, nonRiskyWindowsLimit: 2)
     }
-    
+
     func testLoad() throws {
         encryptedStore.stored["exposure_window_store"] = """
         {
@@ -39,7 +39,7 @@ class ExposureWindowStoreTests: XCTestCase {
             }]
         }
         """.data(using: .utf8)
-        
+
         let exposureWindowInfo = try XCTUnwrap(exposureWindowStore.load())
         let exposureWindowsInfoCollection = ExposureWindowInfoCollection(
             exposureWindowsInfo: [
@@ -48,7 +48,7 @@ class ExposureWindowStoreTests: XCTestCase {
         )
         XCTAssertEqual(exposureWindowInfo, exposureWindowsInfoCollection)
     }
-    
+
     func testLoadWithIsConsideredRiskyField() throws {
         encryptedStore.stored["exposure_window_store"] = """
         {
@@ -70,7 +70,7 @@ class ExposureWindowStoreTests: XCTestCase {
             }]
         }
         """.data(using: .utf8)
-        
+
         let exposureWindowInfo = try XCTUnwrap(exposureWindowStore.load())
         let exposureWindowsInfoCollection = ExposureWindowInfoCollection(
             exposureWindowsInfo: [
@@ -79,7 +79,7 @@ class ExposureWindowStoreTests: XCTestCase {
         )
         XCTAssertEqual(exposureWindowInfo, exposureWindowsInfoCollection)
     }
-    
+
     func testAppendFirstTimeToNilCollection() throws {
         XCTAssertNil(exposureWindowStore.load())
         exposureWindowStore.append([
@@ -93,7 +93,7 @@ class ExposureWindowStoreTests: XCTestCase {
         )
         XCTAssertEqual(exposureWindowInfo, exposureWindowsInfoCollection)
     }
-    
+
     func testAppend() throws {
         encryptedStore.stored["exposure_window_store"] = """
         {
@@ -126,7 +126,7 @@ class ExposureWindowStoreTests: XCTestCase {
         )
         XCTAssertEqual(exposureWindowInfo, exposureWindowsInfoCollection)
     }
-    
+
     func testDelete() throws {
         encryptedStore.stored["exposure_window_store"] = """
         {
@@ -151,9 +151,9 @@ class ExposureWindowStoreTests: XCTestCase {
         exposureWindowStore.delete()
         XCTAssertNil(exposureWindowStore.load())
     }
-    
+
     // MARK: Non-risky windows
-    
+
     func testAppendNonRiskyWindowsFirstTimeToNilCollection() throws {
         XCTAssertNil(exposureWindowStore.load())
         exposureWindowStore.append([
@@ -167,9 +167,9 @@ class ExposureWindowStoreTests: XCTestCase {
         )
         XCTAssertEqual(exposureWindowInfo, exposureWindowsInfoCollection)
     }
-    
+
     func testAppendNonRiskyWindowsAreGreaterThenOrEqualToLimitReplacesOldWindows() throws {
-        
+
         encryptedStore.stored["exposure_window_store"] = """
         {
             "exposureWindowsInfo": [{
@@ -206,22 +206,22 @@ class ExposureWindowStoreTests: XCTestCase {
             }]
         }
         """.data(using: .utf8)
-        
+
         let newNonRiskyWindows = [
             self.exposureWindowInfo(date: GregorianDay(year: 2020, month: 7, day: 10), isConsideredRisky: false),
             self.exposureWindowInfo(date: GregorianDay(year: 2020, month: 7, day: 10), isConsideredRisky: false),
         ]
         exposureWindowStore.append(newNonRiskyWindows)
-        
+
         let exposureWindowInfo = try XCTUnwrap(exposureWindowStore.load())
         let exposureWindowsInfoCollection = ExposureWindowInfoCollection(
             exposureWindowsInfo: newNonRiskyWindows
         )
         XCTAssertEqual(exposureWindowInfo, exposureWindowsInfoCollection)
     }
-    
+
     func testAppendNonRiskyWindowShouldAppendExistingWindowsIfUpperLimitIsNotReached() throws {
-        
+
         encryptedStore.stored["exposure_window_store"] = """
         {
             "exposureWindowsInfo": [{
@@ -242,24 +242,24 @@ class ExposureWindowStoreTests: XCTestCase {
             }]
         }
         """.data(using: .utf8)
-        
+
         exposureWindowStore.append([
             self.exposureWindowInfo(date: GregorianDay(year: 2020, month: 7, day: 7), isConsideredRisky: false),
         ])
-        
+
         let expectedStoredNonRiskyWindows = [
             self.exposureWindowInfo(date: GregorianDay(year: 2020, month: 7, day: 8), isConsideredRisky: false),
             self.exposureWindowInfo(date: GregorianDay(year: 2020, month: 7, day: 7), isConsideredRisky: false),
         ]
-        
+
         let exposureWindowInfo = try XCTUnwrap(exposureWindowStore.load())
         let exposureWindowsInfoCollection = ExposureWindowInfoCollection(
             exposureWindowsInfo: expectedStoredNonRiskyWindows
         )
-        
+
         XCTAssertEqual(exposureWindowInfo, exposureWindowsInfoCollection)
     }
-    
+
     private func exposureWindowInfo(date: GregorianDay) -> ExposureWindowInfo {
         ExposureWindowInfo(
             date: date,
@@ -276,17 +276,17 @@ class ExposureWindowStoreTests: XCTestCase {
             isConsideredRisky: true
         )
     }
-    
+
     func testDeleteExpiredWindowsPriorToASpecificDate() throws {
-        
+
         // User A meets with user B on 1st of March
         // Keys are matched on the 5th of March and EWs are stored that day
         // EWs should no longer be on the device on the 15th of March
-        
+
         let fifteenthOfMarch = GregorianDay(year: 2021, month: 3, day: 15)
         let secondOfMarch = GregorianDay(year: 2021, month: 3, day: 2)
         let firstOfMarch = GregorianDay(year: 2021, month: 3, day: 1)
-        
+
         // add windows with a range of dates
         let exposureWindowsInfoCollection = ExposureWindowInfoCollection(
             exposureWindowsInfo: [
@@ -298,26 +298,26 @@ class ExposureWindowStoreTests: XCTestCase {
                 exposureWindowInfo(date: firstOfMarch),
             ]
         )
-        
+
         // add to the store
         exposureWindowStore.append(exposureWindowsInfoCollection.exposureWindowsInfo)
-        
+
         // load it back up and check they match
         let exposureWindowInfo = try XCTUnwrap(exposureWindowStore.load())
         XCTAssertEqual(exposureWindowInfo, exposureWindowsInfoCollection)
-        
+
         // expire the older windows - we only expect the ones from fifteenDaysAgo to be deleted
         exposureWindowStore.deleteWindows(includingAndPriorTo: secondOfMarch)
-        
+
         let exposureWindowInfoAfterExpiry = try XCTUnwrap(exposureWindowStore.load())
         let remainingWindows = exposureWindowInfoAfterExpiry.exposureWindowsInfo.filter {
             $0.date == fifteenthOfMarch
         }
         XCTAssertEqual(remainingWindows.count, 2)
     }
-    
+
     // MARK: Utilities
-    
+
     private func exposureWindowInfo(date: GregorianDay, isConsideredRisky: Bool) -> ExposureWindowInfo {
         ExposureWindowInfo(
             date: date,

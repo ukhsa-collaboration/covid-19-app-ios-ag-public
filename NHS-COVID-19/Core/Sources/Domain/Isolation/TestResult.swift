@@ -23,7 +23,7 @@ public enum UnacknowledgedTestResult: Equatable {
 }
 
 extension TestResult {
-    
+
     init?(_ testResult: UnacknowledgedTestResult) {
         switch testResult {
         case .positive:
@@ -34,5 +34,5 @@ extension TestResult {
             return nil
         }
     }
-    
+
 }

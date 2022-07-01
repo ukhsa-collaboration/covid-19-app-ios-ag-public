@@ -12,6 +12,6 @@ struct NoOpBackgroundTask: BackgroundTask {
         }
         nonmutating set {}
     }
-    
+
     func setTaskCompleted(success: Bool) {}
 }

@@ -6,14 +6,14 @@ import Scenarios
 import XCTest
 
 class PrivacyScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<PrivacyScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = PrivacyScreen(app: app)
-            
+
             XCTAssertTrue(screen.title.exists)
             XCTAssertTrue(screen.privacyDespcription.allExist)
             XCTAssertTrue(screen.dataDespcription1.exists)
@@ -27,7 +27,7 @@ class PrivacyScreenTests: XCTestCase {
             XCTAssertTrue(screen.dataHeader.exists)
         }
     }
-    
+
     func testTappingPrivacyNotice() throws {
         try runner.run { app in
             let screen = PrivacyScreen(app: app)
@@ -35,7 +35,7 @@ class PrivacyScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.privacyNoticeTapped].exists)
         }
     }
-    
+
     func testTapppingTermsOfUse() throws {
         try runner.run { app in
             let screen = PrivacyScreen(app: app)
@@ -43,7 +43,7 @@ class PrivacyScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.termsOfUseTapped].exists)
         }
     }
-    
+
     func testTappingAgreeButton() throws {
         try runner.run { app in
             let screen = PrivacyScreen(app: app)
@@ -51,7 +51,7 @@ class PrivacyScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.agreeButtonTapped].exists)
         }
     }
-    
+
     func testTappingNoThanksButton() throws {
         try runner.run { app in
             let screen = PrivacyScreen(app: app)
@@ -59,5 +59,5 @@ class PrivacyScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.noThanksButtonTapped].exists)
         }
     }
-    
+
 }

@@ -18,28 +18,28 @@ public enum ContactCaseOptOutReason: Equatable {
 }
 
 public struct ContactCaseOptOutQuestionnaire {
-    
+
     public enum Resolution: Equatable {
         case notFinished
         case optedOutOfIsolation(ContactCaseOptOutReason, [ContactCaseOptOutQuestion])
         case needToIsolate([ContactCaseOptOutQuestion])
     }
-    
+
     private enum State: Equatable {
         case showQuestions([ContactCaseOptOutQuestion])
         case finishedNoNeedToIsolate(questions: [ContactCaseOptOutQuestion], reason: ContactCaseOptOutReason)
         case finishedWithIsolation([ContactCaseOptOutQuestion])
     }
-    
+
     private let country: DomainProperty<Country>
-    
+
     init(country: DomainProperty<Country>) {
         self.country = country
     }
-    
+
     public func nextQuestion(with answers: [ContactCaseOptOutQuestion: Bool]) -> [ContactCaseOptOutQuestion] {
         let nextState = calculateState(with: answers)
-        
+
         switch nextState {
         case .showQuestions(let questions):
             return questions
@@ -49,10 +49,10 @@ public struct ContactCaseOptOutQuestionnaire {
             return questions
         }
     }
-    
+
     public func getResolution(with answers: [ContactCaseOptOutQuestion: Bool]) -> Resolution {
         let nextState = calculateState(with: answers)
-        
+
         switch nextState {
         case .showQuestions:
             return .notFinished
@@ -62,13 +62,13 @@ public struct ContactCaseOptOutQuestionnaire {
             return .needToIsolate(questions)
         }
     }
-    
+
     private func calculateState(with answers: [ContactCaseOptOutQuestion: Bool]) -> State {
         let fullyVaccinated: Bool? = answers[.fullyVaccinated]
         let lastDose: Bool? = answers[.lastDose]
         let clinicalTrial: Bool? = answers[.clinicalTrial]
         let medicallyExempt: Bool? = answers[.medicallyExempt]
-        
+
         var questions: [ContactCaseOptOutQuestion] = [.fullyVaccinated]
         if let fullyVaccinated = fullyVaccinated {
             if fullyVaccinated {
@@ -128,8 +128,8 @@ public struct ContactCaseOptOutQuestionnaire {
                 }
             }
         }
-        
+
         return .showQuestions(questions)
     }
-    
+
 }

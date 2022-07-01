@@ -6,11 +6,11 @@ import SwiftUI
 
 public struct Box<Content>: View where Content: View {
     var views: Content
-    
+
     public init(@ViewBuilder content: () -> Content) {
         views = content()
     }
-    
+
     public var body: some View {
         VStack(alignment: .leading) {
             views

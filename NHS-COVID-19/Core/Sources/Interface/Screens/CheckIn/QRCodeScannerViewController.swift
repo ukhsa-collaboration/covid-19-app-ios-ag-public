@@ -15,7 +15,7 @@ public class QRScanner {
     public typealias StartScanning = (UIView, @escaping (String) -> Void) -> Void
     public typealias StopScanning = () -> Void
     public typealias LayoutFinished = (CGRect, UIInterfaceOrientation) -> Void
-    
+
     public enum State: Equatable {
         case starting
         case failed
@@ -25,13 +25,13 @@ public class QRScanner {
         case processing
         case stopped
     }
-    
+
     public var state: AnyPublisher<State, Never>
-    
+
     private var _startScanning: StartScanning
     private var _stopScanning: StopScanning
     private var _layoutFinished: LayoutFinished
-    
+
     public init(state: AnyPublisher<State, Never>,
                 startScanning: @escaping StartScanning,
                 stopScanning: @escaping StopScanning,
@@ -41,38 +41,38 @@ public class QRScanner {
         _stopScanning = stopScanning
         _layoutFinished = layoutFinished
     }
-    
+
     func startScanning(targetView: UIView, resultHandler: @escaping (String) -> Void) {
         _startScanning(targetView, resultHandler)
     }
-    
+
     func stopScanning() {
         _stopScanning()
     }
-    
+
     func layoutFinished(viewBounds: CGRect, orientation: UIInterfaceOrientation) {
         _layoutFinished(viewBounds, orientation)
     }
 }
 
 public class QRCodeScannerViewController: UIViewController {
-    
+
     public typealias Interacting = QRCodeScannerViewControllerInteracting
-    
+
     private var scanner: QRScanner
-    
+
     private var scanView: ScanView!
-    
+
     private var cameraPermissionState: AnyPublisher<CameraPermissionState, Never>
-    
+
     private var isCameraSetup: Bool = false
-    
+
     private var completion: (String) -> Void
-    
+
     private var interactor: Interacting
-    
+
     private var orientationCancellable: AnyCancellable?
-    
+
     public init(
         interactor: Interacting,
         cameraPermissionState: AnyPublisher<CameraPermissionState, Never>,
@@ -85,11 +85,11 @@ public class QRCodeScannerViewController: UIViewController {
         self.scanner = scanner
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -97,41 +97,41 @@ public class QRCodeScannerViewController: UIViewController {
             self?.layoutFinished()
         }
     }
-    
+
     func layoutFinished() {
         scanner.layoutFinished(viewBounds: view.bounds, orientation: view.interfaceOrientation)
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
-    
+
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
-    
+
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         scanner.startScanning(targetView: view, resultHandler: completion)
     }
-    
+
     override public func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         scanner.stopScanning()
     }
-    
+
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         layoutFinished()
     }
-    
+
     override public func accessibilityPerformEscape() -> Bool {
         dismiss(animated: true, completion: nil)
         return true
     }
-    
+
     private func setupUI() {
         scanView = ScanView(
             frame: view.bounds,
@@ -140,9 +140,9 @@ public class QRCodeScannerViewController: UIViewController {
                 self?.showHelp()
             }
         )
-        
+
         view.addFillingSubview(scanView)
-        
+
         let closeButton = UIButton()
         closeButton.setTitleColor(UIColor(.surface), for: .normal)
         closeButton.setTitle(localize(.checkin_qrcode_scanner_close_button_title), for: .normal)
@@ -151,21 +151,21 @@ public class QRCodeScannerViewController: UIViewController {
         closeButton.largeContentTitle = localize(.checkin_qrcode_scanner_close_button_title)
         closeButton.addInteraction(UILargeContentViewerInteraction())
         view.addAutolayoutSubview(closeButton)
-        
+
         NSLayoutConstraint.activate([
             closeButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: .standardSpacing),
             closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
         ])
     }
-    
+
     private func showHelp() {
         interactor.showHelp()
     }
-    
+
     func announceCameraIfRunning() {
         scanView.cameraActiveAnnouncement()
     }
-    
+
     @objc func closeButtonTapped() {
         dismiss(animated: true, completion: nil)
     }

@@ -7,11 +7,11 @@ import Security
 
 struct MockTrustValidator: TrustValidating {
     var canAccept: Bool
-    
+
     init(canAccept: Bool) {
         self.canAccept = canAccept
     }
-    
+
     func canAccept(_ trust: SecTrust?) -> Bool {
         canAccept
     }

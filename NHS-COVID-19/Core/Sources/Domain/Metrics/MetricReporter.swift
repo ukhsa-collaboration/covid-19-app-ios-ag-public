@@ -9,9 +9,9 @@ import Logging
 import UIKit
 
 class MetricReporter: NSObject {
-    
+
     private static let logger = Logger(label: "MetricReporter")
-    
+
     private let client: HTTPClient
     private let collector: MetricCollector
     private let enabled: MetricsState
@@ -23,7 +23,7 @@ class MetricReporter: NSObject {
     private let getHouseKeepingDayDuration: () -> DayDuration
     private let isFeatureEnabled: (Feature) -> Bool
     private let getCountry: () -> Country
-    
+
     init(
         client: HTTPClient,
         encryptedStore: EncryptedStoring,
@@ -36,7 +36,7 @@ class MetricReporter: NSObject {
         metricChunkCreator: MetricUploadChunkCreator? = nil,
         isFeatureEnabled: @escaping (Feature) -> Bool,
         getCountry: @escaping () -> Country
-        
+
     ) {
         self.client = client
         self.getPostcode = getPostcode
@@ -45,58 +45,58 @@ class MetricReporter: NSObject {
         self.getHouseKeepingDayDuration = getHouseKeepingDayDuration
         self.isFeatureEnabled = isFeatureEnabled
         self.getCountry = getCountry
-        
+
         let enabled = MetricsState()
-        
+
         let collector = metricCollector ?? MetricCollector(encryptedStore: encryptedStore, currentDateProvider: currentDateProvider, enabled: enabled)
         let chunkCreator = metricChunkCreator ?? MetricUploadChunkCreator(collector: collector, appInfo: appInfo, getPostcode: getPostcode, getLocalAuthority: getLocalAuthority, getCountry: getCountry, currentDateProvider: currentDateProvider, isFeatureEnabled: isFeatureEnabled)
-        
+
         self.enabled = enabled
         self.collector = collector
         self.chunkCreator = chunkCreator
-        
+
         super.init()
     }
-    
+
     func set(rawState: DomainProperty<RawState>) {
         enabled.set(rawState: rawState)
     }
-    
+
     func uploadMetrics() -> AnyPublisher<Void, Never> {
-        
+
         // check onboarding was completed; we don't upload metrics until this is done
         guard enabled.state == .enabled else {
             return Empty().eraseToAnyPublisher()
         }
-        
+
         var publishers = [AnyPublisher<Void, NetworkRequestError>]()
-        
+
         // note; we're not checking that these are uploaded successfully - if it fails, they are lost
         while let info = chunkCreator.consumeMetricsInfoForNextWindow() {
             publishers.append(
                 client.fetch(MetricSubmissionEndpoint(), with: info)
             )
         }
-        
+
         return Publishers.Sequence<[AnyPublisher<Void, NetworkRequestError>], NetworkRequestError>(sequence: publishers)
             .flatMap { $0 }
             .ensureFinishes(placeholder: ())
             .eraseToAnyPublisher()
     }
-    
+
     func didFinishOnboarding() {
-        
+
         // send the onboarding packet
         let today = GregorianDay.today.startDate(in: .utc)
         let payload = chunkCreator.createTriggeredPayload(dateInterval: DateInterval(start: today, end: today))
-        
+
         var metricsToBeStripped = Feature.allCases.filter { !isFeatureEnabled($0) }
             .filter { $0.countriesOfRelevance.contains(self.getCountry()) }
             .map { $0.associatedMetrics }
             .reduce([], +)
-            
+
         metricsToBeStripped.append(contentsOf: Metric.nonFeatureRelatedMetricsToBeStripped)
-        
+
         let info = MetricsInfo(
             payload: MetricsInfoPayload.triggeredPayload(payload),
             postalDistrict: getPostcode() ?? "",
@@ -106,7 +106,7 @@ class MetricReporter: NSObject {
         )
         client.fetch(MetricSubmissionEndpoint(), with: info).replaceError(with: ()).sink { _ in }.store(in: &cancellables)
     }
-    
+
     private func executeHousekeeping() {
         Self.logger.debug("execute housekeeping; deleting expired metric entries")
         let today = currentDateProvider.currentGregorianDay(timeZone: .utc)
@@ -114,7 +114,7 @@ class MetricReporter: NSObject {
         let keepAfterDate = today.advanced(by: -housekeepingDuration).startDate(in: .utc)
         collector.consumeMetricsNotOnOrAfter(date: keepAfterDate)
     }
-    
+
     func createHouskeepingPublisher() -> AnyPublisher<Void, Never> {
         Future<Void, Never> { [weak self] promise in
             guard let self = self else {
@@ -125,19 +125,19 @@ class MetricReporter: NSObject {
             promise(.success(()))
         }.eraseToAnyPublisher()
     }
-    
+
     func delete() {
         collector.delete()
     }
 }
 
 extension MetricReporter {
-    
+
     func monitorHousekeeping() {
-        
+
         // assuming this is called shortly after the app launches, execute housekeeping now
         executeHousekeeping()
-        
+
         // now listen for foreground events and check again when they happen
         NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
             .sink { [weak self] _ in

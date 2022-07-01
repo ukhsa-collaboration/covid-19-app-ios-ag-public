@@ -12,7 +12,7 @@ import UIKit
 public class LanguageSelectionScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name: String = "Language Selection"
-    
+
     static var appController: AppController {
         NavigationAppController { parent in
             LanguageSelectionViewController(
@@ -36,7 +36,7 @@ public class LanguageSelectionScreenScenario: Scenario {
 
 private struct Interactor: LanguageSelectionViewController.Interacting {
     let completion: (LocaleConfiguration) -> Void
-    
+
     func didSelect(configuration: LocaleConfiguration) {
         completion(configuration)
     }
@@ -57,5 +57,5 @@ private let languages = [
     SelectableLanguage(isoCode: "tur", exonym: "Turkish", endonym: "Turkçe"),
     SelectableLanguage(isoCode: "ur", exonym: "Urdu", endonym: "اُردُو‎"),
     SelectableLanguage(isoCode: "cy", exonym: "Welsh", endonym: "Cymraeg"),
-    
+
 ]

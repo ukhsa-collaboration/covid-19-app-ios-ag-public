@@ -8,24 +8,24 @@ import Foundation
 import UIKit
 
 final class AdjustableDateProvider: DateProviding {
-    
+
     private let notificationCenter: NotificationCenter
     private let numberOfDaysFromNowSubject = CurrentValueSubject<Int, Never>(0)
     private var cancellables = Set<AnyCancellable>()
-    
+
     init(notificationCenter: NotificationCenter = .default, dataProvider: MockDataProvider = .shared) {
         self.notificationCenter = notificationCenter
-        
+
         dataProvider.numberOfDaysFromNowDidChange
             .prepend(dataProvider.numberOfDaysFromNow)
             .subscribe(numberOfDaysFromNowSubject)
             .store(in: &cancellables)
     }
-    
+
     var currentDate: Date {
         Date().addingTimeInterval(TimeInterval(numberOfDaysFromNowSubject.value * 24 * 60 * 60))
     }
-    
+
     var today: AnyPublisher<LocalDay, Never> {
         notificationCenter.publisher(for: UIApplication.significantTimeChangeNotification)
             .mapToVoid()
@@ -35,5 +35,5 @@ final class AdjustableDateProvider: DateProviding {
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
-    
+
 }

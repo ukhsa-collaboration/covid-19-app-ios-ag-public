@@ -1,5 +1,4 @@
 
-
 import Foundation
 @testable import Domain
 import XCTest
@@ -18,7 +17,7 @@ class IsolationPaymentAnalyticsTests: AnalyticsTests {
         }
         """))))
     }
-    
+
     func testReceivedAcitveIPCTokenAndIpcTokenBackgroundTick() {
         riskyContact.trigger(exposureDate: currentDateProvider.currentDate) {
             self.assertOnFields { assertField in

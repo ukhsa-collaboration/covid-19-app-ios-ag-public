@@ -6,18 +6,18 @@ import Integration
 import SwiftUI
 
 struct SelectExperimentView: View {
-    
+
     enum Sheet: Identifiable {
         case inspectExperiment(ExperimentInspector)
         case inspectExperimentResults(ExperimentInspector)
-        
+
         var id: ObjectIdentifier {
             switch self {
             case .inspectExperiment(let object), .inspectExperimentResults(let object):
                 return object.id
             }
         }
-        
+
         var experimentInspector: ExperimentInspector {
             switch self {
             case .inspectExperiment(let object), .inspectExperimentResults(let object):
@@ -25,13 +25,13 @@ struct SelectExperimentView: View {
             }
         }
     }
-    
+
     @ObservedObject
     var experimentManager: ExperimentManager
-    
+
     @State
     var sheet: Sheet?
-    
+
     var body: some View {
         NavigationView {
             VStack(spacing: .standardSpacing) {
@@ -69,22 +69,22 @@ struct SelectExperimentView: View {
                 )
             }
         }
-        
+
     }
-    
+
     private var isButtonDisabled: Bool {
         (
             experimentManager.teamName.isEmpty ||
                 experimentManager.experimentId.isEmpty
         )
     }
-    
+
     private func inspectExperiment() {
         sheet = .inspectExperiment(ExperimentInspector(manager: experimentManager))
     }
-    
+
     private func inspectExperimentResults() {
         sheet = .inspectExperimentResults(ExperimentInspector(manager: experimentManager))
     }
-    
+
 }

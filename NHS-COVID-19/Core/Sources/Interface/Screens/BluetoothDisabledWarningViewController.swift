@@ -13,12 +13,12 @@ public protocol BluetoothDisabledWarningViewControllerInteracting {
 
 public class BluetoothDisabledWarningViewController: ScrollingContentViewController {
     public typealias Interacting = BluetoothDisabledWarningViewControllerInteracting
-    
+
     public enum ViewType {
         case onboarding
         case contactTracing
     }
-    
+
     public static func viewController(for type: ViewType, interactor: Interacting, country: Country) -> BluetoothDisabledWarningViewController {
         switch type {
         case .onboarding:
@@ -43,7 +43,7 @@ public class BluetoothDisabledWarningViewController: ScrollingContentViewControl
             )
         }
     }
-    
+
     private init(
         interactor: Interacting,
         country: Country,
@@ -76,11 +76,11 @@ public class BluetoothDisabledWarningViewController: ScrollingContentViewControl
                 ]
         )
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)

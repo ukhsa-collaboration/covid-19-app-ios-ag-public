@@ -6,14 +6,14 @@ import Scenarios
 import XCTest
 
 class VenueCheckInInformationScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<VenueCheckInInformationScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = VenueCheckInInformationScreen(app: app)
-            
+
             XCTAssert(screen.screenTitle.exists)
             XCTAssert(screen.helpScanningTitle.exists)
             XCTAssert(screen.helpScanningDescription.exists)
@@ -30,15 +30,15 @@ class VenueCheckInInformationScreenTests: XCTestCase {
             XCTAssert(screen.cancelButton.exists)
         }
     }
-    
+
     func tapCancel() throws {
         try runner.run { app in
             let screen = VenueCheckInInformationScreen(app: app)
-            
+
             screen.cancelButton.tap()
-            
+
             XCTAssert(screen.dismissAlert.exists)
         }
     }
-    
+
 }

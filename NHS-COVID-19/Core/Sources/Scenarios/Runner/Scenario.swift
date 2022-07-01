@@ -13,9 +13,9 @@ public enum ScenarioKind: CaseIterable, Identifiable {
     case component
     case palette
     case prototype
-    
+
     public var id: ScenarioKind { self }
-    
+
     var name: String {
         switch self {
         case .environment: return "Environments"
@@ -46,10 +46,10 @@ public extension IdentifiableType {
 ///
 /// This protocol define common requirements on scenarios – regardless of whether it’s called from tests or internally within scenarios.
 public protocol BaseScenario: IdentifiableType {
-    
+
     /// User-visible name for this scenario
     static var name: String { get }
-    
+
     /// The kind of the test.
     ///
     /// This is used as a conceptual grouping of the scenarios, used e.g. when displaying the list of scenarios.
@@ -64,7 +64,7 @@ public struct EmptyCodable: Codable, Equatable {}
 /// Rather, it has the information needed by the UI tests to be able to correctly configure and start the test.
 public protocol TestScenario: BaseScenario {
     associatedtype Inputs: Encodable & Equatable = EmptyCodable
-    
+
     /// Default inputs for the test.
     static var defaultInputs: Inputs { get }
 }
@@ -73,13 +73,13 @@ public protocol TestScenario: BaseScenario {
 ///
 /// The protocol also defined
 protocol AppControllingScenario: BaseScenario {
-    
+
     /// Alternative name for this scenario, used for sorting purposes. Default conformance returns ``name``.
     static var nameForSorting: String { get }
-    
+
     /// A user-visible description for the scenario. Default conformance returns ``nil``.
     static var description: String? { get }
-    
+
     /// The ``AppController`` for the scenario.
     static var appController: AppController { get }
 }
@@ -112,7 +112,7 @@ extension Scenario {
     static var description: String? {
         nil
     }
-    
+
     static var nameForSorting: String {
         name
     }

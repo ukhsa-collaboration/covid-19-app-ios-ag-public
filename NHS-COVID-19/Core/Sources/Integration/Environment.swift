@@ -17,26 +17,26 @@ public struct Environment {
     public let backgroundTaskIdentifier: String
     public let identifier: String
     public let appInfo: AppInfo
-    
+
     public struct CopyServices {
         public let project: String
         public let token: String
-        
+
         public init(project: String, token: String) {
             self.project = project
             self.token = token
         }
     }
-    
+
     public let copyServices: CopyServices?
 }
 
 public extension Environment {
-    
+
     static func standard(with configuration: EnvironmentConfiguration = .production) -> Environment {
         let appInfo = AppInfo(for: .main)
         let userAgentHeaderValue = "p=iOS,o=\(Version.iOSVersion.readableRepresentation),v=\(appInfo.version.readableRepresentation),b=\(appInfo.buildNumber)"
-        
+
         let copyServices: Environment.CopyServices?
         if let project = configuration.copyServices?.project,
             let token = configuration.copyServices?.token {
@@ -44,7 +44,7 @@ public extension Environment {
         } else {
             copyServices = nil
         }
-        
+
         return Environment(
             distributionClient: AppHTTPClient(for: configuration.distributionRemote, kind: .distribution),
             apiClient: AppHTTPClient(for: configuration.submissionRemote, kind: .submission(userAgentHeaderValue: userAgentHeaderValue)),
@@ -56,7 +56,7 @@ public extension Environment {
             copyServices: copyServices
         )
     }
-    
+
     static func mock(with client: HTTPClient, copyServices: CopyServices? = nil) -> Environment {
         Environment(
             distributionClient: client,
@@ -69,22 +69,22 @@ public extension Environment {
             copyServices: copyServices.map { Environment.CopyServices(project: $0.project, token: $0.token) }
         )
     }
-    
+
 }
 
 private extension HTTPRemote {
-    
+
     static let iTunes = HTTPRemote(host: "itunes.apple.com", path: "")
-    
+
 }
 
 private extension VenueDecoder {
-    
+
     init(for signatureKey: SigningKeyInfo) {
         self.init(
             keyId: signatureKey.id,
             key: try! P256.Signing.PublicKey(pemRepresentationCompatibility: signatureKey.pemRepresentation)
         )
     }
-    
+
 }

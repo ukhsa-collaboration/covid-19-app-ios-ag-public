@@ -6,13 +6,13 @@ import Foundation
 import SwiftUI
 
 public struct StateView: View {
-    
+
     var collection: StateCollection
-    
+
     public init(collection: StateCollection) {
         self.collection = collection
     }
-    
+
     public var body: some View {
         VStack(alignment: .trailing) {
             HStack {
@@ -25,7 +25,7 @@ public struct StateView: View {
             Text(counterText)
         }
     }
-    
+
     var counterText: String {
         switch collection.counter {
         case 1:
@@ -34,13 +34,13 @@ public struct StateView: View {
             return "⨉ \(collection.counter)"
         }
     }
-    
+
 }
 
 private struct CaseStateView: View {
-    
+
     var condition: StateCollection.Condition
-    
+
     var body: some View {
         VStack {
             Text("")
@@ -55,7 +55,7 @@ private struct CaseStateView: View {
         .background(fillColor.brightness(0.1))
         .border(Color.black, width: 1)
     }
-    
+
     var fillColor: Color {
         switch condition.status {
         case .any:
@@ -73,7 +73,7 @@ private struct CaseStateView: View {
 }
 
 struct StateViewPreviews: PreviewProvider {
-    
+
     static var previews: some View {
         StateView(
             collection: StateCollection(
@@ -86,5 +86,5 @@ struct StateViewPreviews: PreviewProvider {
         .padding()
         .previewLayout(.sizeThatFits)
     }
-    
+
 }

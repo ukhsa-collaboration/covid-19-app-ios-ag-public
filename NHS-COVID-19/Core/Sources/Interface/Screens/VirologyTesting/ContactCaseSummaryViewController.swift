@@ -16,7 +16,7 @@ public protocol ContactCaseSummaryViewControllerInteracting {
 public struct ContactCaseVaccinationStatusQuestionAndAnswer: Equatable {
     let question: ContactCaseVaccinationStatusQuestion
     let answer: Bool
-    
+
     public init(question: ContactCaseVaccinationStatusQuestion, answer: Bool) {
         self.question = question
         self.answer = answer
@@ -26,13 +26,13 @@ public struct ContactCaseVaccinationStatusQuestionAndAnswer: Equatable {
 class ContactCaseSummaryContent {
     public typealias Interacting = ContactCaseSummaryViewControllerInteracting
     typealias QuestionAndAnswer = ContactCaseSummaryViewController.QuestionAndAnswer
-    
+
     private let interactor: Interacting
     private let overAgeLimit: Bool
     private let vaccinationStatusQuestionsAndAnswers: [ContactCaseVaccinationStatusQuestionAndAnswer]
     private let birthThresholdDate: Date
     private let vaccineThresholdDate: Date
-    
+
     init(
         interactor: Interacting,
         overAgeLimit: Bool,
@@ -46,9 +46,9 @@ class ContactCaseSummaryContent {
         self.birthThresholdDate = birthThresholdDate
         self.vaccineThresholdDate = vaccineThresholdDate
     }
-    
+
     private func makeAnsweredVaccineStatusQuestion(_ question: ContactCaseVaccinationStatusQuestion, answer: Bool) -> QuestionAndAnswer {
-        
+
         switch question {
         case .fullyVaccinated:
             return QuestionAndAnswer(
@@ -87,58 +87,58 @@ class ContactCaseSummaryContent {
             )
         }
     }
-    
+
     private func makeVaccinationStatusBox() -> UIView? {
         var answeredQuestions: [QuestionAndAnswer] = []
-        
+
         for qa in vaccinationStatusQuestionsAndAnswers {
             answeredQuestions.append(makeAnsweredVaccineStatusQuestion(qa.question, answer: qa.answer))
         }
-        
+
         guard !answeredQuestions.isEmpty else { return nil }
-        
+
         let vaccinationStatusAnswerBoxViewModel = AnswerBox.ViewModel(
             headerText: localize(.contact_case_vaccination_status_heading),
             buttonTitle: (text: localize(.contact_case_summary_change_vaccination_status_button), accessibilityText: localize(.contact_case_summary_change_vaccination_status_accessiblity_button)),
             buttonAction: interactor.didTapChangeVaccinationStatusButton, questionsWithAnswers: answeredQuestions
         )
-        
+
         let vaccinationStatusAnswerBox = AnswerBox(viewModel: vaccinationStatusAnswerBoxViewModel)
         let vaccineStatusHostingVC = UIHostingController(rootView: vaccinationStatusAnswerBox)
         vaccineStatusHostingVC.view.backgroundColor = .clear
-        
+
         return vaccineStatusHostingVC.view
     }
-    
+
     private func makeAgeAnswerBox() -> UIView {
-        
+
         let ageQuestionAndAnswer = QuestionAndAnswer(
             question: localize(.age_declaration_question(date: birthThresholdDate)),
             answer: overAgeLimit,
             answerContent: overAgeLimit ? localize(.age_declaration_yes_option) : localize(.age_declaration_no_option),
             answerAccessibilityText: overAgeLimit ? localize(.age_declaration_yes_option_accessibility_text(date: birthThresholdDate)) : localize(.age_declaration_no_option_accessibility_text(date: birthThresholdDate))
         )
-        
+
         let ageAnswerBoxViewModel = AnswerBox.ViewModel(
             headerText: localize(.age_declaration_heading),
             buttonTitle: (text: localize(.contact_case_summary_change_age_button), accessibilityText: localize(.contact_case_summary_change_age_accessiblity_button)),
             buttonAction: interactor.didTapChangeAgeButton,
             questionsWithAnswers: [ageQuestionAndAnswer]
         )
-        
+
         let ageAnswerBox = AnswerBox(viewModel: ageAnswerBoxViewModel)
         let hostingVC = UIHostingController(rootView: ageAnswerBox)
         hostingVC.view.backgroundColor = .clear
-        
+
         return hostingVC.view!
     }
-    
+
     private func confirmAnswers() {
         var fullyVaccinated: Bool?
         var lastDose: Bool?
         var clinicalTrial: Bool?
         var medicallyExempt: Bool?
-        
+
         for qa in vaccinationStatusQuestionsAndAnswers {
             switch qa.question {
             case .fullyVaccinated:
@@ -151,7 +151,7 @@ class ContactCaseSummaryContent {
                 medicallyExempt = qa.answer
             }
         }
-        
+
         let answers = ContactCaseVaccinationStatusAnswers(
             fullyVaccinated: fullyVaccinated,
             lastDose: lastDose,
@@ -160,7 +160,7 @@ class ContactCaseSummaryContent {
         )
         interactor.didTapSubmitAnswersButton(overAgeLimit: overAgeLimit, vaccinationStatusAnswers: answers)
     }
-    
+
     func makeViews() -> [StackViewContentProvider] {
         let primaryButton = PrimaryButton(title: localize(.contact_case_summary_submit_button), action: confirmAnswers)
         let heading = BaseLabel().set(text: localize(.contact_case_summary_heading)).styleAsPageHeader()
@@ -168,16 +168,15 @@ class ContactCaseSummaryContent {
     }
 }
 
-public class ContactCaseSummaryViewController:
-    ScrollingContentViewController {
+public class ContactCaseSummaryViewController: ScrollingContentViewController {
     public typealias Interacting = ContactCaseSummaryViewControllerInteracting
-    
+
     public struct QuestionAndAnswer {
         let question: String
         let answer: Bool
         let answerContent: String
         let answerAccessibilityText: String
-        
+
         public init(
             question: String,
             answer: Bool,
@@ -190,7 +189,7 @@ public class ContactCaseSummaryViewController:
             self.answerAccessibilityText = answerAccessibilityText
         }
     }
-    
+
     public init(
         interactor: Interacting,
         overAgeLimit: Bool,
@@ -205,17 +204,17 @@ public class ContactCaseSummaryViewController:
             birthThresholdDate: birthThresholdDate,
             vaccineThresholdDate: vaccineThresholdDate
         )
-        
+
         super.init(views: content.makeViews())
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         title = localize(.contact_case_summary_title)
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
@@ -223,20 +222,20 @@ public class ContactCaseSummaryViewController:
 
 private struct AnswerBox: View {
     typealias QuestionAndAnswer = ContactCaseSummaryViewController.QuestionAndAnswer
-    
+
     struct ViewModel {
         let headerText: String
         let buttonTitle: (text: String, accessibilityText: String)
         let buttonAction: () -> Void
         let questionsWithAnswers: [QuestionAndAnswer]
     }
-    
+
     private let viewModel: ViewModel
-    
+
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
-    
+
     var body: some View {
         Box {
             // Header
@@ -248,25 +247,25 @@ private struct AnswerBox: View {
                 Button.underlined(text: viewModel.buttonTitle.text, action: viewModel.buttonAction)
                     .accessibility(label: Text(viewModel.buttonTitle.accessibilityText))
                     .fixedSize(horizontal: false, vertical: true)
-                
+
             }
-            
+
             ForEach(viewModel.questionsWithAnswers, id: \.question) { qAndA in
                 Divider()
                 Text(qAndA.question)
                     .styleAsHeading()
                     .fixedSize(horizontal: false, vertical: true)
-                
+
                 HStack {
                     Image(qAndA.answer == true ? .checkIcon : .crossIcon)
                         .accessibility(hidden: true)
-                    
+
                     Text(qAndA.answerContent)
                         .styleAsBody()
                         .accessibility(label: Text(qAndA.answerAccessibilityText))
                 }
             }
-            
+
         }
     }
 }

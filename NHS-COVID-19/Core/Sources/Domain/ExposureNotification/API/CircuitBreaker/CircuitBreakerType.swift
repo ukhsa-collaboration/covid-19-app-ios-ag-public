@@ -5,7 +5,7 @@
 enum CircuitBreakerType: Equatable {
     case exposureNotification(RiskInfo)
     case riskyVenue
-    
+
     var endpointName: String {
         switch self {
         case .exposureNotification:

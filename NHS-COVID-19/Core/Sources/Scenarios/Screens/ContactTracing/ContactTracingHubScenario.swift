@@ -12,7 +12,7 @@ protocol CommonContactTracingHubScenario: Scenario {
 }
 
 extension CommonContactTracingHubScenario {
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
@@ -28,7 +28,7 @@ extension CommonContactTracingHubScenario {
             )
         }
     }
-    
+
 }
 
 public enum ContactTracingHubAlertTitle {
@@ -48,18 +48,18 @@ public class ContactTracingHubUserNotificationsNotAuthorizedScenario: CommonCont
 }
 
 private class Interactor: ContactTracingHubViewController.Interacting {
-    
+
     private weak var viewController: UIViewController?
     private var cancellable: AnyCancellable?
-    
+
     func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn) {
         print("Schedule reminder in \(reminderIn.rawValue)hrs")
     }
-    
+
     func didTapAdviceWhenDoNotPauseCTButton() {
         viewController?.showAlert(title: ContactTracingHubAlertTitle.adviceWhenDoNotPauseCT)
     }
-    
+
     init(viewController: UIViewController) {
         self.viewController = viewController
     }

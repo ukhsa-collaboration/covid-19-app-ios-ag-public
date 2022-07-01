@@ -9,7 +9,7 @@ protocol NonRiskyWindowSelecting {
 }
 
 struct NonRiskyWindowSelector: NonRiskyWindowSelecting {
-    
+
     var allow: Bool {
         // 2.5% this will return true
         Int.random(in: 0 ... 999) < 25

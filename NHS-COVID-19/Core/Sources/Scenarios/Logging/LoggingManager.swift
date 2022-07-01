@@ -7,29 +7,29 @@ import Foundation
 import Logging
 
 public class LoggingManager {
-    
+
     private static let consoleMinimumLogLevel = Logger.Level.debug
-    
+
     @Published
     var logs = ""
-    
+
     private let io = DispatchQueue(label: "Logging IO")
     private let stream = OutputStream.makeForLogs()
-    
+
     public init() {
         stream.open()
     }
-    
+
     public func makeLogHandler(label: String) -> LogHandler {
         ForwardingLogHandler(label: label, send: log)
     }
-    
+
     private func log(_ event: LogEvent) {
         let entry = "\(event.description())\n"
         if event.level >= Self.consoleMinimumLogLevel {
             print(event.description(verbosity: .standard))
         }
-        
+
         DispatchQueue.main.async {
             self.logs.append(entry)
             self.logs.append("\n")
@@ -42,16 +42,16 @@ public class LoggingManager {
             }
         }
     }
-    
+
 }
 
 extension LogEvent {
-    
+
     enum Verbosity {
         case standard
         case detailed
     }
-    
+
     func description(verbosity: Verbosity = .standard) -> String {
         let headline = self.headline(verbosity: verbosity)
         if let metadata = self.metadata, !metadata.isEmpty {
@@ -60,7 +60,7 @@ extension LogEvent {
             return headline
         }
     }
-    
+
     private func headline(verbosity: Verbosity) -> String {
         switch verbosity {
         case .standard:
@@ -69,15 +69,15 @@ extension LogEvent {
             return "\(formatter.string(from: date)) \(level): \(label) \(fileName):\(line):\(function) – \(message)"
         }
     }
-    
+
     private var fileName: String {
         file.components(separatedBy: "/").last!
     }
-    
+
 }
 
 private extension Logger.Metadata {
-    
+
     var description: String {
         if
             count == 1,
@@ -94,7 +94,7 @@ private extension Logger.Metadata {
             return string
         }
     }
-    
+
     func appendDescription(into description: inout String, depth: Int = 0) {
         let whitespace = repeatElement("  ", count: depth).joined()
         sorted { $0.key < $1.key }
@@ -103,11 +103,11 @@ private extension Logger.Metadata {
                 value.appendDescription(into: &description, depth: depth + 1)
             }
     }
-    
+
 }
 
 private extension Logger.MetadataValue {
-    
+
     func appendDescription(into description: inout String, depth: Int) {
         switch self {
         case .string(let string):
@@ -128,7 +128,7 @@ private extension Logger.MetadataValue {
             }
         }
     }
-    
+
 }
 
 private let formatter: DateFormatter = {
@@ -140,25 +140,25 @@ private let formatter: DateFormatter = {
 }()
 
 private extension OutputStream {
-    
+
     static func makeForLogs() -> OutputStream {
         let fileManager = FileManager()
         let fileName = ISO8601DateFormatter().string(from: Date())
-        
+
         // Don’t really expect an error, but don’t want to crash because of this.
         guard let logsFolder = try? fileManager
             .url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
             .appendingPathComponent("Logs") else {
             return OutputStream(toMemory: ())
         }
-        
+
         try? fileManager.createDirectory(at: logsFolder, withIntermediateDirectories: true, attributes: nil)
-        
+
         let file = logsFolder.appendingPathComponent("\(fileName).log")
-        
+
         return OutputStream(url: file, append: false) ?? OutputStream(toMemory: ())
     }
-    
+
 }
 
 // TODO: This logic is duplicate with Test support. Can we unify?
@@ -186,7 +186,7 @@ private enum Description {
     case array([Description])
     case jsonObject(Any)
     case null
-    
+
     var jsonObject: Any {
         switch self {
         case .string(let value):
@@ -201,7 +201,7 @@ private enum Description {
             return NSNull()
         }
     }
-    
+
     public static func encodable<T: Encodable>(_ object: T) -> Description {
         let data = try! JSONEncoder().encode(object)
         let object = try! JSONSerialization.jsonObject(with: data)
@@ -229,9 +229,9 @@ private func descriptionObject(for subject: Any) -> Description {
             }
             instanceMirror = instanceMirror?.superclassMirror
         }
-        
+
         return .dictionary(dictionary)
-        
+
     case .optional:
         var value: Any?
         mirror.children.forEach { _, child in
@@ -242,13 +242,13 @@ private func descriptionObject(for subject: Any) -> Description {
         } else {
             return .null
         }
-        
+
     case .collection:
         let array = mirror.children.map { _, child in
             descriptionObject(for: child)
         }
         return .array(array)
-        
+
     case .set:
         let array = mirror.children
             .sorted { "\($0.1)" < "\($1.1)" } // doesn’t matter as long as it’s predictable
@@ -256,7 +256,7 @@ private func descriptionObject(for subject: Any) -> Description {
                 descriptionObject(for: child)
             }
         return .array(array)
-        
+
     case .dictionary:
         var dictionary = [String: Description]()
         mirror.children.forEach { _, child in
@@ -277,20 +277,20 @@ private func descriptionObject(for subject: Any) -> Description {
             }
         }
         return .dictionary(dictionary)
-        
+
     case .enum, .tuple:
         // Not worth the effort at the moment. Refine if the need comes up.
         return .string("\(subject)")
-        
+
     @unknown default:
         return .string("\(subject)")
     }
 }
 
 extension HTTPRequest: CustomDescriptionConvertible {
-    
+
     private static let fakeRemote = HTTPRemote(host: "a.com", path: "")
-    
+
     fileprivate var descriptionObject: Description {
         let request = try! Self.fakeRemote.urlRequest(from: self)
         let path = request.url!.absoluteString.replacingOccurrences(of: "https://a.com", with: "")
@@ -303,27 +303,27 @@ extension HTTPRequest: CustomDescriptionConvertible {
         .joined(separator: "\n")
         return .string(description)
     }
-    
+
     private var headerDescription: String? {
         guard !headers.fields.isEmpty else { return nil }
-        
+
         let lines = headers.fields.sorted { $0.0.lowercaseName < $1.0.lowercaseName }
             .map { "    \($0.lowercaseName): \($1)" }
             .joined(separator: "\n")
-        
+
         return "Headers:\n\(lines)"
     }
-    
+
     private var bodyDescription: String? {
         guard let body = body else { return "" }
-        
+
         return String(data: body.content, encoding: .utf8) ?? ""
     }
-    
+
 }
 
 extension HTTPResponse: CustomDescriptionConvertible {
-    
+
     fileprivate var descriptionObject: Description {
         let description = [
             "\(statusCode)",
@@ -334,27 +334,27 @@ extension HTTPResponse: CustomDescriptionConvertible {
         .joined(separator: "\n")
         return .string(description)
     }
-    
+
     private var headerDescription: String? {
         guard !headers.fields.isEmpty else { return nil }
-        
+
         let lines = headers.fields.sorted { $0.0.lowercaseName < $1.0.lowercaseName }
             .map { "    \($0.lowercaseName): \($1)" }
             .joined(separator: "\n")
-        
+
         return "Headers:\n\(lines)"
     }
-    
+
     private var bodyDescription: String {
         String(data: body.content, encoding: .utf8) ?? ""
     }
-    
+
 }
 
 extension Date: CustomDescriptionConvertible {
-    
+
     fileprivate var descriptionObject: Description {
         .string(description)
     }
-    
+
 }

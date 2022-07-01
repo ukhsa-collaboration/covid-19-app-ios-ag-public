@@ -9,7 +9,7 @@ public struct SymptomCheckerQuestions {
     var hasNonCardinalSymptoms: Bool?
     var hasCardinalSymptoms: Bool?
     var isFeelingWell: Bool?
-    
+
     public init(hasNonCardinalSymptoms: Bool?, hasCardinalSymptoms: Bool?, isFeelingWell: Bool?) {
         self.hasNonCardinalSymptoms = hasNonCardinalSymptoms
         self.hasCardinalSymptoms = hasCardinalSymptoms
@@ -30,7 +30,7 @@ struct SymptomCheckerAdviceHandler {
               let isFeelingWell = symptomCheckerQuestions.isFeelingWell else {
             return nil
         }
-        
+
         if !hasCardinalSymptoms && isFeelingWell {
             return .continueNormalActivities
         } else {

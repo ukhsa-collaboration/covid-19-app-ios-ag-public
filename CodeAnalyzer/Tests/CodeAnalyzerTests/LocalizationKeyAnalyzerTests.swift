@@ -7,10 +7,10 @@ import XCTest
 
 final class LocalizationKeyAnalyzerTests: XCTestCase {
     private var analyzer: LocalizationKeyAnalyzer!
-    
+
     override func setUpWithError() throws {
         try super.setUpWithError()
-        
+
         analyzer = LocalizationKeyAnalyzer(
             localisationKeyParser: MockAppKeys(),
             localizableStringKeyParser: MockStringsKeys(),
@@ -18,7 +18,7 @@ final class LocalizationKeyAnalyzerTests: XCTestCase {
             localizationKeysCalledFileParser: MockKeysCalledFile()
         )
     }
-    
+
     func testUndefinedKeys() {
         let expectedKeys: Set<LocalizableKey> = [
             LocalizableKey(
@@ -28,9 +28,9 @@ final class LocalizationKeyAnalyzerTests: XCTestCase {
         ]
         XCTAssertEqual(expectedKeys, analyzer.undefinedKeys)
     }
-    
+
     func testUncalledKeys() {
-        
+
         let expectedKeys: Set<LocalizableKey> = [
             LocalizableKey(
                 key: "key_two",
@@ -44,9 +44,9 @@ final class LocalizationKeyAnalyzerTests: XCTestCase {
                 key: "key_four_%ld",
                 keyWithSuffix: nil
             ),
-            
+
         ]
-        
+
         XCTAssertEqual(expectedKeys, analyzer.uncalledKeys)
     }
 }
@@ -55,7 +55,7 @@ struct MockAppKeys: DefinedLocalizationKeys {
     var defaultKeys: Set<String> {
         ["key_one", "key_two", "key_three"]
     }
-    
+
     var parameterizedKeys: Set<StringLocalizableKeyParser.ParameterizedKey> {
         [
             StringLocalizableKeyParser.ParameterizedKey(

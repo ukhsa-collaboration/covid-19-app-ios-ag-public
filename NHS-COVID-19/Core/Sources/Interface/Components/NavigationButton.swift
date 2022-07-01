@@ -7,7 +7,7 @@ import Localization
 import SwiftUI
 
 public struct NavigationButton: View {
-    
+
     public class ColorScheme {
         var iconColor: Color
         var foregroundColor: Color
@@ -17,9 +17,9 @@ public struct NavigationButton: View {
         var backgroundColor: Color {
             singleColor == true ? imageBackgroundColor : Color(.surface)
         }
-        
+
         var borderColor: Color
-        
+
         init(
             iconColor: Color,
             foregroundColor: Color,
@@ -35,7 +35,7 @@ public struct NavigationButton: View {
             self.fontColor = fontColor
             self.borderColor = borderColor
         }
-        
+
         static func standard(foregroundColor: Color, imageBackgroundColor: Color) -> ColorScheme {
             return .init(
                 iconColor: Color(.secondaryText),
@@ -47,7 +47,7 @@ public struct NavigationButton: View {
             )
         }
     }
-    
+
     var action: () -> Void
     var imageName: ImageName
     var iconName: ImageName
@@ -56,9 +56,9 @@ public struct NavigationButton: View {
     var fontWeight: Font.Weight?
     var colorScheme: ColorScheme
     var showNewLabel: Bool
-    
+
     @State private var didTapButton: Bool = false
-    
+
     public init(
         imageName: ImageName,
         iconName: ImageName = .menuChevron,
@@ -81,7 +81,7 @@ public struct NavigationButton: View {
             action: action
         )
     }
-    
+
     public init(
         imageName: ImageName,
         iconName: ImageName = .menuChevron,
@@ -101,7 +101,7 @@ public struct NavigationButton: View {
         self.colorScheme = colorScheme
         self.showNewLabel = showNewLabel
     }
-    
+
     public var body: some View {
         Button(action: {
             if showNewLabel {

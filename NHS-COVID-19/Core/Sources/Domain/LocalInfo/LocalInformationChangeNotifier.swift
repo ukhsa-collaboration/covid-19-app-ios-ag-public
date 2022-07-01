@@ -8,12 +8,12 @@ import Foundation
 import UserNotifications
 
 struct LocalInformationChangeNotifier {
-    
+
     var notificationManager: UserNotificationManaging
-    
+
     private static let postcodePlaceholder = "[postcode]"
     private static let localAuthorityPlaceholder = "[local authority]"
-    
+
     func alertUserToChanges<P: Publisher>(
         in localInfo: P,
         localAuthority: AnyPublisher<LocalAuthority?, Never>,
@@ -24,7 +24,7 @@ struct LocalInformationChangeNotifier {
         localInfo
             .combineLatest(localAuthority, languageCode, postcode)
             .sink { localInfoWrapper, localAuthority, languageCode, postcode in
-                
+
                 // check that the local authorities match
                 guard let localAuthorityId = localAuthority?.id,
                     localAuthorityId == localInfoWrapper?.localAuthority?.id,
@@ -32,7 +32,7 @@ struct LocalInformationChangeNotifier {
                     let postcode = postcode else {
                     return
                 }
-                
+
                 guard let localAuthority = localAuthority else {
                     return
                 }
@@ -46,25 +46,25 @@ struct LocalInformationChangeNotifier {
                     // something else wrong with the postcode
                     return
                 }
-                
+
                 // get the current language code
                 let languageCode = languageCode ?? Locale.current.languageCode
-                
+
                 // check we've translations for this
                 guard let message = localInfoWrapper?.info?.translations(for: languageCode) else {
                     return
                 }
-                
+
                 if localInfoWrapper?.notify ?? false, let head = message.head {
                     Metrics.signpost(.didSendLocalInfoNotification)
-                    
+
                     #warning("put in an integration adaptor")
                     let notificationTitle: String = {
                         head
                             .replacingOccurrences(of: Self.postcodePlaceholder, with: postcode.value)
                             .replacingOccurrences(of: Self.localAuthorityPlaceholder, with: localAuthorityName)
                     }()
-                    
+
                     let notificationBody: String = {
                         guard let message = message.body else {
                             return ""
@@ -73,7 +73,7 @@ struct LocalInformationChangeNotifier {
                             .replacingOccurrences(of: Self.postcodePlaceholder, with: postcode.value)
                             .replacingOccurrences(of: Self.localAuthorityPlaceholder, with: localAuthorityName)
                     }()
-                    
+
                     self.notificationManager.add(
                         type: .localMessage(title: notificationTitle, body: notificationBody),
                         at: nil,

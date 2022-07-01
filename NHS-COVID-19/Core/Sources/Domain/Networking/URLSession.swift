@@ -21,11 +21,11 @@ extension URLSessionConfiguration {
 }
 
 public extension URLSession {
-    
+
     convenience init(trustValidator: TrustValidating) {
         let configuration: URLSessionConfiguration = .default
         configuration.secure()
-        
+
         let delegate = TrustValidatingURLSessionDelegate(validator: trustValidator)
         self.init(configuration: configuration, delegate: delegate, delegateQueue: nil)
     }

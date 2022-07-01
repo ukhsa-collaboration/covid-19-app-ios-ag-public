@@ -7,7 +7,7 @@ import Domain
 import Foundation
 
 extension IsolationModelAdapter {
-    
+
     func verify(_ context: RunningAppContext, isIn logicalState: IsolationModel.State) throws {
         let expected = try expectedState(for: logicalState)
         let actual = context.isolationState.currentValue
@@ -29,7 +29,7 @@ extension IsolationModelAdapter {
             throw IsolationModelAcceptanceError("Expected to be isolating with \(payload.reason) but instead it is not isolating")
         }
     }
-    
+
     func canDistinguish(_ lhs: IsolationModel.State, from rhs: IsolationModel.State) -> Bool {
         do {
             return try expectedState(for: lhs) != expectedState(for: rhs)
@@ -37,7 +37,7 @@ extension IsolationModelAdapter {
             return false
         }
     }
-    
+
     private func expectedState(for logicalState: IsolationModel.State) throws -> IsolationState {
         switch (logicalState.contact, logicalState.symptomatic, logicalState.positiveTest) {
         case (.noIsolation, .noIsolation, .noIsolation):

@@ -8,17 +8,17 @@ import XCTest
 @testable import Domain
 
 class SymptomsQuestionnaireEndpointTests: XCTestCase {
-    
+
     private let endpoint = SymptomsQuestionnaireEndpoint()
-    
+
     func testEndpoint() throws {
         let expected = HTTPRequest.get("/distribution/symptomatic-questionnaire")
-        
+
         let actual = try endpoint.request(for: ())
-        
+
         TS.assert(actual, equals: expected)
     }
-    
+
     func testDecodingEmptyList() throws {
         let response = HTTPResponse.ok(with: .json(#"""
         {
@@ -41,14 +41,14 @@ class SymptomsQuestionnaireEndpointTests: XCTestCase {
             "isSymptomaticSelfIsolationForWalesEnabled": false
         }
         """#))
-        
+
         let questionnaire = try endpoint.parse(response)
-        
+
         TS.assert(questionnaire.riskThreshold, equals: 0.5)
         TS.assert(questionnaire.dateSelectionWindow, equals: 14)
         XCTAssert(questionnaire.symptoms.isEmpty)
     }
-    
+
     func testDecodingSymptomList() throws {
         let title1en = String.random()
         let description1en = String.random()
@@ -56,7 +56,7 @@ class SymptomsQuestionnaireEndpointTests: XCTestCase {
         let description1de = String.random()
         let title2 = String.random()
         let description2 = String.random()
-        
+
         let response = HTTPResponse.ok(with: .json(#"""
         {
             "symptoms": [
@@ -99,7 +99,7 @@ class SymptomsQuestionnaireEndpointTests: XCTestCase {
             "isSymptomaticSelfIsolationForWalesEnabled": false
         }
         """#))
-        
+
         let expected = SymptomsQuestionnaire(
             symptoms: [
                 Symptom(
@@ -122,9 +122,9 @@ class SymptomsQuestionnaireEndpointTests: XCTestCase {
             dateSelectionWindow: 14,
             isSymptomaticSelfIsolationForWalesEnabled: false
         )
-        
+
         let actual = try endpoint.parse(response)
-        
+
         TS.assert(actual, equals: expected)
     }
 }

@@ -15,7 +15,7 @@ extension SymptomsAfterPositiveTestViewController {
     private class Content: PrimaryButtonStickyFooterScrollingContent {
         init(interactor: Interacting, isolationEndDate: Date, currentDateProvider: DateProviding) {
             let daysToIsolate = currentDateProvider.currentLocalDay.daysRemaining(until: isolationEndDate)
-            
+
             let headingStack = UIStackView(
                 content: BasicContent(
                     views: [
@@ -37,7 +37,7 @@ extension SymptomsAfterPositiveTestViewController {
             .isAccessibilityElement(true)
             .accessibilityTraits([.header, .staticText])
             .accessibilityLabel(localize(.positive_test_start_to_isolate_accessibility_label(days: daysToIsolate)))
-            
+
             super.init(
                 scrollingViews: [
                     UIImageView(.isolationStartIndex).styleAsDecoration(),
@@ -51,7 +51,7 @@ extension SymptomsAfterPositiveTestViewController {
                         title: localize(.self_diagnosis_symptoms_after_positive_link),
                         action: interactor.didTapOnlineServicesLink
                     ),
-                    
+
                 ],
                 primaryButton: (
                     title: localize(.self_diagnosis_symptoms_after_positive_button_title),
@@ -65,16 +65,16 @@ extension SymptomsAfterPositiveTestViewController {
 public class SymptomsAfterPositiveTestViewController: StickyFooterScrollingContentViewController {
     public typealias Interacting = SymptomsAfterPositiveTestViewControllerInteracting
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting, isolationEndDate: Date, currentDateProvider: DateProviding) {
         self.interactor = interactor
         super.init(content: Content(interactor: interactor, isolationEndDate: isolationEndDate, currentDateProvider: currentDateProvider))
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)

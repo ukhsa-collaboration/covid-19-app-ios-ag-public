@@ -9,13 +9,13 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 class InspectExperimentAppController: AppController {
-    
+
     let experimentManager = ExperimentManager()
     let rootViewController: UIViewController
-    
+
     init() {
         let rootView = SelectExperimentView(experimentManager: experimentManager)
         rootViewController = UIHostingController(rootView: rootView)
     }
-    
+
 }

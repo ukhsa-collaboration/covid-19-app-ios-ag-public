@@ -27,24 +27,24 @@ class PostAcknowledgementViewController: UIViewController {
         case showContactCaseResult(ContactCaseResultInterfaceState)
         case thankYou
     }
-    
+
     private var cancellables: Set<AnyCancellable> = []
-    
+
     private var setNeedsUpdate: Bool = true
-    
+
     fileprivate var interfaceState: PostAcknowledgmentState = .home {
         didSet {
             setNeedsInterfaceUpdate()
         }
     }
-    
+
     private let context: RunningAppContext
     private let shouldShowLanguageSelectionScreen: Bool
     fileprivate let showUIState: CurrentValueSubject<UITriggeredInterfaceState?, Never>
     fileprivate let bluetoothOffAcknowledgementNeeded: AnyPublisher<Bool, Never>
     fileprivate let bluetoothOffAcknowledgedCallback: () -> Void
     private let showNotificationScreen: CurrentValueSubject<NotificationInterfaceState?, Never>
-    
+
     private var content: UIViewController? {
         didSet {
             oldValue?.remove()
@@ -54,7 +54,7 @@ class PostAcknowledgementViewController: UIViewController {
             }
         }
     }
-    
+
     init(
         context: RunningAppContext,
         shouldShowLanguageSelectionScreen: Bool,
@@ -67,9 +67,9 @@ class PostAcknowledgementViewController: UIViewController {
         self.showNotificationScreen = showNotificationScreen
         bluetoothOffAcknowledgementNeeded = context.bluetoothOffAcknowledgementNeeded
         bluetoothOffAcknowledgedCallback = context.bluetoothOffAcknowledgedCallback
-        
+
         super.init(nibName: nil, bundle: nil)
-        
+
         PostAcknowledgmentState.makePostAcknowledgmentState(
             showUIState: showUIState,
             bluetoothOffAcknowledgementNeeded: bluetoothOffAcknowledgementNeeded,
@@ -79,34 +79,34 @@ class PostAcknowledgementViewController: UIViewController {
         .sink { [weak self] in self?.interfaceState = $0 }
         .store(in: &cancellables)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         updateIfNeeded()
     }
-    
+
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         updateIfNeeded()
     }
-    
+
     private func setNeedsInterfaceUpdate() {
         setNeedsUpdate = true
         if isViewLoaded {
             view.setNeedsLayout()
         }
     }
-    
+
     private func updateIfNeeded() {
         guard isViewLoaded, setNeedsUpdate else { return }
         setNeedsUpdate = false
         content = makeContentViewController()
     }
-    
+
     private func makeContentViewController() -> UIViewController {
         switch interfaceState {
         case .bluetoothOff:
@@ -196,7 +196,7 @@ class PostAcknowledgementViewController: UIViewController {
             }
         }
     }
-    
+
     private func sendKeysViewController(_ diagnosisKeySharer: DiagnosisKeySharer, shareFlowType: SendKeysFlowViewController.ShareFlowType) -> UIViewController {
         let interactor = SendKeysFlowViewControllerInteractor(
             diagnosisKeySharer: diagnosisKeySharer,
@@ -210,20 +210,20 @@ class PostAcknowledgementViewController: UIViewController {
                 }
             }
         )
-        
+
         return SendKeysFlowViewController(
             interactor: interactor,
             shareFlowType: shareFlowType
         )
     }
-    
+
     private func homeViewController() -> UIViewController {
-        
+
         let interactor = HomeFlowViewControllerInteractor(
             context: context,
             currentDateProvider: context.currentDateProvider
         )
-        
+
         let riskLevelBannerViewModel = context.postcodeInfo
             .map { postcodeInfo -> AnyPublisher<RiskLevelBanner.ViewModel?, Never> in
                 guard let postcodeInfo = postcodeInfo else { return Just(nil).eraseToAnyPublisher() }
@@ -240,21 +240,21 @@ class PostAcknowledgementViewController: UIViewController {
             }
             .switchToLatest()
             .property(initialValue: nil)
-        
+
         let localInfoBannerViewModel = context.localInformation
             .combineLatest(context.postcodeInfo)
             .map { (localInfo, postcodeInfo) -> LocalInformationBanner.ViewModel? in
                 guard let localInfo = localInfo,
                     let message = localInfo.info?.translations(for: currentLocaleIdentifier())
                 else { return nil }
-                
+
                 guard let headingText = message.head,
                     let renderableBlocks = message.renderable()
                 else { return nil }
-                
+
                 let postcode = postcodeInfo?.postcode.value ?? ""
                 let localAuthority = localInfo.localAuthority?.name ?? ""
-                
+
                 #warning("Postcode and local authority placeholder replacement should be done in the model layer")
                 let paragraphs = renderableBlocks.map { renderableBlock in
                     LocalInformationViewController.ViewModel.Paragraph(
@@ -262,16 +262,16 @@ class PostAcknowledgementViewController: UIViewController {
                         link: renderableBlock.url
                     )
                 }
-                
+
                 let replacementHeadingText = headingText.stringByReplacing(postcode: postcode, localAuthority: localAuthority)
-                
+
                 return LocalInformationBanner.ViewModel(
                     text: replacementHeadingText,
                     localInfoScreenViewModel: .init(header: replacementHeadingText, body: paragraphs)
                 )
             }
             .property(initialValue: nil)
-        
+
         let animationDisabled = NotificationCenter.default.publisher(
             for: UIAccessibility.reduceMotionStatusDidChangeNotification
         ).map { _ in UIAccessibility.isReduceMotionEnabled }
@@ -281,7 +281,7 @@ class PostAcknowledgementViewController: UIViewController {
                 return !animationsEnabled
             }.receive(on: RunLoop.main)
             .property(initialValue: UIAccessibility.isReduceMotionEnabled)
-        
+
         let isolationViewModel = RiskLevelIndicator.ViewModel(
             isolationState: context.isolationState
                 .mapToInterface(with: context.currentDateProvider)
@@ -289,15 +289,15 @@ class PostAcknowledgementViewController: UIViewController {
             paused: context.exposureNotificationStateController.isEnabledPublisher.map { !$0 }.property(initialValue: false),
             animationDisabled: animationDisabled, bluetoothOff: context.bluetoothOff.interfaceProperty, country: context.country.interfaceProperty
         )
-        
+
         let didRecentlyVisitSevereRiskyVenue = context.checkInContext?.recentlyVisitedSevereRiskyVenue ?? DomainProperty<GregorianDay?>.constant(nil)
-        
+
         let showOrderTestButton = context.shouldShowBookALabTest
             .combineLatest(didRecentlyVisitSevereRiskyVenue) { shouldShowBookALabTest, didRecentlyVisitSevereRiskyVenue in
                 shouldShowBookALabTest || didRecentlyVisitSevereRiskyVenue != nil
             }
             .property(initialValue: false)
-        
+
         let showWarnAndBookATestFlow = context.isolationState.combineLatest(didRecentlyVisitSevereRiskyVenue) { state, didRecentlyVisitSevereRiskyVenue in
             var showWarnAndBookATestFlow: Bool = false
             switch state {
@@ -309,24 +309,24 @@ class PostAcknowledgementViewController: UIViewController {
             return showWarnAndBookATestFlow && didRecentlyVisitSevereRiskyVenue != nil
         }
         .property(initialValue: false)
-        
+
         let shouldShowSelfDiagnosis = context.isolationState.map { state in
             if case .isolate(let isolation) = state { return isolation.canFillQuestionnaire }
             return true
         }
         .property(initialValue: false)
-        
+
         let userNotificationEnabled = context.exposureNotificationReminder.isNotificationAuthorized.property(initialValue: false)
-        
+
         let showFinancialSupportButton = context.isolationPaymentState.map { isolationPaymentState -> Bool in
             switch isolationPaymentState {
             case .disabled: return false
             case .enabled: return true
             }
         }.interfaceProperty
-        
+
         let country = context.country.property(initialValue: context.country.currentValue)
-        
+
         return HomeFlowViewController(
             interactor: interactor,
             bluetoothOff: context.bluetoothOff.eraseToAnyPublisher(),
@@ -346,7 +346,7 @@ class PostAcknowledgementViewController: UIViewController {
             shouldShowLocalStats: context.shouldShowLocalStats
         )
     }
-    
+
     private func bookAFollowUpTestController() -> UIViewController {
         let interactor = BookAFollowUpTestInteractor(
             didTapPrimaryButton: { [weak self] in
@@ -358,16 +358,16 @@ class PostAcknowledgementViewController: UIViewController {
             },
             openURL: context.openURL
         )
-        
+
         let bookAFollowUpTestViewController = BookAFollowUpTestViewController(interactor: interactor)
-        
+
         return BaseNavigationController(rootViewController: bookAFollowUpTestViewController)
     }
-    
+
     private func bookATestViewController() -> UIViewController {
-        
+
         let navigationVC = BaseNavigationController()
-        
+
         let virologyInteractor = VirologyTestingFlowInteractor(
             virologyTestOrderInfoProvider: context.virologyTestingManager,
             openURL: context.openURL,
@@ -377,7 +377,7 @@ class PostAcknowledgementViewController: UIViewController {
                 }
             }
         )
-        
+
         let bookATestInfoInteractor = BookATestInfoViewControllerInteractor(
             didTapBookATest: {
                 let virologyFlowVC = VirologyTestingFlowViewController(virologyInteractor)
@@ -385,13 +385,13 @@ class PostAcknowledgementViewController: UIViewController {
             },
             openURL: context.openURL
         )
-        
+
         let bookATestInfoVC = BookATestInfoViewController(interactor: bookATestInfoInteractor, shouldHaveCancelButton: true)
         bookATestInfoVC.didCancel = virologyInteractor.acknowledge
         navigationVC.viewControllers = [bookATestInfoVC]
         return navigationVC
     }
-    
+
     private func warnAndBookATestViewController() -> UIViewController {
         let navigationVC = BaseNavigationController()
         let checkSymptomsInteractor = TestCheckSymptomsInteractor(
@@ -445,7 +445,7 @@ class PostAcknowledgementViewController: UIViewController {
 
 private struct ThankYouViewControllerInteractor: ThankYouViewController.Interacting {
     var didTapButton: () -> Void
-    
+
     func action() {
         didTapButton()
     }
@@ -459,17 +459,17 @@ private struct TestCheckSymptomsInteractor: TestCheckSymptomsViewController.Inte
 private struct BookARapidTestInfoInteractor: BookARapidTestInfoViewController.Interacting {
     private weak var viewController: PostAcknowledgementViewController?
     public let openURL: (URL) -> Void
-    
+
     init(viewController: PostAcknowledgementViewController?, openURL: @escaping (URL) -> Void) {
         self.viewController = viewController
         self.openURL = openURL
     }
-    
+
     func didTapAlreadyHaveATest() {
         Metrics.signpost(.selectedHasLFDTestM2Journey)
         viewController?.showUIState.send(nil)
     }
-    
+
     func didTapBookATest() {
         Metrics.signpost(.selectedLFDTestOrderingM2Journey)
         openURL(ExternalLink.getTested.url)
@@ -478,71 +478,71 @@ private struct BookARapidTestInfoInteractor: BookARapidTestInfoViewController.In
 }
 
 private struct ContactCaseNoIsolationUnderAgeLimitInteractor: ContactCaseNoIsolationUnderAgeLimitEnglandViewController.Interacting {
-    
+
     private weak var viewController: PostAcknowledgementViewController?
     private let openURL: (URL) -> Void
-    
+
     init(viewController: PostAcknowledgementViewController?, openURL: @escaping (URL) -> Void) {
         self.viewController = viewController
         self.openURL = openURL
     }
-    
+
     func didTapBookAFreeTest() {
         viewController?.showUIState.send(.showBookATest)
     }
-    
+
     func didTapBackToHome() {
         viewController?.showUIState.send(nil)
     }
-    
+
     func didTapCancel() {
         viewController?.showUIState.send(nil)
     }
-    
+
     func didTapGuidanceLink() {
         openURL(ExternalLink.nhsGuidance.url)
     }
-    
+
     func didTapCommonQuestionsLink() {
         openURL(ExternalLink.faq.url)
     }
-    
+
     func didTapReadGuidanceForContacts() {
         openURL(ExternalLink.guidanceForContactsInEngland.url)
         viewController?.showUIState.send(nil)
     }
-    
+
 }
 
 private struct ContactCaseNoIsolationFullyVaccinatedInteractor: ContactCaseNoIsolationFullyVaccinatedEnglandViewController.Interacting {
     private weak var viewController: PostAcknowledgementViewController?
     private let openURL: (URL) -> Void
-    
+
     init(viewController: PostAcknowledgementViewController?, openURL: @escaping (URL) -> Void) {
         self.viewController = viewController
         self.openURL = openURL
     }
-    
+
     func didTapBookAFreeTest() {
         viewController?.showUIState.send(.showBookATest)
     }
-    
+
     func didTapBackToHome() {
         viewController?.showUIState.send(nil)
     }
-    
+
     func didTapCancel() {
         viewController?.showUIState.send(nil)
     }
-    
+
     func didTapGuidanceLink() {
         openURL(ExternalLink.nhsGuidance.url)
     }
-    
+
     func didTapCommonQuestionsLink() {
         openURL(ExternalLink.faq.url)
     }
-    
+
     func didTapReadGuidanceForContacts() {
         openURL(ExternalLink.guidanceForContactsInEngland.url)
         viewController?.showUIState.send(nil)
@@ -552,32 +552,32 @@ private struct ContactCaseNoIsolationFullyVaccinatedInteractor: ContactCaseNoIso
 private struct ContactCaseNoIsolationMedicallyExemptInteractor: ContactCaseNoIsolationMedicallyExemptViewController.Interacting {
     private weak var viewController: PostAcknowledgementViewController?
     private let openURL: (URL) -> Void
-    
+
     init(viewController: PostAcknowledgementViewController?, openURL: @escaping (URL) -> Void) {
         self.viewController = viewController
         self.openURL = openURL
     }
-    
+
     func didTapBookAFreeTest() {
         viewController?.showUIState.send(.showBookATest)
     }
-    
+
     func didTapBackToHome() {
         viewController?.showUIState.send(nil)
     }
-    
+
     func didTapCancel() {
         viewController?.showUIState.send(nil)
     }
-    
+
     func didTapGuidanceLink() {
         openURL(ExternalLink.nhsGuidance.url)
     }
-    
+
     func didTapCommonQuestionsLink() {
         openURL(ExternalLink.faq.url)
     }
-    
+
     func didTapReadGuidanceForContacts() {
         openURL(ExternalLink.guidanceForContactsInEngland.url)
         viewController?.showUIState.send(nil)
@@ -589,11 +589,11 @@ private struct ContactCaseStartIsolationInteractor: ContactCaseStartIsolationInt
         case bookPCR
         case orderLateralFlow
     }
-    
+
     private weak var viewController: PostAcknowledgementViewController?
     private let openURL: (URL) -> Void
     private let testOrderingAction: TestOrderingAction
-    
+
     init(viewController: PostAcknowledgementViewController?,
          openURL: @escaping (URL) -> Void,
          testBookingAction: TestOrderingAction) {
@@ -601,7 +601,7 @@ private struct ContactCaseStartIsolationInteractor: ContactCaseStartIsolationInt
         self.openURL = openURL
         testOrderingAction = testBookingAction
     }
-    
+
     func didTapGetTestButton() {
         switch testOrderingAction {
         case .bookPCR:
@@ -611,15 +611,15 @@ private struct ContactCaseStartIsolationInteractor: ContactCaseStartIsolationInt
             viewController?.showUIState.send(nil)
         }
     }
-    
+
     func didTapBackToHome() {
         viewController?.showUIState.send(nil)
     }
-    
+
     func didTapCancel() {
         viewController?.showUIState.send(nil)
     }
-    
+
     func didTapGuidanceLink() {
         openURL(ExternalLink.nhsGuidance.url)
     }
@@ -628,20 +628,20 @@ private struct ContactCaseStartIsolationInteractor: ContactCaseStartIsolationInt
 private struct ContactCaseContinueIsolationInteractor: ContactCaseContinueIsolationViewController.Interacting {
     private weak var viewController: PostAcknowledgementViewController?
     private let openURL: (URL) -> Void
-    
+
     init(viewController: PostAcknowledgementViewController?, openURL: @escaping (URL) -> Void) {
         self.viewController = viewController
         self.openURL = openURL
     }
-    
+
     func didTapBackToHome() {
         viewController?.showUIState.send(nil)
     }
-    
+
     func didTapCancel() {
         viewController?.showUIState.send(nil)
     }
-    
+
     func didTapGuidanceLink() {
         openURL(ExternalLink.nhsGuidance.url)
     }
@@ -650,16 +650,16 @@ private struct ContactCaseContinueIsolationInteractor: ContactCaseContinueIsolat
 private struct BluetoothDisabledWarningInteractor: BluetoothDisabledWarningViewController.Interacting {
     private weak var viewController: PostAcknowledgementViewController?
     private let openSettings: () -> Void
-    
+
     init(viewController: PostAcknowledgementViewController?, openSettings: @escaping () -> Void) {
         self.viewController = viewController
         self.openSettings = openSettings
     }
-    
+
     func didTapSettings() {
         openSettings()
     }
-    
+
     func didTapContinue() {
         viewController?.bluetoothOffAcknowledgedCallback()
     }

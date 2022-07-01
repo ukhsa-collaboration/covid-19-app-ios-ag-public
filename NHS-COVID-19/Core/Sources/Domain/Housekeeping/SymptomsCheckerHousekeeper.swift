@@ -11,7 +11,7 @@ class SymptomsCheckerHousekeeper {
     private let getMostRecentCompletedQuestionnaireDay: () -> GregorianDay?
     private let getToday: () -> GregorianDay
     private let clearData: () -> Void
-    
+
     init(getHousekeepingDeletionPeriod: @escaping () -> DayDuration?,
          getMostRecentCompletedQuestionnaireDay: @escaping () -> GregorianDay?,
          getToday: @escaping () -> GregorianDay,
@@ -21,7 +21,7 @@ class SymptomsCheckerHousekeeper {
         self.getToday = getToday
         self.clearData = clearData
     }
-    
+
     convenience init(symptomsCheckerStore: SymptomsCheckerStore, getToday: @escaping () -> GregorianDay) {
         self.init(
             getHousekeepingDeletionPeriod: { symptomsCheckerStore.configuration.analyticsPeriod },
@@ -30,22 +30,22 @@ class SymptomsCheckerHousekeeper {
             clearData: { symptomsCheckerStore.delete() }
         )
     }
-    
+
     func executeHousekeeping() -> AnyPublisher<Void, Never> {
         guard let housekeepingDeletionPeriod = getHousekeepingDeletionPeriod()?.days else {
             return Empty().eraseToAnyPublisher()
         }
-        
+
         guard let mostRecentCompletedQuestionnaireDay = getMostRecentCompletedQuestionnaireDay() else {
             return Empty().eraseToAnyPublisher()
         }
-        
+
         let daysSinceCompletedQuestionnaire = mostRecentCompletedQuestionnaireDay.distance(to: getToday())
-        
+
         if daysSinceCompletedQuestionnaire >= housekeepingDeletionPeriod {
             clearData()
         }
-        
+
         return Empty().eraseToAnyPublisher()
     }
 }

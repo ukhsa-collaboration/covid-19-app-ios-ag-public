@@ -15,16 +15,16 @@ struct RiskyPostDistrictsHandler: RequestHandler {
         case green
         case neutral
     }
-    
+
     struct RiskLevelData {
         var postcodes: Set<String> = []
         var localAuthorities: Set<String> = []
     }
-    
+
     var paths = ["/distribution/risky-post-districts-v2"]
-    
+
     var dataProvider: MockDataProvider
-    
+
     var response: Result<HTTPResponse, HTTPRequestError> {
         Self.response([
             .black: RiskLevelData(
@@ -57,18 +57,18 @@ struct RiskyPostDistrictsHandler: RequestHandler {
             ),
         ])
     }
-    
+
     static func response(_ data: [Indicator: RiskLevelData]) -> Result<HTTPResponse, HTTPRequestError> {
         let postcodeIndicators = data.flatMap { indicator, data in
             data.postcodes.map { "\"\($0)\": \"\(indicator.rawValue)\"," }
         }
         .joined(separator: "")
-        
+
         let localAuthorityIndicators = data.flatMap { indicator, data in
             data.localAuthorities.map { "\"\($0)\": \"\(indicator.rawValue)\"," }
         }
         .joined(separator: "")
-        
+
         func policyData(alertLevel: Int) -> String {
             """
             {
@@ -278,7 +278,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
             }
             """
         }
-        
+
         let json = """
         {
             "postDistricts" : {
@@ -431,13 +431,13 @@ struct RiskyPostDistrictsHandler: RequestHandler {
             }
         }
         """
-        
+
         return Result.success(.ok(with: .json(json)))
     }
 }
 
 private extension String {
-    
+
     var commaSeparatedComponents: Set<String> {
         Set(
             components(separatedBy: ",")
@@ -446,5 +446,5 @@ private extension String {
                 .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
         )
     }
-    
+
 }

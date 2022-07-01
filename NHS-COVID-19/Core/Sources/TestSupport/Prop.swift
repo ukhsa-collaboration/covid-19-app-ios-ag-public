@@ -11,44 +11,44 @@ public protocol TestPropConfiguration {
 
 public protocol TestProp {
     associatedtype Configuration = Void
-    
+
     static var defaultConfiguration: Configuration { get }
     init(configuration: Configuration) throws
     mutating func prepare(for test: XCTestCase)
 }
 
 public extension TestProp {
-    
+
     mutating func prepare(for test: XCTestCase) {}
-    
+
 }
 
 public extension TestProp where Configuration: TestPropConfiguration {
-    
+
     static var defaultConfiguration: Configuration { Configuration() }
-    
+
 }
 
 public extension TestProp where Configuration == Void {
-    
+
     static var defaultConfiguration: Void { () }
-    
+
 }
 
 @propertyWrapper
 public class Propped<Prop: TestProp> {
-    
+
     private enum State {
         case notInitialized
         case initialized(Prop)
     }
-    
+
     private var configuration = Prop.defaultConfiguration
     private var state = State.notInitialized
     private weak var instance: XCTestCase?
-    
+
     public init() {}
-    
+
     public var wrappedValue: Prop {
         guard let instance = self.instance else {
             preconditionFailure("Wrapped property called when we do not have an instance")
@@ -70,7 +70,7 @@ public class Propped<Prop: TestProp> {
             return value
         }
     }
-    
+
     public var projectedValue: Prop.Configuration {
         get {
             configuration
@@ -84,12 +84,12 @@ public class Propped<Prop: TestProp> {
             }
         }
     }
-    
+
     public func reset() {
         configuration = Prop.defaultConfiguration
         state = .notInitialized
     }
-    
+
     public static subscript<Instance: XCTestCase, Prop: TestProp>(
         _enclosingInstance instance: Instance,
         wrapped wrappedKeyPath: KeyPath<Instance, Prop>,
@@ -98,5 +98,5 @@ public class Propped<Prop: TestProp> {
         instance[keyPath: storageKeyPath].instance = instance
         return instance[keyPath: storageKeyPath].wrappedValue
     }
-    
+
 }

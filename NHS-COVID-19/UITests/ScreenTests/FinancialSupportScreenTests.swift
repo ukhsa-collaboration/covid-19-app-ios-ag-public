@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class FinancialSupportScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<FinanacialSupportScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = FinancialSupportScreen(app: app)
@@ -22,29 +22,29 @@ class FinancialSupportScreenTests: XCTestCase {
             XCTAssertTrue(screen.checkEligibilityLinkButton.exists)
         }
     }
-    
+
     func testTapFinancialHelpEnglandLinkButton() throws {
         try runner.run { app in
             let screen = FinancialSupportScreen(app: app)
-            
+
             screen.financialHelpEnglandLinkButton.tap()
             XCTAssert(app.staticTexts[runner.scenario.financialHelpEnglandLinkAlertTitle].exists)
         }
     }
-    
+
     func testTapFinancialHelpWalesLinkButton() throws {
         try runner.run { app in
             let screen = FinancialSupportScreen(app: app)
-            
+
             screen.financialHelpWalesLinkButton.tap()
             XCTAssert(app.staticTexts[runner.scenario.financialHelpWalesLinkAlertTitle].exists)
         }
     }
-    
+
     func testCheckEligibilityLinkButton() throws {
         try runner.run { app in
             let screen = FinancialSupportScreen(app: app)
-            
+
             screen.checkEligibilityLinkButton.tap()
             XCTAssert(app.staticTexts[runner.scenario.checkYourEligibilityAlertTitle].exists)
         }

@@ -12,7 +12,7 @@ struct App {
         CompilerCompilationRequirement.clang1,
         PlatformCompilationRequirement.iOSDevice,
     ]
-    
+
     static let knownAssets: [Asset] = [
         .strings("Localizable"),
         .stringsdict("Localizable"),
@@ -22,20 +22,20 @@ struct App {
         .bundle("Core_Localization"),
         .content(name: "PostalDistricts", suffix: "json"),
     ]
-    
+
     static let corePackageSourcesPathComponent = "NHS-COVID-19/Core/Sources"
-    
+
     static let localizableStringsResourcePath = "Localization/Resources/en.lproj/Localizable.strings"
-    
+
     static let localizableStringsDictResourcePath = "Localization/Resources/en.lproj/Localizable.stringsdict"
-    
+
     static let StringLocalizableKeyResourcePath = "Localization/StringLocalizableKey.swift"
-    
+
     static let localizedPackages = [
         "Integration",
         "Interface",
         "Localization",
         "Scenarios",
     ]
-    
+
 }

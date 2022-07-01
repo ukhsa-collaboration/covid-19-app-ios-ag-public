@@ -33,16 +33,16 @@ extension ShareKeysViewController {
 }
 
 public class ShareKeysViewController: StickyFooterScrollingContentViewController {
-    
+
     public typealias Interacting = ShareKeysViewControllerInteracting
     let interactor: Interacting
-    
+
     public init(interactor: Interacting) {
         self.interactor = interactor
         super.init(content: Content(interactor: interactor))
         title = localize(.share_keys_and_venues_share_keys_title)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

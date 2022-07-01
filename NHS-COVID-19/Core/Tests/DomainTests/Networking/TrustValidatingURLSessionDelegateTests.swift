@@ -13,7 +13,7 @@ class TrustValidatingURLSessionDelegateTests: XCTestCase {
         realm: nil,
         authenticationMethod: NSURLAuthenticationMethodServerTrust
     )
-    
+
     private lazy var challenge = URLAuthenticationChallenge(
         protectionSpace: protectionSpace,
         proposedCredential: nil,
@@ -22,7 +22,7 @@ class TrustValidatingURLSessionDelegateTests: XCTestCase {
         error: nil,
         sender: MockURLAuthenticationChallengeSender()
     )
-    
+
     func testAcceptingTrust() {
         let delegate = TrustValidatingURLSessionDelegate(validator: MockTrustValidator(canAccept: true))
         var disposition: URLSession.AuthChallengeDisposition?
@@ -31,11 +31,11 @@ class TrustValidatingURLSessionDelegateTests: XCTestCase {
             disposition = $0
             credential = $1
         }
-        
+
         XCTAssertNil(credential)
         XCTAssertEqual(disposition, .performDefaultHandling)
     }
-    
+
     func testRejectingTrust() {
         let delegate = TrustValidatingURLSessionDelegate(validator: MockTrustValidator(canAccept: false))
         var disposition: URLSession.AuthChallengeDisposition?
@@ -44,9 +44,9 @@ class TrustValidatingURLSessionDelegateTests: XCTestCase {
             disposition = $0
             credential = $1
         }
-        
+
         XCTAssertNil(credential)
         XCTAssertEqual(disposition, .cancelAuthenticationChallenge)
     }
-    
+
 }

@@ -7,7 +7,7 @@ import XCTest
 @testable import Domain
 
 class CheckInTests: XCTestCase {
-    
+
     func testSortCheckInsBasedOnSeverityLevelAndCheckInDate() {
         let checkIn1 = CheckIn(
             venue: Venue.random(),
@@ -36,13 +36,13 @@ class CheckInTests: XCTestCase {
             isRisky: true,
             venueMessageType: .warnAndBookATest
         )
-        
+
         let checkIns: [CheckIn] = [checkIn1, checkIn2, checkIn3, checkIn4]
-        
+
         let sortedCheckIns = checkIns.sorted {
             $0.isMoreRecentAndSevere(than: $1)
         }
-        
+
         XCTAssertEqual(sortedCheckIns[0], checkIn4)
         XCTAssertEqual(sortedCheckIns[1], checkIn2)
         XCTAssertEqual(sortedCheckIns[2], checkIn3)

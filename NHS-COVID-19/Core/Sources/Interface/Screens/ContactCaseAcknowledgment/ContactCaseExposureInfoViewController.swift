@@ -17,9 +17,9 @@ protocol ContactCaseExposureContent {
 
 public struct ContactCaseExposureInfoEnglandContent: ContactCaseExposureContent {
     public typealias Interacting = ContactCaseExposureInfoInteracting
-    
+
     var views: [StackViewContentProvider]
-    
+
     public init(interactor: Interacting,
                 exposureDate: Date) {
         let accordionController = UIHostingController(
@@ -36,7 +36,7 @@ public struct ContactCaseExposureInfoEnglandContent: ContactCaseExposureContent 
             })
         let accordionView = accordionController.view!
         accordionView.backgroundColor = .clear
-        
+
         // it fixes bug with height of expanded accordion on iOS 13 and iOS 15
         accordionView.translatesAutoresizingMaskIntoConstraints = false
         let accordionHeightConstraint = accordionView.heightAnchor.constraint(equalToConstant: 0)
@@ -45,7 +45,7 @@ public struct ContactCaseExposureInfoEnglandContent: ContactCaseExposureContent 
             accordionHeightConstraint.constant = size.height
             accordionHeightConstraint.isActive = true
         }
-        
+
         views = [
             UIImageView(.coronaVirus)
                 .styleAsDecoration()
@@ -69,9 +69,9 @@ public struct ContactCaseExposureInfoEnglandContent: ContactCaseExposureContent 
 
 public struct ContactCaseExposureInfoWalesContent: ContactCaseExposureContent {
     public typealias Interacting = ContactCaseExposureInfoInteracting
-    
+
     var views: [StackViewContentProvider]
-    
+
     public init(interactor: Interacting,
                 exposureDate: Date,
                 isIndexCase: Bool) {
@@ -89,7 +89,7 @@ public struct ContactCaseExposureInfoWalesContent: ContactCaseExposureContent {
             })
         let accordionView = accordionController.view!
         accordionView.backgroundColor = .clear
-        
+
         // it fixes bug with height of expanded accordion on iOS 13 and iOS 15
         accordionView.translatesAutoresizingMaskIntoConstraints = false
         let accordionHeightConstraint = accordionView.heightAnchor.constraint(equalToConstant: 0)
@@ -98,7 +98,7 @@ public struct ContactCaseExposureInfoWalesContent: ContactCaseExposureContent {
             accordionHeightConstraint.constant = size.height
             accordionHeightConstraint.isActive = true
         }
-        
+
         views = [
             UIImageView(.coronaVirus)
                 .styleAsDecoration()
@@ -111,7 +111,7 @@ public struct ContactCaseExposureInfoWalesContent: ContactCaseExposureContent {
                 .centralized(),
             accordionView,
         ]
-        
+
         if !isIndexCase {
             views.append(contentsOf: [
                 InformationBox.indication(
@@ -121,7 +121,7 @@ public struct ContactCaseExposureInfoWalesContent: ContactCaseExposureContent {
                 WelcomePoint(image: .thermometer, body: localize(.contact_case_exposure_info_screen_if_you_have_symptoms)),
             ])
         }
-        
+
         views.append(contentsOf: [
             UIView(), // This adds space when between the content and button. Otherwise the button is vertically stretched when the content height is less than screen height.
             PrimaryButton(title: localize(.contact_case_exposure_info_screen_continue_button), action: interactor.didTapContinue),
@@ -131,21 +131,21 @@ public struct ContactCaseExposureInfoWalesContent: ContactCaseExposureContent {
 
 public class ContactCaseExposureInfoEnglandViewController: ScrollingContentViewController {
     public typealias Interacting = ContactCaseExposureInfoInteracting
-    
+
     public init(interactor: Interacting,
                 exposureDate: Date) {
-        
+
         let content = ContactCaseExposureInfoEnglandContent(
             interactor: interactor,
             exposureDate: exposureDate
         )
         super.init(views: content.views)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
@@ -154,7 +154,7 @@ public class ContactCaseExposureInfoEnglandViewController: ScrollingContentViewC
 
 public class ContactCaseExposureInfoWalesViewController: ScrollingContentViewController {
     public typealias Interacting = ContactCaseExposureInfoInteracting
-    
+
     public init(interactor: Interacting,
                 exposureDate: Date,
                 isIndexCase: Bool) {
@@ -165,11 +165,11 @@ public class ContactCaseExposureInfoWalesViewController: ScrollingContentViewCon
         )
         super.init(views: content.views)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)

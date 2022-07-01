@@ -7,7 +7,7 @@ import Foundation
 
 struct CircuitBreakerExposureNotificationHandler: RequestHandler {
     var paths = ["/circuit-breaker/exposure-notification/request"]
-    
+
     var response: Result<HTTPResponse, HTTPRequestError> {
         let response = HTTPResponse.ok(with: .json("""
         {

@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class LocalAuthorityInformationScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<LocalAuthorityInformationScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = LocalAuthorityScreen(app: app)
@@ -18,7 +18,7 @@ class LocalAuthorityInformationScreenTests: XCTestCase {
             XCTAssertTrue(screen.button.exists)
         }
     }
-    
+
     func testContinue() throws {
         try runner.run { app in
             let screen = LocalAuthorityScreen(app: app)

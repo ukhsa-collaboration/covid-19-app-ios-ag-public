@@ -6,11 +6,11 @@ import Common
 import Foundation
 
 struct IsolationConfigurationEndpoint: HTTPEndpoint {
-    
+
     func request(for input: Void) throws -> HTTPRequest {
         .get("/distribution/self-isolation")
     }
-    
+
     func parse(_ response: HTTPResponse) throws -> EnglandAndWalesIsolationConfigurations {
         let payload = try JSONDecoder().decode(Payload.self, from: response.body.content)
         return EnglandAndWalesIsolationConfigurations(
@@ -30,7 +30,7 @@ private struct Payload: Codable {
         var indexCaseSinceTestResultEndDate: Int
         var testResultPollingTokenRetentionPeriod: Int
     }
-    
+
     var england: CountrySpecificValues
     var wales_v2: CountrySpecificValues
 }

@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class LocalStatisticsScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<LocalStatisticsScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = LocalStatisticsScreen(app: app)
@@ -21,7 +21,7 @@ class LocalStatisticsScreenTests: XCTestCase {
             XCTAssertTrue(screen.dashboardLink.exists)
         }
     }
-    
+
     func testLinkButton() throws {
         try runner.run { app in
             let screen = LocalStatisticsScreen(app: app)

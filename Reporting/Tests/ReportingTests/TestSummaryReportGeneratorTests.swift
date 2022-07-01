@@ -6,41 +6,41 @@ import XCTest
 @testable import Reporting
 
 final class TestSummaryReportGeneratorTests: XCTestCase {
-    
+
     override class func setUp() {
         super.setUp()
-        
+
     }
-    
+
     func testCreatingCoverageSummaryWithCorrectFormat() throws {
         let sut = TestSummaryReportGenerator()
         let coverageData = try sut.createCoverageSummary(from: getTestResultsJSON)
         let result = String(data: coverageData, encoding: .utf8)!
-        
+
         let expectedCoverageOutput = """
         General:
         ========
-        
+
         Type of coverage used: branch coverage
-        
+
         Coverages of modules:
         =====================
-        
+
         Domain: 86.62%
         Integration: 69.06%
         Localization: 74.13%
         Interface: 85.48%
         Common: 61.92%
-        
+
         Total test coverage: 82.3%
         """
-        
+
         XCTAssertEqual(result, expectedCoverageOutput)
     }
-    
+
     func testCreatingCoverageSummaryMissingTarget() throws {
         let sut = TestSummaryReportGenerator()
-        
+
         let json = """
         {
           "coveredLines" : 31855,
@@ -64,10 +64,10 @@ final class TestSummaryReportGeneratorTests: XCTestCase {
           "executableLines" : 57246
         }
         """.data(using: .utf8)!
-        
+
         XCTAssertThrowsError(try sut.createCoverageSummary(from: json))
     }
-    
+
 }
 
 private var getTestResultsJSON: Data {

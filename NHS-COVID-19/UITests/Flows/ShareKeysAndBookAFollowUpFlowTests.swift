@@ -8,10 +8,10 @@ import Scenarios
 import XCTest
 
 class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<SandboxedScenario>
-    
+
     override func setUpWithError() throws {
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = false
@@ -20,16 +20,16 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
         $runner.initialState.localAuthorityId = "E09000022"
         try $runner.initialState.set(testResultEndDate: LocalDay.today.advanced(by: -1).startOfDay)
     }
-    
+
     func testCombinedShareKeysAndBookAFollowUpTestFlowEngland() throws {
-        
+
         // Set up
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.index.rawValue
         $runner.initialState.testResult = "positive"
         $runner.initialState.supportsKeySubmission = true
         $runner.initialState.requiresConfirmatoryTest = true
         $runner.initialState.testKitType = "RAPID_RESULT"
-        
+
         $runner.report(scenario: "Share Keys And Book A Follow Up Test", "Combined Flow") {
             """
             Someone gets a positive lateral flow test result that allows them to BOTH:
@@ -38,42 +38,42 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
             """
         }
         $runner.enable(\.$testingForCOVID19Toggle)
-        
+
         try runner.run { app in
-            
+
             runner.step("Advice for index cases screen in England") {
                 """
                 We see the advice screen.
                 """
             }
-            
+
             let adviceScreen = AdviceForIndexCasesEnglandAlreadyIsolatingScreen(app: app)
             XCTAssertTrue(adviceScreen.heading.exists)
             adviceScreen.continueButton.tap()
-            
+
             runner.step("Share random IDs") {
                 """
                 The person is invited to share their device's random IDs (keys)
                 and taps continue.
                 """
             }
-            
+
             let shareKeysScreen = ShareKeysScreen(app: app)
             XCTAssertTrue(shareKeysScreen.heading.exists)
             shareKeysScreen.continueButton.tap()
-            
+
             let alertScreen = SimulatedShareRandomIdsScreen(app: app)
             alertScreen.shareButton.tap()
-            
+
             runner.step("Thank you screen") {
                 """
                 On the thank you screen, the button is labelled 'continue.'
                 """
             }
-            
+
             let thankYouScreen = ThankYouScreen(app: app)
             thankYouScreen.continueButtonText.tap()
-            
+
             runner.step("Book a Follow Up Test Screen") {
                 """
                 The person sees a screen inviting them to book a follow-up test,
@@ -85,7 +85,7 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
             let bookAFollowUpTestScreen = BookAFollowUpTestScreen(app: app)
             XCTAssertTrue(bookAFollowUpTestScreen.heading.exists)
             bookAFollowUpTestScreen.primaryButton.tap()
-            
+
             runner.step("Book a Test Screen") {
                 """
                 The usual test-booking screen is displayed.
@@ -94,7 +94,7 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
             let bookATestScreen = BookATestScreen(app: app)
             XCTAssertTrue(bookATestScreen.description.allExist)
             bookATestScreen.cancelButton.tap()
-            
+
             runner.step("Home Screen") {
                 """
                 Cancelling the Book a Test screen returns to the home screen.
@@ -104,9 +104,9 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
             XCTAssertTrue(homeScreen.testingHubButton.exists)
         }
     }
-    
+
     func testCombinedShareKeysAndBookAFollowUpTestFlowWales() throws {
-        
+
         // Set up
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.index.rawValue
         $runner.initialState.testResult = "positive"
@@ -115,7 +115,7 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
         $runner.initialState.testKitType = "RAPID_RESULT"
         $runner.initialState.localAuthorityId = "W06000023"
         $runner.enable(\.$testingForCOVID19Toggle)
-        
+
         $runner.report(scenario: "Share Keys And Book A Follow Up Test", "Combined Flow") {
             """
             Someone gets a positive lateral flow test result that allows them to BOTH:
@@ -124,40 +124,40 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
             """
         }
         try runner.run { app in
-            
+
             runner.step("Isolation screen") {
                 """
                 We see the positive test result screen, telling the person they need to isolate
                 """
             }
-            
+
             let positiveScreen = PositiveTestResultContinueIsolationScreen(app: app)
             XCTAssertTrue(positiveScreen.indicationLabel.exists)
             positiveScreen.continueButton.tap()
-            
+
             runner.step("Share random IDs") {
                 """
                 The person is invited to share their device's random IDs (keys)
                 and taps continue.
                 """
             }
-            
+
             let shareKeysScreen = ShareKeysScreen(app: app)
             XCTAssertTrue(shareKeysScreen.heading.exists)
             shareKeysScreen.continueButton.tap()
-            
+
             let alertScreen = SimulatedShareRandomIdsScreen(app: app)
             alertScreen.shareButton.tap()
-            
+
             runner.step("Thank you screen") {
                 """
                 On the thank you screen, the button is labelled 'continue.'
                 """
             }
-            
+
             let thankYouScreen = ThankYouScreen(app: app)
             thankYouScreen.continueButtonText.tap()
-            
+
             runner.step("Book a Follow Up Test Screen") {
                 """
                 The person sees a screen inviting them to book a follow-up test,
@@ -169,7 +169,7 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
             let bookAFollowUpTestScreen = BookAFollowUpTestScreen(app: app)
             XCTAssertTrue(bookAFollowUpTestScreen.heading.exists)
             bookAFollowUpTestScreen.primaryButton.tap()
-            
+
             runner.step("Book a Test Screen") {
                 """
                 The usual test-booking screen is displayed.
@@ -178,7 +178,7 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
             let bookATestScreen = BookATestScreen(app: app)
             XCTAssertTrue(bookATestScreen.description.allExist)
             bookATestScreen.cancelButton.tap()
-            
+
             runner.step("Home Screen") {
                 """
                 Cancelling the Book a Test screen returns to the home screen.
@@ -188,7 +188,7 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
             XCTAssertTrue(homeScreen.testingHubButton.exists)
         }
     }
-    
+
     func testDoesNotInviteToBookFollowUpTestOnEnteringUnconfirmedAfterConfirmedInEngland() throws {
         $runner.initialState.testResult = "positive"
         $runner.initialState.supportsKeySubmission = true
@@ -197,7 +197,6 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
         $runner.initialState.isolationCase = "indexWithPositiveTest"
         $runner.enable(\.$testingForCOVID19Toggle)
 
-        
         $runner.report(
             scenario: "Share Keys And Book A Follow Up Test",
             "Entering unconfirmed test result AFTER confirmed test result in England"
@@ -218,7 +217,7 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
             XCTAssertTrue(positiveScreen.heading.exists)
             XCTAssertTrue(positiveScreen.infoBox.exists)
             positiveScreen.continueButton.tap()
-            
+
             runner.step("Share random IDs") {
                 """
                 The person is invited to share their device's random IDs (keys)
@@ -228,10 +227,10 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
             let shareKeysScreen = ShareKeysScreen(app: app)
             XCTAssertTrue(shareKeysScreen.heading.exists)
             shareKeysScreen.continueButton.tap()
-            
+
             let alertScreen = SimulatedShareRandomIdsScreen(app: app)
             alertScreen.shareButton.tap()
-            
+
             runner.step("Thank You screen") {
                 """
                 The person sees the Thank You screen with the option to go back to home
@@ -240,7 +239,7 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
             let thankYouScreen = ThankYouScreen(app: app)
             XCTAssertTrue(thankYouScreen.headingText.waitForExistence(timeout: 0.1))
             thankYouScreen.backHomeButtonText.tap()
-            
+
             runner.step("Home screen - after second test result") {
                 """
                 The person returns to the home screen WITHOUT being
@@ -251,7 +250,7 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
             XCTAssertTrue(homeScreen.testingHubButton.exists)
         }
     }
-    
+
     func testDoesNotInviteToBookFollowUpTestOnEnteringUnconfirmedAfterConfirmedInWales() throws {
         $runner.initialState.testResult = "positive"
         $runner.initialState.supportsKeySubmission = true
@@ -262,7 +261,6 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
         $runner.initialState.postcode = "LL64"
         $runner.initialState.localAuthorityId = "W06000001"
 
-        
         $runner.report(
             scenario: "Share Keys And Book A Follow Up Test",
             "Entering unconfirmed test result AFTER confirmed test result in Wales"
@@ -282,7 +280,7 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
             let positiveScreen = PositiveTestResultContinueIsolationAfterConfirmedScreen(app: app)
             XCTAssertTrue(positiveScreen.indicationLabel.exists)
             positiveScreen.continueButton.tap()
-            
+
             runner.step("Share random IDs") {
                 """
                 The person is invited to share their device's random IDs (keys)
@@ -292,10 +290,10 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
             let shareKeysScreen = ShareKeysScreen(app: app)
             XCTAssertTrue(shareKeysScreen.heading.exists)
             shareKeysScreen.continueButton.tap()
-            
+
             let alertScreen = SimulatedShareRandomIdsScreen(app: app)
             alertScreen.shareButton.tap()
-            
+
             runner.step("Thank You screen") {
                 """
                 The person sees the Thank You screen with the option to go back to home
@@ -304,7 +302,7 @@ class ShareKeysAndBookAFollowUpFlowTests: XCTestCase {
             let thankYouScreen = ThankYouScreen(app: app)
             XCTAssertTrue(thankYouScreen.headingText.waitForExistence(timeout: 0.1))
             thankYouScreen.backHomeButtonText.tap()
-            
+
             runner.step("Home screen - after second test result") {
                 """
                 The person returns to the home screen WITHOUT being

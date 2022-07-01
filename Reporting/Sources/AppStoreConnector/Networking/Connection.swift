@@ -6,20 +6,20 @@ import Combine
 import Foundation
 
 public class Connection {
-    
+
     public enum Errors: Error {
         case httpError(statusCode: Int)
         case urlError(base: URLError)
     }
-    
+
     private let requestGenerator: RequestGenerator
     private let networkingDelegate: NetworkingDelegate
-    
+
     init(requestGenerator: RequestGenerator, networkingDelegate: NetworkingDelegate) {
         self.networkingDelegate = networkingDelegate
         self.requestGenerator = requestGenerator
     }
-    
+
     public func request(_ path: String) -> AnyPublisher<Data, Errors> {
         let request = requestGenerator.request(for: path)
         return networkingDelegate.response(for: request)
@@ -33,7 +33,7 @@ public class Connection {
                 }
             }.eraseToAnyPublisher()
     }
-    
+
 }
 
 private func absurd<Result>(_ never: Never) -> Result {}

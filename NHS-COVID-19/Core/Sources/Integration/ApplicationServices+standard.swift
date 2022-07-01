@@ -11,9 +11,9 @@ import Logging
 import UIKit
 
 extension ApplicationServices {
-    
+
     private static let logger = Logger(label: "ApplicationServices")
-    
+
     @available(iOSApplicationExtension, unavailable)
     public convenience init(
         standardServicesFor environment: Environment,
@@ -48,5 +48,5 @@ extension ApplicationServices {
             riskyPostcodeUpdateIntervalProvider: riskyPostcodeUpdateIntervalProvider
         )
     }
-    
+
 }

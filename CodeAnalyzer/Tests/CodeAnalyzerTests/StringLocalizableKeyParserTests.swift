@@ -7,17 +7,17 @@ import XCTest
 
 final class StringLocalizableKeyParserTests: XCTestCase {
     private var stringLocalizationParser: StringLocalizableKeyParser!
-    
+
     override func setUpWithError() throws {
         try super.setUpWithError()
-        
+
         stringLocalizationParser = try StringLocalizableKeyParser(
             file: MockFile.StringLocalizableKey.url
         )
     }
-    
+
     func testKeys() {
-        
+
         let expectedDefaultKeys: Set<String> = [
             "onboarding_strapline_title",
             "home_strapline_title",
@@ -26,7 +26,7 @@ final class StringLocalizableKeyParserTests: XCTestCase {
             "home_strapline_accessiblity_label_wls",
             "onboarding_strapline_title",
         ]
-        
+
         let expectedParameterizedKeys: Set<StringLocalizableKeyParser.ParameterizedKey> = [
             StringLocalizableKeyParser.ParameterizedKey(
                 identifier: "numbered_list_item",
@@ -41,9 +41,9 @@ final class StringLocalizableKeyParserTests: XCTestCase {
                 rawValue: "checkin_confirmation_date %@"
             ),
         ]
-        
+
         XCTAssertEqual(expectedDefaultKeys, stringLocalizationParser.defaultKeys)
-        
+
         XCTAssertEqual(expectedParameterizedKeys, stringLocalizationParser.parameterizedKeys)
     }
 }

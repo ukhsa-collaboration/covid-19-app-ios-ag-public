@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class IsolationAdviceForSymptomaticCasesEnglandScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<IsolationAdviceForSymptomaticCasesEnglandViewControllerScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = IsolationAdviceForSymptomaticCasesEnglandScreen(app: app)
@@ -19,12 +19,12 @@ class IsolationAdviceForSymptomaticCasesEnglandScreenTests: XCTestCase {
             }
         }
     }
-    
+
     func testContinueButton() throws {
         try runner.run { app in
             let screen = IsolationAdviceForSymptomaticCasesEnglandScreen(app: app)
             screen.continueButton.tap()
-            
+
             XCTAssertTrue(app.staticTexts[runner.scenario.continueButtonTapped].exists)
         }
     }

@@ -9,24 +9,24 @@ import Interface
 import SwiftUI
 
 class LocalCovidStatsDataViewScenario: Scenario {
-    
+
     static var appController: AppController {
         BasicAppController(rootViewController: UIHostingController(rootView: LocalCovidStatsDataView(localCovidStats: localCovidStatsDailyOBJ)))
     }
-    
+
     public static let name = "Local Covid Stats Data View"
     public static let kind = ScenarioKind.component
-    
+
 }
 
 private var localCovidStatsDailyOBJ: InterfaceLocalCovidStatsDaily {
-    
+
     typealias Value = InterfaceLocalCovidStatsDaily.LocalAuthorityStats.Value
     typealias Direction = InterfaceLocalCovidStatsDaily.LocalAuthorityStats.Direction
-    
+
     let day = GregorianDay(year: 2021, month: 11, day: 18)
     let dayOne = GregorianDay(year: 2021, month: 11, day: 13)
-    
+
     return InterfaceLocalCovidStatsDaily(
         lastFetch: Date(),
         country: InterfaceLocalCovidStatsDaily.CountryStats(

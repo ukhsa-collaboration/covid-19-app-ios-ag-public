@@ -45,9 +45,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string>%ld گھر پر رہنے کی کوشش کرنا جاری رکھیں برائے</string>
+				<string>%ld دن تک ذاتی علیحدگی جاری رکھیں</string>
 				<key>other</key>
-				<string>%ld گھر پر رہنے کی کوشش کرنا جاری رکھیں برائے</string>
+				<string>%ld دن تک ذاتی علیحدگی جاری رکھیں</string>
 			</dict>
 		</dict>
 		<key>isolation_days_accessibility_label %ld</key>
@@ -448,6 +448,54 @@
 				<string>خود کو %2$@ تک %3$@ تک اضافی نگہداشت کریں اور دوسروں کی حفاظت کریں %1$ld  دن باقی ہے۔</string>
 				<key>other</key>
 				<string>خود کو %2$@ تک %3$@ تک اضافی نگہداشت کریں اور دوسروں کی حفاظت کریں %1$ld  دن باقی ہے۔</string>
+			</dict>
+		</dict>
+		<key>contact_case_continue_isolation_days %ld_wls</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string/>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>contact_case_continue_isolation_accessibility_label %ld_wls</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string/>
+				<key>other</key>
+				<string/>
+			</dict>
+		</dict>
+		<key>negative_test_result_with_isolation_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string/>
+				<key>other</key>
+				<string/>
 			</dict>
 		</dict>
 	</dict>

@@ -10,9 +10,9 @@ struct VoidTestResultNoIsolationInteractor: NonNegativeTestResultNoIsolationView
     var didTapCancel: (() -> Void)?
     var didTapOnlineServicesLink: () -> Void
     var didTapPrimaryButton: () -> Void
-    
-    init(didTapCancel: (() -> Void)?, bookATest: @escaping () -> Void, openURL: @escaping (URL) -> Void) {
-        didTapPrimaryButton = bookATest
+
+    init(didTapCancel: (() -> Void)?, didTapPrimaryButton: @escaping () -> Void, openURL: @escaping (URL) -> Void) {
+        self.didTapPrimaryButton = didTapPrimaryButton
         didTapOnlineServicesLink = { openURL(ExternalLink.nhs111Online.url) }
         self.didTapCancel = didTapCancel
     }

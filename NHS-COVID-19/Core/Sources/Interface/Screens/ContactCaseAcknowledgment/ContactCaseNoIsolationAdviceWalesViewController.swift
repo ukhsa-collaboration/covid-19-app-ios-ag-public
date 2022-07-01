@@ -14,7 +14,7 @@ public protocol ContactCaseNoIsolationAdviceWalesViewControllerInteracting {
 extension ContactCaseNoIsolationAdviceWalesViewController {
     private struct Content {
         let views: [StackViewContentProvider]
-        
+
         init(interactor: Interacting) {
             views = [
                 UIImageView(.isolationEndedWarning)
@@ -23,10 +23,10 @@ extension ContactCaseNoIsolationAdviceWalesViewController {
                     .styleAsPageHeader()
                     .set(text: localize(.risky_contact_opt_out_advice_title_wales))
                     .centralized(),
-                
+
                 WelcomePoint(image: .riskLevelMeetingOutdoorsIcon, body: localize(.risky_contact_opt_out_advice_meeting_indoors_wales)),
                 WelcomePoint(image: .riskLevelFaceCoveringsIcon, body: localize(.risky_contact_opt_out_advice_mask_wales)),
-                WelcomePoint(image: .swabTest, body: localize(.risky_contact_opt_out_advice_testing_hub_wales)),
+                WelcomePoint(image: .infoCircle, body: localize(.risky_contact_opt_out_advice_testing_hub_wales)),
                 WelcomePoint(image: .washHands, body: localize(.risky_contact_opt_out_advice_wash_hands_wales)),
                 SpacerView(),
                 PrimaryLinkButton(
@@ -45,16 +45,16 @@ extension ContactCaseNoIsolationAdviceWalesViewController {
 public class ContactCaseNoIsolationAdviceWalesViewController: ScrollingContentViewController {
     public typealias Interacting = ContactCaseNoIsolationAdviceWalesViewControllerInteracting
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting) {
         self.interactor = interactor
         super.init(views: Content(interactor: interactor).views)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)

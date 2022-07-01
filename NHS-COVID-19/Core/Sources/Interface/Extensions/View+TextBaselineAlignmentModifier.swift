@@ -11,7 +11,7 @@ import SwiftUI
  */
 private struct TextBaselineAlignmentModifier: ViewModifier {
     let font: Font
-    
+
     func body(content: Content) -> some View {
         ZStack(alignment: .center) {
             Text("\u{00A0}")

@@ -8,20 +8,15 @@ import Interface
 import Localization
 
 struct EndOfIsolationViewControllerInteractor: EndOfIsolationViewController.Interacting {
-    
+
     var acknowledge: () -> Void
     let openURL: (URL) -> Void
-    
+
     func didTapOnlineServicesLink() {
         openURL(ExternalLink.nhs111Online.url)
     }
-    
+
     func didTapReturnHome() {
         acknowledge()
     }
-    
-    func didTapPrimaryLinkButton() {
-        openURL(ExternalLink.governmentGuidance.url)
-    }
-    
 }

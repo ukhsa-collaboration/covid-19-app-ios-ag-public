@@ -36,17 +36,17 @@ extension NegativeTestResultNoIsolationViewController {
 }
 
 public class NegativeTestResultNoIsolationViewController: StickyFooterScrollingContentViewController {
-    
+
     public typealias Interacting = NegativeTestResultNoIsolationViewControllerInteracting
-    
+
     public init(interactor: Interacting) {
         super.init(content: Content(interactor: interactor))
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)

@@ -11,7 +11,7 @@ public struct HubButtonCell: View {
         let description: String
         let accessoryImageName: ImageName
         let action: () -> Void
-        
+
         public init(
             title: String,
             description: String,
@@ -24,13 +24,13 @@ public struct HubButtonCell: View {
             self.action = action
         }
     }
-    
+
     private let viewModel: ViewModel
-    
+
     public init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
         let button = Button(action: viewModel.action) {
             HStack {
@@ -43,7 +43,7 @@ public struct HubButtonCell: View {
                 }
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                
+
                 Image(viewModel.accessoryImageName)
                     .frame(width: .symbolIconWidth, height: .symbolIconWidth)
                     .foregroundColor(Color(.primaryText))
@@ -54,12 +54,12 @@ public struct HubButtonCell: View {
         .buttonStyle(PlainButtonStyle())
         .background(Color(.surface))
         .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
-        
+
         if viewModel.accessoryImageName == .externalLink {
             let linkText = viewModel.title + ", " + viewModel.description
             return AnyView(button.linkify(linkText))
         }
         return AnyView(button)
     }
-    
+
 }

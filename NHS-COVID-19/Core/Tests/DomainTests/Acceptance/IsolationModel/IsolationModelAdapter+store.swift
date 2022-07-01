@@ -8,7 +8,7 @@ import Domain
 import Foundation
 
 extension IsolationModelAdapter {
-    
+
     func storeRepresentations(for state: IsolationModel.State) throws -> [String] {
         try contactRepresentations(for: state).flatMap { contact in
             try symptomaticRepresentation(for: state).flatMap { symptomatic in
@@ -27,7 +27,7 @@ extension IsolationModelAdapter {
             }
         }
     }
-    
+
     private func contactRepresentations(for state: IsolationModel.State) throws -> [String?] {
         switch state.contact {
         case .noIsolation:
@@ -38,7 +38,7 @@ extension IsolationModelAdapter {
             return [
                 contactCaseWithoutIsolationOptOut(exposureDay: contactCase.exposureDay, isolationFromDay: contactCase.contactIsolationFromStartOfDay),
             ]
-            
+
         case .notIsolatingAndHadRiskyContactIsolationTerminatedEarly:
             return [
                 """
@@ -68,7 +68,7 @@ extension IsolationModelAdapter {
             ]
         }
     }
-    
+
     private func contactCaseWithoutIsolationOptOut(exposureDay: GregorianDay, isolationFromDay: GregorianDay) -> String {
         return """
             "hasAcknowledgedStartOfIsolation": false,
@@ -84,7 +84,7 @@ extension IsolationModelAdapter {
             }
         """
     }
-    
+
     private func symptomaticRepresentation(for state: IsolationModel.State) throws -> [String?] {
         switch state.symptomatic {
         case .noIsolation:
@@ -101,7 +101,7 @@ extension IsolationModelAdapter {
             ]
         }
     }
-    
+
     private func testRepresentation(for state: IsolationModel.State) throws -> [String?] {
         switch state.positiveTest {
         case .noIsolation:
@@ -150,7 +150,7 @@ extension IsolationModelAdapter {
             ]
         }
     }
-    
+
     private func symptomaticCaseRepresentation(selfDiagnosisDay: GregorianDay, onsetDay: GregorianDay? = nil) -> String {
         var json = """
             "selfDiagnosisDay" : {
@@ -159,7 +159,7 @@ extension IsolationModelAdapter {
                 "year" : \(selfDiagnosisDay.year)
             }
         """
-        
+
         if let onsetDay = onsetDay {
             json += """
                 ,
@@ -170,10 +170,10 @@ extension IsolationModelAdapter {
                 }
             """
         }
-        
+
         return json
     }
-    
+
     private func testCaseRepresentation(
         testEndDay: GregorianDay,
         receivedOnDay: GregorianDay,
@@ -198,7 +198,7 @@ extension IsolationModelAdapter {
             \(value(named: "confirmatoryDayLimit", content: confirmatoryDayLimit))
         """
     }
-    
+
     private func endOfIsolationAcknowledged(for state: IsolationModel.State) -> String {
         switch (state.contact, state.symptomatic, state.positiveTest) {
         case (.notIsolatingAndHadRiskyContactIsolationTerminatedEarly, .noIsolation, .noIsolation),
@@ -214,7 +214,7 @@ extension IsolationModelAdapter {
             return "false"
         }
     }
-    
+
     private func isolationJSON(with isolationInfoLines: () -> String) -> String {
         """
         {
@@ -230,7 +230,7 @@ extension IsolationModelAdapter {
         }
         """
     }
-    
+
     private func object(named name: String, content: String?) -> String {
         guard let content = content else { return "" }
         return """
@@ -239,17 +239,17 @@ extension IsolationModelAdapter {
         }
         """
     }
-    
+
     private func value(named name: String, content: Int?) -> String {
         guard let content = content else {
             return """
                 \"\(name)\": null
             """
         }
-        
+
         return """
         \"\(name)\": \(String(describing: content))
         """
     }
-    
+
 }

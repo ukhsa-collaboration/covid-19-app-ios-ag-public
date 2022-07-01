@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class PlodTestResultScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<PlodTestResultScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = PlodTestResultScreen(app: app)
@@ -20,11 +20,11 @@ class PlodTestResultScreenTests: XCTestCase {
             XCTAssert(screen.primaryButton.exists)
         }
     }
-    
+
     func testPrimaryButtonTap() throws {
         try runner.run { app in
             let screen = PlodTestResultScreen(app: app)
-            
+
             screen.primaryButton.tap()
             XCTAssert(screen.primaryButtonAlertTitle.exists)
         }
@@ -32,7 +32,7 @@ class PlodTestResultScreenTests: XCTestCase {
 }
 
 private extension PlodTestResultScreen {
-    
+
     var primaryButtonAlertTitle: XCUIElement {
         app.staticTexts[PlodTestResultScreenScenario.returnHomeTapped]
     }

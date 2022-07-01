@@ -7,13 +7,13 @@ import Localization
 import SwiftUI
 
 private struct GuidanceHubEnglandView: View {
-    
+
     private let interactor: GuidanceHubEnglandViewController.Interacting
-    
+
     init(interactor: GuidanceHubEnglandViewController.Interacting) {
         self.interactor = interactor
     }
-    
+
     var body: some View {
         ScrollView {
             VStack(spacing: .halfHairSpacing) {
@@ -25,7 +25,7 @@ private struct GuidanceHubEnglandView: View {
                                         action: interactor.didTapGuidanceForCovid19EnglandLink
                                     )
                 )
-                
+
                 HubButtonCell(viewModel:
                                     .init(
                                         title: localize(.covid_guidance_hub_check_symptoms_title),
@@ -34,7 +34,7 @@ private struct GuidanceHubEnglandView: View {
                                         action: interactor.didTapGuidanceForCheckSymptomsEnglandLink
                                     )
                 )
-                
+
                 HubButtonCell(viewModel:
                                     .init(
                                         title: localize(.covid_guidance_hub_latest_title),
@@ -43,7 +43,7 @@ private struct GuidanceHubEnglandView: View {
                                         action: interactor.didTapLatestGuidanceCovid19EnglandLink
                                     )
                 )
-                
+
                 HubButtonCell(viewModel:
                                     .init(
                                         title: localize(.covid_guidance_hub_positive_test_result_title),
@@ -52,7 +52,7 @@ private struct GuidanceHubEnglandView: View {
                                         action: interactor.didTapGuidancePositiveCovid19TestResultEnglandLink
                                     )
                 )
-                
+
                 HubButtonCell(viewModel:
                                     .init(
                                         title: localize(.covid_guidance_hub_travelling_abroad_title),
@@ -61,7 +61,7 @@ private struct GuidanceHubEnglandView: View {
                                         action: interactor.didTapGuidanceTravillingAbroadEnglandLink
                                     )
                 )
-                
+
                 HubButtonCell(viewModel:
                                     .init(
                                         title: localize(.covid_guidance_hub_check_ssp_title),
@@ -70,7 +70,7 @@ private struct GuidanceHubEnglandView: View {
                                         action: interactor.didTapGuidanceClaimSSPEnglandLink
                                     )
                 )
-                
+
                 HubButtonCell(viewModel:
                                     .init(
                                         title: localize(.covid_guidance_hub_covid_enquiries_title),
@@ -79,9 +79,9 @@ private struct GuidanceHubEnglandView: View {
                                         action: interactor.didTapGuidanceGetHelpCovid19EnquiriesEnglandLink
                                     )
                 )
-                
+
             }
-            
+
         }
         .padding(.bottom, .bigSpacing)
         .background(Color(.background))
@@ -99,35 +99,30 @@ public protocol GuidanceHubEnglandViewControllerInteracting {
 }
 
 public class GuidanceHubEnglandViewController: RootViewController {
-    
+
     public typealias Interacting = GuidanceHubEnglandViewControllerInteracting
-    
+
     private  let interactor: Interacting
-    
+
     public init(interactor: Interacting) {
         self.interactor = interactor
         super.init(nibName: nil, bundle: nil)
         title = localize(.home_covid19_guidance_button_title)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewDidLoad() {
         super.viewDidLoad()
-        
+
         let guidanceHubEnglandView = GuidanceHubEnglandView(interactor: interactor)
             .edgesIgnoringSafeArea(.bottom)
-        
+
         let contentViewController = UIHostingController(rootView: guidanceHubEnglandView)
         addFilling(contentViewController)
-  
+
     }
-    
+
 }
-
-
-
-
-

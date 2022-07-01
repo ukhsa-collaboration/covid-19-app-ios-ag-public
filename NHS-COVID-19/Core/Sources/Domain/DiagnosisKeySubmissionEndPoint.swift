@@ -7,16 +7,16 @@ import ExposureNotification
 import Foundation
 
 struct DiagnosisKeySubmissionEndPoint: HTTPEndpoint {
-    
+
     var token: DiagnosisKeySubmissionToken
-    
+
     func request(for input: [TemporaryExposureKey]) throws -> HTTPRequest {
         let payload = Payload(token: token, diagnosisKeys: input)
         let encoding = JSONEncoder()
         let body = try encoding.encode(payload)
         return .post("/submission/diagnosis-keys", body: .json(body))
     }
-    
+
     func parse(_ response: HTTPResponse) throws {}
 }
 
@@ -28,13 +28,13 @@ private struct Payload: Codable {
         var transmissionRiskLevel: UInt8
         var daysSinceOnsetOfSymptoms: Int
     }
-    
+
     var diagnosisKeySubmissionToken: String
     var temporaryExposureKeys: [ExposureKey]
 }
 
 extension Payload {
-    
+
     fileprivate init(token: DiagnosisKeySubmissionToken, diagnosisKeys: [TemporaryExposureKey]) {
         let keys = diagnosisKeys.map {
             Payload.ExposureKey(

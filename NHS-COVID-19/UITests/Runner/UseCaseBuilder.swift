@@ -7,14 +7,14 @@ import XCTest
 class UseCaseBuilder {
     private(set) var useCase: UseCase
     private(set) var screenshots = [String: Data]()
-    
+
     var app: XCUIApplication?
     var deviceConfiguration: DeviceConfiguration?
-    
+
     init(useCase: UseCase) {
         self.useCase = useCase
     }
-    
+
     private var shouldUseFullScreenshot: Bool {
         guard let config = deviceConfiguration else { return false }
         return config.orientation == .portrait &&
@@ -22,16 +22,16 @@ class UseCaseBuilder {
             config.interfaceStyle == .light &&
             (config.showStringLocalizableKeysOnly == true || config.language == "en")
     }
-    
+
     func step(name: String, description: () -> String = { "" }) {
         guard let app = app, let deviceConfiguration = deviceConfiguration else {
             preconditionFailure("Can only add a step after setting the application and configuration.")
         }
-        
+
         let fileName = "\(useCase.screenshotsFolderName)/\(name) (\(deviceConfiguration.joinedTags)).png"
-        
+
         let data: Data
-        
+
         if shouldUseFullScreenshot, let fullscreenImageData = app.windows.firstMatch.fullScreenshot()?.pngData() {
             data = fullscreenImageData
         } else {
@@ -39,11 +39,11 @@ class UseCaseBuilder {
             // taking landscape screenshots
             data = XCUIScreen.main.screenshot().pngRepresentation
         }
-        
+
         let screenshot = UseCase.Screenshot(fileName: fileName, tags: deviceConfiguration.screenshotTags)
-        
+
         screenshots[fileName] = data
-        
+
         if let index = useCase.steps.firstIndex(where: { $0.name == name }) {
             useCase.steps[index].screenshots.append(screenshot)
         } else {
@@ -55,22 +55,22 @@ class UseCaseBuilder {
             useCase.steps.append(step)
         }
     }
-    
+
     func clearScreenshots() {
         screenshots.removeAll(keepingCapacity: true)
     }
 }
 
 private extension DeviceConfiguration {
-    
+
     var joinedTags: String {
         screenshotTags.joined(separator: " - ")
     }
-    
+
     var screenshotTags: [String] {
         [orientation.tag, contentSize.tag, interfaceStyle.tag, languageOrTag]
     }
-    
+
 }
 
 private extension DeviceConfiguration {

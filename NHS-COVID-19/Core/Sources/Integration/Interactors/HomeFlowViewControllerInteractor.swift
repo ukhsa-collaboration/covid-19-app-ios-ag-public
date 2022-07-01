@@ -25,9 +25,9 @@ extension LinkTestValidationError {
 }
 
 struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
-    
+
     func getHomeAnimationsViewModel() -> HomeAnimationsViewModel {
-        
+
         let reduceMotionPublisher = NotificationCenter.default.publisher(
             for: UIAccessibility.reduceMotionStatusDidChangeNotification
         )
@@ -35,7 +35,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         .map { _ in UIAccessibility.isReduceMotionEnabled }
         .prepend(UIAccessibility.isReduceMotionEnabled)
         .eraseToAnyPublisher()
-        
+
         return HomeAnimationsViewModel(
             homeAnimationEnabled: context.homeAnimationsStore.homeAnimationsEnabled.interfaceProperty,
             homeAnimationEnabledAction: { enabled in
@@ -43,18 +43,18 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             }, reduceMotionPublisher: reduceMotionPublisher
         )
     }
-    
+
     func getCurrentLocaleConfiguration() -> InterfaceProperty<LocaleConfiguration> {
         context.currentLocaleConfiguration.interfaceProperty
     }
-    
+
     func storeNewLanguage(_ localeConfiguration: LocaleConfiguration) {
         context.storeNewLanguage(localeConfiguration)
     }
-    
+
     var context: RunningAppContext
     var currentDateProvider: DateProviding
-    
+
     func makeLocalAuthorityOnboardingInteractor() -> LocalAuthorityFlowViewController.Interacting {
         return LocalAuthorityOnboardingInteractor(
             openURL: context.openURL,
@@ -62,7 +62,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             storeLocalAuthority: context.storeLocalAuthorities
         )
     }
-    
+
     func makeDiagnosisViewController() -> UIViewController? {
         if context.country.currentValue == .wales {
             let testOrdering = CurrentValueSubject<Bool, Never>(false)
@@ -85,10 +85,10 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             )
         }
     }
-    
+
     func makeCheckInViewController() -> UIViewController? {
         guard let checkInContext = context.checkInContext else { return nil }
-        
+
         let interactor = CheckInInteractor(
             _openSettings: context.openSettings,
             _process: {
@@ -96,9 +96,9 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                 return CheckInDetail(venueName: venueName, removeCurrentCheckIn: removeCurrentCheckIn)
             }
         )
-        
+
         let qrCodeScanner = checkInContext.qrCodeScanner
-        
+
         let cameraPermissionStatePublisher = qrCodeScanner.cameraStateController.$authorizationState.map { state -> CameraPermissionState in
             switch state {
             case .notDetermined:
@@ -109,7 +109,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                 return .denied
             }
         }.eraseToAnyPublisher()
-        
+
         qrCodeScanner.reset()
         let scanner = QRScanner(
             state: qrCodeScanner.getState().map { state in
@@ -134,7 +134,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             stopScanning: qrCodeScanner.stopScanner,
             layoutFinished: qrCodeScanner.changeOrientation
         )
-        
+
         return CheckInFlowViewController(
             cameraPermissionState: cameraPermissionStatePublisher,
             scanner: scanner,
@@ -143,7 +143,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             goHomeCompletion: context.appReviewPresenter.presentReview
         )
     }
-    
+
     func makeLocalCovidStatsViewController(flowController: UINavigationController?) -> UIViewController {
         let interactor = LocalCovidStatsFlowInteractor(
             viewController: flowController,
@@ -154,7 +154,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         )
         return LocalStatisticsFlowViewController(interactor)
     }
-    
+
     func makeTestingInformationViewController(flowController: UINavigationController?, showWarnAndBookATestFlow: InterfaceProperty<Bool>) -> UIViewController? {
         if showWarnAndBookATestFlow.wrappedValue {
             return warnAndBookATestViewController(flowController: flowController)
@@ -162,7 +162,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             return bookATestViewController()
         }
     }
-    
+
     private func bookATestViewController() -> UIViewController {
         WrappingViewController {
             BookATestFlowState.makeState(context: context)
@@ -176,7 +176,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                 }
         }
     }
-    
+
     private func warnAndBookATestViewController(flowController: UINavigationController?) -> UIViewController {
         let navigationVC = BaseNavigationController()
         let checkSymptomsInteractor = TestCheckSymptomsInteractor(
@@ -229,7 +229,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         navigationVC.viewControllers = [checkSymptomsVC]
         return navigationVC
     }
-    
+
     func makeFinancialSupportViewController(flowController: UINavigationController?) -> UIViewController? {
         switch context.isolationPaymentState.currentValue {
         case .disabled: return nil
@@ -240,14 +240,14 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                     flowController?.popViewController(animated: false)
                     // Dismissing VC only after poping the VC that presented him, solves the flickering issue
                     completion()
-                    
+
                 },
                 didTapCheckEligibility: apply,
                 recordLaunchedIsolationPaymentsApplication: { Metrics.signpost(.launchedIsolationPaymentsApplication) }
             )
         }
     }
-    
+
     public func makeSelfIsolationHubViewController(
         flowController: UINavigationController?,
         showOrderTestButton: InterfaceProperty<Bool>,
@@ -267,7 +267,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             showFinancialSupportButton: showFinancialSupportButton
         )
     }
-    
+
     public func makeGuidanceHubEnglandViewController(flowController: UINavigationController?) -> UIViewController? {
         let interactor = GuidanceHubEnglandInteractor(
             flowController: flowController,
@@ -275,7 +275,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         )
         return GuidanceHubEnglandViewController(interactor: interactor)
     }
-    
+
     public func makeGuidanceHubWalesViewController(flowController: UINavigationController?) -> UIViewController? {
         let interactor = GuidanceHubWalesInteractor(
             flowController: flowController,
@@ -283,11 +283,11 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         )
         return GuidanceHubWalesViewController(interactor: interactor)
     }
-    
+
     func makeLinkTestResultViewController() -> UIViewController? {
-        
+
         let baseNavigationController = BaseNavigationController()
-        
+
         let interactor = LinkTestResultInteractor(
             openURL: context.openURL,
             onCancel: {
@@ -300,26 +300,26 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             }
         )
         baseNavigationController.pushViewController(LinkTestResultViewController(interactor: interactor), animated: false)
-        
+
         return baseNavigationController
     }
-    
+
     public func makeContactTracingHubViewController(flowController: UINavigationController?, exposureNotificationsEnabled: InterfaceProperty<Bool>, exposureNotificationsToggleAction: @escaping (Bool) -> Void, userNotificationsEnabled: InterfaceProperty<Bool>) -> UIViewController {
-        
+
         struct ContactTracingHubViewControllerInteractor: ContactTracingHubViewController.Interacting {
             let flowInteractor: HomeFlowViewControllerInteracting
             weak var flowController: UINavigationController?
-            
+
             func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn) {
                 flowInteractor.scheduleReminderNotification(reminderIn: reminderIn)
             }
-            
+
             func didTapAdviceWhenDoNotPauseCTButton() {
                 let viewController = ContactTracingAdviceViewController()
                 flowController?.pushViewController(viewController, animated: true)
             }
         }
-        
+
         let contactTracingInteractor = ContactTracingHubViewControllerInteractor(flowInteractor: self, flowController: flowController)
         let viewController = ContactTracingHubViewController(
             contactTracingInteractor,
@@ -329,12 +329,12 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         )
         return viewController
     }
-    
+
     func makeBluetoothDisabledWarningViewController(flowController: UINavigationController?) -> UIViewController {
         let interactor = BluetoothDisabledWarningInteractor(viewController: flowController, openSettings: context.openSettings)
         return BluetoothDisabledWarningViewController.viewController(for: .contactTracing, interactor: interactor, country: context.country.currentValue)
     }
-    
+
     func makeLocalInfoScreenViewController(
         viewModel: LocalInformationViewController.ViewModel,
         interactor: LocalInformationViewController.Interacting
@@ -342,37 +342,37 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         let viewController = LocalInformationViewController(viewModel: viewModel, interactor: interactor)
         return viewController
     }
-    
+
     func removeDeliveredLocalInfoNotifications() {
         context.userNotificationManaging.removeAllDelivered(for: UserNotificationType.localMessage(title: "", body: ""))
     }
-    
+
     func makeTestingHubViewController(
         flowController: UINavigationController?,
         showOrderTestButton: InterfaceProperty<Bool>,
         showFindOutAboutTestingButton: InterfaceProperty<Bool>,
         showWarnAndBookATestFlow: InterfaceProperty<Bool>
     ) -> UIViewController {
-        
+
         final class TestingHubViewControllerInteractor: TestingHubViewController.Interacting {
-            
+
             private weak var flowController: UINavigationController?
             private let flowInteractor: HomeFlowViewControllerInteracting
             private let showWarnAndBookATestFlow: InterfaceProperty<Bool>
             private var cancellables: Set<AnyCancellable> = []
-            
+
             init(flowController: UINavigationController?, flowInteractor: HomeFlowViewControllerInteracting, showWarnAndBookATestFlow: InterfaceProperty<Bool>) {
                 self.flowController = flowController
                 self.flowInteractor = flowInteractor
                 self.showWarnAndBookATestFlow = showWarnAndBookATestFlow
             }
-            
+
             func didTapBookFreeTestButton() {
                 guard let viewController = flowInteractor.makeTestingInformationViewController(flowController: flowController, showWarnAndBookATestFlow: showWarnAndBookATestFlow) else { return }
                 viewController.modalPresentationStyle = .overFullScreen
                 flowController?.present(viewController, animated: true)
             }
-            
+
             func didTapOrderAFreeTestingKit() {
                 NotificationCenter.default
                     .publisher(for: UIApplication.didEnterBackgroundNotification)
@@ -381,44 +381,44 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                         flowController?.popViewController(animated: false)
                     }
                     .store(in: &cancellables)
-                
+
                 flowInteractor.openOrderAFreeTestingKit()
             }
-            
+
             func didTapEnterTestResultButton() {
                 guard let viewController = flowInteractor.makeLinkTestResultViewController() else { return }
                 flowController?.present(viewController, animated: true)
             }
-            
+
             func didTapFindOutAboutTestingLink() {
                 flowInteractor.openAdvice()
             }
         }
-        
+
         let interactor = TestingHubViewControllerInteractor(flowController: flowController, flowInteractor: self, showWarnAndBookATestFlow: showWarnAndBookATestFlow)
-        
+
         return TestingHubViewController(
             interactor: interactor,
             showOrderTestButton: showOrderTestButton,
             showFindOutAboutTestingButton: showFindOutAboutTestingButton
         )
     }
-    
+
     func recordDidTapLocalInfoBannerMetric() {
         Metrics.signpost(.didAccessLocalInfoScreenViaBanner)
     }
-    
+
     func setExposureNotifcationEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never> {
         context.exposureNotificationStateController.setEnabled(enabled)
     }
-    
+
     public func scheduleReminderNotification(reminderIn: ExposureNotificationReminderIn) {
         guard let date = context.exposureNotificationReminder.scheduleUserNotification(in: reminderIn.rawValue) else {
             return
         }
         context.exposureNotificationReminder.scheduleSecondUserNotification(afterFirstReminderDate: date)
     }
-    
+
     var shouldShowCheckIn: Bool {
         context.shouldShowVenueCheckIn && context.checkInContext != nil
     }
@@ -431,11 +431,11 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             return context.shouldShowSelfIsolationHubWales
         }
     }
-    
+
     var shouldShowTestingForCOVID19: Bool {
         context.shouldShowTestingForCOVID19
     }
-    
+
     var shouldShowGuidanceHub: Bool {
         switch context.country.currentValue {
         case .england:
@@ -444,16 +444,16 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             return context.shouldShowGuidanceHubWales
         }
     }
-    
+
     func getMyAreaViewModel() -> MyAreaTableViewController.ViewModel {
         MyAreaTableViewController.ViewModel(
             postcode: context.postcodeInfo.map { $0?.postcode.value }.interfaceProperty,
             localAuthority: context.postcodeInfo.map { $0?.localAuthority?.name }.interfaceProperty
         )
     }
-    
+
     func getMyDataViewModel() -> MyDataViewController.ViewModel {
-        
+
         // map from the Domain level ConfirmationStatus to the Interface level ConfirmationStatus
         let testResultDetails: MyDataViewController.ViewModel.TestResultDetails? = context.testInfo.currentValue.flatMap {
             guard let interfaceTestResult = Interface.TestResult(domainTestResult: $0.result) else { return nil }
@@ -467,7 +467,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                     return MyDataViewController.ViewModel.TestResultDetails.CompletionStatus.completed(onDay: completedOnDay)
                 }
             }($0)
-            
+
             return MyDataViewController.ViewModel.TestResultDetails(
                 result: interfaceTestResult,
                 acknowledgementDate: $0.receivedOnDay.startDate(in: .current),
@@ -476,10 +476,10 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                 completionStatus: completionStatus
             )
         }
-        
+
         let symptomsOnsetDate = context.symptomsOnsetAndExposureDetailsProvider.provideSymptomsOnsetDate()
         let exposureDetails = context.symptomsOnsetAndExposureDetailsProvider.provideExposureDetails()
-        
+
         // TODO: We may want to pass this through as an interface property or similar rather than computing its instantaneous value here.
         let selfIsolationEndDate = { () -> Date? in
             switch context.isolationState.currentValue {
@@ -489,10 +489,10 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                 return nil
             }
         }()
-        
+
         // TODO: We may want to pass this through as an interface property or similar rather than computing its instantaneous value here.
         let venueOfRiskDate = context.checkInContext?.recentlyVisitedSevereRiskyVenue.currentValue
-        
+
         return .init(
             testResultDetails: testResultDetails,
             symptomsOnsetDate: symptomsOnsetDate,
@@ -507,7 +507,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             venueOfRiskDate: venueOfRiskDate?.startDate(in: .current)
         )
     }
-    
+
     func loadVenueHistory() -> [VenueHistory] {
         context.checkInContext?.checkInsStore.load()?
             .map { checkIn -> VenueHistory in
@@ -521,138 +521,137 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
                 )
             } ?? []
     }
-    
+
     func getVenueHistoryViewModel() -> VenueHistoryViewController.ViewModel {
         return VenueHistoryViewController.ViewModel(venueHistories: loadVenueHistory())
     }
-    
+
     func openAdvice() {
         context.openURL(ExternalLink.generalAdvice.url)
     }
-    
+
     func openOrderAFreeTestingKit() {
         context.openURL(ExternalLink.getTested.url)
     }
-    
+
     func deleteAppData() {
         context.deleteAllData()
     }
-    
+
     func updateVenueHistories(deleting venueHistory: VenueHistory) -> [VenueHistory] {
         let checkInId = venueHistory.id.value
         context.deleteCheckIn(checkInId)
         return loadVenueHistory()
     }
-    
+
     func openTearmsOfUseLink() {
         context.openURL(ExternalLink.ourPolicies.url)
     }
-    
+
     func openPrivacyLink() {
         context.openURL(ExternalLink.privacy.url)
     }
-    
+
     func openFAQ() {
         context.openURL(ExternalLink.faq.url)
     }
-    
+
     func openAccessibilityStatementLink() {
         context.openURL(ExternalLink.accessibilityStatement.url)
     }
-    
+
     func openHowThisAppWorksLink() {
         context.openURL(ExternalLink.howThisAppWorks.url)
     }
-    
+
     func openWebsiteLinkfromRisklevelInfoScreen(url: URL) {
         context.openURL(url)
     }
-    
+
     func openWebsiteLinkfromLocalInfoScreen(url: URL) {
         context.openURL(url)
     }
-    
+
     func openProvideFeedbackLink() {
         context.openURL(ExternalLink.provideFeedback.url)
     }
-    
+
     func openDownloadNHSAppLink() {
         context.openURL(ExternalLink.downloadNHSApp.url)
     }
-    
+
     func openReadLatestGovernmentGuidanceLink() {
         context.openURL(ExternalLink.governmentGuidance.url)
     }
-    
+
     func openFindYourLocalAuthorityLink() {
         context.openURL(ExternalLink.findLocalAuthority.url)
     }
-    
+
     func didTapGetIsolationNoteLink() {
         context.openURL(ExternalLink.isolationNote.url)
     }
-    
+
     func openSettings() {
         context.openSettings()
     }
-    
+
     func openGuidanceForCovid19EnglandLink() {
         context.openURL(ExternalLink.guidanceHubEnglandLink.url)
     }
-    
+
     func openGuidanceForCheckSymptomsEnglandLink() {
         context.openURL(ExternalLink.guidanceHubCheckSymptomsLink.url)
     }
-    
+
     func openLatestGuidanceCovid19EnglandLink() {
         context.openURL(ExternalLink.guidanceHubLatestLink.url)
     }
-    
+
     func openGuidancePositiveCovid19TestResultEnglandLink() {
         context.openURL(ExternalLink.guidanceHubPositiveTestLink.url)
     }
-    
+
     func openGuidanceTravillingAbroadEnglandLink() {
         context.openURL(ExternalLink.guidanceHubTravellingAbroadLink.url)
     }
-    
+
     func openGuidanceClaimSSPEnglandLink() {
         context.openURL(ExternalLink.guidanceHubSSPLink.url)
     }
-    
+
     func openGuidanceGetHelpCovid19EnquiriesEnglandLink() {
         context.openURL(ExternalLink.guidanceHubEnquiriesLink.url)
     }
-    
+
     func openGuidanceHubWalesLink1() {
         context.openURL(ExternalLink.guidanceHubWalesLink1.url)
     }
-    
+
     func openGuidanceHubWalesLink2() {
         context.openURL(ExternalLink.guidanceHubWalesLink2.url)
     }
-    
+
     func openGuidanceHubWalesLink3() {
         context.openURL(ExternalLink.guidanceHubWalesLink3.url)
     }
-    
+
     func openGuidanceHubWalesLink4() {
         context.openURL(ExternalLink.guidanceHubWalesLink4.url)
     }
-    
+
     func openGuidanceHubWalesLink5() {
         context.openURL(ExternalLink.guidanceHubWalesLink5.url)
     }
-    
+
     func openGuidanceHubWalesLink6() {
         context.openURL(ExternalLink.guidanceHubWalesLink6.url)
     }
-    
+
     func openGuidanceHubWalesLink7() {
         context.openURL(ExternalLink.guidanceHubWalesLink7.url)
     }
 
-    
 }
 
 private struct TestCheckSymptomsInteractor: TestCheckSymptomsViewController.Interacting {
@@ -663,31 +662,31 @@ private struct TestCheckSymptomsInteractor: TestCheckSymptomsViewController.Inte
 private class BookARapidTestInfoInteractor: BookARapidTestInfoViewController.Interacting {
     public let openURL: (URL) -> Void
     var dismiss: (() -> Void)?
-    
+
     init(openURL: @escaping (URL) -> Void) {
         self.openURL = openURL
     }
-    
+
     func didTapAlreadyHaveATest() {
         Metrics.signpost(.selectedHasLFDTestM2Journey)
         dismiss?()
     }
-    
+
     func didTapBookATest() {
         Metrics.signpost(.selectedLFDTestOrderingM2Journey)
         openURL(ExternalLink.getTested.url)
         dismiss?()
     }
-    
+
 }
 
 private struct SelfIsolationInteractor: SelfIsolationHubViewController.Interacting {
-    
+
     private weak var flowController: UINavigationController?
     private let flowInteractor: HomeFlowViewControllerInteracting
     private let showWarnAndBookATestFlow: InterfaceProperty<Bool>
     private let recordSelectedIsolationPaymentsButton: () -> Void
-    
+
     init(
         flowController: UINavigationController?,
         flowInteractor: HomeFlowViewControllerInteracting,
@@ -699,13 +698,13 @@ private struct SelfIsolationInteractor: SelfIsolationHubViewController.Interacti
         self.showWarnAndBookATestFlow = showWarnAndBookATestFlow
         self.recordSelectedIsolationPaymentsButton = recordSelectedIsolationPaymentsButton
     }
-    
+
     func didTapBookFreeTestButton() {
         guard let viewController = flowInteractor.makeTestingInformationViewController(flowController: flowController, showWarnAndBookATestFlow: showWarnAndBookATestFlow) else { return }
         viewController.modalPresentationStyle = .overFullScreen
         flowController?.present(viewController, animated: true)
     }
-    
+
     func didTapCheckIfEligibleForFinancialSupport() {
         guard let viewController = flowInteractor.makeFinancialSupportViewController(flowController: flowController) else {
             return
@@ -714,28 +713,28 @@ private struct SelfIsolationInteractor: SelfIsolationHubViewController.Interacti
         viewController.modalPresentationStyle = .overFullScreen
         flowController?.present(viewController, animated: true)
     }
-    
+
     func didTapReadGovernmentGuidanceLink() {
         flowInteractor.openReadLatestGovernmentGuidanceLink()
     }
-    
+
     func didTapFindYourLocalAuthorityLink() {
         flowInteractor.openFindYourLocalAuthorityLink()
     }
-    
+
     func didTapGetIsolationNoteLink() {
         flowInteractor.didTapGetIsolationNoteLink()
         flowController?.popViewController(animated: true)
         Metrics.signpost(.didAccessSelfIsolationNoteLink)
     }
-    
+
 }
 
 private struct GuidanceHubEnglandInteractor: GuidanceHubEnglandViewController.Interacting {
-    
+
     private weak var flowController: UINavigationController?
     private let flowInteractor: HomeFlowViewControllerInteracting
-    
+
     init(
         flowController: UINavigationController?,
         flowInteractor: HomeFlowViewControllerInteracting
@@ -743,31 +742,31 @@ private struct GuidanceHubEnglandInteractor: GuidanceHubEnglandViewController.In
         self.flowController = flowController
         self.flowInteractor = flowInteractor
     }
-    
+
     func didTapGuidanceForCovid19EnglandLink() {
         flowInteractor.openGuidanceForCovid19EnglandLink()
     }
-    
+
     func didTapGuidanceForCheckSymptomsEnglandLink() {
         flowInteractor.openGuidanceForCheckSymptomsEnglandLink()
     }
-    
+
     func didTapLatestGuidanceCovid19EnglandLink() {
         flowInteractor.openLatestGuidanceCovid19EnglandLink()
     }
-    
+
     func didTapGuidancePositiveCovid19TestResultEnglandLink() {
         flowInteractor.openGuidancePositiveCovid19TestResultEnglandLink()
     }
-    
+
     func didTapGuidanceTravillingAbroadEnglandLink() {
         flowInteractor.openGuidanceTravillingAbroadEnglandLink()
     }
-    
+
     func didTapGuidanceClaimSSPEnglandLink() {
         flowInteractor.openGuidanceClaimSSPEnglandLink()
     }
-    
+
     func didTapGuidanceGetHelpCovid19EnquiriesEnglandLink() {
         flowInteractor.openGuidanceGetHelpCovid19EnquiriesEnglandLink()
     }
@@ -776,7 +775,7 @@ private struct GuidanceHubEnglandInteractor: GuidanceHubEnglandViewController.In
 private struct GuidanceHubWalesInteractor: GuidanceHubWalesViewController.Interacting {
     private weak var flowController: UINavigationController?
     private let flowInteractor: HomeFlowViewControllerInteracting
-    
+
     init(
         flowController: UINavigationController?,
         flowInteractor: HomeFlowViewControllerInteracting
@@ -784,31 +783,31 @@ private struct GuidanceHubWalesInteractor: GuidanceHubWalesViewController.Intera
         self.flowController = flowController
         self.flowInteractor = flowInteractor
     }
-    
+
     func didTapLink1() {
         flowInteractor.openGuidanceHubWalesLink1()
     }
-    
+
     func didTapLink2() {
         flowInteractor.openGuidanceHubWalesLink2()
     }
-    
+
     func didTapLink3() {
         flowInteractor.openGuidanceHubWalesLink3()
     }
-    
+
     func didTapLink4() {
         flowInteractor.openGuidanceHubWalesLink4()
     }
-    
+
     func didTapLink5() {
         flowInteractor.openGuidanceHubWalesLink5()
     }
-    
+
     func didTapLink6() {
         flowInteractor.openGuidanceHubWalesLink6()
     }
-    
+
     func didTapLink7() {
         flowInteractor.openGuidanceHubWalesLink7()
     }
@@ -817,16 +816,16 @@ private struct GuidanceHubWalesInteractor: GuidanceHubWalesViewController.Intera
 private struct BluetoothDisabledWarningInteractor: BluetoothDisabledWarningViewController.Interacting {
     private weak var viewController: UINavigationController?
     private let openSettings: () -> Void
-    
+
     init(viewController: UINavigationController?, openSettings: @escaping () -> Void) {
         self.viewController = viewController
         self.openSettings = openSettings
     }
-    
+
     func didTapSettings() {
         openSettings()
     }
-    
+
     func didTapContinue() {
         viewController?.popViewController(animated: true)
     }

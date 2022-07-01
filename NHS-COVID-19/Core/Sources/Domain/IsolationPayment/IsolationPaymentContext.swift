@@ -7,12 +7,12 @@ import Common
 import Foundation
 
 struct IsolationPaymentContext {
-    
+
     private let store: IsolationPaymentStore
     private let manager: IsolationPaymentManager
     private let isolationState: DomainProperty<IsolationLogicalState>
     private let applicationClient: IsolationPaymentApplicationClient
-    
+
     init(
         services: ApplicationServices,
         country: DomainProperty<Country>,
@@ -20,15 +20,15 @@ struct IsolationPaymentContext {
         isolationStateStore: IsolationStateStore
     ) {
         self.isolationState = isolationState
-        
+
         store = IsolationPaymentStore(store: services.encryptedStore)
-        
+
         applicationClient = IsolationPaymentApplicationClient(
             submissionClient: services.apiClient,
             isolationStateStore: isolationStateStore,
             isolationState: isolationState
         )
-        
+
         manager = IsolationPaymentManager(
             httpClient: services.apiClient,
             isolationPaymentInfoProvider: store,
@@ -36,7 +36,7 @@ struct IsolationPaymentContext {
             isInCorrectIsolationStateToApplyForFinancialSupport: { isolationState.currentValue.isInCorrectIsolationStateToApplyForFinancialSupport }
         )
     }
-    
+
     var isolationPaymentState: DomainProperty<IsolationPaymentState> {
         isolationState
             .combineLatest(store.isolationPaymentRawState)
@@ -50,18 +50,18 @@ struct IsolationPaymentContext {
             }
             .domainProperty()
     }
-    
+
     func processCanApplyForFinancialSupport() -> AnyPublisher<Void, Never> {
         manager.processCanApplyForFinancialSupport()
     }
-    
+
     func recordMetrics() -> AnyPublisher<Void, Never> {
         if case .enabled = isolationPaymentState.currentValue {
             Metrics.signpost(.haveActiveIpcTokenBackgroundTick)
         }
         return Empty().eraseToAnyPublisher()
     }
-    
+
     func deleteAllData() {
         store.delete()
     }

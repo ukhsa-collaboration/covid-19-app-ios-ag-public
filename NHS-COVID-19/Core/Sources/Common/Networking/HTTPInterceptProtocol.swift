@@ -6,11 +6,11 @@ import Combine
 import Foundation
 
 public final class HTTPInterceptProtocol: URLProtocol {
-    
+
     private let httpClient: HTTPClient
-    
+
     private var cancellable: AnyCancellable?
-    
+
     override public init(request: URLRequest, cachedResponse: CachedURLResponse?, client: URLProtocolClient?) {
         guard let httpClient = Self.httpClient(for: request) else {
             Thread.fatalError("\(Self.self) should not be initialised without a registered `HTTPClient`.")
@@ -18,32 +18,32 @@ public final class HTTPInterceptProtocol: URLProtocol {
         self.httpClient = httpClient
         super.init(request: request, cachedResponse: cachedResponse, client: client)
     }
-    
+
     override public func startLoading() {
         guard
             let method = HTTPMethod(rawValue: request.httpMethod ?? ""),
             let url = request.url,
             let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         else { return }
-        
+
         let pathComponents = mutating(components.path.components(separatedBy: "/")) {
             $0.remove(at: 1) // remove service path
         }
-        
+
         let queryParameters = Dictionary(uniqueKeysWithValues: (components.queryItems ?? []).map {
             ($0.name, $0.value ?? "")
         })
-        
+
         var headers = request.headers
-        
+
         let body = request.httpBodyStream.map { stream in
             HTTPRequest.Body(content: try! Data(from: stream), type: headers.fields[.contentType] ?? "")
         }
-        
+
         HTTPHeaderFieldName.bodyHeaders.forEach {
             headers.fields.removeValue(forKey: $0)
         }
-        
+
         let httpRequest = HTTPRequest(
             method: method,
             path: pathComponents.joined(separator: "/"),
@@ -52,7 +52,7 @@ public final class HTTPInterceptProtocol: URLProtocol {
             queryParameters: queryParameters,
             headers: headers
         )
-        
+
         cancellable = httpClient.perform(httpRequest).sink(
             receiveCompletion: { [weak self] completion in
                 guard let self = self, let client = self.client else { return }
@@ -82,30 +82,30 @@ public final class HTTPInterceptProtocol: URLProtocol {
             }
         )
     }
-    
+
     override public func stopLoading() {
         cancellable = nil
     }
-    
+
 }
 
 // MARK: Registration
 
 extension HTTPInterceptProtocol {
-    
+
     public struct Registration {
         public var remote: HTTPRemote
         fileprivate var remove: () -> Void
-        
+
         public func deregister() {
             remove()
         }
     }
-    
+
     private static let host = "intercept.local"
-    
+
     private static var clientsById = [String: HTTPClient]()
-    
+
     public static func register(_ client: HTTPClient) -> Registration {
         let id = UUID().uuidString
         clientsById[id] = client
@@ -114,15 +114,15 @@ extension HTTPInterceptProtocol {
             remove: { clientsById.removeValue(forKey: id) }
         )
     }
-    
+
     override public class func canInit(with request: URLRequest) -> Bool {
         httpClient(for: request) != nil
     }
-    
+
     override public class func canonicalRequest(for request: URLRequest) -> URLRequest {
         request
     }
-    
+
     private static func httpClient(for request: URLRequest) -> HTTPClient? {
         guard
             let url = request.url,
@@ -130,15 +130,15 @@ extension HTTPInterceptProtocol {
             components.scheme == "https",
             components.host == host
         else { return nil }
-        
+
         let pathComponents = components.path.components(separatedBy: "/")
         guard pathComponents.count > 1, pathComponents[0] == "" else {
             return nil
         }
-        
+
         return clientsById[pathComponents[1]]
     }
-    
+
 }
 
 private extension Data {
@@ -148,7 +148,7 @@ private extension Data {
         defer {
             input.close()
         }
-        
+
         let bufferSize = 1024
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
         defer {

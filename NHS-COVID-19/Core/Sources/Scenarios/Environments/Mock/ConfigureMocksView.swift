@@ -9,29 +9,29 @@ import Lokalise
 import SwiftUI
 
 class LokaliseState: ObservableObject {
-    
+
     @ObservedObject
     var dataProvider: MockDataProvider
-    
+
     struct StringsUpdateError: Identifiable {
         let error: Error
         let id = UUID()
     }
-    
+
     @Published
     var showStringsUpdateError: StringsUpdateError? = nil
-    
+
     struct StringsUpdateResult: Identifiable {
         let result: Bool
         let id = UUID()
     }
-    
+
     @Published
     var showStringsUpdateResult: StringsUpdateResult?
-    
+
     @Published
     var showStringsUpdatingSpinner = false
-    
+
     var showDownloadedStrings: Binding<Bool> {
         Binding {
             self.dataProvider.lokaliseShowDownloadedStrings
@@ -39,11 +39,11 @@ class LokaliseState: ObservableObject {
             self.dataProvider.lokaliseShowDownloadedStrings = newValue
         }
     }
-    
+
     init(dataProvider: MockDataProvider) {
         self.dataProvider = dataProvider
     }
-    
+
     func checkForUpdates(_ completion: @escaping (Bool, Error?) -> Void) {
         showStringsUpdatingSpinner = true
         Lokalise.shared.checkForUpdates { updated, error in
@@ -59,18 +59,18 @@ class LokaliseState: ObservableObject {
 }
 
 struct ConfigureMocksView: View {
-    
+
     @ObservedObject
     var dataProvider: MockDataProvider
     @ObservedObject
     var lokaliseState: LokaliseState
-    
+
     @Binding
     var showDevView: Bool
     var adjustableDateProvider: AdjustableDateProvider
-    
+
     @State private var hasCopiedToClipboard = false
-    
+
     var body: some View {
         NavigationView {
             List {
@@ -182,7 +182,7 @@ struct ConfigureMocksView: View {
                             range: 0 ... 60,
                             step: 1
                         )
-                        
+
                         Toggle(isOn: $dataProvider.keySubmissionSupported, label: {
                             VStack(alignment: .leading) {
                                 Text("Key submission supported")
@@ -200,7 +200,7 @@ struct ConfigureMocksView: View {
                             )
                             Toggle("Should offer follow-up test", isOn: $dataProvider.shouldOfferFollowUpTest)
                             TextFieldRow(label: "Confirmatory day limit (empty = no limit)", text: $dataProvider.confirmatoryDayLimitString)
-                            
+
                         }
                         if dataProvider.requiresConfirmatoryTest {
                             HStack(alignment: .top) {
@@ -239,7 +239,7 @@ struct ConfigureMocksView: View {
                         Toggle("People tested positive - has data", isOn: $dataProvider.peopleTestedPositiveHasData)
                         Toggle("Cases per 100k - has data", isOn: $dataProvider.casesPer100KHasData)
                     }
-                    
+
                     BackwardsCompatibleDisclosureGroup(
                         title: "App Availability",
                         systemImage: "apps.iphone"
@@ -339,7 +339,7 @@ struct ConfigureMocksView: View {
                     Section(header: Text(verbatim: "Hello tester! 👋🏼"), footer: Text(verbatim: "Happy testing 🙌🏼")) {
                         Text(verbatim: """
                         Your friend, the developer here. Hope you’re having a good day.
-                        
+
                         Let us know if you need any more help with testing and we’ll do our best to support you.
                         """)
                     }
@@ -350,13 +350,13 @@ struct ConfigureMocksView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }
-    
+
     private struct BackwardsCompatibleDisclosureGroup<Content, Badge>: View where Content: View, Badge: View {
         var title: String
         var systemImage: String
         var accessoryBadge: () -> Badge
         var content: () -> Content
-        
+
         init(title: String,
              systemImage: String,
              accessoryText: String,
@@ -372,7 +372,7 @@ struct ConfigureMocksView: View {
             }
             self.content = content
         }
-        
+
         init(title: String,
              systemImage: String,
              accessoryBadge: @escaping () -> Badge,
@@ -382,7 +382,7 @@ struct ConfigureMocksView: View {
             self.accessoryBadge = accessoryBadge
             self.content = content
         }
-        
+
         init(title: String,
              systemImage: String,
              @ViewBuilder content: @escaping () -> Content) where Badge == EmptyView {
@@ -391,9 +391,9 @@ struct ConfigureMocksView: View {
             accessoryBadge = { EmptyView() }
             self.content = content
         }
-        
+
         @State private var isExpanded = false
-        
+
         var body: some View {
             if #available(iOS 14, *) {
                 DisclosureGroup(
@@ -423,17 +423,17 @@ struct ConfigureMocksView: View {
                     if let accessoryBadge = accessoryBadge {
                         accessoryBadge()
                     }
-                    
+
                 }, content: content)
             }
         }
-        
+
     }
-    
+
     struct TextAccessoryBadge: View {
         var text: String
         var color: Color
-        
+
         var body: some View {
             Text(text)
                 .font(.caption)
@@ -441,7 +441,7 @@ struct ConfigureMocksView: View {
                 .padding(.horizontal, .halfSpacing)
                 .background(color)
                 .cornerRadius(.halfSpacing)
-            
+
         }
     }
 }
@@ -459,18 +459,18 @@ struct ConfigureMocksViewPreview: PreviewProvider {
 }
 
 private struct TextFieldRow: View {
-    
+
     var label: String
     var text: Binding<String>
     var keyboardType: UIKeyboardType
-    
+
     init(label: String,
          text: Binding<String>) {
         self.label = label
         self.text = text
         keyboardType = .default
     }
-    
+
     init(label: String,
          text: Binding<String>,
          keyboardType: UIKeyboardType) {
@@ -478,7 +478,7 @@ private struct TextFieldRow: View {
         self.text = text
         self.keyboardType = keyboardType
     }
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             Text(verbatim: label)
@@ -487,16 +487,16 @@ private struct TextFieldRow: View {
                 .keyboardType(keyboardType)
         }
     }
-    
+
 }
 
 private struct StepperNumericInput: View {
     let value: Binding<Int>
     let title: String
-    
+
     let range: ClosedRange<Int>
     let step: Int
-    
+
     var body: some View {
         let string = Binding<String>(
             get: { "\(value.wrappedValue)" },
@@ -506,7 +506,7 @@ private struct StepperNumericInput: View {
                 }
             }
         )
-        
+
         return Stepper(value: value, in: range, step: step) {
             VStack(alignment: .leading) {
                 Text(title).font(.caption)
@@ -521,16 +521,16 @@ private struct StepperNumericInput: View {
 }
 
 private struct DateOffsetRow: View {
-    
+
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.setLocalizedDateFormatFromTemplate("E dd MMM")
         return formatter
     }()
-    
+
     let offset: Binding<Int>
     let title: String
-    
+
     var body: some View {
         let string = Binding<String>(
             get: { "\(offset.wrappedValue)" },
@@ -540,7 +540,7 @@ private struct DateOffsetRow: View {
                 }
             }
         )
-        
+
         return Stepper(value: offset) {
             VStack(alignment: .leading) {
                 Text(title)
@@ -557,16 +557,16 @@ private struct DateOffsetRow: View {
             }
         }
     }
-    
+
     private func dateText() -> some View {
         return Text("(\(offsetDate, formatter: Self.dateFormatter))")
             .font(.caption)
     }
-    
+
     var offsetDate: Date {
         Date().addingTimeInterval(TimeInterval(offset.wrappedValue * 60 * 60 * 24))
     }
-    
+
 }
 
 // TODO: Improve this (and the upstream test kit/result types) to make it less reliant on string comparisons.
@@ -575,19 +575,19 @@ private struct TestResultBadge: View {
     var testKitType: String
     var requiresConfirmatoryTest: Bool
     var diagnosisKeySubmissionSupported: Bool
-    
+
     var body: some View {
         HStack {
             if diagnosisKeySubmissionSupported {
                 Image(systemName: "square.and.arrow.up")
             }
-            
+
             if requiresConfirmatoryTest {
                 Image(systemName: "xmark.seal")
             } else {
                 Image(systemName: "checkmark.seal.fill")
             }
-            
+
             switch testKitType {
             case "LAB_RESULT":
                 if #available(iOS 14.0, *) {
@@ -603,7 +603,7 @@ private struct TestResultBadge: View {
             default:
                 Image(systemName: "questionmark")
             }
-            
+
             switch testResult {
             case "POSITIVE":
                 Image(systemName: "plus.circle")
@@ -616,11 +616,11 @@ private struct TestResultBadge: View {
             default:
                 Image(systemName: "questionmark.circle")
             }
-            
+
         }
         .foregroundColor(preferredColor())
     }
-    
+
     func preferredColor() -> Color {
         switch testResult {
         case "POSITIVE":

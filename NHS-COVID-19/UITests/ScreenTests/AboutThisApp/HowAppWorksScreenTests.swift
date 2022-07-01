@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class HowAppWorksScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<HowAppWorksScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = HowAppWorksScreen(app: app)
@@ -25,7 +25,7 @@ class HowAppWorksScreenTests: XCTestCase {
             XCTAssertTrue(screen.continueButton.exists)
         }
     }
-    
+
     func testContinueButton() throws {
         try runner.run { app in
             let screen = HowAppWorksScreen(app: app)

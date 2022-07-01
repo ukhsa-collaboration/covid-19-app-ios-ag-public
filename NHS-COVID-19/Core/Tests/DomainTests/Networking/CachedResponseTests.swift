@@ -10,9 +10,9 @@ import XCTest
 @testable import Domain
 
 class CachedResponseTests: XCTestCase {
-    
+
     struct Instance: TestProp {
-        
+
         struct Configuration: TestPropConfiguration {
             var httpClient = MockHTTPClient()
             fileprivate var endpoint = TestEndpoint()
@@ -21,7 +21,7 @@ class CachedResponseTests: XCTestCase {
             var name = String.random()
             var initialValue = HTTPResponse.ok(with: .untyped(.random()))
             var updatedSubject = CurrentValueSubject<(old: HTTPResponse?, new: HTTPResponse?)?, Never>(nil)
-            
+
             public init() {
                 let fileManager = FileManager()
                 let documentFolder = try! fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
@@ -31,10 +31,10 @@ class CachedResponseTests: XCTestCase {
                 stored.wrappedValue = nil
             }
         }
-        
+
         let cached: CachedResponse<HTTPResponse>
         let configuration: Configuration
-        
+
         init(configuration: Configuration) {
             self.configuration = configuration
             cached = CachedResponse(
@@ -47,57 +47,57 @@ class CachedResponseTests: XCTestCase {
             )
         }
     }
-    
+
     @Propped
     private var instance: Instance
     private var cancellable: AnyCancellable?
-    
+
     private var cached: CachedResponse<HTTPResponse> {
         instance.cached
     }
-    
+
     func testGettingInitialValue() {
         TS.assert(cached.value, equals: $instance.initialValue)
         XCTAssertNil($instance.stored.wrappedValue)
     }
-    
+
     func testTheStoredValueIsLoadedImmediately() {
         let storedValue = HTTPResponse.ok(with: .untyped(.random()))
         $instance.stored.wrappedValue = storedValue.body.content
         TS.assert(cached.value, equals: storedValue)
     }
-    
+
     func testUpdating() throws {
         let response = HTTPResponse.ok(with: .untyped(.random()))
         $instance.httpClient.response = .success(response)
-        
+
         var changed = false
         cancellable = instance.configuration.updatedSubject.sink(receiveValue: { (update: (old: HTTPResponse?, new: HTTPResponse?)?) in
             if update?.old != nil, update?.new != nil {
                 changed = true
             }
         })
-        
+
         _ = try cached.update().await()
-        
+
         TS.assert(changed, equals: true)
-        
+
         TS.assert($instance.httpClient.lastRequest, equals: $instance.endpoint._request)
         TS.assert(cached.value, equals: response)
         TS.assert($instance.stored.wrappedValue, equals: response.body.content)
     }
-    
+
 }
 
 private struct TestEndpoint: HTTPEndpoint {
     var _request = HTTPRequest.get("/\(String.random())")
-    
+
     func request(for input: Void) throws -> HTTPRequest {
         _request
     }
-    
+
     func parse(_ response: HTTPResponse) throws -> HTTPResponse {
         response
     }
-    
+
 }

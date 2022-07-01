@@ -7,13 +7,13 @@ import Localization
 import SwiftUI
 
 private struct GuidanceHubWalesView: View {
-    
+
     private let interactor: GuidanceHubWalesViewController.Interacting
-    
+
     init(interactor: GuidanceHubWalesViewController.Interacting) {
         self.interactor = interactor
     }
-    
+
     var body: some View {
         ScrollView {
             VStack(spacing: .halfHairSpacing) {
@@ -25,7 +25,7 @@ private struct GuidanceHubWalesView: View {
                                         action: interactor.didTapLink1
                                     )
                 )
-                
+
                 HubButtonCell(viewModel:
                                     .init(
                                         title: localize(.covid_guidance_hub_wales_button_two_title),
@@ -75,9 +75,8 @@ private struct GuidanceHubWalesView: View {
                                     )
                 )
 
-                
             }
-            
+
         }
         .padding(.bottom, .bigSpacing)
         .background(Color(.background))
@@ -95,30 +94,30 @@ public protocol GuidanceHubWalesViewControllerInteracting {
 }
 
 public class GuidanceHubWalesViewController: RootViewController {
-    
+
     public typealias Interacting = GuidanceHubWalesViewControllerInteracting
-    
+
     private  let interactor: Interacting
-    
+
     public init(interactor: Interacting) {
         self.interactor = interactor
         super.init(nibName: nil, bundle: nil)
         title = localize(.home_covid19_guidance_button_title)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewDidLoad() {
         super.viewDidLoad()
-        
+
         let GuidanceHubWalesView = GuidanceHubWalesView(interactor: interactor)
             .edgesIgnoringSafeArea(.bottom)
-        
+
         let contentViewController = UIHostingController(rootView: GuidanceHubWalesView)
         addFilling(contentViewController)
-  
+
     }
-    
+
 }

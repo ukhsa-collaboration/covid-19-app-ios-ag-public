@@ -7,7 +7,7 @@ import Foundation
 
 struct SymptomaticQuestionnaireHandler: RequestHandler {
     var paths = ["/distribution/symptomatic-questionnaire"]
-    
+
     var response: Result<HTTPResponse, HTTPRequestError> {
         Result.success(.ok(with: .json(questionnaire)))
     }

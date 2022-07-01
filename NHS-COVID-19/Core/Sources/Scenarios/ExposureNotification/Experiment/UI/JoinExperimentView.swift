@@ -6,15 +6,15 @@ import Integration
 import SwiftUI
 
 struct JoinExperimentView: View {
-    
+
     @ObservedObject
     var experimentManager: ExperimentManager
-    
+
     @ObservedObject
     var experimentJoiner: ExperimentJoiner
-    
+
     var complete: () -> Void
-    
+
     var body: some View {
         NavigationView {
             VStack {
@@ -37,9 +37,9 @@ struct JoinExperimentView: View {
             .navigationBarTitle("Join new experiment", displayMode: .inline)
         }
     }
-    
+
     private func joinExperiment() {
         experimentJoiner.joinExperiment(storeIn: experimentManager, complete: complete)
     }
-    
+
 }

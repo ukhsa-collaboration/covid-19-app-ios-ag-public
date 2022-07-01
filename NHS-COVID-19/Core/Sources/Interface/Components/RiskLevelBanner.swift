@@ -12,11 +12,11 @@ extension RiskLevelBanner {
         public enum ColorScheme: String {
             case green, yellow, red, amber, neutral, maroon, black
         }
-        
+
         var postcode: String
         var colorScheme: ColorScheme
         public var riskLevelInfoViewModel: RiskLevelInfoViewController.ViewModel
-        
+
         public init(
             postcode: String,
             colorScheme: ColorScheme,
@@ -31,7 +31,7 @@ extension RiskLevelBanner {
         ) {
             self.postcode = postcode
             self.colorScheme = colorScheme
-            
+
             let image: UIImage
             switch colorScheme {
             case .neutral:
@@ -49,7 +49,7 @@ extension RiskLevelBanner {
             case .black:
                 image = UIImage(.riskLevelBlack)
             }
-            
+
             riskLevelInfoViewModel = RiskLevelInfoViewController.ViewModel(
                 image: image,
                 title: title,
@@ -68,12 +68,12 @@ extension RiskLevelBanner {
 public struct RiskLevelBanner: View {
     private var viewModel: ViewModel
     private let tapAction: (RiskLevelInfoViewController.ViewModel) -> Void
-    
+
     public init(viewModel: ViewModel, tapAction: @escaping (RiskLevelInfoViewController.ViewModel) -> Void) {
         self.viewModel = viewModel
         self.tapAction = tapAction
     }
-    
+
     public var body: some View {
         NavigationButton(
             imageName: .pin,
@@ -82,11 +82,11 @@ public struct RiskLevelBanner: View {
             action: { self.tapAction(self.viewModel.riskLevelInfoViewModel) }
         )
     }
-    
+
 }
 
 private extension RiskLevelBanner.ViewModel.ColorScheme {
-    
+
     var navigationColorScheme: NavigationButton.ColorScheme {
         return NavigationButton.ColorScheme(
             iconColor: Color(fontColor),
@@ -97,14 +97,14 @@ private extension RiskLevelBanner.ViewModel.ColorScheme {
             borderColor: Color(borderColor)
         )
     }
-    
+
     var fontColor: ColorName {
         if case .black = self {
             return .lightSurface
         }
         return .primaryText
     }
-    
+
     var iconColor: ColorName {
         switch self {
         case .neutral:
@@ -123,7 +123,7 @@ private extension RiskLevelBanner.ViewModel.ColorScheme {
             return .riskLevelIconBlack
         }
     }
-    
+
     var backgroundColor: ColorName {
         switch self {
         case .neutral:
@@ -142,7 +142,7 @@ private extension RiskLevelBanner.ViewModel.ColorScheme {
             return .riskLevelBackgroundBlack
         }
     }
-    
+
     var borderColor: ColorName {
         switch self {
         case .neutral:
@@ -153,5 +153,5 @@ private extension RiskLevelBanner.ViewModel.ColorScheme {
             return iconColor
         }
     }
-    
+
 }

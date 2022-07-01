@@ -6,11 +6,11 @@ import Common
 import Foundation
 
 struct OrderTestKitEndpoint: HTTPEndpoint {
-    
+
     func request(for input: Void) throws -> HTTPRequest {
         .post("/virology-test/v2/order", body: .plain(""))
     }
-    
+
     func parse(_ response: HTTPResponse) throws -> OrderTestkitResponse {
         let payload = try JSONDecoder().decode(Payload.self, from: response.body.content)
         return OrderTestkitResponse(

@@ -6,12 +6,12 @@ import Scenarios
 import XCTest
 
 class ContactCaseExposureInfoEnglandScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<ContactCaseExposureInfoEnglandScenario>
-    
+
     private let date = DateComponents(calendar: .gregorian, timeZone: .utc, year: 2021, month: 8, day: 1).date!
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = ContactCaseExposureInfoEnglandScreen(app: app, date: date)
@@ -21,7 +21,7 @@ class ContactCaseExposureInfoEnglandScreenTests: XCTestCase {
             XCTAssert(screen.continueButton.exists)
         }
     }
-    
+
     func testTappingContinue() throws {
         try runner.run { app in
             let screen = ContactCaseExposureInfoEnglandScreen(app: app, date: date)
@@ -29,7 +29,7 @@ class ContactCaseExposureInfoEnglandScreenTests: XCTestCase {
             XCTAssert(screen.alertOnTappingContinueButton.exists)
         }
     }
-    
+
     func testOpeningAccordion() throws {
         try runner.run { app in
             let screen = ContactCaseExposureInfoEnglandScreen(app: app, date: date)
@@ -43,12 +43,12 @@ class ContactCaseExposureInfoEnglandScreenTests: XCTestCase {
 }
 
 class ContactCaseExposureInfoWalesScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<ContactCaseExposureInfoWalesScenario>
-    
+
     private let date = DateComponents(calendar: .gregorian, timeZone: .utc, year: 2021, month: 8, day: 1).date!
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = ContactCaseExposureInfoWalesScreen(app: app, date: date)
@@ -59,7 +59,7 @@ class ContactCaseExposureInfoWalesScreenTests: XCTestCase {
             XCTAssert(screen.continueButton.exists)
         }
     }
-    
+
     func testTappingContinue() throws {
         try runner.run { app in
             let screen = ContactCaseExposureInfoWalesScreen(app: app, date: date)
@@ -67,7 +67,7 @@ class ContactCaseExposureInfoWalesScreenTests: XCTestCase {
             XCTAssert(screen.alertOnTappingContinueButton.exists)
         }
     }
-    
+
     func testOpeningAccordion() throws {
         try runner.run { app in
             let screen = ContactCaseExposureInfoWalesScreen(app: app, date: date)

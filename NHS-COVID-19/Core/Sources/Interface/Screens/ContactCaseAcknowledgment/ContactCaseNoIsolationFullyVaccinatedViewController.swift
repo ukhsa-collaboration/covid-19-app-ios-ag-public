@@ -21,7 +21,7 @@ public protocol ContactCaseNoIsolationFullyVaccinatedInteracting {
 extension ContactCaseNoIsolationFullyVaccinatedEnglandViewController {
     private struct Content {
         let views: [StackViewContentProvider]
-        
+
         init(interactor: Interacting) {
             var views: [StackViewContentProvider] = [
                 UIImageView(.isolationStartIndex)
@@ -36,7 +36,7 @@ extension ContactCaseNoIsolationFullyVaccinatedEnglandViewController {
                 WelcomePoint(image: .riskLevelFaceCoveringsIcon, body: localize(.contact_case_no_isolation_fully_vaccinated_list_item_wear_a_mask_england)),
                 WelcomePoint(image: .riskLevelWorkIcon, body: localize(.contact_case_no_isolation_fully_vaccinated_list_item_work_from_home_england)),
             ]
-            
+
             views.append(contentsOf: [
                 PrimaryLinkButton(
                     title: localize(.contact_case_no_isolation_fully_vaccinated_primary_button_title_read_guidance_england),
@@ -47,7 +47,7 @@ extension ContactCaseNoIsolationFullyVaccinatedEnglandViewController {
                     action: interactor.didTapBackToHome
                 ),
             ])
-            
+
             self.views = views
         }
     }
@@ -56,7 +56,7 @@ extension ContactCaseNoIsolationFullyVaccinatedEnglandViewController {
 public class ContactCaseNoIsolationFullyVaccinatedEnglandViewController: ScrollingContentViewController {
     public typealias Interacting = ContactCaseNoIsolationFullyVaccinatedInteracting
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting) {
         self.interactor = interactor
         super.init(views: Content(interactor: interactor).views)
@@ -66,11 +66,11 @@ public class ContactCaseNoIsolationFullyVaccinatedEnglandViewController: Scrolli
             action: #selector(didTapCancel)
         )
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc func didTapCancel() {
         interactor.didTapCancel()
     }
@@ -81,7 +81,7 @@ public class ContactCaseNoIsolationFullyVaccinatedEnglandViewController: Scrolli
 extension ContactCaseNoIsolationFullyVaccinatedWalesViewController {
     private struct Content {
         let views: [StackViewContentProvider]
-        
+
         init(interactor: Interacting, secondTestAdviceDate: Date?) {
             var views: [StackViewContentProvider] = [
                 UIImageView(.isolationStartIndex)
@@ -94,13 +94,13 @@ extension ContactCaseNoIsolationFullyVaccinatedWalesViewController {
                 WelcomePoint(image: .infoCircle, body: localize(.contact_case_no_isolation_fully_vaccinated_list_item_info_wales)),
                 WelcomePoint(image: .socialDistancing, body: localize(.contact_case_no_isolation_fully_vaccinated_list_item_lfd_wales)),
             ]
-            
+
             secondTestAdviceDate.map {
                 views.append(contentsOf: [
                     WelcomePoint(image: .swabTest, body: localize(.contact_case_no_isolation_fully_vaccinated_list_item_testing_with_date(date: $0))),
                 ])
             }
-            
+
             views.append(contentsOf: [
                 LinkButton(
                     title: localize(.contact_case_no_isolation_fully_vaccinated_common_questions_button_title),
@@ -122,7 +122,7 @@ extension ContactCaseNoIsolationFullyVaccinatedWalesViewController {
                     action: interactor.didTapBackToHome
                 ),
             ])
-            
+
             self.views = views
         }
     }
@@ -131,7 +131,7 @@ extension ContactCaseNoIsolationFullyVaccinatedWalesViewController {
 public class ContactCaseNoIsolationFullyVaccinatedWalesViewController: ScrollingContentViewController {
     public typealias Interacting = ContactCaseNoIsolationFullyVaccinatedInteracting
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting, secondTestAdviceDate: Date?) {
         self.interactor = interactor
         super.init(views: Content(interactor: interactor, secondTestAdviceDate: secondTestAdviceDate).views)
@@ -141,11 +141,11 @@ public class ContactCaseNoIsolationFullyVaccinatedWalesViewController: Scrolling
             action: #selector(didTapCancel)
         )
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc func didTapCancel() {
         interactor.didTapCancel()
     }

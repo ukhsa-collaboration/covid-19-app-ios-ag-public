@@ -9,70 +9,70 @@ import Logging
 
 class BackgroundTaskAggregator {
     private static let taskFrequency = 2.0 * 60 * 60 // 2h
-    
+
     struct Job {
         var work: () -> AnyPublisher<Void, Never>
     }
-    
+
     private static let logger = Logger(label: "BackgroundTaskAggregator")
-    
+
     private let manager: ProcessingTaskRequestManaging
     private let jobs: [Job]
     private var cancellables = [AnyCancellable]()
-    
+
     public init(manager: ProcessingTaskRequestManaging, jobs: [Job]) {
         self.manager = manager
         self.jobs = jobs
-        
+
         scheduleNextTaskIfNeeded()
     }
-    
+
     func performBackgroundTask(backgroundTask: BackgroundTask) {
         Self.logger.info("starting background task")
         Metrics.begin(.backgroundTasks)
-        
+
         let cancellable = Publishers.Sequence<[Job], Never>(sequence: jobs)
             .flatMap { $0.work() }
             .collect().sink { [weak self] _ in
                 Self.logger.info("background task completed")
                 Metrics.end(.backgroundTasks)
-                
+
                 self?.scheduleNextTask()
                 backgroundTask.setTaskCompleted(success: true)
             }
-        
+
         backgroundTask.expirationHandler = { [weak self] in
             Self.logger.info("background task expired")
             Metrics.end(.backgroundTasks)
-            
+
             cancellable.cancel()
             backgroundTask.setTaskCompleted(success: false)
             self?.scheduleNextTask()
         }
-        
+
         cancellable.store(in: &cancellables)
     }
-    
+
     private func scheduleNextTask() {
         guard !jobs.isEmpty else {
             Self.logger.debug("background task not needed")
             return
         }
-        
+
         var request = ProcessingTaskRequest()
         request.requiresNetworkConnectivity = true
-        
+
         request.earliestBeginDate = Date(timeIntervalSinceNow: Self.taskFrequency)
-        
+
         Self.logger.info("scheduling background task", metadata: .describing(request))
         try? manager.submit(request)
     }
-    
+
     private func scheduleNextTaskIfNeeded() {
         manager.getPendingRequest { request in
             if let request = request {
                 Self.logger.debug("background task already scheduled", metadata: .describing(request))
-                
+
                 // Workaround for any potential issues causing background jobs to stall.
                 //
                 // On iOS 13.6 and later, the OS behaviour is changed, so it remembers the task and re-runs it even if
@@ -96,7 +96,7 @@ class BackgroundTaskAggregator {
             }
         }
     }
-    
+
     func stop() {
         manager.cancelPendingRequest()
     }

@@ -8,39 +8,39 @@ import TestSupport
 import XCTest
 
 class PublisherRegulationMonitoringTests: XCTestCase {
-    
+
     func testCapturingRegulations() {
         let regulator = EmptyingRegulator()
         let emptied = PublisherEventKind(regulator: regulator)
-        
+
         TS.capturePublisherRegulations { _ in
             var emittedCount = 0
             let cancellable = Just(1)
                 .regulate(as: emptied)
                 .sink(receiveValue: { _ in emittedCount += 1 })
             cancellable.cancel()
-            
+
             // We expect the value to be passed through without calling `EmptyingRegulator`.
             TS.assert(regulator.callbackCount, equals: 0)
             TS.assert(emittedCount, equals: 1)
         }
-        
+
         // We should be back to normal now:
-        
+
         var emittedCount = 0
         let cancellable = Just(1)
             .regulate(as: emptied)
             .sink(receiveValue: { _ in emittedCount += 1 })
         cancellable.cancel()
-        
+
         TS.assert(regulator.callbackCount, equals: 1)
         TS.assert(emittedCount, equals: 0)
     }
-    
+
     func testCapturedRegulationsAreReported() {
         let regulator = EmptyingRegulator()
         let kind = PublisherEventKind(regulator: regulator)
-        
+
         TS.capturePublisherRegulations { monitor in
             var completionCount = 0
             var emittedCount = 0
@@ -57,24 +57,24 @@ class PublisherRegulationMonitoringTests: XCTestCase {
                     }
                 )
                 .cancel()
-            
+
             XCTAssertFalse(monitor.isBeingRegualted(as: kind))
-            
+
             TS.assert(emittedCount, equals: 1)
             TS.assert(completionCount, equals: 1)
         }
     }
-    
+
     func testPausingEventDelivery() {
         let regulator = EmptyingRegulator()
         let kind = PublisherEventKind(regulator: regulator)
-        
+
         TS.capturePublisherRegulations { monitor in
             var completionCount = 0
             var emittedCount = 0
-            
+
             monitor.pauseEvents(for: kind)
-            
+
             let cancellable = Just(1)
                 .regulate(as: kind)
                 .sink(
@@ -90,17 +90,17 @@ class PublisherRegulationMonitoringTests: XCTestCase {
                     }
                 )
             defer { cancellable.cancel() }
-            
+
             TS.assert(emittedCount, equals: 0)
             TS.assert(completionCount, equals: 0)
-            
+
             monitor.resumeEvents(for: kind)
-            
+
             TS.assert(emittedCount, equals: 1)
             TS.assert(completionCount, equals: 1)
         }
     }
-    
+
 }
 
 private class EmptyingRegulator: PublisherRegulator {

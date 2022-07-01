@@ -21,7 +21,7 @@ extension String: DataConvertible {
     init(data: Data) {
         self = String(data: data, encoding: .utf8)!
     }
-    
+
     var data: Data {
         self.data(using: .utf8)!
     }
@@ -36,26 +36,26 @@ struct DataEncryptor: DataEncrypting {
     @KeychainStored private var key: SymmetricKey?
     @KeychainStored private var tag: Data?
     @FileStored private var ciphertext: Data?
-    
+
     init(keychain: Keychain, storage: FileStorage, name: String) {
         _key = KeychainStored(keychain: keychain, key: "\(name).key")
         _tag = KeychainStored(keychain: keychain, key: "\(name).tag")
         _ciphertext = FileStored(storage: storage, name: name)
-        
+
         if !$ciphertext.hasValue {
             delete()
         }
     }
-    
+
     var projectedValue: Self {
         self
     }
-    
+
     var wrappedValue: Data? {
         get {
             get()
         }
-        
+
         nonmutating set {
             if let value = newValue {
                 set(value)
@@ -63,13 +63,13 @@ struct DataEncryptor: DataEncrypting {
                 delete()
             }
         }
-        
+
     }
-    
+
     var hasValue: Bool {
         $key.hasValue && $tag.hasValue && $ciphertext.hasValue
     }
-    
+
     private func get() -> Data? {
         guard let ciphertext = ciphertext,
             let key = key,
@@ -81,16 +81,16 @@ struct DataEncryptor: DataEncrypting {
         }
         return plaintext
     }
-    
+
     private func set(_ value: Data) {
         let key = $key.get { SymmetricKey(size: .bits256) }
         let nonce = AES.GCM.Nonce()
         let tag = $tag.get { UUID().uuidString.data(using: .utf8)! }
-        
+
         let sealedBox = try? AES.GCM.seal(value, using: key, nonce: nonce, authenticating: tag)
         ciphertext = sealedBox?.combined
     }
-    
+
     private func delete() {
         key = nil
         tag = nil

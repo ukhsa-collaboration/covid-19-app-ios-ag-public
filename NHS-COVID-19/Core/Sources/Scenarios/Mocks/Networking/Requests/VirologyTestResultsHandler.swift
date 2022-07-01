@@ -7,9 +7,9 @@ import Foundation
 
 struct VirologyTestResultsHandler: RequestHandler {
     var paths = ["/virology-test/v2/results"]
-    
+
     var dataProvider: MockDataProvider
-    
+
     var response: Result<HTTPResponse, HTTPRequestError> {
         let daysAgo = dataProvider.testResultEndDateDaysAgo
         let date = GregorianDay.today.advanced(by: -daysAgo).startDate(in: .utc)
@@ -20,7 +20,7 @@ struct VirologyTestResultsHandler: RequestHandler {
         let requiresConfirmatoryTest = dataProvider.requiresConfirmatoryTest
         let confirmatoryDayLimit = dataProvider.confirmatoryDayLimit
         let shouldOfferFollowUpTest = dataProvider.shouldOfferFollowUpTest
-        
+
         let response = HTTPResponse.ok(with: .json(#"""
         {
         "testEndDate": "\#(dateString)",

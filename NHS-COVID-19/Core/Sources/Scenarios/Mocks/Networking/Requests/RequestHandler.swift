@@ -15,7 +15,7 @@ extension RequestHandler {
     func hasResponse(for path: String) -> Bool {
         return paths.contains { path.hasPrefix($0) }
     }
-    
+
     func value<T>(named name: String, content: T?) -> String {
         if let content = content {
             if content is String {
@@ -33,5 +33,5 @@ extension RequestHandler {
             """
         }
     }
-    
+
 }

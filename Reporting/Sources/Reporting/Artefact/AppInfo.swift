@@ -18,7 +18,7 @@ protocol Visitor {
 }
 
 struct AppInfo: Decodable {
-    
+
     enum DeviceCapabilities: String, Codable {
         case accelerometer
         case arkit
@@ -47,7 +47,7 @@ struct AppInfo: Decodable {
         case videoCamera = "video-camera"
         case wifi
     }
-    
+
     enum BackgroundModes: String, Codable {
         case audio
         case location
@@ -60,24 +60,24 @@ struct AppInfo: Decodable {
         case bluetoothCentral = "bluetooth-central"
         case bluetoothPeripheral = "bluetooth-peripheral"
     }
-    
+
     enum InterfaceOrientation: String, Codable, CaseIterable {
         case portrait = "UIInterfaceOrientationPortrait"
         case portraitUpsideDown = "UIInterfaceOrientationPortraitUpsideDown"
         case left = "UIInterfaceOrientationLandscapeLeft"
         case right = "UIInterfaceOrientationLandscapeRight"
     }
-    
+
     enum InterfaceStyle: String, Codable, CaseIterable {
         case automatic = "Automatic"
         case light = "Light"
         case dark = "Dark"
     }
-    
+
     enum DeviceFamily: Int, Codable {
         case iPhone = 1
         case iPad = 2
-        
+
         var displayName: String {
             switch self {
             case .iPhone: return "iPhone"
@@ -85,41 +85,41 @@ struct AppInfo: Decodable {
             }
         }
     }
-    
+
     struct PrimaryIcon: Decodable {
         private enum CodingKeys: String, CodingKey {
             case name = "CFBundleIconName"
             case files = "CFBundleIconFiles"
         }
-        
+
         var name: String
         var files: [String]
     }
-    
+
     struct Icons: Decodable {
         private enum CodingKeys: String, CodingKey {
             case primary = "CFBundlePrimaryIcon"
         }
-        
+
         var primary: PrimaryIcon
     }
-    
+
     struct AttributeKey<Element: Decodable>: TypedKey {
-        
+
         var rawValue: String
         var keyPath: WritableKeyPath<AppInfo, Decoded<Element>?>
-        
+
         init(_ key: KnownCodingKeys, keyPath: WritableKeyPath<AppInfo, Decoded<Element>?>) {
             rawValue = key.stringValue
             self.keyPath = keyPath
         }
-        
+
         func apply(_ visitor: Visitor) {
             visitor.visit(self)
         }
-        
+
     }
-    
+
     // Documentation: https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html
     // Note that keys injected by Xcode (e.g. `DTCompiler`) are not documented.
     enum KnownCodingKeys: String, CodingKey {
@@ -162,7 +162,7 @@ struct AppInfo: Decodable {
         case exposureNotificationDeveloperRegion = "ENDeveloperRegion"
         case appUsesNonExemptEncryption = "ITSAppUsesNonExemptEncryption"
     }
-    
+
     struct Attributes {
         static let bundleName = AttributeKey(.bundleName, keyPath: \.bundleName)
         static let version = AttributeKey(.version, keyPath: \.version)
@@ -202,7 +202,7 @@ struct AppInfo: Decodable {
         static let exposureNotificationAPIVersion = AttributeKey(.exposureNotificationAPIVersion, keyPath: \.exposureNotificationAPIVersion)
         static let exposureNotificationDeveloperRegion = AttributeKey(.exposureNotificationDeveloperRegion, keyPath: \.exposureNotificationDeveloperRegion)
         static let appUsesNonExemptEncryption = AttributeKey(.appUsesNonExemptEncryption, keyPath: \.appUsesNonExemptEncryption)
-        
+
         static let allCases: [Key] = [
             bundleName,
             version,
@@ -243,36 +243,36 @@ struct AppInfo: Decodable {
             exposureNotificationDeveloperRegion,
             appUsesNonExemptEncryption,
         ]
-        
+
         fileprivate static let knownKeyRawValues = Set(allCases.map { $0.rawValue })
     }
-    
+
     private struct PropertyListKey: CodingKey, Hashable {
         var stringValue: String
-        
+
         init(_ key: Key) {
             stringValue = key.rawValue
         }
-        
+
         init?(stringValue: String) {
             self.stringValue = stringValue
         }
-        
+
         init?(intValue: Int) {
             nil
         }
-        
+
         var intValue: Int? {
             nil
         }
-        
+
     }
-    
+
     struct ParseError {
         var key: String
         var error: String
     }
-    
+
     var bundleName: Decoded<String>?
     var version: Decoded<String>?
     var bundleVersion: Decoded<String>?
@@ -311,34 +311,34 @@ struct AppInfo: Decodable {
     var exposureNotificationAPIVersion: Decoded<String>?
     var exposureNotificationDeveloperRegion: Decoded<String>?
     var appUsesNonExemptEncryption: Decoded<Bool>?
-    
+
     var unknownKeys: Set<String>
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: PropertyListKey.self)
-        
+
         class AttrVisitor: Visitor {
             var info: AppInfo!
             var container: KeyedDecodingContainer<PropertyListKey>!
-            
+
             func visit<Element>(_ attribute: AppInfo.AttributeKey<Element>) where Element: Decodable {
                 let key = PropertyListKey(attribute)
                 info[keyPath: attribute.keyPath] = try! container.decodeIfPresent(Decoded<Element>.self, forKey: key)
                 info.unknownKeys.remove(key.stringValue)
             }
         }
-        
+
         unknownKeys = Set(container.allKeys.map { $0.stringValue })
-        
+
         let visitor = AttrVisitor()
         visitor.container = container
         visitor.info = self
         Attributes.allCases.forEach { $0.apply(visitor) }
-        
+
         self = visitor.info
-        
+
     }
-    
+
     func value<Element>(for key: KeyPath<AppInfo, Decoded<Element>?>) -> Element? {
         let value = self[keyPath: key]
         switch value {
@@ -348,12 +348,12 @@ struct AppInfo: Decodable {
             return nil
         }
     }
-    
+
     var parseErrors: [ParseError] {
         class AttrVisitor: Visitor {
             var info: AppInfo!
             var parseErrors: [ParseError] = []
-            
+
             func visit<Element>(_ attribute: AppInfo.AttributeKey<Element>) where Element: Decodable {
                 let value = info![keyPath: attribute.keyPath]
                 switch value {
@@ -366,11 +366,11 @@ struct AppInfo: Decodable {
                 }
             }
         }
-        
+
         let visitor = AttrVisitor()
         visitor.info = self
         Attributes.allCases.forEach { $0.apply(visitor) }
         return visitor.parseErrors
     }
-    
+
 }

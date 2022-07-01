@@ -10,26 +10,26 @@ import Foundation
 /// If the caller is already running on the main queue when an action is
 /// scheduled, it will be run synchronously.
 public struct UIScheduler: Scheduler {
-    
+
     public typealias SchedulerOptions = Never
     public typealias SchedulerTimeType = DispatchQueue.SchedulerTimeType
-    
+
     public static let shared = UIScheduler()
-    
+
     public var now: SchedulerTimeType {
         DispatchQueue.main.now
     }
-    
+
     public var minimumTolerance: SchedulerTimeType.Stride {
         DispatchQueue.main.minimumTolerance
     }
-    
+
     private init() {}
-    
+
     public func schedule(options: SchedulerOptions? = nil, _ action: @escaping () -> Void) {
         DispatchQueue.onMain(action)
     }
-    
+
     public func schedule(
         after date: SchedulerTimeType,
         tolerance: SchedulerTimeType.Stride,
@@ -38,7 +38,7 @@ public struct UIScheduler: Scheduler {
     ) {
         DispatchQueue.main.schedule(after: date, tolerance: tolerance, options: nil, action)
     }
-    
+
     public func schedule(
         after date: SchedulerTimeType,
         interval: SchedulerTimeType.Stride,
@@ -48,5 +48,5 @@ public struct UIScheduler: Scheduler {
     ) -> Cancellable {
         DispatchQueue.main.schedule(after: date, interval: interval, tolerance: tolerance, options: nil, action)
     }
-    
+
 }

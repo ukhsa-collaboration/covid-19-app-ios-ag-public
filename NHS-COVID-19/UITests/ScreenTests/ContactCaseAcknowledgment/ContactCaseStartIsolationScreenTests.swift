@@ -6,12 +6,12 @@ import Scenarios
 import XCTest
 
 class ContactCaseStartIsolationScreenEnglandTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<ContactCaseStartIsolationScreenEnglandScenario>
-    
+
     private let exposureDate = Date(timeIntervalSinceNow: -86400)
-    
+
     private func screen(for app: XCUIApplication) -> ContactCaseStartIsolationScreenEngland {
         ContactCaseStartIsolationScreenEngland(
             app: app,
@@ -20,7 +20,7 @@ class ContactCaseStartIsolationScreenEnglandTests: XCTestCase {
             remainingDays: 10
         )
     }
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = screen(for: app)
@@ -31,47 +31,47 @@ class ContactCaseStartIsolationScreenEnglandTests: XCTestCase {
             XCTAssertTrue(screen.advice.exists)
         }
     }
-    
+
     func testGuidanceLinkButton() throws {
         try runner.run { app in
             let screen = screen(for: app)
             app.scrollTo(element: screen.guidanceLink)
             screen.guidanceLink.tap()
-            
+
             XCTAssertTrue(app.staticTexts[runner.scenario.guidanceLinkTapped].exists)
         }
     }
-    
+
     func testBookAFreeTestButton() throws {
         try runner.run { app in
             let screen = screen(for: app)
             app.scrollTo(element: screen.bookAFreeTestButton)
             screen.bookAFreeTestButton.tap()
-            
+
             XCTAssertTrue(app.staticTexts[runner.scenario.bookAFreeTestTapped].exists)
         }
     }
-    
+
     func testBackToHomeButton() throws {
         try runner.run { app in
             let screen = screen(for: app)
             app.scrollTo(element: screen.backToHomeButton)
             screen.backToHomeButton.tap()
-            
+
             XCTAssertTrue(app.staticTexts[runner.scenario.backToHomeTapped].exists)
         }
     }
-    
+
 }
 
 class ContactCaseStartIsolationScreenWalesTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<ContactCaseStartIsolationScreenWalesScenario>
-    
+
     private let exposureDate = Date(timeIntervalSinceNow: -86400)
     private let secondTestAdviceDate = Date(timeIntervalSinceNow: 86400 * 8)
-    
+
     private func screen(for app: XCUIApplication) -> ContactCaseStartIsolationScreenWales {
         ContactCaseStartIsolationScreenWales(
             app: app,
@@ -81,7 +81,7 @@ class ContactCaseStartIsolationScreenWalesTests: XCTestCase {
             secondTestAdviceDate: secondTestAdviceDate
         )
     }
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = screen(for: app)
@@ -92,35 +92,35 @@ class ContactCaseStartIsolationScreenWalesTests: XCTestCase {
             XCTAssertTrue(screen.advice.exists)
         }
     }
-    
+
     func testGuidanceLinkButton() throws {
         try runner.run { app in
             let screen = screen(for: app)
             app.scrollTo(element: screen.guidanceLink)
             screen.guidanceLink.tap()
-            
+
             XCTAssertTrue(app.staticTexts[runner.scenario.guidanceLinkTapped].exists)
         }
     }
-    
+
     func testBookAFreeTestButton() throws {
         try runner.run { app in
             let screen = screen(for: app)
             app.scrollTo(element: screen.getTestedButton)
             screen.getTestedButton.tap()
-            
+
             XCTAssertTrue(app.staticTexts[runner.scenario.bookAFreeTestTapped].exists)
         }
     }
-    
+
     func testBackToHomeButton() throws {
         try runner.run { app in
             let screen = screen(for: app)
             app.scrollTo(element: screen.backToHomeButton)
             screen.backToHomeButton.tap()
-            
+
             XCTAssertTrue(app.staticTexts[runner.scenario.backToHomeTapped].exists)
         }
     }
-    
+
 }

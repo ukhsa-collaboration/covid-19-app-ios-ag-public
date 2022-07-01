@@ -6,14 +6,14 @@ import Foundation
 
 struct AppInfoReporter {
     var compilationRequirements: [CompilationRequirement]
-    
+
     func overviewSections(for appInfo: AppInfo) -> [ReportSection] {
         [
             appInfo.versioningAttributesSection,
             appInfo.detailedAttributesSection,
         ]
     }
-    
+
     func technicalSections(for appInfo: AppInfo) -> [ReportSection] {
         [
             appInfo.technicalAttributesSection,
@@ -21,7 +21,7 @@ struct AppInfoReporter {
             appInfo.compilationRequirementsSection(with: compilationRequirements),
         ]
     }
-    
+
 }
 
 private protocol DisplayAttributeProtocol {
@@ -35,38 +35,38 @@ struct AppAttribute {
 }
 
 private extension AppInfo {
-    
+
     struct DisplayAttribute<Value: Decodable>: DisplayAttributeProtocol {
         var displayName: String
         var key: KeyPath<AppInfo, Decoded<Value>?>
         var format: (Value) -> String
         var defaultValue: String?
-        
+
         init(displayName: String, key: KeyPath<AppInfo, Decoded<Value>?>, defaultValue: String? = nil, format: @escaping (Value) -> String = { "\($0)" }) {
             self.displayName = displayName
             self.key = key
             self.defaultValue = defaultValue
             self.format = format
         }
-        
+
         func value(in info: AppInfo) -> String? {
             info.value(for: key).map(format) ?? defaultValue
         }
     }
-    
+
     var versioningAttributesSection: ReportSection {
         let interestingCases: [DisplayAttributeProtocol] = [
             DisplayAttribute(displayName: "Version", key: \.version),
             DisplayAttribute(displayName: "Build", key: \.bundleVersion),
         ]
-        
+
         let attributes = interestingCases.map {
             AppAttribute(name: $0.displayName, value: $0.value(in: self))
         }
-        
+
         return ReportSection(title: "Versioning", attributes: attributes)
     }
-    
+
     var detailedAttributesSection: ReportSection {
         let interestingCases: [DisplayAttributeProtocol] = [
             DisplayAttribute(displayName: "Display Name", key: \.bundleDisplayName),
@@ -87,14 +87,14 @@ private extension AppInfo {
             DisplayAttribute(displayName: "Exposure Notification API Version", key: \.exposureNotificationAPIVersion),
             DisplayAttribute(displayName: "Exposure Notification Region", key: \.exposureNotificationDeveloperRegion),
         ]
-        
+
         let attributes = interestingCases.map {
             AppAttribute(name: $0.displayName, value: $0.value(in: self))
         }
-        
+
         return ReportSection(title: "Attributes", attributes: attributes)
     }
-    
+
     var technicalAttributesSection: ReportSection {
         let interestingCases: [DisplayAttributeProtocol] = [
             DisplayAttribute(displayName: "Bundle identifier", key: \.bundleIdentifier),
@@ -102,35 +102,35 @@ private extension AppInfo {
             DisplayAttribute(displayName: "Executable", key: \.bundleExecutable),
             DisplayAttribute(displayName: "Launch storyboard name", key: \.launchStoryboardName),
         ]
-        
+
         let attributes = interestingCases.map {
             AppAttribute(name: $0.displayName, value: $0.value(in: self))
         }
-        
+
         return ReportSection(title: "Technical Attributes", attributes: attributes)
     }
-    
+
     var integrityChecksSection: ReportSection {
-        
+
         ReportSection(title: "Info integrity checks", checks: [
             IntegrityCheck(name: "All keys are known", result: checkOnlyHasExpectedKeys()),
             IntegrityCheck(name: "All expected keys are formatted correctly", result: checkForParsingErrors()),
             IntegrityCheck(name: "Bundle attribtues are set correctly", result: checkBundleAttributesAreCorrect()),
         ])
     }
-    
+
     func compilationRequirementsSection(with requirements: [CompilationRequirement]) -> ReportSection {
-        
+
         let checks = requirements.map {
             IntegrityCheck(
                 name: $0.displayTitle,
                 result: $0.passes(for: self) ? .passed : .failed(message: "")
             )
         }
-        
+
         return ReportSection(title: "Compilation integrity checks", checks: checks)
     }
-    
+
     func checkOnlyHasExpectedKeys() -> IntegrityCheck.Result {
         if unknownKeys.isEmpty {
             return .passed
@@ -141,7 +141,7 @@ private extension AppInfo {
             return .failed(message: "Found unexpected keys:\n\n\(list.markdownBody)")
         }
     }
-    
+
     func checkForParsingErrors() -> IntegrityCheck.Result {
         let parseErrors = self.parseErrors
         if parseErrors.isEmpty {
@@ -153,7 +153,7 @@ private extension AppInfo {
             return .failed(message: list.markdownBody)
         }
     }
-    
+
     func checkBundleAttributesAreCorrect() -> IntegrityCheck.Result {
         guard let bundleInfoDictionaryVersion = value(for: \.bundleInfoDictionaryVersion) else {
             return .failed(message: "Missing bundle info version")
@@ -169,15 +169,15 @@ private extension AppInfo {
         }
         return .passed
     }
-    
+
 }
 
 private extension Set where Element == AppInfo.InterfaceOrientation {
-    
+
     var displayValue: String {
         let missingAtLeastOneCase = AppInfo.InterfaceOrientation.allCases.contains { !self.contains($0) }
         guard missingAtLeastOneCase else { return "All" }
-        
+
         var parts = [String]()
         if contains(.portrait) {
             parts.append("Portrait (upright)")
@@ -197,5 +197,5 @@ private extension Set where Element == AppInfo.InterfaceOrientation {
         }
         return parts.joined(separator: ", ")
     }
-    
+
 }

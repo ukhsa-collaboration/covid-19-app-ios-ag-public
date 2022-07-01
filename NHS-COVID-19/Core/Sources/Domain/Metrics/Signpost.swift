@@ -10,7 +10,6 @@ public enum Metric: String, CaseIterable {
     case checkedIn
     case deletedLastCheckIn
     case completedQuestionnaireAndStartedIsolation
-    case completedQuestionnaireButDidNotStartIsolation
     case receivedPositiveTestResult
     case receivedNegativeTestResult
     case receivedVoidTestResult
@@ -40,28 +39,28 @@ public enum Metric: String, CaseIterable {
     case totalExposureWindowsConsideredRisky
     case hasTestedLFDPositiveBackgroundTick
     case isIsolatingForTestedLFDPositiveBackgroundTick
-    
+
     case receivedPositiveLFDTestResultEnteredManually
     case receivedUnconfirmedPositiveTestResult
-    
+
     case receivedPositiveSelfRapidTestResultEnteredManually
     case isIsolatingForTestedSelfRapidPositiveBackgroundTick
     case hasTestedSelfRapidPositiveBackgroundTick
-    
+
     case acknowledgedStartOfIsolationDueToRiskyContact
     case hasRiskyContactNotificationsEnabledBackgroundTick
     case totalRiskyContactReminderNotifications
-    
+
     case launchedTestOrdering
-    
+
     case didAskForSymptomsOnPositiveTestEntry
     case didHaveSymptomsBeforeReceivedTestResult
     case didRememberOnsetSymptomsDateBeforeReceivedTestResult
-    
+
     case didAccessSelfIsolationNoteLink
-    
+
     // MARK: - Risky venue warning
-    
+
     case receivedRiskyVenueM1Warning
     case receivedRiskyVenueM2Warning
     case hasReceivedRiskyVenueM2WarningBackgroundTick
@@ -72,66 +71,69 @@ public enum Metric: String, CaseIterable {
     case selectedHasNoSymptomsM2Journey
     case selectedLFDTestOrderingM2Journey
     case selectedHasLFDTestM2Journey
-    
+
     // MARK: Key sharing invitations/completions
-    
+
     case askedToShareExposureKeysInTheInitialFlow
     case consentedToShareExposureKeysInTheInitialFlow
-    
+
     case totalShareExposureKeysReminderNotifications
     case consentedToShareExposureKeysInReminderScreen
-    
+
     case successfullySharedExposureKeys
-    
+
     // MARK: - Local Information / VOC
-    
+
     case didSendLocalInfoNotification
     case didAccessLocalInfoScreenViaNotification
     case didAccessLocalInfoScreenViaBanner
     case isDisplayingLocalInfoBackgroundTick
-    
+
     // MARK: - Lab test result after rapid result
-    
+
     case positiveLabResultAfterPositiveLFD
     case negativeLabResultAfterPositiveLFDWithinTimeLimit
     case negativeLabResultAfterPositiveLFDOutsideTimeLimit
     case positiveLabResultAfterPositiveSelfRapidTest
     case negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit
     case negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit
-    
+
     // MARK: - Contact case opt-out
-    
+
     case optedOutForContactIsolation
     case optedOutForContactIsolationBackgroundTick
-    
+
     // MARK: - New app state metrics
-    
+
     case appIsUsableBackgroundTick
     case appIsUsableBluetoothOffBackgroundTick
     case appIsContactTraceableBackgroundTick
-    
+
     case completedV2SymptomsQuestionnaire
     case completedV2SymptomsQuestionnaireAndStayAtHome
     case hasCompletedV2SymptomsQuestionnaireBackgroundTick
     case hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick
-    
+
     public static let nonFeatureRelatedMetricsToBeStripped: [Metric] = [
+        .didAskForSymptomsOnPositiveTestEntry,
+        .isolatedForSelfDiagnosedBackgroundTick,
+        .completedQuestionnaireAndStartedIsolation
     ]
 }
 
 public enum Metrics {
     static let category = "AppMetrics"
-    
+
     static func begin(_ metric: Metric) {
         MetricCollector.record(metric)
     }
-    
+
     static func end(_ metric: Metric) {}
-    
+
     public static func signpost(_ metric: Metric) {
         MetricCollector.record(metric)
     }
-    
+
     private static func signpostReceived(_ testResult: VirologyTestResult.TestResult, requiresConfirmatoryTest: Bool) {
         switch testResult {
         case .positive:
@@ -146,28 +148,26 @@ public enum Metrics {
         case .plod:
             break
         }
-        
+
     }
-    
+
     static func signpost(_ evaluation: SelfDiagnosisEvaluation) {
         switch evaluation {
-        case .noSymptoms:
-            signpost(.completedQuestionnaireButDidNotStartIsolation)
         case .hasSymptoms(_, .hasNoTest):
             signpost(.completedQuestionnaireAndStartedIsolation)
         default:
             break
         }
     }
-    
+
     static func signpostReceivedFromManual(
         testResult: VirologyTestResult.TestResult,
         testKitType: VirologyTestResult.TestKitType,
         requiresConfirmatoryTest: Bool
     ) {
-        
+
         Self.signpostReceived(testResult, requiresConfirmatoryTest: requiresConfirmatoryTest)
-        
+
         switch testKitType {
         case .rapidResult:
             switch testResult {
@@ -194,17 +194,17 @@ public enum Metrics {
             case .plod: break
             }
         }
-        
+
     }
-    
+
     static func signpostReceivedViaPolling(
         testResult: VirologyTestResult.TestResult,
         testKitType: VirologyTestResult.TestKitType,
         requiresConfirmatoryTest: Bool
     ) {
-        
+
         Self.signpostReceived(testResult, requiresConfirmatoryTest: requiresConfirmatoryTest)
-        
+
         switch testKitType {
         case .labResult:
             switch testResult {
@@ -222,7 +222,7 @@ public enum Metrics {
             break
         }
     }
-    
+
     static func signpostNegativeLabResultAfterRapidResult(
         testKitType: TestKitType?,
         withinTime: Bool
@@ -239,9 +239,9 @@ public enum Metrics {
         case (.labResult, _), (.none, _):
             break
         }
-        
+
     }
-    
+
     static func signpostPositiveLabAfterPositiveRapidResult(testKitType: TestKitType?) {
         switch testKitType {
         case .rapidResult:

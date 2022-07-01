@@ -8,21 +8,21 @@ import Localization
 import UIKit
 
 public class IsolationPaymentFlowViewController: BaseNavigationController {
-    
+
     fileprivate enum State: Equatable {
         case idle
         case loading
         case failedToLoad
     }
-    
+
     @Published
     fileprivate var state: State
-    
+
     fileprivate let _openURL: (URL, () -> Void) -> Void
     fileprivate let _didTapCheckEligibility: () -> AnyPublisher<URL, NetworkRequestError>
     fileprivate let _recordLaunchedIsolationPaymentsApplication: () -> Void
     private var cancellables = [AnyCancellable]()
-    
+
     public init(openURL: @escaping (URL, () -> Void) -> Void, didTapCheckEligibility: @escaping () -> AnyPublisher<URL, NetworkRequestError>, recordLaunchedIsolationPaymentsApplication: @escaping () -> Void) {
         _openURL = openURL
         _recordLaunchedIsolationPaymentsApplication = recordLaunchedIsolationPaymentsApplication
@@ -31,11 +31,11 @@ public class IsolationPaymentFlowViewController: BaseNavigationController {
         super.init()
         monitorState()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func rootViewController(for state: State) -> UIViewController {
         switch state {
         case .idle:
@@ -49,7 +49,7 @@ public class IsolationPaymentFlowViewController: BaseNavigationController {
             return LoadingErrorViewController(interacting: interactor, title: localize(.financial_support_title))
         }
     }
-    
+
     private func monitorState() {
         $state
             .regulate(as: .modelChange)
@@ -58,11 +58,11 @@ public class IsolationPaymentFlowViewController: BaseNavigationController {
             }
             .store(in: &cancellables)
     }
-    
+
     private func update(for state: State) {
         pushViewController(rootViewController(for: state), animated: false)
     }
-    
+
     fileprivate func handleCheckEligibility() {
         state = .loading
         _didTapCheckEligibility()
@@ -89,15 +89,15 @@ public class IsolationPaymentFlowViewController: BaseNavigationController {
 
 private struct LoadingErrorViewControllerInteractor: LoadingErrorViewController.Interacting {
     private weak var controller: IsolationPaymentFlowViewController?
-    
+
     init(controller: IsolationPaymentFlowViewController?) {
         self.controller = controller
     }
-    
+
     func didTapCancel() {
         controller?.dismiss(animated: true, completion: nil)
     }
-    
+
     public func didTapRetry() {
         controller?.handleCheckEligibility()
     }
@@ -105,11 +105,11 @@ private struct LoadingErrorViewControllerInteractor: LoadingErrorViewController.
 
 private struct LoadingViewControllerInteractor: LoadingViewController.Interacting {
     private weak var navigationController: UINavigationController?
-    
+
     init(navigationController: UINavigationController?) {
         self.navigationController = navigationController
     }
-    
+
     func didTapCancel() {
         navigationController?.dismiss(animated: true, completion: nil)
     }
@@ -117,23 +117,23 @@ private struct LoadingViewControllerInteractor: LoadingViewController.Interactin
 
 private struct FinancialSupportViewControllerInteractor: FinancialSupportViewController.Interacting {
     private weak var controller: IsolationPaymentFlowViewController?
-    
+
     init(controller: IsolationPaymentFlowViewController?) {
         self.controller = controller
     }
-    
+
     public func didTapHelpForEngland() {
         controller?._openURL(ExternalLink.financialSupportEngland.url) {}
     }
-    
+
     public func didTapHelpForWales() {
         controller?._openURL(ExternalLink.financialSupportWales.url) {}
     }
-    
+
     public func didTapCheckEligibility() {
         controller?.handleCheckEligibility()
     }
-    
+
     public func didTapViewPrivacyNotice() {
         controller?._openURL(ExternalLink.financialSupportPrivacyNotice.url) {}
     }

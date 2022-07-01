@@ -9,7 +9,7 @@ import SwiftUI
 class ExposureNotificationState {
     private let _action: (Bool) -> Void
     private let _enabledSubject: CurrentValueSubject<Bool, Never>
-    
+
     var enabled: Bool {
         get {
             _enabledSubject.value
@@ -19,11 +19,11 @@ class ExposureNotificationState {
             _action(newValue)
         }
     }
-    
+
     var enabledSubject: CurrentValueSubject<Bool, Never> {
         _enabledSubject
     }
-    
+
     init(enabled: InterfaceProperty<Bool>, action: @escaping (Bool) -> Void) {
         _action = action
         _enabledSubject = enabled.currentValueSubject
@@ -45,12 +45,12 @@ private class ContactTracingState: ObservableObject {
     private var cancellable: AnyCancellable?
     let exposureNotifications: ExposureNotificationState
     private let userNotificationsEnabled: InterfaceProperty<Bool>
-    
+
     @Published var isPresented: Bool = false
     @Published var toggleState: Bool = false
     @Published var exposureNotificationReminderIn: ExposureNotificationReminderIn? = nil
     @Published var showExposureNotificationReminderAlert: Bool = false
-    
+
     // use a custom binding so that we can observe the state of the toggle
     var toggleBinding: Binding<Bool> {
         Binding {
@@ -68,12 +68,12 @@ private class ContactTracingState: ObservableObject {
             }
         }
     }
-    
+
     init(exposureNotifications: ExposureNotificationState, userNotificationsEnabled: InterfaceProperty<Bool>) {
-        
+
         self.exposureNotifications = exposureNotifications
         self.userNotificationsEnabled = userNotificationsEnabled
-        
+
         // update the toggle state based on whether exposure notifications are enabled by the user
         cancellable = exposureNotifications.enabledSubject
             .sink { [weak self] exposureNotificationsEnabled in
@@ -85,27 +85,27 @@ private class ContactTracingState: ObservableObject {
 private struct ContactTracingHubContentView: View {
     @ObservedObject private var contactTracingState: ContactTracingState
     private let interactor: ContactTracingHubViewController.Interacting
-    
+
     init(contactTracingState: ContactTracingState, interactor: ContactTracingHubViewController.Interacting) {
         self.contactTracingState = contactTracingState
         self.interactor = interactor
     }
-    
+
     private var toggleTitle: String {
         contactTracingState.toggleBinding.wrappedValue ?
             localize(.contact_tracing_toggle_title_on) :
             localize(.contact_tracing_toggle_title_off)
     }
-    
+
     var body: some View {
         VStack(alignment: .leading) {
-            
+
             ToggleButton(
                 isToggledOn: contactTracingState.toggleBinding,
                 text: toggleTitle
             )
             .padding(.bottom)
-            
+
             Group {
                 IconItemView(
                     icon: .contactTracingNoTracking,
@@ -125,13 +125,13 @@ private struct ContactTracingHubContentView: View {
             }
             .padding([.leading, .trailing], .halfSpacing)
             .layoutPriority(1)
-            
+
             Spacer(minLength: .tripleSpacing)
-            
+
             Group {
                 Text(localize(.contact_tracing_hub_find_out_more))
                     .styleAsSecondaryHeading()
-                
+
                 VStack(alignment: .center, spacing: 2) {
                     ListRow(
                         text: localize(.contact_tracing_hub_should_not_pause),
@@ -151,7 +151,7 @@ private struct IconItemView: View {
     let icon: ImageName
     let title: String
     let description: String
-    
+
     var body: some View {
         HStack(alignment: .top, spacing: .standardSpacing) {
             Image(icon)
@@ -173,7 +173,7 @@ private struct IconItemView: View {
 private struct ListRow: View {
     let text: String
     let tapAction: () -> Void
-    
+
     var body: some View {
         Button(action: tapAction) {
             HStack(spacing: .halfSpacing) {
@@ -195,7 +195,7 @@ private struct ListRow: View {
 private struct ContactTracingHubView: View {
     private let interactor: ContactTracingHubViewController.Interacting
     @ObservedObject private var contactTracingState: ContactTracingState
-    
+
     init(
         interactor: ContactTracingHubViewController.Interacting,
         contactTracingState: ContactTracingState
@@ -203,7 +203,7 @@ private struct ContactTracingHubView: View {
         self.interactor = interactor
         self.contactTracingState = contactTracingState
     }
-    
+
     var body: some View {
         ScrollView(.vertical) {
             ContactTracingHubContentView(contactTracingState: contactTracingState, interactor: interactor)
@@ -243,11 +243,11 @@ public protocol ContactTracingHubViewControllerInteracting {
 }
 
 public class ContactTracingHubViewController: RootViewController {
-    
+
     public typealias Interacting = ContactTracingHubViewControllerInteracting
-    
+
     private let contactTracingState: ContactTracingState
-    
+
     public init(
         _ interactor: Interacting,
         exposureNotificationsEnabled: InterfaceProperty<Bool>,
@@ -261,11 +261,11 @@ public class ContactTracingHubViewController: RootViewController {
             ),
             userNotificationsEnabled: userNotificationsEnabled
         )
-        
+
         super.init(nibName: nil, bundle: nil)
-        
+
         title = localize(.contact_tracing_hub_title)
-        
+
         let content = UIHostingController(rootView:
             ContactTracingHubView(
                 interactor: interactor,
@@ -274,7 +274,7 @@ public class ContactTracingHubViewController: RootViewController {
         )
         addFilling(content)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

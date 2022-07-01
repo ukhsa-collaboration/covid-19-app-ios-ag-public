@@ -10,10 +10,10 @@ import UIKit
 public class LocalStatisticsScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name: String = "Local Statistics"
-    
+
     public static let dashboardLinkButtonTapped = "Dashboard Link Button Tapped"
     public static let lastFetchedDate = UTCHour(year: 2021, month: 11, day: 18, hour: 17, minutes: 14).date
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
@@ -23,27 +23,27 @@ public class LocalStatisticsScreenScenario: Scenario {
 }
 
 private class Interactor: LocalStatisticsViewController.Interacting {
-    
+
     private weak var viewController: UIViewController?
-    
+
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
     func didTapdashboardLinkButton() {
         viewController?.showAlert(title: LocalStatisticsScreenScenario.dashboardLinkButtonTapped)
     }
-    
+
 }
 
 private var localCovidStatsDaily: InterfaceLocalCovidStatsDaily {
-    
+
     typealias Value = InterfaceLocalCovidStatsDaily.LocalAuthorityStats.Value
     typealias Direction = InterfaceLocalCovidStatsDaily.LocalAuthorityStats.Direction
-    
+
     let day = GregorianDay(year: 2021, month: 11, day: 18)
     let dayOne = GregorianDay(year: 2021, month: 11, day: 13)
-    
+
     return InterfaceLocalCovidStatsDaily(
         lastFetch: LocalStatisticsScreenScenario.lastFetchedDate,
         country: InterfaceLocalCovidStatsDaily.CountryStats(

@@ -9,11 +9,11 @@ import XCTest
 @available(iOS 13.7, *)
 class OnboardingAnalyticsTests: AnalyticsTests {
     func testOnboardingPacketSentWhenOnboardingCompleted() throws {
-        
+
         assertOnLastFields { assertField in
             assertField.equals(expected: 1, \.completedOnboarding)
         }
-        
+
         XCTAssert(lastMetricsPayload?.analyticsWindow.startDate == lastMetricsPayload?.analyticsWindow.endDate)
     }
 }

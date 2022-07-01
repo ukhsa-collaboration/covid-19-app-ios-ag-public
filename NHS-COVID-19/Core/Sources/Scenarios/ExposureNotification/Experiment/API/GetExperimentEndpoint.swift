@@ -6,15 +6,15 @@ import Common
 import Foundation
 
 struct GetExperimentEndpoint: HTTPEndpoint {
-    
+
     var team: String
     var experimentId: String?
-    
+
     func request(for input: Void) throws -> HTTPRequest {
         let experimentPath = experimentId ?? "latest"
         return .get("/team/\(team)/experiment/\(experimentPath)")
     }
-    
+
     func parse(_ response: HTTPResponse) throws -> Experiment {
         let decoder = JSONDecoder()
         let formatter1 = ISO8601DateFormatter()
@@ -35,19 +35,19 @@ struct GetExperimentEndpoint: HTTPEndpoint {
         }
         return try decoder.decode(Experiment.self, from: response.body.content)
     }
-    
+
 }
 
 struct GetExperimentEndpointV2: HTTPEndpoint {
-    
+
     var team: String
     var experimentId: String?
-    
+
     func request(for input: Void) throws -> HTTPRequest {
         let experimentPath = experimentId ?? "latest"
         return .get("/team/\(team)/experiment/\(experimentPath)")
     }
-    
+
     func parse(_ response: HTTPResponse) throws -> Experiment.ExperimentV2 {
         let decoder = JSONDecoder()
         let formatter1 = ISO8601DateFormatter()
@@ -68,5 +68,5 @@ struct GetExperimentEndpointV2: HTTPEndpoint {
         }
         return try decoder.decode(Experiment.ExperimentV2.self, from: response.body.content)
     }
-    
+
 }

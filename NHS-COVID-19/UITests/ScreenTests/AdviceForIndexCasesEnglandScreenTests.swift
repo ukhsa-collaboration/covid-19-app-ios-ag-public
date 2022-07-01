@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class AdviceForIndexCasesEnglandScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<AdviceForIndexCasesEnglandScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = AdviceForIndexCasesEnglandScreen(app: app)
@@ -20,10 +20,10 @@ class AdviceForIndexCasesEnglandScreenTests: XCTestCase {
             XCTAssertTrue(screen.furtherAdvice.exists)
             XCTAssertTrue(screen.nhsOnlineLink.exists)
             XCTAssertTrue(screen.continueButton.exists)
-            
+
         }
     }
-    
+
     func testCommonQuestionsLinke() throws {
         try runner.run { app in
             let screen = AdviceForIndexCasesEnglandScreen(app: app)
@@ -31,7 +31,7 @@ class AdviceForIndexCasesEnglandScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[AdviceForIndexCasesEnglandScenario.didTapCommonQuestionsLink].exists)
         }
     }
-    
+
     func testNHSOnline() throws {
         try runner.run { app in
             let screen = AdviceForIndexCasesEnglandScreen(app: app)
@@ -39,7 +39,7 @@ class AdviceForIndexCasesEnglandScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[AdviceForIndexCasesEnglandScenario.ditTapNHSOnline].exists)
         }
     }
-    
+
     func testContinueButton() throws {
         try runner.run { app in
             let screen = AdviceForIndexCasesEnglandScreen(app: app)

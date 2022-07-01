@@ -12,7 +12,7 @@ struct RawState: Equatable {
     var postcodeState: PostcodeStoreState
     var shouldRecommendUpdate: Bool
     var shouldShowPolicyUpdate: Bool
-    
+
     var logicalState: LogicalState {
         let logicalStateIgnoringOnboarding = self.logicalStateIgnoringOnboarding
         switch logicalStateIgnoringOnboarding {
@@ -23,7 +23,7 @@ struct RawState: Equatable {
             return logicalStateIgnoringOnboarding
         }
     }
-    
+
     private var logicalStateIgnoringOnboarding: LogicalState {
         switch appAvailability.state {
         case .available:
@@ -36,7 +36,7 @@ struct RawState: Equatable {
             return postAvailabilityLogicalState
         }
     }
-    
+
     private var postAvailabilityLogicalState: LogicalState {
         switch exposureState.activationState {
         case .inactive, .activating:
@@ -47,7 +47,7 @@ struct RawState: Equatable {
             return postActivationState
         }
     }
-    
+
     private var authorizationErrorState: LogicalState? {
         switch exposureState.authorizationState {
         case .unknown, .authorized:
@@ -58,24 +58,24 @@ struct RawState: Equatable {
             return .canNotRunExposureNotification(.authorizationDenied)
         }
     }
-    
+
     private var postActivationState: LogicalState {
         if let authorizationErrorState = authorizationErrorState {
             return authorizationErrorState
         }
-        
+
         if case .empty = postcodeState {
             return .postcodeAndLocalAuthorityRequired
         }
-        
+
         if case .onlyPostcode = postcodeState {
             return .localAuthorityRequired
         }
-        
+
         guard !shouldShowPolicyUpdate else {
             return .policyAcceptanceRequired
         }
-        
+
         switch exposureState.authorizationState {
         case .unknown:
             return .authorizationRequired
@@ -83,7 +83,7 @@ struct RawState: Equatable {
             return postAuthorizedState
         }
     }
-    
+
     private var postAuthorizedState: LogicalState {
         switch exposureState.exposureNotificationState {
         case .unknown:
@@ -102,5 +102,5 @@ struct RawState: Equatable {
             }
         }
     }
-    
+
 }

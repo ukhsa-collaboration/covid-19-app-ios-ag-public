@@ -16,14 +16,14 @@ class ExposureWindowEventEndpointTests: XCTestCase {
         localAuthority: "W06000002",
         eventType: .exposureWindow
     )
-    
+
     private let endpointExposureWindowPositiveTest = ExposureWindowEventEndpoint(
         latestAppVersion: Version(major: 3, minor: 12),
         postcode: "LL44",
         localAuthority: "W06000002",
         eventType: .exposureWindowPositiveTest(testKitType: nil, requiresConfirmatoryTest: false)
     )
-    
+
     func testEncodingExposureWindow() throws {
         let expected = HTTPRequest.post("/submission/mobile-analytics-events", body: .json("""
         {
@@ -56,7 +56,7 @@ class ExposureWindowEventEndpointTests: XCTestCase {
           }
         }
         """)).withCanonicalJSONBody()
-        
+
         let exposureWindow = ExposureWindowInfo(
             date: GregorianDay(year: 2020, month: 11, day: 12),
             infectiousness: .high,
@@ -70,11 +70,11 @@ class ExposureWindowEventEndpointTests: XCTestCase {
             riskScore: 131.44555790888523,
             riskCalculationVersion: 2, isConsideredRisky: false
         )
-        
+
         let actual = try endpointExposureWindow.request(for: exposureWindow).withCanonicalJSONBody()
         TS.assert(actual, equals: expected)
     }
-    
+
     func testEncodingExposureWindowPositveTest() throws {
         let expected = HTTPRequest.post("/submission/mobile-analytics-events", body: .json("""
         {
@@ -109,7 +109,7 @@ class ExposureWindowEventEndpointTests: XCTestCase {
           }
         }
         """)).withCanonicalJSONBody()
-        
+
         let exposureWindow = ExposureWindowInfo(
             date: GregorianDay(year: 2020, month: 11, day: 12),
             infectiousness: .high,
@@ -126,7 +126,7 @@ class ExposureWindowEventEndpointTests: XCTestCase {
         let actual = try endpointExposureWindowPositiveTest.request(for: exposureWindow).withCanonicalJSONBody()
         TS.assert(actual, equals: expected)
     }
-    
+
     func testEncodingExposureWindowPositveTestWithTestTypeLabResult() throws {
         let endpointExposureWindowPositiveTest = ExposureWindowEventEndpoint(
             latestAppVersion: Version(major: 3, minor: 12),
@@ -134,7 +134,7 @@ class ExposureWindowEventEndpointTests: XCTestCase {
             localAuthority: "W06000002",
             eventType: .exposureWindowPositiveTest(testKitType: .labResult, requiresConfirmatoryTest: false)
         )
-        
+
         let expected = HTTPRequest.post("/submission/mobile-analytics-events", body: .json("""
         {
           "events": [
@@ -168,7 +168,7 @@ class ExposureWindowEventEndpointTests: XCTestCase {
           }
         }
         """)).withCanonicalJSONBody()
-        
+
         let exposureWindow = ExposureWindowInfo(
             date: GregorianDay(year: 2020, month: 11, day: 12),
             infectiousness: .high,
@@ -185,7 +185,7 @@ class ExposureWindowEventEndpointTests: XCTestCase {
         let actual = try endpointExposureWindowPositiveTest.request(for: exposureWindow).withCanonicalJSONBody()
         TS.assert(actual, equals: expected)
     }
-    
+
     func testEncodingExposureWindowPositveTestWithRapidTestRequiringConfirmation() throws {
         let endpointExposureWindowPositiveTest = ExposureWindowEventEndpoint(
             latestAppVersion: Version(major: 3, minor: 12),
@@ -193,7 +193,7 @@ class ExposureWindowEventEndpointTests: XCTestCase {
             localAuthority: "W06000002",
             eventType: .exposureWindowPositiveTest(testKitType: .rapidResult, requiresConfirmatoryTest: true)
         )
-        
+
         let expected = HTTPRequest.post("/submission/mobile-analytics-events", body: .json("""
         {
           "events": [
@@ -227,7 +227,7 @@ class ExposureWindowEventEndpointTests: XCTestCase {
           }
         }
         """)).withCanonicalJSONBody()
-        
+
         let exposureWindow = ExposureWindowInfo(
             date: GregorianDay(year: 2020, month: 11, day: 12),
             infectiousness: .high,

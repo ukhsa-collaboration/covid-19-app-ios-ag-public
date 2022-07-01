@@ -7,12 +7,12 @@ import Scenarios
 import XCTest
 
 class VoidTestResultFlowTests: XCTestCase {
-    
+
     private let postcode = "SW12"
-    
+
     @Propped
     private var runner: ApplicationRunner<SandboxedScenario>
-    
+
     override func setUp() {
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = false
@@ -21,7 +21,7 @@ class VoidTestResultFlowTests: XCTestCase {
         $runner.initialState.localAuthorityId = "E09000022"
         $runner.initialState.testResult = "void"
     }
-    
+
     func testWithoutIsolation() throws {
         $runner.report(scenario: "Void Test Result", "Without Isolation") {
             """
@@ -29,44 +29,30 @@ class VoidTestResultFlowTests: XCTestCase {
             """
         }
         try runner.run { app in
-            
+
             runner.step("Void Test Result") {
                 """
                 The user is presented with a screen containing information on their void test result while not being
                 in isolation.
-                The user can book a new test
+                The user have the option to go back to home.
                 """
             }
             let voidTestResultScreen = VoidTestResultNoIsolationScreen(app: app)
-            
+
             XCTAssertTrue(voidTestResultScreen.explanationLabel.allExist)
-            
-            voidTestResultScreen.continueButton.tap()
-            
-            runner.step("Book a free test") {
-                """
-                The user is presented a screen with information on how to book a free test.
-                After booking a test, they can go back to the app and are presented the homescreen
-                """
-            }
-            
-            let bookTestScreen = BookATestScreen(app: app)
-            
-            XCTAssertTrue(bookTestScreen.title.exists)
-            
-            app.scrollTo(element: bookTestScreen.button)
-            bookTestScreen.button.tap()
-            
+
+            voidTestResultScreen.primaryButton.tap()
+
             runner.step("Homescreen") {
                 """
                 The user is presented the homescreen
                 """
             }
-            
+
             app.checkOnHomeScreen(postcode: postcode)
         }
     }
-    
+
     func testWithIsolationIndexCase() throws {
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.index.rawValue
         $runner.report(scenario: "Void Test Result", "With Isolation") {
@@ -78,36 +64,22 @@ class VoidTestResultFlowTests: XCTestCase {
             runner.step("Void Test Result") {
                 """
                 The user is presented with a screen containing information on their void test result and notified that
-                they should continue to isolate
-                The user can book a new test
+                they should continue to isolate.
+                The user have the option to go back to home.
                 """
             }
             let voidTestResultScreen = VoidTestResultWithIsolationScreen(app: app)
-            
+
             XCTAssertTrue(voidTestResultScreen.explanationLabel.allExist)
-            
-            voidTestResultScreen.continueButton.tap()
-            
-            runner.step("Book a free test") {
-                """
-                The user is presented a screen with information on how to book a free test.
-                After booking a test, they can go back to the app and are presented the homescreen
-                """
-            }
-            
-            let bookTestScreen = BookATestScreen(app: app)
-            
-            XCTAssertTrue(bookTestScreen.title.exists)
-            
-            app.scrollTo(element: bookTestScreen.button)
-            bookTestScreen.button.tap()
-            
+
+            voidTestResultScreen.primaryButton.tap()
+
             runner.step("Homescreen") {
                 """
                 The user is presented the homescreen and is still isolating
                 """
             }
-            
+
             app.checkOnHomeScreen(postcode: postcode)
         }
     }

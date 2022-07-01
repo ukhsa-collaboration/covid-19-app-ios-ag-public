@@ -10,15 +10,15 @@ import SwiftUI
 import UIKit
 
 public class NavigationButtonComponentScenario: Scenario {
-    
+
     public static let name = "Navigation Button"
     public static let kind = ScenarioKind.component
-    
+
     enum Showcases: CaseIterable {
         case checkIn
         case symptoms
         case selfIsolation
-        
+
         func content() -> NavigationButton {
             switch self {
             case .checkIn:
@@ -30,20 +30,20 @@ public class NavigationButtonComponentScenario: Scenario {
             }
         }
     }
-    
+
     static var appController: AppController {
         BasicAppController(rootViewController: UIHostingController(rootView: NavigationButtonView()))
     }
 }
 
 private struct NavigationButtonView: View {
-    
+
     @State var preferredColourScheme: ColorScheme? = nil
-    
+
     @SwiftUI.Environment(\.colorScheme) var colorScheme
-    
+
     fileprivate init() {}
-    
+
     var body: some View {
         NavigationView {
             List(NavigationButtonComponentScenario.Showcases.allCases, id: \.index) {
@@ -53,16 +53,16 @@ private struct NavigationButtonView: View {
             .navigationBarTitle("NavigationButton")
         }
         .preferredColorScheme(preferredColourScheme)
-        
+
     }
-    
+
     private var toggleColorSchemeButton: some View {
         Button(action: self.toggleColorScheme) {
             Image(systemName: colorScheme == .dark ? "moon.circle.fill" : "moon.circle")
                 .frame(width: 44, height: 44)
         }
     }
-    
+
     private func toggleColorScheme() {
         switch colorScheme {
         case .dark:

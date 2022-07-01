@@ -7,23 +7,23 @@ import ExposureNotification
 import Foundation
 
 class ExperimentCreator: ObservableObject, Identifiable {
-    
+
     private var cancellables = [AnyCancellable]()
-    
+
     @Published
     private(set) var isCreatingExperiment = false
-    
+
     @Published
     private(set) var error: Error?
-    
+
     @Published
     var isPeriodicDetectionEnabled = false
-    
+
     @Published
     var isMultiConfigurationEnabled = false
-    
+
     init() {}
-    
+
     func createExperiment(name: String, storeIn experimentManager: ExperimentManager, complete: @escaping () -> Void) {
         isCreatingExperiment = true
         error = nil
@@ -67,5 +67,5 @@ class ExperimentCreator: ObservableObject, Identifiable {
                 )
         )
     }
-    
+
 }

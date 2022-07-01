@@ -20,7 +20,7 @@ internal protocol HomeScreenScenario: Scenario {
 }
 
 extension HomeScreenScenario {
-    
+
     static func postcodeViewModel(parent: UIViewController) -> RiskLevelBanner.ViewModel? {
         if Self.riskyPostcodeEnabled {
             return RiskLevelBanner.ViewModel(
@@ -39,19 +39,19 @@ extension HomeScreenScenario {
             return nil
         }
     }
-    
+
     static var localInfoBannerViewModel: LocalInformationBanner.ViewModel? {
         if Self.localInformationEnabled {
             return .init(text: "A new variant of concern is in your area.", localInfoScreenViewModel: .init(header: "", body: []))
         }
         return nil
     }
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
-            
+
             let exposureNotificationsEnabled = CurrentValueSubject<Bool, Never>(true)
-            
+
             return HomeViewController(
                 interactor: Interactor(
                     viewController: parent,
@@ -80,9 +80,9 @@ extension HomeScreenScenario {
 
 public class SuccessHomeScreenScenario: HomeScreenScenario {
     public static var name = "Home Screen"
-    
+
     public static var kind = ScenarioKind.screen
-    
+
     public static var riskyPostcodeEnabled = true
     public static var selfDiagnosisEnabled: Bool = true
     public static var checkInEnabled: Bool = true
@@ -95,9 +95,9 @@ public class SuccessHomeScreenScenario: HomeScreenScenario {
 
 public class DisabledFeaturesHomeScreenScenario: HomeScreenScenario {
     public static var name = "Home Screen – All Features disabled"
-    
+
     public static var kind = ScenarioKind.screen
-    
+
     public static var riskyPostcodeEnabled = false
     public static var selfDiagnosisEnabled = false
     public static var checkInEnabled: Bool = false
@@ -126,14 +126,14 @@ public class HomeScreenAlerts {
 }
 
 private class Interactor: HomeViewController.Interacting {
-    
+
     var checkInEnabled: Bool
     var testingForCOVID19Enabled: Bool
     var selfIsolationEnabled: Bool
     var guidanceHubEnabled: Bool
-    
+
     private weak var viewController: UIViewController?
-    
+
     init(
         viewController: UIViewController,
         checkInEnabled: Bool,
@@ -147,75 +147,75 @@ private class Interactor: HomeViewController.Interacting {
         self.selfIsolationEnabled = selfIsolationEnabled
         self.guidanceHubEnabled = guidanceHubEnabled
     }
-    
+
     func didTapRiskLevelBanner(viewModel: RiskLevelInfoViewController.ViewModel) {
         viewController?.showAlert(title: HomeScreenAlerts.postcodeBannerAlertTitle)
     }
-    
+
     func didTapLocalInfoBanner(viewModel: LocalInformationViewController.ViewModel) {
         viewController?.showAlert(title: HomeScreenAlerts.localInfoBannerAlertTitle)
     }
-    
+
     func didTapSelfIsolationButton() {
         viewController?.showAlert(title: HomeScreenAlerts.selfIsolationAlertTitle)
     }
-    
+
     func didTapDiagnosisButton() {
         viewController?.showAlert(title: HomeScreenAlerts.diagnosisAlertTitle)
     }
-    
+
     func didTapCheckInButton() {
         viewController?.showAlert(title: HomeScreenAlerts.checkInAlertTitle)
     }
-    
+
     func didTapAboutButton() {
         viewController?.showAlert(title: HomeScreenAlerts.aboutAlertTitle)
     }
-    
+
     func didTapSettingsButton() {
         viewController?.showAlert(title: HomeScreenAlerts.settingsAlertTitle)
     }
-    
+
     func didTapLinkTestResultButton() {
         viewController?.showAlert(title: HomeScreenAlerts.linkTestResultTitle)
     }
-    
+
     func didTapContactTracingHubButton() {
         viewController?.showAlert(title: HomeScreenAlerts.contactTracingHubAlertTitle)
     }
-    
+
     func didTapTestingHubButton() {
         viewController?.showAlert(title: HomeScreenAlerts.testingHubAlertTitle)
     }
-    
+
     var shouldShowCheckIn: Bool {
         checkInEnabled
     }
-    
+
     var shouldShowTestingForCOVID19: Bool {
         testingForCOVID19Enabled
     }
-    
+
     var shouldShowSelfIsolation: Bool {
         selfIsolationEnabled
     }
-    
+
     var shouldShowGuidanceHub: Bool {
         guidanceHubEnabled
     }
-    
+
     func openSettings() {
         viewController?.showAlert(title: HomeScreenAlerts.openSettingAlertTitle)
     }
-    
+
     func didTapStatsButton() {
         viewController?.showAlert(title: HomeScreenAlerts.statsTappedAlertTitle)
     }
-    
+
     func didTapGuidanceHubEnglandButton() {
         viewController?.showAlert(title: HomeScreenAlerts.openGuidanceHubEnglandAlertTitle)
     }
-    
+
     func didTapGuidanceHubWalesButton() {
         viewController?.showAlert(title: HomeScreenAlerts.openGuidanceHubWalesAlertTitle)
     }

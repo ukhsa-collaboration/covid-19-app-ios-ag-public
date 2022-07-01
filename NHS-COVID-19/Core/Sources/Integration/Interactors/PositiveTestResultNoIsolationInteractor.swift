@@ -8,11 +8,11 @@ import Localization
 
 struct PositiveTestResultNoIsolationInteractor: NonNegativeTestResultNoIsolationViewControllerInteracting {
     let openURL: (URL) -> Void
-    
+
     var didTapPrimaryButton: () -> Void
     var didTapOnlineServicesLink: () -> Void
     var didTapCancel: (() -> Void)?
-    
+
     init(
         openURL: @escaping (URL) -> Void,
         didTapPrimaryButton: @escaping () -> Void,
@@ -23,5 +23,5 @@ struct PositiveTestResultNoIsolationInteractor: NonNegativeTestResultNoIsolation
         didTapOnlineServicesLink = { openURL(ExternalLink.nhs111Online.url) }
         self.didTapCancel = didTapCancel
     }
-    
+
 }

@@ -7,7 +7,7 @@ import ExposureNotification
 
 struct TemporaryExposureKey {
     private static let priorDaysThreshold = -2
-    
+
     var keyData: Data
     var rollingStartNumber: UInt32
     var rollingPeriod: UInt32
@@ -15,13 +15,13 @@ struct TemporaryExposureKey {
         let transmissionRiskLevel = daysSinceOnsetOfSymptoms < Self.priorDaysThreshold
             ? 0
             : ENTemporaryExposureKey.maxTransmissionRiskLevel - abs(daysSinceOnsetOfSymptoms)
-        
+
         return ENRiskLevel(max(ENTemporaryExposureKey.minTransmissionRiskLevel, transmissionRiskLevel))
     }
-    
+
     var gregorianDay: GregorianDay
     var daysSinceOnsetOfSymptoms: Int
-    
+
     init(exposureKey: ENTemporaryExposureKey, onsetDay: GregorianDay) {
         keyData = exposureKey.keyData
         rollingStartNumber = exposureKey.rollingStartNumber
@@ -42,13 +42,13 @@ private extension ENTemporaryExposureKey {
 }
 
 extension TemporaryExposureKey {
-    
+
     static func infectiousDateRange(onsetDay: GregorianDay) -> Range<GregorianDay> {
         let startDay = onsetDay.advanced(by: priorDaysThreshold)
         let endDay = onsetDay.advanced(by: ENTemporaryExposureKey.maxTransmissionRiskLevel)
         return startDay ..< endDay
     }
-    
+
     static func dateRangeConsideredForUploadIgnoringInfectiousness(
         acknowledgmentDay: GregorianDay,
         isolationDuration: DayDuration,
@@ -58,5 +58,5 @@ extension TemporaryExposureKey {
         let endDay = acknowledgmentDay
         return min(startDay, endDay) ..< endDay
     }
-    
+
 }

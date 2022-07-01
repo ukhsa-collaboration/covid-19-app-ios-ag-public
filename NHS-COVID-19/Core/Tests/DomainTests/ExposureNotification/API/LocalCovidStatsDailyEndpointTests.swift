@@ -8,29 +8,29 @@ import XCTest
 @testable import Domain
 
 class LocalCovidStatsDailyEndpointTests: XCTestCase {
-    
+
     typealias StatsValue = LocalCovidStatsDaily.LocalAuthorityStats.Value
     typealias Direction = LocalCovidStatsDaily.Direction
-    
+
     private let endpoint = LocalCovidStatsDailyEndpoint()
-    
+
     func testRequest() throws {
         let expected = HTTPRequest.get("/distribution/v1/local-covid-stats-daily")
-        
+
         let actual = try endpoint.request(for: ())
-        
+
         TS.assert(actual, equals: expected)
     }
-    
+
     func testResponse() throws {
         let response = HTTPResponse.ok(with: .json(localCovidStatsDailyPayload))
-        
+
         let formatter = ISO8601DateFormatter()
-        
+
         let date = { (string: String) throws -> Date in
             try XCTUnwrap(formatter.date(from: string))
         }
-        
+
         let day = GregorianDay(year: 2021, month: 11, day: 18)
         let dayOne = GregorianDay(year: 2021, month: 11, day: 13)
         let expected = try LocalCovidStatsDaily(

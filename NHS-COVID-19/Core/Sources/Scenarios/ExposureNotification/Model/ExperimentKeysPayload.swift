@@ -17,7 +17,7 @@ struct TemporaryTracingKey: Codable {
     var key: String
     var intervalNumber: Int
     var intervalCount: Int
-    
+
     var exposureKey: ExposureKey {
         ExposureKey(
             keyData: Data(base64Encoded: key)!,
@@ -29,28 +29,28 @@ struct TemporaryTracingKey: Codable {
 }
 
 struct ExperimentKeysPayload: Codable {
-    
+
     typealias TemporaryTracingKey = Scenarios.TemporaryTracingKey
-    
+
     struct Info: Codable {
         var deviceName: String
         var experimentName: String
     }
-    
+
     var regions: [String]
     var temporaryTracingKeys: [TemporaryTracingKey]
     var info: Info
 }
 
 struct ExperimentResultsPayload: Codable {
-    
+
     struct Summary: Codable {
         var attenuationDurations: [Double]
         var daysSinceLastExposure: Int
         var matchedKeyCount: Int
         var maximumRiskScore: Int
     }
-    
+
     struct ExposureInfo: Codable {
         var attenuationDurations: [Double]
         var attenuationValue: Int
@@ -60,21 +60,21 @@ struct ExperimentResultsPayload: Codable {
         var transmissionRiskLevel: Int
         var metadata: [String: String]?
     }
-    
+
     struct ExposureWindow: Codable {
         var date: Date
         var reportType: Int
         var scanInstances: [ScanInstance]
     }
-    
+
     struct ScanInstance: Codable {
         var typicalAttenuationDb: Int
         var minAttenuationDb: Int
         var secondsSinceLastScan: Int
     }
-    
+
     typealias Info = ExperimentKeysPayload.Info
-    
+
     var info: Info
     var summary: Summary
     var exposureInfos: [ExposureInfo]
@@ -125,26 +125,26 @@ extension ExperimentResultsPayload.ExposureWindow {
 }
 
 extension ExperimentKeysPayload {
-    
+
     init(keys: [ENTemporaryExposureKey], deviceManager: DeviceManager) {
         let mappedKeys = keys.map(ExperimentKeysPayload.TemporaryTracingKey.init)
-        
+
         let info = ExperimentKeysPayload.Info(
             deviceName: deviceManager.deviceName,
             experimentName: deviceManager.experimentName
         )
-        
+
         self.init(
             regions: ["UK"],
             temporaryTracingKeys: mappedKeys,
             info: info
         )
     }
-    
+
 }
 
 extension TemporaryTracingKey {
-    
+
     init(key: ENTemporaryExposureKey) {
         self.init(
             key: key.keyData.base64EncodedString(),
@@ -152,5 +152,5 @@ extension TemporaryTracingKey {
             intervalCount: Int(key.rollingPeriod)
         )
     }
-    
+
 }

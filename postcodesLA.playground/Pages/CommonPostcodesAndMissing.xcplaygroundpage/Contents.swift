@@ -30,7 +30,7 @@ countries.forEach {
         print(result.sorted())
         print("---")
     }
-    
+
 }
 
 let url1 = Bundle.main.url(forResource: "PostalDistricts", withExtension: ".json")

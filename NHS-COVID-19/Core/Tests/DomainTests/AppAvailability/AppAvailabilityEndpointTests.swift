@@ -8,17 +8,17 @@ import XCTest
 @testable import Domain
 
 class AppAvailabilityEndpointTests: XCTestCase {
-    
+
     private let endpoint = AppAvailabilityEndpoint()
-    
+
     func testEncoding() throws {
         let expected = HTTPRequest.get("/distribution/availability-ios")
-        
+
         let actual = try endpoint.request(for: ())
-        
+
         TS.assert(actual, equals: expected)
     }
-    
+
     func testDecoding() throws {
         let minimumOSVersionDescription = UUID().uuidString
         let recommendedOSVersionTitle = UUID().uuidString
@@ -26,7 +26,7 @@ class AppAvailabilityEndpointTests: XCTestCase {
         let minimumAppVersionDescription = UUID().uuidString
         let recommendedAppVersionTitle = UUID().uuidString
         let recommendedAppVersionDescription = UUID().uuidString
-        
+
         let response = HTTPResponse.ok(with: .json("""
         {
           "minimumOSVersion": {
@@ -61,7 +61,7 @@ class AppAvailabilityEndpointTests: XCTestCase {
           },
         }
         """))
-        
+
         let expected = AppAvailability(
             iOSVersion: AppAvailability.VersionRequirement(
                 minimumSupported: Version(major: 13, minor: 5),
@@ -82,10 +82,10 @@ class AppAvailabilityEndpointTests: XCTestCase {
                 descriptions: [Locale(identifier: "en-GB"): recommendedAppVersionDescription]
             )
         )
-        
+
         TS.assert(try endpoint.parse(response), equals: expected)
     }
-    
+
     func testDecodingValueWithMinorAndPatchVersionsOmitted() throws {
         let minimumOSVersionDescription = UUID().uuidString
         let recommendedOSVersionTitle = UUID().uuidString
@@ -93,7 +93,7 @@ class AppAvailabilityEndpointTests: XCTestCase {
         let minimumAppVersionDescription = UUID().uuidString
         let recommendedAppVersionTitle = UUID().uuidString
         let recommendedAppVersionDescription = UUID().uuidString
-        
+
         let response = HTTPResponse.ok(with: .json("""
         {
           "minimumOSVersion": {
@@ -128,7 +128,7 @@ class AppAvailabilityEndpointTests: XCTestCase {
           },
         }
         """))
-        
+
         let expected = AppAvailability(
             iOSVersion: AppAvailability.VersionRequirement(
                 minimumSupported: Version(major: 13, minor: 5),
@@ -149,10 +149,10 @@ class AppAvailabilityEndpointTests: XCTestCase {
                 descriptions: [Locale(identifier: "en-GB"): recommendedAppVersionDescription]
             )
         )
-        
+
         TS.assert(try endpoint.parse(response), equals: expected)
     }
-    
+
     func testDecodingValueWithInvalidVersionsFails() throws {
         let response = HTTPResponse.ok(with: .json(#"""
         {
@@ -170,7 +170,7 @@ class AppAvailabilityEndpointTests: XCTestCase {
           },
         }
         """#))
-        
+
         XCTAssertThrowsError(try endpoint.parse(response))
     }
 }

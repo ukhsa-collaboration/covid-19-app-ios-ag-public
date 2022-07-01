@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class WarnAndTestCheckSymptomsScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<WarnAndTestCheckSymptomsScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = WarnAndTestCheckSymptomsScreen(app: app)

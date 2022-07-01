@@ -20,17 +20,17 @@ struct LocalAuthoritiesValidator: LocalAuthoritiesValidating {
     struct LocalAuthorityPayload: Codable {
         fileprivate let name: String
         fileprivate let country: String
-        
+
         fileprivate init(name: String, country: String) {
             self.name = name
             self.country = country
         }
     }
-    
+
     struct LocalAuthoritiesPayload: Codable {
         fileprivate let postcodes: [String: Set<String>]
         fileprivate let localAuthorities: [String: LocalAuthorityPayload]
-        
+
         fileprivate init(
             postcodes: [String: Set<String>],
             localAuthorities: [String: LocalAuthorityPayload]
@@ -39,11 +39,11 @@ struct LocalAuthoritiesValidator: LocalAuthoritiesValidating {
             self.localAuthorities = localAuthorities
         }
     }
-    
+
     private let payload: LocalAuthoritiesPayload
     private let postcodes: [Postcode: Set<LocalAuthorityId>]
     private let localAuthorities: [LocalAuthorityId: LocalAuthority]
-    
+
     init(data: Data) throws {
         payload = try JSONDecoder().decode(LocalAuthoritiesPayload.self, from: data)
         postcodes = Dictionary(uniqueKeysWithValues: payload.postcodes.map { key, value in
@@ -65,7 +65,7 @@ struct LocalAuthoritiesValidator: LocalAuthoritiesValidating {
             return (localAuthorityId, localAuthority)
         })
     }
-    
+
     init() {
         guard
             let url = Bundle.module.url(forResource: "LocalAuthorities", withExtension: "json"),
@@ -76,7 +76,7 @@ struct LocalAuthoritiesValidator: LocalAuthoritiesValidating {
         }
         self = validator
     }
-    
+
     func localAuthorities(for postcode: Postcode) -> Result<Set<LocalAuthority>, PostcodeValidationError> {
         guard let localIds = postcodes[postcode], localIds.count > 0 else {
             return .failure(.invalidPostcode)
@@ -90,7 +90,7 @@ struct LocalAuthoritiesValidator: LocalAuthoritiesValidating {
         }
         return .success(Set(localAuthorities))
     }
-    
+
     func localAuthority(with localAuthorityId: LocalAuthorityId) -> LocalAuthority? {
         return localAuthorities[localAuthorityId]
     }

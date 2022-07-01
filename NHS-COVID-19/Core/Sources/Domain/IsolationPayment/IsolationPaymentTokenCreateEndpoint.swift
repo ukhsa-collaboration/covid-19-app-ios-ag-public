@@ -18,7 +18,7 @@ struct IsolationPaymentTokenCreateEndpoint: HTTPEndpoint {
         let data = try encoder.encode(payload)
         return .post("/isolation-payment/ipc-token/create", body: .json(data))
     }
-    
+
     func parse(_ response: HTTPResponse) throws -> IsolationPaymentRawState {
         return try IsolationPaymentRawState(try Response.parse(response))
     }
@@ -32,7 +32,7 @@ private extension IsolationPaymentTokenCreateEndpoint {
     struct Response: Decodable, Equatable {
         var isEnabled: Bool
         var ipcToken: String?
-        
+
         fileprivate static func parse(_ response: HTTPResponse) throws -> Self {
             let jsonDecoder = JSONDecoder()
             return try jsonDecoder.decode(Self.self, from: response.body.content)
@@ -44,7 +44,7 @@ extension IsolationPaymentRawState {
     enum ResponseError: Error {
         case noToken
     }
-    
+
     fileprivate init(_ response: IsolationPaymentTokenCreateEndpoint.Response) throws {
         if response.isEnabled {
             if let tokenString = response.ipcToken {

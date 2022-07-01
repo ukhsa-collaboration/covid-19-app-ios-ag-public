@@ -11,16 +11,16 @@ private enum AwaitError: Error {
 }
 
 extension Publisher {
-    
+
     /// Waits as long as the timeout for the publisher to emit a single value and returns it; otherwise throws an error
     /// - Parameter timeout: The duration to wait for an event.
     public func await(timeout: TimeInterval = 0.1) throws -> Result<Output, Failure> {
         var capturedResult: Result<Output, Failure>?
-        
+
         let complete = { (result: Result<Output, Failure>) in
             capturedResult = result
         }
-        
+
         let cancellable =
             sink(
                 receiveCompletion: { completion in
@@ -50,7 +50,7 @@ extension Publisher {
         defer {
             cancellable.cancel()
         }
-        
+
         let deadline = Date(timeIntervalSinceNow: timeout)
         while
             deadline > Date(),
@@ -66,5 +66,5 @@ extension Publisher {
             throw AwaitError.timedOut
         }
     }
-    
+
 }

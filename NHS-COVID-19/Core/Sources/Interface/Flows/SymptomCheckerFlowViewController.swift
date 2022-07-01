@@ -15,11 +15,11 @@ public protocol SymptomCheckerFlowViewControllerInteracting {
 }
 
 public class SymptomCheckerFlowViewController: BaseNavigationController {
-    
+
     public typealias Interacting = SymptomCheckerFlowViewControllerInteracting
-    
+
     fileprivate let interactor: Interacting
-    
+
     fileprivate enum State: Equatable {
         case start
         case loaded
@@ -29,10 +29,10 @@ public class SymptomCheckerFlowViewController: BaseNavigationController {
         case tryToStayAtHome
         case normalActivities
     }
-    
+
     @Published
     fileprivate var state: State = .start
-    
+
     fileprivate var symptomsQuestionnaire = InterfaceSymptomsQuestionnaire(
         riskThreshold: 0.0,
         symptoms: [SymptomInfo](),
@@ -41,32 +41,32 @@ public class SymptomCheckerFlowViewController: BaseNavigationController {
         dateSelectionWindow: 0,
         isSymptomaticSelfIsolationForWalesEnabled: false
     )
-    
+
     fileprivate var doYouFeelWell: Bool? = nil
-    
+
     private let currentDateProvider: DateProviding
     private let country: Country
     private let openURL: (URL) -> Void
     public var didCancel: (() -> Void)?
     public var finishFlow: (() -> Void)?
-    
+
     private var cancellables = [AnyCancellable]()
-    
+
     public init(_ interactor: Interacting, currentDateProvider: DateProviding, country: Country, openURL: @escaping (URL) -> Void) {
         self.interactor = interactor
         self.currentDateProvider = currentDateProvider
         self.country = country
         self.openURL = openURL
         super.init()
-        
+
         monitorState()
         executeFetchQuestionnaire()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func monitorState() {
         $state
             .regulate(as: .modelChange)
@@ -75,7 +75,7 @@ public class SymptomCheckerFlowViewController: BaseNavigationController {
             }
             .store(in: &cancellables)
     }
-    
+
     private func update(for state: State) {
         if let viewControllerToPresent = viewControllers.first(where: { type(of: $0) == type(of: rootViewController(for: state)) }) {
             popToViewController(viewControllerToPresent, animated: true)
@@ -83,7 +83,7 @@ public class SymptomCheckerFlowViewController: BaseNavigationController {
             pushViewController(rootViewController(for: state), animated: state != .start)
         }
     }
-    
+
     private func rootViewController(for state: State) -> UIViewController {
         switch state {
         case .start:
@@ -111,7 +111,7 @@ public class SymptomCheckerFlowViewController: BaseNavigationController {
             return SymptomaticCaseSummaryViewController(interactor: interactor, adviseForSymptomaticCase: summaryResult)
         }
     }
-    
+
     func executeFetchQuestionnaire() {
         interactor.fetchQuestionnaire()
             .sink(
@@ -133,11 +133,11 @@ public class SymptomCheckerFlowViewController: BaseNavigationController {
 
 private class LoadingViewControllerInteractor: LoadingViewController.Interacting {
     private weak var navigationController: SymptomCheckerFlowViewController?
-    
+
     init(navigationController: SymptomCheckerFlowViewController?) {
         self.navigationController = navigationController
     }
-    
+
     func didTapCancel() {
         navigationController?.didCancel?()
         navigationController?.dismiss(animated: true, completion: nil)
@@ -146,34 +146,34 @@ private class LoadingViewControllerInteractor: LoadingViewController.Interacting
 
 private struct LoadingErrorControllerInteractor: LoadingErrorViewController.Interacting {
     private weak var controller: SymptomCheckerFlowViewController?
-    
+
     init(controller: SymptomCheckerFlowViewController?) {
         self.controller = controller
     }
-    
+
     func didTapCancel() {
         controller?.didCancel?()
         controller?.dismiss(animated: true, completion: nil)
     }
-    
+
     public func didTapRetry() {
         controller?.executeFetchQuestionnaire()
     }
 }
 
 private struct YourSymptomsViewControllerInteractor: YourSymptomsViewController.Interacting {
-    
+
     private weak var controller: SymptomCheckerFlowViewController?
-    
+
     init(controller: SymptomCheckerFlowViewController?) {
         self.controller = controller
     }
-    
+
     public func didTapCancel() {
         controller?.didCancel?()
         controller?.dismiss(animated: true, completion: nil)
     }
-    
+
     public func didTapReportButton(hasNonCardinalSymptoms: Bool, hasCardinalSymptoms: Bool) {
         if let controller = controller {
             controller.state = .howYouFeel
@@ -182,47 +182,47 @@ private struct YourSymptomsViewControllerInteractor: YourSymptomsViewController.
 }
 
 private struct HowDoYouFeelViewControllerInteractor: HowDoYouFeelViewController.Interacting {
-    
+
     private weak var controller: SymptomCheckerFlowViewController?
-    
+
     init(controller: SymptomCheckerFlowViewController?) {
         self.controller = controller
     }
-    
+
     func didTapContinueButton(_ doYouFeelWell: Bool) {
         controller?.doYouFeelWell = doYouFeelWell
         controller?.state = .summary
     }
-    
+
     func didTapBackButton() {
         controller?.state = .loaded
     }
-    
+
 }
 
 private struct CheckYourAnswersViewControllerInteractor: CheckYourAnswersViewController.Interacting {
-    
+
     private weak var controller: SymptomCheckerFlowViewController?
-    
+
     let firstChangeButtonId: String = "firstChangeButtonId"
     let secondChangeButtonId: String = "secondChangeButtonId"
-    
+
     init(controller: SymptomCheckerFlowViewController?) {
         self.controller = controller
     }
-    
+
     func changeYourSymptoms() {
         controller?.state = .loaded
     }
-    
+
     func changeHowYouFeel() {
         controller?.state = .howYouFeel
     }
-    
+
     func didTapBackButton() {
         controller?.state = .howYouFeel
     }
-    
+
     func confirmAnswers() {
         if let adviceResult = controller?.interactor.invoke(
             interfaceSymptomsQuestionnaire: controller?.symptomsQuestionnaire,
@@ -240,7 +240,7 @@ private struct CheckYourAnswersViewControllerInteractor: CheckYourAnswersViewCon
 }
 
 private struct SymptomaticCaseSummaryViewControllerInteractor: SymptomaticCaseSummaryViewController.Interacting {
-    
+
     private weak var controller: SymptomCheckerFlowViewController?
     private let openURL: (URL) -> Void
 
@@ -252,20 +252,20 @@ private struct SymptomaticCaseSummaryViewControllerInteractor: SymptomaticCaseSu
     func didTapSymptomaticCase() {
         openURL(ExternalLink.didTapSymptomCheckerNormalActivities.url)
     }
-    
+
     func didTapReturnHome() {
         controller?.finishFlow?()
         controller?.dismiss(animated: true, completion: nil)
     }
-    
+
     func didTapCancel() {
         controller?.state = .summary
     }
-    
+
     func didTapOnlineServicesLink() {
         openURL(ExternalLink.nhs111Online.url)
     }
-    
+
     func didTapSymptomCheckerNormalActivities() {
         openURL(ExternalLink.didTapSymptomaticCase.url)
     }

@@ -7,9 +7,9 @@ import Localization
 import UIKit
 
 class KeysViewController: ListViewController {
-    
+
     private let keys: [ENTemporaryExposureKey]
-    
+
     init(keys: [ENTemporaryExposureKey]) {
         self.keys = keys
         let rows = keys
@@ -33,17 +33,17 @@ class KeysViewController: ListViewController {
             target: self,
             action: #selector(share)
         )
-        
+
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc private func share() {
         let tempFolder = try! FileManager().url(for: .itemReplacementDirectory, in: .userDomainMask, appropriateFor: Bundle.main.bundleURL, create: true)
         let file = tempFolder.appendingPathComponent("keys.json")
-        
+
         let keys = self.keys.map {
             ExposureKey(
                 keyData: $0.keyData,
@@ -52,15 +52,15 @@ class KeysViewController: ListViewController {
                 transmissionRiskLevel: 7
             )
         }
-        
+
         try! JSONEncoder().encode(keys).write(to: file)
-        
+
         let viewController = UIActivityViewController(activityItems: [file], applicationActivities: nil)
         present(viewController, animated: true, completion: nil)
     }
-    
+
     @objc private func cancel() {
         dismiss(animated: true, completion: nil)
     }
-    
+
 }

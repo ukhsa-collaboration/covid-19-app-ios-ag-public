@@ -16,7 +16,7 @@ public class AppAvailabilityErrorViewController: RecoverableErrorViewController 
             case appTooOld(updateAvailable: Bool)
             case recommendingAppUpdate(title: LocaleString)
             case recommendingOSUpdate(title: LocaleString)
-            
+
             fileprivate var title: String {
                 switch self {
                 case .iOSTooOld:
@@ -30,13 +30,13 @@ public class AppAvailabilityErrorViewController: RecoverableErrorViewController 
                 }
             }
         }
-        
+
         var title: String
         var descriptions: LocaleString
         var appUpdateAction: (() -> Void)?
         var appUpdateImage: UIImage?
         var secondaryBtnAction: (() -> Void)?
-        
+
         public init(errorType: ErrorType, descriptions: LocaleString, secondaryBtnAction: (() -> Void)? = nil) {
             title = errorType.title
             self.descriptions = descriptions
@@ -56,7 +56,7 @@ public class AppAvailabilityErrorViewController: RecoverableErrorViewController 
                 appUpdateImage = UIImage(named: ImageName.appUpdateImage.rawValue)
             }
         }
-        
+
         private func downloadAppAction() -> () -> Void {
             return {
                 if let url = URL(string: downloadAppLink) {
@@ -66,34 +66,34 @@ public class AppAvailabilityErrorViewController: RecoverableErrorViewController 
             }
         }
     }
-    
+
     public init(viewModel: ViewModel) {
         let description = viewModel.descriptions.localizedString()
-        
+
         var action: (title: String, act: () -> Void)?
         if let act = viewModel.appUpdateAction {
             action = (title: localize(.update_app_button_title), act: act)
         }
-        
+
         var secondaryBtnAction: (title: String, act: () -> Void)?
         if let act = viewModel.secondaryBtnAction {
             secondaryBtnAction = (title: localize(.ask_me_later_button_title), act: act)
         }
-        
+
         var updateImageView: UIImageView?
         if let image = viewModel.appUpdateImage {
             updateImageView = UIImageView()
             updateImageView?.contentMode = .scaleAspectFit
             updateImageView?.image = image
         }
-        
+
         super.init(error: AppAvailabilityError(imageView: updateImageView, action: action, title: viewModel.title, description: description), isPrimaryLinkBtn: true, secondaryBtnAction: secondaryBtnAction)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 }
 
 private struct AppAvailabilityError: ErrorDetail {
@@ -102,7 +102,7 @@ private struct AppAvailabilityError: ErrorDetail {
     let title: String
     let description: String?
     var logoStrapLineStyle: LogoStrapline.Style = .onboarding
-    
+
     var content: [UIView] {
         let label = BaseLabel()
         label.styleAsBody()

@@ -12,12 +12,12 @@ public protocol SelfDiagnosisAfterPositiveTestIsolatingViewControllerInteracting
 
 private class Content: PrimaryButtonStickyFooterScrollingContent {
     public typealias Interacting = SelfDiagnosisAfterPositiveTestIsolatingViewControllerInteracting
-    
+
     public init(interactor: Interacting, symptomState: SelfDiagnosisAfterPositiveTestIsolatingViewController.SymptomState) {
         super.init(
             scrollingViews: [
                 UIImageView(.isolationContinue).styleAsDecoration(),
-                BaseLabel().set(text: symptomState.title).styleAsPageHeader(),
+                BaseLabel().set(text: symptomState.title).styleAsPageHeader().centralized(),
                 InformationBox.indication.badNews(symptomState.infobox),
                 symptomState.body
                     .map { BaseLabel().set(text: $0).styleAsBody() },
@@ -36,17 +36,17 @@ public class SelfDiagnosisAfterPositiveTestIsolatingViewController: StickyFooter
     public enum SymptomState {
         case discardSymptoms, noSymptoms
     }
-    
+
     public typealias Interacting = SelfDiagnosisAfterPositiveTestIsolatingViewControllerInteracting
-    
+
     public init(interactor: Interacting, symptomState: SymptomState) {
         super.init(content: Content(interactor: interactor, symptomState: symptomState))
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
@@ -54,7 +54,7 @@ public class SelfDiagnosisAfterPositiveTestIsolatingViewController: StickyFooter
 }
 
 extension SelfDiagnosisAfterPositiveTestIsolatingViewController.SymptomState {
-    
+
     var title: String {
         switch self {
         case .discardSymptoms:
@@ -63,7 +63,7 @@ extension SelfDiagnosisAfterPositiveTestIsolatingViewController.SymptomState {
             return localize(.self_diagnosis_no_symptoms_after_positive_title)
         }
     }
-    
+
     var infobox: String {
         switch self {
         case .discardSymptoms:
@@ -72,7 +72,7 @@ extension SelfDiagnosisAfterPositiveTestIsolatingViewController.SymptomState {
             return localize(.self_diagnosis_no_symptoms_after_positive_info)
         }
     }
-    
+
     var body: [String] {
         switch self {
         case .discardSymptoms:
@@ -81,7 +81,7 @@ extension SelfDiagnosisAfterPositiveTestIsolatingViewController.SymptomState {
             return localizeAndSplit(.self_diagnosis_no_symptoms_after_positive_body)
         }
     }
-    
+
     var furtherAdvice: String {
         switch self {
         case .discardSymptoms:
@@ -90,7 +90,7 @@ extension SelfDiagnosisAfterPositiveTestIsolatingViewController.SymptomState {
             return localize(.self_diagnosis_no_symptoms_after_positive_advice)
         }
     }
-    
+
     var link: String {
         switch self {
         case .discardSymptoms:
@@ -99,7 +99,7 @@ extension SelfDiagnosisAfterPositiveTestIsolatingViewController.SymptomState {
             return localize(.self_diagnosis_no_symptoms_after_positive_link)
         }
     }
-    
+
     var button: String {
         switch self {
         case .discardSymptoms:

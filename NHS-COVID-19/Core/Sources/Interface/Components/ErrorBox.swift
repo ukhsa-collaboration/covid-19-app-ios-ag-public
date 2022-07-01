@@ -6,15 +6,15 @@ import Localization
 import SwiftUI
 
 public struct ErrorBox: View {
-    
+
     private var heading: String
     private var description: String
-    
+
     public init(_ heading: String, description: String) {
         self.heading = heading
         self.description = description
     }
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: .buttonCornerRadius) {
             Text(verbatim: heading)

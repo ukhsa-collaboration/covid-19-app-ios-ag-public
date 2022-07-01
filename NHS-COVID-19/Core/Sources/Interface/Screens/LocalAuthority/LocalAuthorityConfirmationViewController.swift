@@ -13,12 +13,12 @@ public protocol LocalAuthorityConfirmationViewControllerInteracting {
 
 private class LocalAuthorityConfirmationContent: PrimaryButtonStickyFooterScrollingContent {
     public typealias Interacting = LocalAuthorityConfirmationViewControllerInteracting
-    
+
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting, postcode: String, localAuthority: LocalAuthority) {
         self.interactor = interactor
-        
+
         super.init(
             scrollingViews: [
                 UIImageView(.onboardingPostcode)
@@ -40,20 +40,20 @@ private class LocalAuthorityConfirmationContent: PrimaryButtonStickyFooterScroll
 
 public class LocalAuthorityConfirmationViewController: StickyFooterScrollingContentViewController {
     public typealias Interacting = LocalAuthorityConfirmationViewControllerInteracting
-    
+
     public init(interactor: Interacting, postcode: String, localAuthority: LocalAuthority, hideBackButton: Bool) {
         super.init(content: LocalAuthorityConfirmationContent(interactor: interactor, postcode: postcode, localAuthority: localAuthority))
         title = localize(.local_authority_confirmation_title)
         navigationItem.hidesBackButton = hideBackButton
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
-    
+
 }

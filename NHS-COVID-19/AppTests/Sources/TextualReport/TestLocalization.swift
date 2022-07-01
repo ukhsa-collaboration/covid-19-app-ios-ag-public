@@ -12,9 +12,9 @@ enum useCase: CaseIterable {
 }
 
 class TestLocalization: XCTestCase {
-    
+
     let runner = ReportRunner()
-    
+
     func testLocalizationReport() throws {
         try runner.run(name: "Localization Checks") {
             var sections: [Report.Section] = []
@@ -27,14 +27,14 @@ class TestLocalization: XCTestCase {
             return Report(title: "Localization Checks", sections: sections)
         }
     }
-    
+
     private func collectMissingCopy() -> Report.Section {
         var checks = [Report.Check]()
-        
+
         let allLanguages = Localization.current.bundle.localizations.filter {
             $0 != "Base"
         }
-        
+
         allLanguages.forEach { language in
             var missingCopy: String = ""
             LocaleConfiguration.custom(localeIdentifier: language).becomeCurrent()

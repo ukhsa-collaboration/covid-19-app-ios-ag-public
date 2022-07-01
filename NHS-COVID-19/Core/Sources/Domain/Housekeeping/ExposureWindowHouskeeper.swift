@@ -9,13 +9,13 @@ import Logging
 
 class ExposureWindowHousekeeper {
     private static let logger = Logger(label: "ExposureWindowHousekeeper")
-    
+
     private let deleteExpiredExposureWindows: () -> Void
-    
+
     init(deleteExpiredExposureWindows: @escaping () -> Void) {
         self.deleteExpiredExposureWindows = deleteExpiredExposureWindows
     }
-    
+
     func executeHousekeeping() -> AnyPublisher<Void, Never> {
         Future<Void, Never> { [weak self] promise in
             guard let self = self else {

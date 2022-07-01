@@ -19,7 +19,7 @@ public protocol ContactCaseNoIsolationUnderAgeLimitInteracting {
 extension ContactCaseNoIsolationUnderAgeLimitEnglandViewController {
     private struct Content {
         let views: [StackViewContentProvider]
-        
+
         init(interactor: Interacting) {
             var views: [StackViewContentProvider] = [
                 UIImageView(.isolationStartIndex)
@@ -30,7 +30,7 @@ extension ContactCaseNoIsolationUnderAgeLimitEnglandViewController {
                     .centralized(),
                 InformationBox.indication.warning(localize(.contact_case_no_isolation_under_age_limit_info_box)),
             ]
-            
+
             views.append(contentsOf: [
                 WelcomePoint(image: .adultChild, body: localize(.contact_case_no_isolation_under_age_limit_list_item_adult)),
                 WelcomePoint(image: .socialDistancing, body: localize(.contact_case_no_isolation_under_age_limit_list_item_social_distancing_england)),
@@ -45,7 +45,7 @@ extension ContactCaseNoIsolationUnderAgeLimitEnglandViewController {
                     action: interactor.didTapBackToHome
                 ),
             ])
-            
+
             self.views = views
         }
     }
@@ -54,7 +54,7 @@ extension ContactCaseNoIsolationUnderAgeLimitEnglandViewController {
 public class ContactCaseNoIsolationUnderAgeLimitEnglandViewController: ScrollingContentViewController {
     public typealias Interacting = ContactCaseNoIsolationUnderAgeLimitInteracting
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting) {
         self.interactor = interactor
         super.init(views: Content(interactor: interactor).views)
@@ -64,11 +64,11 @@ public class ContactCaseNoIsolationUnderAgeLimitEnglandViewController: Scrolling
             action: #selector(didTapCancel)
         )
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc func didTapCancel() {
         interactor.didTapCancel()
     }
@@ -77,7 +77,7 @@ public class ContactCaseNoIsolationUnderAgeLimitEnglandViewController: Scrolling
 extension ContactCaseNoIsolationUnderAgeLimitWalesViewController {
     private struct Content {
         let views: [StackViewContentProvider]
-        
+
         init(interactor: Interacting, secondTestAdviceDate: Date?) {
             var views: [StackViewContentProvider] = [
                 UIImageView(.isolationStartIndex)
@@ -88,13 +88,13 @@ extension ContactCaseNoIsolationUnderAgeLimitWalesViewController {
                     .centralized(),
                 InformationBox.indication.warning(localize(.contact_case_no_isolation_under_age_limit_info_box_wales)),
             ]
-            
+
             secondTestAdviceDate.map {
                 views.append(contentsOf: [
                     WelcomePoint(image: .swabTest, body: localize(.contact_case_no_isolation_under_age_limit_list_item_testing_with_date(date: $0))),
                 ])
             }
-            
+
             views.append(contentsOf: [
                 WelcomePoint(image: .socialDistancing, body: localize(.contact_case_no_isolation_under_age_limit_list_item_lfd_wales)),
                 WelcomePoint(image: .adultChild, body: localize(.contact_case_no_isolation_under_age_limit_list_item_adult_wales)),
@@ -118,7 +118,7 @@ extension ContactCaseNoIsolationUnderAgeLimitWalesViewController {
                     action: interactor.didTapBackToHome
                 ),
             ])
-            
+
             self.views = views
         }
     }
@@ -127,7 +127,7 @@ extension ContactCaseNoIsolationUnderAgeLimitWalesViewController {
 public class ContactCaseNoIsolationUnderAgeLimitWalesViewController: ScrollingContentViewController {
     public typealias Interacting = ContactCaseNoIsolationUnderAgeLimitInteracting
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting, secondTestAdviceDate: Date?) {
         self.interactor = interactor
         super.init(views: Content(interactor: interactor, secondTestAdviceDate: secondTestAdviceDate).views)
@@ -137,11 +137,11 @@ public class ContactCaseNoIsolationUnderAgeLimitWalesViewController: ScrollingCo
             action: #selector(didTapCancel)
         )
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc func didTapCancel() {
         interactor.didTapCancel()
     }

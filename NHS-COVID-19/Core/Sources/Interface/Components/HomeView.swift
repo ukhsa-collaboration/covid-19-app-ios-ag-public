@@ -16,7 +16,7 @@ struct HomeView: View {
     private let exposureNotificationState: ExposureNotificationState
     private let country: InterfaceProperty<Country>
     private let shouldShowLocalStats: Bool
-    
+
     init(
         interactor: HomeViewController.Interacting,
         riskLevelBannerViewModel: InterfaceProperty<RiskLevelBanner.ViewModel?>,
@@ -35,28 +35,28 @@ struct HomeView: View {
         self.shouldShowSelfDiagnosis = shouldShowSelfDiagnosis
         self.country = country
         self.shouldShowLocalStats = shouldShowLocalStats
-        
+
         exposureNotificationState = ExposureNotificationState(
             enabled: exposureNotificationsEnabled,
             action: exposureNotificationsToggleAction
         )
     }
-    
+
     var riskLevelbanner: some View {
         guard let riskViewModel = riskLevelBannerViewModel.wrappedValue else { return AnyView(EmptyView()) }
         return AnyView(RiskLevelBanner(viewModel: riskViewModel, tapAction: interactor.didTapRiskLevelBanner(viewModel:)))
     }
-    
+
     var body: some View {
         ScrollView {
             VStack(spacing: .standardSpacing) {
                 Strapline(country: self.country)
                     .zIndex(1)
-                
+
                 VStack(spacing: .halfSpacing) {
                     riskLevelbanner
                         .accessibility(sortPriority: 1)
-                    
+
                     RiskLevelIndicator(
                         viewModel: isolationViewModel,
                         turnContactTracingOnTapAction: {
@@ -65,7 +65,7 @@ struct HomeView: View {
                         openSettings: interactor.openSettings
                     )
                     .zIndex(-1)
-                    
+
                     if let localInfoViewModel = localInfoBannerViewModel.wrappedValue {
                         LocalInformationBanner(
                             viewModel: localInfoViewModel,
@@ -73,11 +73,11 @@ struct HomeView: View {
                         )
                         .padding([.leading, .trailing], -.standardSpacing)
                     }
-                    
+
                     buttons()
                 }
                 .accessibilityElement(children: .contain)
-                
+
                 Spacer()
                     .frame(height: .standardSpacing)
             }
@@ -85,9 +85,9 @@ struct HomeView: View {
         }
         .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }
-    
+
     // Two Groups are within the function "buttons" because a view only can have 10 subviews.
-    
+
     private func buttons() -> some View {
         Group {
             Group {
@@ -106,7 +106,7 @@ struct HomeView: View {
                             }
                         })
                 }
-                
+
                 if isolationViewModel.isolationState != .notIsolating && interactor.shouldShowSelfIsolation {
                     NavigationButton(
                         imageName: .selfIsolation,
@@ -116,7 +116,7 @@ struct HomeView: View {
                         action: interactor.didTapSelfIsolationButton
                     )
                 }
-                
+
                 if interactor.shouldShowCheckIn {
                     NavigationButton(
                         imageName: .read,
@@ -128,11 +128,11 @@ struct HomeView: View {
                 }
             }
             Group {
-                
+
                 if isolationViewModel.isolationState == .notIsolating && shouldShowLocalStats {
                     statsButton()
                 }
-                
+
                 if shouldShowSelfDiagnosis.wrappedValue {
                     NavigationButton(
                         imageName: .thermometer,
@@ -142,7 +142,7 @@ struct HomeView: View {
                         action: interactor.didTapDiagnosisButton
                     )
                 }
-                
+
                 if interactor.shouldShowTestingForCOVID19 {
                     NavigationButton(
                         imageName: .swab,
@@ -152,7 +152,7 @@ struct HomeView: View {
                         action: interactor.didTapTestingHubButton
                     )
                 }
-                
+
                 NavigationButton(
                     imageName: .enterTestResult,
                     foregroundColor: Color(.background),
@@ -160,11 +160,11 @@ struct HomeView: View {
                     text: localize(.home_link_test_result_button_title),
                     action: interactor.didTapLinkTestResultButton
                 )
-                
+
                 if isolationViewModel.isolationState != .notIsolating && shouldShowLocalStats {
                     statsButton()
                 }
-                
+
                 NavigationButton(
                     imageName: .settings,
                     foregroundColor: Color(.background),
@@ -172,7 +172,7 @@ struct HomeView: View {
                     text: localize(.home_settings_button_title),
                     action: interactor.didTapSettingsButton
                 )
-                
+
                 NavigationButton(
                     imageName: .info,
                     foregroundColor: Color(.background),
@@ -180,7 +180,7 @@ struct HomeView: View {
                     text: localize(.home_about_the_app_button_title),
                     action: interactor.didTapAboutButton
                 )
-                
+
                 NavigationButton(
                     imageName: .bluetooth,
                     foregroundColor: Color(.background),
@@ -191,7 +191,7 @@ struct HomeView: View {
             }
         }
     }
-    
+
     private func statsButton() -> some View {
         NavigationButton(
             imageName: .statsChart,

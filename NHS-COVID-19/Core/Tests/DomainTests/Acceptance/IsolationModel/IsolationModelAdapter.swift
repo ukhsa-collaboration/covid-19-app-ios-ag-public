@@ -12,9 +12,9 @@ struct IsolationModelAdapter {
     var contactCase = ContactCase()
     var symptomaticCase = SymptomaticCase()
     var testCase = TestCase()
-    
+
     init() {}
-    
+
     init(anticipating event: IsolationModel.Event) {
         if event == .contactIsolationEnded {
             // bring contact case date earlier so we can end it without affecting status of any other isolation.
@@ -56,42 +56,42 @@ struct IsolationModelAdapter {
             symptomaticCase.expiredSelfDiagnosisDay = symptomaticCase.selfDiagnosisDay
         }
     }
-    
+
     struct ContactCase {
         var exposureDay: GregorianDay
         var contactIsolationFromStartOfDay: GregorianDay
         var optedOutIsolation: GregorianDay
-        
+
         var optedOutIsolationDate: Date {
             optedOutIsolation.startDate(in: .current)
         }
-        
+
         var expiredExposureDay: GregorianDay
         var expiredIsolationFromStartOfDay: GregorianDay
-        
+
         var contactIsolationToStartOfDay: GregorianDay
-        
+
         init() {
             exposureDay = GregorianDay(year: 2020, month: 10, day: 10)
-            
+
             contactIsolationFromStartOfDay = GregorianDay(year: 2020, month: 10, day: 11)
             contactIsolationToStartOfDay = GregorianDay(year: 2020, month: 10, day: 24)
-            
+
             optedOutIsolation = GregorianDay(year: 2020, month: 10, day: 12)
-            
+
             expiredExposureDay = GregorianDay(year: 2020, month: 9, day: 26)
             expiredIsolationFromStartOfDay = GregorianDay(year: 2020, month: 9, day: 27)
         }
     }
-    
+
     struct SymptomaticCase {
         var selfDiagnosisDay: GregorianDay
         var onsetDay: GregorianDay
-        
+
         var expiredSelfDiagnosisDay: GregorianDay
-        
+
         var symptomaticIsolationUntilStartOfDay: GregorianDay
-        
+
         init() {
             selfDiagnosisDay = GregorianDay(year: 2020, month: 10, day: 11)
             expiredSelfDiagnosisDay = GregorianDay(year: 2020, month: 10, day: 4)
@@ -99,23 +99,23 @@ struct IsolationModelAdapter {
             symptomaticIsolationUntilStartOfDay = GregorianDay(year: 2020, month: 10, day: 17)
         }
     }
-    
+
     struct TestCase {
         var testEndDay: GregorianDay
         var receivedOnDay: GregorianDay
-        
+
         var expiredTestEndDay: GregorianDay
         var expiredReceivedOnDay: GregorianDay
-        
+
         init() {
             testEndDay = GregorianDay(year: 2020, month: 10, day: 12)
             receivedOnDay = GregorianDay(year: 2020, month: 10, day: 14)
-            
+
             expiredTestEndDay = GregorianDay(year: 2020, month: 10, day: 1)
             expiredReceivedOnDay = GregorianDay(year: 2020, month: 10, day: 3)
         }
     }
-    
+
     var contactCaseIsolation: Isolation {
         Isolation(
             fromDay: LocalDay(gregorianDay: contactCase.contactIsolationFromStartOfDay, timeZone: .current),
@@ -126,7 +126,7 @@ struct IsolationModelAdapter {
             )
         )
     }
-    
+
     func indexCaseIsolation(optedOutOfContactIsolation: Bool = false) -> Isolation {
         Isolation(
             fromDay: LocalDay(gregorianDay: symptomaticCase.selfDiagnosisDay, timeZone: .current),
@@ -136,15 +136,14 @@ struct IsolationModelAdapter {
                     hasPositiveTestResult: false,
                     testKitType: nil,
                     isSelfDiagnosed: true,
-                    isPendingConfirmation: false,
-                    numberOfIsolationDaysForIndexCaseFromConfiguration: 10
+                    isPendingConfirmation: false
                 ),
                 contactCaseInfo: nil
             ),
             optOutOfContactIsolationInfo: optedOutOfContactIsolation ? Isolation.OptOutOfContactIsolationInfo(optOutDay: contactCase.optedOutIsolation, untilStartOfDay: LocalDay(gregorianDay: contactCase.exposureDay + DayDuration(14), timeZone: .current)) : nil
         )
     }
-    
+
     private func bothCasesFromDay(isSelfDiagnosed: Bool) -> GregorianDay {
         if isSelfDiagnosed {
             return min(contactCase.contactIsolationFromStartOfDay, symptomaticCase.selfDiagnosisDay)
@@ -152,7 +151,7 @@ struct IsolationModelAdapter {
             return min(contactCase.contactIsolationFromStartOfDay, testCase.testEndDay)
         }
     }
-    
+
     func bothCasesIsolation(
         hasPositiveTestResult: Bool = false,
         isPendingConfirmation: Bool = false,
@@ -166,14 +165,13 @@ struct IsolationModelAdapter {
                     hasPositiveTestResult: hasPositiveTestResult,
                     testKitType: hasPositiveTestResult ? .labResult : nil,
                     isSelfDiagnosed: isSelfDiagnosed,
-                    isPendingConfirmation: isPendingConfirmation,
-                    numberOfIsolationDaysForIndexCaseFromConfiguration: 10
+                    isPendingConfirmation: isPendingConfirmation
                 ),
                 contactCaseInfo: Isolation.ContactCaseInfo(exposureDay: contactCase.exposureDay)
             )
         )
     }
-    
+
     func indexCasePositiveTestIsolation(
         optedOutOfContactIsolation: Bool = false,
         isPendingConfirmation: Bool = false,
@@ -181,7 +179,7 @@ struct IsolationModelAdapter {
     ) -> Isolation {
         let fromDay: LocalDay
         let untilStartOfDay: LocalDay
-        
+
         if isSelfDiagnosed {
             fromDay = LocalDay(gregorianDay: symptomaticCase.selfDiagnosisDay, timeZone: .current)
             untilStartOfDay = fromDay.advanced(by: 5)
@@ -189,7 +187,7 @@ struct IsolationModelAdapter {
             fromDay = LocalDay(gregorianDay: testCase.testEndDay, timeZone: .current)
             untilStartOfDay = fromDay.advanced(by: 10)
         }
-        
+
         return Isolation(
             fromDay: fromDay,
             untilStartOfDay: untilStartOfDay,
@@ -198,8 +196,7 @@ struct IsolationModelAdapter {
                     hasPositiveTestResult: true,
                     testKitType: .labResult,
                     isSelfDiagnosed: isSelfDiagnosed,
-                    isPendingConfirmation: isPendingConfirmation,
-                    numberOfIsolationDaysForIndexCaseFromConfiguration: 10
+                    isPendingConfirmation: isPendingConfirmation
                 ),
                 contactCaseInfo: nil
             ),

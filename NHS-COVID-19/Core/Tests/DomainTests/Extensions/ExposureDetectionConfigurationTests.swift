@@ -15,16 +15,16 @@ class ExposureDetectionConfigurationTests: XCTestCase {
         1, 1, 1, 1, 1, 1,
         0, 0, 0, 0, 0
     ]
-    
+
     func testCovertsArrayOfInfectiousnessToMap() {
         var config = ExposureDetectionConfiguration.dummyForTesting
         config.daysSinceOnsetToInfectiousness = daysSinceOnsetToInfectiousness
-        
+
         let mappedConfig = ENExposureConfiguration(from: config)
-        
+
         XCTAssertEqual(mappedConfig.infectiousnessForDaysSinceOnsetOfSymptoms, expectedInfectiousnessMap)
     }
-    
+
     private let expectedInfectiousnessMap = [
         NSNumber(value: -14): NSNumber(value: ENInfectiousness.none.rawValue),
         NSNumber(value: -13): NSNumber(value: ENInfectiousness.none.rawValue),

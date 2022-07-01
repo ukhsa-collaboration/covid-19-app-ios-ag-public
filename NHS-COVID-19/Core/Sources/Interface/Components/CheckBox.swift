@@ -8,7 +8,7 @@ import SwiftUI
 public class CheckBoxInfo: ObservableObject, Identifiable {
     @Published public var isConfirmed: Bool
     public var heading: String
-    
+
     public init(isConfirmed: Bool, heading: String) {
         self.heading = heading
         self.isConfirmed = isConfirmed
@@ -17,18 +17,18 @@ public class CheckBoxInfo: ObservableObject, Identifiable {
 
 public struct CheckBox: View {
     @ObservedObject private var viewModel: CheckBoxInfo
-    
+
     public init(viewModel: CheckBoxInfo) {
         self.viewModel = viewModel
     }
-    
+
     public var body: some View {
         Button(action: {
             withAnimation {
                 self.viewModel.isConfirmed.toggle()
             }
         }) {
-            
+
             HStack {
                 ZStack {
                     Image(systemName: "checkmark.square.fill")

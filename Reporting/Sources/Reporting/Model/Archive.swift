@@ -6,13 +6,13 @@ import Foundation
 
 struct Archive {
     private let fileManager = FileManager()
-    
+
     var url: URL
     let application: Application
-    
+
     init(url: URL) throws {
         self.url = url
-        
+
         // Parse application
         let applicationsFolder = url
             .appendingPathComponent("Products")

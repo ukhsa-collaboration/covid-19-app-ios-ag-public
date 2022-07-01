@@ -10,7 +10,7 @@ import XCTest
 class HTTPHeadersObfuscatorTests: XCTestCase {
     private let request = HTTPRequest.random()
     private let obfuscator = HTTPHeadersObfuscator()
-    
+
     func testRandomHeaderFieldsSize() {
         let randomSizes = obfuscator.randomHeaderFieldsSize(from: 5000)
         XCTAssertEqual(randomSizes, [2000, 2000, 1000])
@@ -19,7 +19,7 @@ class HTTPHeadersObfuscatorTests: XCTestCase {
         let randomSizes3 = obfuscator.randomHeaderFieldsSize(from: 0)
         XCTAssertEqual(randomSizes3, [])
     }
-    
+
     func testRandomHeaderBytes() {
         let randomString = obfuscator.randomized(index: 1, bytes: 2000).first!.1
         XCTAssertEqual(randomString.lengthOfBytes(using: .utf8), 2000)

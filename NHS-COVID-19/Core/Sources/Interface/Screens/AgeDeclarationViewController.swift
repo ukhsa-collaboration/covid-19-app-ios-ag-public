@@ -13,7 +13,7 @@ public protocol AgeDeclarationViewControllerInteracting {
 struct AgeDeclarationContent {
     public typealias Interacting = AgeDeclarationViewControllerInteracting
     var views: [StackViewContentProvider]
-    
+
     init(interactor: Interacting, birthThresholdDate: Date, isIndexCase: Bool) {
         let emptyError = UIHostingController(
             rootView: ErrorBox(
@@ -23,7 +23,7 @@ struct AgeDeclarationContent {
         )
         emptyError.view.backgroundColor = .clear
         emptyError.view.isHidden(true)
-        
+
         var isOverAgeLimit: Bool?
         let yesNoOptions: [RadioButtonGroup.ButtonViewModel] = [
             .init(
@@ -37,33 +37,33 @@ struct AgeDeclarationContent {
                 action: { isOverAgeLimit = false }
             ),
         ]
-        
+
         let radioButtonGroup = UIHostingController(
             rootView: RadioButtonGroup(buttonViewModels: yesNoOptions)
         )
         radioButtonGroup.view.backgroundColor = .clear
-        
+
         var stackedViews: [UIView] = [
             UIImageView(.isolationContinue).styleAsDecoration(),
             BaseLabel().set(text: localize(.age_declaration_heading)).styleAsPageHeader().centralized(),
         ]
-        
+
         if !isIndexCase {
             stackedViews.append(contentsOf: [
                 BaseLabel().set(text: localize(.age_declaration_description)).styleAsBody(),
             ])
         }
-        
+
         stackedViews.append(contentsOf: [
             emptyError.view,
             BaseLabel().set(text: localize(.age_declaration_question(date: birthThresholdDate))).styleAsSecondaryTitle(),
             radioButtonGroup.view,
         ])
-        
+
         let contentStack = UIStackView(arrangedSubviews: stackedViews.flatMap { $0.content })
         contentStack.axis = .vertical
         contentStack.spacing = .standardSpacing
-        
+
         let button = PrimaryButton(
             title: localize(.age_declaration_primary_button_title),
             action: {
@@ -72,18 +72,18 @@ struct AgeDeclarationContent {
                     UIAccessibility.post(notification: .layoutChanged, argument: emptyError)
                     return
                 }
-                
+
                 emptyError.view.isHidden(true)
                 interactor.didTapContinueButton(isOverAgeLimit)
             }
         )
-        
+
         let stackContent = [contentStack, button]
         let stackView = UIStackView(arrangedSubviews: stackContent)
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
         stackView.spacing = .standardSpacing
-        
+
         views = [stackView]
     }
 }
@@ -91,7 +91,7 @@ struct AgeDeclarationContent {
 public class AgeDeclarationViewController: ScrollingContentViewController {
     public typealias Interacting = AgeDeclarationViewControllerInteracting
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting, birthThresholdDate: Date, isIndexCase: Bool) {
         self.interactor = interactor
         let content = AgeDeclarationContent(
@@ -102,11 +102,11 @@ public class AgeDeclarationViewController: ScrollingContentViewController {
         super.init(views: content.views)
         title = localize(.age_declaration_title)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)

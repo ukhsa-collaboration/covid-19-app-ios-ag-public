@@ -11,25 +11,25 @@ import XCTest
 
 class CheckInsManagerTests: XCTestCase {
     var checkInsManager: CheckInsManager!
-    
+
     var providedRiskyVenues = [RiskyVenue]()
-    
+
     func fetchRiskyVenues() -> AnyPublisher<[RiskyVenue], NetworkRequestError> {
         Result.success(providedRiskyVenues).publisher.eraseToAnyPublisher()
     }
-    
+
     var checkIns: [CheckIn] = []
-    
+
     func save(_ checkIn: CheckIn) {
         checkIns.append(checkIn)
     }
-    
+
     var deletedCheckinsBefore: UTCHour?
-    
+
     var actualRiskyVenues: [RiskyVenue]?
-    
+
     private var client: MockHTTPClient!
-    
+
     override func setUp() {
         checkIns = []
         client = MockHTTPClient()
@@ -41,7 +41,7 @@ class CheckInsManagerTests: XCTestCase {
             },
             fetchRiskyVenues: fetchRiskyVenues
         )
-        
+
         addTeardownBlock {
             self.checkInsManager = nil
         }

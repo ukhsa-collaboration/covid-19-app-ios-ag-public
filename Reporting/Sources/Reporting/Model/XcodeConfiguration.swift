@@ -5,11 +5,11 @@
 import Foundation
 
 struct XcodeConfiguration {
-    
+
     enum Line {
         case decoration(text: String)
         case configuration(name: String, value: String)
-        
+
         init<S: StringProtocol>(text: S) {
             let parts = text.components(separatedBy: "=")
             switch parts.count {
@@ -23,33 +23,33 @@ struct XcodeConfiguration {
             }
         }
     }
-    
+
     var url: URL
     var lines: [Line]
-    
+
     init(url: URL) throws {
         self.url = url
         lines = try String(contentsOf: url)
             .split(separator: "\n")
             .map(Line.init)
     }
-    
+
     func save() throws {
         try lines.lazy.map { $0.text }.joined(separator: "\n")
             .write(to: url, atomically: true, encoding: .utf8)
     }
-    
+
     func value(for name: String) throws -> String {
         guard let value = lines.last(where: { $0.name == name })?.value else {
             throw CustomError("No value for configuration “\(name)”")
         }
         return value
     }
-    
+
 }
 
 extension XcodeConfiguration.Line {
-    
+
     var name: String? {
         switch self {
         case .decoration:
@@ -58,7 +58,7 @@ extension XcodeConfiguration.Line {
             return name
         }
     }
-    
+
     var value: String? {
         switch self {
         case .decoration:
@@ -67,7 +67,7 @@ extension XcodeConfiguration.Line {
             return value
         }
     }
-    
+
     var text: String {
         switch self {
         case .decoration(let text):
@@ -76,5 +76,5 @@ extension XcodeConfiguration.Line {
             return "\(name) = \(value)"
         }
     }
-    
+
 }

@@ -9,7 +9,7 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 extension CoordinatedAppController {
-    
+
     func makeContent(
         for state: ApplicationState
     ) -> UIViewController {
@@ -17,7 +17,7 @@ extension CoordinatedAppController {
         case .starting:
             let s = UIStoryboard(name: "LaunchScreen", bundle: nil)
             return s.instantiateInitialViewController()!
-            
+
         case .appUnavailable(let reason):
             switch reason {
             case .iOSTooOld(let descriptions):
@@ -31,12 +31,12 @@ extension CoordinatedAppController {
                 )
                 return BaseNavigationController(rootViewController: vc)
             }
-            
+
         case .failedToStart(let openURL):
             let interactor = UnrecoverableErrorViewControllerInteractor(openURL: openURL)
             let vc = UnrecoverableErrorViewController(interactor: interactor)
             return BaseNavigationController(rootViewController: vc)
-            
+
         case .onboarding(
             let complete,
             let openURL,
@@ -50,13 +50,13 @@ extension CoordinatedAppController {
                 interactor: interactor,
                 shouldShowVenueCheckIn: isFeatureEnabled(.venueCheckIn)
             )
-            
+
         case .authorizationRequired(let requestPermissions, let country):
             return ContactTracingBluetoothViewController(
                 interactor: ContactTracingBluetoothInteractor(submitAction: requestPermissions),
                 country: country.interfaceProperty
             )
-            
+
         case .postcodeAndLocalAuthorityRequired(let openURL, let getLocalAuthorities, let storeLocalAuthority):
             let interactor = LocalAuthorityOnboardingInteractor(
                 openURL: openURL,
@@ -64,10 +64,10 @@ extension CoordinatedAppController {
                 storeLocalAuthority: storeLocalAuthority
             )
             return LocalAuthorityFlowViewController(interactor)
-            
+
         case .localAuthorityRequired(let postcode, let localAuthorities, let openURL, let storeLocalAuthority):
             let localAuthoritiesForPostcode = Dictionary(uniqueKeysWithValues: localAuthorities.map { (UUID(), $0) })
-            
+
             let interactor = LocalAuthorityUpdateInteractor(
                 postcode: postcode,
                 localAuthoritiesForPostcode: localAuthoritiesForPostcode,
@@ -79,7 +79,7 @@ extension CoordinatedAppController {
                 localAuthorities: localAuthoritiesForPostcode.map { Interface.LocalAuthority(id: $0.key, name: $0.value.name) }
             )
             return LocalAuthorityFlowViewController(interactor, viewModel: viewModel)
-            
+
         case .canNotRunExposureNotification(let reason, let country):
             let vc: UIViewController
             switch reason {
@@ -91,17 +91,17 @@ extension CoordinatedAppController {
                 )
             }
             return BaseNavigationController(rootViewController: vc)
-            
+
         case .policyAcceptanceRequired(let saveCurrentVersion, let openURL):
             let interactor = PolicyUpdateInteractor(
                 saveCurrentVersion: saveCurrentVersion,
                 openURL: openURL
             )
             return PolicyUpdateViewController(interactor: interactor)
-            
+
         case .runningExposureNotification(let context):
             return viewControllerForRunningApp(with: context)
-            
+
         case .recommendedUpdate(let reason):
             switch reason {
             case .newRecommendedAppUpdate(let title, let descriptions, let dismissAction):
@@ -123,7 +123,7 @@ extension CoordinatedAppController {
             }
         }
     }
-    
+
     private func createNonNegativeTestResultWithIsolationAcknowledgement(
         acknowledge: @escaping () -> Void,
         context: RunningAppContext,
@@ -142,7 +142,7 @@ extension CoordinatedAppController {
             currentDateProvider: context.currentDateProvider
         )
     }
-    
+
     private func createAdviceForAlreadyIsolatingInEngland(
         acknowledge: @escaping () -> Void,
         context: RunningAppContext
@@ -153,7 +153,7 @@ extension CoordinatedAppController {
         )
         return AdviceForIndexCasesEnglandAlreadyIsolatingViewController(interactor: interactor)
     }
-    
+
     private func createAdviceForIndexCaseEngland(
         acknowledge: @escaping () -> Void,
         context: RunningAppContext
@@ -164,7 +164,7 @@ extension CoordinatedAppController {
         )
         return AdviceForIndexCasesEnglandViewController(interactor: adviceForIndexCaseInteractor)
     }
-    
+
     private func createAdviceOrIsolationController(
         acknowledge: @escaping () -> Void,
         context: RunningAppContext,
@@ -186,7 +186,7 @@ extension CoordinatedAppController {
                     context: context
                 )
             }
-            
+
         case .wales:
             return createNonNegativeTestResultWithIsolationAcknowledgement(
                 acknowledge: acknowledge,
@@ -197,7 +197,7 @@ extension CoordinatedAppController {
             )
         }
     }
-    
+
     private func viewControllerForRunningApp(
         with context: RunningAppContext
     ) -> UIViewController {
@@ -205,9 +205,9 @@ extension CoordinatedAppController {
             AcknowledgementNeededState.makeAcknowledgementState(context: context)
                 .regulate(as: .modelChange)
                 .map { [weak self] ackState in
-                    
+
                     guard let self = self else { return UIViewController() }
-                    
+
                     if let ackState = ackState {
                         return self.acknowledgementViewController(
                             for: ackState,
@@ -221,7 +221,7 @@ extension CoordinatedAppController {
                 }
         }
     }
-    
+
     private func acknowledgementViewController(
         for state: AcknowledgementNeededState,
         context: RunningAppContext
@@ -235,7 +235,7 @@ extension CoordinatedAppController {
                 isolationEndDate: isolationEndDate,
                 testResultType: .positive(isolation: .start, requiresConfirmatoryTest: false)
             )
-            
+
         case .neededForPositiveResultContinueToIsolate(let acknowledge, let isolationEndDate, let requiresConfirmatoryTest):
             if case .isolate(let isolation) = context.isolationState.currentValue,
                 isolation.hasConfirmedPositiveTestResult, requiresConfirmatoryTest {
@@ -247,7 +247,7 @@ extension CoordinatedAppController {
                     testResultType: .positiveButAlreadyConfirmedPositive
                 )
             }
-            
+
             return createAdviceOrIsolationController(
                 acknowledge: acknowledge,
                 context: context,
@@ -255,39 +255,38 @@ extension CoordinatedAppController {
                 isolationEndDate: isolationEndDate,
                 testResultType: .positive(isolation: .continue, requiresConfirmatoryTest: false)
             )
-            
+
         case .neededForPositiveResultNotIsolating(let acknowledge):
             let interactor = PositiveTestResultNoIsolationInteractor(
                 openURL: context.openURL,
                 didTapPrimaryButton: acknowledge
             )
             return NonNegativeTestResultNoIsolationViewController(interactor: interactor)
-            
+
         case .neededForNegativeResultContinueToIsolate(let interactor, let isolationEndDate):
             return NegativeTestResultWithIsolationViewController(
                 interactor: interactor,
                 viewModel: .init(isolationEndDate: isolationEndDate, testResultType: .firstResult), currentDateProvider: context.currentDateProvider
             )
-            
+
         case .neededForNegativeResultNotIsolating(let interactor):
             return NegativeTestResultNoIsolationViewController(interactor: interactor)
-            
+
         case .neededForNegativeAfterPositiveResultContinueToIsolate(interactor: let interactor, isolationEndDate: let isolationEndDate):
             return NegativeTestResultWithIsolationViewController(
                 interactor: interactor,
                 viewModel: .init(isolationEndDate: isolationEndDate, testResultType: .afterPositive), currentDateProvider: context.currentDateProvider
             )
-            
-        case .neededForEndOfIsolation(let interactor, let isolationEndDate, let isIndexCase, let numberOfIsolationDaysForIndexCase):
+
+        case .neededForEndOfIsolation(let interactor, let isolationEndDate, let isIndexCase):
             return EndOfIsolationViewController(
                 interactor: interactor,
                 isolationEndDate: isolationEndDate,
                 isIndexCase: isIndexCase,
-                numberOfIsolationDaysForIndexCase: numberOfIsolationDaysForIndexCase,
                 currentDateProvider: context.currentDateProvider,
                 currentCountry: context.country.currentValue
             )
-            
+
         case .neededForStartOfIsolationExposureDetection(let acknowledge, let exposureDate, let birthThresholdDate, let vaccineThresholdDate, let secondTestAdviceDate, let isolationEndDate, let isIndexCase):
 
             var shouldShowOptOutFlow: Bool {
@@ -298,7 +297,7 @@ extension CoordinatedAppController {
                     return context.shouldShowWalesOptOutFlow
                 }
             }
-            
+
             if !shouldShowOptOutFlow {
                 if isIndexCase {
                     return ContactCaseExposureInfoEnglandViewController(
@@ -323,7 +322,7 @@ extension CoordinatedAppController {
                     didDeclareVaccinationStatus: { answers in
                         let mappedAnswers = answers.mapAnswersToDomain()
                         let result = context.contactCaseOptOutQuestionnaire.getResolution(with: mappedAnswers)
-                        
+
                         switch result {
                         case .notFinished:
                             return .failure(ContactCaseVaccinationStatusNotEnoughAnswersError())
@@ -347,7 +346,7 @@ extension CoordinatedAppController {
                         } else {
                             let mappedAnswers = vaccinationStatusAnswers.mapAnswersToDomain()
                             let result = context.contactCaseOptOutQuestionnaire.getResolution(with: mappedAnswers)
-                            
+
                             let didOptOut: Bool
                             let optOutReason: ContactCaseOptOutReason?
                             switch result {
@@ -362,7 +361,7 @@ extension CoordinatedAppController {
                                 didOptOut = false
                                 optOutReason = nil
                             }
-                            
+
                             acknowledge(didOptOut)
                             if isIndexCase {
                                 showUIState.value = .showContactCaseResult(.continueIsolation(endDate: isolationEndDate.currentValue, secondTestAdviceDate: secondTestAdviceDate))
@@ -384,7 +383,7 @@ extension CoordinatedAppController {
                         }
                     }
                 )
-                
+
                 return ContactCaseMultipleResolutionsFlowViewController(
                     interactor: interactor,
                     isIndexCase: isIndexCase,
@@ -392,19 +391,19 @@ extension CoordinatedAppController {
                     birthThresholdDate: birthThresholdDate,
                     vaccineThresholdDate: vaccineThresholdDate
                 )
-                
+
             }
-            
+
         case .neededForRiskyVenue(let interactor, let venueName, let checkInDate):
             return RiskyVenueInformationViewController(
                 interactor: interactor,
                 viewModel: .init(venueName: venueName, checkInDate: checkInDate)
             )
-            
+
         case .neededForRiskyVenueWarnAndBookATest(let acknowledge, _, _):
-            
+
             let navigationVC = BaseNavigationController()
-            
+
             let isIndexCaseIsolation: Bool = {
                 if case .isolate(let isolation) = context.isolationState.currentValue {
                     return isolation.isIndexCase
@@ -412,7 +411,7 @@ extension CoordinatedAppController {
                     return false
                 }
             }()
-            
+
             let interactor = RiskyVenueInformationBookATestInteractor(
                 bookATestTapped: { [showUIState] in
                     showUIState.send(isIndexCaseIsolation ? .showBookATest : .showWarnAndBookATest)
@@ -421,24 +420,21 @@ extension CoordinatedAppController {
                     acknowledge()
                 }
             )
-            
+
             let riskyVenueInformationBookATestViewController = RiskyVenueInformationBookATestViewController(interactor: interactor)
             navigationVC.viewControllers = [riskyVenueInformationBookATestViewController]
             return navigationVC
-            
+
         case .neededForVoidResultContinueToIsolate(let interactor, let isolationEndDate):
-            
+
             let navigationVC = BaseNavigationController()
-            
+
             let nonNegativeInteractor = VoidTestResultWithIsolationInteractor(
-                didTapPrimaryButton: { [showUIState] in
-                    showUIState.send(.showBookATest)
-                    interactor.acknowledge()
-                },
+                didTapPrimaryButton: { interactor.acknowledge() },
                 openURL: context.openURL,
                 didTapCancel: interactor.acknowledge
             )
-            
+
             let nonNegativeVC = NonNegativeTestResultWithIsolationViewController(
                 interactor: nonNegativeInteractor,
                 isolationEndDate: isolationEndDate,
@@ -447,26 +443,23 @@ extension CoordinatedAppController {
             )
             navigationVC.viewControllers = [nonNegativeVC]
             return navigationVC
-            
+
         case .neededForVoidResultNotIsolating(let interactor):
             let navigationVC = BaseNavigationController()
-            
+
             let nonNegativeInteractor = VoidTestResultNoIsolationInteractor(
                 didTapCancel: interactor.acknowledge,
-                bookATest: { [showUIState] in
-                    showUIState.send(.showBookATest)
-                    interactor.acknowledge()
-                },
+                didTapPrimaryButton: { interactor.acknowledge() },
                 openURL: context.openURL
             )
-            
+
             let nonNegativeVC = NonNegativeTestResultNoIsolationViewController(
                 interactor: nonNegativeInteractor,
                 testResultType: .void
             )
             navigationVC.viewControllers = [nonNegativeVC]
             return navigationVC
-            
+
         case .askForSymptomsOnsetDay(let testEndDay, let didFinishAskForSymptomsOnsetDay, let didConfirmSymptoms, let setOnsetDay):
             return SymptomsOnsetDayFlowViewController(
                 testEndDay: testEndDay,
@@ -474,17 +467,17 @@ extension CoordinatedAppController {
                 setOnsetDay: setOnsetDay,
                 recordDidHaveSymptoms: didConfirmSymptoms
             )
-            
+
         case .neededForPlodResult(interactor: let interactor):
             let plodTestResultVC = PlodTestResultViewController(interactor: interactor)
             return plodTestResultVC
-            
+
         case .neededForUnknownResult(interactor: let interactor):
             let unknownTestResultVC = UnknownTestResultsViewController(interactor: interactor)
             return BaseNavigationController(rootViewController: unknownTestResultVC)
         }
     }
-    
+
     private func postAcknowledgementViewController(
         with context: RunningAppContext
     ) -> UIViewController {
@@ -505,27 +498,27 @@ extension CoordinatedAppController {
 }
 
 private struct OnboardingInteractor: OnboardingFlowViewController.Interacting {
-    
+
     var complete: () -> Void
     let openURL: (URL) -> Void
-    
+
     func didTapPrivacyNotice() {
         openURL(ExternalLink.privacy.url)
     }
-    
+
     func didTapTermsOfUse() {
         openURL(ExternalLink.ourPolicies.url)
     }
-    
+
     func didTapAgree() {
         complete()
     }
 }
 
 private struct AuthorizationDeniedInteractor: AuthorizationDeniedViewController.Interacting {
-    
+
     var openSettings: () -> Void
-    
+
     func didTapSettings() {
         openSettings()
     }
@@ -534,11 +527,11 @@ private struct AuthorizationDeniedInteractor: AuthorizationDeniedViewController.
 private struct PolicyUpdateInteractor: PolicyUpdateViewController.Interacting {
     var saveCurrentVersion: () -> Void
     let openURL: (URL) -> Void
-    
+
     func didTapContinue() {
         saveCurrentVersion()
     }
-    
+
     func didTapTermsOfUse() {
         openURL(ExternalLink.ourPolicies.url)
     }
@@ -548,10 +541,10 @@ class LocalAuthorityOnboardingInteractor: LocalAuthorityFlowViewController.Inter
     private let openURL: (URL) -> Void
     private let getLocalAuthorities: (Postcode) -> Result<Set<Domain.LocalAuthority>, PostcodeValidationError>
     private let storeLocalAuthority: (Postcode, Domain.LocalAuthority) -> Result<Void, LocalAuthorityUnsupportedCountryError>
-    
+
     private var postcode: Postcode?
     private var localAuthoritiesForPostcode: [UUID: Domain.LocalAuthority]?
-    
+
     init(
         openURL: @escaping (URL) -> Void,
         getLocalAuthorities: @escaping (Postcode) -> Result<Set<Domain.LocalAuthority>, PostcodeValidationError>,
@@ -561,7 +554,7 @@ class LocalAuthorityOnboardingInteractor: LocalAuthorityFlowViewController.Inter
         self.getLocalAuthorities = getLocalAuthorities
         self.storeLocalAuthority = storeLocalAuthority
     }
-    
+
     func localAuthorities(
         for postcode: String
     ) -> Result<[Interface.LocalAuthority], DisplayableError> {
@@ -575,14 +568,14 @@ class LocalAuthorityOnboardingInteractor: LocalAuthorityFlowViewController.Inter
             }
             .mapError(DisplayableError.init)
     }
-    
+
     func confirmLocalAuthority(
         _ localAuthority: Interface.LocalAuthority?
     ) -> Result<Void, LocalAuthoritySelectionError> {
         if let localAuthority = localAuthority {
             if let postcode = self.postcode,
                 let authority = localAuthoritiesForPostcode?[localAuthority.id] {
-                
+
                 return storeLocalAuthority(postcode, authority).mapError(LocalAuthoritySelectionError.init)
             } else {
                 assertionFailure("This should not be possible.")
@@ -591,9 +584,9 @@ class LocalAuthorityOnboardingInteractor: LocalAuthorityFlowViewController.Inter
         } else {
             return Result.failure(.emptySelection)
         }
-        
+
     }
-    
+
     func didTapGovUKLink() {
         openURL(ExternalLink.visitUKgov.url)
     }
@@ -601,11 +594,11 @@ class LocalAuthorityOnboardingInteractor: LocalAuthorityFlowViewController.Inter
 
 private struct ContactTracingBluetoothInteractor: ContactTracingBluetoothViewController.Interacting {
     let submitAction: () -> Void
-    
+
     init(submitAction: @escaping () -> Void) {
         self.submitAction = submitAction
     }
-    
+
     func didTapContinueButton() {
         submitAction()
     }
@@ -616,7 +609,7 @@ private struct LocalAuthorityUpdateInteractor: LocalAuthorityFlowViewController.
     private let storeLocalAuthority: (Postcode, Domain.LocalAuthority) -> Result<Void, LocalAuthorityUnsupportedCountryError>
     private let postcode: Postcode
     private let localAuthoritiesForPostcode: [UUID: Domain.LocalAuthority]
-    
+
     init(
         postcode: Postcode,
         localAuthoritiesForPostcode: [UUID: Domain.LocalAuthority],
@@ -628,7 +621,7 @@ private struct LocalAuthorityUpdateInteractor: LocalAuthorityFlowViewController.
         self.openURL = openURL
         self.storeLocalAuthority = storeLocalAuthority
     }
-    
+
     #warning("Find a better way to avoid implementing this function")
     func localAuthorities(
         for postcode: String
@@ -636,7 +629,7 @@ private struct LocalAuthorityUpdateInteractor: LocalAuthorityFlowViewController.
         assertionFailure("This should never be called.")
         return Result.success(localAuthoritiesForPostcode.map { Interface.LocalAuthority(id: $0.key, name: $0.value.name) })
     }
-    
+
     func confirmLocalAuthority(
         _ localAuthority: Interface.LocalAuthority?
     ) -> Result<Void, LocalAuthoritySelectionError> {
@@ -649,9 +642,9 @@ private struct LocalAuthorityUpdateInteractor: LocalAuthorityFlowViewController.
         } else {
             return Result.failure(.emptySelection)
         }
-        
+
     }
-    
+
     func didTapGovUKLink() {
         openURL(ExternalLink.visitUKgov.url)
     }
@@ -664,9 +657,9 @@ extension LocalAuthoritySelectionError {
 }
 
 private struct UnrecoverableErrorViewControllerInteractor: UnrecoverableErrorViewControllerInteracting {
-    
+
     let openURL: (URL) -> Void
-    
+
     func faqLinkTapped() {
         openURL(ExternalLink.cantRunThisAppFAQs.url)
     }
@@ -696,7 +689,7 @@ private extension ContactCaseVaccinationStatusAnswers {
         medicallyExempt.map { mappedAnswers[.medicallyExempt] = $0 }
         return mappedAnswers
     }
-    
+
     func mapAnswersWithInterfaceQuestions(questions: [ContactCaseOptOutQuestion]) -> [ContactCaseVaccinationStatusQuestionAndAnswer] {
         var questionsAnswers: [ContactCaseVaccinationStatusQuestionAndAnswer] = []
         for question in questions {
@@ -728,7 +721,7 @@ private extension ContactCaseVaccinationStatusAnswers {
                         )
                     )
                 }
-                
+
             case .medicallyExempt:
                 if let medicallyExempt = medicallyExempt {
                     questionsAnswers.append(
@@ -738,7 +731,7 @@ private extension ContactCaseVaccinationStatusAnswers {
                         )
                     )
                 }
-                
+
             }
         }
         return questionsAnswers
@@ -747,11 +740,11 @@ private extension ContactCaseVaccinationStatusAnswers {
 
 private struct ContactCaseImmediateAcknowledgementFlowViewControllerInteractor: ContactCaseImmediateAcknowledgementFlowViewController.Interacting {
     let _acknowledge: () -> Void
-    
+
     init(acknowledge: @escaping () -> Void) {
         _acknowledge = acknowledge
     }
-    
+
     func acknowledge() {
         _acknowledge()
     }
@@ -759,11 +752,11 @@ private struct ContactCaseImmediateAcknowledgementFlowViewControllerInteractor: 
 
 private struct ContactCaseExposureInfoInteractor: ContactCaseExposureInfoEnglandViewController.Interacting {
     private let _acknowledge: () -> Void
-    
+
     init(acknowledge: @escaping () -> Void) {
         _acknowledge = acknowledge
     }
-    
+
     func didTapContinue() {
         _acknowledge()
     }

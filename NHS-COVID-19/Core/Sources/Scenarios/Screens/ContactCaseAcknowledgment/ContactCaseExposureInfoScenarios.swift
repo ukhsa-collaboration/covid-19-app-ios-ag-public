@@ -12,7 +12,7 @@ import UIKit
 public class ContactCaseExposureInfoWalesScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name = "EN Exposure Info Wales (actions depend on your vaccination status)"
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
@@ -28,7 +28,7 @@ public class ContactCaseExposureInfoWalesScenario: Scenario {
 public class ContactCaseExposureInfoEnglandScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name = "EN Exposure Info England (show to an adult)"
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
@@ -42,15 +42,15 @@ public class ContactCaseExposureInfoEnglandScenario: Scenario {
 
 private class Interactor: ContactCaseExposureInfoInteracting {
     public static let continueTapped = "'Continue' button tapped"
-    
+
     private weak var viewController: UIViewController?
-    
+
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
     func didTapContinue() {
         viewController?.showAlert(title: Self.continueTapped)
     }
-    
+
 }

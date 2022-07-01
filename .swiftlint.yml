@@ -1,10 +1,19 @@
-whitelist_rules:
+only_rules:
+  - colon
+  - operator_usage_whitespace
+  - return_arrow_whitespace
+  - trailing_whitespace
+  - vertical_whitespace
+  - void_return
   - custom_rules
 
 excluded:
   - Core/Sources/Scenarios
   - Core/Sources/TestSupport
   - Core/Tests
+
+colon:
+  apply_to_dictionaries: false
 
 custom_rules:
   base_class_required: # rule identifier

@@ -6,21 +6,21 @@ import Localization
 import SwiftUI
 
 public struct NotIsolatingIndicator: View {
-    
+
     private var animationDisabled: Bool
-    
+
     fileprivate init(animationDisabled: Bool) {
         self.animationDisabled = animationDisabled
     }
-    
+
     private let badgeSize: CGFloat = 40
-    
+
     public var body: some View {
         VStack(alignment: .center, spacing: .doubleSpacing) {
             Text(verbatim: " ") // This adds empty space with dynamic height
                 .font(.title)
                 .accessibility(hidden: true)
-            
+
             ZStack {
                 if self.animationDisabled {
                     Circle()
@@ -30,7 +30,7 @@ public struct NotIsolatingIndicator: View {
                     PulsatingCircle(delay: 0, initialDiameter: badgeSize, color: Color(.activeScanIndicator))
                     PulsatingCircle(delay: 1, initialDiameter: badgeSize, color: Color(.activeScanIndicator))
                 }
-                
+
                 Circle()
                     .foregroundColor(Color(.activeScanIndicator))
                     .overlay(Circle().stroke(Color(.lightSurface), lineWidth: 3))
@@ -45,14 +45,14 @@ public struct NotIsolatingIndicator: View {
                     Image(.notIsolatingCircles)
                 }
             })
-            
+
             Text(.risk_level_indicator_contact_tracing_active)
                 .bold()
                 .scaledFont(textStyle: .title3, size: 18)
                 .foregroundColor(Color(.primaryText))
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
-            
+
             Text(" ") // This adds empty space with dynamic height
                 .font(.body)
                 .accessibility(hidden: true)

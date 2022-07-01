@@ -6,11 +6,11 @@ import Common
 import Foundation
 
 public struct InterfaceLocalCovidStatsDaily: Equatable {
-    
+
     public let lastFetch: Date
     public let country: CountryStats
     public let lowerTierLocalAuthority: LocalAuthorityStats
-    
+
     public init(
         lastFetch: Date,
         country: CountryStats,
@@ -23,43 +23,43 @@ public struct InterfaceLocalCovidStatsDaily: Equatable {
 }
 
 extension InterfaceLocalCovidStatsDaily {
-    
+
     public struct CountryStats: Equatable {
         public let country: Country
         public let newCasesBySpecimenDateRollingRate: Double?
         public let lastUpdate: GregorianDay
-        
+
         public init(
             country: Country,
             newCasesBySpecimenDateRollingRate: Double?,
             lastUpdate: GregorianDay
-            
+
         ) {
             self.country = country
             self.newCasesBySpecimenDateRollingRate = newCasesBySpecimenDateRollingRate
             self.lastUpdate = lastUpdate
         }
-        
+
     }
 }
 
 extension InterfaceLocalCovidStatsDaily {
     public struct LocalAuthorityStats: Equatable {
-        
+
         public enum Direction: Equatable {
             case up, down, same
         }
-        
+
         public struct Value<T: Equatable>: Equatable {
             public let value: T
             public let lastUpdate: GregorianDay
-            
+
             public init(value: T, lastUpdate: GregorianDay) {
                 self.value = value
                 self.lastUpdate = lastUpdate
             }
         }
-        
+
         public let id: String
         public let name: String
         public var newCasesByPublishDateRollingSum: Value<Int?>
@@ -68,7 +68,7 @@ extension InterfaceLocalCovidStatsDaily {
         public var newCasesByPublishDate: Value<Int?>
         public var newCasesByPublishDateChangePercentage: Value<Double?>
         public var newCasesBySpecimenDateRollingRate: Value<Double?>
-        
+
         public init(
             id: String,
             name: String,

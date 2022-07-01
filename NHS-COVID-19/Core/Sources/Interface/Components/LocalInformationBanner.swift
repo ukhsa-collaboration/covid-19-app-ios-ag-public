@@ -7,25 +7,25 @@ import Localization
 import SwiftUI
 
 public struct LocalInformationBanner: View {
-    
+
     public struct ViewModel {
         let text: String
         let localInfoScreenViewModel: LocalInformationViewController.ViewModel
-        
+
         public init(text: String, localInfoScreenViewModel: LocalInformationViewController.ViewModel) {
             self.text = text.applyCurrentLanguageDirection()
             self.localInfoScreenViewModel = localInfoScreenViewModel
         }
     }
-    
+
     private let viewModel: ViewModel
     private let tapAction: (LocalInformationViewController.ViewModel) -> Void
-    
+
     public init(viewModel: ViewModel, tapAction: @escaping (LocalInformationViewController.ViewModel) -> Void) {
         self.viewModel = viewModel
         self.tapAction = tapAction
     }
-    
+
     public var body: some View {
         Button(action: { tapAction(viewModel.localInfoScreenViewModel) }) {
             HStack(alignment: .top, spacing: .stripeSpacing) {
@@ -58,5 +58,5 @@ public struct LocalInformationBanner: View {
         .environment(\.colorScheme, .light) // always use light mode
         .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }
-    
+
 }

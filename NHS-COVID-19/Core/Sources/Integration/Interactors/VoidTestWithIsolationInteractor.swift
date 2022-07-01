@@ -12,7 +12,7 @@ struct VoidTestResultWithIsolationInteractor: NonNegativeTestResultWithIsolation
     var didTapExposureFAQLink: () -> Void
     var didTapNHSGuidanceLink: () -> Void
     var didTapCancel: (() -> Void)?
-    
+
     init(didTapPrimaryButton: @escaping () -> Void, openURL: @escaping (URL) -> Void, didTapCancel: @escaping () -> Void) {
         self.didTapPrimaryButton = didTapPrimaryButton
         didTapOnlineServicesLink = { openURL(ExternalLink.nhs111Online.url) }

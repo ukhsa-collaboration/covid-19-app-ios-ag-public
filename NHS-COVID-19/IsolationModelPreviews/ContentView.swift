@@ -21,13 +21,13 @@ extension View {
     func viewPngData() -> Data {
         let controller = UIHostingController(rootView: self)
         let view = controller.view
-        
+
         let targetSize = controller.view.intrinsicContentSize
         view?.bounds = CGRect(origin: .zero, size: targetSize)
         view?.backgroundColor = .clear
-        
+
         let renderer = UIGraphicsImageRenderer(size: targetSize)
-        
+
         return renderer.pngData(actions: { rendererContext in
             view?.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
             view?.layer.render(in: rendererContext.cgContext)
@@ -77,11 +77,11 @@ struct CaptureView<Content: View>: View {
                     Text("Save Image...")
                 }
             })
-        
+
     }
-    
+
     private func saveImage() {
-        
+
         let imageData = viewPngData()
         do {
             let url = FileManager.default.temporaryDirectory.appendingPathComponent("image.png")

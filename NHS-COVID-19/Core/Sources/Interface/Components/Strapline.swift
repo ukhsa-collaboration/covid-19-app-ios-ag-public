@@ -10,11 +10,11 @@ import UIKit
 public struct Strapline: View {
     @ObservedObject
     var country: InterfaceProperty<Country>
-    
+
     public init(country: InterfaceProperty<Country>) {
         self.country = country
     }
-    
+
     public var body: some View {
         VStack(spacing: 0) {
             Image(country.wrappedValue.imageName)
@@ -30,7 +30,7 @@ public struct Strapline: View {
         .accessibility(addTraits: .isHeader)
         .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }
-    
+
     func title() -> AnyView {
         guard let text = country.wrappedValue.text else {
             return AnyView(EmptyView())
@@ -42,14 +42,14 @@ public struct Strapline: View {
 extension Strapline {
     struct LargeContentViewer: UIViewRepresentable {
         var country: Country
-        
+
         func makeUIView(context: Context) -> UIView {
             let view = UIView()
             view.showsLargeContentViewer = true
             view.addInteraction(UILargeContentViewerInteraction())
             return view
         }
-        
+
         func updateUIView(_ uiView: UIView, context: Context) {
             uiView.largeContentImage = UIImage(country.imageName)
             uiView.largeContentTitle = country.text.map { localize($0) }
@@ -66,7 +66,7 @@ private extension Country {
             return .logoWales
         }
     }
-    
+
     var imageSize: CGSize {
         switch self {
         case .england:
@@ -75,7 +75,7 @@ private extension Country {
             return CGSize(width: .navBarLogoWidthWithoutLabel, height: .navBarLogoHeightWithoutLabel)
         }
     }
-    
+
     var text: StringLocalizableKey? {
         switch self {
         case .england:

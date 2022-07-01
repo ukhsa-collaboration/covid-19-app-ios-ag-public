@@ -8,9 +8,9 @@ import Foundation
 import UserNotifications
 
 struct ChangeNotifier {
-    
+
     var notificationManager: UserNotificationManaging
-    
+
     func alertUserToChanges<P: Publisher>(in risk: P, type: UserNotificationType, shouldSend: @escaping (P.Output) -> Bool = { _ in true }) -> AnyCancellable where P.Output: Equatable, P.Failure == Never {
         risk.removeDuplicates()
             .dropFirst()
@@ -20,5 +20,5 @@ struct ChangeNotifier {
                 }
             }
     }
-    
+
 }

@@ -6,17 +6,17 @@ import Combine
 import Foundation
 
 class ExperimentJoiner: ObservableObject, Identifiable {
-    
+
     private var cancellables = [AnyCancellable]()
-    
+
     @Published
     private(set) var isCreatingExperiment = false
-    
+
     @Published
     private(set) var error: Error?
-    
+
     init() {}
-    
+
     func joinExperiment(storeIn experimentManager: ExperimentManager, complete: @escaping () -> Void) {
         isCreatingExperiment = true
         error = nil
@@ -41,5 +41,5 @@ class ExperimentJoiner: ObservableObject, Identifiable {
                 )
         )
     }
-    
+
 }

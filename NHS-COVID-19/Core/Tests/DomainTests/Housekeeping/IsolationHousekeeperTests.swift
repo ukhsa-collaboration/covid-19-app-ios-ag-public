@@ -8,13 +8,13 @@ import XCTest
 @testable import Domain
 
 class IsolationHousekeeperTests: XCTestCase {
-    
+
     var cleared = false
-    
+
     override func setUp() {
         cleared = false
     }
-    
+
     private func createHouseKeeper(deletionPeriod: Int,
                                    today: GregorianDay,
                                    isolationInfo: IsolationInfo,
@@ -27,9 +27,9 @@ class IsolationHousekeeperTests: XCTestCase {
             clearData: { self.cleared = true }
         )
     }
-    
+
     // MARK: Housekeeper does nothing
-    
+
     func testHousekeeperDoesNothingIfNoIsolationInfo() throws {
         let housekeeper = createHouseKeeper(
             deletionPeriod: 14,
@@ -38,10 +38,10 @@ class IsolationHousekeeperTests: XCTestCase {
             isolationLogicalState: IsolationLogicalState.notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil)
         )
         _ = housekeeper.executeHousekeeping()
-        
+
         XCTAssertFalse(cleared)
     }
-    
+
     func testHousekeeperDoesNothingIfStillIsolating() throws {
         let housekeeper = createHouseKeeper(
             deletionPeriod: 14,
@@ -52,10 +52,10 @@ class IsolationHousekeeperTests: XCTestCase {
             )
         )
         _ = housekeeper.executeHousekeeping()
-        
+
         XCTAssertFalse(cleared)
     }
-    
+
     func testHousekeeperDoesNothingIfIsolationEndNotAcknowledged() throws {
         let housekeeper = createHouseKeeper(
             deletionPeriod: 14,
@@ -66,12 +66,12 @@ class IsolationHousekeeperTests: XCTestCase {
             )
         )
         _ = housekeeper.executeHousekeeping()
-        
+
         XCTAssertFalse(cleared)
     }
-    
+
     // MARK: Housekeeper clears up
-    
+
     func testHousekeeperShouldClearIfDeletionPeriodHasPassedAtLimit() throws {
         let housekeeper = createHouseKeeper(
             deletionPeriod: 4,
@@ -82,10 +82,10 @@ class IsolationHousekeeperTests: XCTestCase {
             )
         )
         _ = housekeeper.executeHousekeeping()
-        
+
         XCTAssertTrue(cleared)
     }
-    
+
     func testHousekeeperShouldClearIfDeletionPeriodHasPassed() throws {
         let housekeeper = createHouseKeeper(
             deletionPeriod: 14,
@@ -96,10 +96,10 @@ class IsolationHousekeeperTests: XCTestCase {
             )
         )
         _ = housekeeper.executeHousekeeping()
-        
+
         XCTAssertTrue(cleared)
     }
-    
+
     func testHousekeeperShouldClearManualTestEntryOfNegativeTestIfDeletionPeriodHasPassed() throws {
         let testEndDay = GregorianDay(year: 2020, month: 7, day: 10)
         let housekeeper = createHouseKeeper(
@@ -110,10 +110,10 @@ class IsolationHousekeeperTests: XCTestCase {
                 nil)
         )
         _ = housekeeper.executeHousekeeping()
-        
+
         XCTAssertTrue(cleared)
     }
-    
+
     func testHousekeeperShouldNotClearManualTestEntryOfNegativeTestIfDeletionPeriodHasNotPassed() throws {
         let testEndDay = GregorianDay(year: 2020, month: 7, day: 11)
         let housekeeper = createHouseKeeper(
@@ -124,7 +124,7 @@ class IsolationHousekeeperTests: XCTestCase {
                 nil)
         )
         _ = housekeeper.executeHousekeeping()
-        
+
         XCTAssertFalse(cleared)
     }
 }

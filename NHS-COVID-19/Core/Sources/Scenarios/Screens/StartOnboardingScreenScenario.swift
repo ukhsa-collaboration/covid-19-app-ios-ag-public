@@ -12,7 +12,7 @@ public class StartOnboardingScreenScenario: Scenario {
     public static let continueConfirmationAlertTitle = "Age confirmation tapped"
     public static let rejectAlertTitle = "Age rejection tapped"
     public static let moreButtonConfirmationAlertTitle = "More tapped"
-    
+
     static var appController: AppController {
         NavigationAppController { navigationController in
             StartOnboardingViewController(
@@ -34,7 +34,7 @@ public class StartOnboardingNoCheckInScreenScenario: Scenario {
     public static let continueConfirmationAlertTitle = "Age confirmation tapped"
     public static let rejectAlertTitle = "Age rejection tapped"
     public static let moreButtonConfirmationAlertTitle = "More tapped"
-    
+
     static var appController: AppController {
         NavigationAppController { navigationController in
             StartOnboardingViewController(

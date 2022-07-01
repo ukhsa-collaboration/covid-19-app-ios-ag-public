@@ -19,10 +19,10 @@ public struct LocalAuthorityFlowViewModel: Equatable {
         case single(LocalAuthority)
         case selection([LocalAuthority])
     }
-    
+
     var postcode: String
     var flowType: FlowType
-    
+
     public init(postcode: String, localAuthorities: [LocalAuthority]) {
         self.postcode = postcode
         if localAuthorities.count > 1 {
@@ -34,26 +34,26 @@ public struct LocalAuthorityFlowViewModel: Equatable {
 }
 
 public class LocalAuthorityFlowViewController: BaseNavigationController {
-    
+
     public typealias Interacting = LocalAuthorityFlowViewControllerInteracting
-    
+
     fileprivate let interactor: Interacting
-    
+
     private var isEditMode: Bool = false
     private var dismissAction: (() -> Void)?
-    
+
     fileprivate enum State: Equatable {
         case postcode
         case information(LocalAuthorityFlowViewModel)
         case confirmation(LocalAuthorityFlowViewModel, Bool)
         case postcodeEdit
     }
-    
+
     @Published
     fileprivate var state: State
-    
+
     private var cancellables = [AnyCancellable]()
-    
+
     public init(_ interactor: Interacting, viewModel: LocalAuthorityFlowViewModel? = nil, isEditMode: Bool = false) {
         self.isEditMode = isEditMode
         self.interactor = interactor
@@ -66,11 +66,11 @@ public class LocalAuthorityFlowViewController: BaseNavigationController {
         _ = self.isEditMode == true ? setupDismissAction() : nil
         monitorState()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func monitorState() {
         $state
             .regulate(as: .modelChange)
@@ -79,17 +79,17 @@ public class LocalAuthorityFlowViewController: BaseNavigationController {
             }
             .store(in: &cancellables)
     }
-    
+
     private func setupDismissAction() {
         dismissAction = { [weak self] in
             self?.dismiss(animated: true, completion: nil)
         }
     }
-    
+
     private func update(for state: State) {
         pushViewController(rootViewController(for: state), animated: state != .postcode && state != .postcodeEdit)
     }
-    
+
     private func handleSubmittedPostcode(_ postcode: String, confirmation: Bool) -> Result<Void, DisplayableError> {
         let result = interactor.localAuthorities(for: postcode)
         switch result {
@@ -101,7 +101,7 @@ public class LocalAuthorityFlowViewController: BaseNavigationController {
             return Result.failure(error)
         }
     }
-    
+
     private func rootViewController(for state: State) -> UIViewController {
         switch state {
         case .postcodeEdit:
@@ -128,7 +128,7 @@ public class LocalAuthorityFlowViewController: BaseNavigationController {
                 let interactor = LocalAuthorityConfirmationInteractor(
                     _confirm: self.interactor.confirmLocalAuthority, _dismiss: dismissAction
                 )
-                
+
                 return LocalAuthorityConfirmationViewController(interactor: interactor, postcode: viewModel.postcode, localAuthority: localAuthority, hideBackButton: hideBackButton)
             case .selection(let localAuthorities):
                 let interactor = SelectLocalAuthorityInteractor(
@@ -140,38 +140,38 @@ public class LocalAuthorityFlowViewController: BaseNavigationController {
                 return SelectLocalAuthorityViewController(interactor: interactor, localAuthorityViewModel: selectionViewModel, hideBackButton: hideBackButton)
             }
         }
-        
+
     }
-    
+
 }
 
 private struct LocalAuthorityConfirmationInteractor: LocalAuthorityConfirmationViewController.Interacting {
     var _confirm: (LocalAuthority?) -> Result<Void, LocalAuthoritySelectionError>
     var _dismiss: (() -> Void)?
-    
+
     func confirm(localAuthority: LocalAuthority?) -> Result<Void, LocalAuthoritySelectionError> {
         return _confirm(localAuthority)
     }
-    
+
     func dismiss() {
         _dismiss?()
     }
 }
 
 private struct SelectLocalAuthorityInteractor: SelectLocalAuthorityViewController.Interacting {
-    
+
     var openURL: () -> Void
     var submit: (LocalAuthority?) -> Result<Void, LocalAuthoritySelectionError>
     var _dismiss: (() -> Void)?
-    
+
     func didTapSubmitButton(localAuthority: LocalAuthority?) -> Result<Void, LocalAuthoritySelectionError> {
         return submit(localAuthority)
     }
-    
+
     func didTapLink() {
         openURL()
     }
-    
+
     func dismiss() {
         _dismiss?()
     }
@@ -180,5 +180,5 @@ private struct SelectLocalAuthorityInteractor: SelectLocalAuthorityViewControlle
 private struct EditPostcodeInteractor: EditPostcodeViewController.Interacting {
     var savePostcode: (String) -> Result<Void, DisplayableError>
     var didTapCancel: () -> Void
-    
+
 }

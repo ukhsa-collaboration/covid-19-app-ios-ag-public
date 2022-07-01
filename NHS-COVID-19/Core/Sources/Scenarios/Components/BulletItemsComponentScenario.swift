@@ -7,14 +7,14 @@ import Interface
 import SwiftUI
 
 public class BulletItemsComponentScenario: Scenario {
-    
+
     public static let name = "BulletItems"
     public static let kind = ScenarioKind.component
-    
+
     static var appController: AppController {
         BasicAppController(rootViewController: UIHostingController(rootView: ContentView()))
     }
-    
+
 }
 
 private struct ContentView: View {
@@ -41,5 +41,5 @@ private struct ContentView: View {
             }
         }
     }
-    
+
 }

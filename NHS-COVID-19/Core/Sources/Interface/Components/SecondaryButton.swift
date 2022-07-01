@@ -6,7 +6,7 @@ import UIKit
 
 class SecondaryButton: UIButton {
     private let action: (() -> Void)?
-    
+
     init(title: String, action: (() -> Void)?) {
         self.action = action
         super.init(frame: .zero)
@@ -14,11 +14,11 @@ class SecondaryButton: UIButton {
         styleAsSecondary()
         addTarget(self, action: #selector(act))
     }
-    
+
     @objc private func act() {
         action?()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

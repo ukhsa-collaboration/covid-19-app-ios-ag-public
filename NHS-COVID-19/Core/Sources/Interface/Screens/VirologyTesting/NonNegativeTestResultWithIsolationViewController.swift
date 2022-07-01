@@ -18,25 +18,18 @@ public protocol NonNegativeTestResultWithIsolationViewControllerInteracting {
 private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFooterScrollingContent {
     typealias Interacting = NonNegativeTestResultWithIsolationViewControllerInteracting
     typealias TestResultType = NonNegativeTestResultWithIsolationViewController.TestResultType
-    
+
     init(interactor: Interacting, isolationEndDate: Date, testResultType: TestResultType, currentDateProvider: DateProviding) {
         let informationBox: InformationBox = {
             if case .positive(_, true) = testResultType {
                 return InformationBox.indication.warning(testResultType.infoText)
             } else {
-                return InformationBox.indication.badNews(testResultType.infoText)
+                return InformationBox.indication.warning(testResultType.infoText)
             }
         }()
-        
-        let linkAction: () -> Void = {
-            switch testResultType {
-            case .void:
-                return interactor.didTapNHSGuidanceLink
-            case .positive, .positiveButAlreadyConfirmedPositive:
-                return interactor.didTapOnlineServicesLink
-            }
-        }()
-        
+
+        let linkAction = interactor.didTapOnlineServicesLink
+
         super.init(
             scrollingViews: [
                 UIImageView(testResultType.image).styleAsDecoration(),
@@ -57,7 +50,7 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
                             .set(text: testResultType.subtitle)
                             .isAccessibilityElement(false)
                             .centralized(),
-                        
+
                     ],
                     spacing: .standardSpacing,
                     margins: .zero
@@ -90,37 +83,37 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
 
 public class NonNegativeTestResultWithIsolationViewController: StickyFooterScrollingContentViewController {
     public typealias Interacting = NonNegativeTestResultWithIsolationViewControllerInteracting
-    
+
     public enum TestResultType {
         public enum Isolation {
             case start
             case `continue`
         }
-        
+
         case void
         case positive(isolation: Isolation, requiresConfirmatoryTest: Bool)
         case positiveButAlreadyConfirmedPositive
     }
-    
+
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting, isolationEndDate: Date, testResultType: TestResultType, currentDateProvider: DateProviding) {
         self.interactor = interactor
-        
+
         let content = NonNegativeTestResultWithIsolationContent(
             interactor: interactor,
             isolationEndDate: isolationEndDate,
             testResultType: testResultType,
             currentDateProvider: currentDateProvider
         )
-        
+
         super.init(content: content)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if interactor.didTapCancel != nil {
@@ -130,37 +123,37 @@ public class NonNegativeTestResultWithIsolationViewController: StickyFooterScrol
             navigationController?.setNavigationBarHidden(true, animated: animated)
         }
     }
-    
+
     @objc func didTapCancel() {
         interactor.didTapCancel?()
     }
 }
 
 extension NonNegativeTestResultWithIsolationContent.TestResultType {
-    
+
     var image: ImageName {
         switch self {
         case .void, .positive(_, true):
             return .isolationStartIndex
         case .positive(.start, false):
-            return .isolationStartContact
+            return .isolationStartIndex
         case .positive(.continue, false),
              .positiveButAlreadyConfirmedPositive:
             return .isolationContinue
         }
     }
-    
+
     var title: String {
         switch self {
         case .void, .positive(.continue, _):
             return localize(.positive_test_result_title)
         case .positive(.start, _):
-            return localize(.positive_test_result_start_to_isolate_title)
+            return localize(.try_to_stay_at_home_for_after_positive_test_wales)
         case .positiveButAlreadyConfirmedPositive:
             return localize(.positive_test_result_already_confirmed_positive_title)
         }
     }
-    
+
     var subtitle: String? {
         if case .positive(_, true) = self {
             return localize(.positive_test_result_requires_follow_up_test_subtitle)
@@ -168,16 +161,16 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
             return nil
         }
     }
-    
+
     func titleAccessibilityLabel(daysRemaining: Int) -> String {
         switch self {
         case .void, .positive(.continue, _), .positiveButAlreadyConfirmedPositive:
             return localize(.positive_test_please_isolate_accessibility_label(days: daysRemaining))
         case .positive(.start, _):
-            return localize(.positive_test_start_to_isolate_accessibility_label(days: daysRemaining))
+            return localize(.try_to_stay_at_home_for_wales_header(days: daysRemaining))
         }
     }
-    
+
     var explanationText: [String] {
         switch self {
         case .void:
@@ -192,33 +185,33 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
             return localizeAndSplit(.positive_test_result_already_confirmed_positive_explanation)
         }
     }
-    
+
     var infoText: String {
         switch self {
         case .void:
-            return localize(.void_test_result_info)
+            return localize(.end_of_isolation_void_text_no_isolation_title)
         case .positive(_, true):
             return localize(.positive_test_result_requires_follow_up_test_start_to_isolate_info)
         case .positive(_, false):
-            return localize(.positive_test_result_start_to_isolate_info)
+            return localize(.infobox_after_positive_test_wales)
         case .positiveButAlreadyConfirmedPositive:
             return localize(.positive_test_result_already_confirmed_positive_info)
         }
     }
-    
+
     var showExposureFAQ: Bool {
         switch self {
-        case .void:
+        case .void, .positive(_, false):
             return false
-        case .positive, .positiveButAlreadyConfirmedPositive:
+        case .positiveButAlreadyConfirmedPositive, .positive(_, true):
             return true
         }
     }
-    
+
     var primaryButtonText: String {
         switch self {
         case .void:
-            return localize(.void_test_results_continue)
+            return localize(.void_test_results_primary_button_title)
         case .positive(_, true):
             return localize(.positive_test_result_requires_follow_up_test_book_test_button)
         case .positive(_, false):
@@ -227,7 +220,7 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
             return localize(.positive_test_result_already_confirmed_positive_continue)
         }
     }
-    
+
     var linkLabel: String {
         switch self {
         case .positive, .positiveButAlreadyConfirmedPositive:

@@ -8,19 +8,19 @@ import Foundation
 
 class SandboxDistributeClient: HTTPClient {
     private let queue = DispatchQueue(label: "sandbox-distribution-client")
-    
+
     let host: SandboxHost
-    
+
     init(host: SandboxHost) {
         self.host = host
     }
-    
+
     public func perform(_ request: HTTPRequest) -> AnyPublisher<HTTPResponse, HTTPRequestError> {
         _perform(request).publisher
             .receive(on: queue)
             .eraseToAnyPublisher()
     }
-    
+
     private func _perform(_ request: HTTPRequest) -> Result<HTTPResponse, HTTPRequestError> {
         if request.path == "/distribution/symptomatic-questionnaire" {
             return Result.success(.ok(with: .json(getQuestionnaire(host: host))))
@@ -31,7 +31,7 @@ class SandboxDistributeClient: HTTPClient {
         if request.path == "/distribution/risky-post-districts-v2" {
             return .success(.ok(with: .json(riskyPostcodes)))
         }
-        
+
         return Result.failure(.rejectedRequest(underlyingError: SimpleError("")))
     }
 }

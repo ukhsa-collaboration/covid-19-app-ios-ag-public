@@ -7,12 +7,12 @@ import Interface
 import Localization
 
 struct ContactCaseMultipleResolutionsFlowViewControllerInteractor: ContactCaseMultipleResolutionsFlowViewControllerInteracting {
-    
+
     private let openURL: (URL) -> Void
     private let _didDeclareVaccinationStatus: (ContactCaseVaccinationStatusAnswers) -> Result<ContactCaseResolution, ContactCaseVaccinationStatusNotEnoughAnswersError>
     private let _nextVaccinationStatusQuestion: (ContactCaseVaccinationStatusAnswers) -> [ContactCaseVaccinationStatusQuestion]
     private let _didReviewQuestions: (Bool, ContactCaseVaccinationStatusAnswers) -> Void
-    
+
     init(
         openURL: @escaping (URL) -> Void,
         didDeclareVaccinationStatus: @escaping (ContactCaseVaccinationStatusAnswers) -> Result<ContactCaseResolution, ContactCaseVaccinationStatusNotEnoughAnswersError>,
@@ -24,19 +24,19 @@ struct ContactCaseMultipleResolutionsFlowViewControllerInteractor: ContactCaseMu
         _nextVaccinationStatusQuestion = nextVaccinationStatusQuestion
         _didReviewQuestions = didReviewQuestions
     }
-    
+
     func didTapAboutApprovedVaccinesLink() {
         openURL(ExternalLink.approvedVaccinesInfo.url)
     }
-    
+
     func nextVaccinationStatusQuestion(answers: ContactCaseVaccinationStatusAnswers) -> [ContactCaseVaccinationStatusQuestion] {
         _nextVaccinationStatusQuestion(answers)
     }
-    
+
     func didDeclareVaccinationStatus(answers: ContactCaseVaccinationStatusAnswers) -> Result<ContactCaseResolution, ContactCaseVaccinationStatusNotEnoughAnswersError> {
         _didDeclareVaccinationStatus(answers)
     }
-    
+
     func didReviewQuestions(overAgeLimit: Bool, vaccinationStatusAnswers: ContactCaseVaccinationStatusAnswers) {
         _didReviewQuestions(overAgeLimit, vaccinationStatusAnswers)
     }

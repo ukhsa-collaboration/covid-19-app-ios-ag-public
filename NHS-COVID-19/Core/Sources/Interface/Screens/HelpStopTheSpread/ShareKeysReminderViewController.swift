@@ -12,15 +12,15 @@ public protocol ShareKeysReminderViewControllerInteracting {
 }
 
 extension ShareKeysReminderViewController {
-    
+
     private class Content: StickyFooterScrollingContent {
-        
+
         static let infoboxInset = (.stripeWidth + .stripeSpacing)
-        
+
         let scrollingContent: StackContent
         let footerContent: StackContent?
         let spacing: CGFloat = .doubleSpacing
-        
+
         init(interactor: Interacting) {
             scrollingContent = BasicContent(
                 views: [
@@ -46,7 +46,7 @@ extension ShareKeysReminderViewController {
                     $0.right -= Self.infoboxInset
                 }
             )
-            
+
             footerContent = BasicContent(
                 views: [
                     PrimaryButton(title: localize(.share_keys_and_venues_reminder_screen_back_to_share_button_title), action: interactor.didTapShareResult),
@@ -56,25 +56,25 @@ extension ShareKeysReminderViewController {
                 margins: .zero
             )
         }
-        
+
     }
 }
 
 public class ShareKeysReminderViewController: StickyFooterScrollingContentViewController {
-    
+
     public typealias Interacting = ShareKeysReminderViewControllerInteracting
-    
+
     let interactor: Interacting
-    
+
     public init(interactor: Interacting) {
         self.interactor = interactor
         super.init(content: Content(interactor: interactor))
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)

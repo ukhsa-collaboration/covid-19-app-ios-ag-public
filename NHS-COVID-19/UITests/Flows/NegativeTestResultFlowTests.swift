@@ -7,12 +7,12 @@ import Scenarios
 import XCTest
 
 class NegativeTestResultFlowTests: XCTestCase {
-    
+
     private let postcode = "SW12"
-    
+
     @Propped
     private var runner: ApplicationRunner<SandboxedScenario>
-    
+
     override func setUp() {
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = false
@@ -23,7 +23,7 @@ class NegativeTestResultFlowTests: XCTestCase {
         $runner.initialState.requiresConfirmatoryTest = false
         try? $runner.initialState.set(testResultEndDate: Date())
     }
-    
+
     func testWithoutIsolation() throws {
         $runner.report(scenario: "Negative Test Result", "Without Isolation") {
             """
@@ -38,22 +38,22 @@ class NegativeTestResultFlowTests: XCTestCase {
                 """
             }
             let negativeTestResultScreen = NegativeTestResultNoIsolationScreen(app: app)
-            
+
             XCTAssertTrue(negativeTestResultScreen.description.exists)
-            
+
             negativeTestResultScreen.returnHomeButton.tap()
-            
+
             runner.step("Homescreen") {
                 """
                 The user is presented the homescreen
                 """
             }
-            
+
             app.checkOnHomeScreen(postcode: postcode)
-            
+
         }
     }
-    
+
     func testWithIsolationIndexCase() throws {
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.index.rawValue
         $runner.report(scenario: "Negative Test Result", "With Isolation - Index Case") {
@@ -70,22 +70,22 @@ class NegativeTestResultFlowTests: XCTestCase {
                 """
             }
             let negativeTestResultScreen = NegativeTestResultNoIsolationScreen(app: app)
-            
+
             XCTAssertTrue(negativeTestResultScreen.description.exists)
-            
+
             negativeTestResultScreen.returnHomeButton.tap()
-            
+
             runner.step("Homescreen") {
                 """
                 The user is presented the homescreen and is not isolating anymore
                 """
             }
-            
+
             app.checkOnHomeScreen(postcode: postcode)
-            
+
         }
     }
-    
+
     func testWithIsolationContactCase() throws {
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.contact.rawValue
         $runner.report(scenario: "Negative Test Result", "With Isolation - Contact Case") {
@@ -102,17 +102,17 @@ class NegativeTestResultFlowTests: XCTestCase {
                 """
             }
             let negativeTestResultScreen = NegativeTestResultWithIsolationScreen(app: app)
-            
+
             XCTAssertTrue(negativeTestResultScreen.continueToIsolateLabel.exists)
-            
+
             negativeTestResultScreen.returnHomeButton.tap()
-            
+
             runner.step("Homescreen") {
                 """
                 The user is presented the homescreen and is still isolating
                 """
             }
-            
+
             app.checkOnHomeScreen(postcode: postcode)
         }
     }

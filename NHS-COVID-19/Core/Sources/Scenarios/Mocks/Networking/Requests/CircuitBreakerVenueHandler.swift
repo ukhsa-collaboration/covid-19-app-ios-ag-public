@@ -7,7 +7,7 @@ import Foundation
 
 struct CircuitBreakerVenueHandler: RequestHandler {
     var paths = ["/circuit-breaker/venue/request"]
-    
+
     var response: Result<HTTPResponse, HTTPRequestError> {
         let response = HTTPResponse.ok(with: .json("""
         {

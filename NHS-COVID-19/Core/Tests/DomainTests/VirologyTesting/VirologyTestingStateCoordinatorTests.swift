@@ -14,7 +14,7 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
     var userNotificationManager: MockUserNotificationsManager!
     var coordinator: VirologyTestingStateCoordinator!
     var isInterestedInAskingForSymptomsOnsetDay: Bool = true
-    
+
     override func setUp() {
         virologyStore = VirologyTestingStateStore(
             store: MockEncryptedStore(),
@@ -31,7 +31,7 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
             country: { .england }
         )
     }
-    
+
     func testHandlePollingTestResult() throws {
         let result = VirologyTestResult(
             testResult: .positive,
@@ -51,14 +51,14 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
             creationDay: .today,
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random())
         )
-        
+
         coordinator.handlePollingTestResult(response, virologyTestTokens: tokens)
-        
+
         XCTAssertEqual(userNotificationManager.notificationType, UserNotificationType.testResultReceived)
         let savedResult = try XCTUnwrap(virologyStore.virologyTestResult.currentValue)
         XCTAssertEqual(savedResult.testResult, result.testResult)
     }
-    
+
     func testHandleManualTestResult() throws {
         let response = LinkVirologyTestResultResponse(
             virologyTestResult: VirologyTestResult(
@@ -71,54 +71,54 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
             shouldOfferFollowUpTest: false
         )
         coordinator.handleManualTestResult(response)
-        
+
         XCTAssertNil(userNotificationManager.notificationType)
         let savedResult = try XCTUnwrap(virologyStore.virologyTestResult.currentValue)
         XCTAssertEqual(savedResult.testResult, response.virologyTestResult.testResult)
     }
-    
+
     func testDoesNotRequireToAskForSymptomsOnsetDayTestResultRequiresConfirmatoryTest() {
         let virologyTestResult = VirologyTestResult(
             testResult: .positive,
             testKitType: .labResult,
             endDate: Date()
         )
-        
+
         XCTAssertFalse(coordinator.requiresOnsetDay(virologyTestResult, requiresConfirmatoryTest: true))
     }
-    
+
     func testDoesNotRequireToAskForSymptomsOnsetDayTestResultNegative() {
         let virologyTestResult = VirologyTestResult(
             testResult: .negative,
             testKitType: .labResult,
             endDate: Date()
         )
-        
+
         XCTAssertFalse(coordinator.requiresOnsetDay(virologyTestResult, requiresConfirmatoryTest: false))
     }
-    
+
     func testDoesNotRequireToAskForSymptomsOnsetDayIsNotInterestedInAskingForSymptomsOnsetDay() {
         let virologyTestResult = VirologyTestResult(
             testResult: .positive,
             testKitType: .labResult,
             endDate: Date()
         )
-        
+
         isInterestedInAskingForSymptomsOnsetDay = false
-        
+
         XCTAssertFalse(coordinator.requiresOnsetDay(virologyTestResult, requiresConfirmatoryTest: false))
     }
-    
+
     func testRequireToAskForSymptomsOnsetDay() {
         let virologyTestResult = VirologyTestResult(
             testResult: .positive,
             testKitType: .labResult,
             endDate: Date()
         )
-        
+
         XCTAssertTrue(coordinator.requiresOnsetDay(virologyTestResult, requiresConfirmatoryTest: false))
     }
-    
+
     func testHandleSaveOrderTestKitResponseTests() throws {
         let response = OrderTestkitResponse(
             testOrderWebsite: .random(),
@@ -127,7 +127,7 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
             diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken(value: .random())
         )
         coordinator.saveOrderTestKitResponse(response)
-        
+
         let savedTokens = try XCTUnwrap(virologyStore?.virologyTestTokens?.first)
         XCTAssertEqual(savedTokens.diagnosisKeySubmissionToken, response.diagnosisKeySubmissionToken)
         XCTAssertEqual(savedTokens.pollingToken, response.testResultPollingToken)

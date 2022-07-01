@@ -6,27 +6,27 @@ import Combine
 import Foundation
 
 class ExperimentInspector: ObservableObject, Identifiable {
-    
+
     let experimentName: String
-    
+
     private var cancellables = [AnyCancellable]()
-    
+
     @Published
     var isLoading = true
-    
+
     @Published
     private(set) var error: Error?
-    
+
     @Published
     var experiment: Experiment?
-    
+
     @Published
     var experimentV2: Experiment.ExperimentV2?
-    
+
     init(manager: ExperimentManager) {
         experimentName = manager.experimentName
         precondition(!manager.experimentId.isEmpty)
-               
+
         if #available(iOS 13.7, *), manager.usingEnApiVersion == 2 {
             let endpoint = GetExperimentEndpointV2(
                 team: manager.teamName,
@@ -76,9 +76,7 @@ class ExperimentInspector: ObservableObject, Identifiable {
                     )
             )
         }
-        
 
-        
     }
-    
+
 }

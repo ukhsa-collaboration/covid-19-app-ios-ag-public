@@ -18,19 +18,19 @@ public struct RiskInfo: Codable, Equatable, RiskData {
     var isConsideredRisky: Bool {
         true
     }
-    
+
     private enum CodingKeys: String, CodingKey {
         case riskScore
         case riskScoreVersion
         case day
     }
-    
+
     init(riskScore: Double, riskScoreVersion: Int, day: GregorianDay) {
         self.riskScore = riskScore
         self.riskScoreVersion = riskScoreVersion
         self.day = day
     }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         riskScore = try container.decode(Double.self, forKey: .riskScore)
@@ -44,7 +44,7 @@ public struct ExposureRiskInfo: RiskData {
     var riskScoreVersion: Int
     var day: GregorianDay
     var isConsideredRisky: Bool
-    
+
     var shouldShowDontWorryNotification: Bool {
         riskScoreVersion < 2
     }
@@ -60,7 +60,7 @@ extension ExposureRiskInfo {
 }
 
 extension RiskData {
-    
+
     func isHigherPriority(than other: RiskData) -> Bool {
         if isConsideredRisky && !other.isConsideredRisky { return true }
         if !isConsideredRisky && other.isConsideredRisky { return false }
@@ -68,5 +68,5 @@ extension RiskData {
         if day < other.day { return false }
         return riskScore > other.riskScore
     }
-    
+
 }

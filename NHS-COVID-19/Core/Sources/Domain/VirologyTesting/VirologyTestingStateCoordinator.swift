@@ -8,7 +8,7 @@ protocol VirologyTestingStateCoordinating {
     var virologyTestTokens: [VirologyTestTokens] { get }
     var didReceiveUnknownTestResult: Bool { get }
     var country: () -> Country { get }
-    
+
     func saveOrderTestKitResponse(_ orderTestKitResponse: OrderTestkitResponse)
     func handlePollingTestResult(_ testResult: VirologyTestResponse, virologyTestTokens: VirologyTestTokens)
     func handlePollingUnknownTestResult(_ virologyTestTokens: VirologyTestTokens)
@@ -18,7 +18,7 @@ protocol VirologyTestingStateCoordinating {
 }
 
 class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
-    
+
     var virologyTestTokens: [VirologyTestTokens] {
         virologyTestingStateStore.virologyTestTokens ?? []
     }
@@ -30,14 +30,14 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
             virologyTestingStateStore.didReceiveUnknownTestResult = newValue
         }
     }
-    
+
     var country: () -> Country
-    
+
     private let virologyTestingStateStore: VirologyTestingStateStore
     private let userNotificationsManager: UserNotificationManaging
     private let isInterestedInAskingForSymptomsOnsetDay: () -> Bool
     private var setRequiresOnsetDay: () -> Void
-    
+
     init(virologyTestingStateStore: VirologyTestingStateStore, userNotificationsManager: UserNotificationManaging, isInterestedInAskingForSymptomsOnsetDay: @escaping () -> Bool, setRequiresOnsetDay: @escaping () -> Void, country: @escaping () -> Country) {
         self.virologyTestingStateStore = virologyTestingStateStore
         self.userNotificationsManager = userNotificationsManager
@@ -45,14 +45,14 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         self.setRequiresOnsetDay = setRequiresOnsetDay
         self.country = country
     }
-    
+
     func saveOrderTestKitResponse(_ orderTestKitResponse: OrderTestkitResponse) {
         virologyTestingStateStore.saveTest(
             pollingToken: orderTestKitResponse.testResultPollingToken,
             diagnosisKeySubmissionToken: orderTestKitResponse.diagnosisKeySubmissionToken
         )
     }
-    
+
     func handlePollingTestResult(
         _ testResult: VirologyTestResponse,
         virologyTestTokens: VirologyTestTokens
@@ -76,7 +76,7 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
             return
         }
     }
-    
+
     func handlePollingUnknownTestResult(
         _ virologyTestTokens: VirologyTestTokens
     ) {
@@ -85,7 +85,7 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         sendNotification()
         handleUnknownTestResult()
     }
-    
+
     func handleManualTestResult(_ response: LinkVirologyTestResultResponse) {
         Metrics.signpostReceivedFromManual(
             testResult: response.virologyTestResult.testResult,
@@ -113,15 +113,15 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
             )
         }
     }
-    
+
     func handleUnknownTestResult() {
         virologyTestingStateStore.didReceiveUnknownTestResult = true
     }
-    
+
     func acknowledgeUnknownTestResult() {
         virologyTestingStateStore.didReceiveUnknownTestResult = false
     }
-    
+
     func requiresOnsetDay(_ result: VirologyTestResult, requiresConfirmatoryTest: Bool) -> Bool {
         guard requiresConfirmatoryTest == false else {
             return false
@@ -132,10 +132,10 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         guard result.testResult == .positive else {
             return false
         }
-        
+
         return isInterestedInAskingForSymptomsOnsetDay()
     }
-    
+
     private func handleWithNotification(
         _ result: VirologyTestResult,
         diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?,
@@ -153,7 +153,7 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
             askForOnsetDay: false
         )
     }
-    
+
     private func handle(
         _ result: VirologyTestResult,
         diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken?,
@@ -173,9 +173,9 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
             setRequiresOnsetDay()
         }
     }
-    
+
     private func sendNotification() {
         userNotificationsManager.add(type: .testResultReceived, at: nil, withCompletionHandler: nil)
     }
-    
+
 }

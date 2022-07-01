@@ -8,20 +8,20 @@ import Localization
 import UserNotifications
 
 class UserNotificationManager {
-    
+
     private let manager = UNUserNotificationCenter.current()
-    
+
     /// Creates a notification request based on a type
     /// - Parameter type: type of the notification
     /// - Returns: notification request with a title and body based on a passed type
     private func createRequest(for type: UserNotificationType, at date: DateComponents?) -> UNNotificationRequest {
-        
+
         let trigger = date.map {
             UNCalendarNotificationTrigger(dateMatching: $0, repeats: false)
         }
-        
+
         let content = self.content(for: type)
-        
+
         let request = UNNotificationRequest(
             identifier: type.identifier,
             content: content,
@@ -29,7 +29,7 @@ class UserNotificationManager {
         )
         return request
     }
-    
+
     private func content(for notificationType: UserNotificationType) -> UNNotificationContent {
         switch notificationType {
         case .postcode:
@@ -97,25 +97,25 @@ class UserNotificationManager {
 }
 
 extension UserNotificationManager: UserNotificationManaging {
-    
+
     func requestAuthorization(options: AuthorizationOptions, completionHandler: @escaping ErrorHandler) {
         manager.requestAuthorization(options: options, completionHandler: completionHandler)
     }
-    
+
     public func getAuthorizationStatus(completionHandler: @escaping AuthorizationStatusHandler) {
         manager.getNotificationSettings { completionHandler($0.authorizationStatus) }
     }
-    
+
     func add(type: UserNotificationType, at date: DateComponents?, withCompletionHandler completionHandler: ((Error?) -> Void)?) {
-        
+
         let request = createRequest(for: type, at: date)
         manager.add(request, withCompletionHandler: completionHandler)
     }
-    
+
     func removePending(type: UserNotificationType) {
         manager.removePendingNotificationRequests(withIdentifiers: [type.identifier])
     }
-    
+
     func removeAllDelivered(for type: UserNotificationType) {
         manager.removeDeliveredNotifications(withIdentifiers: [type.identifier])
     }

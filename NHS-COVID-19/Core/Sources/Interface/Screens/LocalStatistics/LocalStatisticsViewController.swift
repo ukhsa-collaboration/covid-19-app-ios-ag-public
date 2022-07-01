@@ -12,12 +12,12 @@ public protocol LocalStatisticsInteracting {
 }
 
 extension LocalStatisticsViewController {
-    
+
     struct Content {
         var views: [StackViewContentProvider]
-        
+
         init(interactor: Interacting, localStats: InterfaceLocalCovidStatsDaily) {
-            
+
             var heightConstraint: NSLayoutConstraint?
             let dataController = UIHostingController(
                 rootView: SizingView(
@@ -31,7 +31,7 @@ extension LocalStatisticsViewController {
             dataController.view.backgroundColor = .clear
             dataController.view.translatesAutoresizingMaskIntoConstraints = false
             heightConstraint = dataController.view.heightAnchor.constraint(equalToConstant: 0)
-            
+
             views = [
                 BaseLabel()
                     .styleAsPageHeader()
@@ -61,14 +61,14 @@ extension LocalStatisticsViewController {
 public class LocalStatisticsViewController: ScrollingContentViewController {
     public typealias Interacting = LocalStatisticsInteracting
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting, covidStats: InterfaceLocalCovidStatsDaily) {
         self.interactor = interactor
-        
+
         super.init(views: Content(interactor: interactor, localStats: covidStats).views)
         title = localize(.local_statistics_main_screen_navigation_title)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

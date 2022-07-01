@@ -18,7 +18,7 @@ class WrappingViewController: UIViewController {
     ) {
         didSet { relayout() }
     }
-    
+
     func addDeveloperOptions(
         onTap: @escaping () -> Void,
         onLongPress: @escaping () -> Void
@@ -39,12 +39,12 @@ class WrappingViewController: UIViewController {
         addPanGestureRecognizer(roundView: childViewController.view)
         relayout()
     }
-    
+
     func addPanGestureRecognizer(roundView: UIView) {
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(developerOptionsViewPanned))
         developerOptionsView.addGestureRecognizer(panGestureRecognizer)
     }
-    
+
     private func relayout() {
         developerOptionsView.frame = CGRect(
             x: developerOptionsViewDragOffset.width,
@@ -54,7 +54,7 @@ class WrappingViewController: UIViewController {
         )
         developerOptionsView.layoutIfNeeded()
     }
-    
+
     @objc func developerOptionsViewPanned(_ gestureRecognizer: UIPanGestureRecognizer) {
         switch gestureRecognizer.state {
         case .began:
@@ -70,7 +70,7 @@ class WrappingViewController: UIViewController {
 
 class WrappingAppController: AppController {
     let rootViewController: UIViewController = WrappingViewController()
-    
+
     var content: AppController? {
         didSet {
             oldValue?.rootViewController.dismiss(animated: false, completion: nil)
@@ -80,11 +80,11 @@ class WrappingAppController: AppController {
             }
         }
     }
-    
+
     func performBackgroundTask(task: BackgroundTask) {
         content?.performBackgroundTask(task: task)
     }
-    
+
     func handleUserNotificationResponse(_ response: UNNotificationResponse, completionHandler: @escaping () -> Void) {
         content?.handleUserNotificationResponse(response, completionHandler: completionHandler)
     }

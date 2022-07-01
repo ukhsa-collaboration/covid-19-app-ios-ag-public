@@ -6,14 +6,14 @@ import Common
 import Foundation
 
 public extension HTTPRequest {
-    
+
     func withCanonicalJSONBody() -> HTTPRequest {
         guard let body = body else {
             return self
         }
-        
+
         let normalizedContent = body.content.normalizingJSON()
-        
+
         return HTTPRequest(
             method: method,
             path: path,
@@ -23,5 +23,5 @@ public extension HTTPRequest {
             headers: headers
         )
     }
-    
+
 }

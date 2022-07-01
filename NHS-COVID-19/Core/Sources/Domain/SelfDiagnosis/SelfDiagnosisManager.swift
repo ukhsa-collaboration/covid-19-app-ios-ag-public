@@ -11,31 +11,31 @@ public enum SelfDiagnosisEvaluation: Equatable {
         case hasNoTest
         case hasTest(shouldChangeAdviceDueToSymptoms: Bool)
     }
-    
+
     case noSymptoms
     case hasSymptoms(Isolation, ExistingPositiveTestState)
 }
 
 public protocol SelfDiagnosisManaging {
     func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError>
-    
+
     func evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double, symptomaticSelfIsolationEnabled: Bool) -> SelfDiagnosisEvaluation
 }
 
 class SelfDiagnosisManager: SelfDiagnosisManaging {
     private let httpClient: HTTPClient
     private let calculateIsolationState: (GregorianDay?, _ symptomaticSelfIsolationEnabled: Bool) -> (IsolationState, SelfDiagnosisEvaluation.ExistingPositiveTestState)
-    
+
     init(httpClient: HTTPClient,
          calculateIsolationState: @escaping (GregorianDay?, _ symptomaticSelfIsolationEnabled: Bool) -> (IsolationState, SelfDiagnosisEvaluation.ExistingPositiveTestState)) {
         self.httpClient = httpClient
         self.calculateIsolationState = calculateIsolationState
     }
-    
+
     func fetchQuestionnaire() -> AnyPublisher<SymptomsQuestionnaire, NetworkRequestError> {
         httpClient.fetch(SymptomsQuestionnaireEndpoint())
     }
-    
+
     func evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double, symptomaticSelfIsolationEnabled: Bool) -> SelfDiagnosisEvaluation {
         let evaluation = _evaluate(
             selectedSymptoms: selectedSymptoms,
@@ -43,23 +43,23 @@ class SelfDiagnosisManager: SelfDiagnosisManaging {
             threshold: threshold,
             symptomaticSelfIsolationEnabled: symptomaticSelfIsolationEnabled
         )
-        
+
         if symptomaticSelfIsolationEnabled {
             Metrics.signpost(evaluation)
         }
 
         return evaluation
     }
-    
+
     private func _evaluate(selectedSymptoms: [Symptom], onsetDay: GregorianDay?, threshold: Double, symptomaticSelfIsolationEnabled: Bool) -> SelfDiagnosisEvaluation {
         let sum = selectedSymptoms
             .map { $0.riskWeight }
             .reduce(0, +)
-        
+
         guard sum >= threshold else {
             return .noSymptoms
         }
-        
+
         let state = calculateIsolationState(onsetDay, symptomaticSelfIsolationEnabled)
         switch state.0 {
         case .noNeedToIsolate:

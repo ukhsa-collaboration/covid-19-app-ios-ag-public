@@ -19,7 +19,7 @@ public enum TestResultAcknowledgementState {
     case neededForVoidResultNotIsolating(acknowledge: () -> Void)
     case neededForPlodResult(acknowledge: () -> Void)
     case neededForUnknownResult(acknowledge: () -> Void, openAppStore: () -> Void)
-    
+
     init(
         result: VirologyStateTestResult,
         newIsolationState: IsolationLogicalState,

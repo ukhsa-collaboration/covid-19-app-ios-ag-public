@@ -15,12 +15,12 @@ public class SelfSizingHostingController<Content>: UIHostingController<Content> 
 struct SizingView<T: View>: View {
     let view: T
     let updateSizeHandler: (_ size: CGSize) -> Void
-    
+
     init(view: T, updateSizeHandler: @escaping (_ size: CGSize) -> Void) {
         self.view = view
         self.updateSizeHandler = updateSizeHandler
     }
-    
+
     var body: some View {
         view.background(
             GeometryReader { proxy in
@@ -37,7 +37,7 @@ struct SizingView<T: View>: View {
 struct SizePreferenceKey: PreferenceKey {
     typealias Value = CGSize
     static var defaultValue: Value = .zero
-    
+
     static func reduce(value _: inout Value, nextValue: () -> Value) {
         _ = nextValue()
     }

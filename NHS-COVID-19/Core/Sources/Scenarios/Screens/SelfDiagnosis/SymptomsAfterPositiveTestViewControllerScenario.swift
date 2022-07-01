@@ -12,7 +12,7 @@ public class SymptomsAfterPositiveTestViewControllerScenario: Scenario {
     public static var name: String = "Self-Diagnosis after positive test"
     public static let returnHomeTapped: String = "Continue button tapped"
     public static let onlineServicesLinkTapped: String = "Online services link tapped"
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
@@ -22,19 +22,19 @@ public class SymptomsAfterPositiveTestViewControllerScenario: Scenario {
 }
 
 private class Interactor: SymptomsAfterPositiveTestViewController.Interacting {
-    
+
     private weak var viewController: UIViewController?
-    
+
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
     func didTapOnlineServicesLink() {
         viewController?.showAlert(title: SymptomsAfterPositiveTestViewControllerScenario.onlineServicesLinkTapped)
     }
-    
+
     func didTapReturnHome() {
         viewController?.showAlert(title: SymptomsAfterPositiveTestViewControllerScenario.returnHomeTapped)
     }
-    
+
 }

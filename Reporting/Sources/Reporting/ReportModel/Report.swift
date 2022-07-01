@@ -10,18 +10,18 @@ struct Report {
 }
 
 extension Report {
-    
+
     func save(to reportFolder: URL) throws {
         let fileManager = FileManager()
         if fileManager.fileExists(atPath: reportFolder.path) {
             try fileManager.removeItem(at: reportFolder)
         }
-        
+
         try fileManager.createDirectory(at: reportFolder, withIntermediateDirectories: true)
         try pages.forEach {
             try $0.save(in: reportFolder)
         }
-        
+
         if !attachments.isEmpty {
             let attachmentsFolder = reportFolder.appendingPathComponent("Attachments", isDirectory: true)
             try fileManager.createDirectory(at: attachmentsFolder, withIntermediateDirectories: true)
@@ -31,5 +31,5 @@ extension Report {
             }
         }
     }
-    
+
 }

@@ -11,12 +11,12 @@ import UIKit
 public class SymptomsReviewViewControllerScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name: String = "Self-Diagnosis - Symptoms Review"
-    
+
     public static var deniedForFeverish = "A runny nose"
     public static var confirmedForCough = "A new continuous cough"
-    
+
     public static var confirmTapped = "Confirm button tapped"
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             SymptomsReviewViewController(
@@ -40,19 +40,21 @@ public class SymptomsReviewViewControllerScenario: Scenario {
 
 private class Interactor: SymptomsReviewViewController.Interacting {
     private weak var viewController: UIViewController?
-    
+
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
+    var hideDateInfoBox: Bool = false
+
     func changeSymptomAnswer(index: Int) {
         viewController?.showAlert(title: "\(index)")
     }
-    
+
     func confirmSymptoms(riskThreshold: Double, selectedDay: GregorianDay?, hasCheckedNoDate: Bool) -> Result<Void, UIValidationError> {
         viewController?.showAlert(title: SymptomsReviewViewControllerScenario.confirmTapped)
         return .success(())
     }
-    
+
     var hasError: Bool = true
 }

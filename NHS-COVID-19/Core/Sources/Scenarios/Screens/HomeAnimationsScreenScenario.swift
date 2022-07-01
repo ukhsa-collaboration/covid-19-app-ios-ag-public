@@ -10,7 +10,7 @@ import UIKit
 public class HomeAnimationsScreenScenario: Scenario {
     public static let name = "Settings - Animations"
     public static let kind = ScenarioKind.screen
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let viewModel = HomeAnimationsViewModel(

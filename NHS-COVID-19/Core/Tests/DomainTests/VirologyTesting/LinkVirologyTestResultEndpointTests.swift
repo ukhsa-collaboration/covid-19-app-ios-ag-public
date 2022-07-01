@@ -8,30 +8,30 @@ import XCTest
 @testable import Domain
 
 class LinkVirologyTestResultEndpointTests: XCTestCase {
-    
+
     private let endpoint = LinkVirologyTestResultEndpoint()
-    
+
     func testEncoding() throws {
         let ctaToken = CTAToken(value: .random(), country: .england)
-        
+
         let countryString: String = {
             switch ctaToken.country {
             case .england: return "England"
             case .wales: return "Wales"
             }
         }()
-        
+
         let expectedRequest = HTTPRequest.post("/virology-test/v2/cta-exchange", body: .json("{\"country\":\"\(countryString)\",\"ctaToken\":\"\(ctaToken.value)\"}"))
-        
+
         let actualRequest = try endpoint.request(for: ctaToken)
-        
+
         TS.assert(actualRequest, equals: expectedRequest)
     }
-    
+
     func testDecodingPositiveLfdDiagnosisKeySubmissionSupported() throws {
         let date = "2021-01-10T00:00:00.0000000Z"
         let submissionToken = DiagnosisKeySubmissionToken(value: .random())
-        
+
         let actualResponse = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
@@ -43,7 +43,7 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": false
         }
         """#))
-        
+
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions.insert(.withFractionalSeconds)
         let expectedResponse = LinkVirologyTestResultResponse(
@@ -56,16 +56,16 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             requiresConfirmatoryTest: false,
             shouldOfferFollowUpTest: false
         )
-        
+
         let parsedResponse = try endpoint.parse(actualResponse)
-        
+
         TS.assert(parsedResponse, equals: expectedResponse)
     }
-    
+
     func testDecodingUnconfirmedWithKeyShareSupport() throws {
         let date = "2021-01-10T00:00:00.0000000Z"
         let submissionToken = DiagnosisKeySubmissionToken(value: .random())
-        
+
         let actualResponse = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
@@ -77,7 +77,7 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": true
         }
         """#))
-        
+
         let expectedResponse = LinkVirologyTestResultResponse(
             virologyTestResult: .init(
                 testResult: .positive,
@@ -94,14 +94,14 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             requiresConfirmatoryTest: true,
             shouldOfferFollowUpTest: true
         )
-        
+
         TS.assert(try endpoint.parse(actualResponse), equals: expectedResponse)
     }
-    
+
     func testDecodingUnconfirmedTestWithNegativeResult() throws {
         let date = "2021-01-10T00:00:00.0000000Z"
         let submissionToken = DiagnosisKeySubmissionToken(value: .random())
-        
+
         let actualResponse = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
@@ -113,14 +113,14 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": true
         }
         """#))
-        
+
         XCTAssertThrowsError(try endpoint.parse(actualResponse))
     }
-    
+
     func testDecodingTestWithPLODResult() throws {
         let date = "2021-01-10T00:00:00.0000000Z"
         let submissionToken = DiagnosisKeySubmissionToken(value: .random())
-        
+
         let actualResponse = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
@@ -132,14 +132,14 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": false
         }
         """#))
-        
+
         XCTAssertNoThrow(try endpoint.parse(actualResponse))
     }
-    
+
     func testDecodingUnconfirmedTestWithVoidResult() throws {
         let date = "2021-01-10T00:00:00.0000000Z"
         let submissionToken = DiagnosisKeySubmissionToken(value: .random())
-        
+
         let actualResponse = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
@@ -151,14 +151,14 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": true
         }
         """#))
-        
+
         XCTAssertThrowsError(try endpoint.parse(actualResponse))
     }
-    
+
     func testDecodingTestWithUnknownResult() throws {
         let date = "2021-01-10T00:00:00.0000000Z"
         let submissionToken = DiagnosisKeySubmissionToken(value: .random())
-        
+
         let actualResponse = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
@@ -170,7 +170,7 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": false
         }
         """#))
-        
+
         XCTAssertThrowsError(try endpoint.parse(actualResponse)) { error in
             switch error {
             case DecodingError.dataCorrupted:
@@ -180,10 +180,10 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             }
         }
     }
-    
+
     func testDecodingPositiveLfdDiagnosisKeySubmissionNotSupported() throws {
         let date = "2021-01-10T00:00:00.0000000Z"
-        
+
         let actualResponse = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
@@ -195,7 +195,7 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": true
         }
         """#))
-        
+
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions.insert(.withFractionalSeconds)
         let expectedResponse = LinkVirologyTestResultResponse(
@@ -208,15 +208,15 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             requiresConfirmatoryTest: true,
             shouldOfferFollowUpTest: true
         )
-        
+
         let parsedResponse = try endpoint.parse(actualResponse)
-        
+
         TS.assert(parsedResponse, equals: expectedResponse)
     }
-    
+
     func testDecodingInvalidTestKit() throws {
         let date = "2021-01-10T00:00:00.0000000Z"
-        
+
         let actualResponse = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
@@ -230,10 +230,10 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
         """#))
         XCTAssertThrowsError(try endpoint.parse(actualResponse))
     }
-    
+
     func testDecodingLFDInvalidResponseOnVoid() throws {
         let date = "2021-01-10T00:00:00.0000000Z"
-        
+
         let actualResponse = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
@@ -245,13 +245,13 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": false
         }
         """#))
-        
+
         XCTAssertThrowsError(try endpoint.parse(actualResponse))
     }
-    
+
     func testDecodingLFDInvalidResponseOnNegative() throws {
         let date = "2021-01-10T00:00:00.0000000Z"
-        
+
         let actualResponse = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
@@ -263,13 +263,13 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": true
         }
         """#))
-        
+
         XCTAssertThrowsError(try endpoint.parse(actualResponse))
     }
-    
+
     func testDecodingInvalidVenueSharingResponse() throws {
         let date = "2021-01-10T00:00:00.0000000Z"
-        
+
         let actualResponse = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
@@ -281,8 +281,8 @@ class LinkVirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": true
         }
         """#))
-        
+
         XCTAssertThrowsError(try endpoint.parse(actualResponse)) // expecting a venue sharing token
     }
-    
+
 }

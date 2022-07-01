@@ -8,21 +8,21 @@ import Domain
 class MockBackgroundTaskScheduler: BackgroundTaskScheduling {
     var requests = [BGTaskRequest]()
     private var taskInfo = [String: (queue: DispatchQueue?, launchHandler: (BackgroundTask) -> Void)]()
-    
+
     func submit(_ taskRequest: BGTaskRequest) throws {
         requests.append(taskRequest)
     }
-    
+
     @discardableResult
     func register(forTaskWithIdentifier identifier: String, using queue: DispatchQueue?, launchHandler: @escaping (BackgroundTask) -> Void) -> Bool {
         taskInfo[identifier] = (queue, launchHandler)
         return true
     }
-    
+
     func getPendingTaskRequests(completionHandler: @escaping ([BGTaskRequest]) -> Void) {
         completionHandler(requests)
     }
-    
+
     func cancel(taskRequestWithIdentifier identifier: String) {
         requests.removeAll { $0.identifier == identifier }
     }

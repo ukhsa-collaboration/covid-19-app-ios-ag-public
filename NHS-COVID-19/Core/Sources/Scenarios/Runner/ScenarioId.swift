@@ -8,13 +8,13 @@ import ObjectiveC
 import SwiftUI
 
 struct ScenarioId: CaseIterable, Hashable, Identifiable, RawRepresentable {
-    
+
     var scenarioType: AppControllingScenario.Type
-    
+
     init(withType type: AppControllingScenario.Type) {
         scenarioType = type
     }
-    
+
     init?(rawValue: String) {
         guard
             let type = NSClassFromString(rawValue),
@@ -23,21 +23,21 @@ struct ScenarioId: CaseIterable, Hashable, Identifiable, RawRepresentable {
         }
         scenarioType = conformingType
     }
-    
+
     var rawValue: String {
         NSStringFromClass(scenarioType)
     }
-    
+
     var id: ScenarioId { self }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(scenarioType.id)
     }
-    
+
     static func == (lhs: ScenarioId, rhs: ScenarioId) -> Bool {
         lhs.scenarioType.id == rhs.scenarioType.id
     }
-    
+
     static let allCases: [ScenarioId] = {
         // AnyClass.init seems to register new objective-C class the first time it is called.
         //
@@ -46,14 +46,14 @@ struct ScenarioId: CaseIterable, Hashable, Identifiable, RawRepresentable {
         _ = [AnyClass](unsafeUninitializedCapacity: Int(1)) { buffer, initialisedCount in
             initialisedCount = 0
         }
-        
+
         // Improved thanks to some hints from https://stackoverflow.com/a/54150007
         let count = objc_getClassList(nil, 0)
         let classes = [AnyClass](unsafeUninitializedCapacity: Int(count)) { buffer, initialisedCount in
             let autoreleasingPointer = AutoreleasingUnsafeMutablePointer<AnyClass>(buffer.baseAddress)
             initialisedCount = Int(objc_getClassList(autoreleasingPointer, count))
         }
-        
+
         return classes
             .lazy
             // The `filter` is necessary; otherwise we may crash.
@@ -68,5 +68,5 @@ struct ScenarioId: CaseIterable, Hashable, Identifiable, RawRepresentable {
             .map { ScenarioId(withType: $0) }
             .sorted { $0.scenarioType.name < $1.scenarioType.name }
     }()
-    
+
 }

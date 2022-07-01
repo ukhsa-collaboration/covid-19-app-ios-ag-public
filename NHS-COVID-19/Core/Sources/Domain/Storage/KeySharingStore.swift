@@ -12,7 +12,7 @@ private struct KeySharingPayload: Codable, DataConvertible {
         var hasFinishedInitialKeySharingFlow: Bool
         var hasTriggeredReminderNotification: Bool
     }
-    
+
     var keySharingInfo: Info?
 }
 
@@ -39,20 +39,20 @@ private extension KeySharingPayload.Info {
 }
 
 class KeySharingStore {
-    
+
     @PublishedEncrypted private var keySharingPayload: KeySharingPayload?
-    
+
     @available(*, deprecated, message: "Use `info` instead.")
     public enum State: Equatable {
         case empty
         case hasNotReminded(token: String, time: UTCHour)
         case hasReminded(token: String, time: UTCHour)
     }
-    
+
     private(set) lazy var info: DomainProperty<KeySharingInfo?> = {
         $keySharingPayload.map { $0?.keySharingInfo.map(KeySharingInfo.init) }
     }()
-    
+
     @available(*, deprecated, message: "Use `info` instead.")
     private(set) lazy var state: DomainProperty<State?> = {
         $keySharingPayload
@@ -60,7 +60,7 @@ class KeySharingStore {
                 guard let info = $0?.keySharingInfo else {
                     return .empty
                 }
-                
+
                 if info.hasFinishedInitialKeySharingFlow {
                     return .hasReminded(token: info.diagnosisKeySubmissionToken, time: info.testResultAcknowledgmentTime)
                 } else {
@@ -68,11 +68,11 @@ class KeySharingStore {
                 }
             }
     }()
-    
+
     init(store: EncryptedStoring) {
         _keySharingPayload = store.encrypted("key_sharing")
     }
-    
+
     func save(token: DiagnosisKeySubmissionToken,
               acknowledgmentTime: UTCHour) {
         keySharingPayload = KeySharingPayload(
@@ -84,19 +84,19 @@ class KeySharingStore {
             ))
         )
     }
-    
+
     func didFinishInitialKeySharingFlow() {
         keySharingPayload = mutating(keySharingPayload) {
             $0?.keySharingInfo?.hasFinishedInitialKeySharingFlow = true
         }
     }
-    
+
     func didTriggerReminderNotification() {
         keySharingPayload = mutating(keySharingPayload) {
             $0?.keySharingInfo?.hasTriggeredReminderNotification = true
         }
     }
-    
+
     func reset() {
         keySharingPayload = nil
     }

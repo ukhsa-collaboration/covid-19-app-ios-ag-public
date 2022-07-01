@@ -6,9 +6,9 @@ import Foundation
 import SwiftUI
 
 struct TransitionView: View {
-    
+
     var transition: Transition
-    
+
     var body: some View {
         HStack {
             StateView(collection: transition.from)
@@ -25,21 +25,21 @@ struct TransitionView: View {
             StateView(collection: transition.to)
         }
     }
-    
+
 }
 
 struct TransitionViewPreviews: PreviewProvider {
-    
+
     static var previews: some View {
         TransitionView(transition: .sample)
             .padding()
             .previewLayout(.sizeThatFits)
     }
-    
+
 }
 
 private extension Transition {
-    
+
     static let sample = Transition(
         from: StateCollection(
             contact: .init(label: "C", status: .noIsolation),
@@ -54,5 +54,5 @@ private extension Transition {
             positiveTest: .init(label: "P", status: .any)
         )
     )
-    
+
 }

@@ -9,7 +9,7 @@ import Interface
 import Localization
 
 extension DisplayableError {
-    
+
     init(_ postcodeValidationError: PostcodeValidationError) {
         switch postcodeValidationError {
         case .invalidPostcode:

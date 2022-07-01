@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class SymptomaticCaseBackToNormalActivitiesScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<SymptomaticCaseSummaryContinueWithNormalActivitiesScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = SymptomaticCaseBackToNormalActivitiesScreen(app: app)
@@ -26,29 +26,29 @@ class SymptomaticCaseBackToNormalActivitiesScreenTests: XCTestCase {
             XCTAssertTrue(screen.backToHomeButton.exists)
         }
     }
-    
+
     func testSymptomCheckerNormalActivitiesLink() throws {
         try runner.run { app in
             let screen = SymptomaticCaseBackToNormalActivitiesScreen(app: app)
-            
+
             screen.yourAdviceLink.tap()
             XCTAssertTrue(screen.testSymptomCheckerNormalActivitiesLink.exists)
         }
     }
-    
+
     func testOnlineServicesLink() throws {
         try runner.run { app in
             let screen = SymptomaticCaseBackToNormalActivitiesScreen(app: app)
-            
+
             screen.onlineServicesLink.tap()
             XCTAssertTrue(screen.testOnlineServiceLink.exists)
         }
     }
-    
+
     func testBackToHomeButton() throws {
         try runner.run { app in
             let screen = SymptomaticCaseBackToNormalActivitiesScreen(app: app)
-            
+
             screen.backToHomeButton.tap()
             XCTAssertTrue(screen.testBackToHomeButton.exists)
         }

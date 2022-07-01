@@ -12,7 +12,7 @@ struct ManualTestResultEntry {
     private let context: RunningAppContext
     private let apiClient: MockHTTPClient
     private let currentDateProvider: AcceptanceTestMockDateProvider
-    
+
     init(
         configuration: AcceptanceTestCase.Instance.Configuration,
         context: RunningAppContext
@@ -21,9 +21,9 @@ struct ManualTestResultEntry {
         currentDateProvider = configuration.currentDateProvider
         self.context = context
     }
-    
+
     private let validToken = "f3dzcfdt"
-    
+
     func enterPositive(requiresConfirmatoryTest: Bool = false, symptomsOnsetDay: GregorianDay? = nil, endDate: Date? = nil, testKitType: VirologyTestResult.TestKitType = .labResult, confirmatoryDayLimit: Int? = nil) throws {
         let testResultAcknowledgementState = try getAcknowledgementState(resultType: .positive, testKitType: testKitType, requiresConfirmatoryTest: requiresConfirmatoryTest, confirmatoryDayLimit: confirmatoryDayLimit, endDate: endDate ?? currentDateProvider.currentDate)
         if case .askForSymptomsOnsetDay(_, let didFinishAskForSymptomsOnsetDay, let didConfirmSymptoms, let onsetDay) = testResultAcknowledgementState {
@@ -33,9 +33,9 @@ struct ManualTestResultEntry {
             }
             didFinishAskForSymptomsOnsetDay()
         }
-        
+
         let testResultAcknowledgementStateResult = try context.testResultAcknowledgementState.await()
-        
+
         switch try testResultAcknowledgementStateResult.get() {
         case .neededForPositiveResultNotIsolating(let acknowledge),
              .neededForPositiveResultStartToIsolate(let acknowledge, _),
@@ -45,7 +45,7 @@ struct ManualTestResultEntry {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
     }
-    
+
     func enterNegative(endDate: Date? = nil) throws {
         let testResultAcknowledgementState = try getAcknowledgementState(resultType: .negative, testKitType: .labResult, requiresConfirmatoryTest: false, endDate: endDate ?? currentDateProvider.currentDate)
         switch testResultAcknowledgementState {
@@ -57,7 +57,7 @@ struct ManualTestResultEntry {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
     }
-    
+
     func enterVoid(endDate: Date? = nil) throws {
         let testResultAcknowledgementState = try getAcknowledgementState(resultType: .void, testKitType: .labResult, requiresConfirmatoryTest: false, endDate: endDate ?? currentDateProvider.currentDate)
         switch testResultAcknowledgementState {
@@ -68,13 +68,13 @@ struct ManualTestResultEntry {
             throw TestError("Unexpected state \(testResultAcknowledgementState)")
         }
     }
-    
+
     private func getAcknowledgementState(resultType: VirologyTestResult.TestResult, testKitType: VirologyTestResult.TestKitType, requiresConfirmatoryTest: Bool, confirmatoryDayLimit: Int? = nil, endDate: Date) throws -> TestResultAcknowledgementState {
         let result = getTestResult(result: resultType, testKitType: testKitType, endDate: endDate, diagnosisKeySubmissionSupported: !requiresConfirmatoryTest, requiresConfirmatoryTest: requiresConfirmatoryTest, confirmatoryDayLimit: confirmatoryDayLimit)
         apiClient.response(for: "/virology-test/v2/cta-exchange", response: .success(.ok(with: .json(result))))
         let manager = context.virologyTestingManager
         _ = try manager.linkExternalTestResult(with: validToken).await()
-        
+
         let testResultAcknowledgementStateResult = try context.testResultAcknowledgementState.await()
         return try testResultAcknowledgementStateResult.get()
     }

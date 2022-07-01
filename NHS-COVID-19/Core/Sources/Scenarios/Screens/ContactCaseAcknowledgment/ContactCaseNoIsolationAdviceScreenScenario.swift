@@ -12,11 +12,11 @@ import UIKit
 public class ContactCaseNoIsolationAdviceScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name = "Contact Case No Isolation Advice"
-    
+
     public static let backToHomeTapped = "Back to home button tapped"
     public static let guidanceLinkForHouseholdContactsTapped = "Guidance link for household contacts tapped"
     public static let guidanceLinkForContactsTapped = "Guidance for contacts link tapped"
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = ContactCaseNoIsolationAdviceInteractor(viewController: parent)
@@ -27,19 +27,19 @@ public class ContactCaseNoIsolationAdviceScreenScenario: Scenario {
 
 private class ContactCaseNoIsolationAdviceInteractor: ContactCaseNoIsolationAdviceViewController.Interacting {
     private weak var viewController: UIViewController?
-    
+
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
     func didTapBackToHome() {
         viewController?.showAlert(title: ContactCaseNoIsolationAdviceScreenScenario.backToHomeTapped)
     }
-    
+
     func didTapReadGuidanceForContacts() {
         viewController?.showAlert(title: ContactCaseNoIsolationAdviceScreenScenario.guidanceLinkForContactsTapped)
     }
-    
+
     func didTapGuidanceForHouseholdContacts() {
         viewController?.showAlert(title: ContactCaseNoIsolationAdviceScreenScenario.guidanceLinkForHouseholdContactsTapped)
     }

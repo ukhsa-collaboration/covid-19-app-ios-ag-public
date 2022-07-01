@@ -7,36 +7,36 @@ import Localization
 import SwiftUI
 
 public struct RadioButtonGroup: View {
-    
+
     public class State: ObservableObject {
         @Published public var selectedID: UUID?
-        
+
         public init(selectedID: UUID? = nil) {
             self.selectedID = selectedID
         }
     }
-    
+
     public struct ButtonViewModel {
         public let title: String
         public let accessibilityText: String?
         public let action: () -> Void
         public let id = UUID()
-        
+
         public init(title: String, accessibilityText: String? = nil, action: @escaping () -> Void) {
             self.title = title
             self.action = action
             self.accessibilityText = accessibilityText
         }
     }
-    
+
     private var buttonViewModels: [ButtonViewModel]
     @ObservedObject public private(set) var state: State
-    
+
     public init(buttonViewModels: [ButtonViewModel], state: State = State()) {
         self.buttonViewModels = buttonViewModels
         self.state = state
     }
-    
+
     public var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: .standardSpacing) {
             ForEach(0 ..< buttonViewModels.count) { index in
@@ -61,7 +61,7 @@ private struct RadioButton: View {
     let accessibilityText: String?
     let isSelected: Bool
     let action: () -> Void
-    
+
     public var body: some View {
         Button(action: {
             withAnimation { action() }

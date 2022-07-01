@@ -6,11 +6,11 @@ import Common
 import Foundation
 
 struct RiskyVenuesEndpoint: HTTPEndpoint {
-    
+
     func request(for input: Void) throws -> HTTPRequest {
         .get("/distribution/risky-venues")
     }
-    
+
     func parse(_ response: HTTPResponse) throws -> [RiskyVenue] {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .appNetworking
@@ -18,7 +18,7 @@ struct RiskyVenuesEndpoint: HTTPEndpoint {
             .venues
             .map(RiskyVenue.init)
     }
-    
+
 }
 
 private struct Payload: Codable {
@@ -26,18 +26,18 @@ private struct Payload: Codable {
         var from: Date
         var until: Date
     }
-    
+
     struct Venue: Codable {
         var id: String
         var riskyWindow: RiskyWindow
         var messageType: String
     }
-    
+
     var venues: [Venue]
 }
 
 private extension RiskyVenue {
-    
+
     init(_ venue: Payload.Venue) {
         self.init(
             id: venue.id,
@@ -45,19 +45,19 @@ private extension RiskyVenue {
             messageType: MessageType(venue.messageType)
         )
     }
-    
+
 }
 
 private extension DateInterval {
-    
+
     init(_ window: Payload.RiskyWindow) {
         self.init(start: window.from, end: window.until)
     }
-    
+
 }
 
 private extension RiskyVenue.MessageType {
-    
+
     init(_ messageType: String) {
         switch messageType {
         case "M1":

@@ -7,9 +7,9 @@ import Foundation
 
 struct LinkVirologyTestResultHandler: RequestHandler {
     var paths = ["/virology-test/v2/cta-exchange"]
-    
+
     var dataProvider: MockDataProvider
-    
+
     var response: Result<HTTPResponse, HTTPRequestError> {
         let daysAgo = dataProvider.testResultEndDateDaysAgo
         let confirmatoryDayLimit = dataProvider.confirmatoryDayLimit
@@ -21,7 +21,7 @@ struct LinkVirologyTestResultHandler: RequestHandler {
         let diagnosisKeySubmissionToken = dataProvider.keySubmissionSupported ? UUID().uuidString : nil
         let requiresConfirmatoryTest = dataProvider.requiresConfirmatoryTest
         let shouldOfferFollowUpTest = dataProvider.shouldOfferFollowUpTest
-        
+
         let response = HTTPResponse.ok(with: .json(#"""
         {
         "testEndDate": "\#(dateString)",

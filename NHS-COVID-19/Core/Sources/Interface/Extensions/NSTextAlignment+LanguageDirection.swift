@@ -15,7 +15,7 @@ extension NSTextAlignment {
             return .left
         }
     }
-    
+
     static var trailing: Self {
         switch currentLanguageDirection() {
         case .rightToLeft: return .left

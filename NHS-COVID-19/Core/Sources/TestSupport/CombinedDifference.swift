@@ -11,7 +11,7 @@ struct CombinedDifference<Element: Equatable>: Equatable {
         case added
         case removed
     }
-    
+
     var element: Element
     var change: Change
 }
@@ -21,15 +21,15 @@ extension BidirectionalCollection where Element: Equatable {
     /// Returns an array of all elements from receiver and another collection, along with how they have changed from one to another.
     func combinedDifference<C>(from other: C) -> [CombinedDifference<Element>] where C: BidirectionalCollection, C.Element == Self.Element {
         let difference = self.difference(from: other)
-        
+
         var lines = other.map { CombinedDifference(element: $0, change: .none) }
-        
+
         var indexes = (0 ..< lines.count).map { $0 }
         difference.removals.reversed().forEach {
             indexes.remove(at: $0.offset)
             lines[$0.offset].change = .removed
         }
-        
+
         difference.insertions.forEach { change in
             let indexToInsert = (change.offset < indexes.count) ? indexes[change.offset] : lines.count
             lines.insert(CombinedDifference(element: change.element, change: .added), at: indexToInsert)
@@ -52,12 +52,12 @@ private extension CollectionDifference.Change {
             return offset
         }
     }
-    
+
     var element: ChangeElement {
         switch self {
         case .insert(_, let element, _), .remove(_, let element, _):
             return element
         }
     }
-    
+
 }

@@ -6,7 +6,7 @@ import XCTest
 
 struct GuidanceHubWalesScreen {
     let app: XCUIApplication
-    
+
     var allElements: [XCUIElement] {
         [
             linkButtonOne,
@@ -18,15 +18,15 @@ struct GuidanceHubWalesScreen {
             linkButtonSeven
         ]
     }
-    
+
     var linkButtonOne: XCUIElement {
         app.links.element(containing: localize(.covid_guidance_hub_wales_button_one_title))
     }
-    
+
     var linkButtonTwo: XCUIElement {
         app.links.element(containing: localize(.covid_guidance_hub_wales_button_two_title))
     }
-    
+
     var linkButtonThree: XCUIElement {
         app.links.element(containing: localize(.covid_guidance_hub_wales_button_three_title))
     }

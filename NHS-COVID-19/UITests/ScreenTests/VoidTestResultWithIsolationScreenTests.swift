@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class VoidTestResultWithIsolationScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<VoidTestResultWithIsolationScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = VoidTestResultWithIsolationScreen(app: app)
@@ -17,41 +17,41 @@ class VoidTestResultWithIsolationScreenTests: XCTestCase {
             XCTAssert(screen.indicationLabel.exists)
             XCTAssert(screen.explanationLabel.allExist)
             XCTAssert(screen.nhsGuidanceLink.exists)
-            XCTAssert(screen.continueButton.exists)
+            XCTAssert(screen.primaryButton.exists)
         }
     }
-    
+
     func testTapNHSGuidance() throws {
         try runner.run { app in
             let screen = VoidTestResultWithIsolationScreen(app: app)
-            
+
             screen.nhsGuidanceLink.tap()
-            XCTAssert(screen.nhsGuidanceLinkAlertTitle.exists)
+            XCTAssert(screen.onlineServicesLinkAlertTitle.exists)
         }
     }
-    
+
     func testPrimaryButtonTap() throws {
         try runner.run { app in
             let screen = VoidTestResultWithIsolationScreen(app: app)
-            
-            screen.continueButton.tap()
+
+            screen.primaryButton.tap()
             XCTAssert(screen.primaryButtonAlertTitle.exists)
         }
     }
 }
 
 private extension VoidTestResultWithIsolationScreen {
-    
-    var nhsGuidanceLinkAlertTitle: XCUIElement {
-        app.staticTexts[VoidTestResultWithIsolationScreenScenario.nhsGuidanceLinkTapped]
+
+    var onlineServicesLinkAlertTitle: XCUIElement {
+        app.staticTexts[VoidTestResultWithIsolationScreenScenario.onlineServicesLinkTapped]
     }
-    
+
     var primaryButtonAlertTitle: XCUIElement {
         app.staticTexts[VoidTestResultWithIsolationScreenScenario.primaryButtonTapped]
     }
-    
+
     var noThanksAlertTitle: XCUIElement {
         app.staticTexts[VoidTestResultWithIsolationScreenScenario.noThanksLinkTapped]
     }
-    
+
 }

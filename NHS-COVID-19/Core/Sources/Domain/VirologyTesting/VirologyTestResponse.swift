@@ -20,7 +20,7 @@ struct PollVirologyTestResultResponse: Equatable {
 struct VirologyTestResult: Equatable {
     typealias TestResult = UnacknowledgedTestResult
     typealias TestKitType = Domain.TestKitType
-    
+
     var testResult: TestResult
     var testKitType: TestKitType
     var endDate: Date

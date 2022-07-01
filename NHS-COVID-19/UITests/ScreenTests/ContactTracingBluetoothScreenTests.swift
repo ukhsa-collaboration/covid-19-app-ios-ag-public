@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class ContactTracingBluetoothScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<ContactTracingBluetoothScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = ContactTracingBluetoothScreen(app: app)
@@ -20,14 +20,14 @@ class ContactTracingBluetoothScreenTests: XCTestCase {
             XCTAssertTrue(screen.bullets.allExist)
         }
     }
-    
+
     func testContinueButton() throws {
         try runner.run { app in
             let screen = ContactTracingBluetoothScreen(app: app)
             screen.continueButton.tap()
             XCTAssertTrue(app.staticTexts[ContactTracingBluetoothScreenScenario.continueButtonTapped].exists)
         }
-        
+
     }
-    
+
 }

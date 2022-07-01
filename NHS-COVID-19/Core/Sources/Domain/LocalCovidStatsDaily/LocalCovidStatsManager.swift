@@ -17,7 +17,7 @@ class LocalCovidStatsManager: LocalCovidStatsManaging {
     ) {
         self.httpClient = httpClient
     }
-    
+
     func fetchLocalCovidStats() -> AnyPublisher<LocalCovidStatsDaily, NetworkRequestError> {
         httpClient.fetch(LocalCovidStatsDailyEndpoint())
     }

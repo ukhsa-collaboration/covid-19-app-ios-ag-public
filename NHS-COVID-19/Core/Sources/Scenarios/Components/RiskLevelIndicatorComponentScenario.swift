@@ -9,18 +9,18 @@ import SwiftUI
 import UIKit
 
 public class RiskLevelIndicatorComponentScenario: Scenario {
-    
+
     public static let name = "Risk Level Indicator"
     public static let kind = ScenarioKind.component
     public static let turnContactTracingOnTappedTitle = "Turn Contact Tracing On tapped"
     public static let openPhoneSettingTappedTitle = "Open phone settings Button tapped"
-    
+
     enum Showcases: CaseIterable {
         case isolatingThreeDays
         case isolatingFourteenDays
         case notIsolating
         case paused
-        
+
         func content() -> RiskLevelIndicator.ViewModel {
             switch self {
             case .isolatingThreeDays:
@@ -52,22 +52,22 @@ public class RiskLevelIndicatorComponentScenario: Scenario {
             }
         }
     }
-    
+
     static var appController: AppController {
         BasicAppController(rootViewController: UIHostingController(rootView: RiskLevelIndicatorView()))
     }
 }
 
 private struct RiskLevelIndicatorView: View {
-    
+
     @State var preferredColourScheme: ColorScheme? = nil
     @State private var turnContactTracingOnAlertIsPresented = false
     @State private var openPhoneSettingsAlertIsPresented = false
-    
+
     @SwiftUI.Environment(\.colorScheme) var colorScheme
-    
+
     fileprivate init() {}
-    
+
     var body: some View {
         NavigationView {
             List(RiskLevelIndicatorComponentScenario.Showcases.allCases, id: \.index) {
@@ -87,16 +87,16 @@ private struct RiskLevelIndicatorView: View {
             }
         }
         .preferredColorScheme(preferredColourScheme)
-        
+
     }
-    
+
     private var toggleColorSchemeButton: some View {
         Button(action: self.toggleColorScheme) {
             Image(systemName: colorScheme == .dark ? "moon.circle.fill" : "moon.circle")
                 .frame(width: 44, height: 44)
         }
     }
-    
+
     private func toggleColorScheme() {
         switch colorScheme {
         case .dark:

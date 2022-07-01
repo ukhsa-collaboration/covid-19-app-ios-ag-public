@@ -6,11 +6,11 @@ import Common
 import Foundation
 
 struct RiskyVenuesConfigurationEndpoint: HTTPEndpoint {
-    
+
     func request(for input: Void) throws -> HTTPRequest {
         .get("/distribution/risky-venue-configuration")
     }
-    
+
     func parse(_ response: HTTPResponse) throws -> RiskyVenueConfiguration {
         let decoder = JSONDecoder()
         let payload = try decoder.decode(Payload.self, from: response.body.content)
@@ -20,7 +20,7 @@ struct RiskyVenuesConfigurationEndpoint: HTTPEndpoint {
 
 private struct Payload: Decodable {
     var durationDays: DurationDays
-    
+
     struct DurationDays: Decodable {
         var optionToBookATest: Int
     }

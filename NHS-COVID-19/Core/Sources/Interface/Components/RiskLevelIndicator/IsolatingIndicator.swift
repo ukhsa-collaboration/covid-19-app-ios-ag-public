@@ -6,11 +6,11 @@ import Localization
 import SwiftUI
 
 public struct IsolatingIndicator: View {
-    
+
     public enum Style {
         case informational
         case warning
-        
+
         /// - TODO: Refactor this so it's not part of `Style`
         public var baseColor: ColorName {
             switch self {
@@ -20,7 +20,7 @@ public struct IsolatingIndicator: View {
                 return .errorRed
             }
         }
-        
+
         /// - TODO: Refactor this so it's not part of `Style`
         public var title: String {
             switch self {
@@ -30,7 +30,7 @@ public struct IsolatingIndicator: View {
                 return localize(.isolation_until_date_title)
             }
         }
-        
+
         /// - TODO: Refactor this so it's not part of `Style`
         public func accessibilityLabel(date: Date, days: Int) -> String {
             switch self {
@@ -41,14 +41,14 @@ public struct IsolatingIndicator: View {
             }
         }
     }
-    
+
     private var animationDisabled: Bool
     private var isDetectionPaused: Bool
     private let remainingDays: Int
     private let date: Date
     private let percentRemaining: Double
     private let style: Style
-    
+
     fileprivate init(
         remainingDays: Int,
         percentRemaining: Double,
@@ -64,19 +64,19 @@ public struct IsolatingIndicator: View {
         self.animationDisabled = animationDisabled
         self.style = style
     }
-    
+
     struct Arc: Shape {
         private let percent: Double
-        
+
         init(percent: Double) {
             self.percent = percent
         }
-        
+
         func path(in rect: CGRect) -> Path {
             var path = Path()
-            
+
             let radius = min(rect.width, rect.height) / 2
-            
+
             path.addArc(
                 center: CGPoint(x: rect.midX, y: rect.midY),
                 radius: radius,
@@ -84,13 +84,13 @@ public struct IsolatingIndicator: View {
                 endAngle: .degrees(360 * percent - 90),
                 clockwise: false
             )
-            
+
             return path.strokedPath(.init(lineWidth: 5, lineCap: .round))
         }
     }
-    
+
     private let badgeSize: CGFloat = 110
-    
+
     /// On iOS 14.0 and 14.1, a bug means returning to the home screen from
     /// the Contact Tracing Hub after turning contact tracing back on causes the
     /// app to crash. This doesn't happen if animation is turned off, so on these
@@ -104,24 +104,24 @@ public struct IsolatingIndicator: View {
             return false
         }
     }
-    
+
     public var body: some View {
-        
+
         VStack(alignment: .center, spacing: .standardSpacing) {
-            
+
             Text(verbatim: style.title)
                 .font(.title)
                 .bold()
                 .foregroundColor(Color(.primaryText))
                 .fixedSize(horizontal: false, vertical: true)
                 .multilineTextAlignment(.center)
-            
+
             Text(verbatim: localize(.isolation_until_date(date: date)))
                 .font(.headline)
                 .foregroundColor(Color(.primaryText))
                 .fixedSize(horizontal: false, vertical: true)
                 .multilineTextAlignment(.center)
-            
+
             ZStack(alignment: .center) {
                 if animationDisabled || isDetectionPaused || shouldDegradeAnimation {
                     Circle()
@@ -131,10 +131,10 @@ public struct IsolatingIndicator: View {
                     PulsatingCircle(delay: 0, initialDiameter: badgeSize, color: Color(style.baseColor))
                     PulsatingCircle(delay: 1, initialDiameter: badgeSize, color: Color(style.baseColor))
                 }
-                
+
                 Arc(percent: 1).foregroundColor(Color(.background))
                 Arc(percent: self.percentRemaining).foregroundColor(Color(style.baseColor))
-                
+
                 Text("\(remainingDays)")
                     .font(Font(UIFont.boldSystemFont(ofSize: 48)))
                     .foregroundColor(Color(.background))
@@ -152,7 +152,7 @@ public struct IsolatingIndicator: View {
                     Image(.isolatingCircles)
                 }
             })
-            
+
             Text(verbatim: localize(.isolation_days_subtitle(days: remainingDays)))
                 .font(.headline)
                 .foregroundColor(Color(.primaryText))
@@ -165,7 +165,7 @@ public struct IsolatingIndicator: View {
         .accessibility(addTraits: .isStaticText)
         .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }
-    
+
     private var accessibilityLabel: String {
         self.style.accessibilityLabel(date: date, days: remainingDays)
     }

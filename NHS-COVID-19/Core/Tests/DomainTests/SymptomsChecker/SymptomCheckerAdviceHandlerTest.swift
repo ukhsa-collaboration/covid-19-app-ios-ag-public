@@ -8,17 +8,17 @@ import XCTest
 class SymptomCheckerAdviceHandlerTest: XCTestCase {
 
     let adviceHandler = SymptomCheckerAdviceHandler()
-    
+
     func testHasNonCardinalAndCardinalSymptomsAndFeelsWell() throws {
         let symptomCheckerQuestions = SymptomCheckerQuestions(
             hasNonCardinalSymptoms: true,
             hasCardinalSymptoms: true,
             isFeelingWell: true
         )
-        
+
         let expectedResult: SymptomCheckerAdviceResult = .tryToStayAtHome
         let actualResult = adviceHandler.invoke(symptomCheckerQuestions: symptomCheckerQuestions)
-        
+
         XCTAssertEqual(actualResult, expectedResult)
     }
 
@@ -28,10 +28,10 @@ class SymptomCheckerAdviceHandlerTest: XCTestCase {
             hasCardinalSymptoms: true,
             isFeelingWell: false
         )
-        
+
         let expectedResult: SymptomCheckerAdviceResult = .tryToStayAtHome
         let actualResult = adviceHandler.invoke(symptomCheckerQuestions: symptomCheckerQuestions)
-        
+
         XCTAssertEqual(actualResult, expectedResult)
     }
 
@@ -41,10 +41,10 @@ class SymptomCheckerAdviceHandlerTest: XCTestCase {
             hasCardinalSymptoms: false,
             isFeelingWell: true
         )
-        
+
         let expectedResult: SymptomCheckerAdviceResult = .continueNormalActivities
         let actualResult = adviceHandler.invoke(symptomCheckerQuestions: symptomCheckerQuestions)
-        
+
         XCTAssertEqual(actualResult, expectedResult)
     }
 
@@ -54,62 +54,62 @@ class SymptomCheckerAdviceHandlerTest: XCTestCase {
             hasCardinalSymptoms: false,
             isFeelingWell: false
         )
-        
+
         let expectedResult: SymptomCheckerAdviceResult = .tryToStayAtHome
         let actualResult = adviceHandler.invoke(symptomCheckerQuestions: symptomCheckerQuestions)
-        
+
         XCTAssertEqual(actualResult, expectedResult)
     }
-    
+
     func testDontHaveNonCardinalSymptomsHaveCardinalSymptomsAndFeelsWell() throws {
         let symptomCheckerQuestions = SymptomCheckerQuestions(
             hasNonCardinalSymptoms: false,
             hasCardinalSymptoms: true,
             isFeelingWell: true
         )
-        
+
         let expectedResult: SymptomCheckerAdviceResult = .tryToStayAtHome
         let actualResult = adviceHandler.invoke(symptomCheckerQuestions: symptomCheckerQuestions)
-        
+
         XCTAssertEqual(actualResult, expectedResult)
     }
-    
+
     func testDontHaveNonCardinalSymptomsHaveCardinalSymptomsButDontFeelsWell() throws {
         let symptomCheckerQuestions = SymptomCheckerQuestions(
             hasNonCardinalSymptoms: false,
             hasCardinalSymptoms: true,
             isFeelingWell: false
         )
-        
+
         let expectedResult: SymptomCheckerAdviceResult = .tryToStayAtHome
         let actualResult = adviceHandler.invoke(symptomCheckerQuestions: symptomCheckerQuestions)
-        
+
         XCTAssertEqual(actualResult, expectedResult)
     }
-    
+
     func testDontHaveNonCardinalSymptomsDontHaveCardinalSymptomsAndFeelsWell() throws {
         let symptomCheckerQuestions = SymptomCheckerQuestions(
             hasNonCardinalSymptoms: false,
             hasCardinalSymptoms: false,
             isFeelingWell: true
         )
-        
+
         let expectedResult: SymptomCheckerAdviceResult = .continueNormalActivities
         let actualResult = adviceHandler.invoke(symptomCheckerQuestions: symptomCheckerQuestions)
-        
+
         XCTAssertEqual(actualResult, expectedResult)
     }
-    
+
     func testDontHaveNonCardinalSymptomsDontHaveCardinalSymptomsButDontFeelsWell() throws {
         let symptomCheckerQuestions = SymptomCheckerQuestions(
             hasNonCardinalSymptoms: false,
             hasCardinalSymptoms: false,
             isFeelingWell: false
         )
-        
+
         let expectedResult: SymptomCheckerAdviceResult = .tryToStayAtHome
         let actualResult = adviceHandler.invoke(symptomCheckerQuestions: symptomCheckerQuestions)
-        
+
         XCTAssertEqual(actualResult, expectedResult)
     }
 }

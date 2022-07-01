@@ -10,19 +10,19 @@ import XCTest
 class LanguageStoreTests: XCTestCase {
     private var encryptedStore: MockEncryptedStore!
     private var languageStore: LanguageStore!
-    
+
     override func setUp() {
         super.setUp()
-        
+
         encryptedStore = MockEncryptedStore()
         languageStore = LanguageStore(store: encryptedStore)
     }
-    
+
     func testInitialConfigurationValue() {
         languageStore = LanguageStore(store: encryptedStore)
         XCTAssertEqual(languageStore.languageInfo.currentValue.configuration(supportedLocalizations: LocaleBundle().supportedLocalizations), .systemPreferred)
     }
-    
+
     func testLoadingLanguageData() {
         encryptedStore.stored["language"] = #"""
         {
@@ -32,12 +32,12 @@ class LanguageStoreTests: XCTestCase {
         languageStore = LanguageStore(store: encryptedStore)
         XCTAssertEqual(languageStore.languageInfo.currentValue.configuration(supportedLocalizations: LocaleBundle().supportedLocalizations), .custom(localeIdentifier: "en"))
     }
-    
+
     func testSaveLanguageSucess() throws {
         languageStore.save(localeConfiguration: .custom(localeIdentifier: "en"))
         XCTAssertEqual(languageStore.languageInfo.currentValue.configuration(supportedLocalizations: LocaleBundle().supportedLocalizations), .custom(localeIdentifier: "en"))
     }
-    
+
     func testDeleteLanguage() throws {
         encryptedStore.stored["language"] = #"""
         {

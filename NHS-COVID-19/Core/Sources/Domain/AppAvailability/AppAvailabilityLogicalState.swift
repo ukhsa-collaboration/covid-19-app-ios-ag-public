@@ -16,19 +16,19 @@ enum AppAvailabilityLogicalState: Equatable {
         case iOSTooOld
         case appTooOld(updateAvailable: Bool)
     }
-    
+
     enum RecommendationReason: Equatable {
         case iOSOlderThanRecommended(version: Version)
         case appOlderThanRecommended(version: Version)
     }
-    
+
     case available
     case recommending(reason: RecommendationReason)
     case unavailable(reason: UnavailabilityReason)
 }
 
 extension AppAvailabilityMetadata {
-    
+
     init(
         availability: AppAvailability,
         iOSVersion: Version,

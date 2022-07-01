@@ -40,12 +40,12 @@ public class MyDataViewController: UITableViewController {
         var exposureNotificationDetails: ExposureNotificationDetails?
         var selfIsolationEndDate: Date?
         var venueOfRiskDate: Date?
-        
+
         public struct ExposureNotificationDetails {
             let encounterDate: Date
             let notificationDate: Date
             let optOutOfIsolationDate: Date?
-            
+
             public init(encounterDate: Date,
                         notificationDate: Date,
                         optOutOfIsolationDate: Date?) {
@@ -54,18 +54,18 @@ public class MyDataViewController: UITableViewController {
                 self.optOutOfIsolationDate = optOutOfIsolationDate
             }
         }
-        
+
         public struct TestResultDetails {
             let result: TestResult
             let acknowledgementDate: Date?
             let testEndDate: Date?
             let testKitType: TestKitType?
-            
+
             public enum CompletionStatus: CustomStringConvertible {
                 case pending
                 case completed(onDay: GregorianDay)
                 case notRequired
-                
+
                 public var description: String {
                     switch self {
                     case .pending:
@@ -76,7 +76,7 @@ public class MyDataViewController: UITableViewController {
                         return localize(.mydata_test_result_follow_up_not_required)
                     }
                 }
-                
+
                 public var subtitle: String? {
                     if case .completed(let completedOnDay) = self {
                         return localize(.mydata_date_description(date: completedOnDay.startDate(in: .current)))
@@ -84,9 +84,9 @@ public class MyDataViewController: UITableViewController {
                     return nil
                 }
             }
-            
+
             let completionStatus: CompletionStatus?
-            
+
             public init(result: TestResult, acknowledgementDate: Date, testEndDate: Date?, testKitType: TestKitType?, completionStatus: CompletionStatus?) {
                 self.result = result
                 self.acknowledgementDate = acknowledgementDate
@@ -95,7 +95,7 @@ public class MyDataViewController: UITableViewController {
                 self.completionStatus = completionStatus
             }
         }
-        
+
         public init(
             testResultDetails: TestResultDetails?,
             symptomsOnsetDate: Date?,
@@ -110,13 +110,13 @@ public class MyDataViewController: UITableViewController {
             self.venueOfRiskDate = venueOfRiskDate
         }
     }
-    
+
     private let viewModel: ViewModel
-    
+
     enum HeaderType {
         case basic(title: String)
     }
-    
+
     enum RowType {
         case testAcknowledgementDate(Date)
         case testEndDate(Date)
@@ -131,12 +131,12 @@ public class MyDataViewController: UITableViewController {
         case venueOfRiskDate(Date)
         case optOutOfContactIsolation(Date)
     }
-    
+
     private struct Section {
         var header: HeaderType
         var rows: [RowType]
     }
-    
+
     private var content: [Section] {
         let testResultSection: Section? = viewModel.testResultDetails.map {
             Section(
@@ -159,14 +159,14 @@ public class MyDataViewController: UITableViewController {
                 ].compactMap { $0 }
             )
         }
-        
+
         let symptomsOnsetSection: Section? = viewModel.symptomsOnsetDate.map {
             Section(
                 header: .basic(title: localize(.mydata_section_symptoms_heading)),
                 rows: [.symptomsOnsetDate($0)]
             )
         }
-        
+
         let exposureNotificationSection: Section? = viewModel.exposureNotificationDetails.map {
             Section(
                 header: .basic(title: localize(.mydata_section_exposure_notification_description)),
@@ -179,7 +179,7 @@ public class MyDataViewController: UITableViewController {
                 ].compactMap { $0 }
             )
         }
-        
+
         let lastDayOfSelfIsolationSection: Section? = viewModel.selfIsolationEndDate.map {
             Section(
                 header: .basic(title: localize(.mydata_section_self_isolation_heading)),
@@ -188,7 +188,7 @@ public class MyDataViewController: UITableViewController {
                 ]
             )
         }
-        
+
         let venueOfRiskDateSection: Section? = viewModel.venueOfRiskDate.map {
             Section(
                 header: .basic(title: localize(.mydata_section_venue_of_risk_heading)),
@@ -197,33 +197,33 @@ public class MyDataViewController: UITableViewController {
                 ]
             )
         }
-        
+
         return [testResultSection, lastDayOfSelfIsolationSection, symptomsOnsetSection, venueOfRiskDateSection, exposureNotificationSection].compactMap { $0 }
     }
-    
+
     public init(viewModel: ViewModel) {
         self.viewModel = viewModel
         super.init(style: .grouped)
         tableView.allowsSelection = false
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
     }
-    
+
     override public func numberOfSections(in tableView: UITableView) -> Int {
         content.count
     }
-    
+
     override public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         content[section].rows.count
     }
-    
+
     override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: UITableViewCell
         switch content[indexPath.section].rows[indexPath.row] {
@@ -260,26 +260,26 @@ public class MyDataViewController: UITableViewController {
         case .optOutOfContactIsolation(let date):
             cell = TextCell.create(tableView: tableView, title: localize(.mydata_exposure_notification_details_opt_out_date_description), date: date)
         }
-        
+
         // Trigger a layout pass to prevent incorrect cell content layout
         cell.setNeedsDisplay()
         cell.layoutIfNeeded()
         return cell
     }
-    
+
     override public func viewDidLoad() {
         super.viewDidLoad()
         title = localize(.mydata_screen_title)
         view.styleAsScreenBackground(with: traitCollection)
-        
+
         tableView.sectionHeaderHeight = UITableView.automaticDimension
         tableView.sectionFooterHeight = .zero
         tableView.rowHeight = UITableView.automaticDimension
         tableView.sectionFooterHeight = UITableView.automaticDimension
-        
+
         tableView.register(SectionHeader.self, forHeaderFooterViewReuseIdentifier: SectionHeader.reuseIdentifier)
         tableView.register(TextCell.self, forCellReuseIdentifier: TextCell.reuseIdentifier)
-        
+
         if content.count == 0 {
             tableView.backgroundView = EmptySettingsView(
                 image: UIImage(.settingInfo),
@@ -287,7 +287,7 @@ public class MyDataViewController: UITableViewController {
             )
         }
     }
-    
+
     override public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch content[section].header {
         case .basic(let title):

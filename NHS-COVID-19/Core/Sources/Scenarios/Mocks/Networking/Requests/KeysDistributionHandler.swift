@@ -9,18 +9,18 @@ struct KeysDistributionHandler: RequestHandler {
     enum Variant {
         case withBinAndSigFile
     }
-    
+
     var paths = ["/distribution/daily/", "/distribution/two-hourly/"]
-    
+
     var response: Result<HTTPResponse, HTTPRequestError> {
         return Self.response()
     }
-    
+
     static func response(variant: Variant = .withBinAndSigFile) -> Result<HTTPResponse, HTTPRequestError> {
         let response = HTTPResponse(httpUrlResponse: HTTPURLResponse(), bodyContent: zip(variant: variant))
         return Result.success(response)
     }
-    
+
     private static func zip(variant: Variant) -> Data {
         switch variant {
         case .withBinAndSigFile:

@@ -6,14 +6,14 @@ import Scenarios
 import XCTest
 
 class GuidanceHubScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<GuidanceHubEnglandScreenScenario>
 
     func testBasics() throws {
         try runner.run { app in
             let screen = GuidanceHubEnglandScreen(app: app)
-            
+
             XCTAssertTrue(screen.covidGuidanceForEnglandButton.exists)
             XCTAssertTrue(screen.checkSymptomsButton.exists)
             XCTAssertTrue(screen.latestGuidanceButton.exists)
@@ -23,7 +23,7 @@ class GuidanceHubScreenTests: XCTestCase {
             XCTAssertTrue(screen.covidEnquiriesButton.exists)
         }
     }
-    
+
     func testCovidGuidanceForEnglandButton() throws {
         try runner.run { app in
             let screen = GuidanceHubEnglandScreen(app: app)
@@ -32,7 +32,7 @@ class GuidanceHubScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.covid19GuidanceForEnglandTitle].exists)
         }
     }
-    
+
     func testCheckSymptomsButton() throws {
         try runner.run { app in
             let screen = GuidanceHubEnglandScreen(app: app)
@@ -41,7 +41,7 @@ class GuidanceHubScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.checkSymptomsForCovid19EnglandTitle].exists)
         }
     }
-    
+
     func testLatestGuidanceButton() throws {
         try runner.run { app in
             let screen = GuidanceHubEnglandScreen(app: app)
@@ -50,7 +50,7 @@ class GuidanceHubScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.latestCovid19TestingGuidanceEnglandTitle].exists)
         }
     }
-    
+
     func testPositiveTestResultButton() throws {
         try runner.run { app in
             let screen = GuidanceHubEnglandScreen(app: app)
@@ -59,7 +59,7 @@ class GuidanceHubScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.ifPositiveCovid19GuidanceEnglandTitle].exists)
         }
     }
-    
+
     func testTravellingAbroadButton() throws {
         try runner.run { app in
             let screen = GuidanceHubEnglandScreen(app: app)
@@ -68,7 +68,7 @@ class GuidanceHubScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.travellingAbroadGuidanceEnglandTitle].exists)
         }
     }
-    
+
     func testCheckSSPButton() throws {
         try runner.run { app in
             let screen = GuidanceHubEnglandScreen(app: app)
@@ -77,7 +77,7 @@ class GuidanceHubScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.claimSSPGuidanceEnglandTitle].exists)
         }
     }
-    
+
     func testCovidEnquiriesButton() throws {
         try runner.run { app in
             let screen = GuidanceHubEnglandScreen(app: app)

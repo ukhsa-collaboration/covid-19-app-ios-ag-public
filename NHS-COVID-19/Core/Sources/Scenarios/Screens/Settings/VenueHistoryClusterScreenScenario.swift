@@ -10,9 +10,9 @@ import Interface
 public class VenueHistoryClusterScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name: String = "Venue history - many check-ins"
-    
+
     public static let didTapEditButton = "Tapped edit button"
-    
+
     fileprivate static var venueHistories: [VenueHistory] = {
         let date1 = UTCHour(year: 2020, month: 7, day: 9, hour: 19, minutes: 30).date
         let date2 = date1.addingTimeInterval(60 * 60 * 24 * 30)
@@ -28,7 +28,7 @@ public class VenueHistoryClusterScreenScenario: Scenario {
             )
         }
     }()
-    
+
     static var appController: AppController {
         NavigationAppController { parent in
             VenueHistoryViewController(

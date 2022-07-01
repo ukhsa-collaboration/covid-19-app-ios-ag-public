@@ -13,7 +13,7 @@ public class NoSymptomsIsolatingViewControllerScenario: Scenario {
     public static let returnHomeTapped: String = "Back to home button tapped"
     public static let onlineServicesLinkTapped: String = "Online services link tapped"
     public static let cancelButtonTapped: String = "Cancel button tapped"
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
@@ -23,23 +23,23 @@ public class NoSymptomsIsolatingViewControllerScenario: Scenario {
 }
 
 private class Interactor: NoSymptomsIsolatingViewController.Interacting {
-    
+
     private weak var viewController: UIViewController?
-    
+
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
     func didTapOnlineServicesLink() {
         viewController?.showAlert(title: NoSymptomsIsolatingViewControllerScenario.onlineServicesLinkTapped)
     }
-    
+
     func didTapReturnHome() {
         viewController?.showAlert(title: NoSymptomsIsolatingViewControllerScenario.returnHomeTapped)
     }
-    
+
     func didTapCancel() {
         viewController?.showAlert(title: NoSymptomsIsolatingViewControllerScenario.cancelButtonTapped)
     }
-    
+
 }

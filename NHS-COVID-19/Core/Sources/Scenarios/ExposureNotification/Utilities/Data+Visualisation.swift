@@ -5,7 +5,7 @@
 import Foundation
 
 extension Data {
-    
+
     var emoji: String {
         let range = 0x1F600 ... 0x1F64F
         let hash = Int(reduce(0, ^))
@@ -14,5 +14,5 @@ extension Data {
         guard let scalar = UnicodeScalar(index) else { return "❓" }
         return String(scalar)
     }
-    
+
 }

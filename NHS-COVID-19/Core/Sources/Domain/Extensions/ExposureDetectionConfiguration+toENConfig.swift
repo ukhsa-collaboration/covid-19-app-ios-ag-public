@@ -17,14 +17,14 @@ extension ENExposureConfiguration {
         daysSinceLastExposureLevelValues = config.daysSinceLastExposure.map { NSNumber(value: $0) }
         attenuationLevelValues = config.attenuation.map { NSNumber(value: $0) }
         metadata = ["attenuationDurationThresholds": config.thresholds.map { NSNumber(value: $0) }]
-        
+
         if #available(iOS 13.7, *) {
             reportTypeNoneMap = ENDiagnosisReportType(rawValue: UInt32(config.reportTypeWhenMissing)) ?? ENDiagnosisReportType.confirmedTest
             infectiousnessForDaysSinceOnsetOfSymptoms = convertToMap(config.daysSinceOnsetToInfectiousness)
         }
     }
-    
-    private func convertToMap(_ daysSinceOnsetToInfectiousness: [Int]) -> [NSNumber : NSNumber] {
+
+    private func convertToMap(_ daysSinceOnsetToInfectiousness: [Int]) -> [NSNumber: NSNumber] {
         return zip(-14...14, daysSinceOnsetToInfectiousness)
             .reduce(into: [:]) { (dict, tuple) in
                 let (index, infectiousness) = tuple

@@ -5,7 +5,7 @@
 import UIKit
 
 public class InformationBox: UIView {
-    
+
     /// Defines the color of the bar at the side of InformationBox
     public enum Style {
         /// Has a blue bar at the side
@@ -18,7 +18,7 @@ public class InformationBox: UIView {
         case badNews
         // Has a clear bar at the side
         case noNews
-        
+
         public enum InformationColor {
             case purple
             case orange
@@ -29,13 +29,13 @@ public class InformationBox: UIView {
             case yellow
         }
     }
-    
+
     var style: Style = .information(.darkBlue) {
         didSet {
             setupColor(for: style)
         }
     }
-    
+
     private let containerStackView = UIStackView()
     private lazy var contentStackView: UIStackView = {
         let stackView = UIStackView()
@@ -47,33 +47,33 @@ public class InformationBox: UIView {
         stackView.isLayoutMarginsRelativeArrangement = true
         return stackView
     }()
-    
+
     private let stripe = UIView()
-    
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        
+
         setUp()
     }
-    
+
     public init(views: [UIView], style: Style, backgroundColor: UIColor = UIColor(.background)) {
         super.init(frame: .zero)
         self.style = style
-        
+
         setUp()
-        
+
         views.forEach { contentStackView.addArrangedSubview($0) }
         containerStackView.addArrangedSubview(contentStackView)
         self.backgroundColor = backgroundColor
     }
-    
+
     private func setUp() {
         setupColor(for: style)
-        
+
         NSLayoutConstraint.activate([
             stripe.widthAnchor.constraint(equalToConstant: .stripeWidth),
         ])
-        
+
         containerStackView.addArrangedSubview(stripe)
         containerStackView.axis = .horizontal
         containerStackView.alignment = .fill
@@ -81,7 +81,7 @@ public class InformationBox: UIView {
         containerStackView.spacing = .stripeSpacing
         addFillingSubview(containerStackView)
     }
-    
+
     func setupColor(for style: Style) {
         switch style {
         case .information(.purple):

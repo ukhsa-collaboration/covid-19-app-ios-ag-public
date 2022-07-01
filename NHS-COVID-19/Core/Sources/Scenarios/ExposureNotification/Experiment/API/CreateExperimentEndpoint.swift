@@ -6,16 +6,16 @@ import Common
 import Foundation
 
 struct CreateExperimentEndpoint: HTTPEndpoint {
-    
+
     var team: String
-    
+
     func request(for input: Experiment.Create) throws -> HTTPRequest {
         let encoding = JSONEncoder()
         encoding.dateEncodingStrategy = .iso8601
         let body = try encoding.encode(input)
         return .post("/team/\(team)/experiment", body: .json(body))
     }
-    
+
     func parse(_ response: HTTPResponse) throws -> Experiment {
         let decoder = JSONDecoder()
         let formatter1 = ISO8601DateFormatter()
@@ -36,5 +36,5 @@ struct CreateExperimentEndpoint: HTTPEndpoint {
         }
         return try decoder.decode(Experiment.self, from: response.body.content)
     }
-    
+
 }

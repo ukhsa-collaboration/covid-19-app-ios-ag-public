@@ -9,9 +9,9 @@ public protocol StoreReviewControlling {
 }
 
 public struct StoreReviewController: StoreReviewControlling {
-    
+
     public init() {}
-    
+
     public func requestAppReview() {
         SKStoreReviewController.requestReview()
     }

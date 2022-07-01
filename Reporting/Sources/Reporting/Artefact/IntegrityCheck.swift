@@ -5,15 +5,15 @@
 import Foundation
 
 struct IntegrityCheck {
-    
+
     enum Result {
         case passed
         case failed(message: String)
     }
-    
+
     var name: String
     var result: Result
-    
+
     var passed: Bool {
         switch result {
         case .passed:
@@ -22,7 +22,7 @@ struct IntegrityCheck {
             return false
         }
     }
-    
+
     var errorMessage: String? {
         switch result {
         case .passed:
@@ -34,7 +34,7 @@ struct IntegrityCheck {
 }
 
 extension ReportTable where Row == IntegrityCheck {
-    
+
     init(checks: [IntegrityCheck]) {
         self.init(
             rows: checks,
@@ -45,5 +45,5 @@ extension ReportTable where Row == IntegrityCheck {
             ]
         )
     }
-    
+
 }

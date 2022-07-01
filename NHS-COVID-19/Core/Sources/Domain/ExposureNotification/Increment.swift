@@ -13,7 +13,7 @@ extension Increment {
     typealias Day = GregorianDay
     struct TwoHour {
         var value: Int
-        
+
         public init(value: Int) {
             self.value = value
         }

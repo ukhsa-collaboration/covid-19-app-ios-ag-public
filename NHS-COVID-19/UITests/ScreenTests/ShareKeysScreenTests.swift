@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class ShareKeysScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<ShareKeysScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = ShareKeysScreen(app: app)
@@ -23,7 +23,7 @@ class ShareKeysScreenTests: XCTestCase {
             XCTAssertTrue(screen.notifyButton.exists)
         }
     }
-    
+
     func testNotifyButton() throws {
         try runner.run { app in
             let screen = ShareKeysScreen(app: app)
@@ -31,5 +31,5 @@ class ShareKeysScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts["'Continue' tapped"].exists)
         }
     }
-    
+
 }

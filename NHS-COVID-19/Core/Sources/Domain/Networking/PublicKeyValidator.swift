@@ -17,13 +17,13 @@ public protocol TrustValidating {
 }
 
 public class PublicKeyValidator: TrustValidating {
-    
+
     private let trustedKeyHashes: Set<String>
-    
+
     public init(trustedKeyHashes: Set<String>) {
         self.trustedKeyHashes = trustedKeyHashes
     }
-    
+
     public func canAccept(_ trust: SecTrust?) -> Bool {
         guard let trust = trust else { return false }
         return trust.certificates.contains { certificate in
@@ -31,11 +31,11 @@ public class PublicKeyValidator: TrustValidating {
             return trustedKeyHashes.contains(hash)
         }
     }
-    
+
 }
 
 private extension SecTrust {
-    
+
     var certificates: AnySequence<SecCertificate> {
         let certificatesCount = SecTrustGetCertificateCount(self)
         return AnySequence(sequence(state: 0) { index -> SecCertificate? in
@@ -44,24 +44,24 @@ private extension SecTrust {
             return SecTrustGetCertificateAtIndex(self, index)
         })
     }
-    
+
 }
 
 private extension SecCertificate {
-    
+
     var publicKey: SecKey? {
         SecCertificateCopyKey(self)
     }
-    
+
 }
 
 extension SecKey {
-    
+
     var hash: String? {
         // The hashed data is the DER representation of the key. This includes:
         // * the signature algorithm https://tools.ietf.org/html/rfc5280#section-4.1.1.2
         // * public key data https://tools.ietf.org/html/rfc2313#section-7.1
-        
+
         // The latter is what we get from `externalRepresentation`. The former, as the name suggests, depends on the
         // algorithm.
         // We could try to encode this data “properly”, but is probably overkill since we’d have to write an ASN1
@@ -72,18 +72,18 @@ extension SecKey {
         let derData = derPreamble + externalRepresentation
         return derData.sha256Hash.base64EncodedString()
     }
-    
+
     var externalRepresentation: Data? {
         SecKeyCopyExternalRepresentation(self, nil) as Data?
     }
-    
+
     private var derPreamble: Data? {
         guard
             let attributes = SecKeyCopyAttributes(self) as? [String: Any],
             let algorithm = attributes[kSecAttrKeyType as String] as? String,
             let size = attributes[kSecAttrKeySizeInBits as String] as? Int
         else { return nil }
-        
+
         if algorithm == kSecAttrKeyTypeRSA as String {
             return .rsaEncryption_Header
         } else if algorithm == kSecAttrKeyTypeECSECPrimeRandom as String, size == 256 {
@@ -92,23 +92,23 @@ extension SecKey {
             return nil
         }
     }
-    
+
 }
 
 private extension Data {
-    
+
     // https://tools.ietf.org/html/rfc2313#section-11
     static let rsaEncryption_Header = Data([
         0x30, 0x82, 0x01, 0x22, 0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01, 0x05,
         0x00, 0x03, 0x82, 0x01, 0x0f, 0x00,
     ])
-    
+
     // https://tools.ietf.org/html/rfc3279#section-2.3.5
     static let ecPublicKey_prime256v1_Header = Data([
         0x30, 0x59, 0x30, 0x13, 0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x02, 0x01, 0x06, 0x08, 0x2a, 0x86, 0x48,
         0xce, 0x3d, 0x03, 0x01, 0x07, 0x03, 0x42, 0x00,
     ])
-    
+
     var sha256Hash: Data {
         withUnsafeBytes { bytes in
             var hash = Data(count: Int(CC_SHA256_DIGEST_LENGTH))
@@ -118,5 +118,5 @@ private extension Data {
             return hash
         }
     }
-    
+
 }

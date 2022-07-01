@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class MyDataScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<MyDataScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = MyDataScreen(app: app)

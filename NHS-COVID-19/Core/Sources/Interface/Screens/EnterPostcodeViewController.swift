@@ -6,45 +6,45 @@ import Localization
 import UIKit
 
 public class EnterPostcodeViewController: OnboardingStepViewController {
-    
+
     public init(submit: @escaping (String) -> Result<Void, DisplayableError>) {
         super.init(step: EnterPostcodeStep(submit: submit))
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
 }
 
 private class EnterPostcodeStep: NSObject, OnboardingStep {
     var footerContent = [UIView]()
-    
+
     private let submit: (String) -> Result<Void, DisplayableError>
-    
+
     private var showError = false
-    
+
     private lazy var title: UILabel = {
         let label = BaseLabel()
         label.text = localize(.postcode_entry_step_title)
         label.styleAsPageHeader()
         return label
     }()
-    
+
     let actionTitle = localize(.postcode_entry_continue_button_title)
     let image: UIImage? = UIImage(.onboardingPostcode)
-    
+
     init(submit: @escaping (String) -> Result<Void, DisplayableError>) {
         self.submit = submit
     }
-    
+
     private lazy var exampleLabel: UILabel = {
         let label = BaseLabel()
         label.text = localize(.postcode_entry_example_label)
         label.styleAsSecondaryBody()
         return label
     }()
-    
+
     private lazy var errorTitle: UILabel = {
         let label = BaseLabel()
         label.text = localize(.postcode_entry_error_title)
@@ -52,14 +52,14 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
         label.isHidden = true
         return label
     }()
-    
+
     private lazy var errorDescription: UILabel = {
         let label = BaseLabel()
         label.styleAsError()
         label.isHidden = true
         return label
     }()
-    
+
     private lazy var postcodeTextField: UITextField = {
         let textField = BaseTextField()
         textField.keyboardType = .asciiCapable
@@ -75,11 +75,11 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
         textField.autocorrectionType = .no
         textField.enablesReturnKeyAutomatically = true
         textField.addTarget(self, action: #selector(valueChanged), for: .editingChanged)
-        
+
         NSLayoutConstraint.activate([textField.heightAnchor.constraint(greaterThanOrEqualToConstant: .hitAreaMinHeight)])
         return textField
     }()
-    
+
     @objc private func valueChanged() {
         if let textFieldContent = postcodeTextField.text {
             let processedPostcode = PostcodeProcessor.process(textFieldContent)
@@ -92,11 +92,11 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
             }
         }
     }
-    
+
     private let descriptionTitle = BaseLabel().styleAsTertiaryTitle().set(text: localize(.postcode_entry_information_title))
     private let description1 = BaseLabel().styleAsBody().set(text: localize(.postcode_entry_information_description_1))
     private let description2 = BaseLabel().styleAsBody().set(text: localize(.postcode_entry_information_description_2))
-    
+
     func stack(for labels: [UILabel]) -> UIStackView {
         let stackView = UIStackView(arrangedSubviews: labels)
         stackView.axis = .vertical
@@ -105,18 +105,18 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
         stackView.layoutMargins = .inner
         return stackView
     }
-    
+
     private lazy var informationBox: InformationBox = InformationBox.error(
         title, exampleLabel, errorTitle, errorDescription, postcodeTextField
     )
-    
+
     var content: [UIView] {
         [
             informationBox,
             stack(for: [descriptionTitle, description1, description2]),
         ]
     }
-    
+
     func act() {
         postcodeTextField.resignFirstResponder()
         if let textFieldContent = postcodeTextField.text {
@@ -133,11 +133,11 @@ private class EnterPostcodeStep: NSObject, OnboardingStep {
             }
         }
     }
-    
+
 }
 
 extension EnterPostcodeStep: UITextFieldDelegate {
-    
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         act()
         return false

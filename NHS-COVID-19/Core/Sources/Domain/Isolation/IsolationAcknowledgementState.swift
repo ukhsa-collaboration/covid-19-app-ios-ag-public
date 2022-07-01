@@ -8,7 +8,7 @@ public enum IsolationAcknowledgementState {
     case notNeeded
     case neededForEnd(Isolation, acknowledge: () -> Void)
     case neededForStartContactIsolation(Isolation, acknowledge: (Bool) -> Void)
-    
+
     init(logicalState: IsolationLogicalState, now: Date, acknowledgeStart: @escaping (Bool) -> Void, acknowledgeEnd: @escaping () -> Void) {
         switch logicalState {
         case .notIsolating:

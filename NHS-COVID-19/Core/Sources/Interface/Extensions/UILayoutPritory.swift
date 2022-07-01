@@ -5,7 +5,7 @@
 import UIKit
 
 extension UILayoutPriority {
-    
+
     static let almostRequest = UILayoutPriority(rawValue: 999)
-    
+
 }

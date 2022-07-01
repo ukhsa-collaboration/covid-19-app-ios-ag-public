@@ -9,12 +9,12 @@ import UIKit
 
 @available(iOS 13.7, *)
 struct ExposureWindowEventEndpoint: HTTPEndpoint {
-    
+
     var latestAppVersion: Version
     var postcode: String
     var localAuthority: String
     var eventType: EpidemiologicalEventType
-    
+
     func request(for input: ExposureWindowInfo) throws -> HTTPRequest {
         let payload = ExposureWindowEventPayload(
             window: input,
@@ -28,7 +28,7 @@ struct ExposureWindowEventEndpoint: HTTPEndpoint {
         let body = try encoder.encode(payload)
         return .post("/submission/mobile-analytics-events", body: .json(body))
     }
-    
+
     func parse(_ response: HTTPResponse) throws {}
 }
 
@@ -37,7 +37,7 @@ private struct ExposureWindowEventPayload: Codable {
         enum EventType: String, Codable {
             case exposureWindow
             case exposureWindowPositiveTest
-            
+
             init(_ type: EpidemiologicalEventType) {
                 switch type {
                 case .exposureWindow: self = .exposureWindow
@@ -45,13 +45,13 @@ private struct ExposureWindowEventPayload: Codable {
                 }
             }
         }
-        
+
         enum TestType: String, Codable {
             case unknown
             case labResult = "LAB_RESULT"
             case rapidResult = "RAPID_RESULT"
             case rapidSelfReported = "RAPID_SELF_REPORTED"
-            
+
             init(_ testKitType: TestKitType?) {
                 switch testKitType {
                 case .labResult: self = .labResult
@@ -61,7 +61,7 @@ private struct ExposureWindowEventPayload: Codable {
                 }
             }
         }
-        
+
         struct Payload: Codable {
             var testType: TestType?
             var requiresConfirmatoryTest: Bool?
@@ -72,24 +72,24 @@ private struct ExposureWindowEventPayload: Codable {
             var riskCalculationVersion: Int
             var isConsideredRisky: Bool
         }
-        
+
         struct ScanInstance: Codable {
             var minimumAttenuation: UInt8
             var typicalAttenuation: UInt8
             var secondsSinceLastScan: Int
         }
-        
+
         enum Infectiousness: String, Codable {
             case none
             case standard
             case high
         }
-        
+
         var type: EventType
         var version: Int
         var payload: Payload
     }
-    
+
     struct Metadata: Codable {
         var operatingSystemVersion: String
         var latestApplicationVersion: String
@@ -97,7 +97,7 @@ private struct ExposureWindowEventPayload: Codable {
         var postalDistrict: String
         var localAuthority: String
     }
-    
+
     var metadata: Metadata
     var events: [Event]
 }
@@ -122,7 +122,7 @@ private extension ExposureWindowEventPayload {
 }
 
 private extension EpidemiologicalEventType {
-    
+
     var version: Int {
         switch self {
         case .exposureWindow:
@@ -131,7 +131,7 @@ private extension EpidemiologicalEventType {
             return 3
         }
     }
-    
+
 }
 
 @available(iOS 13.7, *)

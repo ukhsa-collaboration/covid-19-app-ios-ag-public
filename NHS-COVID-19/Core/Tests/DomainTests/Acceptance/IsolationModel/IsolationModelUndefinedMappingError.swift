@@ -5,7 +5,7 @@
 import Foundation
 
 struct IsolationModelUndefinedMappingError: Error {
-    
+
     @available(*, deprecated, message: "Using this error signifies that a test case is not defined yet.")
     init() {}
 }
@@ -15,6 +15,6 @@ struct IsolationModelAcceptanceError: Error, CustomStringConvertible {
     init(_ description: String) {
         self.description = description
     }
-    
+
     static let forbidden = IsolationModelAcceptanceError("Case forbidden")
 }

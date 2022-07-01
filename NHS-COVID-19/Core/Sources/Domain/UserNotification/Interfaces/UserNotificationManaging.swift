@@ -6,12 +6,12 @@ import Foundation
 import UserNotifications
 
 public enum UserNotificationType: Equatable {
-    
+
     public enum VenueMessageType: String {
         case warnAndInform
         case warnAndBookATest
     }
-    
+
     case postcode
     case venue(VenueMessageType)
     case isolationState
@@ -27,10 +27,10 @@ public enum UserNotificationType: Equatable {
         title: String,
         body: String
     )
-    
+
     @available(*, deprecated, message: "No longer in use. Here only to allow existing notifications of this type to be cancelled when people upgrade their app.")
     case selfIsolation
-    
+
     public var identifier: String {
         switch self {
         case .postcode:
@@ -81,7 +81,7 @@ public protocol UserNotificationManaging {
     typealias AuthorizationOptions = UNAuthorizationOptions
     typealias AuthorizationStatus = UNAuthorizationStatus
     typealias NotificationRequest = UNNotificationRequest
-    
+
     func requestAuthorization(options: AuthorizationOptions, completionHandler: @escaping ErrorHandler)
     func getAuthorizationStatus(completionHandler: @escaping AuthorizationStatusHandler)
     func add(type: UserNotificationType, at: DateComponents?, withCompletionHandler completionHandler: ((Error?) -> Void)?)

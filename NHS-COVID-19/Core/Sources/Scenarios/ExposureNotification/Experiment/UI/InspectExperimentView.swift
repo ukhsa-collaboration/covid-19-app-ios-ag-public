@@ -6,28 +6,28 @@ import Integration
 import SwiftUI
 
 struct InspectExperimentView: View {
-    
+
     @ObservedObject
     var experimentInspector: ExperimentInspector
-    
+
     @ObservedObject
     var experimentManager: ExperimentManager
-    
+
     var participants: [Experiment.Participant] {
         experimentInspector.experiment?.participants ?? []
     }
-    
+
     var participantsV2: [Experiment.ParticipantV2] {
         experimentInspector.experimentV2?.participants ?? []
     }
-    
+
     var body: some View {
         NavigationView {
             content
                 .navigationBarTitle("Experiment \(experimentInspector.experimentName)", displayMode: .inline)
         }
     }
-    
+
     private var content: some View {
         if experimentInspector.isLoading {
             return AnyView(Text("Loading…"))
@@ -35,7 +35,7 @@ struct InspectExperimentView: View {
             return AnyView(experimentDetails)
         }
     }
-    
+
     private var experimentDetails: some View {
         List {
             Section(header: Text("Parameters")) {
@@ -45,7 +45,7 @@ struct InspectExperimentView: View {
             Section(header: Text("Lead")) {
                 Text(self.getLeadName() ?? "")
             }
-            
+
             if experimentManager.usingEnApiVersion == 2 {
                 Section(header: Text("Participants (\(participantsV2.count))")) {
                     ForEach(participantsV2) { participant in
@@ -68,24 +68,24 @@ struct InspectExperimentView: View {
         }
         .listStyle(GroupedListStyle())
     }
-    
+
     private var automaticallyRunDetectionValue: String {
         guard
             let duration = experimentInspector.experiment?.automaticDetectionFrequency,
             duration > 0 else {
             return "Disabled"
         }
-        
+
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
         formatter.unitsStyle = .brief
         return "Every \(formatter.string(from: duration) ?? "")"
     }
-    
+
     private var detectionConfigurationsValue: String {
         "\(experimentInspector.experiment?.requestedConfigurations.count ?? 0)"
     }
-    
+
     private func getLeadName() -> String? {
         if experimentManager.usingEnApiVersion == 2 {
             return experimentInspector.experimentV2?.lead.deviceName
@@ -104,7 +104,6 @@ struct InspectExperimentView: View {
             return "Uploaded \(count) result sets"
         }
     }
-    
-}
 
+}
 

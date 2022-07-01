@@ -5,7 +5,7 @@
 import SwiftUI
 
 public extension Button where Label == Text {
-    
+
     static func underlined(text: String, action: @escaping () -> Void) -> Button {
         Button(
             action: action,

@@ -10,7 +10,7 @@ class PolicyIconImageNameTests: XCTestCase {
         let icon = RiskLevelInfoViewController.Policy.iconFromName(string: "")
         XCTAssertEqual(icon, .riskLevelDefaultIcon)
     }
-    
+
     func testValidPolicIcons() {
         let validIcons = [
             "meeting-people",

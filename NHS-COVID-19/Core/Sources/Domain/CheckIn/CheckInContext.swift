@@ -12,7 +12,7 @@ public struct CheckInContext {
     public var currentDateProvider: DateProviding
     private let riskyVenueConfiguration: CachedResponse<RiskyVenueConfiguration>
     public var recentlyVisitedSevereRiskyVenue: DomainProperty<GregorianDay?>
-    
+
     init(
         checkInsStore: CheckInsStore,
         checkInsManager: CheckInsManager,
@@ -25,7 +25,7 @@ public struct CheckInContext {
         self.qrCodeScanner = qrCodeScanner
         self.currentDateProvider = currentDateProvider
         self.riskyVenueConfiguration = riskyVenueConfiguration
-        
+
         recentlyVisitedSevereRiskyVenue = checkInsStore.$mostRecentRiskyCheckInDay.combineLatest(currentDateProvider.today, checkInsStore.$mostRecentRiskyVenueConfiguration) { mostRecentRiskyCheckInDay, today, mostRecentRiskyVenueConfiguration -> GregorianDay? in
             guard let mostRecentRiskyCheckInDay = mostRecentRiskyCheckInDay,
                 let mostRecentRiskyVenueConfiguration = mostRecentRiskyVenueConfiguration
@@ -36,7 +36,7 @@ public struct CheckInContext {
         }
         .domainProperty()
     }
-    
+
     func makeBackgroundJobs() -> [BackgroundTaskAggregator.Job] {
         [
             BackgroundTaskAggregator.Job(
@@ -47,7 +47,7 @@ public struct CheckInContext {
             ),
         ]
     }
-    
+
     private func recordMetrics() -> AnyPublisher<Void, Never> {
         if recentlyVisitedSevereRiskyVenue.currentValue != nil {
             Metrics.signpost(.hasReceivedRiskyVenueM2WarningBackgroundTick)

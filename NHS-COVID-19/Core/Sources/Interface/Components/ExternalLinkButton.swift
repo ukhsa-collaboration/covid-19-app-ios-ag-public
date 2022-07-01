@@ -5,17 +5,17 @@
 import SwiftUI
 
 public struct ExternalLinkButton: View {
-    
+
     private let title: String
     private let alignment: TextAlignment
     private let action: () -> Void
-    
+
     public init(_ title: String, alignment: TextAlignment = .center, action: @escaping () -> Void) {
         self.title = title
         self.alignment = alignment
         self.action = action
     }
-    
+
     public var body: some View {
         Button(action: action) {
             HStack {
@@ -30,5 +30,5 @@ public struct ExternalLinkButton: View {
         }
         .linkify(title)
     }
-    
+
 }

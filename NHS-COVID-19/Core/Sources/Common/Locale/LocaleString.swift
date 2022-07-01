@@ -6,15 +6,15 @@ import Foundation
 
 public struct LocaleString: Equatable, ExpressibleByDictionaryLiteral {
     public var values: [Locale: String]
-    
+
     public init(dictionaryLiteral elements: (Locale, String)...) {
         values = Dictionary(elements, uniquingKeysWith: { $1 })
     }
-    
+
     public subscript(_ locale: Locale) -> String? {
         values[locale]
     }
-    
+
     var isEmpty: Bool {
         values.isEmpty
     }

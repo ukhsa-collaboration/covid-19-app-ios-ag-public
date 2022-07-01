@@ -16,11 +16,11 @@ extension DateFormatter: LocaleConsumer {}
 extension DateIntervalFormatter: LocaleConsumer {}
 
 private extension LocaleConsumer {
-    
+
     func applyLocale(for locale: Locale) {
         self.locale = locale
     }
-    
+
 }
 
 public protocol LocalizationOverrider {
@@ -29,29 +29,29 @@ public protocol LocalizationOverrider {
 
 public struct Localization {
     private static var localeConsumers = [LocaleConsumer]()
-    
+
     let localeConfiguration: LocaleConfiguration
     var bundle: Bundle
     var locale: Locale
-    
+
     public var overrider: LocalizationOverrider?
-    
+
     private func _localize(_ key: String, tableName: String? = nil, bundle: Bundle = Localization.current.bundle, value: String = "", comment: String) -> String {
-        
+
         // overrider is only ever set in the Scenarios app so this does not affect production code
         if let override = overrider?.localize(key, languageCode: locale.languageCode ?? "en", tableName: tableName, bundle: bundle, value: value, comment: comment) {
             return override
         }
-        
+
         return NSLocalizedString(key, tableName: tableName, bundle: bundle, value: value, comment: comment)
     }
-    
+
     init(bundle: Bundle, locale: Locale) {
         localeConfiguration = .systemPreferred
         self.bundle = bundle
         self.locale = locale
     }
-    
+
     init(configuration: LocaleConfiguration) {
         localeConfiguration = configuration
         switch configuration {
@@ -63,7 +63,7 @@ public struct Localization {
             locale = Locale(identifier: localeIdentifier)
         }
     }
-    
+
     #warning("LocalConsures.applyLocale will not have effect on Localization instance")
     public static var current = Localization(configuration: .systemPreferred) {
         didSet {
@@ -73,22 +73,22 @@ public struct Localization {
             configurationChangeSubject.send(())
         }
     }
-    
+
     public static var configurationChangePublisher: AnyPublisher<Void, Never> {
         return configurationChangeSubject.eraseToAnyPublisher()
     }
-    
+
     private static var configurationChangeSubject = PassthroughSubject<Void, Never>()
-    
+
     public static var country = Country.england
-    
+
     static func make<T: LocaleConsumer>(_ type: T.Type) -> T {
         let instance = T()
         localeConsumers.append(instance)
         instance.applyLocale(for: Localization.current.locale)
         return instance
     }
-    
+
     // todo; could combine these two functions as they are essentially the same; this is only used in localizeURL and localizeForCountry
     func localize(_ key: String, default value: String = "", applyCurrentLanguageDirection: Bool = true) -> String {
         let string = _localize(key, tableName: nil, bundle: bundle, value: value, comment: "")
@@ -96,30 +96,30 @@ public struct Localization {
             key :
             applyCurrentLanguageDirection ? string.applyCurrentLanguageDirection() : string
     }
-    
+
     func localize<Key: RawRepresentable>(_ key: Key, default value: String = "", applyCurrentLanguageDirection: Bool = true) -> String where Key.RawValue == String {
         let string = _localize(key.rawValue, tableName: nil, bundle: bundle, value: value, comment: "")
         return string.isEmpty ?
             key.rawValue :
             applyCurrentLanguageDirection ? string.applyCurrentLanguageDirection() : string
     }
-    
+
     func localize<Key: RawRepresentable>(_ key: Key, arguments: [CVarArg]) -> String where Key.RawValue == String {
-        
+
         let format = localize(key, applyCurrentLanguageDirection: false)
         let string = String(
             format: format,
             locale: locale,
             arguments: arguments
         )
-        
+
         let actualString = string.isEmpty ?
             String(
                 format: key.rawValue,
                 locale: locale,
                 arguments: arguments
             ) : string
-        
+
         return actualString.applyCurrentLanguageDirection()
     }
 }
@@ -128,7 +128,7 @@ extension Localization {
     func hasLocalizedValue<Key: RawRepresentable>(for key: Key) -> Bool where Key.RawValue == String {
         localize(key, default: "1") == localize(key, default: "2")
     }
-    
+
     static func preferredLocaleIdentifier(from supportedLocalizations: [String]) -> String? {
         switch Localization.current.localeConfiguration {
         case .systemPreferred:
@@ -136,7 +136,7 @@ extension Localization {
         case .custom(let localeIdentifierString):
             let localeIdentifierValues = supportedLocalizations.map { LocaleIdentifier(rawValue: $0) }
             let localeIdentifier = LocaleIdentifier(rawValue: localeIdentifierString)
-            
+
             if let id = localeIdentifierValues.filter({ $0.canonicalValue == localeIdentifier.canonicalValue }).first {
                 return id.rawValue
             } else if let id = localeIdentifierValues.filter({ $0.languageCode == localeIdentifier.languageCode }).first {
@@ -195,47 +195,47 @@ public func localizeAndSplit(_ key: ParameterisedStringLocalizable) -> [String] 
 
 func localizeURL(_ key: StringLocalizableKey) -> URL {
     var rawValue = key.rawValue
-    
+
     if let suffix = Localization.country.localizationSuffix {
         rawValue.append(suffix)
     }
-    
+
     let localizedString = Localization.current.localize(rawValue, applyCurrentLanguageDirection: false)
-    
+
     guard localizedString != rawValue else { return URL(string: localize(key, applyCurrentLanguageDirection: false))! }
-    
+
     return URL(string: localizedString) ?? URL(string: localize(key, applyCurrentLanguageDirection: false))!
 }
 
 public func localizeForCountry(_ key: StringLocalizableKey) -> String {
     var rawValue = key.rawValue
-    
+
     if let suffix = Localization.country.localizationSuffix {
         rawValue.append(suffix)
     }
-    
+
     return Localization.current.localize(rawValue)
 }
 
-@available(*, deprecated, message: "Not currently used, probably remove")
 public func localizeForCountry(_ localizable: ParameterisedStringLocalizable) -> String {
     var rawValue = localizable.key.rawValue
-    
+
     if let suffix = Localization.country.localizationSuffix {
         rawValue.append(suffix)
     }
-    
-    let format = Localization.current.localize(rawValue)
-    
+
+    let format = Localization.current.localize(rawValue, applyCurrentLanguageDirection: false)
+
     let string = String(format: format, locale: Localization.current.locale, arguments: localizable.arguments)
-    
-    return string.isEmpty ?
-        String(
-            format: localizable.key.rawValue,
-            locale: Localization.current.locale,
-            arguments: localizable.arguments
-        ) : string.applyCurrentLanguageDirection()
-    
+
+    let actualString = string.isEmpty ?
+    String(
+        format: localizable.key.rawValue,
+        locale: Localization.current.locale,
+        arguments: localizable.arguments
+    ) : string
+
+    return actualString.applyCurrentLanguageDirection()
 }
 
 @available(*, deprecated, message: "Not currently used, probably remove")
@@ -247,7 +247,7 @@ public func localizeForCountryAndSplit(_ key: StringLocalizableKey) -> [String] 
 
 public func localize(_ localizable: ParameterisedStringLocalizable) -> String {
     Localization.current.localize(localizable.key, arguments: localizable.arguments)
-    
+
 }
 
 private extension Country {
@@ -283,7 +283,7 @@ public enum LocalizedContentType {
 }
 
 extension LocaleString {
-    
+
     public func localizedString(contentType: LocalizedContentType = .text) -> String {
         guard let identifier = Localization.preferredLocaleIdentifier(
             from: Array(values.keys.map { $0.identifier })
@@ -303,7 +303,7 @@ extension LocaleURL {
     public enum LocaleError: Error {
         case unknown
     }
-    
+
     public func localizedURL() throws -> URL {
         guard let identifier = Localization.preferredLocaleIdentifier(
             from: Array(values.keys.map { $0.identifier })
@@ -325,7 +325,7 @@ public extension String {
             return self
         }
     }
-    
+
     func applyCurrentLanguageDirection() -> String {
         apply(direction: currentLanguageDirection())
     }

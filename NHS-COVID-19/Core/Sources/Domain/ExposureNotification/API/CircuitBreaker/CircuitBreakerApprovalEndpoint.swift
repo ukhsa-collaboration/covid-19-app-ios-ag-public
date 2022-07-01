@@ -6,7 +6,7 @@ import Common
 import Foundation
 
 struct CircuitBreakerApprovalEndpoint: HTTPEndpoint {
-    
+
     func request(for type: CircuitBreakerType) throws -> HTTPRequest {
         let encoder = JSONEncoder()
         let data: Data
@@ -23,7 +23,7 @@ struct CircuitBreakerApprovalEndpoint: HTTPEndpoint {
         }
         return .post("/circuit-breaker/\(type.endpointName)/request", body: .json(data))
     }
-    
+
     func parse(_ response: HTTPResponse) throws -> Response {
         try Response.parse(response)
     }
@@ -33,7 +33,7 @@ extension CircuitBreakerApprovalEndpoint {
     struct Response: Decodable, Equatable {
         var approvalToken: CircuitBreakerApprovalToken
         var approval: CircuitBreakerApproval
-        
+
         static func parse(_ response: HTTPResponse) throws -> Self {
             let jsonDecoder = JSONDecoder()
             jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase

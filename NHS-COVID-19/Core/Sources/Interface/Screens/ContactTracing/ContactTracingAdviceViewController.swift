@@ -7,7 +7,7 @@ import SwiftUI
 import UIKit
 
 private struct ContactTracingAdviceView: View {
-    
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: .standardSpacing) {
@@ -25,14 +25,14 @@ private struct ContactTracingAdviceView: View {
 public final class ContactTracingAdviceViewController: RootViewController {
     public init() {
         super.init(nibName: nil, bundle: nil)
-        
+
         title = localize(.contact_tracing_should_not_pause_title)
-        
+
         let contentView = ContactTracingAdviceView()
         let contentViewController = UIHostingController(rootView: contentView)
         addFilling(contentViewController)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

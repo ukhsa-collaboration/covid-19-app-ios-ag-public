@@ -20,21 +20,21 @@ extension UnknownTestResultsViewController {
                 self.height = height
                 super.init(frame: .zero)
             }
-            
+
             required init?(coder: NSCoder) {
                 fatalError("init(coder:) has not been implemented")
             }
-            
+
             override var intrinsicContentSize: CGSize {
                 CGSize(width: UIView.noIntrinsicMetric, height: height)
             }
         }
-        
+
         var content: [UIView] {
             [VerticalSpacerView(height: height)]
         }
     }
-    
+
     private class Content: PrimaryButtonStickyFooterScrollingContent {
         init(interactor: Interacting) {
             super.init(
@@ -56,29 +56,29 @@ extension UnknownTestResultsViewController {
 }
 
 public class UnknownTestResultsViewController: StickyFooterScrollingContentViewController {
-    
+
     public typealias Interacting = UnknownTestResultsViewControllerInteracting
-    
+
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting) {
         self.interactor = interactor
         super.init(content: Content(interactor: interactor))
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupNavigationBar()
     }
-    
+
     @objc private func didTapClose() {
         interactor.didTapClose()
     }
-    
+
     private func setupNavigationBar() {
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.navigationBar.shadowImage = UIImage()

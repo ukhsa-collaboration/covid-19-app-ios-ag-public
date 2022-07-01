@@ -6,16 +6,16 @@ import BackgroundTasks
 
 public protocol BackgroundTaskScheduling {
     func submit(_ taskRequest: BGTaskRequest) throws
-    
+
     @discardableResult
     func register(
         forTaskWithIdentifier identifier: String,
         using queue: DispatchQueue?,
         launchHandler: @escaping (BackgroundTask) -> Void
     ) -> Bool
-    
+
     func getPendingTaskRequests(completionHandler: @escaping ([BGTaskRequest]) -> Void)
-    
+
     func cancel(taskRequestWithIdentifier identifier: String)
 }
 

@@ -7,20 +7,20 @@ import Foundation
 
 struct QRCodeCheckIn {
     let context: RunningAppContext
-    
+
     init(context: RunningAppContext) {
         self.context = context
     }
-    
+
     func checkIn(date: Date) throws {
         _ = try _checkIn(date)
     }
-    
+
     func checkInAndCancel(date: Date) throws {
         let (_, cancel) = try _checkIn(date)
         cancel()
     }
-    
+
     private func _checkIn(_ date: Date) throws -> (String, () -> Void) {
         return try context.checkInContext!.checkInsStore.checkIn(with: validQrPayload, currentDate: date)
     }

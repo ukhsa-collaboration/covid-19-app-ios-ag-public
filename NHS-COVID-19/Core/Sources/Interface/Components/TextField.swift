@@ -6,17 +6,17 @@ import UIKit
 
 class TextField: BaseTextField {
     private let process: (String) -> String
-    
+
     init(process: @escaping (String) -> String) {
         self.process = process
         super.init()
         setup()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func setup() {
         borderStyle = .roundedRect
         layer.borderWidth = 2
@@ -26,14 +26,14 @@ class TextField: BaseTextField {
         autocorrectionType = .no
         enablesReturnKeyAutomatically = true
         NSLayoutConstraint.activate([heightAnchor.constraint(greaterThanOrEqualToConstant: .hitAreaMinHeight)])
-        
+
         addTarget(self, action: #selector(valueChanged), for: .editingChanged)
     }
-    
+
     @objc private func valueChanged() {
         let originalLength = text?.count
         text = text.map(process)
-        
+
         if originalLength != text?.count {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }

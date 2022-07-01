@@ -6,20 +6,20 @@ import Foundation
 import Logging
 
 struct ForwardingLogHandler: LogHandler {
-    
+
     let label: String
-    
+
     private let send: (LogEvent) -> Void
-    
+
     var metadata = Logger.Metadata()
-    
+
     var logLevel = Logger.Level.debug
-    
+
     init(label: String, send: @escaping (LogEvent) -> Void) {
         self.label = label
         self.send = send
     }
-    
+
     func log(level: Logger.Level,
              message: Logger.Message,
              metadata: Logger.Metadata?,
@@ -37,7 +37,7 @@ struct ForwardingLogHandler: LogHandler {
             )
         )
     }
-    
+
     subscript(metadataKey key: String) -> Logger.Metadata.Value? {
         get {
             metadata[key]
@@ -46,5 +46,5 @@ struct ForwardingLogHandler: LogHandler {
             metadata[key] = newValue
         }
     }
-    
+
 }

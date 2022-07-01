@@ -9,10 +9,10 @@ public enum LinkTestResultError: Error {
     case noInternet
     case decodeFailed // e.g. unknown test result
     case unknownError
-    
+
     private static let codeNotValid = 404
     private static let codeMalformed = 400
-    
+
     init(_ networkError: NetworkRequestError) {
         switch networkError {
         case .networkFailure(let underlyingError):

@@ -6,11 +6,11 @@ import CodeAnalyzer
 import Foundation
 
 struct CodebaseReporter {
-    
+
     func report(for repoBaseFolder: URL) throws -> Report {
-        
+
         let corePackageSourcesFolder = repoBaseFolder.appendingPathComponent(App.corePackageSourcesPathComponent)
-        
+
         let localizationKeyAnalyzer = try LocalizationKeyAnalyzer(
             localizableStringsFile: corePackageSourcesFolder.appendingPathComponent(App.localizableStringsResourcePath),
             localizableStringsDictFile: corePackageSourcesFolder.appendingPathComponent(App.localizableStringsDictResourcePath),
@@ -19,7 +19,7 @@ struct CodebaseReporter {
                 getAllFiles(in: corePackageSourcesFolder.appendingPathComponent($0))
             }
         )
-        
+
         return Report(
             pages: [
                 ReportPage(
@@ -32,7 +32,7 @@ struct CodebaseReporter {
                                     result: localizationKeyAnalyzer.undefinedKeys.isEmpty ? .passed : .failed(
                                         message: """
                                         These keys are localised, but are not defined in code:
-                                        
+
                                         \(ReportList(items: localizationKeyAnalyzer.undefinedKeys.map(\.description).sorted()).markdownBody)
                                         """
                                     )

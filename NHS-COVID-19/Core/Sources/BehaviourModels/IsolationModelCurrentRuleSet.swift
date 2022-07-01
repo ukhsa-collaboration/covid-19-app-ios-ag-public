@@ -5,7 +5,7 @@
 import Foundation
 
 public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
-    
+
     public static let unreachableStatePredicates: [StatePredicate] = [
         // Symptomatic and positive test isolations finish together.
         StatePredicate(
@@ -16,20 +16,20 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             symptomatic: [.isolating],
             positiveTest: [.notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHasNegativeTest]
         ),
-        
+
         // A contact case and unconfirmed positive test isolation will not happen at the same time.
         StatePredicate(
             contact: [.isolating],
             positiveTest: [.isolatingWithConfirmedTest]
         ),
-        
+
         // To simplify logic, contact case isolation is always removed when we have a positive test isolation.
         StatePredicate(
             contact: [.notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedEarly],
             positiveTest: [.isolatingWithConfirmedTest]
         ),
     ]
-    
+
     public static let rulesRespondingToExternalEvents: [Rule] = [
         Rule(
             """
@@ -44,7 +44,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .riskyContact,
             update: .init(contact: .isolating)
         ),
-        
+
         Rule(
             """
             A risky contact isolation will be terminated for users that are below the age limit or fully vaccinated (self-declared).
@@ -56,7 +56,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .terminatedRiskyContactEarly,
             update: .init(contact: .notIsolatingAndHadRiskyContactIsolationTerminatedEarly)
         ),
-        
+
         Rule(
             """
             Exception: A risky contact will not start a new isolation if it’s older than contact case opt-out (self-declared under the age limit or fully vaccinated).
@@ -68,12 +68,12 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .riskyContactWithExposureDayOlderThanEarlyIsolationTermination,
             update: .init()
         ),
-        
+
         Rule(
             """
             A symptomatic isolation will start on a symptomatic self-diagnosis.
             Symptom entry is only allowed if not already isolating as symptomatic.
-            
+
             Delete any tests remembered if it is not causing an active isolation.
             """,
             predicate: StatePredicate(
@@ -86,12 +86,12 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .noIsolation
             )
         ),
-        
+
         Rule(
             """
             A symptomatic isolation will start on a symptomatic self-diagnosis.
             Symptom entry is only allowed if not already isolating as symptomatic.
-            
+
             Keep any remembered tests if they are causing an active isolation.
             """,
             predicate: StatePredicate(
@@ -103,7 +103,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 symptomatic: .isolating
             )
         ),
-        
+
         Rule(
             """
             Exception: We allow new self-diagnosis during an active positive test isolation,
@@ -116,7 +116,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .selfDiagnosedSymptomaticWithAssumedOnsetDateOlderThanPositiveTestEndDate,
             update: .init()
         ),
-        
+
         Rule(
             """
             A positive test isolation will start on a positive test.
@@ -132,7 +132,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .isolatingWithConfirmedTest
             )
         ),
-        
+
         Rule(
             """
             A positive test will continue a positive test (asymptomatic) isolation.
@@ -150,7 +150,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .isolatingWithConfirmedTest
             )
         ),
-        
+
         Rule(
             """
             A positive test will not start a new isolation if a positive test (asymptomatic) isolation is expired.
@@ -168,7 +168,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .notIsolatingAndHadConfirmedTestPreviously
             )
         ),
-        
+
         Rule(
             """
             A positive test will start a new isolation if not in symptomatic isolation and has negative test.
@@ -187,7 +187,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .isolatingWithConfirmedTest
             )
         ),
-        
+
         Rule(
             """
             An older positive test will start a new isolation if not in symptomatic isolation and has negative test.
@@ -206,7 +206,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .isolatingWithConfirmedTest
             )
         ),
-        
+
         Rule(
             """
             A positive test will not start a new isolation if a symptomatic isolation is expired.
@@ -225,7 +225,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .notIsolatingAndHadConfirmedTestPreviously
             )
         ),
-        
+
         Rule(
             """
             A positive test will start a new isolation if symptomatic isolation ended and has negative test.
@@ -245,7 +245,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .isolatingWithConfirmedTest
             )
         ),
-        
+
         Rule(
             """
             Exception: A positive test will replace a newer negative test and resume old symptomatic isolation.
@@ -265,7 +265,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .isolatingWithConfirmedTest
             )
         ),
-        
+
         Rule(
             """
             A symptomatic test isolation will continue on a new positive test.
@@ -285,7 +285,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .isolatingWithConfirmedTest
             )
         ),
-        
+
         Rule(
             """
             Exception: A positive test will be ignored if the isolation resulting from it would end before any active
@@ -332,7 +332,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate,
             update: .init()
         ),
-        
+
         Rule(
             """
             An unconfirmed positive test will continue an existing positive test (asymptomatic) isolation.
@@ -348,7 +348,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedUnconfirmedPositiveTest,
             update: .init()
         ),
-        
+
         Rule(
             """
             An unconfirmed positive test isolation will start an isolation.
@@ -364,7 +364,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .isolatingWithUnconfirmedTest
             )
         ),
-        
+
         Rule(
             """
             Exception: An unconfirmed positive test will not override a negative test if it’s older.
@@ -379,7 +379,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedUnconfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate,
             update: .init()
         ),
-        
+
         Rule(
             """
             Exception: An unconfirmed positive test will override a negative test if it’s more than N days older.
@@ -397,7 +397,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .isolatingWithUnconfirmedTest
             )
         ),
-        
+
         Rule(
             """
             Affirmation: An unconfirmed positive test will not override a negative test if it’s even older.
@@ -412,7 +412,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedUnconfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate,
             update: .init()
         ),
-        
+
         Rule(
             """
             Exception: An unconfirmed positive test will not modify a symptomatic isolation if its end date is older.
@@ -429,7 +429,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .notIsolatingAndHadUnconfirmedTestPreviously
             )
         ),
-        
+
         Rule(
             """
             Exception: An unconfirmed positive test will override a symptomatic isolation if its end date is older.
@@ -445,7 +445,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedUnconfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate,
             update: .init()
         ),
-        
+
         Rule(
             """
             An unconfirmed positive test will not change state of existing symptomatic isolation.
@@ -460,7 +460,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedUnconfirmedPositiveTest,
             update: .init()
         ),
-        
+
         Rule(
             """
             Exception: An unconfirmed positive test will not modify a symptomatic isolation if its end date is older.
@@ -477,7 +477,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .isolatingWithUnconfirmedTest
             )
         ),
-        
+
         Rule(
             """
             Exception: An unconfirmed positive test will override a symptomatic isolation if its end date is older.
@@ -493,7 +493,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedUnconfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate,
             update: .init()
         ),
-        
+
         Rule(
             """
             Exception: A positive test will be ignored if the isolation resulting from it would end before any active
@@ -536,12 +536,12 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                     symptomatic: .all(except: .noIsolation),
                     positiveTest: [.noIsolation, .notIsolatingAndHasNegativeTest]
                 ),
-                
+
             ],
             event: .receivedUnconfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate,
             update: .init()
         ),
-        
+
         Rule(
             """
             A negative test will not override a confirmed test.
@@ -552,7 +552,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedNegativeTest,
             update: .init()
         ),
-        
+
         Rule(
             """
             A negative test will not override a confirmed test.
@@ -573,7 +573,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 symptomatic: .noIsolation
             )
         ),
-        
+
         Rule(
             """
             A negative test when has no in symptomatic or positive isolation state will be stored.
@@ -585,7 +585,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedNegativeTest,
             update: .init(positiveTest: .notIsolatingAndHasNegativeTest)
         ),
-        
+
         Rule(
             """
             A negative test will override an unconfirmed positive test iolation, possibly ending isolation.
@@ -598,7 +598,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedNegativeTest,
             update: .init(positiveTest: .notIsolatingAndHasNegativeTest)
         ),
-        
+
         Rule(
             """
             Exception: A negative test will not override an unconfirmed positive if the negative test is older.
@@ -610,7 +610,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedNegativeTestWithEndDateOlderThanRememberedUnconfirmedTestEndDateAndOlderThanAssumedSymptomOnsetDayIfAny,
             update: .init()
         ),
-        
+
         Rule(
             """
             When has symptoms but no test results, a negative test will be stored, possibly ending isolation.
@@ -626,7 +626,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .notIsolatingAndHasNegativeTest
             )
         ),
-        
+
         Rule(
             """
             Exception: A negative test will not override a symptomatic iolation if the negative test is older.
@@ -641,7 +641,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .noIsolation
             )
         ),
-        
+
         Rule(
             """
             Affirmation: A negative test will not override a confirmed test even if old.
@@ -653,7 +653,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedNegativeTestWithEndDateOlderThanAssumedSymptomOnsetDate,
             update: .init()
         ),
-        
+
         Rule(
             """
             A negative test with a test end date n days newer than the remembered unconfirmed test end date will not
@@ -665,7 +665,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDateButOlderThanAssumedSymptomOnsetDayIfAny,
             update: .init()
         ),
-        
+
         Rule(
             """
             A negative test with a test end date n days newer than the remembered unconfirmed test end date will not
@@ -681,7 +681,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 symptomatic: .noIsolation
             )
         ),
-        
+
         Rule(
             """
             A void test will never change isolation state.
@@ -691,9 +691,9 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             update: .init()
         ),
     ]
-    
+
     public static let rulesAutomaticallyTriggeredOverTime: [Rule] = [
-        
+
         Rule(
             """
             A contact isolation will end.
@@ -702,7 +702,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .contactIsolationEnded,
             update: .init(contact: .notIsolatingAndHadRiskyContactPreviously)
         ),
-        
+
         Rule(
             """
             A confirmed positive test isolation will end.
@@ -714,7 +714,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .indexIsolationEnded,
             update: .init(positiveTest: .notIsolatingAndHadConfirmedTestPreviously)
         ),
-        
+
         Rule(
             """
             An unconfirmed positive test isolation will end.
@@ -726,7 +726,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .indexIsolationEnded,
             update: .init(positiveTest: .notIsolatingAndHadUnconfirmedTestPreviously)
         ),
-        
+
         Rule(
             """
             A symptomatic isolation will end.
@@ -738,7 +738,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .indexIsolationEnded,
             update: .init(symptomatic: .notIsolatingAndHadSymptomsPreviously)
         ),
-        
+
         Rule(
             """
             A combined symptomatic and positive test isolation will end together.
@@ -753,7 +753,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .notIsolatingAndHadConfirmedTestPreviously
             )
         ),
-        
+
         Rule(
             """
             A combined symptomatic and unconfirmed positive test isolation will end together.
@@ -768,7 +768,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 positiveTest: .notIsolatingAndHadUnconfirmedTestPreviously
             )
         ),
-        
+
         Rule(
             """
             After retention period ends all isolation is deleted.
@@ -808,7 +808,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             )
         ),
     ]
-    
+
     /// Rules that are defined for completeness of the state machine, but we don't expect them as should be "impossible" for reasons not captured in state machine.
     public static let fillerRules: [Rule] = [
         Rule(
@@ -826,7 +826,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ],
             event: .riskyContact
         ),
-        
+
         Rule(
             filler: """
             We block risky contacts events during an existing positive isolation.
@@ -839,7 +839,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ],
             event: .riskyContactWithExposureDayOlderThanEarlyIsolationTermination
         ),
-        
+
         Rule(
             filler: """
             If not in contact isolation, then the event to end it is meaningless.
@@ -847,7 +847,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             predicate: StatePredicate(contact: [.noIsolation, .notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedEarly]),
             event: .contactIsolationEnded
         ),
-        
+
         Rule(
             filler: """
             If not in contact isolation, then terminating it early is meaningless.
@@ -855,7 +855,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             predicate: StatePredicate(contact: [.noIsolation, .notIsolatingAndHadRiskyContactPreviously, .notIsolatingAndHadRiskyContactIsolationTerminatedEarly]),
             event: .terminatedRiskyContactEarly
         ),
-        
+
         Rule(
             filler: """
             We do not allow new self-diagnosis during an active symptomatic isolation.
@@ -867,7 +867,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ],
             event: .selfDiagnosedSymptomatic
         ),
-        
+
         Rule(
             filler: """
             We do not allow new self-diagnosis during an active symptomatic isolation.
@@ -879,7 +879,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ],
             event: .selfDiagnosedSymptomaticWithAssumedOnsetDateOlderThanPositiveTestEndDate
         ),
-        
+
         Rule(
             filler: """
             This event can not happen without an active positive result isolation and if there is already
@@ -893,7 +893,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ],
             event: .selfDiagnosedSymptomaticWithAssumedOnsetDateOlderThanPositiveTestEndDate
         ),
-        
+
         Rule(
             filler: """
             If not in symptomatic or positive test isolation, then the event to finish it is meaningless.
@@ -904,7 +904,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ),
             event: .indexIsolationEnded
         ),
-        
+
         Rule(
             filler: """
             Ending retention period with no isolation is meaningless.
@@ -916,7 +916,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ),
             event: .retentionPeriodEnded
         ),
-        
+
         Rule(
             filler: """
             Retention period should not end if we have an active isolation.
@@ -960,7 +960,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ],
             event: .retentionPeriodEnded
         ),
-        
+
         Rule(
             filler: """
             This event is not possible if we do not have an unconfirmed test.
@@ -970,7 +970,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ),
             event: .receivedNegativeTestWithEndDateOlderThanRememberedUnconfirmedTestEndDateAndOlderThanAssumedSymptomOnsetDayIfAny
         ),
-        
+
         Rule(
             filler: """
             This event is not possible if we do not have symptoms, or have an unconfirmed test.
@@ -982,7 +982,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ],
             event: .receivedNegativeTestWithEndDateOlderThanAssumedSymptomOnsetDate
         ),
-        
+
         Rule(
             filler: """
             This event is not possible if we do not have symptoms and an unconfirmed test.
@@ -997,7 +997,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ],
             event: .receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDate
         ),
-        
+
         Rule(
             filler: """
             This event is not possible if we do not have symptoms and a confirmed test.
@@ -1012,7 +1012,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ],
             event: .receivedNegativeTestWithEndDateNewerThanAssumedSymptomOnsetDateAndAssumedSymptomOnsetDateNewerThanPositiveTestEndDate
         ),
-        
+
         Rule(
             filler: """
             This event is not possible if we do not have negative tests.
@@ -1022,7 +1022,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ),
             event: .receivedConfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate
         ),
-        
+
         Rule(
             filler: """
             This event is not possible if we do not have any isolation
@@ -1034,7 +1034,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ),
             event: .receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate
         ),
-        
+
         Rule(
             filler: """
             This event is not possible if we do not have negative tests.
@@ -1044,7 +1044,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ),
             event: .receivedUnconfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate
         ),
-        
+
         Rule(
             filler: """
             This event is not possible if we do not have negative tests.
@@ -1054,7 +1054,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ),
             event: .receivedUnconfirmedPositiveTestWithEndDateNDaysOlderThanRememberedNegativeTestEndDateAndOlderThanAssumedSymptomOnsetDayIfAny
         ),
-        
+
         Rule(
             filler: """
             This event is not possible if we do not have symptoms.
@@ -1064,7 +1064,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ),
             event: .receivedUnconfirmedPositiveTestWithEndDateOlderThanAssumedSymptomOnsetDate
         ),
-        
+
         Rule(
             filler: """
             This event is not possible if we do not have any isolation
@@ -1076,7 +1076,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             ),
             event: .receivedUnconfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate
         ),
-        
+
         Rule(
             filler: """
             This event is not possible if isolation wasn't terminated early by self-declaring under age limit or fully vaccinated.
@@ -1096,5 +1096,5 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedNegativeTestWithEndDateNDaysNewerThanRememberedUnconfirmedTestEndDateButOlderThanAssumedSymptomOnsetDayIfAny
         ),
     ]
-    
+
 }

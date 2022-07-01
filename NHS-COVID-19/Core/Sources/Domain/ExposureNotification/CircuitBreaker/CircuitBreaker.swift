@@ -20,7 +20,7 @@ extension CheckInsStore: RiskyCheckinsProvider {}
 
 class CircuitBreaker {
     public var showDontWorryNotificationIfNeeded = false
-    
+
     private let client: CircuitBreakingClient
     private let exposureInfoProvider: ExposureInfoProvider
     private let riskyCheckinsProvider: RiskyCheckinsProvider
@@ -29,13 +29,13 @@ class CircuitBreaker {
     private let handleContactCase: (RiskInfo) -> Void
     private let handleDontWorryNotification: () -> Void
     private let exposureNotificationProcessingBehaviour: () -> ExposureNotificationProcessingBehaviour
-    
+
     private enum Resolution: Equatable {
         case proceed
         case ignore
         case askAgain(CircuitBreakerApprovalToken)
     }
-    
+
     init(
         client: CircuitBreakingClient,
         exposureInfoProvider: ExposureInfoProvider,
@@ -55,7 +55,7 @@ class CircuitBreaker {
         self.handleDontWorryNotification = handleDontWorryNotification
         self.exposureNotificationProcessingBehaviour = exposureNotificationProcessingBehaviour
     }
-    
+
     func processPendingApprovals() -> AnyPublisher<Void, Never> {
         Publishers.Merge(
             processExposureNotificationApproval(),
@@ -63,12 +63,12 @@ class CircuitBreaker {
         )
         .eraseToAnyPublisher()
     }
-    
+
     func processExposureNotificationApproval() -> AnyPublisher<Void, Never> {
         guard let riskInfo = exposureInfoProvider.exposureInfo?.riskInfo else {
             return client.sendObfuscatedTraffic(for: .circuitBreaker).eraseToAnyPublisher()
         }
-        
+
         guard exposureNotificationProcessingBehaviour()
             .shouldNotifyForExposure(
                 on: riskInfo.day,
@@ -82,7 +82,7 @@ class CircuitBreaker {
             exposureInfoProvider.exposureInfo = nil
             return client.sendObfuscatedTraffic(for: .circuitBreaker).eraseToAnyPublisher()
         }
-        
+
         let existingToken = exposureInfoProvider.exposureInfo?.approvalToken
         return getCircuitBreakerResolution(for: .exposureNotification(riskInfo), existingToken: existingToken)
             .handleEvents(receiveOutput: { [weak self] resolution in
@@ -93,9 +93,9 @@ class CircuitBreaker {
                 } else if self.showDontWorryNotificationIfNeeded {
                     self.handleDontWorryNotification()
                 }
-                
+
                 self.showDontWorryNotificationIfNeeded = false
-                
+
                 switch resolution {
                 case .proceed, .ignore:
                     self.exposureInfoProvider.exposureInfo = nil
@@ -113,19 +113,19 @@ class CircuitBreaker {
             .map { _ in }
             .eraseToAnyPublisher()
     }
-    
+
     func processRiskyVenueApproval() -> AnyPublisher<Void, Never> {
         let venueIdsPendingApproval = Set(
             riskyCheckinsProvider.riskyCheckIns
                 .filter { $0.isRisky && $0.circuitBreakerApproval == .pending }
                 .map { $0.venueId }
         )
-        
+
         return Publishers.Sequence(sequence: venueIdsPendingApproval)
             .flatMap(processRiskyVenueApproval(with:))
             .eraseToAnyPublisher()
     }
-    
+
     private func processRiskyVenueApproval(with venueId: String) -> AnyPublisher<Void, Never> {
         let token = riskyCheckinsProvider.riskApprovalTokens[venueId]
         return getCircuitBreakerResolution(for: .riskyVenue, existingToken: token)
@@ -146,12 +146,12 @@ class CircuitBreaker {
             .map { _ in }
             .eraseToAnyPublisher()
     }
-    
+
     private func getCircuitBreakerResolution(for type: CircuitBreakerType, existingToken: CircuitBreakerApprovalToken?) -> AnyPublisher<Resolution, Error> {
         if let approvalToken = existingToken {
             return getCircuitBreakerPermission(for: type, with: approvalToken)
         }
-        
+
         return client.fetchApproval(for: type)
             .map { response in
                 switch response.approval {
@@ -166,7 +166,7 @@ class CircuitBreaker {
             .mapError { $0 as Error }
             .eraseToAnyPublisher()
     }
-    
+
     private func getCircuitBreakerPermission(for type: CircuitBreakerType, with approvalToken: CircuitBreakingClient.ApprovalToken) -> AnyPublisher<Resolution, Error> {
         client.fetchResolution(for: type, with: approvalToken)
             .map { response in

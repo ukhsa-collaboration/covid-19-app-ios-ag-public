@@ -16,9 +16,9 @@ public struct ExposureDetectionInfo: Codable, DataConvertible {
 }
 
 class ExposureDetectionStore {
-    
+
     @Encrypted private var exposureDetectionInfo: ExposureDetectionInfo?
-    
+
     @Published
     var exposureInfo: ExposureInfo? {
         didSet {
@@ -28,19 +28,19 @@ class ExposureDetectionStore {
             )
         }
     }
-    
+
     init(store: EncryptedStoring) {
         _exposureDetectionInfo = store.encrypted("background_task_state")
         exposureInfo = exposureDetectionInfo?.exposureInfo
     }
-    
+
     public func save(lastKeyDownloadDate: Date) {
         exposureDetectionInfo = ExposureDetectionInfo(
             lastKeyDownloadDate: lastKeyDownloadDate,
             exposureInfo: exposureDetectionInfo?.exposureInfo
         )
     }
-    
+
     private func newRiskInfo(current: RiskInfo?, incoming: RiskInfo) -> RiskInfo? {
         guard let current = current else { return incoming }
         if incoming.isHigherPriority(than: current) {
@@ -48,7 +48,7 @@ class ExposureDetectionStore {
         }
         return nil
     }
-    
+
     public func save(riskInfo: RiskInfo) {
         guard let riskInfo = newRiskInfo(current: exposureInfo?.riskInfo, incoming: riskInfo) else { return }
         exposureInfo = ExposureInfo(
@@ -56,11 +56,11 @@ class ExposureDetectionStore {
             riskInfo: riskInfo
         )
     }
-    
+
     public func load() -> ExposureDetectionInfo? {
         exposureDetectionInfo
     }
-    
+
     public func delete() {
         exposureDetectionInfo = nil
         exposureInfo = nil

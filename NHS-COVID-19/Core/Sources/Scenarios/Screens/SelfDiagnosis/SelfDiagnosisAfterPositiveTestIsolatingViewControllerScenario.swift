@@ -10,7 +10,7 @@ import UIKit
 public class DiscardedSymptomsAfterPositiveScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name: String = "Self-Diagnosis after Positive - Discarded"
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
@@ -22,7 +22,7 @@ public class DiscardedSymptomsAfterPositiveScenario: Scenario {
 public class NoSymptomsAfterPositiveScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name: String = "Self-Diagnosis after Positive - No Symptoms"
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
@@ -37,17 +37,17 @@ public struct SelfDiagnosisAfterPositiveTestIsolatingViewControllerScenario {
 }
 
 private class Interactor: SelfDiagnosisAfterPositiveTestIsolatingViewController.Interacting {
-    
+
     private weak var viewController: UIViewController?
-    
+
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
     func didTapReturnHome() {
         viewController?.showAlert(title: SelfDiagnosisAfterPositiveTestIsolatingViewControllerScenario.returnHomeTapped)
     }
-    
+
     func didTapNHS111Link() {
         viewController?.showAlert(title: SelfDiagnosisAfterPositiveTestIsolatingViewControllerScenario.nhs111LinkTapped)
     }

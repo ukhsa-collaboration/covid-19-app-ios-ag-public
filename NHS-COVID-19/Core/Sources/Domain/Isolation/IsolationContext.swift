@@ -8,23 +8,23 @@ import Foundation
 import UIKit
 
 struct IsolationContext {
-    
+
     struct AcknowledgementCompletionActions {
         var shouldSuggestBookingFollowUpTest: Bool
         var shouldAllowKeySubmission: Bool
     }
-    
+
     let isolationStateStore: IsolationStateStore
     let isolationStateManager: IsolationStateManager
     let isolationConfiguration: CachedResponse<EnglandAndWalesIsolationConfigurations>
     let country: DomainProperty<Country>
-    
+
     private let notificationCenter: NotificationCenter
     private let currentDateProvider: DateProviding
     private let removeExposureDetectionNotifications: () -> Void
-    
+
     let shouldAskForSymptoms = CurrentValueSubject<Bool, Never>(false)
-    
+
     init(
         isolationConfiguration: CachedResponse<EnglandAndWalesIsolationConfigurations>,
         encryptedStore: EncryptedStoring,
@@ -38,7 +38,7 @@ struct IsolationContext {
         self.currentDateProvider = currentDateProvider
         self.removeExposureDetectionNotifications = removeExposureDetectionNotifications
         self.country = country
-        
+
         isolationStateStore = IsolationStateStore(
             store: encryptedStore,
             latestConfiguration: { isolationConfiguration.value.for(country.currentValue) },
@@ -46,7 +46,7 @@ struct IsolationContext {
         )
         isolationStateManager = IsolationStateManager(stateStore: isolationStateStore, currentDateProvider: currentDateProvider)
     }
-    
+
     func canBookALabTest() -> AnyPublisher<Bool, Never> {
         isolationStateManager.$state
             .combineLatest(isolationConfiguration.$value, country)
@@ -61,17 +61,17 @@ struct IsolationContext {
                 }
             }.eraseToAnyPublisher()
     }
-    
+
     private func showOptOutLabTestBooking(isolation: Isolation?, duration: DayDuration) -> Bool {
         guard let isolation = isolation else { return false }
-        
+
         if let optOutOfContactIsolationInfo = isolation.optOutOfContactIsolationInfo {
             return optOutOfContactIsolationInfo.untilStartOfDay > currentDateProvider.currentLocalDay
         } else {
             return false
         }
     }
-    
+
     func makeIsolationAcknowledgementState() -> AnyPublisher<IsolationAcknowledgementState, Never> {
         isolationStateManager.$state
             .combineLatest(notificationCenter.onApplicationBecameActive, currentDateProvider.today) { state, _, _ in state }
@@ -100,7 +100,7 @@ struct IsolationContext {
             })
             .eraseToAnyPublisher()
     }
-    
+
     func makeResultAcknowledgementState(
         result: VirologyStateTestResult?,
         completionHandler: @escaping (AcknowledgementCompletionActions) -> Void
@@ -112,7 +112,7 @@ struct IsolationContext {
                 guard let result = result else {
                     return TestResultAcknowledgementState.notNeeded
                 }
-                
+
                 if shouldAskForSymptoms {
                     return TestResultAcknowledgementState.askForSymptomsOnsetDay(
                         testEndDay: result.endDay,
@@ -132,18 +132,18 @@ struct IsolationContext {
                         }
                     )
                 }
-                
+
                 let currentIsolationState = didRememberOnsetSymptomsDateBeforeReceivedTestResult
                 ? .notIsolating(finishedIsolationThatWeHaveNotDeletedYet: nil)
                 : IsolationLogicalState(stateInfo: isolationStateInfo, day: self.currentDateProvider.currentLocalDay)
-                
+
                 let testResultIsolationOperation = TestResultIsolationOperation(
                     currentIsolationState: currentIsolationState,
                     storedIsolationInfo: isolationStateInfo?.isolationInfo,
                     result: result,
                     configuration: isolationStateStore.configuration
                 )
-                
+
                 let storeOperation = testResultIsolationOperation.storeOperation()
                 let newIsolationStateInfo = isolationStateStore.newIsolationStateInfo(
                     from: isolationStateInfo?.isolationInfo,
@@ -156,16 +156,16 @@ struct IsolationContext {
                     npexDay: result.endDay,
                     operation: storeOperation
                 )
-                
+
                 let newIsolationState = IsolationLogicalState(stateInfo: newIsolationStateInfo, day: self.currentDateProvider.currentLocalDay)
-                
+
                 let testResultMetricsHandler = TestResultMetricsHandler(
                     currentIsolationState: currentIsolationState,
                     storedIsolationInfo: isolationStateInfo?.isolationInfo,
                     receivedResult: result,
                     configuration: isolationStateStore.configuration
                 )
-                
+
                 return TestResultAcknowledgementState(
                     result: result,
                     newIsolationState: newIsolationState,
@@ -173,17 +173,17 @@ struct IsolationContext {
                     indexCaseInfo: newIsolationStateInfo.isolationInfo.indexCaseInfo
                 ) {
                     testResultMetricsHandler.trackMetrics()
-                    
+
                     isolationStateStore.isolationStateInfo = newIsolationStateInfo
-                    
+
                     if !newIsolationState.isIsolating {
                         isolationStateStore.acknowldegeEndOfIsolation()
                     }
-                    
+
                     if !currentIsolationState.isIsolating, newIsolationState.isIsolating {
                         isolationStateStore.restartIsolationAcknowledgement()
                     }
-                    
+
                     let shouldSuggestBookingFollowUpTest: Bool = {
                         if case .isolating(let isolation, _, _) = currentIsolationState,
                             result.requiresConfirmatoryTest,
@@ -195,7 +195,7 @@ struct IsolationContext {
                             return false
                         }
                     }()
-                    
+
                     completionHandler(
                         AcknowledgementCompletionActions(
                             shouldSuggestBookingFollowUpTest: shouldSuggestBookingFollowUpTest && result.shouldOfferFollowUpTest,
@@ -206,7 +206,7 @@ struct IsolationContext {
             }
             .eraseToAnyPublisher()
     }
-    
+
     func makeBackgroundJobs() -> [BackgroundTaskAggregator.Job] {
         [
             BackgroundTaskAggregator.Job(
@@ -220,34 +220,34 @@ struct IsolationContext {
             ),
         ]
     }
-    
+
     func optOutContactIsolationOnExposurerDay() {
         guard let contactCaseInfo = isolationStateStore.isolationInfo.contactCaseInfo else {
             return // assert? - invalid state...
         }
         optOutContactIsolation(optOutDay: contactCaseInfo.exposureDay)
     }
-    
+
     private func optOutContactIsolation(optOutDay: GregorianDay) {
         guard let contactCaseInfo = isolationStateStore.isolationInfo.contactCaseInfo,
             let activeIsolation = isolationStateManager.isolationLogicalState.currentValue.activeIsolation else {
             return // assert? - invalid state...
         }
-        
+
         let isContactCaseOnly = activeIsolation.isContactCaseOnly
-        
+
         let updatedContactCase = mutating(contactCaseInfo) {
             $0.optOutOfIsolationDay = optOutDay
         }
         isolationStateStore.set(updatedContactCase)
-        
+
         if isContactCaseOnly {
             isolationStateStore.acknowldegeEndOfIsolation()
         }
-        
+
         Metrics.signpost(.optedOutForContactIsolation)
     }
-    
+
     func handleSymptomsIsolationState(onsetDay: GregorianDay?, symptomaticSelfIsolationEnabled: Bool) -> (IsolationState, SelfDiagnosisEvaluation.ExistingPositiveTestState) {
         let currentIsolationLogicalState = IsolationLogicalState(
             stateInfo: isolationStateStore.isolationStateInfo,
@@ -258,7 +258,7 @@ struct IsolationContext {
             onsetDay: onsetDay
         )
         let hasActivePositiveTestIsolation = currentIsolationLogicalState.activeIsolation?.hasPositiveTestResult ?? false
-        
+
         if hasActivePositiveTestIsolation,
             let currentTestInfo = isolationStateStore.isolationInfo.indexCaseInfo?.testInfo,
             let testEndDay = isolationStateStore.isolationInfo.indexCaseInfo?.assumedTestEndDay {
@@ -293,12 +293,12 @@ struct IsolationContext {
             if symptomaticSelfIsolationEnabled {
                 newIsolationLogicalState = isolationStateStore.set(info)
             }
-            
+
             let isolationState = IsolationState(logicalState: newIsolationLogicalState)
             return (isolationState, .hasNoTest)
         }
     }
-    
+
     func handleContactCase(riskInfo: RiskInfo, sendContactCaseIsolationNotification: @escaping () -> Void) {
         let contactCaseInfo = ContactCaseInfo(exposureDay: riskInfo.day, isolationFromStartOfDay: currentDateProvider.currentGregorianDay(timeZone: .current))
         isolationStateStore.set(contactCaseInfo)
@@ -307,14 +307,14 @@ struct IsolationContext {
 }
 
 private extension NotificationCenter {
-    
+
     var onApplicationBecameActive: AnyPublisher<Void, Never> {
         publisher(for: UIApplication.didBecomeActiveNotification)
             .map { _ in () }
             .prepend(())
             .eraseToAnyPublisher()
     }
-    
+
 }
 
 extension EnglandAndWalesIsolationConfigurations {

@@ -6,9 +6,9 @@ import Foundation
 import Logging
 
 extension ExposureDetectionStore {
-    
+
     private static let logger = Logger(label: "ExposureNotification")
-    
+
     func saveIfNeeded(exposureRiskInfo: ExposureRiskInfo) -> Bool {
         Self.logger.info("calculated risk info", metadata: .describing(exposureRiskInfo))
         if exposureRiskInfo.isConsideredRisky {
@@ -23,5 +23,5 @@ extension ExposureDetectionStore {
         }
         return false
     }
-    
+
 }

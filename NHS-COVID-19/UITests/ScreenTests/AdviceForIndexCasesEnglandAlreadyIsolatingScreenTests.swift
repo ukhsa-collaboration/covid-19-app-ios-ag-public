@@ -3,10 +3,10 @@ import XCTest
 import Scenarios
 
 class AdviceForIndexCasesEnglandAlreadyIsolatingScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<AdviceForIndexCasesEnglandAlreadyIsolatingScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = AdviceForIndexCasesEnglandAlreadyIsolatingScreen(app: app)
@@ -17,10 +17,10 @@ class AdviceForIndexCasesEnglandAlreadyIsolatingScreenTests: XCTestCase {
             XCTAssertTrue(screen.furtherAdvice.exists)
             XCTAssertTrue(screen.nhsOnlineLink.exists)
             XCTAssertTrue(screen.continueButton.exists)
-            
+
         }
     }
-    
+
     func testCommonQuestionsLinke() throws {
         try runner.run { app in
             let screen = AdviceForIndexCasesEnglandAlreadyIsolatingScreen(app: app)
@@ -28,7 +28,7 @@ class AdviceForIndexCasesEnglandAlreadyIsolatingScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[AdviceForIndexCasesEnglandAlreadyIsolatingScenario.didTapCommonQuestionsLink].exists)
         }
     }
-    
+
     func testNHSOnline() throws {
         try runner.run { app in
             let screen = AdviceForIndexCasesEnglandAlreadyIsolatingScreen(app: app)
@@ -36,7 +36,7 @@ class AdviceForIndexCasesEnglandAlreadyIsolatingScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[AdviceForIndexCasesEnglandAlreadyIsolatingScenario.ditTapNHSOnline].exists)
         }
     }
-    
+
     func testContinueButton() throws {
         try runner.run { app in
             let screen = AdviceForIndexCasesEnglandAlreadyIsolatingScreen(app: app)

@@ -8,7 +8,7 @@ import SwiftUI
 struct TextInputRow: View {
     var title: String
     var text: Binding<String>
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("\(title)")

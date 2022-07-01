@@ -8,22 +8,22 @@ import XCTest
 @testable import Domain
 
 class VirologyTestResultEndpointTests: XCTestCase {
-    
+
     private let endpoint = VirologyTestResultEndpoint()
-    
+
     func testEndpoint() throws {
         let request = VirologyTestResultRequest(pollingToken: PollingToken(value: .random()), country: .england)
-        
+
         let expected = HTTPRequest.post("/virology-test/v2/results", body: .json("{\"country\":\"England\",\"testResultPollingToken\":\"\(request.pollingToken.value)\"}"))
-        
+
         let actual = try endpoint.request(for: request)
-        
+
         TS.assert(actual, equals: expected)
     }
-    
+
     func testDecodingTestResultPositive() throws {
         let date = "2020-04-23T00:00:00.0000000Z"
-        
+
         let response = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
@@ -34,7 +34,7 @@ class VirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": false
         }
         """#))
-        
+
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions.insert(.withFractionalSeconds)
         let expectedResponse = VirologyTestResponse.receivedResult(
@@ -45,14 +45,14 @@ class VirologyTestResultEndpointTests: XCTestCase {
                 shouldOfferFollowUpTest: false
             )
         )
-        
+
         let parsedResponse = try endpoint.parse(response)
         TS.assert(parsedResponse, equals: expectedResponse)
     }
-    
+
     func testDecodingTestResultNegative() throws {
         let date = "2020-04-23T00:00:00Z"
-        
+
         let response = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
@@ -63,9 +63,9 @@ class VirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": false
         }
         """#))
-        
+
         let formatter = ISO8601DateFormatter()
-        
+
         let expectedResponse = VirologyTestResponse.receivedResult(
             PollVirologyTestResultResponse(
                 virologyTestResult: VirologyTestResult(testResult: .negative, testKitType: .labResult, endDate: try XCTUnwrap(formatter.date(from: date))),
@@ -74,14 +74,14 @@ class VirologyTestResultEndpointTests: XCTestCase {
                 shouldOfferFollowUpTest: false
             )
         )
-        
+
         let parsedResponse = try endpoint.parse(response)
         TS.assert(parsedResponse, equals: expectedResponse)
     }
-    
+
     func testDecodingTestResultVoid() throws {
         let date = "2020-04-23T00:00:00Z"
-        
+
         let response = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
@@ -92,9 +92,9 @@ class VirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": false
         }
         """#))
-        
+
         let formatter = ISO8601DateFormatter()
-        
+
         let expectedResponse = VirologyTestResponse.receivedResult(
             PollVirologyTestResultResponse(
                 virologyTestResult: VirologyTestResult(testResult: .void, testKitType: .labResult, endDate: try XCTUnwrap(formatter.date(from: date))),
@@ -103,22 +103,22 @@ class VirologyTestResultEndpointTests: XCTestCase {
                 shouldOfferFollowUpTest: false
             )
         )
-        
+
         let parsedResponse = try endpoint.parse(response)
         TS.assert(parsedResponse, equals: expectedResponse)
     }
-    
+
     func testDecodingNoResultYet() throws {
         let response = HTTPResponse.noContent(with: .empty)
-        
+
         let expectedResponse = VirologyTestResponse.noResultYet
-        
+
         let parsedResponse = try endpoint.parse(response)
         TS.assert(parsedResponse, equals: expectedResponse)
     }
-    
+
     func testDecodingNegativeRapidTestResult() throws {
-        
+
         let response = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "2020-04-23T00:00:00Z",
@@ -129,12 +129,12 @@ class VirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": true
         }
         """#))
-        
+
         XCTAssertThrowsError(try endpoint.parse(response))
     }
-    
+
     func testDecodingVoidRapidSelfReportedTestResult() throws {
-        
+
         let response = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "2020-04-23T00:00:00Z",
@@ -145,14 +145,14 @@ class VirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": false
         }
         """#))
-        
+
         XCTAssertThrowsError(try endpoint.parse(response))
     }
-    
+
     func testDecodingUnconfirmedWithKeySubmissionSupported() throws {
-        
+
         let date = "2020-04-23T00:00:00Z"
-        
+
         let response = HTTPResponse.ok(with: .json(#"""
         {
             "testEndDate": "\#(date)",
@@ -163,9 +163,9 @@ class VirologyTestResultEndpointTests: XCTestCase {
             "shouldOfferFollowUpTest": true
         }
         """#))
-        
+
         let formatter = ISO8601DateFormatter()
-        
+
         let expectedResponse = VirologyTestResponse.receivedResult(
             .init(
                 virologyTestResult:
@@ -179,7 +179,7 @@ class VirologyTestResultEndpointTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: true
             ))
-        
+
         TS.assert(try endpoint.parse(response), equals: expectedResponse)
     }
 }

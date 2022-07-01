@@ -10,13 +10,13 @@ public struct LocalAuthorityCard: View {
     var viewModel: LocalAuthority
     @Binding var selectedLocalAuthority: LocalAuthority?
     var selectLocalAuthority: (LocalAuthority) -> Void
-    
+
     // MARK: - Init
-    
+
     func isConfirmed() -> Bool {
         selectedLocalAuthority == viewModel
     }
-    
+
     public var body: some View {
         Button(action: {
             withAnimation {

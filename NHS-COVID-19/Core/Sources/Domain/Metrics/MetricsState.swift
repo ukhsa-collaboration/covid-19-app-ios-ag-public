@@ -18,20 +18,20 @@ extension RawState {
 }
 
 class MetricsState {
-    
+
     enum State {
         case enabled, disabled
     }
-    
+
     private var rawState: DomainProperty<RawState>?
-    
+
     var state: State {
         guard let rawState = rawState else {
             return .disabled
         }
         return rawState.currentValue.isOnboarded ? .enabled : .disabled
     }
-    
+
     func set(rawState: DomainProperty<RawState>) {
         self.rawState = rawState
     }

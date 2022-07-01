@@ -6,10 +6,10 @@ import Scenarios
 import XCTest
 
 class RiskyVenueInformationBookATestScreenTests: XCTestCase {
-    
+
     @Propped
     private var runner: ApplicationRunner<RiskyVenueInformationBookATestScreenScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = RiskyVenueInformationBookATestScreen(app: app)
@@ -21,7 +21,7 @@ class RiskyVenueInformationBookATestScreenTests: XCTestCase {
             XCTAssertTrue(screen.closeButton.exists)
         }
     }
-    
+
     func testBookATestButton() throws {
         try runner.run { app in
             let screen = RiskyVenueInformationBookATestScreen(app: app)
@@ -29,7 +29,7 @@ class RiskyVenueInformationBookATestScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.bookATestTapped].exists)
         }
     }
-    
+
     func testBookATestLaterButtonTapped() throws {
         try runner.run { app in
             let screen = RiskyVenueInformationBookATestScreen(app: app)
@@ -37,7 +37,7 @@ class RiskyVenueInformationBookATestScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.bookATestLaterTapped].exists)
         }
     }
-    
+
     func testCloseButtonTapped() throws {
         try runner.run { app in
             let screen = RiskyVenueInformationBookATestScreen(app: app)
@@ -45,5 +45,5 @@ class RiskyVenueInformationBookATestScreenTests: XCTestCase {
             XCTAssertTrue(app.staticTexts[runner.scenario.closeTapped].exists)
         }
     }
-    
+
 }

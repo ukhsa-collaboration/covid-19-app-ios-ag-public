@@ -11,19 +11,19 @@ public class LocaleConfigurationTests: XCTestCase {
         let localeConfiguration = LocaleConfiguration(localeIdentifier: nil, supportedLocalizations: LocaleBundle().supportedLocalizations)
         XCTAssertEqual(localeConfiguration, .systemPreferred)
     }
-    
+
     func testBaseLocale() {
         let localizations = LocaleBundle().localizations
         XCTAssertTrue(localizations.contains("Base"))
         let localeConfiguration = LocaleConfiguration(localeIdentifier: "Base", supportedLocalizations: LocaleBundle().supportedLocalizations)
         XCTAssertEqual(localeConfiguration, .systemPreferred)
     }
-    
+
     func testCustomLocale() {
         let localeConfiguration = LocaleConfiguration(localeIdentifier: "en", supportedLocalizations: LocaleBundle().supportedLocalizations)
         XCTAssertEqual(localeConfiguration, .custom(localeIdentifier: "en"))
     }
-    
+
     func testInvalidCustomLocale() {
         let localeConfiguration = LocaleConfiguration(localeIdentifier: "ar", supportedLocalizations: LocaleBundle().supportedLocalizations)
         XCTAssertEqual(localeConfiguration, .systemPreferred)

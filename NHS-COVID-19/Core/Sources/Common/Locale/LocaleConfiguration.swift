@@ -8,7 +8,7 @@ import Foundation
 public enum LocaleConfiguration: Equatable {
     case systemPreferred
     case custom(localeIdentifier: String)
-    
+
     public init(
         localeIdentifier: String?,
         supportedLocalizations: [String]

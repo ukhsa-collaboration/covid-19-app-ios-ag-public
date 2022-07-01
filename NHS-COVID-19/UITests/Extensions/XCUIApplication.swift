@@ -7,7 +7,7 @@ import XCTest
 extension XCUIApplication {
     func checkOnHomeScreen(postcode: String, alertLevel: Int = 1) {
         let homeScreen = HomeScreen(app: self)
-        
+
         #warning("Remove this after resolving the accessiblity hack for iOS 14 in HomeViewController")
         /*
          The accessibility hack for iOS 14 in HomeViewController adds a flickering to the home screen. Because of
@@ -16,10 +16,10 @@ extension XCUIApplication {
          */
         XCTAssert(homeScreen.riskLevelBanner(for: postcode, title: "[postcode] is in Local Alert Level \(alertLevel)").waitForExistence(timeout: 2.0))
     }
-    
+
     func checkOnHomeScreenNotIsolating() {
         let homeScreen = HomeScreen(app: self)
-        
+
         #warning("Remove this after resolving the accessiblity hack for iOS 14 in HomeViewController")
         /*
          The accessibility hack for iOS 14 in HomeViewController adds a flickering to the home screen. Because of
@@ -28,10 +28,10 @@ extension XCUIApplication {
          */
         XCTAssert(homeScreen.notIsolatingIndicator.waitForExistence(timeout: 2.0))
     }
-    
+
     func checkOnHomeScreenIsolatingWarning(date: Date, days: Int) {
         let homeScreen = HomeScreen(app: self)
-        
+
         #warning("Remove this after resolving the accessiblity hack for iOS 14 in HomeViewController")
         /*
          The accessibility hack for iOS 14 in HomeViewController adds a flickering to the home screen. Because of
@@ -40,10 +40,10 @@ extension XCUIApplication {
          */
         XCTAssert(homeScreen.isolatingIndicatorWarning(date: date, days: days).waitForExistence(timeout: 2.0))
     }
-    
+
     func checkOnHomeScreenIsolatingInformational(date: Date, days: Int) {
         let homeScreen = HomeScreen(app: self)
-        
+
         #warning("Remove this after resolving the accessiblity hack for iOS 14 in HomeViewController")
         /*
          The accessibility hack for iOS 14 in HomeViewController adds a flickering to the home screen. Because of
@@ -53,7 +53,6 @@ extension XCUIApplication {
         XCTAssert(homeScreen.isolatingIndicatorInformational(date: date, days: days).waitForExistence(timeout: 2.0))
     }
 
-    
     func checkOnHomeScreen(with element: XCUIElement) {
         #warning("Remove this after resolving the accessiblity hack for iOS 14 in HomeViewController")
         /*
@@ -63,10 +62,10 @@ extension XCUIApplication {
          */
         XCTAssert(element.waitForExistence(timeout: 2.0))
     }
-    
+
     func checkOnHomeScreenBluetoothOff() {
         let homeScreen = HomeScreen(app: self)
         XCTAssert(homeScreen.contactTracingDoesNotWorkWithBTOffLabel.exists)
     }
-    
+
 }

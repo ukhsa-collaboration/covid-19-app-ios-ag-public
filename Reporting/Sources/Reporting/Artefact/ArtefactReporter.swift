@@ -5,15 +5,15 @@
 import Foundation
 
 struct ArtefactReporter {
-    
+
     func report(for appURL: URL) throws -> Report {
-        
+
         let application = try Application(url: appURL)
         let appInfo = application.appInfo
-        
+
         let appInfoReporter = AppInfoReporter(compilationRequirements: App.compilationRequirements)
         let appFilesReporter = AppFilesReporter()
-        
+
         return Report(
             pages: [
                 ReportPage(

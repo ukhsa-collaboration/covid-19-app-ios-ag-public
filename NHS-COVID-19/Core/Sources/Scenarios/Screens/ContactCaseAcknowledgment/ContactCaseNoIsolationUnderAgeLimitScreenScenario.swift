@@ -12,14 +12,14 @@ import UIKit
 public class ContactCaseNoIsolationUnderAgeLimitEnglandScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name = "Contact Case No Isolation Under 18 (England)"
-    
+
     public static let cancelTapped = "Cancel button tapped"
     public static let bookAFreeTestTapped = "Book a free test button tapped"
     public static let backToHomeTapped = "Back to home button tapped"
     public static let guidanceLinkTapped = "GuidanceLink link tapped"
     public static let commonQuestionsLinkTapped = "CommonQuestions link tapped"
     public static let contactGuidanceButtonTapped = "'Read guidance for contacts' tapped"
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = EnglandInteractor(viewController: parent)
@@ -29,49 +29,49 @@ public class ContactCaseNoIsolationUnderAgeLimitEnglandScreenScenario: Scenario 
 }
 
 private class EnglandInteractor: ContactCaseNoIsolationUnderAgeLimitInteracting {
-    
+
     private weak var viewController: UIViewController?
-    
+
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
     func didTapCancel() {
         viewController?.showAlert(title: ContactCaseNoIsolationUnderAgeLimitEnglandScreenScenario.cancelTapped)
     }
-    
+
     func didTapGuidanceLink() {
         viewController?.showAlert(title: ContactCaseNoIsolationUnderAgeLimitEnglandScreenScenario.guidanceLinkTapped)
     }
-    
+
     func didTapBackToHome() {
         viewController?.showAlert(title: ContactCaseNoIsolationUnderAgeLimitEnglandScreenScenario.backToHomeTapped)
     }
-    
+
     func didTapBookAFreeTest() {
         viewController?.showAlert(title: ContactCaseNoIsolationUnderAgeLimitEnglandScreenScenario.bookAFreeTestTapped)
     }
-    
+
     func didTapCommonQuestionsLink() {
         viewController?.showAlert(title: ContactCaseNoIsolationUnderAgeLimitEnglandScreenScenario.commonQuestionsLinkTapped)
     }
-    
+
     func didTapReadGuidanceForContacts() {
         viewController?.showAlert(title: ContactCaseNoIsolationUnderAgeLimitEnglandScreenScenario.contactGuidanceButtonTapped)
     }
-    
+
 }
 
 public class ContactCaseNoIsolationUnderAgeLimitWalesScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name = "Contact Case No Isolation Under 18 (Wales)"
-    
+
     public static let cancelTapped = "Cancel button tapped"
     public static let bookAFreeTestTapped = "Book a free test button tapped"
     public static let backToHomeTapped = "Back to home button tapped"
     public static let guidanceLinkTapped = "GuidanceLink link tapped"
     public static let commonQuestionsLinkTapped = "CommonQuestions link tapped"
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = WalesInteractor(viewController: parent)
@@ -81,35 +81,35 @@ public class ContactCaseNoIsolationUnderAgeLimitWalesScreenScenario: Scenario {
 }
 
 private class WalesInteractor: ContactCaseNoIsolationUnderAgeLimitInteracting {
-    
+
     private weak var viewController: UIViewController?
-    
+
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
     func didTapCancel() {
         viewController?.showAlert(title: ContactCaseNoIsolationUnderAgeLimitWalesScreenScenario.cancelTapped)
     }
-    
+
     func didTapGuidanceLink() {
         viewController?.showAlert(title: ContactCaseNoIsolationUnderAgeLimitWalesScreenScenario.guidanceLinkTapped)
     }
-    
+
     func didTapBackToHome() {
         viewController?.showAlert(title: ContactCaseNoIsolationUnderAgeLimitWalesScreenScenario.backToHomeTapped)
     }
-    
+
     func didTapBookAFreeTest() {
         viewController?.showAlert(title: ContactCaseNoIsolationUnderAgeLimitWalesScreenScenario.bookAFreeTestTapped)
     }
-    
+
     func didTapCommonQuestionsLink() {
         viewController?.showAlert(title: ContactCaseNoIsolationUnderAgeLimitWalesScreenScenario.commonQuestionsLinkTapped)
     }
-    
+
     func didTapReadGuidanceForContacts() {
         assertionFailure("Should not be able to tap England guidance button from the Wales screen.")
     }
-    
+
 }

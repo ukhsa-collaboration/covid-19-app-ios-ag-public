@@ -7,20 +7,20 @@ import Foundation
 
 struct LocalCovidStatsHandler: RequestHandler {
     var paths = ["/distribution/v1/local-covid-stats-daily"]
-    
+
     var dataProvider: MockDataProvider
-    
+
     var response: Result<HTTPResponse, HTTPRequestError> {
         let direction = MockDataProvider.covidStatsDirection[dataProvider.localCovidStatsDirection]
         let localAuthorityId = dataProvider.localCovidStatsLAId
         let localAuthorityResponse: String
-        
+
         let dailyPositiveCases = dataProvider.peopleTestedPositiveHasData ? 105 : nil
         let weeklyPositiveCases = dataProvider.peopleTestedPositiveHasData ? -771 : nil
-        
+
         let localAuthorityCasePer100k = dataProvider.casesPer100KHasData ? 289.5 : nil
         let countryCasesPer100k = dataProvider.casesPer100KHasData ? 510.8 : nil
-        
+
         if localAuthorityId.isEmpty {
             localAuthorityResponse = ""
         } else {

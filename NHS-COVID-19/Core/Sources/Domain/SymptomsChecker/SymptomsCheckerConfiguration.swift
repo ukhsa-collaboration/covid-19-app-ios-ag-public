@@ -7,7 +7,7 @@ import Foundation
 
 struct SymptomsCheckerConfiguration: Equatable {
     var analyticsPeriod: DayDuration
-    
+
     static let `default` = SymptomsCheckerConfiguration(
         analyticsPeriod: 14
     )

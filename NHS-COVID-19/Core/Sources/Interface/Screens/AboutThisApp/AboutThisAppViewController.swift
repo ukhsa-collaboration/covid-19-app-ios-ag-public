@@ -18,32 +18,32 @@ public protocol AboutThisAppContentInteracting {
 }
 
 extension AboutThisAppViewController {
-    
+
     static func content(interactor: Interacting, appName: String?, version: String?) -> [UIView] {
-        
+
         func makeStackView(with symbol: ImageName, and title: String) -> UIStackView {
             let icon = UIImageView(symbol).color(.primaryText).styleAsDecoration()
             let imageSize = icon.image!.size
             let aspectRatio = imageSize.height / imageSize.width
-            
+
             let titleLabel = BaseLabel()
             titleLabel.text = title
             titleLabel.styleAsBody()
             titleLabel.isAccessibilityElement = false
-            
+
             let symbolWithTitleStackview = UIStackView(arrangedSubviews: [icon, titleLabel])
             symbolWithTitleStackview.alignment = .center
             symbolWithTitleStackview.spacing = .halfSpacing
-            
+
             NSLayoutConstraint.activate([
                 icon.widthAnchor.constraint(equalToConstant: .symbolIconWidth),
                 icon.heightAnchor.constraint(equalTo: icon.widthAnchor, multiplier: aspectRatio),
             ])
-            
+
             return symbolWithTitleStackview
-            
+
         }
-        
+
         func makeIdentedStackView(text: [String]) -> UIStackView {
             let labels: [UILabel] = text.map {
                 let label = BaseLabel()
@@ -52,7 +52,7 @@ extension AboutThisAppViewController {
                 label.isAccessibilityElement = false
                 return label
             }
-            
+
             let indentedStackView = UIStackView(arrangedSubviews: labels)
             indentedStackView.axis = .vertical
             indentedStackView.distribution = .fill
@@ -65,17 +65,17 @@ extension AboutThisAppViewController {
                 right: 0
             )
             indentedStackView.isLayoutMarginsRelativeArrangement = true
-            
+
             return indentedStackView
         }
-        
+
         let appNameView = makeIdentedStackView(
             text: [localize(.about_this_app_software_information_app_name), appName ?? ""]
         )
         appNameView.isAccessibilityElement = true
         appNameView.accessibilityTraits = .staticText
         appNameView.accessibilityLabel = "\(localize(.about_this_app_software_information_app_name)) \(appName ?? "")"
-        
+
         let instructionForUseView: UIView = {
             let stackView = makeStackView(with: .symbolInstructionForUse, and: localize(.about_this_app_how_this_app_works_instruction_for_use))
             stackView.isAccessibilityElement = true
@@ -83,21 +83,21 @@ extension AboutThisAppViewController {
             stackView.accessibilityLabel = localize(.about_this_app_how_this_app_works_instruction_for_use)
             return stackView
         }()
-        
+
         let versionView: UIView = {
             let versionTitleView = makeStackView(with: .symbolRef, and: localize(.about_this_app_software_information_version))
             let versionDescriptionView = makeIdentedStackView(text: [version ?? ""])
-            
+
             let stackView = UIStackView(arrangedSubviews: [versionTitleView, versionDescriptionView])
             stackView.axis = .vertical
             stackView.spacing = .halfSpacing
-            
+
             stackView.isAccessibilityElement = true
             stackView.accessibilityTraits = .staticText
             stackView.accessibilityLabel = "\(localize(.about_this_app_software_information_version)) \(version ?? "")"
             return stackView
         }()
-        
+
         let dateOfReleaseView: UIView = {
             let dateOfReleaseTitleView = makeStackView(
                 with: .symbolRelease,
@@ -105,18 +105,18 @@ extension AboutThisAppViewController {
             )
             let dateOfReleaseDescriptionView = makeIdentedStackView(
                 text: [localize(.about_this_app_software_information_date_of_release_description)])
-            
+
             let stackView = UIStackView(arrangedSubviews: [dateOfReleaseTitleView, dateOfReleaseDescriptionView])
             stackView.axis = .vertical
             stackView.spacing = .halfSpacing
-            
+
             stackView.isAccessibilityElement = true
             stackView.accessibilityTraits = .staticText
             stackView.accessibilityLabel = localize(.about_this_app_software_information_date_of_release_title) + " "
                 + localize(.about_this_app_software_information_date_of_release_description)
             return stackView
         }()
-        
+
         let manufacturerView: UIView = {
             let manufacturerTitleView = makeStackView(
                 with: .symbolManufacturer,
@@ -124,23 +124,23 @@ extension AboutThisAppViewController {
             )
             let manufacturerViewDescriptionView = makeIdentedStackView(
                 text: [localize(.about_this_app_software_information_manufacturer_description)])
-            
+
             let stackView = UIStackView(arrangedSubviews: [manufacturerTitleView, manufacturerViewDescriptionView])
             stackView.axis = .vertical
             stackView.spacing = .halfSpacing
-            
+
             stackView.isAccessibilityElement = true
             stackView.accessibilityTraits = .staticText
             stackView.accessibilityLabel = localize(.about_this_app_software_information_manufacturer_title) + " "
                 + localize(.about_this_app_software_information_manufacturer_description)
             return stackView
         }()
-        
+
         let ukcaConformityView: UIView = {
             let ukcaBadge = UIImageView(.symbolUKCA).color(.primaryText).styleAsDecoration()
             let ukcaBadgeStack = UIStackView(arrangedSubviews: [ukcaBadge, UIView()])
             ukcaBadgeStack.alignment = .firstBaseline
-            
+
             let indentedStackView = UIStackView(arrangedSubviews: [ukcaBadgeStack])
             indentedStackView.axis = .vertical
             indentedStackView.distribution = .fill
@@ -153,13 +153,13 @@ extension AboutThisAppViewController {
                 right: 0
             )
             indentedStackView.isLayoutMarginsRelativeArrangement = true
-            
+
             indentedStackView.isAccessibilityElement = true
             indentedStackView.accessibilityLabel = localize(.ukca_compliance_announcement)
-            
+
             return indentedStackView
         }()
-        
+
         let views = [
             InformationBox.information.yellow([
                 [
@@ -213,24 +213,24 @@ extension AboutThisAppViewController {
             BaseLabel().set(text: localize(.about_this_app_footer_text)).styleAsHeading().centralized(),
             UIImageView(.onboardingStart).styleAsDecoration(),
         ]
-        
+
         return views
     }
-    
+
 }
 
 public class AboutThisAppViewController: ScrollingContentViewController {
     public typealias Interacting = AboutThisAppContentInteracting
-    
+
     public init(interactor: Interacting, appName: String?, version: String?) {
         super.init(views: Self.content(interactor: interactor, appName: appName, version: version))
         title = localize(.about_this_app_title)
     }
-    
+
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)

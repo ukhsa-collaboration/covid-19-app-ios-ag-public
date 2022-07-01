@@ -15,7 +15,7 @@ public protocol HowDoYouFeelViewControllerInteracting {
 struct HowDoYouFeelContent {
     public typealias Interacting = HowDoYouFeelViewControllerInteracting
     var views: [StackViewContentProvider]
-    
+
     init(interactor: Interacting, doYouFeelWell: Bool?) {
         let emptyError = UIHostingController(
             rootView: ErrorBox(
@@ -25,7 +25,7 @@ struct HowDoYouFeelContent {
         )
         emptyError.view.backgroundColor = .clear
         emptyError.view.isHidden(true)
-        
+
         var doYouFeelWell: Bool? = doYouFeelWell
         let yesNoOptions: [RadioButtonGroup.ButtonViewModel] = [
             .init(
@@ -45,15 +45,15 @@ struct HowDoYouFeelContent {
                 }
             ),
         ]
-        
+
         var yesNoButtonState: RadioButtonGroup.State {
             guard let doYouFeelWell = doYouFeelWell else {
                 return RadioButtonGroup.State()
             }
-            
+
             return RadioButtonGroup.State(selectedID: yesNoOptions[doYouFeelWell ? 0 : 1].id)
         }
-        
+
         let stepLabel = BaseLabel()
         stepLabel.text = localize(.step_label(index: 2, count: 3))
         stepLabel.accessibilityLabel = localize(.step_accessibility_label(index: 2, count: 3))
@@ -61,7 +61,7 @@ struct HowDoYouFeelContent {
         stepLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
         stepLabel.numberOfLines = 0
         stepLabel.adjustsFontForContentSizeCategory = true
-        
+
         let radioButtonGroup = UIHostingController(
             rootView: RadioButtonGroup(
                 buttonViewModels: yesNoOptions,
@@ -69,7 +69,7 @@ struct HowDoYouFeelContent {
             )
         )
         radioButtonGroup.view.backgroundColor = .clear
-        
+
         let stackedViews: [UIView] = [
             emptyError.view,
             UIImageView(.isolationContinue).styleAsDecoration(),
@@ -80,7 +80,7 @@ struct HowDoYouFeelContent {
         let contentStack = UIStackView(arrangedSubviews: stackedViews.flatMap { $0.content })
         contentStack.axis = .vertical
         contentStack.spacing = .standardSpacing
-        
+
         let button = PrimaryButton(
             title: localize(.how_you_feel_continue_button),
             action: {
@@ -92,13 +92,13 @@ struct HowDoYouFeelContent {
                 }
             }
         )
-        
+
         let stackContent = [contentStack, button]
         let stackView = UIStackView(arrangedSubviews: stackContent)
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
         stackView.spacing = .standardSpacing
-        
+
         views = [stackView]
     }
 }
@@ -106,7 +106,7 @@ struct HowDoYouFeelContent {
 public class HowDoYouFeelViewController: ScrollingContentViewController {
     public typealias Interacting = HowDoYouFeelViewControllerInteracting
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting, doYouFeelWell: Bool?) {
         self.interactor = interactor
         let content = HowDoYouFeelContent(
@@ -117,11 +117,11 @@ public class HowDoYouFeelViewController: ScrollingContentViewController {
         title = localize(.how_you_feel_header)
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: localize(.back), style: .plain, target: self, action: #selector(didTapBackButton))
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)

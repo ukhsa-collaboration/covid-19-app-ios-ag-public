@@ -11,7 +11,7 @@ import Interface
 enum SelfDiagnosisOrderFlowState {
     case selfDiagnosis(SelfDiagnosisFlowViewController.Interacting)
     case testOrdering(VirologyTestingFlowViewController.Interacting)
-    
+
     static func makeState(context: RunningAppContext, acknowledge: (() -> Void)? = nil) -> AnyPublisher<SelfDiagnosisOrderFlowState, Never> {
         let testOrdering = CurrentValueSubject<Bool, Never>(false)
         return testOrdering

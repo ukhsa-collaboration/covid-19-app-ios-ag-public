@@ -9,7 +9,7 @@ import Foundation
 
 @available(iOS 13.7, *)
 extension IsolationModelAcceptanceTests {
-    
+
     func trigger(_ event: IsolationModel.Event, adapter: inout IsolationModelAdapter, initialState: IsolationModel.State) throws {
         switch event {
         case .riskyContact:
@@ -105,27 +105,27 @@ extension IsolationModelAcceptanceTests {
             try testEntry.enterNegative(endDate: endDay.startDate(in: .utc))
         }
     }
-    
+
     private func triggerRiskyContact(adapter: inout IsolationModelAdapter) throws {
         let riskyContact = RiskyContact(configuration: $instance)
-        
+
         adapter.contactCase.exposureDay = adapter.contactCase.optedOutIsolation.advanced(by: 1)
-        
+
         adapter.contactCase.contactIsolationToStartOfDay = adapter.contactCase.exposureDay.advanced(by: 14)
-        
+
         riskyContact.trigger(exposureDate: adapter.contactCase.exposureDay.startDate(in: .utc)) {
             instance.coordinator.performBackgroundTask(task: NoOpBackgroundTask())
         }
         adapter.contactCase.contactIsolationFromStartOfDay = adapter.currentDate.day
     }
-    
+
     private func riskyContactWithExposureDayOlderThanEarlyIsolationTermination(adapter: inout IsolationModelAdapter) throws {
         let riskyContact = RiskyContact(configuration: $instance)
         riskyContact.trigger(exposureDate: adapter.contactCase.optedOutIsolation.advanced(by: -4).startDate(in: .utc)) {
             instance.coordinator.performBackgroundTask(task: NoOpBackgroundTask())
         }
     }
-    
+
 }
 
 private struct NoOpBackgroundTask: BackgroundTask {
@@ -136,6 +136,6 @@ private struct NoOpBackgroundTask: BackgroundTask {
         }
         nonmutating set {}
     }
-    
+
     func setTaskCompleted(success: Bool) {}
 }

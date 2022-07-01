@@ -11,9 +11,9 @@ import UIKit
 public class TestSymptomsReviewScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name: String = "Virology Testing - Symptoms Review"
-    
+
     public static var confirmTapped = "Confirm button tapped"
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             TestSymptomsReviewViewController(
@@ -27,11 +27,11 @@ public class TestSymptomsReviewScreenScenario: Scenario {
 
 private class Interactor: TestSymptomsReviewViewController.Interacting {
     private weak var viewController: UIViewController?
-    
+
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
     func confirmSymptomsDate(selectedDay: GregorianDay?, hasCheckedNoDate: Bool) -> Result<Void, TestSymptomsReviewUIError> {
         if selectedDay == nil, !hasCheckedNoDate {
             return .failure(.neitherDateNorNoDateCheckSet)

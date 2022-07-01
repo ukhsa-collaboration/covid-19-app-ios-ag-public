@@ -12,7 +12,7 @@ struct ExposureKeysManager {
     enum KeySharerResult {
         case markInitialFlowComplete
         case markToDelete
-        
+
         init(
             result: DiagnosisKeySharer.ShareResult,
             flowType: DiagnosisKeySharer.ShareFlowType,
@@ -37,13 +37,13 @@ struct ExposureKeysManager {
             }
         }
     }
-    
+
     var controller: ExposureNotificationDetectionController
     var submissionClient: HTTPClient
     var trafficObfuscationClient: TrafficObfuscationClient
     var contactCaseIsolationDuration: DayDuration
     var currentDateProvider: DateProviding
-    
+
     init(controller: ExposureNotificationDetectionController,
          submissionClient: HTTPClient,
          trafficObfuscationClient: TrafficObfuscationClient,
@@ -55,7 +55,7 @@ struct ExposureKeysManager {
         self.contactCaseIsolationDuration = contactCaseIsolationDuration
         self.currentDateProvider = currentDateProvider
     }
-    
+
     func sendKeys(for onsetDay: GregorianDay,
                   token: DiagnosisKeySubmissionToken,
                   acknowledgementDay: GregorianDay,
@@ -73,7 +73,7 @@ struct ExposureKeysManager {
                 case .reminder:
                     Metrics.signpost(.consentedToShareExposureKeysInReminderScreen)
                 }
-                
+
                 return keys.map { TemporaryExposureKey(exposureKey: $0, onsetDay: onsetDay) }
                     .filter { $0.transmissionRiskLevel > 0 }
                     .filter {
@@ -85,11 +85,11 @@ struct ExposureKeysManager {
             }
             .eraseToAnyPublisher()
     }
-    
+
     private func post(token: DiagnosisKeySubmissionToken, diagnosisKeys: [TemporaryExposureKey]) -> AnyPublisher<Void, NetworkRequestError> {
         submissionClient.fetch(DiagnosisKeySubmissionEndPoint(token: token), with: diagnosisKeys)
     }
-    
+
     public func makeDiagnosisKeySharer(
         assumedOnsetDay: GregorianDay,
         currentDateProvider: DateProviding,
@@ -123,21 +123,21 @@ struct ExposureKeysManager {
                             } else if case .sent = result {
                                 Metrics.signpost(.successfullySharedExposureKeys)
                             }
-                            
+
                             let keySharerResult = KeySharerResult(
                                 result: result,
                                 flowType: flowType,
                                 acknowledgementTime: info.testResultAcknowledgmentTime.date,
                                 currentDateProvider: currentDateProvider
                             )
-                            
+
                             completionHandler(keySharerResult)
                         })
                         .eraseToAnyPublisher()
                     },
                     doNotShareKeys: { flowType in
                         self.trafficObfuscationClient.sendSingleTraffic(for: TrafficObfuscator.keySubmission)
-                        
+
                         let keySharerResult = KeySharerResult(
                             result: .notSent,
                             flowType: flowType,
@@ -157,12 +157,12 @@ public struct DiagnosisKeySharer {
         case sent
         case notSent
     }
-    
+
     public enum ShareFlowType {
         case initial
         case reminder
     }
-    
+
     public var hasFinishedInitialKeySharingFlow: Bool
     public var hasTriggeredReminderNotification: Bool
     public var shareKeys: (ShareFlowType) -> AnyPublisher<ShareResult, Error>

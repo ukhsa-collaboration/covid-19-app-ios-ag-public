@@ -8,10 +8,10 @@ import SwiftUI
 import UIKit
 
 struct SelectRoleView: View {
-    
+
     @ObservedObject
     var experimentManager: ExperimentManager
-    
+
     var body: some View {
         NavigationView {
             VStack(spacing: 16) {
@@ -33,5 +33,5 @@ struct SelectRoleView: View {
             .navigationBarTitle("Select Role")
         }
     }
-    
+
 }

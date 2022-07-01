@@ -9,22 +9,22 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 class ExperimentAppController: AppController {
-    
+
     let experimentManager = ExperimentManager()
     let rootViewController: UIViewController
-    
+
     init() {
         let rootView = ExperimentView(experimentManager: experimentManager)
         rootViewController = UIHostingController(rootView: rootView)
     }
-    
+
 }
 
 private struct ExperimentView: View {
-    
+
     @ObservedObject
     var experimentManager: ExperimentManager
-    
+
     var body: some View {
         if experimentManager.role == .lead {
             return AnyView(LeadHomeView(experimentManager: experimentManager))
@@ -34,5 +34,5 @@ private struct ExperimentView: View {
             return AnyView(SelectRoleView(experimentManager: experimentManager))
         }
     }
-    
+
 }

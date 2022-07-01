@@ -15,7 +15,7 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
     let symptomMapper = SymptomMapping()
     let openURL: (URL) -> Void
     let initialIsolationState: Domain.IsolationState
-    
+
     func fetchQuestionnaire() -> AnyPublisher<InterfaceSymptomsQuestionnaire, Error> {
         selfDiagnosisManager.fetchQuestionnaire()
             .map { questionnaire in
@@ -34,7 +34,7 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
             .mapError { $0 }
             .eraseToAnyPublisher()
     }
-    
+
     func advice(basedOn symptomsQuestionnaire: InterfaceSymptomsQuestionnaire, onsetDay: GregorianDay?, country: Country) -> SelfDiagnosisAdvice {
         let riskThreshold: Double = symptomsQuestionnaire.riskThreshold
         let symptoms: [SymptomInfo] = symptomsQuestionnaire.symptoms
@@ -42,7 +42,7 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
             .filter(\.isConfirmed)
             .map(symptomMapper.domainSymptomFrom)
         let symptomaticSelfIsolationEnabled = !(country == .wales && !symptomsQuestionnaire.isSymptomaticSelfIsolationForWalesEnabled)
-        
+
         let evaluation = selfDiagnosisManager.evaluate(
             selectedSymptoms: selectedSymptoms,
             onsetDay: onsetDay,
@@ -56,67 +56,75 @@ struct SelfDiagnosisFlowInteractor: SelfDiagnosisFlowViewController.Interacting 
             let adviceDetails: SelfDiagnosisAdvice.HasSymptomsAdviceDetails = .init(isolation: isolation, testState: testState)
             if !symptomaticSelfIsolationEnabled
                 && adviceDetails == .isolate(SelfDiagnosisAdvice.ExistingPositiveTestState.hasNoTests, endDate: isolation.endDate) {
-                return .hasSymptoms(.followAdviceButNoIsolationNeeded(endDate: isolation.endDate))
+                return .hasSymptoms(.followAdviceButNoIsolationNeeded)
             } else {
                 return .hasSymptoms(adviceDetails)
             }
         }
     }
-    
+
     var adviceWhenNoSymptomsAreReported: SelfDiagnosisAdvice {
         .noSymptoms(.init(initialIsolationState))
     }
-    
+
     func openTestkitOrder() {
         orderTest()
     }
-    
+
     func furtherAdviceLinkTapped() {
         openURL(ExternalLink.isolationAdvice.url)
     }
-    
+
     func nhs111LinkTapped() {
         openURL(ExternalLink.nhs111Online.url)
     }
-    
+
     func nhsGuidanceLinkTapped() {
         openURL(ExternalLink.nhsGuidance.url)
     }
-    
+
     func gettingTestedLinkTapped() {
         openURL(ExternalLink.getTested.url)
     }
-    
+
     func exposureFAQsLinkTapped() {
         openURL(ExternalLink.exposureFAQs.url)
     }
-    
+
     func gettingTestedWalesLinkTapped() {
         openURL(ExternalLink.getTestedWalesLink.url)
+    }
+
+    func walesNHS111OnlineLinkTapped() {
+        openURL(ExternalLink.walesNHS111OnlineLink.url)
+    }
+
+    func commonQuestionsLinkTapped() {
+        openURL(ExternalLink.commonQuestionLink.url)
     }
 }
 
 extension SelfDiagnosisFlowInteractor: BookATestInfoViewControllerInteracting {
-    
+
     public func didTapBookATest() {
         openTestkitOrder()
     }
-    
+
     public func didTapTestingPrivacyNotice() {
         openURL(ExternalLink.testingPrivacyNotice.url)
     }
-    
+
     public func didTapAppPrivacyNotice() {
         openURL(ExternalLink.privacy.url)
     }
-    
+
     public func didTapBookATestForSomeoneElse() {
         openURL(ExternalLink.bookATestForSomeoneElse.url)
     }
 }
 
 private extension SelfDiagnosisAdvice.NoSymptomsAdviceDetails {
-    
+
     init(_ isolationState: Domain.IsolationState) {
         switch isolationState {
         case .noNeedToIsolate:
@@ -127,11 +135,11 @@ private extension SelfDiagnosisAdvice.NoSymptomsAdviceDetails {
             self = .isolateForUnspecifiedReason(endDate: isolation.endDate)
         }
     }
-    
+
 }
 
 private extension SelfDiagnosisAdvice.HasSymptomsAdviceDetails {
-    
+
     init(isolation: Isolation, testState: SelfDiagnosisEvaluation.ExistingPositiveTestState) {
         switch testState {
         case .hasNoTest:
@@ -141,5 +149,5 @@ private extension SelfDiagnosisAdvice.HasSymptomsAdviceDetails {
         case .hasTest(shouldChangeAdviceDueToSymptoms: false):
             self = .followAdviceForExistingPositiveTest
         }
-    }    
+    }
 }

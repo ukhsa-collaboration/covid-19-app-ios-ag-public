@@ -8,20 +8,20 @@ import Foundation
 import UIKit
 
 public class CameraStateController: ObservableObject {
-    
+
     public enum AuthorizationState {
         case notDetermined
         case authorized
         case denied
         case restricted
     }
-    
+
     @Published
     public private(set) var authorizationState: AuthorizationState
-    
+
     private let manager: CameraManaging
     private var cancellable: AnyCancellable?
-    
+
     public init(manager: CameraManaging, notificationCenter: NotificationCenter) {
         self.manager = manager
         authorizationState = CameraStateController.AuthorizationState(manager.instanceAuthorizationStatus)
@@ -30,7 +30,7 @@ public class CameraStateController: ObservableObject {
                 self?.authorizationState = CameraStateController.AuthorizationState(manager.instanceAuthorizationStatus)
             }
     }
-    
+
     public func requestAccess() {
         assert(authorizationState == .notDetermined, "\(#function) must be called at most once.")
         manager.requestAccess {
@@ -40,7 +40,7 @@ public class CameraStateController: ObservableObject {
 }
 
 private extension CameraStateController.AuthorizationState {
-    
+
     init(_ status: AVAuthorizationStatus) {
         switch status {
         case .restricted:

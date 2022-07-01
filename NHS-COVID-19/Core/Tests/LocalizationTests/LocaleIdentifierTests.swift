@@ -14,14 +14,14 @@ class LocaleIdentifierTests: XCTestCase {
         XCTAssertEqual(en.canonicalValue, "en")
         XCTAssertEqual(en.languageCode, "en")
     }
-    
+
     func testWithUnderscore() throws {
         let en = LocaleIdentifier(rawValue: "en_GB")
         XCTAssertEqual(en.rawValue, "en_GB")
         XCTAssertEqual(en.canonicalValue, "en-gb")
         XCTAssertEqual(en.languageCode, "en")
     }
-    
+
     func testWithDash() throws {
         let en = LocaleIdentifier(rawValue: "en-GB")
         XCTAssertEqual(en.rawValue, "en-GB")

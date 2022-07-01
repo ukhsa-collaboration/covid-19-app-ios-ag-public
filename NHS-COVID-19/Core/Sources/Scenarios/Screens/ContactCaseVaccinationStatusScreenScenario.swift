@@ -10,12 +10,12 @@ import UIKit
 public class ContactCaseVaccinationStatusScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name: String = "Contact Case Exposure - Vaccination"
-    
+
     public static let confirmFullyVaccinatedTapped = "Confirm that is fully vaccinated tapped"
     public static let confirmNotFullyVaccinatedTapped = "Confirm that is not fully vaccinated tapped"
     public static let linkTapped = "Link tapped"
     public static let vaccineThresholdDate = Date(timeIntervalSinceNow: -15 * 86400)
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
@@ -29,21 +29,21 @@ public class ContactCaseVaccinationStatusScreenScenario: Scenario {
 }
 
 private class Interactor: ContactCaseVaccinationStatusViewController.Interacting {
-    
+
     private weak var viewController: UIViewController?
-    
+
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
     func didTapEditPostcode() {
         viewController?.showAlert(title: MyAreaScreenScenario.editTappeed)
     }
-    
+
     func didTapAboutApprovedVaccinesLink() {
         viewController?.showAlert(title: ContactCaseVaccinationStatusScreenScenario.linkTapped)
     }
-    
+
     func didAnswerQuestion(answers: ContactCaseVaccinationStatusAnswers) -> [ContactCaseVaccinationStatusQuestion] {
         if let fullyVaccinated = answers.fullyVaccinated {
             if fullyVaccinated {
@@ -55,7 +55,7 @@ private class Interactor: ContactCaseVaccinationStatusViewController.Interacting
             return [.fullyVaccinated]
         }
     }
-    
+
     func didTapConfirm(answers: ContactCaseVaccinationStatusAnswers) -> Result<Void, ContactCaseVaccinationStatusNotEnoughAnswersError> {
         if let fullyVaccinated = answers.fullyVaccinated {
             if let lastDose = answers.lastDose {
@@ -77,5 +77,5 @@ private class Interactor: ContactCaseVaccinationStatusViewController.Interacting
             return Result.failure(ContactCaseVaccinationStatusNotEnoughAnswersError())
         }
     }
-    
+
 }

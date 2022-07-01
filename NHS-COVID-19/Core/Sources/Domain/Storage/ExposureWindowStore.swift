@@ -14,25 +14,25 @@ struct ExposureWindowInfo: Codable, Equatable {
     var riskScore: Double
     var riskCalculationVersion: Int
     var isConsideredRisky: Bool
-    
+
     struct ScanInstance: Codable, Equatable {
         var minimumAttenuation: UInt8
         var typicalAttenuation: UInt8
         var secondsSinceLastScan: Int
-        
+
         init(minimumAttenuation: UInt8, typicalAttenuation: UInt8, secondsSinceLastScan: Int) {
             self.minimumAttenuation = minimumAttenuation
             self.typicalAttenuation = typicalAttenuation
             self.secondsSinceLastScan = secondsSinceLastScan
         }
     }
-    
+
     enum Infectiousness: String, Codable, Equatable {
         case none
         case standard
         case high
     }
-    
+
     init(
         date: GregorianDay,
         infectiousness: ExposureWindowInfo.Infectiousness,
@@ -91,22 +91,22 @@ struct ExposureWindowInfoCollection: Codable, Equatable, DataConvertible {
 
 class ExposureWindowStore {
     @Encrypted private var exposureWindowsInfo: ExposureWindowInfoCollection?
-    
+
     private static var logger = Logger(label: "ExposureWindowStore")
     /// Limit of non-risky windows to be stored
     var nonRiskyWindowsLimit: Int
-    
+
     init(store: EncryptedStoring, nonRiskyWindowsLimit: Int = ExposureWindowInfo.nonRiskyWindowStoreLimit) {
         _exposureWindowsInfo = store.encrypted("exposure_window_store")
         self.nonRiskyWindowsLimit = nonRiskyWindowsLimit
     }
-    
+
     func load() -> ExposureWindowInfoCollection? {
         return exposureWindowsInfo
     }
-    
+
     func append(_ infos: [ExposureWindowInfo]) {
-        
+
         let collectionToStore: ExposureWindowInfoCollection = {
             if var current = exposureWindowsInfo {
                 // store has existing windows so append all new risky windows and up to a combined store limit of existing and new non-risky windows
@@ -118,14 +118,14 @@ class ExposureWindowStore {
                 return ExposureWindowInfoCollection(exposureWindowsInfo: infos.riskyWindows + infos.nonRiskyWindows.suffix(nonRiskyWindowsLimit))
             }
         }()
-        
+
         save(collectionToStore)
     }
-    
+
     private func save(_ collection: ExposureWindowInfoCollection) {
         exposureWindowsInfo = collection
     }
-    
+
     // delete all exposure windows
     func delete() {
         exposureWindowsInfo = nil
@@ -150,16 +150,16 @@ class ExposureWindowStore {
 
 // Decodable init
 extension ExposureWindowInfo {
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
+
         date = try container.decode(GregorianDay.self, forKey: .date)
         infectiousness = try container.decode(Infectiousness.self, forKey: .infectiousness)
         scanInstances = try container.decode([ScanInstance].self, forKey: .scanInstances)
         riskScore = try container.decode(Double.self, forKey: .riskScore)
         riskCalculationVersion = try container.decode(Int.self, forKey: .riskCalculationVersion)
         isConsideredRisky = try container.decodeIfPresent(Bool.self, forKey: .isConsideredRisky) ?? true
-        
+
     }
 }

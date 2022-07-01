@@ -26,28 +26,28 @@ extension DeviceConfiguration {
             interfaceStyle: .light
         )
     }
-    
+
     func configure(_ device: XCUIDevice) {
         device.orientation = orientation
     }
 }
 
 extension DeviceConfiguration {
-    
+
     static let reportConfigurations: Set<DeviceConfiguration> = {
-        
+
         let orientations: [UIDeviceOrientation] = [.portrait, .landscapeLeft]
         let languages = Bundle(for: Marker.self).localizations
-        
+
         let contentSizes: [UIContentSizeCategory] = [
             .extraSmall,
             .medium,
             .extraLarge,
             .accessibilityExtraExtraExtraLarge,
         ]
-        
+
         let interfaceStyles: [InterfaceStyle] = [.dark, .light]
-        
+
         return Set(
             languages.flatMap { language in
                 orientations.flatMap { orientation in
@@ -65,15 +65,15 @@ extension DeviceConfiguration {
             }
         )
     }()
-    
+
     static let reportConfigurationsSparse: Set<DeviceConfiguration> = {
         Set(orientationAndStyleMinimal + contentSizesMinimal + languages + stringLocalizableKeysOnly)
     }()
-    
+
     static let testConfigurationLanguages: Set<DeviceConfiguration> = {
         Set(languages)
     }()
-    
+
     private static var orientationAndStyleMinimal: [DeviceConfiguration] {
         [
             DeviceConfiguration(
@@ -96,15 +96,15 @@ extension DeviceConfiguration {
             ),
         ]
     }
-    
+
     private static var contentSizesMinimal: [DeviceConfiguration] {
-        
+
         let contentSizes: [UIContentSizeCategory] = [
             .extraSmall,
             .medium,
             .accessibilityExtraExtraExtraLarge,
         ]
-        
+
         return contentSizes.map { contentSize in
             DeviceConfiguration(
                 language: "en",
@@ -114,11 +114,11 @@ extension DeviceConfiguration {
             )
         }
     }
-    
+
     private static var languages: [DeviceConfiguration] {
-        
+
         let languages = Bundle(for: Marker.self).localizations
-        
+
         return languages.map { language in
             DeviceConfiguration(
                 language: language,
@@ -128,7 +128,7 @@ extension DeviceConfiguration {
             )
         }
     }
-    
+
     private static var stringLocalizableKeysOnly: [DeviceConfiguration] {
         [
             DeviceConfiguration(
@@ -140,7 +140,7 @@ extension DeviceConfiguration {
             ),
         ]
     }
-    
+
 }
 
 private class Marker {}

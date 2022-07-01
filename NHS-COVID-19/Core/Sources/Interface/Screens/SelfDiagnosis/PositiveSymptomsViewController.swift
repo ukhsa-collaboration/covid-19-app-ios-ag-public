@@ -15,10 +15,10 @@ public protocol PositiveSymptomsViewControllerInteracting {
 
 extension PositiveSymptomsViewController {
     private class Content: PrimaryLinkButtonStickyFooterScrollingContent {
-        
+
         init(interactor: Interacting, isolationEndDate: Date, currentDateProvider: DateProviding) {
             let daysToIsolate = currentDateProvider.currentLocalDay.daysRemaining(until: isolationEndDate)
-            
+
             let headingStack = UIStackView(
                 content: BasicContent(
                     views: [
@@ -45,7 +45,7 @@ extension PositiveSymptomsViewController {
             .isAccessibilityElement(true)
             .accessibilityTraits([.header, .staticText])
             .accessibilityLabel(localize(.positive_symptoms_please_isolate_accessibility_label(days: daysToIsolate)))
-            
+
             super.init(
                 scrollingViews: [
                     UIImageView(.isolationStartIndex).styleAsDecoration(),
@@ -63,7 +63,7 @@ extension PositiveSymptomsViewController {
                         title: localize(.end_of_isolation_online_services_link),
                         action: interactor.furtherAdviceLinkTapped
                     ),
-                    
+
                 ],
                 primaryLinkButton: (
                     title: localize(.positive_symptoms_corona_test_button),
@@ -77,7 +77,7 @@ extension PositiveSymptomsViewController {
 public class PositiveSymptomsViewController: StickyFooterScrollingContentViewController {
     public typealias Interacting = PositiveSymptomsViewControllerInteracting
     private let interactor: Interacting
-    
+
     public init(interactor: Interacting, isolationEndDate: Date, currentDateProvider: DateProviding) {
         self.interactor = interactor
         super.init(content: Content(interactor: interactor, isolationEndDate: isolationEndDate, currentDateProvider: currentDateProvider))
@@ -87,11 +87,11 @@ public class PositiveSymptomsViewController: StickyFooterScrollingContentViewCon
             action: #selector(didTapCancel)
         )
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc func didTapCancel() {
         interactor.didTapCancel()
     }

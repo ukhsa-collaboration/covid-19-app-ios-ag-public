@@ -15,18 +15,18 @@ enum TrafficObfuscator: String, Encodable {
 }
 
 class TrafficObfuscationClient {
-    
+
     let httpClient: HTTPClient
     let rateLimiter: ObfuscationRateLimiting
 
     var cancellables = [AnyCancellable]()
     private static let logger = Logger(label: "TrafficObfuscationClient")
-    
+
     init(client: HTTPClient, rateLimiter: ObfuscationRateLimiting) {
         self.httpClient = client
         self.rateLimiter = rateLimiter
     }
-    
+
     func sendTraffic(for source: TrafficObfuscator, randomRange: ClosedRange<Int>, numberOfActualCalls: Int) {
 
         guard rateLimiter.allow else {
@@ -37,18 +37,18 @@ class TrafficObfuscationClient {
 
         let randomNumberOfCalls = Int.random(in: randomRange)
         Self.logger.info("Random number: \(randomNumberOfCalls)")
-        
+
         guard numberOfActualCalls < randomNumberOfCalls else {
             return
         }
-        
+
         for _ in 1 ... randomNumberOfCalls - numberOfActualCalls {
             post(for: source)
         }
     }
-    
+
     func sendSingleTraffic(for source: TrafficObfuscator) {
-        
+
         guard rateLimiter.allow else {
             Self.logger.info("Blocking single traffic")
             return
@@ -57,7 +57,7 @@ class TrafficObfuscationClient {
 
         post(for: source)
     }
-    
+
     private func post(for source: TrafficObfuscator) {
         httpClient.fetch(EmptyEndpoint(), with: source)
             .ensureFinishes(placeholder: ())

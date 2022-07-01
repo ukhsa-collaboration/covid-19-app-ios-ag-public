@@ -13,9 +13,9 @@ import XCTest
 struct ApplicationRunner<Scenario: TestScenario>: TestProp {
     struct Configuration: TestPropConfiguration {
         var disableAnimations = true
-        
+
         var initialState: Scenario.Inputs = Scenario.defaultInputs
-        
+
         fileprivate var useCase: UseCase?
         mutating func report(scenario: String = Scenario.name, _ name: String, _ description: () -> String = { "" }) {
             useCase = UseCase(
@@ -25,45 +25,45 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
                 description: description()
             )
         }
-        
+
         var enabledFeatures: Set<String> = []
-        
+
         private mutating func enable<T>(feature: UserDefault<T>) {
             enabledFeatures.insert(feature.key)
         }
-        
+
         mutating func enable<T>(_ keyPath: KeyPath<FeatureToggleStorage, UserDefault<T>>) {
             let featureToggleStorage = FeatureToggleStorage()
-            
+
             enable(feature: featureToggleStorage[keyPath: keyPath])
         }
-        
+
     }
-    
+
     private var configuration: Configuration
     private var useCaseBuilder: UseCaseBuilder?
     private var testBundle = Bundle.main
-    
+
     mutating func prepare(for test: XCTestCase) {
         testBundle = Bundle(for: type(of: test))
         test.continueAfterFailure = false
     }
-    
+
     init(configuration: Configuration) {
         self.configuration = configuration
         if let useCase = configuration.useCase, ProcessInfo().testMode == .report || ProcessInfo().testMode == .languages {
             useCaseBuilder = UseCaseBuilder(useCase: useCase)
         }
     }
-    
+
     var scenario: Scenario.Type {
         Scenario.self
     }
-    
+
     var isGeneratingReport: Bool {
         useCaseBuilder != nil
     }
-    
+
     @_transparent
     func run(file: StaticString = #file,
              line: UInt = #line,
@@ -73,12 +73,12 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
         // up on the line that calls `run`; but we preserve line information of errors thrown by `work`.
         try _run(file: file, line: line, deviceConfigurations: deviceConfigurations, work: work)
     }
-    
+
     @_transparent
     func step(_ name: String, _ description: () -> String = { "" }) {
         useCaseBuilder?.step(name: name, description: description)
     }
-    
+
     @_transparent
     private func _run(file: StaticString,
                       line: UInt,
@@ -92,21 +92,21 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
             guard let useCaseBuilder = useCaseBuilder else {
                 throw XCTSkip("Not a report use-case.", file: file, line: line)
             }
-            
+
             let reportCollector = try ReportCollector.shared()
-            
+
             let initialConfiguration = DeviceConfiguration(from: .shared)
-            
+
             try deviceConfigurations.forEach { deviceConfiguration in
                 try runOnce(deviceConfiguration: deviceConfiguration, work: work)
-                
+
                 // Save screenshots after each run to avoid keeping it all in memory.
                 try reportCollector.appendScreenshots(useCaseBuilder.screenshots, for: useCaseBuilder.useCase)
                 useCaseBuilder.clearScreenshots()
             }
-            
+
             initialConfiguration.configure(.shared)
-            
+
             try reportCollector.saveManifest(for: useCaseBuilder.useCase)
             #else
             throw XCTSkip("Reporting is only supported on the simulator.")
@@ -116,36 +116,36 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
             guard useCaseBuilder != nil else {
                 throw XCTSkip("Not a report use-case.", file: file, line: line)
             }
-            
+
             let initialConfiguration = DeviceConfiguration(from: .shared)
-            
+
             try DeviceConfiguration.testConfigurationLanguages.forEach { deviceConfiguration in
                 try runOnce(deviceConfiguration: deviceConfiguration, work: work)
             }
-            
+
             initialConfiguration.configure(.shared)
         }
     }
-    
+
     private func runOnce(deviceConfiguration: DeviceConfiguration? = nil, work: (XCUIApplication) throws -> Void) throws {
         if let deviceConfiguration = deviceConfiguration {
             deviceConfiguration.configure(.shared)
         }
         let encodedJson = try JSONEncoder().encode(configuration.initialState).base64EncodedString()
-        
+
         let app = XCUIApplication()
         app.launchEnvironment[Runner.disableAnimations] = configuration.disableAnimations ? "1" : "0"
         app.launchEnvironment[Runner.disableHardwareKeyboard] = "1"
         app.launchEnvironment[Runner.shouldResetScenarioAfterEnteringBackground] = "1"
         app.launchEnvironment[SandboxedScenario.initialStateEnvironmentKey] = encodedJson
         app.launchArguments = ["-\(Runner.activeScenarioDefaultKey)", Scenario.id]
-        
+
         FeatureToggleStorage().allFeatureKeys.forEach {
             app.launchArguments += ["-\($0)", configuration.enabledFeatures.contains($0) ? "<true/>" : "<false/>"]
         }
-        
+
         testBundle.becomeCurrentForTesting()
-        
+
         if let deviceConfiguration = deviceConfiguration {
             app.launchArguments += [
                 "-UIPreferredContentSizeCategoryName", deviceConfiguration.contentSize.rawValue,
@@ -153,29 +153,29 @@ struct ApplicationRunner<Scenario: TestScenario>: TestProp {
                 "-AppleLanguages", "(\(deviceConfiguration.language))",
                 "-AppleLocale", deviceConfiguration.language,
             ]
-            
+
             let showKeysOnly = deviceConfiguration.showStringLocalizableKeysOnly
             app.launchEnvironment[Runner.showStringLocalizableKeysOnly] = showKeysOnly ? "1" : "0"
             // Set overrider for UITests target
             Localization.current.overrider = showKeysOnly ? ShowLocalizableKeysOnlyOverrider() : nil
-            
+
             let localeConfiguration = LocaleConfiguration.custom(localeIdentifier: deviceConfiguration.language)
             localeConfiguration.becomeCurrent()
         }
-        
+
         try app.run(with: AppLaunchConfiguration(configuration: configuration, device: deviceConfiguration))
         useCaseBuilder?.app = app
         useCaseBuilder?.deviceConfiguration = deviceConfiguration
-        
+
         defer {
             LocaleConfiguration.systemPreferred.becomeCurrent()
             useCaseBuilder?.app = nil
             useCaseBuilder?.deviceConfiguration = nil
         }
-        
+
         try work(app)
     }
-    
+
 }
 
 private struct AppLaunchConfiguration: Equatable {
@@ -184,7 +184,7 @@ private struct AppLaunchConfiguration: Equatable {
     var disableAnimations: Bool
     var encodedInitialState: String
     var enabledFeatures: Set<String>
-    
+
     init<Scenario: TestScenario>(configuration: ApplicationRunner<Scenario>.Configuration, device: DeviceConfiguration?) throws {
         scenarioId = Scenario.id
         deviceConfiguration = device
@@ -198,10 +198,10 @@ private struct AppLaunchConfiguration: Equatable {
 
 private extension XCUIApplication {
     private static var previousConfiguration: AppLaunchConfiguration?
-    
+
     func run(with configuration: AppLaunchConfiguration) {
         defer { Self.previousConfiguration = configuration }
-        
+
         if configuration == Self.previousConfiguration {
             print("Running the app using the same configuration")
             XCUIDevice.shared.press(.home)
@@ -213,22 +213,22 @@ private extension XCUIApplication {
             launch()
         }
     }
-    
+
 }
 
 private extension ProcessInfo {
-    
+
     enum TestMode: String {
         case standard
         case report
         case languages
     }
-    
+
     var testMode: TestMode {
         guard let mode = TestMode(rawValue: environment["test_mode"] ?? "") else { return .standard }
         return mode
     }
-    
+
 }
 
 private extension ScenarioKind {
@@ -247,12 +247,12 @@ private extension ScenarioKind {
 private class MainWindowNotReadyError: Error {}
 
 private extension Bundle {
-    
+
     func becomeCurrentForTesting() {
         UIColor.bundle = self
         Color.bundle = self
         UIImage.bundle = self
         Image.bundle = self
     }
-    
+
 }

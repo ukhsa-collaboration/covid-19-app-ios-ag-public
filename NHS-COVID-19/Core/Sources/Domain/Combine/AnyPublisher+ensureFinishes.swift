@@ -6,7 +6,7 @@ import Combine
 import Foundation
 
 extension Publisher {
-    
+
     func ensureFinishes(placeholder output: Self.Output) -> Publishers.ReplaceError<Publishers.Concatenate<Publishers.Sequence<[Self.Output], Self.Failure>, Self>> {
         // Workaround for possible OS issue (last tested on iOS 14.0):
         //
@@ -22,5 +22,5 @@ extension Publisher {
         prepend(output)
             .replaceError(with: output)
     }
-    
+
 }

@@ -6,34 +6,34 @@ import ExposureNotification
 import Foundation
 
 struct Experiment: Codable {
-    
+
     typealias Key = Scenarios.TemporaryTracingKey
-    
+
     enum Role: String {
         case lead
         case participant
     }
-    
+
     struct Participant: Codable, Identifiable {
         var deviceName: String
         var temporaryTracingKeys: [Key]
         var results: [DetectionResults]?
-        
+
         var id: String {
             deviceName
         }
     }
-    
+
     struct ParticipantV2: Codable, Identifiable {
         var deviceName: String
         var temporaryTracingKeys: [Key]
         var results: [DetectionResultsV2]?
-        
+
         var id: String {
             deviceName
         }
     }
-    
+
     struct Create: Codable {
         var usedExposureNotificationApiVersion: String
         var experimentCreatedAt = Date()
@@ -42,33 +42,33 @@ struct Experiment: Codable {
         var requestedConfigurations: [RequestedConfiguration]
         var lead: Participant
     }
-    
+
     typealias Summary = ExperimentResultsPayload.Summary
     typealias ExposureInfo = ExperimentResultsPayload.ExposureInfo
     typealias ExposureWindow = ExperimentResultsPayload.ExposureWindow
-    
+
     struct DetectionResult: Codable {
         var deviceName: String
         var summary: Summary
         var exposureInfos: [ExposureInfo]
     }
-    
+
     struct DetectionResults: Codable {
         var timestamp: Date
         var configuration: DetectionConfiguration
         var counterparts: [DetectionResult]
     }
-    
+
     struct DetectionResultsV2: Codable {
         var timestamp: Date
         var counterparts: [DetectionResultV2]
     }
-    
+
     struct DetectionResultV2: Codable {
         var deviceName: String
         var exposureWindows: [ExposureWindow]
     }
-    
+
     struct DetectionConfiguration: Codable {
         var minimumRiskScore: Int
         var minimumRiskScoreFullRange: Double?
@@ -82,11 +82,11 @@ struct Experiment: Codable {
         var transmissionRiskLevelValues: [Int]
         var transmissionRiskWeight: Double
     }
-    
+
     struct RequestedConfiguration: Codable {
         var attenuationDurationThresholds: [Int]
     }
-    
+
     var experimentName: String
     var experimentId: String
     var lead: Participant
@@ -105,7 +105,7 @@ struct Experiment: Codable {
 }
 
 extension Experiment.DetectionConfiguration {
-    
+
     init(_ configuration: ENExposureConfiguration) {
         minimumRiskScore = Int(configuration.minimumRiskScore)
         minimumRiskScoreFullRange = configuration.minimumRiskScoreFullRange
@@ -119,13 +119,13 @@ extension Experiment.DetectionConfiguration {
         transmissionRiskLevelValues = configuration.transmissionRiskLevelValues.map { $0.intValue }
         transmissionRiskWeight = configuration.transmissionRiskWeight
     }
-    
+
 }
 
 extension Experiment.RequestedConfiguration {
-    
+
     init(_ configuration: ENExposureConfiguration) {
         attenuationDurationThresholds = configuration.attenuationDurationThresholds.map { $0.intValue }
     }
-    
+
 }

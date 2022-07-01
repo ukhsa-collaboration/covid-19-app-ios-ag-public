@@ -17,7 +17,7 @@ enum PostAcknowledgmentState {
     case thankYou(ThankYouViewController.ViewType)
     case bookATest
     case warnAndBookATest
-    
+
     static func makePostAcknowledgmentState(
         showUIState: CurrentValueSubject<PostAcknowledgementViewController.UITriggeredInterfaceState?, Never>,
         bluetoothOffAcknowledgementNeeded: AnyPublisher<Bool, Never>,
@@ -33,7 +33,7 @@ enum PostAcknowledgmentState {
                 let diagnosisKeySharer = combinedState.1
                 let isFollowUpTestRequired = combinedState.2
                 let bluetoothOffAcknowledgementNeeded = combinedState.3
-                
+
                 if let showUIState = showUIState {
                     switch showUIState {
                     case .showBookATest: return .bookATest

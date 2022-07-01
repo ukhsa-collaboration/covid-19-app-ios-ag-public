@@ -7,19 +7,19 @@ import Foundation
 struct ReportSection {
     var title: String
     var content: ReportContent
-    
+
     var body: String
     var checks: [IntegrityCheck]?
     var attributes: [AppAttribute]?
-    
+
     var markdownBody: String {
         """
         ### \(title)
-        
+
         \(content.markdownBody)
         """
     }
-    
+
 }
 
 extension ReportSection {
@@ -30,7 +30,7 @@ extension ReportSection {
             body: content.markdownBody
         )
     }
-    
+
     init(title: String, checks: [IntegrityCheck]) {
         self.init(
             title: title,
@@ -39,7 +39,7 @@ extension ReportSection {
             checks: checks
         )
     }
-    
+
     init(title: String, attributes: [AppAttribute]) {
         let table = ReportTable(
             rows: attributes,

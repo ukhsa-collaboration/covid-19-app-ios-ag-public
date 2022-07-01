@@ -7,15 +7,15 @@ import Localization
 import SwiftUI
 
 public struct LocalCovidStatsDataView: View {
-    
+
     let localStats: InterfaceLocalCovidStatsDaily
     let localAuthorityStats: InterfaceLocalCovidStatsDaily.LocalAuthorityStats
-    
+
     public init(localCovidStats: InterfaceLocalCovidStatsDaily) {
         localStats = localCovidStats
         localAuthorityStats = localStats.lowerTierLocalAuthority
     }
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: .halfSpacing) {
             Text(localAuthorityStats.name)
@@ -23,11 +23,11 @@ public struct LocalCovidStatsDataView: View {
                 .fontWeight(.semibold)
                 .styleAsHeading()
                 .fixedSize(horizontal: false, vertical: true)
-            
+
             Text(localize(.local_statistics_main_screen_local_authority_lower_tier))
                 .styleAsBody()
                 .fixedSize(horizontal: false, vertical: true)
-            
+
             PositiveCovidView(localStats: localStats)
                 .padding([.bottom, .top], .halfSpacing)
             Divider()
@@ -50,7 +50,7 @@ public struct LocalCovidStatsDataView: View {
         .background(Color(.surface))
         .cornerRadius(.buttonCornerRadius)
     }
-    
+
     private func setDateWith(offset: Int) -> Date {
         let lastUpdateGregorianDay = localStats.lowerTierLocalAuthority.newCasesByPublishDate.lastUpdate
         return lastUpdateGregorianDay.advanced(by: offset).startDate(in: .utc)
@@ -59,14 +59,14 @@ public struct LocalCovidStatsDataView: View {
 
 public struct PositiveCovidView: View {
     let localStats: InterfaceLocalCovidStatsDaily
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: .halfSpacing) {
-            
+
             Text(localize(.local_statistics_main_screen_people_tested_positive))
                 .styleAsHeading()
                 .fixedSize(horizontal: false, vertical: true)
-            
+
             let startDate = localStats.lowerTierLocalAuthority.newCasesByPublishDateChange.lastUpdate.startDate(in: .current)
             Text(
                 localize(
@@ -76,7 +76,7 @@ public struct PositiveCovidView: View {
             )
             .styleAsSecondaryBody()
             .fixedSize(horizontal: false, vertical: true)
-            
+
             PositiveCovidStatsView(localAuthorityStats: localStats.lowerTierLocalAuthority)
             RollingStatsView(localStats: localStats)
         }
@@ -87,7 +87,7 @@ public struct PositiveCovidStatsView: View {
     let localAuthorityStats: InterfaceLocalCovidStatsDaily.LocalAuthorityStats
     public var body: some View {
         HStack(alignment: .top) {
-            
+
             NumbersView(
                 period: localize(.local_statistics_main_screen_daily),
                 periodType: .daily,
@@ -96,11 +96,11 @@ public struct PositiveCovidStatsView: View {
                 changeValue: nil,
                 percentChange: nil,
                 authorityName: localAuthorityStats.name
-                
+
             )
-            
+
             Spacer()
-            
+
             NumbersView(
                 period: localize(.local_statistics_main_screen_last_7_days),
                 periodType: .weekly,
@@ -123,11 +123,11 @@ public struct NumbersView: View {
     public let changeValue: Int?
     public let percentChange: Double?
     public let authorityName: String
-    
+
     public enum PeriodType {
         case daily, weekly
     }
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: .halfSpacing) {
             Text(period).styleAsBody()
@@ -136,7 +136,7 @@ public struct NumbersView: View {
             Text(cases)
                 .fontWeight(.semibold)
                 .font(.title)
-            
+
             if trend != nil && numberOfCases != nil {
                 HStack {
                     Image(systemName: imageName())
@@ -144,14 +144,14 @@ public struct NumbersView: View {
                     Text(trendText())
                         .styleAsSecondaryBody()
                         .fixedSize(horizontal: false, vertical: true)
-                    
+
                 }
             }
         }
         .accessibilityElement(children: .ignore)
         .accessibility(label: Text(accessibilityText()))
     }
-    
+
     private func accessibilityText() -> String {
         switch periodType {
         case .daily:
@@ -160,7 +160,7 @@ public struct NumbersView: View {
             return weeklyAccessibilityText()
         }
     }
-    
+
     func dailyAccessibilityText() -> String {
         if let numberOfCases = numberOfCases {
             return localize(.local_statistics_main_screen_daily_accessibility_text(positivTests: numberOfCases, localAuthority: authorityName))
@@ -168,7 +168,7 @@ public struct NumbersView: View {
             return localize(.local_statistics_main_screen_daily_cases_not_available_accessibility_text(localAuthority: authorityName))
         }
     }
-    
+
     func weeklyAccessibilityText() -> String {
         if let numberOfCases = numberOfCases {
             let positiveCasesAccessibility = localize(.local_statistics_main_screen_last_7_days_accessibility_text(positiveTests: numberOfCases))
@@ -178,7 +178,7 @@ public struct NumbersView: View {
                 if let percentChange = percentChange, let changeValue = changeValue {
                     trendDescriptionAccessibility = localize(.local_statistics_main_screen_last_seven_days_rate_up_accessibility_text(value: changeValue, percentValue: percentChange))
                 }
-                
+
             case .down:
                 if let percentChange = percentChange, let changeValue = changeValue {
                     trendDescriptionAccessibility = localize(.local_statistics_main_screen_last_seven_days_rate_down_accessibility_text(value: changeValue, percentValue: percentChange))
@@ -193,7 +193,7 @@ public struct NumbersView: View {
             return localize(.local_statistics_main_screen_last_7_days_not_available_accessibility_text)
         }
     }
-    
+
     func trendIconColor() -> Color {
         switch trend {
         case .up:
@@ -206,12 +206,12 @@ public struct NumbersView: View {
             return .black
         }
     }
-    
+
     func trendText() -> String {
         guard let changeValue = changeValue, let percentChange = percentChange else {
             return ""
         }
-        
+
         switch trend {
         case .up:
             return localize(.local_statistics_main_screen_last_seven_days_rate_up(value: changeValue, percentageValue: percentChange))
@@ -223,7 +223,7 @@ public struct NumbersView: View {
             return "—"
         }
     }
-    
+
     func imageName() -> String {
         switch trend {
         case .up:
@@ -239,24 +239,24 @@ public struct NumbersView: View {
 }
 
 public struct RollingStatsView: View {
-    
+
     let localStats: InterfaceLocalCovidStatsDaily
-    
+
     private var localAuthorityStats: InterfaceLocalCovidStatsDaily.LocalAuthorityStats {
         return localStats.lowerTierLocalAuthority
     }
-    
+
     private var country: Country {
         return localStats.country.country
     }
-    
+
     public var body: some View {
-        
+
         Text(localize(.local_statistics_main_screen_cases_per_hundred_thousand))
             .styleAsHeading()
             .accessibility(label: Text(localize(.local_statistics_main_screen_rolling_rate_100k_accessibility_text)))
             .fixedSize(horizontal: false, vertical: true)
-        
+
         Text(
             localize(
                 .local_statistics_main_screen_rolling_rate_last_updated(
@@ -268,7 +268,7 @@ public struct RollingStatsView: View {
         .styleAsSecondaryBody()
         .padding(.bottom)
         .fixedSize(horizontal: false, vertical: true)
-        
+
         HStack {
             Text(localAuthorityStats.name)
                 .fixedSize(horizontal: false, vertical: true)
@@ -278,11 +278,11 @@ public struct RollingStatsView: View {
                 .fontWeight(.semibold)
                 .styleAsHeading()
                 .fixedSize(horizontal: false, vertical: true)
-            
+
         }
         .accessibilityElement(children: .ignore)
         .accessibility(label: Text(accessibilityTextForLocalAuthority()))
-        
+
         HStack {
             Text(copyForCountry())
                 .fixedSize(horizontal: false, vertical: true)
@@ -296,7 +296,7 @@ public struct RollingStatsView: View {
         .accessibilityElement(children: .ignore)
         .accessibility(label: Text(accessibilityTextForCountry()))
     }
-    
+
     private func copyForCountry() -> String {
         switch country {
         case .england:
@@ -305,12 +305,12 @@ public struct RollingStatsView: View {
             return localize(.local_statistics_main_screen_wales_average)
         }
     }
-    
+
     private func rollingRateForCountry() -> Double? {
         return localStats.country.newCasesBySpecimenDateRollingRate
-        
+
     }
-    
+
     private func rollingRateForCountryStringValue() -> String {
         if let rollingRate = rollingRateForCountry() {
             return String(format: "%.1f", rollingRate)
@@ -318,7 +318,7 @@ public struct RollingStatsView: View {
             return "—"
         }
     }
-    
+
     private func rollingRateForLocalAuthority() -> String {
         if let authoritiyRollingRate = localAuthorityStats.newCasesBySpecimenDateRollingRate.value {
             return String(format: "%.1f", authoritiyRollingRate)
@@ -326,7 +326,7 @@ public struct RollingStatsView: View {
             return "—"
         }
     }
-    
+
     private func accessibilityTextForLocalAuthority() -> String {
         if let authoritiyRollingRate = localAuthorityStats.newCasesBySpecimenDateRollingRate.value {
             return localize(
@@ -342,7 +342,7 @@ public struct RollingStatsView: View {
             )
         }
     }
-    
+
     private func accessibilityTextForCountry() -> String {
         switch country {
         case .england:

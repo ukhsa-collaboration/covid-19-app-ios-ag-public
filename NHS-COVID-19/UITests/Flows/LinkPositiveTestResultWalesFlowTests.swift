@@ -7,10 +7,10 @@ import Foundation
 import XCTest
 
 class LinkPositiveTestResultWalesFlowTests: XCTestCase {
-        
+
     @Propped
     private var runner: ApplicationRunner<SandboxedScenario>
-    
+
     override func setUpWithError() throws {
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = false
@@ -18,7 +18,7 @@ class LinkPositiveTestResultWalesFlowTests: XCTestCase {
         $runner.initialState.postcode = "LL64"
         $runner.initialState.localAuthorityId = "W06000001"
     }
-    
+
     func testAskForSymptomsOnsetDayDidNotHaveSymptoms() throws {
         $runner.report(scenario: "Positive Test Result (Wales)", "Without symptoms") {
             """
@@ -29,24 +29,24 @@ class LinkPositiveTestResultWalesFlowTests: XCTestCase {
             """
         }
         try runner.run { app in
-            
+
             let homeScreen = HomeScreen(app: app)
             app.checkOnHomeScreenNotIsolating()
             XCTAssert(homeScreen.enterTestResultButton.exists)
-            
+
             runner.step("Home screen") {
                 """
                 The user is presented the Home screen.
                 The user taps on enter test result button to proceed.
                 """
             }
-            
+
             app.scrollTo(element: homeScreen.enterTestResultButton)
             homeScreen.enterTestResultButton.tap()
-            
+
             let linkTestResultScreen = LinkTestResultScreen(app: app)
             XCTAssert(linkTestResultScreen.testCodeTextField.exists)
-            
+
             runner.step("Enter Test Result screen") {
                 """
                 The user is presented the enter test result screen.
@@ -54,26 +54,26 @@ class LinkPositiveTestResultWalesFlowTests: XCTestCase {
                 The user taps on continue button to proceed.
                 """
             }
-            
+
             linkTestResultScreen.testCodeTextField.tap()
             linkTestResultScreen.testCodeTextField.typeText("testendd")
             linkTestResultScreen.continueButton.tap()
-            
+
             let testCheckSymptomsScreen = TestCheckSymptomsScreen(app: app)
             XCTAssert(testCheckSymptomsScreen.yesButton.exists)
-            
+
             runner.step("Check Symptoms screen") {
                 """
                 The user is presented the check symptoms screen.
                 The user taps on No button to proceed.
                 """
             }
-            
+
             testCheckSymptomsScreen.noButton.tap()
-            
+
             let positiveScreen = PositiveTestResultStartIsolationScreen(app: app)
             XCTAssertTrue(positiveScreen.indicationLabel.exists)
-            
+
             runner.step("Positive Test Result screen") {
                 """
                 The user is presented with a screen containing information on their positive test result and that their
@@ -81,43 +81,43 @@ class LinkPositiveTestResultWalesFlowTests: XCTestCase {
                 The user taps on continue button to proceed.
                 """
             }
-            
+
             positiveScreen.continueButton.tap()
-            
+
             let shareScreen = ShareKeysScreen(app: app)
             XCTAssertTrue(shareScreen.heading.exists)
-            
+
             runner.step("Share random ids") {
                 """
                 The user is presented with a modal screen telling them to share their device random ids.
                 The user taps on continue button to proceed.
                 """
             }
-            
+
             shareScreen.continueButton.tap()
-            
+
             let alertScreen = SimulatedShareRandomIdsScreen(app: app)
             alertScreen.shareButton.tap()
-            
+
             runner.step("Share random ids - System Alert") {
                 """
                 The user is asked by the system to confirm sharing the device random ids.
                 The user taps on Share button to proceed.
                 """
             }
-            
+
             let thankYouScreen = ThankYouScreen(app: app)
             thankYouScreen.backHomeButtonText.tap()
-            
+
             runner.step("Thank you screen") {
                 """
                 The user is presented the thank you message.
                 """
             }
-            
+
             let date = GregorianDay.today.advanced(by: Sandbox.Config.Isolation.indexCaseSinceTestResultEndDate).startDate(in: .current)
-            app.checkOnHomeScreenIsolatingWarning(date: date, days: Sandbox.Config.Isolation.indexCaseSinceTestResultEndDate)
-            
+            app.checkOnHomeScreenIsolatingInformational(date: date, days: Sandbox.Config.Isolation.indexCaseSinceTestResultEndDate)
+
             runner.step("Homescreen") {
                 """
                 The user is presented the home screen again and is isolating.
@@ -125,7 +125,7 @@ class LinkPositiveTestResultWalesFlowTests: XCTestCase {
             }
         }
     }
-    
+
     func testAskForSymptomsOnsetDayDidHaveSymptomsButDoesNotRememberOnsetDay() throws {
         $runner.report(scenario: "Positive Test Result (Wales)", "With symptoms but no OnsetDay") {
             """
@@ -137,24 +137,24 @@ class LinkPositiveTestResultWalesFlowTests: XCTestCase {
             """
         }
         try runner.run { app in
-            
+
             let homeScreen = HomeScreen(app: app)
             app.checkOnHomeScreenNotIsolating()
             XCTAssert(homeScreen.enterTestResultButton.exists)
-            
+
             runner.step("Home screen") {
                 """
                 The user is presented the Home screen.
                 The user taps on enter test result button to proceed.
                 """
             }
-            
+
             app.scrollTo(element: homeScreen.enterTestResultButton)
             homeScreen.enterTestResultButton.tap()
-            
+
             let linkTestResultScreen = LinkTestResultScreen(app: app)
             XCTAssert(linkTestResultScreen.testCodeTextField.exists)
-            
+
             runner.step("Enter Test Result screen") {
                 """
                 The user is presented the enter test result screen.
@@ -162,26 +162,26 @@ class LinkPositiveTestResultWalesFlowTests: XCTestCase {
                 The user taps on continue button to proceed.
                 """
             }
-            
+
             linkTestResultScreen.testCodeTextField.tap()
             linkTestResultScreen.testCodeTextField.typeText("testendd")
             linkTestResultScreen.continueButton.tap()
-            
+
             let testCheckSymptomsScreen = TestCheckSymptomsScreen(app: app)
             XCTAssert(testCheckSymptomsScreen.yesButton.exists)
-            
+
             runner.step("Check Symptoms screen") {
                 """
                 The user is presented the check symptoms screen.
                 The user taps on Yes button to proceed.
                 """
             }
-            
+
             testCheckSymptomsScreen.yesButton.tap()
-            
+
             let testSymptomsReviewScreen = TestSymptomsReviewScreen(app: app)
             XCTAssert(testSymptomsReviewScreen.noDate.exists)
-            
+
             runner.step("Review Symptoms screen") {
                 """
                 The user is presented the review symptoms screen.
@@ -189,13 +189,13 @@ class LinkPositiveTestResultWalesFlowTests: XCTestCase {
                 The user taps on continue button the proceed.
                 """
             }
-            
+
             testSymptomsReviewScreen.noDate.tap()
             testSymptomsReviewScreen.continueButton.tap()
-            
+
             let positiveScreen = PositiveTestResultStartIsolationScreen(app: app)
             XCTAssertTrue(positiveScreen.indicationLabel.exists)
-            
+
             runner.step("Positive Test Result screen") {
                 """
                 The user is presented with a screen containing information on their positive test result and that their
@@ -203,43 +203,43 @@ class LinkPositiveTestResultWalesFlowTests: XCTestCase {
                 The user taps on continue button to proceed.
                 """
             }
-            
+
             positiveScreen.continueButton.tap()
-            
+
             let shareScreen = ShareKeysScreen(app: app)
             XCTAssertTrue(shareScreen.heading.exists)
-            
+
             runner.step("Share random ids") {
                 """
                 The user is presented with a modal screen telling them to share their device random ids.
                 The user taps on continue button to proceed.
                 """
             }
-            
+
             shareScreen.continueButton.tap()
-            
+
             let alertScreen = SimulatedShareRandomIdsScreen(app: app)
             alertScreen.shareButton.tap()
-            
+
             runner.step("Share random ids - System Alert") {
                 """
                 The user is asked by the system to confirm sharing the device random ids.
                 The user taps on Share button to proceed.
                 """
             }
-            
+
             let thankYouScreen = ThankYouScreen(app: app)
             thankYouScreen.backHomeButtonText.tap()
-            
+
             runner.step("Thank you screen") {
                 """
                 The user is presented the thank you message.
                 """
             }
-            
+
             let date = GregorianDay.today.advanced(by: Sandbox.Config.Isolation.indexCaseSinceTestResultEndDate).startDate(in: .current)
-            app.checkOnHomeScreenIsolatingWarning(date: date, days: Sandbox.Config.Isolation.indexCaseSinceTestResultEndDate)
-            
+            app.checkOnHomeScreenIsolatingInformational(date: date, days: Sandbox.Config.Isolation.indexCaseSinceTestResultEndDate)
+
             runner.step("Homescreen") {
                 """
                 The user is presented the home screen again and is isolating.
@@ -247,7 +247,7 @@ class LinkPositiveTestResultWalesFlowTests: XCTestCase {
             }
         }
     }
-        
+
     func testAskForSymptomsOnsetDayDidHaveSymptomsAndDoesRememberOnsetDayWales() throws {
         $runner.report(scenario: "Positive Test Result (Wales)", "With symptoms and OnsetDay") {
             """
@@ -259,50 +259,50 @@ class LinkPositiveTestResultWalesFlowTests: XCTestCase {
             """
         }
         try runner.run { app in
-            
+
             let homeScreen = HomeScreen(app: app)
             app.checkOnHomeScreenNotIsolating()
             XCTAssert(homeScreen.enterTestResultButton.exists)
-            
+
             runner.step("Home screen") {
                 """
                 The user is presented the Home screen.
                 The user taps on enter test result button to proceed.
                 """
             }
-            
+
             app.scrollTo(element: homeScreen.enterTestResultButton)
             homeScreen.enterTestResultButton.tap()
-            
+
             let linkTestResultScreen = LinkTestResultScreen(app: app)
             XCTAssert(linkTestResultScreen.testCodeTextField.exists)
-            
+
             runner.step("Enter Test Result screen") {
                 """
                 The user is presented the enter test result screen.
                 The user enter the test code.
                 """
             }
-            
+
             linkTestResultScreen.testCodeTextField.tap()
             linkTestResultScreen.testCodeTextField.typeText("testendd")
             linkTestResultScreen.continueButton.tap()
-            
+
             let testCheckSymptomsScreen = TestCheckSymptomsScreen(app: app)
             XCTAssert(testCheckSymptomsScreen.yesButton.exists)
-            
+
             runner.step("Check Symptoms screen") {
                 """
                 The user is presented the check symptoms screen.
                 The user taps on Yes button to proceed.
                 """
             }
-            
+
             testCheckSymptomsScreen.yesButton.tap()
-            
+
             let testSymptomsReviewScreen = TestSymptomsReviewScreen(app: app)
             XCTAssert(testSymptomsReviewScreen.noDate.exists)
-            
+
             runner.step("Review Symptoms screen") {
                 """
                 The user is presented the review symptoms screen.
@@ -310,15 +310,15 @@ class LinkPositiveTestResultWalesFlowTests: XCTestCase {
                 The user taps on continue button the proceed.
                 """
             }
-            
+
             testSymptomsReviewScreen.dateTextField.tap()
             testSymptomsReviewScreen.doneButton.tap()
-            
+
             testSymptomsReviewScreen.continueButton.tap()
-            
+
             let positiveScreen = PositiveTestResultStartIsolationScreen(app: app)
             XCTAssertTrue(positiveScreen.indicationLabel.exists)
-            
+
             runner.step("Positive Test Result screen") {
                 """
                 The user is presented with a screen containing information on their positive test result and that their
@@ -326,49 +326,49 @@ class LinkPositiveTestResultWalesFlowTests: XCTestCase {
                 The user taps on continue button to proceed.
                 """
             }
-            
+
             positiveScreen.continueButton.tap()
-            
+
             let shareScreen = ShareKeysScreen(app: app)
             XCTAssertTrue(shareScreen.heading.exists)
-            
+
             runner.step("Share random ids") {
                 """
                 The user is presented with a modal screen telling them to share their device random ids.
                 The user taps on continue button to proceed.
                 """
             }
-            
+
             shareScreen.continueButton.tap()
-            
+
             let alertScreen = SimulatedShareRandomIdsScreen(app: app)
             alertScreen.shareButton.tap()
-            
+
             runner.step("Share random ids - System Alert") {
                 """
                 The user is asked by the system to confirm sharing the device random ids.
                 The user taps on Share button to proceed.
                 """
             }
-            
+
             let thankYouScreen = ThankYouScreen(app: app)
             thankYouScreen.backHomeButtonText.tap()
-            
+
             runner.step("Thank you screen") {
                 """
                 The user is presented the thank you message.
                 """
             }
-            
+
             let date = GregorianDay.today.advanced(by: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisOnset).startDate(in: .current)
-            app.checkOnHomeScreenIsolatingWarning(date: date, days: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisOnset)
-            
+            app.checkOnHomeScreenIsolatingInformational(date: date, days: Sandbox.Config.Isolation.indexCaseSinceSelfDiagnosisOnset)
+
             runner.step("Homescreen") {
                 """
                 The user is presented the home screen again and is isolating.
                 """
             }
         }
-        
+
     }
 }

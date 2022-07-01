@@ -5,7 +5,7 @@
 import UIKit
 
 extension UIView.AnimationOptions {
-    
+
     static func curve(from curve: UIView.AnimationCurve) -> UIView.AnimationOptions {
         switch curve {
         case .easeInOut:

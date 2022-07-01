@@ -6,7 +6,7 @@ import Foundation
 import Logging
 
 extension Logger.Metadata {
-    
+
     public init(dictionary: [AnyHashable: Any]) {
         self.init(uniqueKeysWithValues: dictionary
             .map { key, value in
@@ -14,11 +14,11 @@ extension Logger.Metadata {
             }
         )
     }
-    
+
 }
 
 extension Logger.MetadataValue {
-    
+
     public init(describing value: Any) {
         switch value {
         case let string as String:
@@ -33,5 +33,5 @@ extension Logger.MetadataValue {
             self = .string(String(describing: value))
         }
     }
-    
+
 }

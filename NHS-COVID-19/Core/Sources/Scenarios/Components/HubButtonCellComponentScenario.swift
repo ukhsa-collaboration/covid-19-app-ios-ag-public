@@ -13,20 +13,20 @@ public class HubButtonCellComponentScenario: Scenario {
     public static let firstHubButtonCellDescription = "Description of the first hub cell button"
     public static let secondHubButtonCellTitle = "Second hub cell button title"
     public static let secondHubButtonCellDescription = "Description of the second hub cell button"
-    
+
     public enum Alerts: String {
         case firstHubButtoCellAlert = "First hub cell button tapped"
         case secondHubButtonCellAlert = "Second hub cell button tapped"
     }
-    
+
     static var appController: AppController {
         BasicAppController(rootViewController: UIHostingController(rootView: HubButtonCellScenarioView()))
     }
-    
+
     private struct HubButtonCellScenarioView: View {
         @State private var currentAlert: Alerts = .firstHubButtoCellAlert
         @State private var showAlert = false
-        
+
         var body: some View {
             NavigationView {
                 ScrollView {
@@ -53,7 +53,7 @@ public class HubButtonCellComponentScenario: Scenario {
                                 }
                             )
                         )
-                        
+
                     }
                 }
                 .background(Color(.background))
@@ -66,6 +66,6 @@ public class HubButtonCellComponentScenario: Scenario {
                 )
             }
         }
-        
+
     }
 }

@@ -9,13 +9,13 @@ import AVFoundation
 import CoreHaptics
 
 public class CheckInConfirmationFeedbackViewController: UIViewController {
-    
+
     var engine: CHHapticEngine?
 
     struct Row {
         let title: String
         let subtitle: String?
-        let tapped: () -> ()
+        let tapped: () -> Void
     }
     private lazy var rows = [
         Row(title: "System 'Success' Haptic", subtitle: "Provided by iOS", tapped: {
@@ -76,20 +76,20 @@ public class CheckInConfirmationFeedbackViewController: UIViewController {
             }
         }),
     ]
-    
+
     public init() {
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         title = "CheckIn Confirmation Feedback"
-        
+
         let tableView = UITableViewController()
         tableView.tableView.dataSource = self
         tableView.tableView.delegate = self
@@ -110,7 +110,7 @@ extension CheckInConfirmationFeedbackViewController: UITableViewDataSource {
             return cell
         }
     }
-    
+
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         self.rows.count
     }

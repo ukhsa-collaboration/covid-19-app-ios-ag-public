@@ -10,14 +10,14 @@ public protocol NegativeTestResultWithIsolationViewControllerInteracting {
     func didTapOnlineServicesLink()
     func didTapNHSGuidanceLink()
     func didTapReturnHome()
-    
+
 }
 
 extension NegativeTestResultWithIsolationViewController {
     private class Content: PrimaryButtonStickyFooterScrollingContent {
         init(interactor: Interacting, viewModel: ViewModel, currentDateProvider: DateProviding) {
             let daysToIsolate = currentDateProvider.currentLocalDay.daysRemaining(until: viewModel.isolationEndDate)
-            
+
             super.init(
                 scrollingViews: [
                     UIImageView(.isolationContinue).styleAsDecoration(),
@@ -25,7 +25,7 @@ extension NegativeTestResultWithIsolationViewController {
                         content: BasicContent(
                             views: [
                                 BaseLabel()
-                                    .set(text: localize(.positive_test_result_title))
+                                    .set(text: localize(.negative_test_result_with_isolation_title))
                                     .styleAsHeading()
                                     .centralized()
                                     .isAccessibilityElement(false),
@@ -41,7 +41,7 @@ extension NegativeTestResultWithIsolationViewController {
                     )
                     .isAccessibilityElement(true)
                     .accessibilityTraits([.header, .staticText])
-                    .accessibilityLabel(localize(.positive_test_please_isolate_accessibility_label(days: daysToIsolate))),
+                    .accessibilityLabel(localize(.negative_test_result_with_isolation_accessibility_label(days: daysToIsolate))),
                     viewModel.infobox,
                     BaseLabel().set(text: viewModel.explanationLabel).styleAsSecondaryBody(),
                     BaseLabel().set(text: localize(.negative_test_result_with_isolation_advice)).styleAsSecondaryBody(),
@@ -61,29 +61,29 @@ extension NegativeTestResultWithIsolationViewController {
 
 public class NegativeTestResultWithIsolationViewController: StickyFooterScrollingContentViewController {
     public typealias Interacting = NegativeTestResultWithIsolationViewControllerInteracting
-    
+
     public struct ViewModel {
         public enum TestResultType {
             case firstResult, afterPositive
         }
-        
+
         var isolationEndDate: Date
         var testResultType: TestResultType
-        
+
         public init(isolationEndDate: Date, testResultType: TestResultType) {
             self.isolationEndDate = isolationEndDate
             self.testResultType = testResultType
         }
     }
-    
+
     public init(interactor: Interacting, viewModel: ViewModel, currentDateProvider: DateProviding) {
         super.init(content: Content(interactor: interactor, viewModel: viewModel, currentDateProvider: currentDateProvider))
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
@@ -99,7 +99,7 @@ private extension NegativeTestResultWithIsolationViewController.ViewModel {
             return InformationBox.indication.badNews(localize(.negative_test_result_after_positive_info))
         }
     }
-    
+
     var explanationLabel: String {
         switch testResultType {
         case .firstResult:
@@ -108,7 +108,7 @@ private extension NegativeTestResultWithIsolationViewController.ViewModel {
             return localize(.negative_test_result_after_positive_explanation)
         }
     }
-    
+
     var continueButtonText: String {
         switch testResultType {
         case .firstResult:
@@ -117,7 +117,7 @@ private extension NegativeTestResultWithIsolationViewController.ViewModel {
             return localize(.negative_test_result_after_positive_button_label)
         }
     }
-    
+
     var linkLabel: String {
         switch testResultType {
         case .firstResult:

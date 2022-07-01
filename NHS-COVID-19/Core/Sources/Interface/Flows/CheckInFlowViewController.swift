@@ -10,7 +10,7 @@ import UIKit
 public struct CheckInDetail {
     public var venueName: String
     public var removeCurrentCheckIn: () -> Void
-    
+
     public init(venueName: String, removeCurrentCheckIn: @escaping () -> Void) {
         self.venueName = venueName
         self.removeCurrentCheckIn = removeCurrentCheckIn
@@ -28,9 +28,9 @@ public enum CameraPermissionState {
 }
 
 public class CheckInFlowViewController: BaseNavigationController {
-    
+
     public typealias Interacting = CheckInFlowViewControllerInteracting
-    
+
     private enum State: Equatable {
         case start
         case permissionDenied
@@ -38,22 +38,22 @@ public class CheckInFlowViewController: BaseNavigationController {
         case scanningFailure
         case confirm
     }
-    
+
     private var cameraPermissionState: AnyPublisher<CameraPermissionState, Never>
     private let scanner: QRScanner
     private let interactor: Interacting
-    
+
     @Published
     private var state = State.start
-    
+
     private var cancellables = [AnyCancellable]()
-    
+
     private var checkInDetail: CheckInDetail!
     private var currentDateProvider: DateProviding
     private let goHomeCompletion: () -> Void
-    
+
     private weak var scannerViewController: QRCodeScannerViewController?
-    
+
     public init(cameraPermissionState: AnyPublisher<CameraPermissionState, Never>,
                 scanner: QRScanner,
                 interactor: Interacting,
@@ -65,7 +65,7 @@ public class CheckInFlowViewController: BaseNavigationController {
         self.currentDateProvider = currentDateProvider
         self.goHomeCompletion = goHomeCompletion
         super.init()
-        
+
         cameraPermissionState
             .sink { [weak self] cameraAuthorizationState in
                 switch cameraAuthorizationState {
@@ -76,7 +76,7 @@ public class CheckInFlowViewController: BaseNavigationController {
                 }
             }
             .store(in: &cancellables)
-        
+
         scanner.state
             .sink { [weak self] scannerState in
                 if scannerState == .failed {
@@ -84,7 +84,7 @@ public class CheckInFlowViewController: BaseNavigationController {
                 }
             }
             .store(in: &cancellables)
-        
+
         $state
             .removeDuplicates()
             .receive(on: RunLoop.main)
@@ -92,14 +92,14 @@ public class CheckInFlowViewController: BaseNavigationController {
                 self?.update(for: state)
             }
             .store(in: &cancellables)
-        
+
         setupNavigationBar()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func update(for state: State) {
         if viewControllers.isEmpty {
             viewControllers = [
@@ -109,7 +109,7 @@ public class CheckInFlowViewController: BaseNavigationController {
             pushViewController(rootViewController(for: state), animated: true)
         }
     }
-    
+
     private func rootViewController(for state: State) -> UIViewController {
         switch state {
         case .start:
@@ -147,7 +147,7 @@ public class CheckInFlowViewController: BaseNavigationController {
             )
         }
     }
-    
+
     private func setupNavigationBar() {
         navigationBar.tintColor = UIColor(.nhsBlue)
         navigationBar.barTintColor = UIColor(.background)
@@ -155,29 +155,29 @@ public class CheckInFlowViewController: BaseNavigationController {
 }
 
 extension CheckInFlowViewController: CameraFailureViewController.Interacting, ScanningFailureViewController.Interacting, CheckInConfirmationViewController.Interacting, QRCodeScannerViewController.Interacting, VenueCheckInInformationViewController.Interacting {
-    
+
     public func goHome() {
         dismiss(animated: true, completion: nil)
     }
-    
+
     public func goHomeAfterCheckIn() {
         dismiss(animated: true, completion: goHomeCompletion)
     }
-    
+
     public func wrongCheckIn() {
         dismiss(animated: true, completion: nil)
     }
-    
+
     public func didTapVenueCheckinMoreInfoButton() {
         showHelp()
     }
-    
+
     public func showHelp() {
         let viewController = BaseNavigationController(rootViewController: VenueCheckInInformationViewController(interactor: self))
         viewController.modalPresentationStyle = .overFullScreen
         present(viewController, animated: true, completion: nil)
     }
-    
+
     public func didTapDismiss() { // e.g. dismissHelp
         dismiss(animated: true, completion: { [weak self] in
             #warning("We need a cleaner way of communicating that the scanner window has become visible again or stopping/starting the camera when the help screen is shown")

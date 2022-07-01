@@ -13,9 +13,9 @@ enum ExposureRiskManagingProcessingMode {
 
 protocol ExposureRiskManaging {
     typealias ProcessingMode = ExposureRiskManagingProcessingMode
-    
+
     var preferredProcessingMode: ProcessingMode { get }
     var checkFrequency: TimeInterval { get }
-    
+
     func riskInfo(for summary: ENExposureDetectionSummary, configuration: ExposureDetectionConfiguration) -> AnyPublisher<ExposureRiskInfo?, Error>
 }

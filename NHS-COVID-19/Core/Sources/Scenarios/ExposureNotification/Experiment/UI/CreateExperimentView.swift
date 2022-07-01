@@ -6,18 +6,18 @@ import Integration
 import SwiftUI
 
 struct CreateExperimentView: View {
-    
+
     @ObservedObject
     var experimentManager: ExperimentManager
-    
+
     @ObservedObject
     var experimentCreator: ExperimentCreator
-    
+
     @State
     var experimentName = ""
-    
+
     var complete: () -> Void
-    
+
     var body: some View {
         NavigationView {
             VStack(spacing: .standardSpacing) {
@@ -45,7 +45,7 @@ struct CreateExperimentView: View {
             .navigationBarTitle("Create new experiment", displayMode: .inline)
         }
     }
-    
+
     private var isButtonDisabled: Bool {
         (
             experimentManager.teamName.isEmpty ||
@@ -53,9 +53,9 @@ struct CreateExperimentView: View {
                 experimentCreator.isCreatingExperiment
         )
     }
-    
+
     private func createExperiment() {
         experimentCreator.createExperiment(name: experimentName, storeIn: experimentManager, complete: complete)
     }
-    
+
 }

@@ -5,7 +5,7 @@
 import Foundation
 
 extension HTTPURLResponse {
-    
+
     var headers: HTTPHeaders {
         HTTPHeaders(
             fields: Dictionary(
@@ -14,5 +14,5 @@ extension HTTPURLResponse {
             )
         )
     }
-    
+
 }

@@ -7,21 +7,21 @@ import Foundation
 public struct VenueHistory: Identifiable, Equatable, Hashable {
     public struct ID: Hashable {
         public let value: String
-        
+
         public init(
             value: String
         ) {
             self.value = value
         }
     }
-    
+
     public let id: ID
     let venueId: String
     let organisation: String
     let postcode: String?
     let checkedIn: Date
     let checkedOut: Date
-    
+
     public init(
         id: ID,
         venueId: String,

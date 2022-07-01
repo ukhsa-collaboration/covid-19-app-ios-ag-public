@@ -8,7 +8,7 @@ import XCTest
 class ContactTracingAdviceShouldNotPauseScreenTests: XCTestCase {
     @Propped
     private var runner: ApplicationRunner<ContactTracingAdviceScreenShouldNotPauseScenario>
-    
+
     func testBasics() throws {
         try runner.run { app in
             let screen = ContactTracingAdviceScreen(app: app)
@@ -17,5 +17,5 @@ class ContactTracingAdviceShouldNotPauseScreenTests: XCTestCase {
             XCTAssertTrue(screen.footnote.exists)
         }
     }
-    
+
 }

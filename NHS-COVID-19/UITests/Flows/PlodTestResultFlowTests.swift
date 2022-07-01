@@ -7,12 +7,12 @@ import Scenarios
 import XCTest
 
 class PlodTestResultFlowTests: XCTestCase {
-    
+
     private let postcode = "SW12"
-    
+
     @Propped
     private var runner: ApplicationRunner<SandboxedScenario>
-    
+
     override func setUp() {
         $runner.initialState.exposureNotificationsAuthorized = true
         $runner.initialState.userNotificationsAuthorized = false
@@ -21,7 +21,7 @@ class PlodTestResultFlowTests: XCTestCase {
         $runner.initialState.localAuthorityId = "E09000022"
         $runner.initialState.testResult = "plod"
     }
-    
+
     func testWithoutIsolation() throws {
         $runner.initialState.isolationCase = Sandbox.Text.IsolationCase.index.rawValue
         $runner.report(scenario: "Plod Test Result", "Without Isolation") {
@@ -30,7 +30,7 @@ class PlodTestResultFlowTests: XCTestCase {
             """
         }
         try runner.run { app in
-            
+
             runner.step("Plod Test Result") {
                 """
                 The user is presented with a screen containing information on their plod test result while not being
@@ -39,22 +39,22 @@ class PlodTestResultFlowTests: XCTestCase {
                 """
             }
             let plodTestResultScreen = PlodTestResultScreen(app: app)
-            
+
             XCTAssertTrue(plodTestResultScreen.description.allExist)
-            
+
             plodTestResultScreen.primaryButton.tap()
-            
+
             runner.step("Homescreen") {
                 """
                 The user is presented the homescreen
                 """
             }
-            
+
             app.checkOnHomeScreen(postcode: postcode)
-            
+
         }
     }
-    
+
     func testWithIsolationIndexCase() throws {
         $runner.report(scenario: "Plod Test Result", "With Isolation") {
             """
@@ -62,7 +62,7 @@ class PlodTestResultFlowTests: XCTestCase {
             """
         }
         try runner.run { app in
-            
+
             runner.step("Plod Test Result") {
                 """
                 The user is presented with a screen containing information on their plod test result while being
@@ -71,20 +71,20 @@ class PlodTestResultFlowTests: XCTestCase {
                 """
             }
             let plodTestResultScreen = PlodTestResultScreen(app: app)
-            
+
             XCTAssertTrue(plodTestResultScreen.description.allExist)
-            
+
             plodTestResultScreen.primaryButton.tap()
-            
+
             runner.step("Homescreen") {
                 """
                 The user is presented the homescreen
                 """
             }
-            
+
             app.checkOnHomeScreen(postcode: postcode)
-            
+
         }
     }
-    
+
 }

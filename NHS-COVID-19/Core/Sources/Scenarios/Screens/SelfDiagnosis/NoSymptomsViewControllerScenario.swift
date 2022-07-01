@@ -13,7 +13,7 @@ public class NoSymptomsViewControllerScenario: Scenario {
     public static let returnHomeTapped: String = "Return home button tapped"
     public static let nhs111LinkTapped: String = "NHS 111 link tapped"
     public static let gettingTestedLinkTapped: String = "Getting tested for coronavirus link tapped"
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
@@ -23,21 +23,21 @@ public class NoSymptomsViewControllerScenario: Scenario {
 }
 
 private class Interactor: NoSymptomsViewController.Interacting {
-    
+
     private weak var viewController: UIViewController?
-    
+
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
     func didTapReturnHome() {
         viewController?.showAlert(title: NoSymptomsViewControllerScenario.returnHomeTapped)
     }
-    
+
     func didTapNHS111Link() {
         viewController?.showAlert(title: NoSymptomsViewControllerScenario.nhs111LinkTapped)
     }
-    
+
     func didTapGettingTestedLink() {
         viewController?.showAlert(title: NoSymptomsViewControllerScenario.gettingTestedLinkTapped)
     }

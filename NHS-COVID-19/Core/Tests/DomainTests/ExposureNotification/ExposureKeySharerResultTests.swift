@@ -21,7 +21,7 @@ class ExposureKeySharerResultTests: XCTestCase {
         )
         XCTAssertEqual(keySharerResult, .markToDelete)
     }
-    
+
     func testKeysSentWithFlowTypeReminder() {
         let acknowledgementTime = UTCHour(year: 2021, month: 1, day: 1, hour: 5)
         let keySharingTime = UTCHour(year: 2021, month: 1, day: 2, hour: 4)
@@ -34,7 +34,7 @@ class ExposureKeySharerResultTests: XCTestCase {
         )
         XCTAssertEqual(keySharerResult, .markToDelete)
     }
-    
+
     func testKeysNotSentWithFlowTypeReminder() {
         let acknowledgementTime = UTCHour(year: 2021, month: 1, day: 1, hour: 5)
         let keySharingTime = UTCHour(year: 2021, month: 1, day: 2, hour: 4)
@@ -47,7 +47,7 @@ class ExposureKeySharerResultTests: XCTestCase {
         )
         XCTAssertEqual(keySharerResult, .markToDelete)
     }
-    
+
     func testKeysNotSentWithFlowTypeInitialMoreThan24HoursMarksToDelete() {
         let acknowledgementTime = UTCHour(year: 2021, month: 1, day: 1, hour: 5)
         let keySharingTime = UTCHour(year: 2021, month: 1, day: 2, hour: 6)
@@ -60,7 +60,7 @@ class ExposureKeySharerResultTests: XCTestCase {
         )
         XCTAssertEqual(keySharerResult, .markToDelete)
     }
-    
+
     func testKeysNotSentWithFlowTypeInitialEqualTo24HoursMarksFlowComplete() {
         let acknowledgementTime = UTCHour(year: 2021, month: 1, day: 1, hour: 5)
         let keySharingTime = UTCHour(year: 2021, month: 1, day: 2, hour: 5)
@@ -73,7 +73,7 @@ class ExposureKeySharerResultTests: XCTestCase {
         )
         XCTAssertEqual(keySharerResult, .markInitialFlowComplete)
     }
-    
+
     func testKeysNotSentWithFlowTypeInitialLessThan24HoursMarksFlowComplete() {
         let acknowledgementTime = UTCHour(year: 2021, month: 1, day: 1, hour: 5)
         let keySharingTime = UTCHour(year: 2021, month: 1, day: 2, hour: 4)

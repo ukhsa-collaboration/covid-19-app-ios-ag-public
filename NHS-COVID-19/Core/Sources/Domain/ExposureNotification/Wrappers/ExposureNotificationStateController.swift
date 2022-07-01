@@ -18,21 +18,21 @@ extension ExposureNotificationStateController: ExposureNotificationStateControll
 }
 
 class ExposureNotificationStateController: ObservableObject {
-    
+
     enum ActivationState {
         case inactive
         case activating
         case activationFailed
         case activated
     }
-    
+
     enum AuthorizationState {
         case unknown
         case restricted
         case notAuthorized
         case authorized
     }
-    
+
     enum State {
         case unknown
         case active
@@ -40,29 +40,29 @@ class ExposureNotificationStateController: ObservableObject {
         case bluetoothOff
         case restricted
     }
-    
+
     struct CombinedState: Equatable {
         var activationState: ActivationState
         var authorizationState: AuthorizationState
         var exposureNotificationState: State
         var isEnabled: Bool
     }
-    
+
     private let manager: ExposureNotificationManaging
     private var cancellables = [AnyCancellable]()
-    
+
     @Published
     private(set) var activationState = ActivationState.inactive
-    
+
     @Published
     private(set) var authorizationState: AuthorizationState
-    
+
     @Published
     private(set) var exposureNotificationState = State.unknown
-    
+
     @Published
     private(set) var isEnabled = false
-    
+
     var combinedState: AnyPublisher<CombinedState, Never> {
         $activationState
             .combineLatest(
@@ -74,30 +74,30 @@ class ExposureNotificationStateController: ObservableObject {
             .removeDuplicates()
             .eraseToAnyPublisher()
     }
-    
+
     init(manager: ExposureNotificationManaging) {
         self.manager = manager
         authorizationState = AuthorizationState(manager.instanceAuthorizationStatus)
-        
+
         manager.exposureNotificationStatusPublisher.sink { [weak self] in
             self?.exposureNotificationState = State($0)
         }.store(in: &cancellables)
-        
+
         manager.exposureNotificationEnabledPublisher.sink { [weak self] in
             self?.isEnabled = $0
         }.store(in: &cancellables)
     }
-    
+
     func activate() {
         assert(activationState == .inactive, "\(#function) must be called at most once.")
-        
+
         activationState = .activating
         manager.activate { error in
             self.activationState = (error == nil) ? .activated : .activationFailed
             self.authorizationState = AuthorizationState(self.manager.instanceAuthorizationStatus)
         }
     }
-    
+
     func setEnabled(_ enabled: Bool, completion: @escaping () -> Void) {
         guard enabled != isEnabled else {
             completion()
@@ -108,7 +108,7 @@ class ExposureNotificationStateController: ObservableObject {
             completion()
         }
     }
-    
+
     func setEnabled(_ enabled: Bool) -> AnyPublisher<Void, Never> {
         Future { [weak self] promise in
             self?.setEnabled(enabled) {
@@ -117,15 +117,15 @@ class ExposureNotificationStateController: ObservableObject {
         }
         .eraseToAnyPublisher()
     }
-    
+
     func enable(completion: @escaping () -> Void) {
         setEnabled(true, completion: completion)
     }
-    
+
     func disable(completion: @escaping () -> Void) {
         setEnabled(false, completion: completion)
     }
-    
+
     func recordMetrics() -> AnyPublisher<Void, Never> {
         Metrics.signpost(.appIsUsableBackgroundTick)
         if exposureNotificationState == .bluetoothOff {
@@ -133,19 +133,19 @@ class ExposureNotificationStateController: ObservableObject {
         } else {
             Metrics.signpost(.runningNormallyTick)
         }
-        
+
         if !isEnabled {
             Metrics.signpost(.pauseTick)
         } else if exposureNotificationState != .bluetoothOff {
             Metrics.signpost(.appIsContactTraceableBackgroundTick)
         }
-        
+
         return Empty().eraseToAnyPublisher()
     }
 }
 
 private extension ExposureNotificationStateController.AuthorizationState {
-    
+
     init(_ status: ExposureNotificationManaging.AuthorizationStatus) {
         switch status {
         case .unknown:
@@ -161,11 +161,11 @@ private extension ExposureNotificationStateController.AuthorizationState {
             self = .unknown
         }
     }
-    
+
 }
 
 private extension ExposureNotificationStateController.State {
-    
+
     init(_ status: ExposureNotificationManaging.Status) {
         switch status {
         case .unknown, .unauthorized, .paused:
@@ -183,5 +183,5 @@ private extension ExposureNotificationStateController.State {
             self = .unknown
         }
     }
-    
+
 }

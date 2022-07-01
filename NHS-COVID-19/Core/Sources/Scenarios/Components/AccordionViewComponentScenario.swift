@@ -7,20 +7,20 @@ import Interface
 import SwiftUI
 
 public class AccordionViewComponentScenario: Scenario {
-    
+
     public static let name = "AccordionView"
     public static let kind = ScenarioKind.component
-    
+
     static var appController: AppController {
         BasicAppController(rootViewController: UIHostingController(rootView: ContentView()))
     }
-    
+
 }
 
 private struct ContentView: View {
-    
+
     @State private var preferredColourScheme: ColorScheme = .light
-    
+
     var body: some View {
         NavigationView {
             ScrollView {
@@ -45,7 +45,7 @@ private struct ContentView: View {
                             Text("Some sort of short version of the content here\nhttps://www.gov.uk/government/publications/covid-19-stay-at-home-guidance/stay-at-home-guidance-for-households-with-possible-coronavirus-covid-19-infection ")
                         }
                     }
-                    
+
                     AccordionGroup("How your isolation period is calculated") {
                         AccordionView("You have reported symptoms in the app") {
                             Text("The self-isolation period is the date your symptoms started (symptom onset date) plus 10 full days.")
@@ -74,7 +74,7 @@ private struct ContentView: View {
         }
         .environment(\.colorScheme, preferredColourScheme)
     }
-    
+
     private var toggleColorSchemeBarItem: some View {
         Button(
             action: { preferredColourScheme.toggle() },
@@ -86,7 +86,7 @@ private struct ContentView: View {
 // MARK: - Private extensions
 
 private extension ColorScheme {
-    
+
     mutating func toggle() {
         switch self {
         case .dark:
@@ -95,5 +95,5 @@ private extension ColorScheme {
             self = .dark
         }
     }
-    
+
 }

@@ -7,12 +7,12 @@ import Common
 import UIKit
 
 public class SymptomsOnsetDayFlowViewController: BaseNavigationController {
-    
+
     fileprivate enum State: Equatable {
         case checkSymptoms
         case symptomsReview
     }
-    
+
     @Published
     fileprivate var state: State = .checkSymptoms
     private var cancellables = [AnyCancellable]()
@@ -20,7 +20,7 @@ public class SymptomsOnsetDayFlowViewController: BaseNavigationController {
     private var setOnsetDay: (GregorianDay) -> Void
     private var recordDidHaveSymptoms: () -> Void
     private var testEndDay: GregorianDay
-    
+
     public init(testEndDay: GregorianDay, didFinishAskForSymptomsOnsetDay: @escaping () -> Void, setOnsetDay: @escaping (GregorianDay) -> Void, recordDidHaveSymptoms: @escaping () -> Void) {
         self.didFinishAskForSymptomsOnsetDay = didFinishAskForSymptomsOnsetDay
         self.setOnsetDay = setOnsetDay
@@ -29,11 +29,11 @@ public class SymptomsOnsetDayFlowViewController: BaseNavigationController {
         super.init()
         monitorState()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func rootViewController(for state: State) -> UIViewController {
         switch state {
         case .checkSymptoms:
@@ -66,7 +66,7 @@ public class SymptomsOnsetDayFlowViewController: BaseNavigationController {
             )
         }
     }
-    
+
     private func monitorState() {
         $state
             .regulate(as: .modelChange)
@@ -75,7 +75,7 @@ public class SymptomsOnsetDayFlowViewController: BaseNavigationController {
             }
             .store(in: &cancellables)
     }
-    
+
     private func update(for state: State) {
         pushViewController(rootViewController(for: state), animated: false)
     }
@@ -84,7 +84,7 @@ public class SymptomsOnsetDayFlowViewController: BaseNavigationController {
 private struct TestCheckSymptomsInteractor: TestCheckSymptomsViewController.Interacting {
     var didTapYes: () -> Void
     var didTapNo: () -> Void
-    
+
 }
 
 private struct TestSymptomsReviewInteractor: TestSymptomsReviewViewController.Interacting {

@@ -9,9 +9,9 @@ protocol ReportContent {
 }
 
 extension String: ReportContent {
-    
+
     var markdownBody: String {
         self
     }
-    
+
 }

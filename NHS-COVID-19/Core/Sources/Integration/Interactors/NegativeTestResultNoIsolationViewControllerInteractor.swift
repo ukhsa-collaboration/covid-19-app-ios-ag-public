@@ -10,14 +10,14 @@ import Localization
 struct NegativeTestResultNoIsolationViewControllerInteractor: NegativeTestResultNoIsolationViewController.Interacting {
     var _acknowledge: () -> Void
     let openURL: (URL) -> Void
-    
+
     func didTapOnlineServicesLink() {
         openURL(ExternalLink.nhs111Online.url)
     }
-    
+
     func didTapReturnHome() {
         _acknowledge()
     }
-    
+
     func didTapFurtherAdviceLink() {}
 }

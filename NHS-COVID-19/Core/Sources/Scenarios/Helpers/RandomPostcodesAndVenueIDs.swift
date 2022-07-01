@@ -14,7 +14,7 @@ extension String {
         ]
         return "\(RandomString(from: formats.randomElement()!))"
     }
-    
+
     static func randomPostcode() -> String {
         let formats = [
             "A11AA",
@@ -26,7 +26,7 @@ extension String {
         ]
         return "\(RandomString(from: formats.randomElement()!))"
     }
-    
+
     /// Flips two coins - if both are tails, returns `nil`. Otherwise generates a random postcode.
     /// - Returns: Either a random postcode (75% chance) or `nil` (25% chance.)
     static func randomPostcodeOrNil() -> String? {
@@ -40,13 +40,13 @@ private struct RandomString: CustomStringConvertible {
         case number = "1"
         case space = " "
     }
-    
+
     let format: [StringFormatCharacter]
-    
+
     init(from string: String) {
         format = string.map { StringFormatCharacter(rawValue: $0)! }
     }
-    
+
     var description: String {
         let s = format.map { character -> Character in
             switch character {
@@ -58,7 +58,7 @@ private struct RandomString: CustomStringConvertible {
                 return Character(" ")
             }
         }
-        
+
         return String(s)
     }
 }

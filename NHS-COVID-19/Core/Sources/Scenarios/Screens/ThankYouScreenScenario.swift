@@ -10,9 +10,9 @@ import UIKit
 public class ThankYouScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name: String = "Thank You - Share key completion"
-    
+
     public static let backToHomeTapped: String = "Back to home tapped"
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
@@ -26,11 +26,11 @@ public class ThankYouScreenScenario: Scenario {
 
 private class Interactor: ThankYouViewController.Interacting {
     private weak var viewController: UIViewController?
-    
+
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
     func action() {
         viewController?.showAlert(title: ThankYouScreenScenario.backToHomeTapped)
     }

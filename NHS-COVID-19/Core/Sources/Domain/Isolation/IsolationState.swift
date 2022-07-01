@@ -7,7 +7,7 @@ import Foundation
 public enum IsolationState: Equatable {
     case noNeedToIsolate(optOutOfIsolationDay: Date? = nil)
     case isolate(Isolation)
-    
+
     init(logicalState: IsolationLogicalState) {
         switch logicalState {
         case .notIsolating(let isolation):

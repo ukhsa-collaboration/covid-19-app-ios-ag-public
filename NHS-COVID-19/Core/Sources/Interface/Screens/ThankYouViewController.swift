@@ -15,7 +15,7 @@ public class ThankYouViewController: UIViewController {
         case completed
         case stillNeedToBookATest
     }
-    
+
     public static func viewController(for type: ViewType, interactor: Interacting) -> ThankYouViewController {
         switch type {
         case .completed:
@@ -32,13 +32,13 @@ public class ThankYouViewController: UIViewController {
             )
         }
     }
-    
+
     public typealias Interacting = ThankYouViewControllerInteracting
-    
+
     let headingText: String
     let buttonText: String
     private var interactor: Interacting
-    
+
     private init(
         headingText: String,
         buttonText: String,
@@ -49,17 +49,17 @@ public class ThankYouViewController: UIViewController {
         self.interactor = interactor
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     private let scrollView: UIView = UIScrollView()
-    
+
     private let contentView: UIView = UIView()
-    
+
     private lazy var titleLabel: UIView = {
         let titleLabel = BaseLabel().styleAsPageHeader().centralized()
         titleLabel.text = headingText
         return titleLabel
     }()
-    
+
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(.tick)
@@ -70,7 +70,7 @@ public class ThankYouViewController: UIViewController {
         ])
         return imageView
     }()
-    
+
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [imageView, titleLabel])
         stackView.axis = .vertical
@@ -78,7 +78,7 @@ public class ThankYouViewController: UIViewController {
         stackView.distribution = .fill
         return stackView
     }()
-    
+
     private lazy var actionButton: UIButton = {
         var button = UIButton()
         button.styleAsPrimary()
@@ -86,53 +86,53 @@ public class ThankYouViewController: UIViewController {
         button.addTarget(self, action: #selector(didTapActionButton), for: .touchUpInside)
         return button
     }()
-    
+
     public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
-    
+
     override public func viewDidLoad() {
         super.viewDidLoad()
-        
+
         view.styleAsScreenBackground(with: traitCollection)
-        
+
         view.addAutolayoutSubview(scrollView)
         view.addAutolayoutSubview(actionButton)
         scrollView.addAutolayoutSubview(contentView)
         contentView.addAutolayoutSubview(stackView)
-        
+
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: .standardSpacing),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            
+
             actionButton.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: .standardSpacing),
             actionButton.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor, constant: .standardSpacing),
             actionButton.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: -.standardSpacing),
             actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -.standardSpacing),
-            
+
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: .standardSpacing),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            
+
             stackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor),
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor, constant: .standardSpacing),
             stackView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: -.standardSpacing),
-            
+
             stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor).withPriority(.defaultLow),
         ])
     }
-    
+
     @objc private func didTapActionButton() {
         interactor.action()
     }

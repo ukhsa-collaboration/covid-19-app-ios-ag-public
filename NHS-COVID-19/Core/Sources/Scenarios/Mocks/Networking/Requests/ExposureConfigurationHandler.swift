@@ -7,7 +7,7 @@ import Foundation
 
 struct ExposureConfigurationHandler: RequestHandler {
     var paths = ["/distribution/exposure-configuration"]
-    
+
     var response: Result<HTTPResponse, HTTPRequestError> {
         Result.success(.ok(with: .json(exposureConfiguration)))
     }

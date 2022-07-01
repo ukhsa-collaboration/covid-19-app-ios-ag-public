@@ -10,20 +10,20 @@ import SwiftUI
 public class ImagePaletteScenario: Scenario {
     public static let name = "Images"
     public static let kind = ScenarioKind.palette
-    
+
     static var appController: AppController {
         BasicAppController(rootViewController: UIHostingController(rootView: ImagePaletteView()))
     }
 }
 
 private struct ImagePaletteView: View {
-    
+
     @State var preferredColourScheme: ColorScheme? = nil
-    
+
     @SwiftUI.Environment(\.colorScheme) var colorScheme
-    
+
     fileprivate init() {}
-    
+
     var body: some View {
         NavigationView {
             List(ImageName.allCases) {
@@ -34,14 +34,14 @@ private struct ImagePaletteView: View {
         }
         .preferredColorScheme(preferredColourScheme)
     }
-    
+
     private var toggleColorSchemeButton: some View {
         Button(action: self.toggleColorScheme) {
             Image(systemName: colorScheme == .dark ? "moon.circle.fill" : "moon.circle")
                 .frame(width: 44, height: 44)
         }
     }
-    
+
     private func toggleColorScheme() {
         switch colorScheme {
         case .dark:
@@ -53,9 +53,9 @@ private struct ImagePaletteView: View {
 }
 
 private struct ImagePreviewView: View {
-    
+
     var name: ImageName
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             Text(verbatim: name.rawValue)
@@ -70,5 +70,5 @@ private struct ImagePreviewView: View {
             }
         }
     }
-    
+
 }

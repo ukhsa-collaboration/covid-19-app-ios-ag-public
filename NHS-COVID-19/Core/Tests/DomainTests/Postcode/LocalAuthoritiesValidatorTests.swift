@@ -9,7 +9,7 @@ import XCTest
 
 class LocalAuthoritiesValidatorTests: XCTestCase {
     var laValidator: LocalAuthoritiesValidator!
-    
+
     override func setUpWithError() throws {
         let data = """
         {
@@ -43,14 +43,14 @@ class LocalAuthoritiesValidatorTests: XCTestCase {
         """.data(using: .utf8)!
         laValidator = try LocalAuthoritiesValidator(data: data)
     }
-    
+
     func testLoadingLocalAuthorities() {
         let exit = Thread.detachSyncSupervised {
             _ = LocalAuthoritiesValidator()
         }
         XCTAssertEqual(exit, .normal)
     }
-    
+
     func testIsValidForPostcodeWithNoLocalAuthorities() {
         TS.assert(
             laValidator.localAuthorities(for: Postcode("ab13")),
@@ -61,7 +61,7 @@ class LocalAuthoritiesValidatorTests: XCTestCase {
             equals: Result<Set<LocalAuthority>, PostcodeValidationError>.failure(.invalidPostcode)
         )
     }
-    
+
     func testIsValidForPostcodeWithLocalAuthoritiyInEnglandOrWales() {
         TS.assert(
             laValidator.localAuthorities(for: Postcode("ab11")),
@@ -79,7 +79,7 @@ class LocalAuthoritiesValidatorTests: XCTestCase {
                 ])
         )
     }
-    
+
     func testIsValidForPostcodeWithLocalAuthorityNotInEnglandOrWales() {
         TS.assert(
             laValidator.localAuthorities(for: Postcode("ab14")),

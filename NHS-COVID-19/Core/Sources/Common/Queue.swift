@@ -5,8 +5,8 @@
 import Foundation
 
 public extension DispatchQueue {
-    
-    static func onMain(_ work: @escaping () -> ()) {
+
+    static func onMain(_ work: @escaping () -> Void) {
         if Thread.isMainThread {
             work()
         } else {

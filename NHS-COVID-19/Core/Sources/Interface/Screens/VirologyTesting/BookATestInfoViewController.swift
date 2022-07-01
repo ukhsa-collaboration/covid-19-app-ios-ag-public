@@ -33,20 +33,20 @@ extension BookATestInfoViewController {
 
 public class BookATestInfoViewController: ScrollingContentViewController {
     public typealias Interacting = BookATestInfoViewControllerInteracting
-    
+
     private let shouldHaveCancelButton: Bool
-    
+
     public var didCancel: (() -> Void)?
-    
+
     public init(interactor: Interacting, shouldHaveCancelButton: Bool) {
         self.shouldHaveCancelButton = shouldHaveCancelButton
-        
+
         let contentStack = UIStackView(
             arrangedSubviews: Self.content(interactor: interactor).flatMap { $0.content }
         )
         contentStack.axis = .vertical
         contentStack.spacing = .standardSpacing
-        
+
         let buttonStack = UIStackView(
             arrangedSubviews: [
                 PrimaryLinkButton(
@@ -61,30 +61,30 @@ public class BookATestInfoViewController: ScrollingContentViewController {
         )
         buttonStack.axis = .vertical
         buttonStack.spacing = .standardSpacing
-        
+
         let stackContent = [contentStack, buttonStack]
         let stackView = UIStackView(arrangedSubviews: stackContent)
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
         stackView.spacing = .standardSpacing
-        
+
         super.init(views: [stackView])
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         title = localize(.virology_book_a_test_title)
         navigationController?.setNavigationBarHidden(false, animated: true)
         if shouldHaveCancelButton {
             navigationItem.leftBarButtonItem = UIBarButtonItem(title: localize(.cancel), style: .done, target: self, action: #selector(didTapCancel))
         }
     }
-    
+
     @objc private func didTapCancel() {
         didCancel?()
         navigationController?.dismiss(animated: true)

@@ -6,13 +6,13 @@ import Interface
 import SwiftUI
 
 struct PrimaryButton: View {
-    
+
     var title: String
     var action: () -> Void
-    
+
     @Environment(\.isEnabled)
     var isEnabled: Bool
-    
+
     var body: some View {
         Button(action: action) {
             Text(title)
@@ -24,5 +24,5 @@ struct PrimaryButton: View {
         }
         .padding([.leading, .trailing], .standardSpacing)
     }
-    
+
 }

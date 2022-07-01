@@ -11,13 +11,13 @@ public struct ToggleButton: View {
     @Binding private var isToggledOn: Bool
     var imageName: ImageName?
     var text: String
-    
+
     public init(isToggledOn: Binding<Bool>, imageName: ImageName? = nil, text: String) {
         self.imageName = imageName
         self.text = text
         _isToggledOn = isToggledOn
     }
-    
+
     public var body: some View {
         HStack(spacing: .zero) {
             if let imageName = imageName {

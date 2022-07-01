@@ -10,7 +10,7 @@ struct BookAFollowUpTestInteractor: BookAFollowUpTestViewController.Interacting 
     let didTapPrimaryButton: () -> Void
     let didTapNHSGuidanceLink: () -> Void
     let didTapCancel: () -> Void
-    
+
     init(
         didTapPrimaryButton: @escaping () -> Void,
         didTapCancel: @escaping () -> Void,

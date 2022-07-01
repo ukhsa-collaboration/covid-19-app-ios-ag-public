@@ -7,15 +7,15 @@ import Foundation
 @testable import Scenarios
 
 struct TestOrdering {
-    
+
     private let apiClient: MockHTTPClient
     private let virologyManager: VirologyTestingManaging
-    
+
     init(configuration: AcceptanceTestCase.Instance.Configuration, context: RunningAppContext) {
         apiClient = configuration.apiClient
         virologyManager = context.virologyTestingManager
     }
-    
+
     func order() throws {
         apiClient.response(for: "/virology-test/v2/order", response: .success(.ok(with: .json(orderTestkitResponse))))
         _ = try virologyManager.provideTestOrderInfo().await()

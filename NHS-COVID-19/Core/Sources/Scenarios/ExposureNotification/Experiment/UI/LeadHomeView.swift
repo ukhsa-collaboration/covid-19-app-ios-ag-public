@@ -8,11 +8,11 @@ import SwiftUI
 import UIKit
 
 struct LeadHomeView: View {
-    
+
     enum Sheet: Identifiable {
         case createExperiment(ExperimentCreator)
         case inspectExperiment(ExperimentInspector)
-        
+
         var id: ObjectIdentifier {
             switch self {
             case .createExperiment(let object):
@@ -21,14 +21,14 @@ struct LeadHomeView: View {
                 return object.id
             }
         }
-        
+
         var experimentCreator: ExperimentCreator? {
             guard case .createExperiment(let object) = self else {
                 return nil
             }
             return object
         }
-        
+
         var experimentInspector: ExperimentInspector? {
             guard case .inspectExperiment(let object) = self else {
                 return nil
@@ -36,13 +36,13 @@ struct LeadHomeView: View {
             return object
         }
     }
-    
+
     @ObservedObject
     var experimentManager: ExperimentManager
-    
+
     @State
     var sheet: Sheet?
-    
+
     var body: some View {
         NavigationView {
             VStack(spacing: 16) {
@@ -79,7 +79,7 @@ struct LeadHomeView: View {
             }
         }
     }
-    
+
     private var experimentNameTitle: String {
         if experimentManager.experimentName.isEmpty {
             return "No experiments in progress"
@@ -87,5 +87,5 @@ struct LeadHomeView: View {
             return "Experiment: \(experimentManager.experimentName)"
         }
     }
-    
+
 }

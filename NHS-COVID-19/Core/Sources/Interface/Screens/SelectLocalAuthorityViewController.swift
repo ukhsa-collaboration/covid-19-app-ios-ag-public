@@ -8,14 +8,14 @@ import UIKit
 
 // MODEL
 public struct LocalAuthority: Equatable, Identifiable {
-    
+
     // MARK: - Properties
-    
+
     public var id: UUID
     public var name: String
-    
+
     // MARK: - Init
-    
+
     public init(id: UUID, name: String) {
         self.id = id
         self.name = name
@@ -24,10 +24,10 @@ public struct LocalAuthority: Equatable, Identifiable {
 
 struct LocalAuthorities: View {
     @State var selectedAuthority: LocalAuthority? = nil
-    
+
     var localAuthorities: [LocalAuthority]
     var selectAuthority: (LocalAuthority) -> Void
-    
+
     var body: some View {
         VStack(alignment: .center, spacing: .halfSpacing) {
             ForEach(localAuthorities.sorted(by: { $0.name.lowercased() < $1.name.lowercased() })) { la in
@@ -43,19 +43,19 @@ struct LocalAuthorities: View {
 
 // VIEWMODEL
 public class LocalAuthorityViewModel {
-    
+
     // MARK: - Properties
-    
+
     let localAuthorities: [LocalAuthority]
     var postcode: String
-    
+
     // MARK: - Init
-    
+
     public init(postcode: String, localAuthorities: [LocalAuthority]) {
         self.postcode = postcode
         self.localAuthorities = localAuthorities
     }
-    
+
 }
 
 public enum LocalAuthoritySelectionError: Error {
@@ -71,9 +71,9 @@ public protocol SelectLocalAuthorityViewControllerInteracting {
 
 struct SelectLocalAuthorityContent {
     public typealias Interacting = SelectLocalAuthorityViewControllerInteracting
-    
+
     var views: [StackViewContentProvider]
-    
+
     init(interactor: Interacting, localAuthorityViewModel: LocalAuthorityViewModel) {
         let emptyError = UIHostingController(
             rootView: ErrorBox(
@@ -83,7 +83,7 @@ struct SelectLocalAuthorityContent {
         )
         emptyError.view.backgroundColor = .clear
         emptyError.view.isHidden(true)
-        
+
         let unsupportedCountryError = UIHostingController(
             rootView: ErrorBox(
                 localize(.local_authority_unsupported_country_error_title),
@@ -92,14 +92,14 @@ struct SelectLocalAuthorityContent {
         )
         unsupportedCountryError.view.backgroundColor = .clear
         unsupportedCountryError.view.isHidden(true)
-        
+
         var selectedAuthority: LocalAuthority?
         let localAuthorities = LocalAuthorities(localAuthorities: localAuthorityViewModel.localAuthorities) { la in
             selectedAuthority = la
         }
         let localAuthoritiesVC = UIHostingController(rootView: localAuthorities)
         localAuthoritiesVC.view.backgroundColor = .clear
-        
+
         views = [
             UIImageView(.onboardingPostcode).styleAsDecoration(),
             BaseLabel().set(text: localize(.local_authority_information_title)).styleAsPageHeader(),
@@ -114,11 +114,11 @@ struct SelectLocalAuthorityContent {
             unsupportedCountryError.view,
             localAuthoritiesVC.view,
         ]
-        
+
         let contentStack = UIStackView(arrangedSubviews: views.flatMap { $0.content })
         contentStack.axis = .vertical
         contentStack.spacing = .standardSpacing
-        
+
         let button = PrimaryButton(
             title: localize(.local_authority_confirmation_button),
             action: {
@@ -139,37 +139,37 @@ struct SelectLocalAuthorityContent {
                 }
             }
         )
-        
+
         let stackContent = [contentStack, button]
         let stackView = UIStackView(arrangedSubviews: stackContent)
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
         stackView.spacing = .standardSpacing
-        
+
         views = [stackView]
-        
+
     }
 }
 
 public class SelectLocalAuthorityViewController: ScrollingContentViewController {
-    
+
     // MARK: - Properties
-    
+
     public typealias Interacting = SelectLocalAuthorityViewControllerInteracting
-    
+
     // MARK: - Init
-    
+
     public init(interactor: Interacting, localAuthorityViewModel: LocalAuthorityViewModel, hideBackButton: Bool) {
         let content = SelectLocalAuthorityContent(interactor: interactor, localAuthorityViewModel: localAuthorityViewModel)
         super.init(views: content.views)
         title = localize(.local_authority_confirmation_title)
         navigationItem.hidesBackButton = hideBackButton
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)

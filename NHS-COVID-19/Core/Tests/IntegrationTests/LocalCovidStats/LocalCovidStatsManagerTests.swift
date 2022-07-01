@@ -10,14 +10,14 @@ import XCTest
 class LocalCovidStatsManagerTests: XCTestCase {
     private var manager: LocalCovidStatsManager!
     private var httpClient: MockLocalStatsHttpClient!
-    
+
     override func setUp() {
         httpClient = MockLocalStatsHttpClient()
         manager = LocalCovidStatsManager(
             httpClient: httpClient
         )
     }
-    
+
     func testFetchLocalStats() {
         _ = manager.fetchLocalCovidStats()
         XCTAssertEqual(httpClient.amountOfCalls, 1)
@@ -27,7 +27,7 @@ class LocalCovidStatsManagerTests: XCTestCase {
 private class MockLocalStatsHttpClient: HTTPClient {
     var amountOfCalls = 0
     var response: HTTPResponse?
-    
+
     func perform(_ request: HTTPRequest) -> AnyPublisher<HTTPResponse, HTTPRequestError> {
         amountOfCalls += 1
         if let response = response {

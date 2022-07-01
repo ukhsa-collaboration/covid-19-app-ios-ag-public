@@ -8,13 +8,13 @@ import Localization
 
 struct PositiveTestResultWithIsolationInteractor: NonNegativeTestResultWithIsolationViewControllerInteracting {
     let openURL: (URL) -> Void
-    
+
     var didTapOnlineServicesLink: () -> Void
     var didTapExposureFAQLink: () -> Void
     var didTapNHSGuidanceLink: () -> Void
     var didTapPrimaryButton: () -> Void
     var didTapCancel: (() -> Void)?
-    
+
     init(
         openURL: @escaping (URL) -> Void,
         didTapPrimaryButton: @escaping () -> Void,

@@ -11,9 +11,9 @@ public class MockHTTPClient: HTTPClient {
     public var requests = [HTTPRequest]()
     public var response: Result<HTTPResponse, HTTPRequestError>?
     private var responses: [String: Result<HTTPResponse, HTTPRequestError>] = [:]
-    
+
     public init() {}
-    
+
     public func perform(_ request: HTTPRequest) -> AnyPublisher<HTTPResponse, HTTPRequestError> {
         lastRequest = request
         requests.append(request)
@@ -22,11 +22,11 @@ public class MockHTTPClient: HTTPClient {
             .flatMap { $0.publisher }
             .eraseToAnyPublisher()
     }
-    
+
     public func response(for path: String, response: Result<HTTPResponse, HTTPRequestError>) {
         responses[path] = response
     }
-    
+
     public func reset() {
         responses = [:]
         requests = []
@@ -35,11 +35,11 @@ public class MockHTTPClient: HTTPClient {
 }
 
 extension MockHTTPClient {
-    
+
     func register(_ requestHandler: RequestHandler) {
         for path in requestHandler.paths {
             response(for: path, response: requestHandler.response)
         }
     }
-    
+
 }

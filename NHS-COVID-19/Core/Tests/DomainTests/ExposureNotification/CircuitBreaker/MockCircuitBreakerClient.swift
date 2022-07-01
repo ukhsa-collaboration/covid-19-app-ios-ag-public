@@ -12,7 +12,7 @@ class MockCircuitBreakerClient: CircuitBreakingClient {
     var approvalType: CircuitBreakerType?
     var resolutionRequest: ApprovalToken?
     var shouldShowError = false
-    
+
     func fetchApproval(for type: CircuitBreakerType) -> AnyPublisher<ApprovalEndpoint.Response, Error> {
         if shouldShowError {
             return Result.failure(TestError("")).publisher.eraseToAnyPublisher()
@@ -21,7 +21,7 @@ class MockCircuitBreakerClient: CircuitBreakingClient {
             return Optional.Publisher(approvalResponse).setFailureType(to: Error.self).eraseToAnyPublisher()
         }
     }
-    
+
     func fetchResolution(for type: CircuitBreakerType, with approvalToken: ApprovalToken) -> AnyPublisher<ResolutionEndpoint.Response, Error> {
         if shouldShowError {
             return Result.failure(TestError("")).publisher.eraseToAnyPublisher()
@@ -30,7 +30,7 @@ class MockCircuitBreakerClient: CircuitBreakingClient {
             return Optional.Publisher(resolutionResponse).setFailureType(to: Error.self).eraseToAnyPublisher()
         }
     }
-    
+
     func sendObfuscatedTraffic(for type: TrafficObfuscator) -> AnyPublisher<Void, Never> {
         return Optional.Publisher(()).eraseToAnyPublisher()
     }

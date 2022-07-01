@@ -9,13 +9,13 @@ import UIKit
 public class DynamicRiskLevelScreenScenario: Scenario {
     public static var kind = ScenarioKind.screen
     public static var name: String = "Dynamic Risk Level"
-    
+
     public static let title: String = "[Placeholder] SW12 is in local COVID alert level: very high "
     public static let heading: [String] = ["[Placeholder] Coronavirus cases are very high in your area"]
     public static let body: [String] = ["[Placeholder] The restrictions placed on areas with a very high level of infections can vary and are based on discussions between central and local government. You should check the specific rules in your area."]
     public static let linkTitle: String = "[Placeholder] Restrictions in your area"
     public static let footer: [String] = ["[Placeholder] Find out what rules apply in your area to help reduce the spread of coronavirus. "]
-    
+
     public static let policyIcons: [ImageName] = [
         .riskLevelDefaultIcon,
         .riskLevelMeetingPeopleIcon,
@@ -27,7 +27,7 @@ public class DynamicRiskLevelScreenScenario: Scenario {
         .riskLevelExerciseIcon,
         .riskLevelWeddingsAndFuneralsIcon,
     ]
-    
+
     public static let policyHeadings: [String] = [
         "[Placeholder] Default Icon",
         "[Placeholder] Meeting People",
@@ -39,7 +39,7 @@ public class DynamicRiskLevelScreenScenario: Scenario {
         "[Placeholder] Exercise",
         "[Placeholder] Weddings and Funerals",
     ]
-    
+
     public static let policyContents: [String] = [
         "[Placeholder] Policy Content 1",
         "[Placeholder] Policy Content 2",
@@ -51,10 +51,10 @@ public class DynamicRiskLevelScreenScenario: Scenario {
         "[Placeholder] Policy Content 8",
         "[Placeholder] Policy Content 9",
     ]
-    
+
     public static let linkButtonTapped = "Link to website tapped"
     public static let cancelTapped = "Cancel tapped"
-    
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
@@ -82,19 +82,19 @@ public class DynamicRiskLevelScreenScenario: Scenario {
 }
 
 private class Interactor: RiskLevelInfoViewController.Interacting {
-    
+
     private weak var viewController: UIViewController?
-    
+
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
-    
+
     func didTapWebsiteLink(url: URL) {
         viewController?.showAlert(title: DynamicRiskLevelScreenScenario.linkButtonTapped)
     }
-    
+
     func didTapCancel() {
         viewController?.showAlert(title: DynamicRiskLevelScreenScenario.cancelTapped)
     }
-    
+
 }

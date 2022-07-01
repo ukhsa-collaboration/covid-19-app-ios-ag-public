@@ -7,17 +7,17 @@ import UIKit
 
 public protocol PrivacyViewControllerInteracting {
     func didTapPrivacyNotice()
-    
+
     func didTapTermsOfUse()
-    
+
     func didTapAgree()
-    
+
     func didTapNoThanks()
 }
 
 public class PrivacyViewController: ScrollingContentViewController {
     public typealias Interacting = PrivacyViewControllerInteracting
-    
+
     public init(interactor: Interacting) {
         super.init(
             views: [
@@ -52,7 +52,7 @@ public class PrivacyViewController: ScrollingContentViewController {
             ]
         )
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

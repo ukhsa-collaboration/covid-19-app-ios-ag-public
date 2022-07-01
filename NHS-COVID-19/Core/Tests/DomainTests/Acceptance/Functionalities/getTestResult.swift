@@ -11,7 +11,7 @@ func getTestResult(result: VirologyTestResult.TestResult,
                    diagnosisKeySubmissionSupported: Bool,
                    requiresConfirmatoryTest: Bool,
                    confirmatoryDayLimit: Int?) -> String {
-    
+
     let timestamp = ISO8601DateFormatter().string(from: endDate)
     return """
     {

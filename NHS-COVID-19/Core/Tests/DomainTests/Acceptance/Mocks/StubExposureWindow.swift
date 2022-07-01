@@ -17,30 +17,30 @@ class StubExposureWindow: ENExposureWindow {
             StubScanInstance(),
         ]
     }
-    
+
     override var date: Date {
         self.exposureDate
     }
-    
+
     override var infectiousness: ENInfectiousness {
         .high
     }
-    
+
     let exposureDate: Date
-    
+
     init(exposureDate: Date) {
         self.exposureDate = exposureDate
     }
-    
+
     class StubScanInstance: ENScanInstance {
         override var minimumAttenuation: ENAttenuation {
             30
         }
-        
+
         override var typicalAttenuation: ENAttenuation {
             30
         }
-        
+
         override var secondsSinceLastScan: Int {
             120
         }

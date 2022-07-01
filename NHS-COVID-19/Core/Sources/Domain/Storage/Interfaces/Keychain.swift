@@ -7,7 +7,7 @@ import Logging
 
 public struct OSStatusError: Error, Equatable {
     public var status: OSStatus
-    
+
     public init(_ status: OSStatus) {
         self.status = status
     }
@@ -17,35 +17,35 @@ public struct OSStatusError: Error, Equatable {
 ///
 /// `Keychain` sets the `kSecAttrService` attribute on all queries. Otherwise, the queries are passed to the system API unchanged.
 public struct Keychain {
-    
+
     private static let logger = Logger(label: "Keychain")
-    
+
     private struct UnexpectedResultError: Error {}
-    
+
     private var service: String
-    
+
     public init(service: String) {
         self.service = service
     }
-    
+
     public func add(_ query: [String: Any]) throws {
         try catchError {
             SecItemAdd(prepare(query), nil)
         }
     }
-    
+
     public func update(_ query: [String: Any], with updatedAttributes: [String: Any]) throws {
         try catchError {
             SecItemUpdate(prepare(query), updatedAttributes as CFDictionary)
         }
     }
-    
+
     public func delete(_ query: [String: Any]) throws {
         try catchError {
             SecItemDelete(prepare(query))
         }
     }
-    
+
     public func get<Result>(_ query: [String: Any], as type: Result.Type) throws -> Result {
         var result: CFTypeRef?
         try catchError {
@@ -56,13 +56,13 @@ public struct Keychain {
         }
         return expectedResult
     }
-    
+
     private func prepare(_ query: [String: Any]) -> CFDictionary {
         var preparedQuery = query
         preparedQuery[kSecAttrService as String] = service
         return preparedQuery as CFDictionary
     }
-    
+
     private func catchError(from work: () -> OSStatus) throws {
         let status = work()
         switch status {
@@ -81,5 +81,5 @@ public struct Keychain {
             throw OSStatusError(status)
         }
     }
-    
+
 }
