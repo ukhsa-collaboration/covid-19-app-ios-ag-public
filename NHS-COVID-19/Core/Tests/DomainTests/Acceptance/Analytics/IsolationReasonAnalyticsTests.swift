@@ -43,7 +43,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
             assertField.isNil(\.completedQuestionnaireAndStartedIsolation)
             assertField.equals(expected: 1, \.startedIsolation)
             assertField.isPresent(\.isIsolatingBackgroundTick)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
         }
 
@@ -52,13 +52,13 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
         assertOnFieldsForDateRange(dateRange: 4 ... 13) { assertField in
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
         // Dates: 14th-27th Jan -> Analytics packets for: 13th-26th Jan
         // Isolation is over, but isolation reason still stored for 14 days
         assertOnFieldsForDateRange(dateRange: 14 ... 27) { assertField in
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
         // Current date: 27th Jan -> Analytics packet for: 26th Jan
@@ -145,7 +145,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
             assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
         // Still in isolation for both reasons
@@ -154,7 +154,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
             assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
         // Still in isolation because self-diagnosed with symptoms
@@ -162,13 +162,13 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
             assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
         // Isolation is over, but isolation reason still stored for 14 days
         assertOnFieldsForDateRange(dateRange: 15 ... 28) { assertField in
             assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
         // Previous isolation reason no longer stored
@@ -188,7 +188,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
             assertField.isNil(\.completedQuestionnaireAndStartedIsolation)
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
         // Has risky contact on 2nd Jan
@@ -202,7 +202,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
                 assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
                 assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
                 assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
-                assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+                assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
             }
         }
 
@@ -212,7 +212,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
             assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
         // Still in isolation for because of the risky contact
@@ -220,13 +220,13 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
             assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
         // Isolation is over, but isolation reason still stored for 14 days
         assertOnFieldsForDateRange(dateRange: 15 ... 28) { assertField in
             assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
         // Previous isolation reason no longer stored
@@ -246,12 +246,12 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
         // Current date: 3rd Jan -> Analytics packet for: 2nd Jan
         assertOnFields { assertField in
             assertField.equals(expected: 1, \.completedV2SymptomsQuestionnaire)
-            assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
+            assertField.isNil(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
         }
 
         // Dates: 4th-16th Jan -> Analytics packets for: 3rd-15th Jan
         assertOnFieldsForDateRange(dateRange: 4 ... 16) { assertField in
-            assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
+            assertField.isNil(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
         }
 
         // Current date: 17th Jan -> Analytics packet for: 16th Jan
@@ -273,14 +273,14 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
         assertOnFields { assertField in
             assertField.equals(expected: 1, \.completedV2SymptomsQuestionnaire)
             assertField.equals(expected: 1, \.completedV2SymptomsQuestionnaireAndStayAtHome)
-            assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
-            assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick)
+            assertField.isNil(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
+            assertField.isNil(\.hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick)
         }
 
         // Dates: 4th-16th Jan -> Analytics packets for: 3rd-15th Jan
         assertOnFieldsForDateRange(dateRange: 4 ... 16) { assertField in
-            assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
-            assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick)
+            assertField.isNil(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
+            assertField.isNil(\.hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick)
         }
 
         // Current date: 17th Jan -> Analytics packet for: 16th Jan

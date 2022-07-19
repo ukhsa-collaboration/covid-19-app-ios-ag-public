@@ -103,6 +103,10 @@ extension IsolationModelAcceptanceTests {
             let endDay = adapter.testCase.testEndDay.advanced(by: 3)
             let testEntry = ManualTestResultEntry(configuration: $instance, context: try! context())
             try testEntry.enterNegative(endDate: endDay.startDate(in: .utc))
+        case .receivedConfirmedPositiveTestWithEndDateOlderThanExpiredIndexIsolationEndDate:
+            let endDay = adapter.testCase.testEndDay.advanced(by: -1)
+            let testEntry = ManualTestResultEntry(configuration: $instance, context: try! context())
+            try testEntry.enterPositive(endDate: endDay.startDate(in: .utc))
         }
     }
 

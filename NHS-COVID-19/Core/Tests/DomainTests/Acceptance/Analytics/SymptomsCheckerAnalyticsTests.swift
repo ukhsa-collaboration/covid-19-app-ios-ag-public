@@ -21,7 +21,7 @@ class SymptomsCheckerAnalyticsTests: AnalyticsTests {
         assertOnFields { assertField in
             assertField.equals(expected: 1, \.completedV2SymptomsQuestionnaire)
             assertField.equals(expected: 0, \.completedV2SymptomsQuestionnaireAndStayAtHome)
-            assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
+            assertField.isNil(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
         }
     }
 
@@ -31,8 +31,8 @@ class SymptomsCheckerAnalyticsTests: AnalyticsTests {
         assertOnFields { assertField in
             assertField.equals(expected: 1, \.completedV2SymptomsQuestionnaire)
             assertField.equals(expected: 1, \.completedV2SymptomsQuestionnaireAndStayAtHome)
-            assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
-            assertField.isPresent(\.hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick)
+            assertField.isNil(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
+            assertField.isNil(\.hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick)
         }
     }
 }

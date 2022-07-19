@@ -70,6 +70,7 @@ public struct IsolationModel {
         case terminatedRiskyContactEarly
 
         case receivedConfirmedPositiveTest
+        case receivedConfirmedPositiveTestWithEndDateOlderThanExpiredIndexIsolationEndDate
         case receivedConfirmedPositiveTestWithEndDateOlderThanRememberedNegativeTestEndDate
         case receivedConfirmedPositiveTestWithIsolationPeriodOlderThanAssumedIsolationStartDate
 

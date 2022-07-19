@@ -254,7 +254,7 @@ class IsolationContextTests: XCTestCase {
 
     }
 
-    func testPositiveNotAcknowledgedEndOfIsolationWillAcknowledgeEndOfIsolation() throws {
+    func testPositiveNotAcknowledgedEndOfIsolationWillPutYouIntoIsolation() throws {
         let date = GregorianDay.today
         isolationContext.isolationStateStore.set(
             IndexCaseInfo(
@@ -275,17 +275,15 @@ class IsolationContextTests: XCTestCase {
 
         let state = try makeResultAcknowledgementState(result: result).await().get()
 
-        if case TestResultAcknowledgementState.neededForPositiveResultNotIsolating(let acknowledge) = state {
+        if case TestResultAcknowledgementState.neededForPositiveResultStartToIsolate(let acknowledge, _) = state {
             acknowledge()
-            XCTAssertFalse(isolationContext.isolationStateManager.state.isIsolating)
-            XCTAssertTrue(isolationContext.isolationStateStore
-                .isolationInfo.hasAcknowledgedEndOfIsolation)
+            XCTAssertTrue(isolationContext.isolationStateManager.state.isIsolating)
         } else {
             XCTFail("Unexpected state \(state)")
         }
     }
 
-    func testConfirmedPositiveAlreadyOutOfIsolationNoNewIsolation() throws {
+    func testConfirmedPositiveAlreadyOutOfIsolationNewIsolation() throws {
         let date = GregorianDay.today
         isolationContext.isolationStateStore.set(
             IndexCaseInfo(
@@ -306,9 +304,9 @@ class IsolationContextTests: XCTestCase {
 
         let state = try makeResultAcknowledgementState(result: result).await().get()
 
-        if case TestResultAcknowledgementState.neededForPositiveResultNotIsolating(let acknowledge) = state {
+        if case TestResultAcknowledgementState.neededForPositiveResultStartToIsolate(let acknowledge, _) = state {
             acknowledge()
-            XCTAssertFalse(isolationContext.isolationStateManager.state.isIsolating)
+            XCTAssertTrue(isolationContext.isolationStateManager.state.isIsolating)
         } else {
             XCTFail("Unexpected state \(state)")
         }

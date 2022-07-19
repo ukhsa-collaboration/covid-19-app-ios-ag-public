@@ -153,10 +153,9 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
 
         Rule(
             """
-            A positive test will not start a new isolation if a positive test (asymptomatic) isolation is expired.
+            A positive test will also start a new isolation if an old (asymptomatic) isolation is expired.
             Any contact case isolation will be cleared.
-            * If the new test has an earlier test end date, override the existing test entirely.
-            * Otherwise, continue to remember the existing test and if it’s not already "confirmed" mark it as such.
+            See below for exceptions related to the test being within the expired isolation period
             """,
             predicate: StatePredicate(
                 symptomatic: [.noIsolation],
@@ -165,6 +164,23 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedConfirmedPositiveTest,
             update: .init(
                 contact: .noIsolation,
+                positiveTest: .isolatingWithConfirmedTest
+            )
+        ),
+
+        Rule(
+            """
+            Exception: A positive test will not start a new isolation if its test end date is within the
+            expired index isolation period of an already stored positive test
+            * If the new test has an earlier test end date, override the existing test entirely.
+            * Otherwise, continue to remember the existing test and if it’s not already "confirmed" mark it as
+            """,
+            predicate: StatePredicate(
+                symptomatic: [.noIsolation],
+                positiveTest: [.notIsolatingAndHadConfirmedTestPreviously, .notIsolatingAndHadUnconfirmedTestPreviously]
+            ),
+            event: .receivedConfirmedPositiveTestWithEndDateOlderThanExpiredIndexIsolationEndDate,
+            update: .init(
                 positiveTest: .notIsolatingAndHadConfirmedTestPreviously
             )
         ),
@@ -209,11 +225,9 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
 
         Rule(
             """
-            A positive test will not start a new isolation if a symptomatic isolation is expired.
-            Any contact case isolation will be cleared.
-            * If the new test has an earlier test end date, we will override the existing test entirely.
-            * Otherwise, we will continue to remember the existing test and, if it’s not already "confirmed" mark it such.
-            See below for exceptions related to the test being old.
+            A positive test will also start a new isolation if a symptomatic isolation is expired.
+            Any contact case and symptomatic isolation will be cleared.
+            See below for exceptions related to the test being within the expired isolation period or old
             """,
             predicate: StatePredicate(
                 symptomatic: [.notIsolatingAndHadSymptomsPreviously],
@@ -222,6 +236,24 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
             event: .receivedConfirmedPositiveTest,
             update: .init(
                 contact: .noIsolation,
+                symptomatic: .noIsolation,
+                positiveTest: .isolatingWithConfirmedTest
+            )
+        ),
+
+        Rule(
+            """
+            Exception: A positive test will not start a new isolation if its test end date is within the
+            isolation period of an already stored symptomatic isolation
+            * If the new test has an earlier test end date, override the existing test entirely.
+            * Otherwise, continue to remember the existing test and if it’s not already "confirmed" mark it as
+            """,
+            predicate: StatePredicate(
+                symptomatic: [.notIsolatingAndHadSymptomsPreviously],
+                positiveTest: [.notIsolatingAndHadConfirmedTestPreviously, .noIsolation, .notIsolatingAndHadUnconfirmedTestPreviously]
+            ),
+            event: .receivedConfirmedPositiveTestWithEndDateOlderThanExpiredIndexIsolationEndDate,
+            update: .init(
                 positiveTest: .notIsolatingAndHadConfirmedTestPreviously
             )
         ),
@@ -351,7 +383,7 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
 
         Rule(
             """
-            An unconfirmed positive test isolation will start an isolation.
+            An unconfirmed positive test will start a new isolation.
             See below for exceptions related to the test being old.
             """,
             predicate: StatePredicate(
@@ -400,7 +432,8 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
 
         Rule(
             """
-            Affirmation: An unconfirmed positive test will not override a negative test if it’s even older.
+            Affirmation: An unconfirmed positive test will not override a negative test if it’s older
+            but still within N days.
             See below for exceptions related to the test being even older.
             """,
             predicates: [
@@ -1011,6 +1044,27 @@ public struct IsolationModelCurrentRuleSet: IsolationRuleSet {
                 ),
             ],
             event: .receivedNegativeTestWithEndDateNewerThanAssumedSymptomOnsetDateAndAssumedSymptomOnsetDateNewerThanPositiveTestEndDate
+        ),
+
+        Rule(
+            filler: """
+            This event is not possible if we do not remember an expired isolation that contained a positive test
+            """,
+            predicates: [
+                StatePredicate(
+                    symptomatic: [.noIsolation],
+                    positiveTest: .all(except: .notIsolatingAndHadUnconfirmedTestPreviously, .notIsolatingAndHadConfirmedTestPreviously)
+                ),
+                StatePredicate(
+                    symptomatic: [.notIsolatingAndHadSymptomsPreviously],
+                    positiveTest: [.notIsolatingAndHasNegativeTest]
+                ),
+                StatePredicate(
+                    symptomatic: [.isolating],
+                    positiveTest: [.isolatingWithUnconfirmedTest, .isolatingWithConfirmedTest, .noIsolation, .notIsolatingAndHasNegativeTest]
+                ),
+            ],
+            event: .receivedConfirmedPositiveTestWithEndDateOlderThanExpiredIndexIsolationEndDate
         ),
 
         Rule(

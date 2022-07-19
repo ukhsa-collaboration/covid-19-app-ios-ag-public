@@ -54,6 +54,22 @@ struct IsolationModelAdapter {
             // bring assumed symptom onset for `.notIsolatingAndHadSymptomsPreviously` (but only because of a negative)
             // to a date that is newer than the new unconfirmed positive test
             symptomaticCase.expiredSelfDiagnosisDay = symptomaticCase.selfDiagnosisDay
+        } else if event == .receivedConfirmedPositiveTestWithEndDateOlderThanExpiredIndexIsolationEndDate {
+            testCase.expiredTestEndDay = GregorianDay(year: 2020, month: 10, day: 4)
+            testCase.expiredReceivedOnDay = GregorianDay(year: 2020, month: 10, day: 6)
+
+            testCase.testEndDay = GregorianDay(year: 2020, month: 10, day: 9)
+            testCase.receivedOnDay = GregorianDay(year: 2020, month: 10, day: 10)
+
+            symptomaticCase.symptomaticIsolationUntilStartOfDay = GregorianDay(year: 2020, month: 10, day: 13)
+
+            contactCase.exposureDay = GregorianDay(year: 2020, month: 10, day: 14)
+            contactCase.contactIsolationFromStartOfDay = GregorianDay(year: 2020, month: 10, day: 14)
+            contactCase.optedOutIsolation = GregorianDay(year: 2020, month: 10, day: 15)
+        } else if event == .receivedConfirmedPositiveTest {
+            testCase.testEndDay = GregorianDay(year: 2020, month: 10, day: 14)
+        } else if event == .receivedUnconfirmedPositiveTest {
+            testCase.testEndDay = GregorianDay(year: 2020, month: 10, day: 14)
         }
     }
 

@@ -39,7 +39,7 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
         assertOnFields { assertField in
             assertField.equals(expected: 1, \.startedIsolation)
             assertField.isNil(\.completedQuestionnaireAndStartedIsolation)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
         }
@@ -54,8 +54,8 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
         assertOnFields { assertField in
             assertField.equals(expected: 1, \.receivedPositiveTestResult)
             assertField.equals(expected: 1, \.receivedPositiveTestResultViaPolling)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
-            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasTestedPositiveBackgroundTick)
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
@@ -68,15 +68,15 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
-            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasTestedPositiveBackgroundTick)
         }
 
         // Dates: 14th-27th Jan -> Analytics packets for: 13th-26th Jan
         // Isolation is over, but isolation reason still stored for 14 days
         assertOnFieldsForDateRange(dateRange: 14 ... 27) { assertField in
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
-            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasTestedPositiveBackgroundTick)
         }
 
         // Current date: 28th Jan -> Analytics packet for: 27th Jan
@@ -101,7 +101,7 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
         assertOnFields { assertField in
             assertField.equals(expected: 1, \.startedIsolation)
             assertField.isNil(\.completedQuestionnaireAndStartedIsolation)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
         }
@@ -116,7 +116,7 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
         assertOnFields { assertField in
             assertField.equals(expected: 1, \.receivedNegativeTestResult)
             assertField.equals(expected: 1, \.receivedNegativeTestResultViaPolling)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
             assertField.isLessThanTotalBackgroundTasks(\.isIsolatingBackgroundTick)
             assertField.isLessThanTotalBackgroundTasks(\.isIsolatingForSelfDiagnosedBackgroundTick)
         }
@@ -125,7 +125,7 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
         // Dates: 5th-17th Jan -> Analytics packets for: 4th-16th Jan
         // Isolation is over, but isolation reason still stored for 14 days
         assertOnFieldsForDateRange(dateRange: 5 ... 17) { assertField in
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
         assertAnalyticsPacketIsNormal()
@@ -143,7 +143,7 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
         assertOnFields { assertField in
             assertField.equals(expected: 1, \.startedIsolation)
             assertField.isNil(\.completedQuestionnaireAndStartedIsolation)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
         }
@@ -159,7 +159,7 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
             assertFields.isPresent(\.receivedVoidTestResultViaPolling)
 
             // Still isolating
-            assertFields.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertFields.isNil(\.hasSelfDiagnosedBackgroundTick)
             assertFields.isPresent(\.isIsolatingBackgroundTick)
             assertFields.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
         }
@@ -188,8 +188,8 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
 
             assertField.equals(expected: 1, \.receivedPositiveTestResult)
 
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
-            assertField.isPresent(\.hasTestedSelfRapidPositiveBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasTestedSelfRapidPositiveBackgroundTick)
 
             assertField.isPresent(\.askedToShareExposureKeysInTheInitialFlow)
         }
@@ -200,14 +200,14 @@ class PollingTestResultAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.isIsolatingForTestedSelfRapidPositiveBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
 
-            assertField.isPresent(\.hasTestedSelfRapidPositiveBackgroundTick)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasTestedSelfRapidPositiveBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
         // 14 Days after isolation - data retention
         assertOnFieldsForDateRange(dateRange: 14 ... 27) { assertField in
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
-            assertField.isPresent(\.hasTestedSelfRapidPositiveBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasTestedSelfRapidPositiveBackgroundTick)
         }
 
         assertAnalyticsPacketIsNormal()

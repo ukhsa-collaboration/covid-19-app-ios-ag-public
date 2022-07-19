@@ -117,7 +117,14 @@ public enum Metric: String, CaseIterable {
     public static let nonFeatureRelatedMetricsToBeStripped: [Metric] = [
         .didAskForSymptomsOnPositiveTestEntry,
         .isolatedForSelfDiagnosedBackgroundTick,
-        .completedQuestionnaireAndStartedIsolation
+        .completedQuestionnaireAndStartedIsolation,
+
+        .selfDiagnosedBackgroundTick,
+        .testedPositiveBackgroundTick,
+        .hasTestedLFDPositiveBackgroundTick,
+        .hasTestedSelfRapidPositiveBackgroundTick,
+        .hasCompletedV2SymptomsQuestionnaireBackgroundTick,
+        .hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick
     ]
 }
 

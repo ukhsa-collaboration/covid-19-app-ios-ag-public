@@ -161,8 +161,8 @@ struct SubmissionPayload: Decodable {
         // Background ticks (max: runningNormallyBackgroundTick)
         var isIsolatingBackgroundTick: Int? = 0
         var hasHadRiskyContactBackgroundTick: Int? = 0
-        var hasSelfDiagnosedBackgroundTick: Int? = 0
-        var hasTestedPositiveBackgroundTick: Int? = 0
+        var hasSelfDiagnosedBackgroundTick: Int? = nil
+        var hasTestedPositiveBackgroundTick: Int? = nil
         var isIsolatingForSelfDiagnosedBackgroundTick: Int? = nil
         var isIsolatingForTestedPositiveBackgroundTick: Int? = 0
         var isIsolatingForHadRiskyContactBackgroundTick: Int? = 0
@@ -182,9 +182,9 @@ struct SubmissionPayload: Decodable {
 
         var receivedPositiveSelfRapidTestResultEnteredManually: Int? = 0
         var isIsolatingForTestedSelfRapidPositiveBackgroundTick: Int? = 0
-        var hasTestedSelfRapidPositiveBackgroundTick: Int? = 0
+        var hasTestedSelfRapidPositiveBackgroundTick: Int? = nil
 
-        var hasTestedLFDPositiveBackgroundTick: Int? = 0
+        var hasTestedLFDPositiveBackgroundTick: Int? = nil
         var isIsolatingForTestedLFDPositiveBackgroundTick: Int? = 0
 
         var launchedTestOrdering: Int? = 0
@@ -245,8 +245,8 @@ struct SubmissionPayload: Decodable {
 
         var completedV2SymptomsQuestionnaire: Int? = 0
         var completedV2SymptomsQuestionnaireAndStayAtHome: Int? = 0
-        var hasCompletedV2SymptomsQuestionnaireBackgroundTick: Int? = 0
-        var hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick: Int? = 0
+        var hasCompletedV2SymptomsQuestionnaireBackgroundTick: Int? = nil
+        var hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick: Int? = nil
     }
 
     var includesMultipleApplicationVersions: Bool

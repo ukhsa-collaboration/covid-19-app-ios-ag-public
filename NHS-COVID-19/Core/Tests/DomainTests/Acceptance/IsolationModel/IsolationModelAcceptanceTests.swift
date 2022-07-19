@@ -67,6 +67,7 @@ class IsolationModelAcceptanceTests: AcceptanceTestCase {
 
         for transition in validTransitions {
             do {
+
                 let adapter = IsolationModelAdapter(anticipating: transition.event)
                 let storeRepresentations = try adapter.storeRepresentations(for: transition.initialState)
                 guard !storeRepresentations.isEmpty else {
@@ -80,6 +81,10 @@ class IsolationModelAcceptanceTests: AcceptanceTestCase {
 
                     $instance.exposureNotificationManager = MockWindowsExposureNotificationManager()
                     $instance.encryptedStore.stored["isolation_state_info"] = Data(storeRepresentation.utf8)
+
+                    let acceptanceTestMockDateProvider = AcceptanceTestMockDateProvider()
+                    acceptanceTestMockDateProvider.setDate(adapter.currentDate.date)
+                    $instance.currentDateProvider = acceptanceTestMockDateProvider
 
                     try completeRunning()
                     let context = try self.context()
@@ -114,6 +119,7 @@ class IsolationModelAcceptanceTests: AcceptanceTestCase {
                     """
                 )
             }
+
         }
 
         try XCTSkipIf(!skippedTransitions.isEmpty, "Skipped \(skippedTransitions.count) out of \(validTransitions.count) valid transitions")

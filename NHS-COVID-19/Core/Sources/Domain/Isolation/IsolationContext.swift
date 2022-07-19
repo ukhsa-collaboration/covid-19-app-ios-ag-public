@@ -141,7 +141,8 @@ struct IsolationContext {
                     currentIsolationState: currentIsolationState,
                     storedIsolationInfo: isolationStateInfo?.isolationInfo,
                     result: result,
-                    configuration: isolationStateStore.configuration
+                    configuration: isolationStateStore.configuration,
+                    currentDateProvider: currentDateProvider
                 )
 
                 let storeOperation = testResultIsolationOperation.storeOperation()

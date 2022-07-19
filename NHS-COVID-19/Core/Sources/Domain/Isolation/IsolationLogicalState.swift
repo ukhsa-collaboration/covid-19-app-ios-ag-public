@@ -388,6 +388,17 @@ enum IsolationLogicalState: Equatable {
         }
     }
 
+    var expiredIsolation: Isolation? {
+        switch self {
+        case .notIsolating(let finishedIsolationThatWeHaveNotDeletedYet):
+            return finishedIsolationThatWeHaveNotDeletedYet
+        case .isolating:
+            return nil
+        case .isolationFinishedButNotAcknowledged(let isolation):
+            return isolation
+        }
+    }
+
     var isInCorrectIsolationStateToApplyForFinancialSupport: Bool {
         guard let activeIsolation = activeIsolation else { return false }
         return activeIsolation.isContactCase && !activeIsolation.hasPositiveTestResult

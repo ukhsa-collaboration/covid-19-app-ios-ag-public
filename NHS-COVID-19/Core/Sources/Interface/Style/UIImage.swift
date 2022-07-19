@@ -125,6 +125,7 @@ public enum ImageName: String, CaseIterable, Identifiable {
 
     case isolatingCircles = "IsolationIndicatorCircles/IsolatingCircles"
     case notIsolatingCircles = "IsolationIndicatorCircles/NotIsolatingCircles"
+    case isolatingInformationalCircles = "IsolationIndicatorCircles/IsolatingInformationalCircles"
 
     // MARK: Contact Tracing
 

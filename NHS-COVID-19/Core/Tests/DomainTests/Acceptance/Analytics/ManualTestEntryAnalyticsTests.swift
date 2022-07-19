@@ -35,7 +35,7 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             assertField.equals(expected: 1, \.receivedPositiveTestResult)
             assertField.equals(expected: 1, \.receivedPositiveTestResultEnteredManually)
             assertField.isPresent(\.isIsolatingBackgroundTick)
-            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
+            assertField.isNil(\.hasTestedPositiveBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
             assertField.isNil(\.didAskForSymptomsOnPositiveTestEntry)
             assertField.isPresent(\.askedToShareExposureKeysInTheInitialFlow)
@@ -46,13 +46,13 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
         assertOnFieldsForDateRange(dateRange: 4 ... 13) { assertField in
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
-            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
+            assertField.isNil(\.hasTestedPositiveBackgroundTick)
         }
 
         // Dates: 14th-27th Jan -> Analytics packets for: 13th-26th Jan
         // Isolation is over, but isolation reason still stored for 14 days
         assertOnFieldsForDateRange(dateRange: 14 ... 27) { assertField in
-            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
+            assertField.isNil(\.hasTestedPositiveBackgroundTick)
         }
 
         // Current date: 27th Jan -> Analytics packet for: 26th Jan
@@ -81,7 +81,7 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             assertField.equals(expected: 1, \.receivedPositiveTestResultEnteredManually)
             assertField.equals(expected: 1, \.receivedUnconfirmedPositiveTestResult)
             assertField.isPresent(\.isIsolatingBackgroundTick)
-            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
+            assertField.isNil(\.hasTestedPositiveBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
             assertField.isPresent(\.isIsolatingForUnconfirmedTestBackgroundTick)
         }
@@ -90,13 +90,13 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
         // Now in isolation due to unconfirmed positive test result
         assertOnFields { assertField in
             assertField.isPresent(\.isIsolatingBackgroundTick)
-            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
+            assertField.isNil(\.hasTestedPositiveBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
             assertField.isPresent(\.isIsolatingForUnconfirmedTestBackgroundTick)
         }
 
         // Enters a confirmatory positive test result
-        // Isolation end date will not change: 12th Jan
+        // New Isolation end date will be: 14th Jan
         try manualTestResultEntry.enterPositive()
 
         // Current date: 5th Jan -> Analytics packet for: 4nd Jan
@@ -105,26 +105,26 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             assertField.equals(expected: 1, \.receivedPositiveTestResult)
             assertField.equals(expected: 1, \.receivedPositiveTestResultEnteredManually)
             assertField.isPresent(\.isIsolatingBackgroundTick)
-            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
+            assertField.isNil(\.hasTestedPositiveBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
             assertField.isPresent(\.askedToShareExposureKeysInTheInitialFlow)
         }
 
-        // Dates: 6th-13th Jan -> Analytics packets for: 5rd-12th Jan
-        // Still in isolation
-        assertOnFieldsForDateRange(dateRange: 6 ... 13) { assertField in
+        // Dates: 6th-15th Jan -> Analytics packets for: 5rd-14th Jan
+        // New isolation
+        assertOnFieldsForDateRange(dateRange: 6 ... 15) { assertField in
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
-            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
+            assertField.isNil(\.hasTestedPositiveBackgroundTick)
         }
 
-        // Dates: 14th-27th Jan -> Analytics packets for: 13th-26th Jan
+        // Dates: 16th-29th Jan -> Analytics packets for: 15th-28th Jan
         // Isolation is over, but isolation reason still stored for 14 days
         assertOnFieldsForDateRange(dateRange: 14 ... 27) { assertField in
-            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
+            assertField.isNil(\.hasTestedPositiveBackgroundTick)
         }
 
-        // Current date: 27th Jan -> Analytics packet for: 26th Jan
+        // Current date: 29th Jan -> Analytics packet for: 30th Jan
         // Previous isolation reason no longer stored
         assertAnalyticsPacketIsNormal()
     }
@@ -143,7 +143,7 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             assertField.isNil(\.didAskForSymptomsOnPositiveTestEntry)
             assertField.equals(expected: 1, \.didRememberOnsetSymptomsDateBeforeReceivedTestResult)
             assertField.equals(expected: 1, \.didHaveSymptomsBeforeReceivedTestResult)
-            assertField.isPresent(\.hasSelfDiagnosedBackgroundTick)
+            assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
 
             // positive confirmed analytics field
@@ -151,7 +151,7 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             assertField.equals(expected: 1, \.receivedPositiveTestResult)
             assertField.equals(expected: 1, \.receivedPositiveTestResultEnteredManually)
             assertField.isPresent(\.isIsolatingBackgroundTick)
-            assertField.isPresent(\.hasTestedPositiveBackgroundTick)
+            assertField.isNil(\.hasTestedPositiveBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
 
             assertField.isPresent(\.askedToShareExposureKeysInTheInitialFlow)
@@ -195,7 +195,7 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             assertField.equals(expected: 1, \.receivedPositiveTestResult)
             assertField.equals(expected: 1, \.receivedPositiveSelfRapidTestResultEnteredManually)
 
-            assertField.isPresent(\.hasTestedSelfRapidPositiveBackgroundTick)
+            assertField.isNil(\.hasTestedSelfRapidPositiveBackgroundTick)
             assertField.isPresent(\.askedToShareExposureKeysInTheInitialFlow)
         }
 
@@ -204,12 +204,12 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedSelfRapidPositiveBackgroundTick)
 
-            assertField.isPresent(\.hasTestedSelfRapidPositiveBackgroundTick)
+            assertField.isNil(\.hasTestedSelfRapidPositiveBackgroundTick)
         }
 
         // 14 Days after isolation - data retention
         assertOnFieldsForDateRange(dateRange: 14 ... 27) { assertField in
-            assertField.isPresent(\.hasTestedSelfRapidPositiveBackgroundTick)
+            assertField.isNil(\.hasTestedSelfRapidPositiveBackgroundTick)
         }
 
         assertAnalyticsPacketIsNormal()

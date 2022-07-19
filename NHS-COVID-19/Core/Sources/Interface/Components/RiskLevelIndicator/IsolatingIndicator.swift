@@ -149,7 +149,7 @@ public struct IsolatingIndicator: View {
             .zIndex(-1)
             .background(Group {
                 if (animationDisabled || shouldDegradeAnimation) && !isDetectionPaused {
-                    Image(.isolatingCircles)
+                    Image(.isolatingInformationalCircles)
                 }
             })
 

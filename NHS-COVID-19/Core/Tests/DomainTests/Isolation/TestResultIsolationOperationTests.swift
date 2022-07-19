@@ -17,12 +17,12 @@ class TestResultIsolationOperationTests: XCTestCase {
             var encryptedStore = MockEncryptedStore()
             var isolationInfo = IsolationInfo(indexCaseInfo: nil, contactCaseInfo: nil)
             var isolationConfiguration = IsolationConfiguration(
-                maxIsolation: 21,
-                contactCase: 14,
-                indexCaseSinceSelfDiagnosisOnset: 8,
-                indexCaseSinceSelfDiagnosisUnknownOnset: 9,
+                maxIsolation: 16,
+                contactCase: 11,
+                indexCaseSinceSelfDiagnosisOnset: 6,
+                indexCaseSinceSelfDiagnosisUnknownOnset: 4,
                 housekeepingDeletionPeriod: 14,
-                indexCaseSinceNPEXDayNoSelfDiagnosis: 11,
+                indexCaseSinceNPEXDayNoSelfDiagnosis: 6,
                 testResultPollingTokenRetentionPeriod: 28
             )
 
@@ -32,6 +32,7 @@ class TestResultIsolationOperationTests: XCTestCase {
         let store: IsolationInfo
         let isolationState: IsolationLogicalState
         let isolationConfiguration: IsolationConfiguration
+        let currentDateProvider: DateProviding
 
         init(configuration: Configuration) {
             store = configuration.isolationInfo
@@ -41,6 +42,7 @@ class TestResultIsolationOperationTests: XCTestCase {
                 configuration: configuration.isolationConfiguration
             )
             isolationConfiguration = configuration.isolationConfiguration
+            currentDateProvider = MockDateProvider(getDate: { configuration.today.startOfDay })
         }
     }
 
@@ -59,11 +61,15 @@ class TestResultIsolationOperationTests: XCTestCase {
         instance.isolationConfiguration
     }
 
+    var currentDateProvider: DateProviding {
+        instance.currentDateProvider
+    }
+
     func testPositiveTestShouldUpdateWhileBeingInSymptomaticIsolation() throws {
         $instance.isolationInfo.indexCaseInfo = IndexCaseInfo(selfDiagnosisDay: $instance.selfDiagnosisDay, onsetDay: nil, testResult: nil)
 
-        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
-        let testReceivedDay = GregorianDay(year: 2020, month: 7, day: 14)
+        let selfDiagnosisDay = LocalDay.today.advanced(by: -2).gregorianDay
+        let testReceivedDay = LocalDay.today.gregorianDay
 
         // Given
         let isolationInfo = IsolationInfo(indexCaseInfo: IndexCaseInfo(
@@ -82,7 +88,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -92,8 +99,8 @@ class TestResultIsolationOperationTests: XCTestCase {
     func testPositiveRequiresConfirmatoryTestShouldNotBeSavedWhileBeingInSymptomaticIsolation() throws {
         $instance.isolationInfo.indexCaseInfo = IndexCaseInfo(selfDiagnosisDay: $instance.selfDiagnosisDay, onsetDay: nil, testResult: nil)
 
-        let selfDiagnosisDay = GregorianDay(year: 2020, month: 7, day: 12)
-        let testReceivedDay = GregorianDay(year: 2020, month: 7, day: 14)
+        let selfDiagnosisDay = LocalDay.today.advanced(by: -2).gregorianDay
+        let testReceivedDay = LocalDay.today.gregorianDay
 
         // Given
         let isolationInfo = IsolationInfo(indexCaseInfo: IndexCaseInfo(
@@ -112,7 +119,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -152,18 +160,19 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
         XCTAssertEqual(operation.storeOperation(), .nothing)
     }
 
-    func testInIsolationEnteringNewPositiveTestShouldOverrideExistingOne() {
-        let firstRapidTestReceivedDay = GregorianDay(year: 2020, month: 7, day: 16)
+    func testInIsolationEnteringNewPositiveTestShouldUpdateExistingOne() {
+        let firstRapidTestReceivedDay = LocalDay.today.advanced(by: -4).gregorianDay
         let firstRapidTestNpexDay = firstRapidTestReceivedDay.advanced(by: -1)
 
-        let secondRapidTestReceivedDay = GregorianDay(year: 2020, month: 7, day: 20)
+        let secondRapidTestReceivedDay = LocalDay.today.gregorianDay
 
         let indexCaseInfo = IndexCaseInfo(
             symptomaticInfo: nil,
@@ -187,16 +196,17 @@ class TestResultIsolationOperationTests: XCTestCase {
             result: VirologyStateTestResult(
                 testResult: .positive,
                 testKitType: .rapidResult,
-                endDate: secondRapidTestReceivedDay.advanced(by: -1).startDate(in: .utc),
+                endDate: secondRapidTestReceivedDay.startDate(in: .utc),
                 diagnosisKeySubmissionToken: nil,
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
-        XCTAssertEqual(operation.storeOperation(), .confirm)
+        XCTAssertEqual(operation.storeOperation(), .update)
     }
 
     func testInIsolationEnteringNewPositiveTestShouldNotOverrideExistingOne() {
@@ -232,7 +242,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -240,14 +251,17 @@ class TestResultIsolationOperationTests: XCTestCase {
     }
 
     func testShouldStartIsolationBecauseOfPositiveTestResultRequiresConfirmatoryTestAfterBeingRecentlyReleasedFromIsolation() {
-        let npexDay = LocalDay.today.advanced(by: -15)
+        let npexDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days - 1).gregorianDay
         let indexCaseInfo = IndexCaseInfo(
             symptomaticInfo: nil,
-            testInfo: .init(result: .positive, testKitType: .rapidResult, requiresConfirmatoryTest: true, shouldOfferFollowUpTest: true, receivedOnDay: .today, testEndDay: npexDay.gregorianDay)
+            testInfo: .init(result: .positive,
+                            testKitType: .rapidResult,
+                            requiresConfirmatoryTest: true,
+                            shouldOfferFollowUpTest: true,
+                            receivedOnDay: npexDay,
+                            testEndDay: npexDay)
         )
         let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
-
-        let endDay = npexDay.advanced(by: $instance.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days).startOfDay
 
         let operation = TestResultIsolationOperation(
             currentIsolationState: isolationState,
@@ -255,12 +269,13 @@ class TestResultIsolationOperationTests: XCTestCase {
             result: VirologyStateTestResult(
                 testResult: .positive,
                 testKitType: .rapidResult,
-                endDate: endDay,
+                endDate: LocalDay.today.startOfDay,
                 diagnosisKeySubmissionToken: nil,
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -287,7 +302,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -321,7 +337,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -341,7 +358,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -369,47 +387,12 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
         XCTAssertEqual(operation.storeOperation(), .overwrite)
-    }
-
-    func testNewTestResultShouldBeIgnoredWhenNewTestResultIsPositiveAndPreviousTestResultIsPositive() throws {
-        let testDay = GregorianDay(year: 2020, month: 7, day: 16)
-        let testEndDay = testDay.advanced(by: -6)
-
-        // Given
-        let isolationInfo = IsolationInfo(indexCaseInfo: IndexCaseInfo(
-            symptomaticInfo: nil,
-            testInfo: IndexCaseInfo.TestInfo(
-                result: .positive,
-                testKitType: .labResult,
-                requiresConfirmatoryTest: false,
-                shouldOfferFollowUpTest: false,
-                receivedOnDay: testDay.advanced(by: -4),
-                testEndDay: testEndDay
-            )
-        ), contactCaseInfo: nil)
-
-        // When
-        let operation = TestResultIsolationOperation(
-            currentIsolationState: isolationState,
-            storedIsolationInfo: isolationInfo,
-            result: VirologyStateTestResult(
-                testResult: .positive,
-                testKitType: .labResult,
-                endDate: LocalDay.today.startOfDay,
-                diagnosisKeySubmissionToken: nil,
-                requiresConfirmatoryTest: false,
-                shouldOfferFollowUpTest: false
-            ),
-            configuration: configuration
-        )
-
-        // THEN
-        XCTAssertEqual(operation.storeOperation(), .nothing)
     }
 
     func testNewTestResultShouldBeSavedWhenNewTestResultIsPositiveAndPreviousTestResultIsNil() throws {
@@ -425,7 +408,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -464,7 +448,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -484,7 +469,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -524,7 +510,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -564,7 +551,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -596,7 +584,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -628,7 +617,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -655,7 +645,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -687,7 +678,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -727,7 +719,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -767,7 +760,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -807,7 +801,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -847,11 +842,12 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
-        XCTAssertEqual(operation.storeOperation(), .overwriteAndConfirm)
+        XCTAssertEqual(operation.storeOperation(), .overwrite)
     }
 
     func testNewPositiveResultOverwriteIfSelfDiagnosisDayIsNewerThanTheTest() {
@@ -887,7 +883,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -927,7 +924,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -967,7 +965,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1007,7 +1006,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1047,7 +1047,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1088,7 +1089,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1129,7 +1131,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1170,7 +1173,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1212,7 +1216,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1254,7 +1259,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1296,7 +1302,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1338,7 +1345,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1380,7 +1388,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1421,7 +1430,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1462,7 +1472,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1503,7 +1514,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1544,7 +1556,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1585,7 +1598,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1626,7 +1640,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: false,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1667,7 +1682,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 requiresConfirmatoryTest: true,
                 shouldOfferFollowUpTest: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1708,7 +1724,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 shouldOfferFollowUpTest: false,
                 confirmatoryDayLimit: 1 // don't care
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1749,7 +1766,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 shouldOfferFollowUpTest: false,
                 confirmatoryDayLimit: 1 // don't care
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1791,7 +1809,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 shouldOfferFollowUpTest: false,
                 confirmatoryDayLimit: 1
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1833,7 +1852,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 shouldOfferFollowUpTest: false,
                 confirmatoryDayLimit: 2
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1874,7 +1894,8 @@ class TestResultIsolationOperationTests: XCTestCase {
                 shouldOfferFollowUpTest: false,
                 confirmatoryDayLimit: 1
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
@@ -1915,13 +1936,429 @@ class TestResultIsolationOperationTests: XCTestCase {
                 shouldOfferFollowUpTest: false,
                 confirmatoryDayLimit: 1
             ),
-            configuration: configuration
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
         )
 
         // THEN
         XCTAssertEqual(operation.storeOperation(), .ignore)
     }
 
+    func testRecivedPositiveTestAfterRecentIsolationBecauseOfPosiviveTestAndHavingSymptoms() {
+
+        let selfDiagnosisDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceSelfDiagnosisOnset.days - 1).gregorianDay
+        let testEndDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days - 2).gregorianDay
+
+        let secondRapidTestReceivedDay = LocalDay.today.gregorianDay
+
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .labResult,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
+                receivedOnDay: testEndDay,
+                testEndDay: testEndDay
+            )
+        )
+
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .rapidResult,
+                endDate: secondRapidTestReceivedDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
+            ),
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
+        )
+
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .overwrite)
+    }
+
+    func testRecivedPositiveTestWithEndDateAfterExpiredIndexIsolationEndDate() {
+        let testEndDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days - 1).gregorianDay
+
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: nil,
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .labResult,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
+                receivedOnDay: testEndDay,
+                testEndDay: testEndDay
+            )
+        )
+
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .labResult,
+                endDate: LocalDay.today.gregorianDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
+            ),
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
+        )
+
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .overwrite)
+    }
+
+    func testRecivedPositiveTestWithEndDateBeforeExpiredConfirmedIndexIsolationEndDate() {
+        let testEndDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days - 1).gregorianDay
+        let secondTestEndDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days)
+
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: nil,
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .labResult,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
+                receivedOnDay: testEndDay,
+                testEndDay: testEndDay
+            )
+        )
+
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .labResult,
+                endDate: secondTestEndDay.startOfDay,
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
+            ),
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
+        )
+
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .nothing)
+    }
+
+    func testRecivedPositiveTestWithEndDateBeforeExpiredUnconfirmedIndexIsolationEndDate() {
+        let testEndDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days - 1).gregorianDay
+        let secondTestEndDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days)
+
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: nil,
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .labResult,
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false,
+                receivedOnDay: testEndDay,
+                testEndDay: testEndDay
+            )
+        )
+
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .labResult,
+                endDate: secondTestEndDay.startOfDay,
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
+            ),
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
+        )
+
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .confirm)
+    }
+
+    func testRecivedPositiveTestWithEndDateBeforeExpiredUnconfirmedIndexEndDate() {
+        let testEndDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days - 1).gregorianDay
+        let secondTestEndDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days - 2)
+
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: nil,
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .labResult,
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false,
+                receivedOnDay: testEndDay,
+                testEndDay: testEndDay
+            )
+        )
+
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .labResult,
+                endDate: secondTestEndDay.startOfDay,
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
+            ),
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
+        )
+
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .nothing)
+    }
+
+    func testReceivedConfirmedPositiveTestWithEndDateOlderThanExpiredSymptomaticIndexIsolationEndDate() {
+        let selfDiagnosisDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceSelfDiagnosisOnset.days - 1).gregorianDay
+        let testEndDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceSelfDiagnosisOnset.days)
+
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: nil
+        )
+
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .labResult,
+                endDate: testEndDay.startOfDay,
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
+            ),
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
+        )
+
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .updateAndConfirm)
+    }
+
+    func testRecivedPositiveTestWithEndDateAfterExpiredSymptomaticIndexIsolationEndDate() {
+        let selfDiagnosisDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceSelfDiagnosisOnset.days - 1).gregorianDay
+
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: nil
+        )
+
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .labResult,
+                endDate: LocalDay.today.gregorianDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
+            ),
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
+        )
+
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .overwrite)
+    }
+
+    func testRecivedPositiveTestWithEndDateAfterExpiredSymptomaticConfirmedIndexIsolationEndDate() {
+        let selfDiagnosisDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceSelfDiagnosisOnset.days - 1).gregorianDay
+        let testEndDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days - 1).gregorianDay
+
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .labResult,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
+                receivedOnDay: testEndDay,
+                testEndDay: testEndDay
+            )
+        )
+
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .labResult,
+                endDate: LocalDay.today.advanced(by: -2).gregorianDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
+            ),
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
+        )
+
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .nothing)
+    }
+
+    func testRecivedPositiveTestWithEndDateAfterExpiredSymptomaticUnconfirmedIndexIsolationEndDate() {
+        let selfDiagnosisDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceSelfDiagnosisOnset.days - 1).gregorianDay
+        let testEndDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days - 1).gregorianDay
+
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .labResult,
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false,
+                receivedOnDay: testEndDay,
+                testEndDay: testEndDay
+            )
+        )
+
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .labResult,
+                endDate: LocalDay.today.advanced(by: -2).gregorianDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
+            ),
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
+        )
+
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .confirm)
+    }
+
+    func testSymptomsAfterPositiveTestRecivedPositiveTestWithEndDateAfterExpiredIndexIsolation() {
+        let selfDiagnosisDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceSelfDiagnosisOnset.days).gregorianDay
+        let testEndDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days - 1).gregorianDay
+
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .labResult,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
+                receivedOnDay: testEndDay,
+                testEndDay: testEndDay
+            )
+        )
+
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .labResult,
+                endDate: LocalDay.today.gregorianDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
+            ),
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
+        )
+
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .overwrite)
+    }
+
+    func testRecivedPositiveUnconfirmedTestWithEndDateBeforeExpiredIndexIsolationEndDate() {
+        let selfDiagnosisDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days - 1).gregorianDay
+        let testEndDay = LocalDay.today.advanced(by: -$instance.isolationConfiguration.indexCaseSinceNPEXDayNoSelfDiagnosis.days).gregorianDay
+
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: IndexCaseInfo.SymptomaticInfo(selfDiagnosisDay: selfDiagnosisDay, onsetDay: selfDiagnosisDay),
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .labResult,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
+                receivedOnDay: testEndDay,
+                testEndDay: testEndDay
+            )
+        )
+
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .labResult,
+                endDate: LocalDay.today.gregorianDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: true,
+                shouldOfferFollowUpTest: false
+            ),
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
+        )
+
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .overwrite)
+    }
 }
 
 private extension IndexCaseInfo {
