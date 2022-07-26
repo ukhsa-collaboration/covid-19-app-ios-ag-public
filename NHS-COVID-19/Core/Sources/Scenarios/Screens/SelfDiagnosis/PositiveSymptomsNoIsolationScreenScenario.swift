@@ -12,7 +12,6 @@ public class PositiveSymptomsNoIsolationScreenScenario: Scenario {
     public static var name: String = "Self-Diagnosis - Positive symptoms No isolation"
 
     public static let cancelTapped: String = "Cancel tapped"
-    public static let commonQuestionsLinkTapped: String = "Common questions link tapped"
     public static let nhs111OnlineLinkTapped = "NHS 111 Online link tapped"
     public static let backHomeButtonTapped: String = "Back to home screen button tapped"
 
@@ -33,10 +32,6 @@ private class Interactor: PositiveSymptomsNoIsolationViewController.Interacting 
 
     func didTapCancel() {
         viewController?.showAlert(title: PositiveSymptomsNoIsolationScreenScenario.cancelTapped)
-    }
-
-    func commonQuestionsLinkTapped() {
-        viewController?.showAlert(title: PositiveSymptomsNoIsolationScreenScenario.commonQuestionsLinkTapped)
     }
 
     func nhs111OnlineLinkTapped() {

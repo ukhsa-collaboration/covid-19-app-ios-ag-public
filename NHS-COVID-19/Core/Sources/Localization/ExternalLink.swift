@@ -35,7 +35,6 @@ public enum ExternalLink: CaseIterable {
     case localCovidStatsInfo
     case getRapidTestsAsymptomaticWales
     case guidanceForContactsInEngland
-    case guidanceForHouseholdContactsInEngland
     case guidanceForContactsInWales
     case getTestedWalesLink
     case guidanceHubEnglandLink
@@ -55,7 +54,6 @@ public enum ExternalLink: CaseIterable {
     case didTapSymptomaticCase
     case didTapSymptomCheckerNormalActivities
     case walesNHS111OnlineLink
-    case commonQuestionLink
 
     public var url: URL {
         switch self {
@@ -119,8 +117,6 @@ public enum ExternalLink: CaseIterable {
             return localizeURL(.contact_case_start_isolation_book_lfd_test_url)
         case .guidanceForContactsInEngland:
             return localizeURL(.contact_case_guidance_for_contacts_in_england_url)
-        case .guidanceForHouseholdContactsInEngland:
-            return localizeURL(.risky_contact_opt_out_further_advice_link_url)
         case .guidanceForContactsInWales:
             return localizeURL(.risky_contact_opt_out_primary_button_url_wales)
         case .getTestedWalesLink:
@@ -159,8 +155,6 @@ public enum ExternalLink: CaseIterable {
             return localizeURL(.symptom_checker_advice_notice_stay_at_home_link_url)
         case .walesNHS111OnlineLink:
             return localizeURL(.nhs_111_online_link_wls)
-        case .commonQuestionLink:
-            return localizeURL(.positive_symptoms_no_isolation_common_question_url)
         }
     }
 }

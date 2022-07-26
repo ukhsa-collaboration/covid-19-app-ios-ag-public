@@ -14,7 +14,6 @@ public class ContactCaseNoIsolationAdviceScreenScenario: Scenario {
     public static var name = "Contact Case No Isolation Advice"
 
     public static let backToHomeTapped = "Back to home button tapped"
-    public static let guidanceLinkForHouseholdContactsTapped = "Guidance link for household contacts tapped"
     public static let guidanceLinkForContactsTapped = "Guidance for contacts link tapped"
 
     static var appController: AppController {
@@ -38,9 +37,5 @@ private class ContactCaseNoIsolationAdviceInteractor: ContactCaseNoIsolationAdvi
 
     func didTapReadGuidanceForContacts() {
         viewController?.showAlert(title: ContactCaseNoIsolationAdviceScreenScenario.guidanceLinkForContactsTapped)
-    }
-
-    func didTapGuidanceForHouseholdContacts() {
-        viewController?.showAlert(title: ContactCaseNoIsolationAdviceScreenScenario.guidanceLinkForHouseholdContactsTapped)
     }
 }

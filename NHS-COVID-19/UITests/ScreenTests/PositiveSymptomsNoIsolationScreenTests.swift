@@ -16,7 +16,6 @@ class PositiveSymptomsNoIsolationScreenTests: XCTestCase {
 
             XCTAssert(screen.heading.exists)
             XCTAssert(screen.explanationLabel.allExist)
-            XCTAssert(screen.commonQuestionsButton.exists)
             XCTAssert(screen.furtherAdviceLabel.exists)
             XCTAssert(screen.nhs111OnlineLink.exists)
             XCTAssert(screen.backToHomeButton.exists)
@@ -32,15 +31,6 @@ class PositiveSymptomsNoIsolationScreenTests: XCTestCase {
         }
     }
 
-    func testCommonQuestions() throws {
-        try runner.run { app in
-            let screen = PositiveSymptomsNoIsolationScreen(app: app)
-
-            screen.commonQuestionsButton.tap()
-            XCTAssert(screen.commonQuestionsAlertTitle.exists)
-        }
-    }
-
     func testNHS111Online() throws {
         try runner.run { app in
             let screen = PositiveSymptomsNoIsolationScreen(app: app)
@@ -51,10 +41,6 @@ class PositiveSymptomsNoIsolationScreenTests: XCTestCase {
 }
 
 private extension PositiveSymptomsNoIsolationScreen {
-    var commonQuestionsAlertTitle: XCUIElement {
-        app.staticTexts[PositiveSymptomsNoIsolationScreenScenario.commonQuestionsLinkTapped]
-    }
-
     var nhs111OnlineAlertTitle: XCUIElement {
         app.staticTexts[PositiveSymptomsNoIsolationScreenScenario.nhs111OnlineLinkTapped]
     }

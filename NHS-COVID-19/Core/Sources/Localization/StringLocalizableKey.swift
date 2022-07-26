@@ -223,6 +223,7 @@ public enum StringLocalizableKey: String, CaseIterable {
     case end_of_isolation_corona_back_to_home_button
     case end_of_isolation_further_advice_visit
     case end_of_isolation_link_label
+    case void_end_of_isolation_link_label
 
     case positive_test_result_title
     case positive_test_result_explanation
@@ -237,6 +238,7 @@ public enum StringLocalizableKey: String, CaseIterable {
     case void_test_result_explanation
     case void_test_results_continue
     case void_test_result_with_isolation_nhs_guidance_link
+    case void_test_result_title
     case try_to_stay_at_home_for_after_positive_test_wales
     case infobox_after_positive_test_wales
 
@@ -431,7 +433,6 @@ public enum StringLocalizableKey: String, CaseIterable {
     case link_isolation_note
     case contact_case_start_isolation_book_lfd_test_url
     case contact_case_guidance_for_contacts_in_england_url
-    case risky_contact_opt_out_further_advice_link_url
     case get_tested_wales_link_url
 
     case cancel
@@ -828,10 +829,7 @@ public enum StringLocalizableKey: String, CaseIterable {
     case risky_contact_opt_out_advice_title
     case risky_contact_opt_out_advice_meeting_indoors
     case risky_contact_opt_out_advice_mask
-    case risky_contact_opt_out_advice_testing_hub
     case risky_contact_opt_out_advice_wash_hands
-    case risky_contact_opt_out_further_advice
-    case risky_contact_opt_out_further_advice_link_text
     case risky_contact_opt_out_primary_button_title
     case risky_contact_opt_out_secondary_button_title
 
@@ -1134,18 +1132,22 @@ public enum StringLocalizableKey: String, CaseIterable {
 
     case positive_symptoms_no_isolation_heading
     case positive_symptoms_no_isolation_explanation
-    case positive_symptoms_no_isolation_common_question_link_label
     case positive_symptoms_no_isolation_advice
     case positive_symptoms_no_isolation_home_button
-    case positive_symptoms_no_isolation_common_question_url
     case nhs_111_online_link_wls
 
     case end_of_isolation_do_not_isolate_after_positive_test_warning
     case end_of_isolation_void_text_no_isolation_title
+    case void_end_of_isolation_void_text_no_isolation_title
 
     case void_test_results_primary_button_title
 
     case negative_test_result_with_isolation_title
+    case negative_test_after_positive_result_with_isolation_title
+    case negative_test_after_positive_result_with_isolation_advice
+    case nhs111_online_link_title
+    case void_test_result_no_isolation_warning
+    case void_test_result_no_isolation_further_advice_visit
 }
 
 public enum ParameterisedStringLocalizable: Equatable {
@@ -1165,6 +1167,7 @@ public enum ParameterisedStringLocalizable: Equatable {
         case positive_symptoms_days = "positive_symptoms_days %ld"
         case positive_symptoms_please_isolate_accessibility_label = "positive_symptoms_please_isolate_accessibility_label %ld"
         case positive_test_please_isolate_accessibility_label = "positive_test_please_isolate_accessibility_label %ld"
+        case void_test_please_isolate_accessibility_label = "void_test_please_isolate_accessibility_label %ld"
         case end_of_isolation_has_passed_description = "end_of_isolation_has_passed_description date: %@ time: %@"
         case end_of_isolation_is_near_description = "end_of_isolation_is_near_description date: %@ time: %@"
         case exposure_acknowledgement_days = "exposure_acknowledgement_days %ld"
@@ -1236,6 +1239,7 @@ public enum ParameterisedStringLocalizable: Equatable {
 
         case your_symptoms_error_description = "your_symptoms_error_description %@"
         case negative_test_result_with_isolation_accessibility_label = "negative_test_result_with_isolation_accessibility_label %ld"
+        case negative_test_after_positive_result_with_isolation_accessibility_label = "negative_test_after_positive_result_with_isolation_accessibility_label %ld"
     }
 
     case checkin_confirmation_date(date: Date)
@@ -1259,6 +1263,7 @@ public enum ParameterisedStringLocalizable: Equatable {
     case positive_symptoms_days(days: Int)
     case positive_symptoms_please_isolate_accessibility_label(days: Int)
     case positive_test_please_isolate_accessibility_label(days: Int)
+    case void_test_please_isolate_accessibility_label(days: Int)
 
     case end_of_isolation_has_passed_description(at: Date)
     case end_of_isolation_is_near_description(at: Date)
@@ -1276,6 +1281,7 @@ public enum ParameterisedStringLocalizable: Equatable {
     case contact_case_continue_isolation_days(days: Int)
     case contact_case_continue_isolation_accessibility_label(days: Int)
     case negative_test_result_with_isolation_accessibility_label(days: Int)
+    case negative_test_after_positive_result_with_isolation_accessibility_label(days: Int)
     case contact_case_start_isolation_how_we_calculate_isolation_days_body(exposureDate: Date)
     case contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period(isolationPeriod: Int)
     case contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter(daysSinceEncounter: Int)
@@ -1344,6 +1350,7 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .positive_symptoms_days: return .positive_symptoms_days
         case .positive_symptoms_please_isolate_accessibility_label: return .positive_symptoms_please_isolate_accessibility_label
         case .positive_test_please_isolate_accessibility_label: return .positive_test_please_isolate_accessibility_label
+        case .void_test_please_isolate_accessibility_label: return .void_test_please_isolate_accessibility_label
         case .end_of_isolation_has_passed_description: return .end_of_isolation_has_passed_description
         case .end_of_isolation_is_near_description: return .end_of_isolation_is_near_description
         case .exposure_acknowledgement_days: return .exposure_acknowledgement_days
@@ -1359,6 +1366,7 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .contact_case_continue_isolation_days: return .contact_case_continue_isolation_days
         case .contact_case_continue_isolation_accessibility_label: return .contact_case_continue_isolation_accessibility_label
         case .negative_test_result_with_isolation_accessibility_label: return .negative_test_result_with_isolation_accessibility_label
+        case .negative_test_after_positive_result_with_isolation_accessibility_label: return .negative_test_after_positive_result_with_isolation_accessibility_label
 
         case .mydata_date_description: return .mydata_date_description
         case .mydata_date_interval_description: return .mydata_date_interval_description
@@ -1489,6 +1497,8 @@ public enum ParameterisedStringLocalizable: Equatable {
             return [days]
         case .positive_test_please_isolate_accessibility_label(let days):
             return [days]
+        case .void_test_please_isolate_accessibility_label(let days):
+            return [days]
 
         case .exposure_acknowledgement_days(let days):
             return [days]
@@ -1513,6 +1523,8 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .contact_case_continue_isolation_accessibility_label(let days):
             return [days]
         case .negative_test_result_with_isolation_accessibility_label(let days):
+            return [days]
+        case .negative_test_after_positive_result_with_isolation_accessibility_label(let days):
             return [days]
         case .mydata_date_description(let date):
             return [DateFormatter.dayOfYear().string(from: date)]

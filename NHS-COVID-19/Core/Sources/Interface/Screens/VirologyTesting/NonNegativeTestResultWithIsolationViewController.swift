@@ -70,7 +70,7 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
                             action: interactor.didTapExposureFAQLink
                         ),
                     ] : [],
-                BaseLabel().styleAsSecondaryBody().set(text: localize(.end_of_isolation_link_label)),
+                BaseLabel().styleAsSecondaryBody().set(text: localizeForCountry(.void_end_of_isolation_link_label)),
                 LinkButton(
                     title: testResultType.linkLabel,
                     action: linkAction
@@ -145,8 +145,10 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
 
     var title: String {
         switch self {
-        case .void, .positive(.continue, _):
+        case .positive(.continue, _):
             return localize(.positive_test_result_title)
+        case .void:
+            return localizeForCountry(.void_test_result_title)
         case .positive(.start, _):
             return localize(.try_to_stay_at_home_for_after_positive_test_wales)
         case .positiveButAlreadyConfirmedPositive:
@@ -164,8 +166,11 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
 
     func titleAccessibilityLabel(daysRemaining: Int) -> String {
         switch self {
-        case .void, .positive(.continue, _), .positiveButAlreadyConfirmedPositive:
+        case .void:
+            return localizeForCountry(.void_test_please_isolate_accessibility_label(days: daysRemaining))
+        case .positive(.continue, _), .positiveButAlreadyConfirmedPositive:
             return localize(.positive_test_please_isolate_accessibility_label(days: daysRemaining))
+            
         case .positive(.start, _):
             return localize(.try_to_stay_at_home_for_wales_header(days: daysRemaining))
         }
@@ -174,7 +179,7 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
     var explanationText: [String] {
         switch self {
         case .void:
-            return localizeAndSplit(.void_test_result_explanation)
+            return localizeForCountryAndSplit(.void_test_result_explanation)
         case .positive(_, true):
             return localizeAndSplit(.positive_test_result_requires_follow_up_test_explanation)
         case .positive(.continue, false):
@@ -189,7 +194,7 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
     var infoText: String {
         switch self {
         case .void:
-            return localize(.end_of_isolation_void_text_no_isolation_title)
+            return localizeForCountry(.void_end_of_isolation_void_text_no_isolation_title)
         case .positive(_, true):
             return localize(.positive_test_result_requires_follow_up_test_start_to_isolate_info)
         case .positive(_, false):
@@ -211,7 +216,7 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
     var primaryButtonText: String {
         switch self {
         case .void:
-            return localize(.void_test_results_primary_button_title)
+            return localizeForCountry(.void_test_results_primary_button_title)
         case .positive(_, true):
             return localize(.positive_test_result_requires_follow_up_test_book_test_button)
         case .positive(_, false):
@@ -226,7 +231,7 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
         case .positive, .positiveButAlreadyConfirmedPositive:
             return localize(.end_of_isolation_online_services_link)
         case .void:
-            return localize(.void_test_result_with_isolation_nhs_guidance_link)
+            return localizeForCountry(.void_test_result_with_isolation_nhs_guidance_link)
         }
     }
 }

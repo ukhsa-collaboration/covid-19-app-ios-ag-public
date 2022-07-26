@@ -17,12 +17,12 @@ extension NegativeTestResultNoIsolationViewController {
             super.init(
                 scrollingViews: [
                     UIImageView(.isolationEndedWarning).styleAsDecoration(),
-                    BaseLabel().set(text: localize(.negative_test_result_no_isolation_title)).styleAsPageHeader().centralized(),
-                    BaseLabel().set(text: localize(.negative_test_result_no_isolation_description)).styleAsHeading().centralized(),
-                    InformationBox.indication.warning(localize(.negative_test_result_no_isolation_warning)),
-                    BaseLabel().set(text: localize(.negative_test_result_no_isolation_link_hint)).styleAsSecondaryBody(),
+                    BaseLabel().set(text: localizeForCountry (.negative_test_result_no_isolation_title)).styleAsPageHeader().centralized(),
+                    BaseLabel().set(text: localizeForCountry(.negative_test_result_no_isolation_description)).styleAsHeading().centralized(),
+                    InformationBox.indication.warning(localizeForCountry(.negative_test_result_no_isolation_warning)),
+                    BaseLabel().set(text: localizeForCountry(.negative_test_result_no_isolation_link_hint)).styleAsSecondaryBody(),
                     LinkButton(
-                        title: localize(.negative_test_result_no_isolation_link_label),
+                        title: localizeForCountry(.nhs111_online_link_title),
                         action: interactor.didTapOnlineServicesLink
                     ),
                 ],

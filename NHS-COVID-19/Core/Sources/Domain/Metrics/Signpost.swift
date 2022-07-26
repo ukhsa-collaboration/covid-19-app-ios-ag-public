@@ -124,7 +124,8 @@ public enum Metric: String, CaseIterable {
         .hasTestedLFDPositiveBackgroundTick,
         .hasTestedSelfRapidPositiveBackgroundTick,
         .hasCompletedV2SymptomsQuestionnaireBackgroundTick,
-        .hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick
+        .hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick,
+        .contactCaseBackgroundTick
     ]
 }
 

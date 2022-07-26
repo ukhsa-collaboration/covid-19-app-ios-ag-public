@@ -113,11 +113,6 @@ private struct ContactCaseNoIsolationAdviceViewControllerInteractor: ContactCase
         viewController?.interactor.acknowledge()
     }
 
-    func didTapGuidanceForHouseholdContacts() {
-        openURL(ExternalLink.guidanceForHouseholdContactsInEngland.url)
-        viewController?.interactor.acknowledge()
-    }
-
     func didTapReadGuidanceForContacts() {
         openURL(ExternalLink.guidanceForContactsInEngland.url)
         viewController?.interactor.acknowledge()

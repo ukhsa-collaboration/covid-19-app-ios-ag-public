@@ -160,7 +160,7 @@ struct SubmissionPayload: Decodable {
 
         // Background ticks (max: runningNormallyBackgroundTick)
         var isIsolatingBackgroundTick: Int? = 0
-        var hasHadRiskyContactBackgroundTick: Int? = 0
+        var hasHadRiskyContactBackgroundTick: Int? = nil
         var hasSelfDiagnosedBackgroundTick: Int? = nil
         var hasTestedPositiveBackgroundTick: Int? = nil
         var isIsolatingForSelfDiagnosedBackgroundTick: Int? = nil

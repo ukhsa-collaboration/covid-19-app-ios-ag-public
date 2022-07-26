@@ -21,10 +21,10 @@ extension NonNegativeTestResultNoIsolationViewController {
                     UIImageView(.isolationEndedWarning).styleAsDecoration(),
                     BaseLabel().set(text: testResultType.headerText).styleAsPageHeader().centralized(),
                     BaseLabel().set(text: testResultType.titleText).styleAsHeading().centralized(),
-                    InformationBox.indication.warning(localize(.end_of_isolation_do_not_isolate_after_positive_test_warning)),
-                    BaseLabel().set(text: localize(.end_of_isolation_further_advice_visit)).styleAsBody(),
+                    InformationBox.indication.warning(testResultType.infoBoxText),
+                    BaseLabel().set(text: testResultType.furtherAdviceText).styleAsBody(),
                     LinkButton(
-                        title: localize(.end_of_isolation_online_services_link),
+                        title: localizeForCountry(.nhs111_online_link_title),
                         action: interactor.didTapOnlineServicesLink
                     ),
 
@@ -74,18 +74,36 @@ extension NonNegativeTestResultNoIsolationViewController.TestResultType {
     var headerText: String {
         switch self {
         case .positive:
-            return localize(.end_of_isolation_positive_text_no_isolation_header)
+            return localizeForCountry(.end_of_isolation_positive_text_no_isolation_header)
         case .void:
-            return localize(.void_test_result_no_isolation_header)
+            return localizeForCountry(.void_test_result_no_isolation_header)
         }
     }
 
     var titleText: String {
         switch self {
         case .positive:
-            return localize(.end_of_isolation_positive_text_no_isolation_title)
+            return localizeForCountry(.end_of_isolation_positive_text_no_isolation_title)
         case .void:
-            return localize(.void_test_result_no_isolation_title)
+            return localizeForCountry(.void_test_result_no_isolation_title)
+        }
+    }
+
+    var infoBoxText: String {
+        switch self {
+        case .positive:
+            return localizeForCountry(.end_of_isolation_do_not_isolate_after_positive_test_warning)
+        case .void:
+            return localizeForCountry(.void_test_result_no_isolation_warning)
+        }
+    }
+
+    var furtherAdviceText: String {
+        switch self {
+        case .positive:
+            return localizeForCountry(.end_of_isolation_further_advice_visit)
+        case .void:
+            return localizeForCountry(.void_test_result_no_isolation_further_advice_visit)
         }
     }
 

@@ -501,7 +501,7 @@
 		<key>negative_test_after_positive_result_with_isolation_accessibility_label %ld</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
-			<string/>
+			<string>%#@days@</string>
 			<key>days</key>
 			<dict>
 				<key>NSStringFormatSpecTypeKey</key>
@@ -509,15 +509,15 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string/>
+				<string>ਇਸਦੇ ਲਈ ਘਰ ਰਹਿਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰਨਾ ਜਾਰੀ ਰੱਖੋ %ld ਦਿਨ</string>
 				<key>other</key>
-				<string/>
+				<string>ਇਸਦੇ ਲਈ ਘਰ ਰਹਿਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰਨਾ ਜਾਰੀ ਰੱਖੋ %ld ਦਿਨ</string>
 			</dict>
 		</dict>
 		<key>negative_test_after_positive_result_with_isolation_accessibility_label %ld_wls</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
-			<string/>
+			<string>%#@days@</string>
 			<key>days</key>
 			<dict>
 				<key>NSStringFormatSpecTypeKey</key>
@@ -525,9 +525,9 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>one</key>
-				<string/>
+				<string>ਇਸਦੇ ਲਈ ਘਰ ਰਹਿਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰਨਾ ਜਾਰੀ ਰੱਖੋ %ld ਦਿਨ</string>
 				<key>other</key>
-				<string/>
+				<string>ਇਸਦੇ ਲਈ ਘਰ ਰਹਿਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰਨਾ ਜਾਰੀ ਰੱਖੋ %ld ਦਿਨ</string>
 			</dict>
 		</dict>
 		<key>void_test_please_isolate_accessibility_label %ld</key>
@@ -549,7 +549,7 @@
 		<key>void_test_please_isolate_accessibility_label_%ld_wls</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
-			<string/>
+			<string>%#@days@</string>
 			<key>days</key>
 			<dict>
 				<key>NSStringFormatSpecTypeKey</key>

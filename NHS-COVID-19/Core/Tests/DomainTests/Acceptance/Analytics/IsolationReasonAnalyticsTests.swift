@@ -84,7 +84,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
                 assertField.equals(expected: 1, \.receivedRiskyContactNotification)
                 assertField.isPresent(\.isIsolatingBackgroundTick)
                 assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
-                assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+                assertField.isNil(\.hasHadRiskyContactBackgroundTick)
             }
         }
 
@@ -94,7 +94,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
             self.assertOnFields { assertField in
                 assertField.isPresent(\.isIsolatingBackgroundTick)
                 assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
-                assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+                assertField.isNil(\.hasHadRiskyContactBackgroundTick)
             }
         }
 
@@ -103,13 +103,13 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
         assertOnFieldsForDateRange(dateRange: 5 ... 13) { assertField in
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
-            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isNil(\.hasHadRiskyContactBackgroundTick)
         }
 
         // Dates: 14th-27th Jan -> Analytics packets for: 13th-26th Jan
         // Isolation is over, but isolation reason still stored for 14 days
         assertOnFieldsForDateRange(dateRange: 14 ... 27) { assertField in
-            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isNil(\.hasHadRiskyContactBackgroundTick)
         }
 
         // Current date: 29th Jan -> Analytics packet for: 28th Jan
@@ -132,7 +132,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
                 assertField.equals(expected: 1, \.receivedRiskyContactNotification)
                 assertField.isPresent(\.isIsolatingBackgroundTick)
                 assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
-                assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+                assertField.isNil(\.hasHadRiskyContactBackgroundTick)
             }
         }
 
@@ -144,7 +144,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
-            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isNil(\.hasHadRiskyContactBackgroundTick)
             assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
@@ -153,7 +153,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
-            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isNil(\.hasHadRiskyContactBackgroundTick)
             assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
@@ -161,13 +161,13 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
         assertOnFieldsForDateRange(dateRange: 14 ... 14) { assertField in
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
-            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isNil(\.hasHadRiskyContactBackgroundTick)
             assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
         // Isolation is over, but isolation reason still stored for 14 days
         assertOnFieldsForDateRange(dateRange: 15 ... 28) { assertField in
-            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isNil(\.hasHadRiskyContactBackgroundTick)
             assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
@@ -201,7 +201,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
                 assertField.isPresent(\.isIsolatingBackgroundTick)
                 assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
                 assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
-                assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+                assertField.isNil(\.hasHadRiskyContactBackgroundTick)
                 assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
             }
         }
@@ -211,7 +211,7 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
             assertField.isPresent(\.isIsolatingForSelfDiagnosedBackgroundTick)
-            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isNil(\.hasHadRiskyContactBackgroundTick)
             assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
@@ -219,13 +219,13 @@ class IsolationReasonAnalyticsTests: AnalyticsTests {
         assertOnFieldsForDateRange(dateRange: 14 ... 14) { assertField in
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
-            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isNil(\.hasHadRiskyContactBackgroundTick)
             assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 
         // Isolation is over, but isolation reason still stored for 14 days
         assertOnFieldsForDateRange(dateRange: 15 ... 28) { assertField in
-            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isNil(\.hasHadRiskyContactBackgroundTick)
             assertField.isNil(\.hasSelfDiagnosedBackgroundTick)
         }
 

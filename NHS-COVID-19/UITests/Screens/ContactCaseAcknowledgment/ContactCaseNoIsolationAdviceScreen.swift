@@ -12,11 +12,8 @@ struct ContactCaseNoIsolationAdviceScreen {
         [
             heading,
             meetingOutdoorsIcon,
-            swabTestListItem,
             faceMaskListItem,
             washHandsListItem,
-            householdContactsGuidanceText,
-            householdContactsGuidanceLink,
             contactsGuidanceLink,
             backToHomeButton,
         ]
@@ -30,24 +27,12 @@ struct ContactCaseNoIsolationAdviceScreen {
         app.staticTexts[localized: .risky_contact_opt_out_advice_meeting_indoors]
     }
 
-    var swabTestListItem: XCUIElement {
-        app.staticTexts[localized: .risky_contact_opt_out_advice_testing_hub]
-    }
-
     var faceMaskListItem: XCUIElement {
         app.staticTexts[localized: .risky_contact_opt_out_advice_mask]
     }
 
     var washHandsListItem: XCUIElement {
         app.staticTexts[localized: .risky_contact_opt_out_advice_wash_hands]
-    }
-
-    var householdContactsGuidanceText: XCUIElement {
-        app.staticTexts[localized: .risky_contact_opt_out_further_advice]
-    }
-
-    var householdContactsGuidanceLink: XCUIElement {
-        app.links[localized: .risky_contact_opt_out_further_advice_link_text]
     }
 
     var contactsGuidanceLink: XCUIElement {

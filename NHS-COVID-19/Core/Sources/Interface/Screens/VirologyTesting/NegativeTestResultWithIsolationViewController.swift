@@ -25,7 +25,7 @@ extension NegativeTestResultWithIsolationViewController {
                         content: BasicContent(
                             views: [
                                 BaseLabel()
-                                    .set(text: localize(.negative_test_result_with_isolation_title))
+                                    .set(text: viewModel.title)
                                     .styleAsHeading()
                                     .centralized()
                                     .isAccessibilityElement(false),
@@ -41,10 +41,10 @@ extension NegativeTestResultWithIsolationViewController {
                     )
                     .isAccessibilityElement(true)
                     .accessibilityTraits([.header, .staticText])
-                    .accessibilityLabel(localize(.negative_test_result_with_isolation_accessibility_label(days: daysToIsolate))),
+                    .accessibilityLabel(viewModel.accessibilityLabel(daysToIsolate: daysToIsolate)),
                     viewModel.infobox,
                     BaseLabel().set(text: viewModel.explanationLabel).styleAsSecondaryBody(),
-                    BaseLabel().set(text: localize(.negative_test_result_with_isolation_advice)).styleAsSecondaryBody(),
+                    BaseLabel().set(text: viewModel.linkTitle).styleAsSecondaryBody(),
                     LinkButton(
                         title: viewModel.linkLabel,
                         action: viewModel.testResultType == .firstResult ? interactor.didTapNHSGuidanceLink : interactor.didTapOnlineServicesLink
@@ -91,12 +91,31 @@ public class NegativeTestResultWithIsolationViewController: StickyFooterScrollin
 }
 
 private extension NegativeTestResultWithIsolationViewController.ViewModel {
+
+    var title: String {
+        switch testResultType {
+        case .firstResult:
+            return localize(.negative_test_result_with_isolation_title)
+        case .afterPositive:
+            return localizeForCountry(.negative_test_after_positive_result_with_isolation_title)
+        }
+    }
+
+    func accessibilityLabel(daysToIsolate: Int) -> String {
+        switch testResultType {
+        case .firstResult:
+            return localize(.negative_test_result_with_isolation_accessibility_label(days: daysToIsolate))
+        case .afterPositive:
+            return localizeForCountry(.negative_test_after_positive_result_with_isolation_accessibility_label(days: daysToIsolate))
+        }
+    }
+
     var infobox: InformationBox {
         switch testResultType {
         case .firstResult:
             return InformationBox.indication.warning(localize(.negative_test_result_with_isolation_info))
         case .afterPositive:
-            return InformationBox.indication.badNews(localize(.negative_test_result_after_positive_info))
+            return InformationBox.indication.badNews(localizeForCountry(.negative_test_result_after_positive_info))
         }
     }
 
@@ -105,7 +124,7 @@ private extension NegativeTestResultWithIsolationViewController.ViewModel {
         case .firstResult:
             return localize(.negative_test_result_with_isolation_explanation)
         case .afterPositive:
-            return localize(.negative_test_result_after_positive_explanation)
+            return localizeForCountry(.negative_test_result_after_positive_explanation)
         }
     }
 
@@ -118,12 +137,21 @@ private extension NegativeTestResultWithIsolationViewController.ViewModel {
         }
     }
 
+    var linkTitle: String {
+        switch testResultType {
+        case .firstResult:
+            return localize(.negative_test_result_with_isolation_advice)
+        case .afterPositive:
+            return localizeForCountry(.negative_test_after_positive_result_with_isolation_advice)
+        }
+    }
+
     var linkLabel: String {
         switch testResultType {
         case .firstResult:
             return localize(.negative_test_result_with_isolation_nhs_guidance_link)
         case .afterPositive:
-            return localize(.negative_test_result_with_isolation_service_link)
+            return localizeForCountry(.nhs111_online_link_title)
         }
     }
 }

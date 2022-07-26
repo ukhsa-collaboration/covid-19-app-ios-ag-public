@@ -53,7 +53,6 @@ public protocol SelfDiagnosisFlowViewControllerInteracting: BookATestInfoViewCon
     func gettingTestedLinkTapped()
     func exposureFAQsLinkTapped()
     func walesNHS111OnlineLinkTapped()
-    func commonQuestionsLinkTapped()
     func gettingTestedWalesLinkTapped()
 }
 
@@ -476,10 +475,6 @@ private struct PositiveSymptomsNoIsolationViewControllerInteractor: PositiveSymp
     public func didTapCancel() {
         controller?.finishFlow?()
         controller?.dismiss(animated: true, completion: nil)
-    }
-
-    func commonQuestionsLinkTapped() {
-        controller?.interactor.commonQuestionsLinkTapped()
     }
 
     func nhs111OnlineLinkTapped() {

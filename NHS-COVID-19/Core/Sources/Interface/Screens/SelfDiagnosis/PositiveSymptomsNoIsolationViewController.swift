@@ -9,7 +9,6 @@ import UIKit
 public protocol PositiveSymptomsNoIsolationViewControllerInteracting {
     func backHomeButtonTapped()
     func didTapCancel()
-    func commonQuestionsLinkTapped()
     func nhs111OnlineLinkTapped()
 }
 
@@ -28,10 +27,7 @@ extension PositiveSymptomsNoIsolationViewController {
                     localizeAndSplit(.positive_symptoms_no_isolation_explanation).map {
                         BaseLabel().set(text: $0).styleAsBody()
                     },
-                    LinkButton(
-                        title: localize(.positive_symptoms_no_isolation_common_question_link_label),
-                        action: interactor.commonQuestionsLinkTapped
-                    ),
+                    SpacerView(),
                     BaseLabel().set(text: localize(.positive_symptoms_no_isolation_advice)).styleAsBody(),
                     LinkButton(
                         title: localize(.nhs_111_online_service),

@@ -17,10 +17,6 @@ struct PositiveSymptomsNoIsolationScreen {
         app.staticTexts[localized: .positive_symptoms_no_isolation_explanation]
     }
 
-    var commonQuestionsButton: XCUIElement {
-        app.links[localized: .positive_symptoms_no_isolation_common_question_link_label]
-    }
-
     var furtherAdviceLabel: XCUIElement {
         app.staticTexts[localized: .positive_symptoms_no_isolation_advice]
     }

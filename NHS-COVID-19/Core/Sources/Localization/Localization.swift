@@ -238,11 +238,23 @@ public func localizeForCountry(_ localizable: ParameterisedStringLocalizable) ->
     return actualString.applyCurrentLanguageDirection()
 }
 
-@available(*, deprecated, message: "Not currently used, probably remove")
-public func localizeForCountryAndSplit(_ key: StringLocalizableKey) -> [String] {
-    localizeForCountry(key)
-        .split(separator: "\n", omittingEmptySubsequences: true)
-        .map(String.init)
+public func localizeForCountryAndSplit(_ key: StringLocalizableKey, applyCurrentLanguageDirection: Bool = true) -> [String] {
+    var rawValue = key.rawValue
+
+    if let suffix = Localization.country.localizationSuffix {
+        rawValue.append(suffix)
+    }
+
+    if let newKey = StringLocalizableKey(rawValue: rawValue) {
+        return Localization.current.localize(newKey, applyCurrentLanguageDirection: false)
+            .split(separator: "\n", omittingEmptySubsequences: true)
+            .map(String.init)
+            .map { applyCurrentLanguageDirection ? $0.applyCurrentLanguageDirection() : $0 }
+    } else {
+        return localizeForCountry(key)
+            .split(separator: "\n", omittingEmptySubsequences: true)
+            .map(String.init)
+    }
 }
 
 public func localize(_ localizable: ParameterisedStringLocalizable) -> String {

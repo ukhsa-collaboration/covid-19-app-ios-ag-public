@@ -749,7 +749,7 @@
 		<key>negative_test_after_positive_result_with_isolation_accessibility_label %ld</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
-			<string/>
+			<string>%#@days@</string>
 			<key>days</key>
 			<dict>
 				<key>NSStringFormatSpecTypeKey</key>
@@ -757,23 +757,23 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>zero</key>
-				<string/>
+				<string>استمر في محاولة البقاء في المنزل لـــ %ld يوم</string>
 				<key>one</key>
-				<string/>
+				<string>استمر في محاولة البقاء في المنزل لـــ %ld يوم</string>
 				<key>two</key>
-				<string/>
+				<string>استمر في محاولة البقاء في المنزل لـــ %ld يوم</string>
 				<key>few</key>
-				<string/>
+				<string>استمر في محاولة البقاء في المنزل لـــ %ld يوم</string>
 				<key>many</key>
-				<string/>
+				<string>استمر في محاولة البقاء في المنزل لـــ %ld يوم</string>
 				<key>other</key>
-				<string/>
+				<string>استمر في محاولة البقاء في المنزل لـــ %ld يوم</string>
 			</dict>
 		</dict>
 		<key>negative_test_after_positive_result_with_isolation_accessibility_label %ld_wls</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
-			<string/>
+			<string>%#@days@</string>
 			<key>days</key>
 			<dict>
 				<key>NSStringFormatSpecTypeKey</key>
@@ -781,17 +781,17 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>zero</key>
-				<string/>
+				<string>استمر في محاولة البقاء في المنزل لـــ %ld يوم</string>
 				<key>one</key>
-				<string/>
+				<string>استمر في محاولة البقاء في المنزل لـــ %ld يوم</string>
 				<key>two</key>
-				<string/>
+				<string>استمر في محاولة البقاء في المنزل لـــ %ld يوم</string>
 				<key>few</key>
-				<string/>
+				<string>استمر في محاولة البقاء في المنزل لـــ %ld يوم</string>
 				<key>many</key>
-				<string/>
+				<string>استمر في محاولة البقاء في المنزل لـــ %ld يوم</string>
 				<key>other</key>
-				<string/>
+				<string>استمر في محاولة البقاء في المنزل لـــ %ld يوم</string>
 			</dict>
 		</dict>
 		<key>void_test_please_isolate_accessibility_label %ld</key>
@@ -821,7 +821,7 @@
 		<key>void_test_please_isolate_accessibility_label_%ld_wls</key>
 		<dict>
 			<key>NSStringLocalizedFormatKey</key>
-			<string/>
+			<string>%#@days@</string>
 			<key>days</key>
 			<dict>
 				<key>NSStringFormatSpecTypeKey</key>

@@ -15,10 +15,10 @@ extension PlodTestResultViewController {
         init(interactor: Interacting) {
             super.init(
                 scrollingViews: [
-                    BaseLabel().set(text: localize(.plod_test_result_title)).styleAsPageHeader().centralized(),
-                    BaseLabel().set(text: localize(.plod_test_result_subtitle)).styleAsHeading().centralized(),
-                    InformationBox.indication.warning(localize(.plod_test_result_warning)),
-                    localizeAndSplit(.plod_test_result_description)
+                    BaseLabel().set(text: localizeForCountry(.plod_test_result_title)).styleAsPageHeader().centralized(),
+                    BaseLabel().set(text: localizeForCountry(.plod_test_result_subtitle)).styleAsHeading().centralized(),
+                    InformationBox.indication.warning(localizeForCountry(.plod_test_result_warning)),
+                    localizeForCountryAndSplit(.plod_test_result_description)
                         .map { BaseLabel().styleAsBody().set(text: String($0)) },
                 ],
                 primaryButton: (

@@ -31,7 +31,7 @@ class OptOutOfContactIsolationAnalyticsTests: AnalyticsTests {
                 assertField.equals(expected: 1, \.receivedRiskyContactNotification)
                 assertField.isPresent(\.isIsolatingBackgroundTick)
                 assertField.isPresent(\.isIsolatingForHadRiskyContactBackgroundTick)
-                assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+                assertField.isNil(\.hasHadRiskyContactBackgroundTick)
             }
         }
 
@@ -44,7 +44,7 @@ class OptOutOfContactIsolationAnalyticsTests: AnalyticsTests {
             // Current date: 4th Jan -> Analytics packet for: 3rd Jan
             assertField.isPresent(\.optedOutForContactIsolation)
             assertField.isPresent(\.optedOutForContactIsolationBackgroundTick)
-            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isNil(\.hasHadRiskyContactBackgroundTick)
             assertField.isPresent(\.acknowledgedStartOfIsolationDueToRiskyContact)
         }
 
@@ -52,7 +52,7 @@ class OptOutOfContactIsolationAnalyticsTests: AnalyticsTests {
         // Isolation is over, but isolation reason and opt-out flag still stored for 14 days
         assertOnFieldsForDateRange(dateRange: 4 ... 15) { assertField in
             assertField.isPresent(\.optedOutForContactIsolationBackgroundTick)
-            assertField.isPresent(\.hasHadRiskyContactBackgroundTick)
+            assertField.isNil(\.hasHadRiskyContactBackgroundTick)
         }
 
         // Current date: 17th Jan -> Analytics packet for: 16th Jan

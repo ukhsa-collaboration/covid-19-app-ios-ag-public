@@ -14,15 +14,15 @@ struct VoidTestResultNoIsolationScreen {
     }
 
     var indicationLabel: XCUIElement {
-        app.staticTexts[localized: .end_of_isolation_do_not_isolate_after_positive_test_warning]
+        app.staticTexts[localized: .void_test_result_no_isolation_warning]
     }
 
     var explanationLabel: [XCUIElement] {
-        app.staticTexts[localized: .end_of_isolation_further_advice_visit]
+        app.staticTexts[localized: .void_test_result_no_isolation_further_advice_visit]
     }
 
     var onlineServicesLink: XCUIElement {
-        app.links[localized: .end_of_isolation_online_services_link]
+        app.links[localized: .nhs111_online_link_title]
     }
 
     var primaryButton: XCUIElement {

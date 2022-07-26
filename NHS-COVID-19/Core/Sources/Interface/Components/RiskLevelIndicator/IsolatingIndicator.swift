@@ -135,7 +135,7 @@ public struct IsolatingIndicator: View {
                 Arc(percent: 1).foregroundColor(Color(.background))
                 Arc(percent: self.percentRemaining).foregroundColor(Color(style.baseColor))
 
-                Text("\(remainingDays)")
+                Text(String(remainingDays))
                     .font(Font(UIFont.boldSystemFont(ofSize: 48)))
                     .foregroundColor(Color(.background))
                     .padding(30)
