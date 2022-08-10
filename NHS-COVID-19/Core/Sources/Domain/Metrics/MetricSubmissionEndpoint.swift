@@ -185,6 +185,7 @@ private struct SubmissionPayload: Codable {
         var completedV2SymptomsQuestionnaireAndStayAtHome: Int? = 0
         var hasCompletedV2SymptomsQuestionnaireBackgroundTick: Int? = 0
         var hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick: Int? = 0
+        var completedV3SymptomsQuestionnaireAndHasSymptoms: Int? = 0
     }
 
     var includesMultipleApplicationVersions: Bool
@@ -323,6 +324,7 @@ private extension Metric {
         case .completedV2SymptomsQuestionnaireAndStayAtHome: return \.completedV2SymptomsQuestionnaireAndStayAtHome
         case .hasCompletedV2SymptomsQuestionnaireBackgroundTick: return \.hasCompletedV2SymptomsQuestionnaireBackgroundTick
         case .hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick: return \.hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick
+        case .completedV3SymptomsQuestionnaireAndHasSymptoms: return  \.completedV3SymptomsQuestionnaireAndHasSymptoms
         }
     }
 

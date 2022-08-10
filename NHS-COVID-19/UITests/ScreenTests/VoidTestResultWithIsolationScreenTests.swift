@@ -26,7 +26,7 @@ class VoidTestResultWithIsolationScreenTests: XCTestCase {
             let screen = VoidTestResultWithIsolationScreen(app: app)
 
             screen.nhsGuidanceLink.tap()
-            XCTAssert(screen.onlineServicesLinkAlertTitle.exists)
+            XCTAssert(screen.nhsGuidanceLinkAlertTitle.exists)
         }
     }
 
@@ -42,8 +42,8 @@ class VoidTestResultWithIsolationScreenTests: XCTestCase {
 
 private extension VoidTestResultWithIsolationScreen {
 
-    var onlineServicesLinkAlertTitle: XCUIElement {
-        app.staticTexts[VoidTestResultWithIsolationScreenScenario.onlineServicesLinkTapped]
+    var nhsGuidanceLinkAlertTitle: XCUIElement {
+        app.staticTexts[VoidTestResultWithIsolationScreenScenario.nhsGuidanceLinkTapped]
     }
 
     var primaryButtonAlertTitle: XCUIElement {

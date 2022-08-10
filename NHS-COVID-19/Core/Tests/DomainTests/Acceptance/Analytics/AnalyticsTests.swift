@@ -160,7 +160,7 @@ struct SubmissionPayload: Decodable {
 
         // Background ticks (max: runningNormallyBackgroundTick)
         var isIsolatingBackgroundTick: Int? = 0
-        var hasHadRiskyContactBackgroundTick: Int? = nil
+        var hasHadRiskyContactBackgroundTick: Int? = 0
         var hasSelfDiagnosedBackgroundTick: Int? = nil
         var hasTestedPositiveBackgroundTick: Int? = nil
         var isIsolatingForSelfDiagnosedBackgroundTick: Int? = nil
@@ -247,6 +247,8 @@ struct SubmissionPayload: Decodable {
         var completedV2SymptomsQuestionnaireAndStayAtHome: Int? = 0
         var hasCompletedV2SymptomsQuestionnaireBackgroundTick: Int? = nil
         var hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick: Int? = nil
+
+        var completedV3SymptomsQuestionnaireAndHasSymptoms: Int? = 0
     }
 
     var includesMultipleApplicationVersions: Bool

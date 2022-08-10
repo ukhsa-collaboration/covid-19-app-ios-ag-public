@@ -28,7 +28,14 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
             }
         }()
 
-        let linkAction = interactor.didTapOnlineServicesLink
+        let linkAction: () -> Void = {
+            switch testResultType {
+            case .void:
+                return interactor.didTapNHSGuidanceLink
+            case .positive, .positiveButAlreadyConfirmedPositive:
+                return interactor.didTapOnlineServicesLink
+            }
+        }()
 
         super.init(
             scrollingViews: [
@@ -63,13 +70,13 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
                     BaseLabel().styleAsSecondaryBody().set(text: $0)
                 },
                 testResultType.showExposureFAQ ?
-                    [
-                        BaseLabel().set(text: localize(.exposure_faqs_link_label)).styleAsSecondaryBody(),
-                        LinkButton(
-                            title: localize(.exposure_faqs_link_button_title),
-                            action: interactor.didTapExposureFAQLink
-                        ),
-                    ] : [],
+                [
+                    BaseLabel().set(text: localize(.exposure_faqs_link_label)).styleAsSecondaryBody(),
+                    LinkButton(
+                        title: localize(.exposure_faqs_link_button_title),
+                        action: interactor.didTapExposureFAQLink
+                    ),
+                ] : [],
                 BaseLabel().styleAsSecondaryBody().set(text: localizeForCountry(.void_end_of_isolation_link_label)),
                 LinkButton(
                     title: testResultType.linkLabel,
@@ -138,7 +145,7 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
         case .positive(.start, false):
             return .isolationStartIndex
         case .positive(.continue, false),
-             .positiveButAlreadyConfirmedPositive:
+                .positiveButAlreadyConfirmedPositive:
             return .isolationContinue
         }
     }
@@ -170,7 +177,7 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
             return localizeForCountry(.void_test_please_isolate_accessibility_label(days: daysRemaining))
         case .positive(.continue, _), .positiveButAlreadyConfirmedPositive:
             return localize(.positive_test_please_isolate_accessibility_label(days: daysRemaining))
-            
+
         case .positive(.start, _):
             return localize(.try_to_stay_at_home_for_wales_header(days: daysRemaining))
         }

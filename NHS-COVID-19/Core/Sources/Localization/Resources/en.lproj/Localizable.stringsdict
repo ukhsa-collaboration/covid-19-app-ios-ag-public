@@ -1,566 +1,566 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>exposure_notification_reminder_alert_title %ld hours</key>
 	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@hours@</string>
-		<key>hours</key>
+		<key>exposure_notification_reminder_alert_title %ld hours</key>
 		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>The app will remind you to turn on contact tracing in %ld hour</string>
-			<key>other</key>
-			<string>The app will remind you to turn on contact tracing in %ld hours</string>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@hours@</string>
+			<key>hours</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>The app will remind you to turn on contact tracing in %ld hour</string>
+				<key>other</key>
+				<string>The app will remind you to turn on contact tracing in %ld hours</string>
+			</dict>
+		</dict>
+		<key>positive_symptoms_please_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Self-isolate for %ld day and book a test</string>
+				<key>other</key>
+				<string>Self-isolate for %ld days and book a test</string>
+			</dict>
+		</dict>
+		<key>positive_test_please_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Continue to self-isolate for %ld day</string>
+				<key>other</key>
+				<string>Continue to self-isolate for %ld days</string>
+			</dict>
+		</dict>
+		<key>isolation_days_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld day to go</string>
+				<key>other</key>
+				<string>%ld days to go</string>
+			</dict>
+		</dict>
+		<key>positive_symptoms_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld day</string>
+				<key>other</key>
+				<string>%ld days</string>
+			</dict>
+		</dict>
+		<key>exposure_acknowledgement_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld day</string>
+				<key>other</key>
+				<string>%ld days</string>
+			</dict>
+		</dict>
+		<key>exposure_acknowledgement_please_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Please isolate for %ld day</string>
+				<key>other</key>
+				<string>Please isolate for %ld days</string>
+			</dict>
+		</dict>
+		<key>isolation_indicator_accessiblity_label days: %ld date: %@ time: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Self-isolate until %2$@ at %3$@. %1$ld day to go.</string>
+				<key>other</key>
+				<string>Self-isolate until %2$@ at %3$@. %1$ld days to go.</string>
+			</dict>
+		</dict>
+		<key>isolation_days_subtitle %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>day to go</string>
+				<key>other</key>
+				<string>days to go</string>
+			</dict>
+		</dict>
+		<key>%ld exposure_notification_reminder_sheet_hours</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@hours@</string>
+			<key>hours</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%li hour</string>
+				<key>other</key>
+				<string>%li hours</string>
+			</dict>
+		</dict>
+		<key>positive_test_start_to_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Self-isolate for %ld day</string>
+				<key>other</key>
+				<string>Self-isolate for %ld days</string>
+			</dict>
+		</dict>
+		<key>risky_venue_isolation_title_accessibility %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>[to be deleted]</string>
+				<key>other</key>
+				<string>[to be deleted]</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%li day</string>
+				<key>other</key>
+				<string>%li days</string>
+			</dict>
+		</dict>
+		<key>contact_case_continue_isolation_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%li day</string>
+				<key>other</key>
+				<string>%li days</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Self-isolate for %ld day</string>
+				<key>other</key>
+				<string>Self-isolate for %ld days</string>
+			</dict>
+		</dict>
+		<key>contact_case_continue_isolation_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Continue to self-isolate for %ld day</string>
+				<key>other</key>
+				<string>Continue to self-isolate for %ld days</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>You should self-isolate for %li full day after the date of close contact.</string>
+				<key>other</key>
+				<string>You should self-isolate for %li full days after the date of close contact.</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>You came into close contact with someone %ld day ago who has since reported a positive COVID-19 test result in the app.</string>
+				<key>other</key>
+				<string>You came into close contact with someone %ld days ago who has since reported a positive COVID-19 test result in the app.</string>
+			</dict>
+		</dict>
+		<key>contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Your remaining self-isolation period is %ld day.</string>
+				<key>other</key>
+				<string>Your remaining self-isolation period is %ld days.</string>
+			</dict>
+		</dict>
+		<key>contact_case_dct_explainer_duration %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld day</string>
+				<key>other</key>
+				<string>%ld days</string>
+			</dict>
+		</dict>
+		<key>contact_case_dct_option_self_isolate_title %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Self-isolate for %ld day</string>
+				<key>other</key>
+				<string>Self-isolate for %ld days</string>
+			</dict>
+		</dict>
+		<key>contact_case_dct_option_take_test_title %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Take a test every day for %ld day</string>
+				<key>other</key>
+				<string>Take a test every day for %ld days</string>
+			</dict>
+		</dict>
+		<key>contact_case_dct_option_self_isolate_bulleted_list %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Self-isolate for the %ld day and book a free PCR test.You will need to self-isolate even if your test result is negative.</string>
+				<key>other</key>
+				<string>Self-isolate for the full %ld days and book a free PCR test.You will need to self-isolate even if your test result is negative.</string>
+			</dict>
+		</dict>
+		<key>contact_case_dct_option_take_test_selected_confirm_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Confirm you are going to take a test every day for %ld day</string>
+				<key>other</key>
+				<string>Confirm you are going to take a test every day for %ld days</string>
+			</dict>
+		</dict>
+		<key>contact_case_dct_option_self_isolate_selected_confirm_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Confirm you are going to self-isolate for %ld day</string>
+				<key>other</key>
+				<string>Confirm you are going to self-isolate for %ld days</string>
+			</dict>
+		</dict>
+		<key>local_statistics_main_screen_daily_accessibility_text %ld %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@tests@</string>
+			<key>tests</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld daily positive test in %@</string>
+				<key>other</key>
+				<string>%ld daily positive tests in %@</string>
+			</dict>
+		</dict>
+		<key>local_statistics_main_screen_last_7_days_accessibility_text %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@tests@</string>
+			<key>tests</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%li positive test in the last 7 days</string>
+				<key>other</key>
+				<string>%li positive tests in the last 7 days</string>
+			</dict>
+		</dict>
+		<key>be_careful_indicator_accessibility_label days: %ld date: %@ time: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Take extra care and protect others until %2$@ at %3$@. %1$ld day to go.</string>
+				<key>other</key>
+				<string>Take extra care and protect others until %2$@ at %3$@. %1$ld days to go.</string>
+			</dict>
+		</dict>
+		<key>contact_case_continue_isolation_days %ld_wls</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%li day</string>
+				<key>other</key>
+				<string>%li days</string>
+			</dict>
+		</dict>
+		<key>contact_case_continue_isolation_accessibility_label %ld_wls</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Continue to self-isolate for %ld day</string>
+				<key>other</key>
+				<string>Continue to self-isolate for %ld days</string>
+			</dict>
+		</dict>
+		<key>negative_test_result_with_isolation_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Continue to try to stay at home for %ld day</string>
+				<key>other</key>
+				<string>Continue to try to stay at home for %ld days</string>
+			</dict>
+		</dict>
+		<key>negative_test_after_positive_result_with_isolation_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Continue to try to stay at home for %ld day</string>
+				<key>other</key>
+				<string>Continue to try to stay at home for %ld days</string>
+			</dict>
+		</dict>
+		<key>negative_test_after_positive_result_with_isolation_accessibility_label %ld_wls</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Continue to try to stay at home for %ld day</string>
+				<key>other</key>
+				<string>Continue to try to stay at home for %ld days</string>
+			</dict>
+		</dict>
+		<key>void_test_please_isolate_accessibility_label %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Continue to self-isolate for %ld day</string>
+				<key>other</key>
+				<string>Continue to self-isolate for %ld days</string>
+			</dict>
+		</dict>
+		<key>void_test_please_isolate_accessibility_label_%ld_wls</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Continue to self-isolate for %ld day</string>
+				<key>other</key>
+				<string>Continue to self-isolate for %ld days</string>
+			</dict>
 		</dict>
 	</dict>
-	<key>positive_symptoms_please_isolate_accessibility_label %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Self-isolate for %ld day and book a test</string>
-			<key>other</key>
-			<string>Self-isolate for %ld days and book a test</string>
-		</dict>
-	</dict>
-	<key>positive_test_please_isolate_accessibility_label %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Continue to self-isolate for %ld day</string>
-			<key>other</key>
-			<string>Continue to self-isolate for %ld days</string>
-		</dict>
-	</dict>
-	<key>void_test_please_isolate_accessibility_label %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Continue to self-isolate for %ld day</string>
-			<key>other</key>
-			<string>Continue to self-isolate for %ld days</string>
-		</dict>
-	</dict>
-	<key>void_test_please_isolate_accessibility_label_%ld_wls</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Continue to self-isolate for %ld day</string>
-			<key>other</key>
-			<string>Continue to self-isolate for %ld days</string>
-		</dict>
-	</dict>
-	<key>isolation_days_accessibility_label %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>%ld day to go</string>
-			<key>other</key>
-			<string>%ld days to go</string>
-		</dict>
-	</dict>
-	<key>positive_symptoms_days %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>%ld day</string>
-			<key>other</key>
-			<string>%ld days</string>
-		</dict>
-	</dict>
-	<key>exposure_acknowledgement_days %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>%ld day</string>
-			<key>other</key>
-			<string>%ld days</string>
-		</dict>
-	</dict>
-	<key>exposure_acknowledgement_please_isolate_accessibility_label %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Please isolate for %ld day</string>
-			<key>other</key>
-			<string>Please isolate for %ld days</string>
-		</dict>
-	</dict>
-	<key>isolation_indicator_accessiblity_label days: %ld date: %@ time: %@</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Self-isolate until %2$@ at %3$@. %1$ld day to go.</string>
-			<key>other</key>
-			<string>Self-isolate until %2$@ at %3$@. %1$ld days to go.</string>
-		</dict>
-	</dict>
-	<key>isolation_days_subtitle %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>day to go</string>
-			<key>other</key>
-			<string>days to go</string>
-		</dict>
-	</dict>
-	<key>%ld exposure_notification_reminder_sheet_hours</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@hours@</string>
-		<key>hours</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>%li hour</string>
-			<key>other</key>
-			<string>%li hours</string>
-		</dict>
-	</dict>
-	<key>positive_test_start_to_isolate_accessibility_label %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Self-isolate for %ld day</string>
-			<key>other</key>
-			<string>Self-isolate for %ld days</string>
-		</dict>
-	</dict>
-	<key>risky_venue_isolation_title_accessibility %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>[to be deleted]</string>
-			<key>other</key>
-			<string>[to be deleted]</string>
-		</dict>
-	</dict>
-	<key>contact_case_start_isolation_days %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>%li day</string>
-			<key>other</key>
-			<string>%li days</string>
-		</dict>
-	</dict>
-	<key>contact_case_continue_isolation_days %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>%li day</string>
-			<key>other</key>
-			<string>%li days</string>
-		</dict>
-	</dict>
-	<key>contact_case_start_isolation_accessibility_label %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Self-isolate for %ld day</string>
-			<key>other</key>
-			<string>Self-isolate for %ld days</string>
-		</dict>
-	</dict>
-	<key>contact_case_continue_isolation_accessibility_label %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Continue to self-isolate for %ld day</string>
-			<key>other</key>
-			<string>Continue to self-isolate for %ld days</string>
-		</dict>
-	</dict>
-	<key>contact_case_start_isolation_how_we_calculate_isolation_days_isolation_period %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>You should self-isolate for %li full day after the date of close contact.</string>
-			<key>other</key>
-			<string>You should self-isolate for %li full days after the date of close contact.</string>
-		</dict>
-	</dict>
-	<key>contact_case_start_isolation_how_we_calculate_isolation_days_days_since_encounter %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>You came into close contact with someone %ld day ago who has since reported a positive COVID-19 test result in the app.</string>
-			<key>other</key>
-			<string>You came into close contact with someone %ld days ago who has since reported a positive COVID-19 test result in the app.</string>
-		</dict>
-	</dict>
-	<key>contact_case_start_isolation_how_we_calculate_isolation_days_remaining_days %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Your remaining self-isolation period is %ld day.</string>
-			<key>other</key>
-			<string>Your remaining self-isolation period is %ld days.</string>
-		</dict>
-	</dict>
-	<key>contact_case_dct_explainer_duration %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>%ld day</string>
-			<key>other</key>
-			<string>%ld days</string>
-		</dict>
-	</dict>
-	<key>contact_case_dct_option_self_isolate_title %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Self-isolate for %ld day</string>
-			<key>other</key>
-			<string>Self-isolate for %ld days</string>
-		</dict>
-	</dict>
-	<key>contact_case_dct_option_take_test_title %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Take a test every day for %ld day</string>
-			<key>other</key>
-			<string>Take a test every day for %ld days</string>
-		</dict>
-	</dict>
-	<key>contact_case_dct_option_self_isolate_bulleted_list %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Self-isolate for the %ld day and book a free PCR test.You will need to self-isolate even if your test result is negative.</string>
-			<key>other</key>
-			<string>Self-isolate for the full %ld days and book a free PCR test.You will need to self-isolate even if your test result is negative.</string>
-		</dict>
-	</dict>
-	<key>contact_case_dct_option_take_test_selected_confirm_accessibility_label %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Confirm you are going to take a test every day for %ld day</string>
-			<key>other</key>
-			<string>Confirm you are going to take a test every day for %ld days</string>
-		</dict>
-	</dict>
-	<key>contact_case_dct_option_self_isolate_selected_confirm_accessibility_label %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Confirm you are going to self-isolate for %ld day</string>
-			<key>other</key>
-			<string>Confirm you are going to self-isolate for %ld days</string>
-		</dict>
-	</dict>
-	<key>local_statistics_main_screen_daily_accessibility_text %ld %@</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@tests@</string>
-		<key>tests</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>%ld daily positive test in %@</string>
-			<key>other</key>
-			<string>%ld daily positive tests in %@</string>
-		</dict>
-	</dict>
-	<key>local_statistics_main_screen_last_7_days_accessibility_text %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@tests@</string>
-		<key>tests</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>%li positive test in the last 7 days</string>
-			<key>other</key>
-			<string>%li positive tests in the last 7 days</string>
-		</dict>
-	</dict>
-	<key>be_careful_indicator_accessibility_label days: %ld date: %@ time: %@</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Take extra care and protect others until %2$@ at %3$@. %1$ld day to go.</string>
-			<key>other</key>
-			<string>Take extra care and protect others until %2$@ at %3$@. %1$ld days to go.</string>
-		</dict>
-	</dict>
-	<key>contact_case_continue_isolation_days %ld_wls</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>%li day</string>
-			<key>other</key>
-			<string>%li days</string>
-		</dict>
-	</dict>
-	<key>contact_case_continue_isolation_accessibility_label %ld_wls</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Continue to self-isolate for %ld day</string>
-			<key>other</key>
-			<string>Continue to self-isolate for %ld days</string>
-		</dict>
-	</dict>
-	<key>negative_test_result_with_isolation_accessibility_label %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Continue to try to stay at home for %ld day</string>
-			<key>other</key>
-			<string>Continue to try to stay at home for %ld days</string>
-		</dict>
-	</dict>
-	<key>negative_test_after_positive_result_with_isolation_accessibility_label %ld</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Continue to try to stay at home for %ld day</string>
-			<key>other</key>
-			<string>Continue to try to stay at home for %ld days</string>
-		</dict>
-	</dict>
-	<key>negative_test_after_positive_result_with_isolation_accessibility_label %ld_wls</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@days@</string>
-		<key>days</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>li</string>
-			<key>one</key>
-			<string>Continue to try to stay at home for %ld day</string>
-			<key>other</key>
-			<string>Continue to try to stay at home for %ld days</string>
-		</dict>
-	</dict>
-</dict>
 </plist>

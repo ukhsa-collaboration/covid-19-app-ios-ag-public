@@ -38,6 +38,9 @@ class SymptomsCheckerStore {
         Metrics.signpost(.completedV2SymptomsQuestionnaire)
         if toldToStayHome {
             Metrics.signpost(.completedV2SymptomsQuestionnaireAndStayAtHome)
+        } else
+        { Metrics.signpost(.completedV3SymptomsQuestionnaireAndHasSymptoms)
+
         }
     }
 

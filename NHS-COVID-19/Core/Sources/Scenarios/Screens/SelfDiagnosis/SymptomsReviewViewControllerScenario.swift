@@ -45,7 +45,7 @@ private class Interactor: SymptomsReviewViewController.Interacting {
         self.viewController = viewController
     }
 
-    var hideDateInfoBox: Bool = false
+    var isSymptomaticSelfIsolationForWalesDisabled: Bool = false
 
     func changeSymptomAnswer(index: Int) {
         viewController?.showAlert(title: "\(index)")

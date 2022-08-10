@@ -22,6 +22,7 @@ class SymptomsCheckerAnalyticsTests: AnalyticsTests {
             assertField.equals(expected: 1, \.completedV2SymptomsQuestionnaire)
             assertField.equals(expected: 0, \.completedV2SymptomsQuestionnaireAndStayAtHome)
             assertField.isNil(\.hasCompletedV2SymptomsQuestionnaireBackgroundTick)
+            assertField.equals(expected: 1, \.completedV3SymptomsQuestionnaireAndHasSymptoms)
         }
     }
 

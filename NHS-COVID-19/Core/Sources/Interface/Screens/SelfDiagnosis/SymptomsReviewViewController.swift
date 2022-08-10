@@ -8,7 +8,7 @@ import SwiftUI
 import UIKit
 
 public protocol SymptomsReviewInteracting {
-    var hideDateInfoBox: Bool { get }
+    var isSymptomaticSelfIsolationForWalesDisabled: Bool { get }
     func changeSymptomAnswer(index: Int)
     func confirmSymptoms(riskThreshold: Double, selectedDay: GregorianDay?, hasCheckedNoDate: Bool) -> Result<Void, UIValidationError>
 }
@@ -264,7 +264,7 @@ public class SymptomsReviewViewController: UIViewController {
         let buttonStack = layoutStack(children: [confirmButton])
 
         var containerStack: UIStackView
-        if interactor.hideDateInfoBox {
+        if interactor.isSymptomaticSelfIsolationForWalesDisabled {
             containerStack = layoutStack(children: [symptomOptionStack, buttonStack])
         } else {
             containerStack = layoutStack(children: [symptomOptionStack, dateInfoBox, buttonStack])
@@ -331,9 +331,11 @@ public class SymptomsReviewViewController: UIViewController {
     }
 
     @objc func confirmSymptoms() {
-        let hasCheckedNoDate: Bool = interactor.hideDateInfoBox ? true : noDateUnchecked.isHidden
+        let hasCheckedNoDate: Bool = interactor.isSymptomaticSelfIsolationForWalesDisabled ? true : noDateUnchecked.isHidden
         switch interactor.confirmSymptoms(riskThreshold: symptomsQuestionnaire.riskThreshold, selectedDay: selectedDay, hasCheckedNoDate: hasCheckedNoDate) {
         case .success(()):
+            if interactor.isSymptomaticSelfIsolationForWalesDisabled {
+            }
             break
         case .failure:
             errorBoxVC.view.isHidden = false

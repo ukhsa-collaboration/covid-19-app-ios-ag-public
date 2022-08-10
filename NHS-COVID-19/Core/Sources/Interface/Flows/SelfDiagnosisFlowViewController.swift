@@ -88,7 +88,6 @@ public class SelfDiagnosisFlowViewController: BaseNavigationController {
     fileprivate let country: Country
     public var didCancel: (() -> Void)?
     public var finishFlow: (() -> Void)?
-
     private var cancellables = [AnyCancellable]()
 
     public init(_ interactor: Interacting, currentDateProvider: DateProviding, country: Country) {
@@ -392,7 +391,7 @@ private struct SymptomsReviewViewControllerInteractor: SymptomsReviewViewControl
         controller?.state = .loaded(scrollToSymptomAtIndex: index)
     }
 
-    public var hideDateInfoBox: Bool {
+    public var isSymptomaticSelfIsolationForWalesDisabled: Bool {
         guard let isSymptomaticSelfIsolationForWalesEnabled = controller?.symptomsQuestionnaire.isSymptomaticSelfIsolationForWalesEnabled else {
             return false
         }

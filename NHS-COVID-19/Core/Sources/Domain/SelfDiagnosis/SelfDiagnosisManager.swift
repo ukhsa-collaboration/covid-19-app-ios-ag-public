@@ -46,6 +46,8 @@ class SelfDiagnosisManager: SelfDiagnosisManaging {
 
         if symptomaticSelfIsolationEnabled {
             Metrics.signpost(evaluation)
+        } else {
+            Metrics.signpost(.completedV3SymptomsQuestionnaireAndHasSymptoms)
         }
 
         return evaluation

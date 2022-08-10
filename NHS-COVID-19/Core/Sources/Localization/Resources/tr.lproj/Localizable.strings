@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Mekana giriş yapmanın diğer yolları olup olmadığıyla ilgili olarak bir personelle konuşmanızı tavsiye ederiz.";
 "checkin_information_whats_a_qr_code_section_title" = "Bir NHS QR kodu posteri nasıl tanınır";
 "checkin_information_whats_a_qr_code_section_description_new" = "Resmi NHS QR kodu posterlerinin neye benzediğine dair bir örneği burada görebilirsiniz. Ortasında kare olan kodu taratmanız gerekir.";
-"about_this_app_software_information_date_of_release_description" = "07/2022";
+"about_this_app_software_information_date_of_release_description" = "08/2022";
 "link_test_result_enter_code_example" = "Örnek: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Test kodu";
 "link_test_result_button_title" = "Devam";

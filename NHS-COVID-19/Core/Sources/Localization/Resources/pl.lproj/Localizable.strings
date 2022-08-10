@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Radzimy porozmawiać z personelem lokalu, aby dowiedzieć się, czy istnieją inne metody zameldowania.";
 "checkin_information_whats_a_qr_code_section_title" = "Jak rozpoznać plakat z kodem NHS QR";
 "checkin_information_whats_a_qr_code_section_description_new" = "Oto jak wyglądają oficjalne plakaty z kodami NHS QR. Należy zeskanować kod, czyli kwadrat znajdujący się pośrodku plakatu.";
-"about_this_app_software_information_date_of_release_description" = "07/2022";
+"about_this_app_software_information_date_of_release_description" = "08/2022";
 "link_test_result_enter_code_example" = "Przykład: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Kod testowy";
 "link_test_result_button_title" = "Kontynuuj";

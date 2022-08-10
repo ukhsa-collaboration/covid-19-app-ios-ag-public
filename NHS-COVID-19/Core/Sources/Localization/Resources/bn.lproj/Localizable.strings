@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "চেক ইন করার অন্য উপায় আছে কিনা জানার জন্য আপনাকে ভেন্যুতে থাকা কোনো কর্মীর সাথে কথা বলার পরামর্শ দেওয়া হচ্ছে।";
 "checkin_information_whats_a_qr_code_section_title" = "কোনো NHS QR কোড পোস্টার যেভাবে চিনবেন";
 "checkin_information_whats_a_qr_code_section_description_new" = "আনুষ্ঠানিক NHS QR কোড পোস্টার কেমন দেখতে, তা এখানে দেখানো হলো। আপনাকে কোড স্ক্যান করতে হবে, যা হলো মাঝখানের বর্গক্ষেত্রটি।";
-"about_this_app_software_information_date_of_release_description" = "07/2022";
+"about_this_app_software_information_date_of_release_description" = "08/2022";
 "link_test_result_enter_code_example" = "উদাহরণ: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "পরীক্ষার কোড";
 "link_test_result_button_title" = "চালিয়ে যান";
