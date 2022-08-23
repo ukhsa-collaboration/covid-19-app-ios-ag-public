@@ -28,7 +28,7 @@ class GuidanceHubWalesFlowTests: XCTestCase {
         try runner.run { app in
 
             let homeScreen = HomeScreen(app: app)
-            app.checkOnHomeScreen(with: homeScreen.guidanceHubButton)
+            app.checkOnHomeScreen(with: homeScreen.guidanceHubButton())
 
             runner.step("Home screen") {
                 """
@@ -37,7 +37,7 @@ class GuidanceHubWalesFlowTests: XCTestCase {
                 """
             }
 
-            homeScreen.guidanceHubButton.tap()
+            homeScreen.guidanceHubButton().tap()
 
             runner.step("Guidance Hub screen") {
                 """

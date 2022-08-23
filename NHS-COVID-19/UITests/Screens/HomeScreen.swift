@@ -80,7 +80,7 @@ struct HomeScreen {
         app.buttons[localized: .bluetooth_activate]
     }
 
-    var guidanceHubButton: XCUIElement {
-        app.buttons[localized: .home_covid19_guidance_button_title]
+    func guidanceHubButton() -> XCUIElement {
+            app.buttons.element(containing: localize(.home_covid19_guidance_button_title))
     }
 }

@@ -2,6 +2,7 @@
 // Copyright © 2021 DHSC. All rights reserved.
 //
 
+import Common
 import Foundation
 import Integration
 import Interface
@@ -11,13 +12,14 @@ public class GuidanceHubWalesScreenScenario: Scenario {
 
     public static let name = "COVID-19 Guidance Hub - Wales Only"
     public static let kind = ScenarioKind.screen
-    public static let link1Tapped = "First link button tapped"
-    public static let link2Tapped = "Second link button tapped"
-    public static let link3Tapped = "Third link button tapped"
-    public static let link4Tapped = "Fourth link button tapped"
-    public static let link5Tapped = "Fifth link button tapped"
-    public static let link6Tapped = "Sixth link button tapped"
-    public static let link7Tapped = "Seventh link button tapped"
+    public static let link1WalesTapped = "First link button tapped"
+    public static let link2WalesTapped = "Second link button tapped"
+    public static let link3WalesTapped = "Third link button tapped"
+    public static let link4WalesTapped = "Fourth link button tapped"
+    public static let link5WalesTapped = "Fifth link button tapped"
+    public static let link6WalesTapped = "Sixth link button tapped"
+    public static let link7WalesTapped = "Seventh link button tapped"
+    public static let link8WalesTapped = "Eigth link button tapped"
 
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
@@ -27,38 +29,44 @@ public class GuidanceHubWalesScreenScenario: Scenario {
 }
 
 private struct Interactor: GuidanceHubWalesViewController.Interacting {
+    var newLabelForLongCovidWalesState: NewLabelState = NewLabelState(newLabelForName: "OpenedNewLongCovidInfoInWalesV4_35", setByCoordinator: true)
+
     private let viewController: UIViewController
 
     init(viewController: UIViewController) {
         self.viewController = viewController
     }
 
-    func didTapLink1() {
-        viewController.showAlert(title: GuidanceHubWalesScreenScenario.link1Tapped)
+    func didTapWalesLink1() {
+        viewController.showAlert(title: GuidanceHubWalesScreenScenario.link1WalesTapped)
     }
 
-    func didTapLink2() {
-        viewController.showAlert(title: GuidanceHubWalesScreenScenario.link2Tapped)
+    func didTapWalesLink2() {
+        viewController.showAlert(title: GuidanceHubWalesScreenScenario.link2WalesTapped)
     }
 
-    func didTapLink3() {
-        viewController.showAlert(title: GuidanceHubWalesScreenScenario.link3Tapped)
+    func didTapWalesLink3() {
+        viewController.showAlert(title: GuidanceHubWalesScreenScenario.link3WalesTapped)
     }
 
-    func didTapLink4() {
-        viewController.showAlert(title: GuidanceHubWalesScreenScenario.link4Tapped)
+    func didTapWalesLink4() {
+        viewController.showAlert(title: GuidanceHubWalesScreenScenario.link4WalesTapped)
     }
 
-    func didTapLink5() {
-        viewController.showAlert(title: GuidanceHubWalesScreenScenario.link5Tapped)
+    func didTapWalesLink5() {
+        viewController.showAlert(title: GuidanceHubWalesScreenScenario.link5WalesTapped)
     }
 
-    func didTapLink6() {
-        viewController.showAlert(title: GuidanceHubWalesScreenScenario.link6Tapped)
+    func didTapWalesLink6() {
+        viewController.showAlert(title: GuidanceHubWalesScreenScenario.link6WalesTapped)
     }
 
-    func didTapLink7() {
-        viewController.showAlert(title: GuidanceHubWalesScreenScenario.link7Tapped)
+    func didTapWalesLink7() {
+        viewController.showAlert(title: GuidanceHubWalesScreenScenario.link7WalesTapped)
+    }
+
+    func didTapWalesLink8() {
+        viewController.showAlert(title: GuidanceHubWalesScreenScenario.link8WalesTapped)
     }
 
 }

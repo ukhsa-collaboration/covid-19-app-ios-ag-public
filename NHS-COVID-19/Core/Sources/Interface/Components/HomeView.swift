@@ -97,6 +97,7 @@ struct HomeView: View {
                         foregroundColor: Color(.background),
                         backgroundColor: Color(.styleTurquoise),
                         text: localize(.home_covid19_guidance_button_title),
+                        shouldShowNewLabelState: interactor.newLabelForLongCovidCurrentCountryState,
                         action: {
                             switch self.country.wrappedValue {
                             case .england:

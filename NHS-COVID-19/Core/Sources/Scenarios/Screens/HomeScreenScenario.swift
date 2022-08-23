@@ -3,6 +3,7 @@
 //
 
 import Combine
+import Common
 import Domain
 import Integration
 import Interface
@@ -131,6 +132,8 @@ private class Interactor: HomeViewController.Interacting {
     var testingForCOVID19Enabled: Bool
     var selfIsolationEnabled: Bool
     var guidanceHubEnabled: Bool
+    var shouldShowNewLabelForGuidanceHub: Bool = false
+    var newLabelForLongCovidCurrentCountryState: NewLabelState = NewLabelState()
 
     private weak var viewController: UIViewController?
 

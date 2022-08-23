@@ -66,13 +66,16 @@ public protocol HomeFlowViewControllerInteracting {
     func openFindYourLocalAuthorityLink()
     func didTapGetIsolationNoteLink()
     func openSettings()
-    func openGuidanceForCovid19EnglandLink()
-    func openGuidanceForCheckSymptomsEnglandLink()
-    func openLatestGuidanceCovid19EnglandLink()
-    func openGuidancePositiveCovid19TestResultEnglandLink()
-    func openGuidanceTravillingAbroadEnglandLink()
-    func openGuidanceClaimSSPEnglandLink()
-    func openGuidanceGetHelpCovid19EnquiriesEnglandLink()
+
+    func openGuidanceHubEnglandLink1()
+    func openGuidanceHubEnglandLink2()
+    func openGuidanceHubEnglandLink3()
+    func openGuidanceHubEnglandLink4()
+    func openGuidanceHubEnglandLink5()
+    func openGuidanceHubEnglandLink6()
+    func openGuidanceHubEnglandLink7()
+    func openGuidanceHubEnglandLink8()
+
     func openGuidanceHubWalesLink1()
     func openGuidanceHubWalesLink2()
     func openGuidanceHubWalesLink3()
@@ -80,6 +83,9 @@ public protocol HomeFlowViewControllerInteracting {
     func openGuidanceHubWalesLink5()
     func openGuidanceHubWalesLink6()
     func openGuidanceHubWalesLink7()
+    func openGuidanceHubWalesLink8()
+
+    var newLabelForLongCovidCurrentCountryState: NewLabelState { get }
 }
 
 public enum ExposureNotificationReminderIn: Int, CaseIterable {
@@ -102,6 +108,7 @@ public class HomeFlowViewController: BaseNavigationController {
     private let showNotificationScreen: CurrentValueSubject<NotificationInterfaceState?, Never>
     private var localInformationInteractor: LocalInformationInteractor?
     private var localInfoBannerViewModel: InterfaceProperty<LocalInformationBanner.ViewModel?>?
+    private var newLabelForLongCovidCurrentCountryState: NewLabelState
 
     public init(
         interactor: Interacting,
@@ -119,7 +126,8 @@ public class HomeFlowViewController: BaseNavigationController {
         country: InterfaceProperty<Country>,
         shouldShowLanguageSelectionScreen: Bool,
         showNotificationScreen: CurrentValueSubject<NotificationInterfaceState?, Never>,
-        shouldShowLocalStats: Bool
+        shouldShowLocalStats: Bool,
+        newLabelForLongCovidCurrentCountryState: NewLabelState
     ) {
         self.interactor = interactor
 
@@ -130,6 +138,7 @@ public class HomeFlowViewController: BaseNavigationController {
 
         self.userNotificationsEnabled = userNotificationsEnabled
         self.showNotificationScreen = showNotificationScreen
+        self.newLabelForLongCovidCurrentCountryState = interactor.newLabelForLongCovidCurrentCountryState
 
         super.init()
 
@@ -163,7 +172,7 @@ public class HomeFlowViewController: BaseNavigationController {
 
         let showLanguageSelectionScreen: () -> Void = {
             let viewController = SettingsViewController(viewModel: SettingsViewController.ViewModel(), interacting: settingsInteractor)
-            self.pushViewController(viewController, animated: false)
+            self.pushViewController(viewController, animated: true)
             if let languageViewController = settingsInteractor.makeLanguageSelectionViewController() {
                 self.pushViewController(languageViewController, animated: false)
             }
@@ -447,6 +456,10 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
 
     public var shouldShowGuidanceHub: Bool {
         flowInteractor.shouldShowGuidanceHub
+    }
+
+    public var newLabelForLongCovidCurrentCountryState: NewLabelState {
+        flowInteractor.newLabelForLongCovidCurrentCountryState
     }
 
     func openSettings() {

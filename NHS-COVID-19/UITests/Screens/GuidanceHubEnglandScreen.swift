@@ -7,31 +7,36 @@ import XCTest
 struct GuidanceHubEnglandScreen {
     let app: XCUIApplication
 
-    var covidGuidanceForEnglandButton: XCUIElement {
-        app.buttons.element(containing: localize(.covid_guidance_hub_for_england_title))
+    var linkButtonOneEngland: XCUIElement {
+        app.buttons.element(containing: localize(.covid_guidance_hub_england_button_one_title))
     }
 
-    var checkSymptomsButton: XCUIElement {
-        app.buttons.element(containing: localize(.covid_guidance_hub_check_symptoms_title))
+    var linkButtonTwoEngland: XCUIElement {
+        app.buttons.element(containing: localize(.covid_guidance_hub_england_button_two_title))
     }
 
-    var latestGuidanceButton: XCUIElement {
-        app.buttons.element(containing: localize(.covid_guidance_hub_latest_title))
+    var linkButtonThreeEngland: XCUIElement {
+        app.buttons.element(containing: localize(.covid_guidance_hub_england_button_three_title))
     }
 
-    var positiveTestResultButton: XCUIElement {
-        app.buttons.element(containing: localize(.covid_guidance_hub_positive_test_result_title))
+    var linkButtonFourEngland: XCUIElement {
+        app.buttons.element(containing: localize(.covid_guidance_hub_england_button_four_title))
     }
 
-    var travellingAbroadButton: XCUIElement {
-        app.buttons.element(containing: localize(.covid_guidance_hub_travelling_abroad_title))
+    var linkButtonFiveEngland: XCUIElement {
+        app.buttons.element(containing: localize(.covid_guidance_hub_england_button_five_title))
     }
 
-    var checkSSPButton: XCUIElement {
-        app.buttons.element(containing: localize(.covid_guidance_hub_check_ssp_title))
+    var linkButtonSixEngland: XCUIElement {
+        app.buttons.element(containing: localize(.covid_guidance_hub_england_button_six_title))
     }
 
-    var covidEnquiriesButton: XCUIElement {
-        app.buttons.element(containing: localize(.covid_guidance_hub_covid_enquiries_title))
+    var linkButtonSevenEngland: XCUIElement {
+        app.buttons.element(containing: localize(.covid_guidance_hub_england_button_seven_title))
     }
+
+    var linkButtonEightEngland: XCUIElement {
+        app.buttons.element(containing: localize(.covid_guidance_hub_england_button_eight_title))
+    }
+
 }

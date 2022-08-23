@@ -55,9 +55,7 @@ public struct NavigationButton: View {
     var font: Font
     var fontWeight: Font.Weight?
     var colorScheme: ColorScheme
-    var showNewLabel: Bool
-
-    @State private var didTapButton: Bool = false
+    @ObservedObject private var shouldShowNewLabelState: NewLabelState
 
     public init(
         imageName: ImageName,
@@ -67,7 +65,7 @@ public struct NavigationButton: View {
         text: String,
         font: Font = .body,
         fontWeight: Font.Weight? = nil,
-        showNewLabel: Bool = false,
+        shouldShowNewLabelState: NewLabelState = NewLabelState(),
         action: @escaping () -> Void
     ) {
         self.init(
@@ -77,7 +75,7 @@ public struct NavigationButton: View {
             font: font,
             fontWeight: fontWeight,
             colorScheme: ColorScheme.standard(foregroundColor: foregroundColor, imageBackgroundColor: backgroundColor),
-            showNewLabel: showNewLabel,
+            shouldShowNewLabelState: shouldShowNewLabelState,
             action: action
         )
     }
@@ -89,7 +87,7 @@ public struct NavigationButton: View {
         font: Font = .body,
         fontWeight: Font.Weight? = nil,
         colorScheme: ColorScheme,
-        showNewLabel: Bool = false,
+        shouldShowNewLabelState: NewLabelState = NewLabelState(),
         action: @escaping () -> Void
     ) {
         self.action = action
@@ -99,14 +97,11 @@ public struct NavigationButton: View {
         self.font = font
         self.fontWeight = fontWeight
         self.colorScheme = colorScheme
-        self.showNewLabel = showNewLabel
+        self.shouldShowNewLabelState = shouldShowNewLabelState
     }
 
     public var body: some View {
         Button(action: {
-            if showNewLabel {
-                didTapButton = true
-            }
             action()
         }) {
             ZStack(alignment: .leading) {
@@ -130,7 +125,7 @@ public struct NavigationButton: View {
                             .fixedSize(horizontal: false, vertical: true)
                             .multilineTextAlignment(.leading)
                         Spacer()
-                        if showNewLabel && !didTapButton {
+                        if shouldShowNewLabelState.setByCoordinator && $shouldShowNewLabelState.shouldNotShowNewLabel.wrappedValue == false {
                             Text(localize(.home_new_label))
                                 .font(font)
                                 .fontWeight(.bold)

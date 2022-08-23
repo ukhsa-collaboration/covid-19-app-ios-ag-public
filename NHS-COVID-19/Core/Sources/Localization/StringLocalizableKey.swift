@@ -1072,27 +1072,31 @@ public enum StringLocalizableKey: String, CaseIterable {
 
     //MARK: - Guidance for COVID-19 England Only
 
-    case covid_guidance_hub_for_england_title
-    case covid_guidance_hub_for_england_description
-    case covid_guidance_hub_check_symptoms_title
-    case covid_guidance_hub_check_symptoms_description
-    case covid_guidance_hub_latest_title
-    case covid_guidance_hub_latest_description
-    case covid_guidance_hub_positive_test_result_title
-    case covid_guidance_hub_positive_test_result_description
-    case covid_guidance_hub_travelling_abroad_title
-    case covid_guidance_hub_travelling_abroad_description
-    case covid_guidance_hub_check_ssp_title
-    case covid_guidance_hub_check_ssp_description
-    case covid_guidance_hub_covid_enquiries_title
-    case covid_guidance_hub_covid_enquiries_description
-    case covid_guidance_hub_for_england_url
-    case covid_guidance_hub_check_symptoms_url
-    case covid_guidance_hub_latest_url
-    case covid_guidance_hub_positive_test_result_url
-    case covid_guidance_hub_travelling_abroad_url
-    case covid_guidance_hub_check_ssp_url
-    case covid_guidance_hub_enquiries_url
+    case covid_guidance_hub_england_button_one_title
+    case covid_guidance_hub_england_button_one_description
+    case covid_guidance_hub_england_button_one_url
+    case covid_guidance_hub_england_button_two_title
+    case covid_guidance_hub_england_button_two_description
+    case covid_guidance_hub_england_button_two_url
+    case covid_guidance_hub_england_button_three_title
+    case covid_guidance_hub_england_button_three_description
+    case covid_guidance_hub_england_button_three_url
+    case covid_guidance_hub_england_button_four_title
+    case covid_guidance_hub_england_button_four_description
+    case covid_guidance_hub_england_button_four_url
+    case covid_guidance_hub_england_button_five_title
+    case covid_guidance_hub_england_button_five_description
+    case covid_guidance_hub_england_button_five_url
+    case covid_guidance_hub_england_button_six_title
+    case covid_guidance_hub_england_button_six_description
+    case covid_guidance_hub_england_button_six_url
+    case covid_guidance_hub_england_button_seven_title
+    case covid_guidance_hub_england_button_seven_description
+    case covid_guidance_hub_england_button_seven_new_label_accessibility_text
+    case covid_guidance_hub_england_button_seven_url
+    case covid_guidance_hub_england_button_eight_title
+    case covid_guidance_hub_england_button_eight_description
+    case covid_guidance_hub_england_button_eight_url
 
     // MARK: - Guidance for COVID-19 Wales Only
     case covid_guidance_hub_wales_button_one_title
@@ -1111,11 +1115,15 @@ public enum StringLocalizableKey: String, CaseIterable {
     case covid_guidance_hub_wales_button_five_description
     case covid_guidance_hub_wales_button_five_url
     case covid_guidance_hub_wales_button_six_title
+    case covid_guidance_hub_wales_button_six_new_label_accessibility_text
     case covid_guidance_hub_wales_button_six_description
     case covid_guidance_hub_wales_button_six_url
     case covid_guidance_hub_wales_button_seven_title
     case covid_guidance_hub_wales_button_seven_description
     case covid_guidance_hub_wales_button_seven_url
+    case covid_guidance_hub_wales_button_eight_title
+    case covid_guidance_hub_wales_button_eight_description
+    case covid_guidance_hub_wales_button_eight_url
 
     //MARK: - Guidance for Index Cases on ending/ended isolation
     case end_of_isolation_index_case_isolation_ended_callout_wales

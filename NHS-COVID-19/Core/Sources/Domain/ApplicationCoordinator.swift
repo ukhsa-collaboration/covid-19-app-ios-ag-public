@@ -49,6 +49,10 @@ public class ApplicationCoordinator {
     private let completedOnboardingForCurrentSession = CurrentValueSubject<Bool, Never>(false)
     private let appReviewPresenter: AppReviewPresenting
     public let country: DomainProperty<Country>
+
+    public let newLabelForLongCovidEnglandState: NewLabelState
+    public let newLabelForLongCovidWalesState: NewLabelState
+
     private let shouldRecommendUpdate = CurrentValueSubject<Bool, Never>(true)
     private let policyManager: PolicyVersionManager
     private let localAuthorityManager: LocalAuthorityManager
@@ -136,6 +140,9 @@ public class ApplicationCoordinator {
         let country = localAuthorityManager.$country.domainProperty()
         self.localAuthorityManager = localAuthorityManager
         self.country = country
+
+        self.newLabelForLongCovidEnglandState = NewLabelState(newLabelForName: "OpenedNewLongCovidInfoInEnglandV4_35", setByCoordinator: true)
+        self.newLabelForLongCovidWalesState = NewLabelState(newLabelForName: "OpenedNewLongCovidInfoInWalesV4_35", setByCoordinator: true)
 
         isolationContext = IsolationContext(
             isolationConfiguration: CachedResponse(
@@ -374,7 +381,6 @@ public class ApplicationCoordinator {
         metricReporter.monitorHousekeeping()
 
         services.userNotificationsManager.removePending(type: .selfIsolation)
-
     }
 
     private func monitorRawState() {
@@ -507,7 +513,9 @@ public class ApplicationCoordinator {
                     contactCaseOptOutQuestionnaire: ContactCaseOptOutQuestionnaire(country: country),
                     contactCaseIsolationDuration: isolationContext.isolationConfiguration.$value.map { $0.for(country.currentValue).contactCase }.domainProperty(),
                     shouldShowLocalStats: isFeatureEnabled(.localStatistics),
-                    localCovidStatsManager: localCovidStatsManager
+                    localCovidStatsManager: localCovidStatsManager,
+                    newLabelForLongCovidEnglandState: newLabelForLongCovidEnglandState,
+                    newLabelForLongCovidWalesState: newLabelForLongCovidWalesState
                 )
             )
         case .recommendingUpdate(let reason, let titles, let descriptions):
@@ -979,6 +987,12 @@ localAuthorityValidator: LocalAuthoritiesValidator) {
         symptomsCheckerManager.deleteAll()
 
         UserDefaults.standard.removeObject(forKey: "OpenedNewSymptomCheckerInEnglandV4_29") // MARK: Was used in v4.29 to display NEW label for symptom checker in England
+
+        newLabelForLongCovidEnglandState.shouldNotShowNewLabel = false
+        newLabelForLongCovidWalesState.shouldNotShowNewLabel = false
+
+        UserDefaults.standard.removeObject(forKey: "OpenedNewLongCovidInfoInEnglandV4_35") // MARK: Was used in v4.35 to display NEW label for Long Covid info in Guidance Hub in England
+        UserDefaults.standard.removeObject(forKey: "OpenedNewLongCovidInfoInWalesV4_35") // MARK: Was used in v4.35 to display NEW label for Long Covid info in Guidance Hub in Wales
     }
 
     private func deleteCheckIn(with id: String) {

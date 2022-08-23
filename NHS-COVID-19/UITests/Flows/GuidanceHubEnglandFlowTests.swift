@@ -28,7 +28,7 @@ class GuidanceHubEnglandFlowTests: XCTestCase {
         try runner.run { app in
 
             let homeScreen = HomeScreen(app: app)
-            app.checkOnHomeScreen(with: homeScreen.guidanceHubButton)
+            app.checkOnHomeScreen(with: homeScreen.guidanceHubButton())
 
             runner.step("Home screen") {
                 """
@@ -37,7 +37,7 @@ class GuidanceHubEnglandFlowTests: XCTestCase {
                 """
             }
 
-            homeScreen.guidanceHubButton.tap()
+            homeScreen.guidanceHubButton().tap()
 
             runner.step("Guidance Hub screen") {
                 """
@@ -46,7 +46,7 @@ class GuidanceHubEnglandFlowTests: XCTestCase {
             }
 
             let guidanceHubScreen = GuidanceHubEnglandScreen(app: app)
-            XCTAssertTrue(guidanceHubScreen.covidGuidanceForEnglandButton.exists)
+            XCTAssertTrue(guidanceHubScreen.linkButtonOneEngland.exists)
 
         }
     }

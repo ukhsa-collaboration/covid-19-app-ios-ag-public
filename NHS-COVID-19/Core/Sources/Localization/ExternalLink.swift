@@ -37,13 +37,14 @@ public enum ExternalLink: CaseIterable {
     case guidanceForContactsInEngland
     case guidanceForContactsInWales
     case getTestedWalesLink
-    case guidanceHubEnglandLink
-    case guidanceHubCheckSymptomsLink
-    case guidanceHubLatestLink
-    case guidanceHubPositiveTestLink
-    case guidanceHubTravellingAbroadLink
-    case guidanceHubSSPLink
-    case guidanceHubEnquiriesLink
+    case guidanceHubEnglandLink1
+    case guidanceHubEnglandLink2
+    case guidanceHubEnglandLink3
+    case guidanceHubEnglandLink4
+    case guidanceHubEnglandLink5
+    case guidanceHubEnglandLink6
+    case guidanceHubEnglandLink7
+    case guidanceHubEnglandLink8
     case guidanceHubWalesLink1
     case guidanceHubWalesLink2
     case guidanceHubWalesLink3
@@ -51,6 +52,7 @@ public enum ExternalLink: CaseIterable {
     case guidanceHubWalesLink5
     case guidanceHubWalesLink6
     case guidanceHubWalesLink7
+    case guidanceHubWalesLink8
     case didTapSymptomaticCase
     case didTapSymptomCheckerNormalActivities
     case walesNHS111OnlineLink
@@ -121,20 +123,22 @@ public enum ExternalLink: CaseIterable {
             return localizeURL(.risky_contact_opt_out_primary_button_url_wales)
         case .getTestedWalesLink:
             return localizeURL(.get_tested_wales_link_url)
-        case .guidanceHubEnglandLink:
-            return localizeURL(.covid_guidance_hub_for_england_url)
-        case .guidanceHubCheckSymptomsLink:
-            return localizeURL(.covid_guidance_hub_check_symptoms_url)
-        case .guidanceHubLatestLink:
-            return localizeURL(.covid_guidance_hub_latest_url)
-        case.guidanceHubPositiveTestLink:
-            return localizeURL(.covid_guidance_hub_positive_test_result_url)
-        case.guidanceHubTravellingAbroadLink:
-            return localizeURL(.covid_guidance_hub_travelling_abroad_url)
-        case.guidanceHubSSPLink:
-            return localizeURL(.covid_guidance_hub_check_ssp_url)
-        case.guidanceHubEnquiriesLink:
-            return localizeURL(.covid_guidance_hub_enquiries_url)
+        case .guidanceHubEnglandLink1:
+            return localizeURL(.covid_guidance_hub_england_button_one_url)
+        case .guidanceHubEnglandLink2:
+            return localizeURL(.covid_guidance_hub_england_button_two_url)
+        case .guidanceHubEnglandLink3:
+            return localizeURL(.covid_guidance_hub_england_button_three_url)
+        case.guidanceHubEnglandLink4:
+            return localizeURL(.covid_guidance_hub_england_button_four_url)
+        case.guidanceHubEnglandLink5:
+            return localizeURL(.covid_guidance_hub_england_button_five_url)
+        case.guidanceHubEnglandLink6:
+            return localizeURL(.covid_guidance_hub_england_button_six_url)
+        case.guidanceHubEnglandLink7:
+            return localizeURL(.covid_guidance_hub_england_button_seven_url)
+        case.guidanceHubEnglandLink8:
+            return localizeURL(.covid_guidance_hub_england_button_eight_url)
         case .guidanceHubWalesLink1:
             return localizeURL(.covid_guidance_hub_wales_button_one_url)
         case .guidanceHubWalesLink2:
@@ -149,6 +153,8 @@ public enum ExternalLink: CaseIterable {
             return localizeURL(.covid_guidance_hub_wales_button_six_url)
         case .guidanceHubWalesLink7:
             return localizeURL(.covid_guidance_hub_wales_button_seven_url)
+        case .guidanceHubWalesLink8:
+            return localizeURL(.covid_guidance_hub_wales_button_eight_url)
         case .didTapSymptomaticCase:
             return localizeURL(.symptom_checker_advice_notice_continue_normal_activities_link_url)
         case .didTapSymptomCheckerNormalActivities:

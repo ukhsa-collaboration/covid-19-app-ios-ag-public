@@ -26,6 +26,7 @@ public protocol HomeViewControllerInteracting {
     var shouldShowSelfIsolation: Bool { get }
     var shouldShowGuidanceHub: Bool { get }
     func openSettings()
+    var newLabelForLongCovidCurrentCountryState: NewLabelState { get }
 }
 
 public class HomeViewController: UIViewController {

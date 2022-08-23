@@ -5,6 +5,7 @@
 import UIKit
 import Localization
 import SwiftUI
+import Common
 
 private struct GuidanceHubWalesView: View {
 
@@ -22,7 +23,7 @@ private struct GuidanceHubWalesView: View {
                                         title: localize(.covid_guidance_hub_wales_button_one_title),
                                         description: localize(.covid_guidance_hub_wales_button_one_description),
                                         iconName: .externalLink,
-                                        action: interactor.didTapLink1
+                                        action: interactor.didTapWalesLink1
                                     )
                 )
 
@@ -31,7 +32,7 @@ private struct GuidanceHubWalesView: View {
                                         title: localize(.covid_guidance_hub_wales_button_two_title),
                                         description: localize(.covid_guidance_hub_wales_button_two_description),
                                         iconName: .externalLink,
-                                        action: interactor.didTapLink2
+                                        action: interactor.didTapWalesLink2
                                     )
                 )
                 HubButtonCell(viewModel:
@@ -39,7 +40,7 @@ private struct GuidanceHubWalesView: View {
                                         title: localize(.covid_guidance_hub_wales_button_three_title),
                                         description: localize(.covid_guidance_hub_wales_button_three_description),
                                         iconName: .externalLink,
-                                        action: interactor.didTapLink3
+                                        action: interactor.didTapWalesLink3
                                     )
                 )
                 HubButtonCell(viewModel:
@@ -47,7 +48,7 @@ private struct GuidanceHubWalesView: View {
                                         title: localize(.covid_guidance_hub_wales_button_four_title),
                                         description: localize(.covid_guidance_hub_wales_button_four_description),
                                         iconName: .externalLink,
-                                        action: interactor.didTapLink4
+                                        action: interactor.didTapWalesLink4
                                     )
                 )
                 HubButtonCell(viewModel:
@@ -55,7 +56,7 @@ private struct GuidanceHubWalesView: View {
                                         title: localize(.covid_guidance_hub_wales_button_five_title),
                                         description: localize(.covid_guidance_hub_wales_button_five_description),
                                         iconName: .externalLink,
-                                        action: interactor.didTapLink5
+                                        action: interactor.didTapWalesLink5
                                     )
                 )
                 HubButtonCell(viewModel:
@@ -63,15 +64,26 @@ private struct GuidanceHubWalesView: View {
                                         title: localize(.covid_guidance_hub_wales_button_six_title),
                                         description: localize(.covid_guidance_hub_wales_button_six_description),
                                         iconName: .externalLink,
-                                        action: interactor.didTapLink6
-                                    )
+                                        action: interactor.didTapWalesLink6,
+                                        accessibilityLabel: localize(.covid_guidance_hub_wales_button_six_new_label_accessibility_text)
+                                    ),
+                              shouldShowNewLabelState: interactor.newLabelForLongCovidWalesState
                 )
                 HubButtonCell(viewModel:
                                     .init(
                                         title: localize(.covid_guidance_hub_wales_button_seven_title),
                                         description: localize(.covid_guidance_hub_wales_button_seven_description),
                                         iconName: .externalLink,
-                                        action: interactor.didTapLink7
+                                        action: interactor.didTapWalesLink7
+                                    )
+                )
+
+                HubButtonCell(viewModel:
+                                    .init(
+                                        title: localize(.covid_guidance_hub_wales_button_eight_title),
+                                        description: localize(.covid_guidance_hub_wales_button_eight_description),
+                                        iconName: .externalLink,
+                                        action: interactor.didTapWalesLink8
                                     )
                 )
 
@@ -84,13 +96,16 @@ private struct GuidanceHubWalesView: View {
 }
 
 public protocol GuidanceHubWalesViewControllerInteracting {
-    func didTapLink1()
-    func didTapLink2()
-    func didTapLink3()
-    func didTapLink4()
-    func didTapLink5()
-    func didTapLink6()
-    func didTapLink7()
+    func didTapWalesLink1()
+    func didTapWalesLink2()
+    func didTapWalesLink3()
+    func didTapWalesLink4()
+    func didTapWalesLink5()
+    func didTapWalesLink6()
+    func didTapWalesLink7()
+    func didTapWalesLink8()
+
+    var newLabelForLongCovidWalesState: NewLabelState { get }
 }
 
 public class GuidanceHubWalesViewController: RootViewController {

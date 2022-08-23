@@ -63,6 +63,7 @@ class SelfIsolationHubScreenTests: XCTestCase {
             XCTAssert(screen.readLatestGovenrnmentGuidanceLink.exists)
             XCTAssert(screen.readLatestGovenrnmentGuidanceLink.isHittable)
             app.scrollTo(element: screen.readLatestGovenrnmentGuidanceLink)
+            app.scroll()
             screen.readLatestGovenrnmentGuidanceLink.tap()
 
             XCTAssert(app.staticTexts[runner.scenario.readGovernmentGuidanceAlertTitle].displayed)

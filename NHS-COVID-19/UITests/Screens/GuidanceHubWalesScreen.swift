@@ -9,42 +9,46 @@ struct GuidanceHubWalesScreen {
 
     var allElements: [XCUIElement] {
         [
-            linkButtonOne,
-            linkButtonTwo,
-            linkButtonThree,
-            linkButtonFour,
-            linkButtonFive,
-            linkButtonSix,
-            linkButtonSeven
+            linkButtonOneWales,
+            linkButtonTwoWales,
+            linkButtonThreeWales,
+            linkButtonFourWales,
+            linkButtonFiveWales,
+            linkButtonSixWales,
+            linkButtonSevenWales
         ]
     }
 
-    var linkButtonOne: XCUIElement {
+    var linkButtonOneWales: XCUIElement {
         app.links.element(containing: localize(.covid_guidance_hub_wales_button_one_title))
     }
 
-    var linkButtonTwo: XCUIElement {
+    var linkButtonTwoWales: XCUIElement {
         app.links.element(containing: localize(.covid_guidance_hub_wales_button_two_title))
     }
 
-    var linkButtonThree: XCUIElement {
+    var linkButtonThreeWales: XCUIElement {
         app.links.element(containing: localize(.covid_guidance_hub_wales_button_three_title))
     }
 
-    var linkButtonFour: XCUIElement {
+    var linkButtonFourWales: XCUIElement {
         app.links.element(containing: localize(.covid_guidance_hub_wales_button_four_title))
     }
 
-    var linkButtonFive: XCUIElement {
+    var linkButtonFiveWales: XCUIElement {
         app.links.element(containing: localize(.covid_guidance_hub_wales_button_five_title))
     }
 
-    var linkButtonSix: XCUIElement {
+    var linkButtonSixWales: XCUIElement {
         app.links.element(containing: localize(.covid_guidance_hub_wales_button_six_title))
     }
 
-    var linkButtonSeven: XCUIElement {
+    var linkButtonSevenWales: XCUIElement {
         app.links.element(containing: localize(.covid_guidance_hub_wales_button_seven_title))
+    }
+
+    var linkButtonEightWales: XCUIElement {
+        app.links.element(containing: localize(.covid_guidance_hub_wales_button_eight_title))
     }
 
 }

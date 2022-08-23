@@ -5,6 +5,7 @@
 import UIKit
 import Localization
 import SwiftUI
+import Common
 
 private struct GuidanceHubEnglandView: View {
 
@@ -19,64 +20,76 @@ private struct GuidanceHubEnglandView: View {
             VStack(spacing: .halfHairSpacing) {
                 HubButtonCell(viewModel:
                                     .init(
-                                        title: localize(.covid_guidance_hub_for_england_title),
-                                        description: localize(.covid_guidance_hub_for_england_description),
+                                        title: localize(.covid_guidance_hub_england_button_one_title),
+                                        description: localize(.covid_guidance_hub_england_button_one_description),
                                         iconName: .externalLink,
-                                        action: interactor.didTapGuidanceForCovid19EnglandLink
+                                        action: interactor.didTapEnglandLink1
                                     )
                 )
 
                 HubButtonCell(viewModel:
                                     .init(
-                                        title: localize(.covid_guidance_hub_check_symptoms_title),
-                                        description: localize(.covid_guidance_hub_check_symptoms_description),
+                                        title: localize(.covid_guidance_hub_england_button_two_title),
+                                        description: localize(.covid_guidance_hub_england_button_two_description),
                                         iconName: .externalLink,
-                                        action: interactor.didTapGuidanceForCheckSymptomsEnglandLink
+                                        action: interactor.didTapEnlgandLink2
                                     )
                 )
 
                 HubButtonCell(viewModel:
                                     .init(
-                                        title: localize(.covid_guidance_hub_latest_title),
-                                        description: localize(.covid_guidance_hub_latest_description),
+                                        title: localize(.covid_guidance_hub_england_button_three_title),
+                                        description: localize(.covid_guidance_hub_england_button_three_description),
                                         iconName: .externalLink,
-                                        action: interactor.didTapLatestGuidanceCovid19EnglandLink
+                                        action: interactor.didTapEnglandLink3
                                     )
                 )
 
                 HubButtonCell(viewModel:
                                     .init(
-                                        title: localize(.covid_guidance_hub_positive_test_result_title),
-                                        description: localize(.covid_guidance_hub_positive_test_result_description),
+                                        title: localize(.covid_guidance_hub_england_button_four_title),
+                                        description: localize(.covid_guidance_hub_england_button_four_description),
                                         iconName: .externalLink,
-                                        action: interactor.didTapGuidancePositiveCovid19TestResultEnglandLink
+                                        action: interactor.didTapEnglandLink4
                                     )
                 )
 
                 HubButtonCell(viewModel:
                                     .init(
-                                        title: localize(.covid_guidance_hub_travelling_abroad_title),
-                                        description: localize(.covid_guidance_hub_travelling_abroad_description),
+                                        title: localize(.covid_guidance_hub_england_button_five_title),
+                                        description: localize(.covid_guidance_hub_england_button_five_description),
                                         iconName: .externalLink,
-                                        action: interactor.didTapGuidanceTravillingAbroadEnglandLink
+                                        action: interactor.didTapEnglandLink5
                                     )
                 )
 
                 HubButtonCell(viewModel:
                                     .init(
-                                        title: localize(.covid_guidance_hub_check_ssp_title),
-                                        description: localize(.covid_guidance_hub_check_ssp_description),
+                                        title: localize(.covid_guidance_hub_england_button_six_title),
+                                        description: localize(.covid_guidance_hub_england_button_six_description),
                                         iconName: .externalLink,
-                                        action: interactor.didTapGuidanceClaimSSPEnglandLink
+                                        action: interactor.didTapEnglandLink6
                                     )
                 )
 
                 HubButtonCell(viewModel:
                                     .init(
-                                        title: localize(.covid_guidance_hub_covid_enquiries_title),
-                                        description: localize(.covid_guidance_hub_covid_enquiries_description),
+                                        title: localize(.covid_guidance_hub_england_button_seven_title),
+                                        description: localize(.covid_guidance_hub_england_button_seven_description),
                                         iconName: .externalLink,
-                                        action: interactor.didTapGuidanceGetHelpCovid19EnquiriesEnglandLink
+                                        action: interactor.didTapEnglandLink7,
+                                        accessibilityLabel: localize(.covid_guidance_hub_england_button_seven_new_label_accessibility_text)
+
+                                    ),
+                              shouldShowNewLabelState: interactor.newLabelForLongCovidEnglandState
+                )
+
+                HubButtonCell(viewModel:
+                                    .init(
+                                        title: localize(.covid_guidance_hub_england_button_eight_title),
+                                        description: localize(.covid_guidance_hub_england_button_eight_description),
+                                        iconName: .externalLink,
+                                        action: interactor.didTapEnglandLink8
                                     )
                 )
 
@@ -89,13 +102,16 @@ private struct GuidanceHubEnglandView: View {
 }
 
 public protocol GuidanceHubEnglandViewControllerInteracting {
-    func didTapGuidanceForCovid19EnglandLink()
-    func didTapGuidanceForCheckSymptomsEnglandLink()
-    func didTapLatestGuidanceCovid19EnglandLink()
-    func didTapGuidancePositiveCovid19TestResultEnglandLink()
-    func didTapGuidanceTravillingAbroadEnglandLink()
-    func didTapGuidanceClaimSSPEnglandLink()
-    func didTapGuidanceGetHelpCovid19EnquiriesEnglandLink()
+    func didTapEnglandLink1()
+    func didTapEnlgandLink2()
+    func didTapEnglandLink3()
+    func didTapEnglandLink4()
+    func didTapEnglandLink5()
+    func didTapEnglandLink6()
+    func didTapEnglandLink7()
+    func didTapEnglandLink8()
+
+    var newLabelForLongCovidEnglandState: NewLabelState { get }
 }
 
 public class GuidanceHubEnglandViewController: RootViewController {

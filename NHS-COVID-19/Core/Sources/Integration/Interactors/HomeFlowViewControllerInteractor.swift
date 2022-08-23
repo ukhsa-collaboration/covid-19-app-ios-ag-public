@@ -271,7 +271,8 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     public func makeGuidanceHubEnglandViewController(flowController: UINavigationController?) -> UIViewController? {
         let interactor = GuidanceHubEnglandInteractor(
             flowController: flowController,
-            flowInteractor: self
+            flowInteractor: self,
+            newLabelForLongCovidEnglandState: self.newLabelForLongCovidCurrentCountryState
         )
         return GuidanceHubEnglandViewController(interactor: interactor)
     }
@@ -279,7 +280,8 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     public func makeGuidanceHubWalesViewController(flowController: UINavigationController?) -> UIViewController? {
         let interactor = GuidanceHubWalesInteractor(
             flowController: flowController,
-            flowInteractor: self
+            flowInteractor: self,
+            newLabelForLongCovidWalesState: self.newLabelForLongCovidCurrentCountryState
         )
         return GuidanceHubWalesViewController(interactor: interactor)
     }
@@ -445,6 +447,15 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         }
     }
 
+    var newLabelForLongCovidCurrentCountryState: NewLabelState {
+        switch context.country.currentValue {
+        case .england:
+            return context.newLabelForLongCovidEnglandState
+        case .wales:
+            return context.newLabelForLongCovidWalesState
+        }
+    }
+
     func getMyAreaViewModel() -> MyAreaTableViewController.ViewModel {
         MyAreaTableViewController.ViewModel(
             postcode: context.postcodeInfo.map { $0?.postcode.value }.interfaceProperty,
@@ -596,32 +607,36 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         context.openSettings()
     }
 
-    func openGuidanceForCovid19EnglandLink() {
-        context.openURL(ExternalLink.guidanceHubEnglandLink.url)
+    func openGuidanceHubEnglandLink1() {
+        context.openURL(ExternalLink.guidanceHubEnglandLink1.url)
     }
 
-    func openGuidanceForCheckSymptomsEnglandLink() {
-        context.openURL(ExternalLink.guidanceHubCheckSymptomsLink.url)
+    func openGuidanceHubEnglandLink2() {
+        context.openURL(ExternalLink.guidanceHubEnglandLink2.url)
     }
 
-    func openLatestGuidanceCovid19EnglandLink() {
-        context.openURL(ExternalLink.guidanceHubLatestLink.url)
+    func openGuidanceHubEnglandLink3() {
+        context.openURL(ExternalLink.guidanceHubEnglandLink3.url)
     }
 
-    func openGuidancePositiveCovid19TestResultEnglandLink() {
-        context.openURL(ExternalLink.guidanceHubPositiveTestLink.url)
+    func openGuidanceHubEnglandLink4() {
+        context.openURL(ExternalLink.guidanceHubEnglandLink4.url)
     }
 
-    func openGuidanceTravillingAbroadEnglandLink() {
-        context.openURL(ExternalLink.guidanceHubTravellingAbroadLink.url)
+    func openGuidanceHubEnglandLink5() {
+        context.openURL(ExternalLink.guidanceHubEnglandLink5.url)
     }
 
-    func openGuidanceClaimSSPEnglandLink() {
-        context.openURL(ExternalLink.guidanceHubSSPLink.url)
+    func openGuidanceHubEnglandLink6() {
+        context.openURL(ExternalLink.guidanceHubEnglandLink6.url)
     }
 
-    func openGuidanceGetHelpCovid19EnquiriesEnglandLink() {
-        context.openURL(ExternalLink.guidanceHubEnquiriesLink.url)
+    func openGuidanceHubEnglandLink7() {
+        context.openURL(ExternalLink.guidanceHubEnglandLink7.url)
+    }
+
+    func openGuidanceHubEnglandLink8() {
+        context.openURL(ExternalLink.guidanceHubEnglandLink8.url)
     }
 
     func openGuidanceHubWalesLink1() {
@@ -652,6 +667,9 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         context.openURL(ExternalLink.guidanceHubWalesLink7.url)
     }
 
+    func openGuidanceHubWalesLink8() {
+        context.openURL(ExternalLink.guidanceHubWalesLink8.url)
+    }
 }
 
 private struct TestCheckSymptomsInteractor: TestCheckSymptomsViewController.Interacting {
@@ -734,82 +752,99 @@ private struct GuidanceHubEnglandInteractor: GuidanceHubEnglandViewController.In
 
     private weak var flowController: UINavigationController?
     private let flowInteractor: HomeFlowViewControllerInteracting
+    fileprivate let newLabelForLongCovidEnglandState: NewLabelState
 
     init(
         flowController: UINavigationController?,
-        flowInteractor: HomeFlowViewControllerInteracting
+        flowInteractor: HomeFlowViewControllerInteracting,
+        newLabelForLongCovidEnglandState: NewLabelState
     ) {
         self.flowController = flowController
         self.flowInteractor = flowInteractor
+        self.newLabelForLongCovidEnglandState = newLabelForLongCovidEnglandState
     }
 
-    func didTapGuidanceForCovid19EnglandLink() {
-        flowInteractor.openGuidanceForCovid19EnglandLink()
+    func didTapEnglandLink1() {
+        flowInteractor.openGuidanceHubEnglandLink1()
     }
 
-    func didTapGuidanceForCheckSymptomsEnglandLink() {
-        flowInteractor.openGuidanceForCheckSymptomsEnglandLink()
+    func didTapEnlgandLink2() {
+        flowInteractor.openGuidanceHubEnglandLink2()
     }
 
-    func didTapLatestGuidanceCovid19EnglandLink() {
-        flowInteractor.openLatestGuidanceCovid19EnglandLink()
+    func didTapEnglandLink3() {
+        flowInteractor.openGuidanceHubEnglandLink3()
     }
 
-    func didTapGuidancePositiveCovid19TestResultEnglandLink() {
-        flowInteractor.openGuidancePositiveCovid19TestResultEnglandLink()
+    func didTapEnglandLink4() {
+        flowInteractor.openGuidanceHubEnglandLink4()
     }
 
-    func didTapGuidanceTravillingAbroadEnglandLink() {
-        flowInteractor.openGuidanceTravillingAbroadEnglandLink()
+    func didTapEnglandLink5() {
+        flowInteractor.openGuidanceHubEnglandLink5()
     }
 
-    func didTapGuidanceClaimSSPEnglandLink() {
-        flowInteractor.openGuidanceClaimSSPEnglandLink()
+    func didTapEnglandLink6() {
+        flowInteractor.openGuidanceHubEnglandLink6()
     }
 
-    func didTapGuidanceGetHelpCovid19EnquiriesEnglandLink() {
-        flowInteractor.openGuidanceGetHelpCovid19EnquiriesEnglandLink()
+    func didTapEnglandLink7() {
+        flowInteractor.openGuidanceHubEnglandLink7()
+        newLabelForLongCovidEnglandState.shouldNotShowNewLabel = true
+    }
+
+    func didTapEnglandLink8() {
+        flowInteractor.openGuidanceHubEnglandLink8()
     }
 }
 
 private struct GuidanceHubWalesInteractor: GuidanceHubWalesViewController.Interacting {
     private weak var flowController: UINavigationController?
     private let flowInteractor: HomeFlowViewControllerInteracting
+    fileprivate let newLabelForLongCovidWalesState: NewLabelState
 
     init(
         flowController: UINavigationController?,
-        flowInteractor: HomeFlowViewControllerInteracting
+        flowInteractor: HomeFlowViewControllerInteracting,
+        newLabelForLongCovidWalesState: NewLabelState
     ) {
         self.flowController = flowController
         self.flowInteractor = flowInteractor
+        self.newLabelForLongCovidWalesState = newLabelForLongCovidWalesState
     }
 
-    func didTapLink1() {
+    func didTapWalesLink1() {
         flowInteractor.openGuidanceHubWalesLink1()
     }
 
-    func didTapLink2() {
+    func didTapWalesLink2() {
         flowInteractor.openGuidanceHubWalesLink2()
     }
 
-    func didTapLink3() {
+    func didTapWalesLink3() {
         flowInteractor.openGuidanceHubWalesLink3()
     }
 
-    func didTapLink4() {
+    func didTapWalesLink4() {
         flowInteractor.openGuidanceHubWalesLink4()
     }
 
-    func didTapLink5() {
+    func didTapWalesLink5() {
         flowInteractor.openGuidanceHubWalesLink5()
     }
 
-    func didTapLink6() {
+    func didTapWalesLink6() {
         flowInteractor.openGuidanceHubWalesLink6()
+        newLabelForLongCovidWalesState.shouldNotShowNewLabel = true
     }
 
-    func didTapLink7() {
+    func didTapWalesLink7() {
+
         flowInteractor.openGuidanceHubWalesLink7()
+    }
+
+    func didTapWalesLink8() {
+        flowInteractor.openGuidanceHubWalesLink8()
     }
 }
 
