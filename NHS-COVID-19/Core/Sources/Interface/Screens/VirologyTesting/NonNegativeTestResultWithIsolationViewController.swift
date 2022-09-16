@@ -236,7 +236,7 @@ extension NonNegativeTestResultWithIsolationContent.TestResultType {
     var linkLabel: String {
         switch self {
         case .positive, .positiveButAlreadyConfirmedPositive:
-            return localize(.end_of_isolation_online_services_link)
+            return localize(.nhs_111_online_service)
         case .void:
             return localizeForCountry(.void_test_result_with_isolation_nhs_guidance_link)
         }

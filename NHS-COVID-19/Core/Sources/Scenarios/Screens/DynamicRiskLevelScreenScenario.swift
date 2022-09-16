@@ -55,6 +55,15 @@ public class DynamicRiskLevelScreenScenario: Scenario {
     public static let linkButtonTapped = "Link to website tapped"
     public static let cancelTapped = "Cancel tapped"
 
+    public static let externalLinks = RiskLevelInfoViewController.ExternalUrls(
+        title: "Keep your app updated:",
+        urls: [
+            RiskLevelInfoViewController.ExternalLink(title: "[Placeholder] Check the App Store", url: URL(string: "http://google.com")),
+            RiskLevelInfoViewController.ExternalLink(title: "[Placeholder] Check the Google Play Store", url: URL(string: "http://google.com")),
+            RiskLevelInfoViewController.ExternalLink(title: "[Placeholder] Visit the app website", url: URL(string: "http://google.com"))
+        ]
+    )
+
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
@@ -68,6 +77,7 @@ public class DynamicRiskLevelScreenScenario: Scenario {
                 linkTitle: Self.linkTitle,
                 linkURL: URL(string: "http://google.com"),
                 footer: Self.footer,
+                externalUrls: Self.externalLinks,
                 policies: zip(policyIcons, zip(policyHeadings, policyContents)).map {
                     RiskLevelInfoViewController.Policy(
                         icon: $0.0,
@@ -89,12 +99,11 @@ private class Interactor: RiskLevelInfoViewController.Interacting {
         self.viewController = viewController
     }
 
-    func didTapWebsiteLink(url: URL) {
+    func didTapOnExternalLink(url: URL) {
         viewController?.showAlert(title: DynamicRiskLevelScreenScenario.linkButtonTapped)
     }
 
     func didTapCancel() {
         viewController?.showAlert(title: DynamicRiskLevelScreenScenario.cancelTapped)
     }
-
 }

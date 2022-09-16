@@ -34,6 +34,7 @@ extension HomeScreenScenario {
                 linkTitle: "Restrictions in your area",
                 linkURL: nil,
                 footer: [],
+                externalUrls: nil,
                 policies: []
             )
         } else {

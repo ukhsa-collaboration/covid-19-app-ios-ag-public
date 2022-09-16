@@ -8,11 +8,16 @@ public class AdviceForIndexCasesEnglandAlreadyIsolatingScenario: Scenario {
     public static let didTapCommonQuestionsLink = "Did Tap Common Questions Link"
     public static let ditTapNHSOnline = "Did tap NHS online"
     public static let didTapContinueButton = "Did Tap Continue Button"
+    public static var daysToIsolate: Int { 6 }
 
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return AdviceForIndexCasesEnglandAlreadyIsolatingViewController(interactor: interactor)
+            return AdviceForIndexCasesEnglandAlreadyIsolatingViewController(
+                interactor: interactor,
+                isolationEndDate: Date(timeIntervalSinceNow: Double(daysToIsolate) * 86400),
+                currentDateProvider: MockDateProvider()
+            )
         }
     }
 }

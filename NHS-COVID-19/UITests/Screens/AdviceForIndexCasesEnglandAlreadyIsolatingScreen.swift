@@ -29,7 +29,7 @@ struct AdviceForIndexCasesEnglandAlreadyIsolatingScreen {
     }
 
     var furtherAdvice: XCUIElement {
-        app.staticTexts[localized: .index_case_already_isolating_advice_further_advice]
+        app.staticTexts[localized: .further_advice_header]
     }
 
     var nhsOnlineLink: XCUIElement {

@@ -174,7 +174,7 @@
 "end_of_isolation_further_advice_visit" = "Daha fazla tavsiye için lütfen aşağıdaki linki ziyaret edin:";
 "positive_test_result_title" = "Aşağıda belirtilen süre boyunca evde kalmaya çalışmaya devam edin";
 "positive_test_result_info" = "COVID-19 testinizin sonucu pozitiftir";
-"positive_test_result_explanation" = "Uygulamanın kişisel karantina günlerini nasıl hesapladığını anlamak için aşağıdaki SSS (sıkça sorulan sorular) bağlantısını ziyaret edin\n\nTest sonucunuz test esnasında koronavirüs enfeksiyonunuzun bulunduğunu gösteriyor. E-posta, SMS mesajı ya da telefon yoluyla size daha fazla bilgi gönderildi. Eğer 18 yaşın altındaysanız bu mesajı güvendiğiniz bir yetişkine göstermeniz tavsiye edilir.\n\nEndişelenmeyin; çoğu kişi hastalığı hafif belirtilerle atlatmaktadır. Ancak belirtilerinizde kötüleşme olursa daha fazla tavsiye için 111 numarasını aramalı ya da nhs.uk adresini ziyaret etmelisiniz.";
+"positive_test_result_explanation" = "Belirtilen süre bitiminde ateşiniz yoksa ve kendinizi yeterince iyi hissediyorsanız normal aktivitelerinize devam edebilirsiniz. Amaç COVID-19'u başkalarına geçirmenizi engellemektir.";
 "positive_test_results_continue" = "Devam";
 "void_test_result_info" = "COVID-19'a yakalanıp yakalanmadığınızı tespit edemedik";
 "void_test_result_explanation" = "Testin yapıldığı sırada sizde COVID-19 olup olmadığını tespit edemedik. \n\nEğer 18 yaşın altındaysanız bu mesajı güvendiğiniz bir yetişkine göstermeniz tavsiye edilir.";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Mekana giriş yapmanın diğer yolları olup olmadığıyla ilgili olarak bir personelle konuşmanızı tavsiye ederiz.";
 "checkin_information_whats_a_qr_code_section_title" = "Bir NHS QR kodu posteri nasıl tanınır";
 "checkin_information_whats_a_qr_code_section_description_new" = "Resmi NHS QR kodu posterlerinin neye benzediğine dair bir örneği burada görebilirsiniz. Ortasında kare olan kodu taratmanız gerekir.";
-"about_this_app_software_information_date_of_release_description" = "08/2022";
+"about_this_app_software_information_date_of_release_description" = "09/2022";
 "link_test_result_enter_code_example" = "Örnek: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Test kodu";
 "link_test_result_button_title" = "Devam";
@@ -1047,13 +1047,13 @@
 "index_case_isolation_advice_further_advice" = "Daha fazla tavsiye için lütfen aşağıdaki linki ziyaret edin:";
 "index_case_isolation_advice_nhs_onilne_link_button" = "NHS 111 online";
 "index_case_isolation_advice_primary_button_title" = "Diğer kullanıcıları isim belirtmeden blgilendirin";
-"index_case_already_isolating_advice_heading_title" = "COVID-19 testinizin sonucu pozitiftir";
-"index_case_already_isolating_advice_information_box_description" = "Uygulama aracılığıyla diğer kullanıcıları isimsiz olarak bilgilendirin";
-"index_case_already_isolating_advice_body" = "Test sonucunuz, testi yaptırdığınız esnada  COVID-19'a yakalanmış olduğunuzu gösteriyor. Konuyla ilgili detaylı bilgi tarafınıza e-posta, kısa mesaj veya telefon aracılığıyla gönderilmiştir. \n\nRisk altında olabileceklerini haber vermek üzere sizinle yakın temas kurmuş kimseleri isimsiz olarak bilgilendirin. Gizliliğiniz koruma altında olup kişisel bilgileriniz paylaşılmayacaktır.\n\n18 yaşından küçükseniz, bu mesajı güvendiğiniz bir yetişkine göstermeniz önerilir.";
+"index_case_already_isolating_advice_heading_title" = "Aşağıda belirtilen süre boyunca evde kalmaya çalışmaya devam edin";
+"index_case_already_isolating_advice_information_box_description" = "COVID-19 testinizin sonucu pozitiftir";
+"index_case_already_isolating_advice_body" = "Belirtilen süre bitiminde ateşiniz yoksa ve kendinizi yeterince iyi hissediyorsanız normal aktivitelerinize devam edebilirsiniz. Amaç COVID-19'u başkalarına geçirmenizi engellemektir.";
 "index_case_already_isolating_advice_common_question_link_button" = "Uygulamanın internet sitesini ziyaret edin";
 "index_case_already_isolating_advice_further_advice" = "Daha fazla tavsiye için lütfen aşağıdaki linki ziyaret edin:";
 "index_case_already_isolating_advice_nhs_onilne_link_button" = "NHS 111 online";
-"index_case_already_isolating_advice_primary_button_title" = "Diğer kullanıcıları isim belirtmeden blgilendirin";
+"index_case_already_isolating_advice_primary_button_title" = "Devam";
 "be_careful_until_date_title" = "Ekstra dikkatli olun ve başkalarını koruyun";
 "get_tested_wales_link_url" = "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests";
 "home_covid19_guidance_button_title" = "COVID-19 yönergesi";
@@ -1214,7 +1214,7 @@
 "void_test_result_with_isolation_nhs_guidance_link_wls" = "NHS yönergesi";
 "void_test_result_title" = "Aşağıda belirtilen süre boyunca evde kalmaya çalışmaya devam edin";
 "void_end_of_isolation_void_text_no_isolation_title" = "";
-"void_end_of_isolation_link_label" = "";
+"void_end_of_isolation_link_label" = "Daha fazla tavsiye için lütfen aşağıdaki linki ziyaret edin:";
 "void_end_of_isolation_link_label_wls" = "Daha fazla tavsiye için lütfen aşağıdaki linki ziyaret edin:";
 "void_test_please_isolate_accessibility_label_wls" = "Aşağıda belirtilen süre boyunca evde kalmaya çalışmaya devam edin %ld gün";
 "risky_contact_opt_out_further_advice_link_url" = "";
@@ -1251,3 +1251,4 @@
 "covid_guidance_hub_wales_button_eight_url" = "https://enquiries.test-and-trace.nhs.uk";
 "covid_guidance_hub_england_button_seven_new_label_accessibility_text" = "Yeni bölüm";
 "covid_guidance_hub_wales_button_six_new_label_accessibility_text" = "Yeni bölüm";
+"further_advice_header" = "Daha fazla tavsiye için lütfen aşağıdaki linki ziyaret edin:";

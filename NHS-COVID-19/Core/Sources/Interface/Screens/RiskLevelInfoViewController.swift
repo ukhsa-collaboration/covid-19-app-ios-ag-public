@@ -8,7 +8,7 @@ import Localization
 import SwiftUI
 
 public protocol RiskLevelInfoInteracting {
-    func didTapWebsiteLink(url: URL)
+    func didTapOnExternalLink(url: URL)
 }
 
 extension RiskLevelInfoViewController {
@@ -21,6 +21,7 @@ extension RiskLevelInfoViewController {
         var linkTitle: String
         var linkURL: URL?
         var footer: [String]
+        var externalUrls: ExternalUrls?
         var policies: [Policy]
     }
 
@@ -37,6 +38,26 @@ extension RiskLevelInfoViewController {
             self.icon = icon
             self.heading = heading
             self.body = body
+        }
+    }
+
+    public struct ExternalUrls {
+        let title: String?
+        let urls: [ExternalLink]
+
+        public init(title: String?, urls: [ExternalLink]) {
+            self.title = title
+            self.urls = urls
+        }
+    }
+
+    public struct ExternalLink {
+        let title: String
+        let url: URL?
+
+        public init(title: String, url: URL?) {
+            self.title = title
+            self.url = url
         }
     }
 }
@@ -91,8 +112,26 @@ extension RiskLevelInfoViewController {
                         header: policy.heading,
                         body: policy.body
                     )
-                },
+                }
             ]
+
+            if let links = viewModel.externalUrls {
+                if let title = links.title {
+                    stackedViews.append(
+                        BaseLabel().set(text: title).styleAsTertiaryTitle())
+                }
+                stackedViews.append(contentsOf:
+                    links.urls.map { externalUrl in
+                        LinkButton(
+                            title: externalUrl.title,
+                            action: {
+                                guard let url = externalUrl.url else { return }
+                                interactor.didTapOnExternalLink(url: url)
+                            }
+                        )
+                    }
+                )
+            }
 
             stackedViews.append(contentsOf:
                 viewModel.footer.map {
@@ -108,7 +147,7 @@ extension RiskLevelInfoViewController {
                 title: viewModel.linkTitle,
                 action: {
                     guard let url = viewModel.linkURL else { return }
-                    interactor.didTapWebsiteLink(url: url)
+                    interactor.didTapOnExternalLink(url: url)
                 }
             )
 

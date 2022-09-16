@@ -13,19 +13,10 @@ class AdviceForIndexCasesEnglandAlreadyIsolatingScreenTests: XCTestCase {
             XCTAssertTrue(screen.heading.exists)
             XCTAssertTrue(screen.infoBox.exists)
             XCTAssertTrue(screen.body.exists)
-            XCTAssertTrue(screen.commmonQuestionsLink.exists)
             XCTAssertTrue(screen.furtherAdvice.exists)
             XCTAssertTrue(screen.nhsOnlineLink.exists)
             XCTAssertTrue(screen.continueButton.exists)
 
-        }
-    }
-
-    func testCommonQuestionsLinke() throws {
-        try runner.run { app in
-            let screen = AdviceForIndexCasesEnglandAlreadyIsolatingScreen(app: app)
-            screen.commmonQuestionsLink.tap()
-            XCTAssertTrue(app.staticTexts[AdviceForIndexCasesEnglandAlreadyIsolatingScenario.didTapCommonQuestionsLink].exists)
         }
     }
 

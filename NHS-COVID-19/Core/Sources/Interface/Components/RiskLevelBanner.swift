@@ -27,6 +27,7 @@ extension RiskLevelBanner {
             linkTitle: String,
             linkURL: URL?,
             footer: [String],
+            externalUrls: RiskLevelInfoViewController.ExternalUrls?,
             policies: [RiskLevelInfoViewController.Policy]
         ) {
             self.postcode = postcode
@@ -59,6 +60,7 @@ extension RiskLevelBanner {
                 linkTitle: linkTitle,
                 linkURL: linkURL,
                 footer: footer,
+                externalUrls: externalUrls,
                 policies: policies
             )
         }

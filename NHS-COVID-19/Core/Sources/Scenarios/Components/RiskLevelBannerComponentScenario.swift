@@ -33,6 +33,7 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     linkTitle: "",
                     linkURL: nil,
                     footer: [],
+                    externalUrls: nil,
                     policies: []
                 )
             case .green:
@@ -46,6 +47,7 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     linkTitle: "",
                     linkURL: nil,
                     footer: [],
+                    externalUrls: nil,
                     policies: []
                 )
             case .yellow:
@@ -59,6 +61,7 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     linkTitle: "",
                     linkURL: nil,
                     footer: [],
+                    externalUrls: nil,
                     policies: []
                 )
             case .amber:
@@ -72,6 +75,7 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     linkTitle: "",
                     linkURL: nil,
                     footer: [],
+                    externalUrls: nil,
                     policies: []
                 )
             case .red:
@@ -85,6 +89,7 @@ public class RiskLevelBannerComponentScenario: Scenario {
                     linkTitle: "",
                     linkURL: nil,
                     footer: [],
+                    externalUrls: nil,
                     policies: []
                 )
             }

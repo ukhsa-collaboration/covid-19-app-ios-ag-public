@@ -174,7 +174,7 @@
 "end_of_isolation_further_advice_visit" = "વધુ સલાહ માટે, કૃપા કરી મુલાકાત કરો:";
 "positive_test_result_title" = "માટે ઘરે રહેવાનો પ્રયત્ન કરવાનું ચાલુ રાખો";
 "positive_test_result_info" = "તમારું COVID-19 ટેસ્ટ પરિણામ પોઝિટિવ છે";
-"positive_test_result_explanation" = "સેલ્ફ આયસોલેશનનાં દિવસોનો એપ કેવી રીતે સરવાળો કરે છે એ જાણવા માટે પૂછાતા પ્રશ્નોની નીચે લિંક જૂઓ.\n\nતમારા ટેસ્ટ પરિણામ બતાવે છે કે ટેસ્ટ સમયે તમે વાયરસ ધરાવતા હતા. તમને ઇમેઇલ, ટેક્સ્ટ અથવા ફોન દ્વારા વધુ માહિતી મોકલવામાં આવી છે. જો તમારી ઉંમર 18 વર્ષથી ઓછી છે, તો તમને કોઈ વિશ્વાસપાત્ર વયસ્ક વ્યક્તિને આ સંદેશ બતાવવાની સલાહ આપવામાં આવે છે.\n\nચિંતા કરશો નહીં - મોટાભાગના લોકો માટે લક્ષણો ખૂબ જ હળવા હોય છે. તેમ છતાં, જો તમારા લક્ષણો વધુ ખરાબ થાય તો તમારે વધુ સલાહ માટે 111 પર કૉલ કરવો જોઈએ અથવા nhs.uk ની મુલાકાત લેવી જોઈએ.";
+"positive_test_result_explanation" = "જો તમને ભારે તાવ ન હોય અને તમે પૂરતું સારું અનુભવી રહ્યા હો તો તમે તે સમય બાદ તમારી સામાન્ય પ્રવૃત્તિઓ ચાલુ રાખી શકો છો. અન્ય લોકોને COVID-19નો ચેપ લગાડવાનું ટાળવા માટે આમ કરવામાં આવે છે.";
 "positive_test_results_continue" = "ચાલુ રાખો";
 "void_test_result_info" = "તમને COVID-19 હતો કે કેમ તે અમે કહી ન શકીએ";
 "void_test_result_explanation" = "જ્યારે ટેસ્ટ કરવામાં આવ્યો હતો ત્યારે તમને COVID-19 હતો કે કેમ તે અમે કહી ન શકીએ. \n\nજો તમારી ઉંમર 18 વર્ષથી ઓછી છે, તો તમને કોઈ વિશ્વાસપાત્ર વયસ્ક વ્યક્તિને આ સંદેશ બતાવવાની સલાહ આપવામાં આવે છે.";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "તપાસ કરવાની અન્ય રીતો છે કે કેમ તે જોવા માટે અમે તમને સ્થળ પર સ્ટાફના સભ્ય સાથે વાત કરવાની સલાહ આપીશું.";
 "checkin_information_whats_a_qr_code_section_title" = "NHS QR કોડ પોસ્ટરને કેવી રીતે ઓળખવું";
 "checkin_information_whats_a_qr_code_section_description_new" = "અહીં સત્તાવાર NHS QR કોડ પોસ્ટર્સ છે. તમારે કોડ સ્કેન કરવાની જરૂર છે, જે મધ્યમાં ચોરસ છે.";
-"about_this_app_software_information_date_of_release_description" = "08/2022";
+"about_this_app_software_information_date_of_release_description" = "09/2022";
 "link_test_result_enter_code_example" = "ઉદાહરણ: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "ટેસ્ટ કોડ";
 "link_test_result_button_title" = "ચાલુ રાખો";
@@ -1047,13 +1047,13 @@
 "index_case_isolation_advice_further_advice" = "વધુ સલાહ માટે, કૃપા કરી મુલાકાત કરો:";
 "index_case_isolation_advice_nhs_onilne_link_button" = "NHS 111 online";
 "index_case_isolation_advice_primary_button_title" = "અનામી રૂપે અન્ય લોકોને જાણ કરો";
-"index_case_already_isolating_advice_heading_title" = "તમારું COVID-19 ટેસ્ટ પરિણામ પોઝિટિવ છે";
-"index_case_already_isolating_advice_information_box_description" = "એપ્લિકેશન દ્વારા અનામી રૂપે અન્ય લોકોને જાણ કરો";
-"index_case_already_isolating_advice_body" = "તમારું ટેસ્ટ પરિણામ દર્શાવે છે કે ટેસ્ટ કરવા સમયે તમને COVID-19 હતું. તમને ઇમેઇલ, ટેક્સ્ટ અથવા ફોન દ્વારા વધુ માહિતી મોકલવામાં આવી છે.\n\nતમારી સાથે નજીકના સંપર્કમાં આવ્યા હોય તેવા કોઈને પણ અનામી રૂપે જાણ કરો કે તેઓને જોખમ હોઈ શકે છે. તમારી ગોપનીયતા સુરક્ષિત રહે છે અને તમારી વ્યક્તિગત માહિતી શેર કરવામાં આવશે નહીં.\n\nજો તમારી ઉંમર 18 વર્ષથી ઓછી છે, તો તમને વિશ્વાસપાત્ર વડીલને વ્યક્તિને આ સંદેશ બતાવવાની સલાહ આપવામાં આવે છે.";
+"index_case_already_isolating_advice_heading_title" = "માટે ઘરે રહેવાનો પ્રયત્ન કરવાનું ચાલુ રાખો";
+"index_case_already_isolating_advice_information_box_description" = "તમારું COVID-19 ટેસ્ટ પરિણામ પોઝિટિવ છે";
+"index_case_already_isolating_advice_body" = "જો તમને ભારે તાવ ન હોય અને તમે પૂરતું સારું અનુભવી રહ્યા હો તો તમે તે સમય બાદ તમારી સામાન્ય પ્રવૃત્તિઓ ચાલુ રાખી શકો છો. અન્ય લોકોને COVID-19નો ચેપ લગાડવાનું ટાળવા માટે આમ કરવામાં આવે છે.";
 "index_case_already_isolating_advice_common_question_link_button" = "ઍપની વેબસાઇટ પર જાઓ";
 "index_case_already_isolating_advice_further_advice" = "વધુ સલાહ માટે, કૃપા કરી મુલાકાત કરો:";
 "index_case_already_isolating_advice_nhs_onilne_link_button" = "NHS 111 online";
-"index_case_already_isolating_advice_primary_button_title" = "અનામી રૂપે અન્ય લોકોને જાણ કરો";
+"index_case_already_isolating_advice_primary_button_title" = "ચાલુ રાખો";
 "be_careful_until_date_title" = "વધારાની કાળજી લો અને અન્યોને સુરક્ષિત રાખો ";
 "get_tested_wales_link_url" = "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests";
 "home_covid19_guidance_button_title" = "COVID-19 માર્ગદર્શન";
@@ -1214,7 +1214,7 @@
 "void_test_result_with_isolation_nhs_guidance_link_wls" = "NHS માર્ગદર્શન";
 "void_test_result_title" = "માટે ઘરે રહેવાનો પ્રયત્ન કરવાનું ચાલુ રાખો";
 "void_end_of_isolation_void_text_no_isolation_title" = "";
-"void_end_of_isolation_link_label" = "";
+"void_end_of_isolation_link_label" = "વધુ સલાહ માટે, કૃપા કરી મુલાકાત કરો:";
 "void_end_of_isolation_link_label_wls" = "વધુ સલાહ માટે, કૃપા કરી મુલાકાત કરો:";
 "void_test_please_isolate_accessibility_label_wls" = "દિવસો માટે ઘરે રહેવાનો પ્રયત્ન કરવાનું ચાલુ રાખો %ld દિવસ";
 "risky_contact_opt_out_further_advice_link_url" = "";
@@ -1251,3 +1251,4 @@
 "covid_guidance_hub_wales_button_eight_url" = "https://enquiries.test-and-trace.nhs.uk";
 "covid_guidance_hub_england_button_seven_new_label_accessibility_text" = "નવો વિભાગ";
 "covid_guidance_hub_wales_button_six_new_label_accessibility_text" = "નવો વિભાગ";
+"further_advice_header" = "વધુ સલાહ માટે, કૃપા કરી મુલાકાત કરો:";

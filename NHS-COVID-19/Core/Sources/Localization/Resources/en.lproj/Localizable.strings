@@ -173,8 +173,8 @@
 "end_of_isolation_corona_back_to_home_button" = "Back to home";
 "end_of_isolation_further_advice_visit" = "For further advice, please visit:";
 "positive_test_result_title" = "Continue to try to stay at home for";
-"positive_test_result_info" = "Your coronavirus test result is positive";
-"positive_test_result_explanation" = "To understand how the app calculates self-isolation days, visit the link to the FAQs below.\n\nYour test result shows that you had the virus at the time of the test. You have been sent more information by email, text or phone. If you are under 18, you are advised to show this message to a trusted adult.\n\nDon’t worry - for most people symptoms are quite mild. However, if your symptoms do worsen then you should call 111 or visit nhs.uk for more advice.";
+"positive_test_result_info" = "Your COVID-19 test result is positive";
+"positive_test_result_explanation" = "You can continue with your normal activities after that time if you don’t have a high temperature and if you feel well enough. This is to avoid passing COVID-19 on to others.";
 "positive_test_results_continue" = "Continue";
 "void_test_result_info" = "We could not tell if you had COVID-19";
 "void_test_result_explanation" = "We could not tell if you had COVID-19 when the test was done. \n\nIf you are under 18, you are advised to show this message to a trusted adult.";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "We advise you to speak to a member of staff at the venue to see if there are other ways of checking in.";
 "checkin_information_whats_a_qr_code_section_title" = "How to recognise an NHS QR code poster";
 "checkin_information_whats_a_qr_code_section_description_new" = "Here are what the official NHS QR code posters look like. You need to scan the code, which is the square in the middle.";
-"about_this_app_software_information_date_of_release_description" = "08/2022";
+"about_this_app_software_information_date_of_release_description" = "09/2022";
 "link_test_result_enter_code_example" = "Example: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Test code";
 "link_test_result_button_title" = "Continue";
@@ -1047,13 +1047,13 @@
 "index_case_isolation_advice_further_advice" = "For further advice, please visit:";
 "index_case_isolation_advice_nhs_onilne_link_button" = "NHS 111 online";
 "index_case_isolation_advice_primary_button_title" = "Anonymously notify others";
-"index_case_already_isolating_advice_heading_title" = "Your COVID-19 test result is positive";
-"index_case_already_isolating_advice_information_box_description" = "Anonymously notify others through the app";
-"index_case_already_isolating_advice_body" = "Your test result shows that you had COVID-19 at the time of the test. You have been sent more information by email, text or phone.\n\nAnonymously notify anyone who has been in close contact with you to let them know they may have been at risk. Your privacy is protected and your personal information will not be shared.\n\nIf you are under 18, you are advised to show this message to a trusted adult.";
+"index_case_already_isolating_advice_heading_title" = "Continue to try to stay at home for";
+"index_case_already_isolating_advice_information_box_description" = "Your COVID-19 test result is positive";
+"index_case_already_isolating_advice_body" = "You can continue with your normal activities after that time if you don’t have a high temperature and if you feel well enough. This is to avoid passing COVID-19 on to others.";
 "index_case_already_isolating_advice_common_question_link_button" = "Visit the app website";
 "index_case_already_isolating_advice_further_advice" = "For further advice, please visit:";
 "index_case_already_isolating_advice_nhs_onilne_link_button" = "NHS 111 online";
-"index_case_already_isolating_advice_primary_button_title" = "Anonymously notify others";
+"index_case_already_isolating_advice_primary_button_title" = "Continue";
 "be_careful_until_date_title" = "Take extra care and protect others";
 "get_tested_wales_link_url" = "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests";
 "home_covid19_guidance_button_title" = "COVID-19 guidance";
@@ -1251,3 +1251,4 @@
 "covid_guidance_hub_wales_button_eight_url" = "https://enquiries.test-and-trace.nhs.uk";
 "covid_guidance_hub_england_button_seven_new_label_accessibility_text" = "New section";
 "covid_guidance_hub_wales_button_six_new_label_accessibility_text" = "New section";
+"further_advice_header" = "For further advice, please visit:";

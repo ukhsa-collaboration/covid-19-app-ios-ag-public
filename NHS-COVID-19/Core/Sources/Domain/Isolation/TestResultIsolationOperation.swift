@@ -235,8 +235,8 @@ struct TestResultIsolationOperation {
                 case .none where !(currentIsolationState.activeIsolation?.isIndexCase ?? true): return .overwrite
                 case .none: return .update
                 case .negative: return .overwrite
-                case .positive where indexCaseInfo.testInfo?.confirmationStatus == .pending: return .update
-                case .positive where currentIsolationState.isIsolating: return .update
+                case .positive where !(currentIsolationState.activeIsolation?.isIndexCase ?? false): return .update
+                case .positive where indexCaseInfo.testInfo?.confirmationStatus == .pending: return .confirm
                 case .positive: return .nothing
                 }
             }

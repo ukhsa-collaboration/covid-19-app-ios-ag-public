@@ -29,6 +29,29 @@ extension RiskLevelBanner.ViewModel {
             }
         }
 
+        var externalUrls: RiskLevelInfoViewController.ExternalUrls? {
+            if let externalUrls = risk.style.externalUrls {
+                return RiskLevelInfoViewController.ExternalUrls(
+                    title: externalUrls.title?.localizedString(),
+                    urls: externalUrls.urls.map {
+                        if let url = $0.url {
+                            return RiskLevelInfoViewController.ExternalLink(
+                                title: $0.title.localizedString(),
+                                url: URL(string: url.localizedString(contentType: .url))
+                            )
+                        } else {
+                            return RiskLevelInfoViewController.ExternalLink(
+                                title: $0.title.localizedString(),
+                                url: nil
+                            )
+                        }
+                    }
+                )
+            } else {
+                return nil
+            }
+        }
+
         if let policyData = risk.style.policyData {
             let localAuthorityTitle: String = {
                 if let localAuthority = localAuthority,
@@ -51,6 +74,7 @@ extension RiskLevelBanner.ViewModel {
                 linkTitle: risk.style.linkTitle.localizedString(),
                 linkURL: URL(string: risk.style.linkUrl.localizedString(contentType: .url)),
                 footer: policyData.footer.localizedString().split(separator: "\n").map(String.init).filter { !$0.isEmpty },
+                externalUrls: externalUrls,
                 policies: policyData.policies.map { policy in
                     RiskLevelInfoViewController.Policy(
                         icon: RiskLevelInfoViewController.Policy.iconFromName(string: policy.policyIcon),
@@ -72,6 +96,7 @@ extension RiskLevelBanner.ViewModel {
                 linkTitle: risk.style.linkTitle.localizedString(),
                 linkURL: URL(string: risk.style.linkUrl.localizedString(contentType: .url)),
                 footer: [],
+                externalUrls: externalUrls,
                 policies: []
             )
         }

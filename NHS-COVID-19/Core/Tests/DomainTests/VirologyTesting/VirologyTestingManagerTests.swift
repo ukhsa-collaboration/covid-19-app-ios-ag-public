@@ -28,7 +28,7 @@ class VirologyTestingManagerTests: XCTestCase {
             virologyTestingStateCoordinator: VirologyTestingStateCoordinator(
                 virologyTestingStateStore: virologyStore,
                 userNotificationsManager: notificationManager,
-                isInterestedInAskingForSymptomsOnsetDay: { false },
+                isInterestedInAskingForSymptomsOnsetDay: { _ in false },
                 setRequiresOnsetDay: {},
                 country: { .england }
             ),

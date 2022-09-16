@@ -168,7 +168,7 @@ class TestResultIsolationOperationTests: XCTestCase {
         XCTAssertEqual(operation.storeOperation(), .nothing)
     }
 
-    func testInIsolationEnteringNewPositiveTestShouldUpdateExistingOne() {
+    func testInIsolationEnteringNewPositiveTestShouldConfirmExistingOne() {
         let firstRapidTestReceivedDay = LocalDay.today.advanced(by: -4).gregorianDay
         let firstRapidTestNpexDay = firstRapidTestReceivedDay.advanced(by: -1)
 
@@ -206,7 +206,7 @@ class TestResultIsolationOperationTests: XCTestCase {
         )
 
         // THEN
-        XCTAssertEqual(operation.storeOperation(), .update)
+        XCTAssertEqual(operation.storeOperation(), .confirm)
     }
 
     func testInIsolationEnteringNewPositiveTestShouldNotOverrideExistingOne() {
@@ -2358,6 +2358,44 @@ class TestResultIsolationOperationTests: XCTestCase {
 
         // THEN
         XCTAssertEqual(operation.storeOperation(), .overwrite)
+    }
+
+    func testReceivedPositiveTestWithEndDateDuringIsolation() {
+        let testEndDay = LocalDay.today.advanced(by: -4).gregorianDay
+
+        let indexCaseInfo = IndexCaseInfo(
+            symptomaticInfo: nil,
+            testInfo: IndexCaseInfo.TestInfo(
+                result: .positive,
+                testKitType: .labResult,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false,
+                receivedOnDay: testEndDay,
+                testEndDay: testEndDay
+            )
+        )
+
+        // GIVEN
+        $instance.isolationInfo.indexCaseInfo = indexCaseInfo
+        let isolationInfo = IsolationInfo(indexCaseInfo: indexCaseInfo)
+
+        let operation = TestResultIsolationOperation(
+            currentIsolationState: isolationState,
+            storedIsolationInfo: isolationInfo,
+            result: VirologyStateTestResult(
+                testResult: .positive,
+                testKitType: .labResult,
+                endDate: LocalDay.today.gregorianDay.startDate(in: .utc),
+                diagnosisKeySubmissionToken: nil,
+                requiresConfirmatoryTest: false,
+                shouldOfferFollowUpTest: false
+            ),
+            configuration: configuration,
+            currentDateProvider: currentDateProvider
+        )
+
+        // THEN
+        XCTAssertEqual(operation.storeOperation(), .nothing)
     }
 }
 

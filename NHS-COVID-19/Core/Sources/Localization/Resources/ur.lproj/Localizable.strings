@@ -173,8 +173,8 @@
 "end_of_isolation_corona_back_to_home_button" = "ہوم پر واپس جائیں";
 "end_of_isolation_further_advice_visit" = "مزید مشورے کے لئے براہ کرم دیکھیے:";
 "positive_test_result_title" = "گھر پر رہنے کی کوشش کرنا جاری رکھیں برائے";
-"positive_test_result_info" = "آپ کے کوروناوائرس کے ٹیسٹ کا نتیجہ مثبت ہے";
-"positive_test_result_explanation" = "یہ سمجھنے کے لئے کہ ایپ خود کو تنہائی  میں رکھنے  کے دنوں کا حساب کیسے دیتی ہے ، نیچے دیئے گئے عمومی سوالنامہ کے لنک پر جائیں۔\n\nآپ کے ٹیسٹ کے نتیجے سے ظاہر ہوتا ہے کہ ٹیسٹ کے وقت آپ میں وائرس موجود تھا۔ آپ کو ای میل، ٹیکسٹ یا فون کے ذریعے مزید معلومات بھیجی گئی ہیں۔ اگر آپ کی عمر 18 سال سے کم ہے تو آپ کو مشورہ دیا جاتا ہے کہ یہ پیغام کسی قابل اعتماد بالغ کو دکھائیں۔\n\nفکر مت کریں - زیادہ تر لوگوں کے لئے علامات کافی ہلکی ہوتی ہیں۔ تاہم، اگر آپ کی علامات خراب ہوگئی ہیں تو آپ کو 111 پر فون کرنا چاہئے یا مزید مشوروں کے لئے nhs.uk دیکھنا چاہئے۔";
+"positive_test_result_info" = "آپ کا COVID-19 کی جانچ کا نتیجہ مثبت ہے";
+"positive_test_result_explanation" = "اگر آپ کا درجۂ حرارت زیادہ نہیں ہے اور اگر آپ کافی بہتر محسوس کرتے ہیں تو آپ اس مدت کے بعد اپنی معمول کی سرگرمیاں جاری رکھ سکتے ہیں۔ ایسا دوسروں تک COVID-19 کو منتقل کرنے سے بچنے کے لیے ہے۔";
 "positive_test_results_continue" = "جاری رکھیں";
 "void_test_result_info" = "ہم یہ نہیں کہہ سکتے کہ آیا آپ کو COVID-19 تھا";
 "void_test_result_explanation" = "جب جانچ کی گئی تھی اس وقت ہم یہ نہیں کہہ سکتے تھے نہیں کہہ سکتے کہ آیا آپ کو COVID-19 تھا۔ \n\nاگر آپ کی عمر 18 سال سے کم ہے تو آپ کو مشورہ دیا جاتا ہے کہ یہ پیغام کسی قابل اعتماد بالغ کو دکھائیں۔";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "ہم آپ کو  مشورہ دیتے ہیں کہ آپ یہ معلوم کرنے کے لیے متعلقہ مقام پر عملہ کے کسی فرد سے بات کریں کہ آیا چیک-ان کرنے کے دیگر طریقے بھی ہیں۔";
 "checkin_information_whats_a_qr_code_section_title" = "NHS کے QR کوڈ پوسٹر کو کیسے پہچانیں";
 "checkin_information_whats_a_qr_code_section_description_new" = "NHS کا آفیشیل QR کوڈ پوسٹر اس طرح کا نظر آتا ہے۔ آپ کو کوڈ کو اسکین کرنا ہوتا ہے، جو درمیان میں چوکور ہے۔";
-"about_this_app_software_information_date_of_release_description" = "08/2022";
+"about_this_app_software_information_date_of_release_description" = "09/2022";
 "link_test_result_enter_code_example" = "مثال: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "ٹیسٹ کوڈ";
 "link_test_result_button_title" = "جاری رکھیں";
@@ -1047,13 +1047,13 @@
 "index_case_isolation_advice_further_advice" = "مزید مشورے کے لئے براہ کرم دیکھیے:";
 "index_case_isolation_advice_nhs_onilne_link_button" = "NHS 111 online";
 "index_case_isolation_advice_primary_button_title" = "گمنام طور پر دوسروں کو مطلع کریں";
-"index_case_already_isolating_advice_heading_title" = "آپ کا COVID-19 کی جانچ کا نتیجہ مثبت ہے";
-"index_case_already_isolating_advice_information_box_description" = "اس ایپ کے ذریعہ گمنام طور پر دوسروں کو مطلع کریں";
-"index_case_already_isolating_advice_body" = "آپ کی جانچ کے نتیجہ سے پتہ چلتا ہے کہ جانچ کے وقت آپ کو COVID-19 تھا۔ ای میل، ٹیکسٹ یا فون کے ذریعہ آپ کو مزید معلومات بھیجی گئی ہیں۔\n\nگمنام طور پر کسی بھی ایسے شخص کو مطلع کریں جو آپ کے قریبی رابطہ میں رہا ہے تاکہ انہیں بتا سکیں کہ وہ خطرے میں ہو سکتے ہیں۔ آپ کی رازداری کی حفاظت کی جاتی ہے اور آپ کی ذاتی معلومات نہیں شیئر کی جائے گی۔\n\nاگر آپ کی عمر 18 سال سے کم ہے تو، آپ کو یہ پیغام کسی قابل اعتماد بالغ فرد کو دکھانے کا مشورہ دیا جاتا ہے.";
+"index_case_already_isolating_advice_heading_title" = "گھر پر رہنے کی کوشش کرنا جاری رکھیں برائے";
+"index_case_already_isolating_advice_information_box_description" = "آپ کا COVID-19 کی جانچ کا نتیجہ مثبت ہے";
+"index_case_already_isolating_advice_body" = "اگر آپ کا درجۂ حرارت زیادہ نہیں ہے اور اگر آپ کافی بہتر محسوس کرتے ہیں تو آپ اس مدت کے بعد اپنی معمول کی سرگرمیاں جاری رکھ سکتے ہیں۔ ایسا دوسروں تک COVID-19 کو منتقل کرنے سے بچنے کے لیے ہے۔";
 "index_case_already_isolating_advice_common_question_link_button" = "ایپ کی ویب سائٹ ملاحظہ کریں";
 "index_case_already_isolating_advice_further_advice" = "مزید مشورے کے لئے براہ کرم دیکھیے:";
 "index_case_already_isolating_advice_nhs_onilne_link_button" = "NHS 111 online";
-"index_case_already_isolating_advice_primary_button_title" = "گمنام طور پر دوسروں کو مطلع کریں";
+"index_case_already_isolating_advice_primary_button_title" = "جاری رکھیں";
 "be_careful_until_date_title" = "اضافی دھیان رکھیں اور دوسروں کو بچائیں";
 "get_tested_wales_link_url" = "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests";
 "home_covid19_guidance_button_title" = "COVID-19 سے متعلق رہنمائی";
@@ -1214,7 +1214,7 @@
 "void_test_result_with_isolation_nhs_guidance_link_wls" = "NHS کی رہنمائی";
 "void_test_result_title" = "گھر پر رہنے کی کوشش کرنا جاری رکھیں برائے";
 "void_end_of_isolation_void_text_no_isolation_title" = "";
-"void_end_of_isolation_link_label" = "";
+"void_end_of_isolation_link_label" = "مزید مشورے کے لئے براہ کرم دیکھیے:";
 "void_end_of_isolation_link_label_wls" = "مزید مشورے کے لئے براہ کرم دیکھیے:";
 "void_test_please_isolate_accessibility_label_wls" = "گھر پر رہنے کی کوشش کرنا جاری رکھیں برائے %ld دن";
 "risky_contact_opt_out_further_advice_link_url" = "";
@@ -1251,3 +1251,4 @@
 "covid_guidance_hub_wales_button_eight_url" = "https://enquiries.test-and-trace.nhs.uk";
 "covid_guidance_hub_england_button_seven_new_label_accessibility_text" = "نیا سیکشن";
 "covid_guidance_hub_wales_button_six_new_label_accessibility_text" = "نیا سیکشن";
+"further_advice_header" = "مزید مشورے کے لئے براہ کرم دیکھیے:";

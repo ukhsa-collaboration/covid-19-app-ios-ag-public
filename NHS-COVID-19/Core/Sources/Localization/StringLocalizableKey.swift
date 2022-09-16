@@ -57,8 +57,6 @@ public enum StringLocalizableKey: String, CaseIterable {
     case postcode_entry_error_description_unsupported_country
 
     case permissions_onboarding_step_title
-    case exposure_notification_permissions_onboarding_step_heading
-    case exposure_notification_permissions_onboarding_step_body
     case permissions_onboarding_step_detail
     case permissions_continue_button_title
 
@@ -209,7 +207,6 @@ public enum StringLocalizableKey: String, CaseIterable {
     case exposure_faqs_link_label
     case exposure_faqs_link_button_title
     case exposure_acknowledgement_self_isolate_for
-    case exposure_acknowledgement_warning
     case exposure_acknowledgement_explaination
     case exposure_acknowledgement_button
     case exposure_acknowledgement_link_label
@@ -510,7 +507,6 @@ public enum StringLocalizableKey: String, CaseIterable {
     case qr_code_poster_wales_accessibility_label
 
     case positive_test_result_start_to_isolate_title
-    case positive_test_result_start_to_isolate_info
     case positive_test_result_start_to_isolate_explaination
 
     case dont_worry_notification_title
@@ -1049,6 +1045,7 @@ public enum StringLocalizableKey: String, CaseIterable {
     case index_case_already_isolating_advice_further_advice
     case index_case_already_isolating_advice_nhs_onilne_link_button
     case index_case_already_isolating_advice_primary_button_title
+    case further_advice_header
 
     // MARK: - Guidance for symptomatic Cases England
 

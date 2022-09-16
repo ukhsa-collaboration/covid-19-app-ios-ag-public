@@ -523,7 +523,7 @@ private struct RiskLevelInfoInteractor: RiskLevelInfoViewController.Interacting 
         self.interactor = interactor
     }
 
-    public func didTapWebsiteLink(url: URL) {
+    public func didTapOnExternalLink(url: URL) {
         interactor.openWebsiteLinkfromRisklevelInfoScreen(url: url)
     }
 }

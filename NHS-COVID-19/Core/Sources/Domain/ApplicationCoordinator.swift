@@ -214,12 +214,21 @@ public class ApplicationCoordinator {
             store: services.encryptedStore,
             dateProvider: dateProvider
         )
+
+        let isolationStateManager = isolationContext.isolationStateManager
+
         virologyTestingManager = VirologyTestingManager(
             httpClient: services.apiClient,
             virologyTestingStateCoordinator: VirologyTestingStateCoordinator(
                 virologyTestingStateStore: virologyTestingStateStore,
                 userNotificationsManager: services.userNotificationsManager,
-                isInterestedInAskingForSymptomsOnsetDay: { (isolationContext.isolationStateStore.isolationInfo.indexCaseInfo?.isInterestedInAskingForSymptomsOnsetDay ?? true)
+                isInterestedInAskingForSymptomsOnsetDay: { testEndDate in
+                    if let isolation = isolationStateManager.state.isolation,
+                       isolation.isIndexCase,
+                       isolation.endDate < testEndDate {
+                        return true
+                    }
+                    return isolationContext.isolationStateStore.isolationInfo.indexCaseInfo?.isInterestedInAskingForSymptomsOnsetDay ?? true
                 },
                 setRequiresOnsetDay: {
                     isolationContext.shouldAskForSymptoms.send(true)
@@ -230,8 +239,6 @@ public class ApplicationCoordinator {
             ctaTokenValidator: CTATokenValidator(),
             country: { country.currentValue }
         )
-
-        let isolationStateManager = isolationContext.isolationStateManager
 
         let interestedInExposureNotifications = { isolationStateManager.state.interestedInExposureNotifications }
 

@@ -149,6 +149,7 @@ extension RiskyPostcodes {
         public var content: LocaleString
         public var linkTitle: LocaleString
         public var linkUrl: LocaleString
+        public var externalUrls: ExternalUrls?
         public var policyData: PolicyData?
     }
 
@@ -158,6 +159,16 @@ extension RiskyPostcodes {
         public var content: LocaleString
         public var footer: LocaleString
         public var policies: [Policy]
+    }
+
+    public struct ExternalUrls: Decodable, Equatable {
+        public var title: LocaleString?
+        public var urls: [ExternalLink]
+    }
+
+    public struct ExternalLink: Decodable, Equatable {
+        public let title: LocaleString
+        public let url: LocaleString?
     }
 
     public struct Policy: Decodable, Equatable {

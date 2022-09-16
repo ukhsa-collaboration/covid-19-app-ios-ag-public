@@ -335,6 +335,40 @@ private func policyData(alertLevel: Int) -> String {
     """
 }
 
+private let externalUrls = """
+{
+    "title": {
+        "en": "Keep your app updated:",
+    },
+    "urls": [
+        {
+          "title": {
+            "en": "Check the App Store",
+          },
+          "url": {
+            "en": "http://google.com",
+          }
+        },
+        {
+          "title": {
+            "en": "Check the Google Play Store",
+          },
+          "url": {
+            "en": "http://google.com",
+          }
+        },
+        {
+          "title": {
+            "en": "Visit the app website",
+          },
+          "url": {
+            "en": "https://www.nhs.uk/",
+          }
+        }
+    ]
+}
+"""
+
 private let riskyPostcodes = """
 {
     "postDistricts" : {
@@ -365,6 +399,7 @@ private let riskyPostcodes = """
             "content": {},
             "linkTitle": { "en": "Restrictions in your area" },
             "linkUrl": {},
+            "externalUrls": \(externalUrls),
             "policyData": \(policyData(alertLevel: 3))
         },
         "maroon": {
@@ -375,6 +410,7 @@ private let riskyPostcodes = """
             "content": {},
             "linkTitle": { "en": "Restrictions in your area" },
             "linkUrl": {},
+            "externalUrls": \(externalUrls),
             "policyData": \(policyData(alertLevel: 3))
         },
         "red": {
@@ -385,6 +421,7 @@ private let riskyPostcodes = """
             "content": {},
             "linkTitle": { "en": "Restrictions in your area" },
             "linkUrl": {},
+            "externalUrls": \(externalUrls),
             "policyData": \(policyData(alertLevel: 3))
         },
         "amber": {
@@ -395,6 +432,7 @@ private let riskyPostcodes = """
             "content": {},
             "linkTitle": { "en": "Restrictions in your area" },
             "linkUrl": {},
+            "externalUrls": \(externalUrls),
             "policyData": \(policyData(alertLevel: 3))
         },
         "yellow": {
@@ -405,6 +443,7 @@ private let riskyPostcodes = """
             "content": {},
             "linkTitle": { "en": "Restrictions in your area" },
             "linkUrl": {},
+            "externalUrls": \(externalUrls),
             "policyData": \(policyData(alertLevel: 2))
         },
         "green": {
@@ -415,6 +454,7 @@ private let riskyPostcodes = """
             "content": {},
             "linkTitle": { "en": "Restrictions in your area" },
             "linkUrl": {},
+            "externalUrls": \(externalUrls),
             "policyData": \(policyData(alertLevel: 1))
         },
         "neutral": {
@@ -425,6 +465,7 @@ private let riskyPostcodes = """
             "content": {},
             "linkTitle": { "en": "Restrictions in your area" },
             "linkUrl": {},
+            "externalUrls": \(externalUrls),
             "policyData": \(policyData(alertLevel: 1))
         }
     }

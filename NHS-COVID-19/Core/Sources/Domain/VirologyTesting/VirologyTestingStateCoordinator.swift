@@ -3,6 +3,7 @@
 //
 
 import Common
+import Foundation
 
 protocol VirologyTestingStateCoordinating {
     var virologyTestTokens: [VirologyTestTokens] { get }
@@ -35,10 +36,10 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
 
     private let virologyTestingStateStore: VirologyTestingStateStore
     private let userNotificationsManager: UserNotificationManaging
-    private let isInterestedInAskingForSymptomsOnsetDay: () -> Bool
+    private let isInterestedInAskingForSymptomsOnsetDay: (_ testEndDate: Date) -> Bool
     private var setRequiresOnsetDay: () -> Void
 
-    init(virologyTestingStateStore: VirologyTestingStateStore, userNotificationsManager: UserNotificationManaging, isInterestedInAskingForSymptomsOnsetDay: @escaping () -> Bool, setRequiresOnsetDay: @escaping () -> Void, country: @escaping () -> Country) {
+    init(virologyTestingStateStore: VirologyTestingStateStore, userNotificationsManager: UserNotificationManaging, isInterestedInAskingForSymptomsOnsetDay: @escaping (_ testEndDate: Date) -> Bool, setRequiresOnsetDay: @escaping () -> Void, country: @escaping () -> Country) {
         self.virologyTestingStateStore = virologyTestingStateStore
         self.userNotificationsManager = userNotificationsManager
         self.isInterestedInAskingForSymptomsOnsetDay = isInterestedInAskingForSymptomsOnsetDay
@@ -133,7 +134,7 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
             return false
         }
 
-        return isInterestedInAskingForSymptomsOnsetDay()
+        return isInterestedInAskingForSymptomsOnsetDay(result.endDate)
     }
 
     private func handleWithNotification(

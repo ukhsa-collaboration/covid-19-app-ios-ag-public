@@ -24,7 +24,7 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
         coordinator = VirologyTestingStateCoordinator(
             virologyTestingStateStore: virologyStore,
             userNotificationsManager: userNotificationManager,
-            isInterestedInAskingForSymptomsOnsetDay: {
+            isInterestedInAskingForSymptomsOnsetDay: { _ in
                 self.isInterestedInAskingForSymptomsOnsetDay
             },
             setRequiresOnsetDay: {},

@@ -174,7 +174,7 @@
 "end_of_isolation_further_advice_visit" = "I gael rhagor o gyngor ewch i:";
 "positive_test_result_title" = "Parhewch i geisio aros gartref am";
 "positive_test_result_info" = "Mae canlyniad eich prawf COVID-19 yn bositif";
-"positive_test_result_explanation" = "Er mwyn deall sut mae'r ap yn cyfrifo diwrnodau hunan-ynysu, defnyddiwch y ddolen i'r cwestiynau isod.\n\nMae canlyniad eich prawf yn dangos bod y feirws arnoch ar adeg y prawf. Anfonwyd rhagor o wybodaeth atoch trwy gyfrwng e-bost, neges destun neu ffôn. Os ydych chi o dan 18 oed, fe'ch cynghorir i ddangos y neges hon i oedolyn dibynadwy.\n\nPeidiwch â phoeni - i'r rhan fwyaf o bobl mae'r symptomau'n eithaf ysgafn. Fodd bynnag, os bydd eich symptomau'n gwaethygu, ffoniwch 111 neu ewch i nhs.uk i gael rhagor o gyngor.";
+"positive_test_result_explanation" = "Gallwch barhau gyda'ch gweithgareddau arferol, wedi’r cyfnod hwnnw, os nad oes gennych chi dymheredd uchel ac os ydych chi'n teimlo'n ddigon da. Mae hyn er mwyn osgoi pasio COVID-19 ymlaen i eraill.";
 "positive_test_results_continue" = "Parhau";
 "void_test_result_info" = "Ni allem ddweud a oedd COVID-19 arnoch";
 "void_test_result_explanation" = "Ni allem ddweud a oedd COVID-19 arnoch pan wnaed y prawf. \n\nOs ydych chi o dan 18 oed, fe'ch cynghorir i ddangos y neges hon i oedolyn dibynadwy.";
@@ -260,7 +260,7 @@
 "link_general_advice" = "https://www.nhs.uk/conditions/coronavirus-covid-19/testing/";
 "link_more_info_on_postcode_risk" = "https://www.gov.uk/government/publications/covid-19-response-living-with-covid-19";
 "link_testing_privacy_notice" = "https://www.gov.uk/government/publications/coronavirus-covid-19-testing-privacy-information";
-"link_nhs111_online" = "https://111.wales.nhs.uk/";
+"link_nhs111_online" = "https://111.nhs.uk/";
 "link_how_this_app_works" = "https://www.gov.uk/government/collections/nhs-covid-19-app";
 "cancel" = "Canslo";
 "back" = "Mynd yn ôl";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Cynghorwn chi i siarad ag aelod o staff yn y lleoliad i weld a oes ffyrdd eraill o fewngofnodi.";
 "checkin_information_whats_a_qr_code_section_title" = "Sut i adnabod poster cod QR y GIG";
 "checkin_information_whats_a_qr_code_section_description_new" = "Dyma sut olwg sydd ar bosteri cod QR swyddogol y GIG. Mae angen i chi sganio’r cod, sydd yn y sgwâr yn y canol.";
-"about_this_app_software_information_date_of_release_description" = "08/2022";
+"about_this_app_software_information_date_of_release_description" = "09/2022";
 "link_test_result_enter_code_example" = "Enghraifft: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Cod y prawf";
 "link_test_result_button_title" = "Parhau";
@@ -1047,13 +1047,13 @@
 "index_case_isolation_advice_further_advice" = "I gael rhagor o gyngor ewch i:";
 "index_case_isolation_advice_nhs_onilne_link_button" = "NHS 111 online";
 "index_case_isolation_advice_primary_button_title" = "Hysbysu eraill yn ddienw";
-"index_case_already_isolating_advice_heading_title" = "Mae canlyniad eich prawf COVID-19 yn bositif";
-"index_case_already_isolating_advice_information_box_description" = "Hysbyswch eraill yn ddienw trwy'r ap";
-"index_case_already_isolating_advice_body" = "Mae canlyniad eich prawf yn dangos bod gennych COVID-19 ar adeg y prawf. Anfonwyd rhagor o wybodaeth atoch trwy e-bost, neges destun neu ffôn.\n\nHysbyswch unrhyw un sydd wedi bod mewn cyswllt agos â chi'n ddienw i roi gwybod iddynt y gallent fod dan risg. Mae'ch preifatrwydd wedi ei ddiogelu ac ni fydd eich gwybodaeth bersonol yn cael ei rhannu.\n\nOs ydych dan 18 oed, rydym yn eich cynghori i ddangos y neges yma i oedolyn rydych yn ymddiried ynddo.";
+"index_case_already_isolating_advice_heading_title" = "Parhewch i geisio aros gartref am";
+"index_case_already_isolating_advice_information_box_description" = "Mae canlyniad eich prawf COVID-19 yn bositif";
+"index_case_already_isolating_advice_body" = "Gallwch barhau gyda'ch gweithgareddau arferol, wedi’r cyfnod hwnnw, os nad oes gennych chi dymheredd uchel ac os ydych chi'n teimlo'n ddigon da. Mae hyn er mwyn osgoi pasio COVID-19 ymlaen i eraill.";
 "index_case_already_isolating_advice_common_question_link_button" = "Ewch i wefan yr ap";
 "index_case_already_isolating_advice_further_advice" = "I gael rhagor o gyngor ewch i:";
 "index_case_already_isolating_advice_nhs_onilne_link_button" = "NHS 111 online";
-"index_case_already_isolating_advice_primary_button_title" = "Hysbysu eraill yn ddienw";
+"index_case_already_isolating_advice_primary_button_title" = "Parhau";
 "be_careful_until_date_title" = "Byddwch yn ofalus iawn a diogelu eraill";
 "get_tested_wales_link_url" = "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests";
 "home_covid19_guidance_button_title" = "Canllaw COVID-19";
@@ -1214,7 +1214,7 @@
 "void_test_result_with_isolation_nhs_guidance_link_wls" = "Canllawiau’r GIG";
 "void_test_result_title" = "Parhewch i geisio aros gartref am";
 "void_end_of_isolation_void_text_no_isolation_title" = "";
-"void_end_of_isolation_link_label" = "";
+"void_end_of_isolation_link_label" = "I gael rhagor o gyngor ewch i:";
 "void_end_of_isolation_link_label_wls" = "I gael rhagor o gyngor ewch i:";
 "void_test_please_isolate_accessibility_label_wls" = "Parhewch i geisio aros gartref am %ld diwrnod";
 "risky_contact_opt_out_further_advice_link_url" = "";
@@ -1251,3 +1251,4 @@
 "covid_guidance_hub_wales_button_eight_url" = "https://enquiries.test-and-trace.nhs.uk";
 "covid_guidance_hub_england_button_seven_new_label_accessibility_text" = "Adran newydd";
 "covid_guidance_hub_wales_button_six_new_label_accessibility_text" = "Adran newydd";
+"further_advice_header" = "I gael rhagor o gyngor ewch i:";

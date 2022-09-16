@@ -145,13 +145,18 @@ extension CoordinatedAppController {
 
     private func createAdviceForAlreadyIsolatingInEngland(
         acknowledge: @escaping () -> Void,
-        context: RunningAppContext
+        context: RunningAppContext,
+        isolationEndDate: Date
     ) -> UIViewController {
         let interactor = AdviceForIndexCasesEnglandAlreadyIsolatingInteractor(
             openURL: context.openURL,
             didTapPrimaryButton: acknowledge
         )
-        return AdviceForIndexCasesEnglandAlreadyIsolatingViewController(interactor: interactor)
+        return AdviceForIndexCasesEnglandAlreadyIsolatingViewController(
+            interactor: interactor,
+            isolationEndDate: isolationEndDate,
+            currentDateProvider: context.currentDateProvider
+        )
     }
 
     private func createAdviceForIndexCaseEngland(
@@ -178,7 +183,8 @@ extension CoordinatedAppController {
             case .continue:
                 return createAdviceForAlreadyIsolatingInEngland(
                     acknowledge: acknowledge,
-                    context: context
+                    context: context,
+                    isolationEndDate: isolationEndDate
                 )
             case .start:
                 return createAdviceForIndexCaseEngland(

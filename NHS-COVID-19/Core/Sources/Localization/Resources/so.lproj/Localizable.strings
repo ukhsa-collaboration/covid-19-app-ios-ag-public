@@ -172,9 +172,9 @@
 "end_of_isolation_online_services_link" = "NHS 111 online";
 "end_of_isolation_corona_back_to_home_button" = "Ku noqo shaashada soo-dhoweynta";
 "end_of_isolation_further_advice_visit" = "Wixii talo dheeri ah, fadlan booqo:";
-"positive_test_result_title" = "Sii wad inaad isku daydid inaad guriga joogtid";
+"positive_test_result_title" = "Sii wad inaad isku daydo inaad joogtid guriga";
 "positive_test_result_info" = "Natiijadaada baaritaanka COVID-19 waa mid togan";
-"positive_test_result_explanation" = "Si aad u ogaato qaabka uu app-ka u xisaabiyo maalmaha is-go'doominta, booqo marrinka hoose ee su'aalaha badana la isweydiiya.\n\nNatiijada baaritaankaaga waxay muujineysaa inaad qabtid fayras wakhtiga baaritaanka. Waxaa maclumaad dheeraad ah laguu soo diray iimayl, qoraal ama telefoonka. Haddii aad ka yar tahay 18, waa lagula talinayaa inaad tusto fariintaan qof weyn oo lagu kalsoon yahay.\n\nHa welwelin - dadka badankood astaamahoodu waa kuwo fudud. Si kastaba ha noqotee, haddii astaamahaaga ka sii darayaan markaa waa inaad wacdaa 111 ama booqo nhs.uk si aad u hesho talo dheeraad ah.";
+"positive_test_result_explanation" = "Waad sii wadi kartaa howlahaaga caadiga ah waqtigaas kadib haddii aadan qabin heerkul sareeyo iyo haddii aad dareentid fiicnaan ku filan. Tani waa ka fogaanshaha inaad u gudbisid COVID-19 dadka kale.";
 "positive_test_results_continue" = "Sii wad";
 "void_test_result_info" = "Ma sheegeyno haddii aad qabtay COVID-19";
 "void_test_result_explanation" = "Ma sheegeyno haddii aad qabtay COVID-19 markii baaritaanka la sameeyay. \n\nHaddii aad ka yar tahay 18, waa lagula talinayaa inaad tusto fariintaan qof weyn oo lagu kalsoon yahay.";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Waxaannu kugula talineynaa inaad la hadasho xubin ka mid ah shaqaalaha goobta jooga si aad u ogaato inay jiraan siyaabo kale aad isku soo xaadirin karto.";
 "checkin_information_whats_a_qr_code_section_title" = "Qaabka loo aqoonsado warqadda  koodhka NHS QR";
 "checkin_information_whats_a_qr_code_section_description_new" = "Waa kuwan sida ay u eg yihiin warqadaha rasmiga ah ee NHS QR. Waxaad u baahantahay inaad iskaan-garayso koodhka, oo ah afar-geeska dhex-bartanka ku yaalla.";
-"about_this_app_software_information_date_of_release_description" = "08/2022";
+"about_this_app_software_information_date_of_release_description" = "09/2022";
 "link_test_result_enter_code_example" = "Tusaale: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Koodhka baaritaanka";
 "link_test_result_button_title" = "Sii wad";
@@ -1047,13 +1047,13 @@
 "index_case_isolation_advice_further_advice" = "Wixii talo dheeri ah, fadlan booqo:";
 "index_case_isolation_advice_nhs_onilne_link_button" = "NHS 111 online";
 "index_case_isolation_advice_primary_button_title" = "Si qarsoodi ah u ogeysii kuwa kale";
-"index_case_already_isolating_advice_heading_title" = "Natiijadaada baaritaanka COVID-19 waa mid togan";
-"index_case_already_isolating_advice_information_box_description" = "Si qarsoodi ah ugu ogeysii dadka kale abka";
-"index_case_already_isolating_advice_body" = "Natiijada baaritaankaagu waxay muujinaysaa inaad qabtay COVID-19 waqtiga baaritaanka. Macluumaad dheeraad ah ayaa lagugu soo diray i-maylka, qoraal ama telefoon ahaan.\n\nSi qarsoodi ah ogaysii qof kasta oo kula lahaa xidhiidh dhow si aad u ogaysiiso inay halis ku jiri karaan. Asturnaantaada waa la dhawray oo macluumaadkaaga gaarka ah lama wadaagi doono.\n\nHaddii aad ka yar tahay 18, waa lagula talinayaa inaad tusto fariintaan qof weyn oo lagu kalsoon yahay.";
+"index_case_already_isolating_advice_heading_title" = "Sii wad inaad isku daydo inaad joogtid guriga";
+"index_case_already_isolating_advice_information_box_description" = "Natiijadaada baaritaanka COVID-19 waa mid togan";
+"index_case_already_isolating_advice_body" = "Waad sii wadi kartaa howlahaaga caadiga ah waqtigaas kadib haddii aadan qabin heerkul sareeyo iyo haddii aad dareentid fiicnaan ku filan. Tani waa ka fogaanshaha inaad u gudbisid COVID-19 dadka kale.";
 "index_case_already_isolating_advice_common_question_link_button" = "Booqo websaydka app-ka";
 "index_case_already_isolating_advice_further_advice" = "Wixii talo dheeri ah, fadlan booqo:";
 "index_case_already_isolating_advice_nhs_onilne_link_button" = "NHS 111 online";
-"index_case_already_isolating_advice_primary_button_title" = "Si qarsoodi ah u ogeysii kuwa kale";
+"index_case_already_isolating_advice_primary_button_title" = "Sii Wad";
 "be_careful_until_date_title" = "Samey taxadar dheeraad oo ilaali dadka kale";
 "get_tested_wales_link_url" = "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests";
 "home_covid19_guidance_button_title" = "Hagida COVID-19";
@@ -1214,7 +1214,7 @@
 "void_test_result_with_isolation_nhs_guidance_link_wls" = "Hagaha NHS";
 "void_test_result_title" = "Sii wad inaad isku daydid inaad guriga joogtid";
 "void_end_of_isolation_void_text_no_isolation_title" = "";
-"void_end_of_isolation_link_label" = "";
+"void_end_of_isolation_link_label" = "Wixii talo dheeri ah, fadlan booqo:";
 "void_end_of_isolation_link_label_wls" = "Wixii talo dheeri ah, fadlan booqo:";
 "void_test_please_isolate_accessibility_label_wls" = "Sii wad inaad isku daydid inaad guriga joogtid %ld maalmood";
 "risky_contact_opt_out_further_advice_link_url" = "";
@@ -1251,3 +1251,4 @@
 "covid_guidance_hub_wales_button_eight_url" = "https://enquiries.test-and-trace.nhs.uk";
 "covid_guidance_hub_england_button_seven_new_label_accessibility_text" = "Qayb cusub";
 "covid_guidance_hub_wales_button_six_new_label_accessibility_text" = "Qayb cusub";
+"further_advice_header" = "Wixii talo dheeri ah, fadlan booqo:";

@@ -16,28 +16,29 @@ extension AdviceForIndexCasesEnglandAlreadyIsolatingViewController {
     private struct Content {
         let views: [StackViewContentProvider]
 
-        init(interactor: Interacting) {
+        init(interactor: Interacting, isolationEndDate: Date, currentDateProvider: DateProviding) {
 
             views = [
-                UIImageView(.isolationStartIndex)
+                UIImageView(.isolationContinue)
                     .styleAsDecoration(),
                 BaseLabel()
-                    .styleAsPageHeader()
+                    .styleAsHeading()
                     .centralized()
                     .set(text: localize(.index_case_already_isolating_advice_heading_title)),
+
+                BaseLabel()
+                    .styleAsPageHeader()
+                    .set(text: localize(.positive_symptoms_days(days: currentDateProvider.currentLocalDay.daysRemaining(until: isolationEndDate))))
+                    .isAccessibilityElement(false)
+                    .centralized(),
 
                 InformationBox.indication.warning(localize(.index_case_already_isolating_advice_information_box_description)),
                 BaseLabel()
                     .styleAsBody()
                     .set(text: localize(.index_case_already_isolating_advice_body)),
-
-                LinkButton(
-                    title: localize(.index_case_already_isolating_advice_common_question_link_button),
-                    action: interactor.didTapCommonQuestions
-                ),
                 BaseLabel()
                     .styleAsBody()
-                    .set(text: localize(.index_case_already_isolating_advice_further_advice)),
+                    .set(text: localize(.further_advice_header)),
                 LinkButton(
                     title: localize(.index_case_already_isolating_advice_nhs_onilne_link_button),
                     action: interactor.didTapNHSOnline
@@ -56,9 +57,9 @@ public class AdviceForIndexCasesEnglandAlreadyIsolatingViewController: Scrolling
     public typealias Interacting = AdviceForIndexCasesEnglandAlreadyIsolatingViewControllerInteracting
     private let interactor: Interacting
 
-    public init(interactor: Interacting) {
+    public init(interactor: Interacting, isolationEndDate: Date, currentDateProvider: DateProviding) {
         self.interactor = interactor
-        super.init(views: Content(interactor: interactor).views)
+        super.init(views: Content(interactor: interactor, isolationEndDate: isolationEndDate, currentDateProvider: currentDateProvider).views)
 
     }
 

@@ -173,8 +173,8 @@
 "end_of_isolation_corona_back_to_home_button" = "返回主屏幕";
 "end_of_isolation_further_advice_visit" = "有关更多建议，请访问：";
 "positive_test_result_title" = "继续居家隔离";
-"positive_test_result_info" = "您的冠状病毒测试结果为阳性";
-"positive_test_result_explanation" = "若要了解应用程序如何计算自我隔离天数，请点击以下\"常见问题解答\"链接。\n\n测试结果表明您在测试时已感染病毒。 有关部门已通过电子邮件、短信或电话向您发送了更多的信息。如果您还未满 18 岁，建议您将此消息拿提供给您信任的成年人。\n\n请放心—大多数人的症状都很轻微。 但是，如果您的症状确实恶化，则应致电111或访问nhs.uk以获取更多建议。";
+"positive_test_result_info" = "您的 COVID-19 检测结果呈阳性";
+"positive_test_result_explanation" = "在这段时间之后，若无发烧且感觉良好，您可以恢复正常生活。这可避免将 COVID-19 传染给他人。";
 "positive_test_results_continue" = "继续";
 "void_test_result_info" = "我们无法判断您是否感染 COVID-19";
 "void_test_result_explanation" = "我们无法判断您在检测完成时是否感染COVID-19毒。\n\n如果您还未满 18 岁，建议您将此消息提供给您信任的成年人。";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "我们建议您与现场工作人员交谈，询问是否有其他登记方式。";
 "checkin_information_whats_a_qr_code_section_title" = "如何识别 NHS 二维码图片";
 "checkin_information_whats_a_qr_code_section_description_new" = "以下是 NHS 官方二维码图片的样子。您需要扫描中间的正方形二维码。";
-"about_this_app_software_information_date_of_release_description" = "08/2022";
+"about_this_app_software_information_date_of_release_description" = "09/2022";
 "link_test_result_enter_code_example" = "例如：7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "检测结果";
 "link_test_result_button_title" = "继续";
@@ -1047,13 +1047,13 @@
 "index_case_isolation_advice_further_advice" = "有关更多建议，请访问：";
 "index_case_isolation_advice_nhs_onilne_link_button" = "在线 NHS 111";
 "index_case_isolation_advice_primary_button_title" = "匿名通知他人";
-"index_case_already_isolating_advice_heading_title" = "您的 COVID-19 检测结果呈阳性";
-"index_case_already_isolating_advice_information_box_description" = "通过应用匿名通知他人";
-"index_case_already_isolating_advice_body" = "检测结果显示您在检测时已感染 COVID-19。已通过邮件、短信或电话向您告知更多信息。\n\n匿名通知任何与您存在密切接触之人，告知其可能存在感染风险。您的隐私将受到保护，个人信息不会被共享。\n\n即使没有任何症状，您也极有可能感染和传播该病毒。如果您还未满 18 岁，建议您将此消息拿提供给您信任的成年人。";
+"index_case_already_isolating_advice_heading_title" = "继续居家隔离";
+"index_case_already_isolating_advice_information_box_description" = "您的 COVID-19 检测结果呈阳性";
+"index_case_already_isolating_advice_body" = "在这段时间之后，若无发烧且感觉良好，您可以恢复正常生活。这可避免将 COVID-19 传染给他人。";
 "index_case_already_isolating_advice_common_question_link_button" = "访问应用网站";
 "index_case_already_isolating_advice_further_advice" = "有关更多建议，请访问：";
 "index_case_already_isolating_advice_nhs_onilne_link_button" = "在线 NHS 111";
-"index_case_already_isolating_advice_primary_button_title" = "匿名通知他人";
+"index_case_already_isolating_advice_primary_button_title" = "继续";
 "be_careful_until_date_title" = "加倍注意，保护他人";
 "get_tested_wales_link_url" = "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests";
 "home_covid19_guidance_button_title" = "COVID-19 指南";
@@ -1214,7 +1214,7 @@
 "void_test_result_with_isolation_nhs_guidance_link_wls" = "NHS 指导";
 "void_test_result_title" = "继续居家隔离";
 "void_end_of_isolation_void_text_no_isolation_title" = "";
-"void_end_of_isolation_link_label" = "";
+"void_end_of_isolation_link_label" = "有关更多建议，请访问：";
 "void_end_of_isolation_link_label_wls" = "有关更多建议，请访问：";
 "void_test_please_isolate_accessibility_label_wls" = "继续居家隔离 %ld 天";
 "risky_contact_opt_out_further_advice_link_url" = "";
@@ -1251,3 +1251,4 @@
 "covid_guidance_hub_wales_button_eight_url" = "https://enquiries.test-and-trace.nhs.uk";
 "covid_guidance_hub_england_button_seven_new_label_accessibility_text" = "全新版块";
 "covid_guidance_hub_wales_button_six_new_label_accessibility_text" = "全新版块";
+"further_advice_header" = "有关更多建议，请访问：";

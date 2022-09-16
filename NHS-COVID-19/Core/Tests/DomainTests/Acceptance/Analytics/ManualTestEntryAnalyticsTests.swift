@@ -96,7 +96,7 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
         }
 
         // Enters a confirmatory positive test result
-        // New Isolation end date will be: 14th Jan
+        // New Isolation end date will still be: 12th Jan
         try manualTestResultEntry.enterPositive()
 
         // Current date: 5th Jan -> Analytics packet for: 4nd Jan
@@ -110,21 +110,21 @@ class ManualTestEntryAnalyticsTests: AnalyticsTests {
             assertField.isPresent(\.askedToShareExposureKeysInTheInitialFlow)
         }
 
-        // Dates: 6th-15th Jan -> Analytics packets for: 5rd-14th Jan
+        // Dates: 6th-13th Jan -> Analytics packets for: 5rd-12th Jan
         // New isolation
-        assertOnFieldsForDateRange(dateRange: 6 ... 15) { assertField in
+        assertOnFieldsForDateRange(dateRange: 6 ... 13) { assertField in
             assertField.isPresent(\.isIsolatingBackgroundTick)
             assertField.isPresent(\.isIsolatingForTestedPositiveBackgroundTick)
             assertField.isNil(\.hasTestedPositiveBackgroundTick)
         }
 
-        // Dates: 16th-29th Jan -> Analytics packets for: 15th-28th Jan
+        // Dates: 15th-28th Jan -> Analytics packets for: 14th-26th Jan
         // Isolation is over, but isolation reason still stored for 14 days
         assertOnFieldsForDateRange(dateRange: 14 ... 27) { assertField in
             assertField.isNil(\.hasTestedPositiveBackgroundTick)
         }
 
-        // Current date: 29th Jan -> Analytics packet for: 30th Jan
+        // Current date: 28th Jan -> Analytics packet for: 29th Jan
         // Previous isolation reason no longer stored
         assertAnalyticsPacketIsNormal()
     }

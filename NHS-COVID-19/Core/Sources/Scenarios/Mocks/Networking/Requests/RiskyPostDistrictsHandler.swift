@@ -279,6 +279,40 @@ struct RiskyPostDistrictsHandler: RequestHandler {
             """
         }
 
+        let externalUrls = """
+        {
+            "title": {
+                "en": "Keep your app updated:",
+            },
+            "urls": [
+                {
+                  "title": {
+                    "en": "Check the App Store",
+                  },
+                  "url": {
+                    "en": "http://google.com",
+                  }
+                },
+                {
+                  "title": {
+                    "en": "Check the Google Play Store",
+                  },
+                  "url": {
+                    "en": "http://google.com",
+                  }
+                },
+                {
+                  "title": {
+                    "en": "Visit the app website",
+                  },
+                  "url": {
+                    "en": "https://www.nhs.uk/",
+                  }
+                }
+            ]
+        }
+        """
+
         let json = """
         {
             "postDistricts" : {
@@ -326,6 +360,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     "linkUrl": {
                         "en": "https://example.com"
                     },
+                    "externalUrls": \(externalUrls),
                     "policyData": \(policyData(alertLevel: 1))
                 },
                 "\(Indicator.yellow.rawValue)": {
@@ -346,6 +381,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     "linkUrl": {
                         "en": "https://example.com"
                     },
+                    "externalUrls": \(externalUrls),
                     "policyData": \(policyData(alertLevel: 2))
                 },
                 "\(Indicator.amber.rawValue)": {
@@ -366,6 +402,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     "linkUrl": {
                         "en": "https://example.com"
                     },
+                    "externalUrls": \(externalUrls),
                     "policyData": \(policyData(alertLevel: 3))
                 },
                 "\(Indicator.red.rawValue)": {
@@ -386,6 +423,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     "linkUrl": {
                         "en": "https://example.com"
                     },
+                    "externalUrls": \(externalUrls),
                     "policyData": \(policyData(alertLevel: 3))
                 },
                 "\(Indicator.maroon.rawValue)": {
@@ -406,6 +444,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     "linkUrl": {
                         "en": "https://example.com"
                     },
+                    "externalUrls": \(externalUrls),
                     "policyData": \(policyData(alertLevel: 3))
                 },
                 "\(Indicator.black.rawValue)": {
@@ -426,6 +465,7 @@ struct RiskyPostDistrictsHandler: RequestHandler {
                     "linkUrl": {
                         "en": "https://example.com"
                     },
+                    "externalUrls": \(externalUrls),
                     "policyData": \(policyData(alertLevel: 3))
                 },
             }

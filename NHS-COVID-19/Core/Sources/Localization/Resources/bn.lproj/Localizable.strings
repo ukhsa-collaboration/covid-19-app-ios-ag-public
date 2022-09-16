@@ -174,7 +174,7 @@
 "end_of_isolation_further_advice_visit" = "আরও পরামর্শের জন্য, অনুগ্রহ করে ভিজিট করুন:";
 "positive_test_result_title" = "বাসায় থাকার চেষ্টা চালিয়ে যান";
 "positive_test_result_info" = "আপনার COVID-19 পরীক্ষার ফলাফল পজিটিভ এসেছে";
-"positive_test_result_explanation" = "স্ব-বিচ্ছিন্ন থাকার দিন সংখ্যা এই অ্যাপ কীভাবে গণনা করে তা বুঝতে নিচে প্রদত্ত প্রায়শই জিজ্ঞাসিত প্রশ্নাবলীর লিংক দেখুন।\n\nপরীক্ষার ফলাফল দেখায় যে পরীক্ষা করানোর সময় আপনার ভাইরাসটি ছিল। আপনাকে ইমেল, পাঠ্য বা ফোনের মাধ্যমে আরো তথ্য প্রেরণ করা হয়েছে। আপনার বয়স ১৮ বছরের কম হলে, নির্ভরযোগ্য কোনো প্রাপ্তবয়স্ক ব্যক্তিকে এই বার্তা দেখানোর জন্য পরামর্শ দেওয়া হচ্ছে।\n\nচিন্তা করবেন না – বেশির ভাগ মানুষের জন্য উপসর্গগুলি বেশ অনুগ্র হয়। কিন্তু, আপনার উপসর্গগুলি যদি খারাপ হতে থাকে তাহলে আপনার 111 নম্বরে কল করা উচিৎ অথবা nhs.uk–থেকে আরো পরামর্শ নেওয়া উচিৎ।";
+"positive_test_result_explanation" = "আপনার জ্বর না থাকলে এবং আপনি যথেষ্ট সুস্থ বোধ করলে, সেই সময়ের পরে আপনি আপনার স্বাভাবিক কার্যকলাপ করতে পারেন। অন্যদের মধ্যে COVID-19 ছড়ানো এড়ানোর জন্য এই পদক্ষেপ নেওয়া হয়।";
 "positive_test_results_continue" = "চালিয়ে যান";
 "void_test_result_info" = "আপনার COVID-19 ছিল কিনা তা আমরা নিশ্চিতভাবে বলতে পারিনি";
 "void_test_result_explanation" = "যখন পরীক্ষাটি করা হয়েছিল, তখন আপনার COVID-19 ছিল কিনা তা আমরা নিশ্চিতভাবে বলতে পারিনি। \n\nআপনার বয়স ১৮ বছরের কম হলে, নির্ভরযোগ্য কোনো প্রাপ্তবয়স্ক ব্যক্তিকে এই বার্তা দেখানোর জন্য পরামর্শ দেওয়া হচ্ছে।";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "চেক ইন করার অন্য উপায় আছে কিনা জানার জন্য আপনাকে ভেন্যুতে থাকা কোনো কর্মীর সাথে কথা বলার পরামর্শ দেওয়া হচ্ছে।";
 "checkin_information_whats_a_qr_code_section_title" = "কোনো NHS QR কোড পোস্টার যেভাবে চিনবেন";
 "checkin_information_whats_a_qr_code_section_description_new" = "আনুষ্ঠানিক NHS QR কোড পোস্টার কেমন দেখতে, তা এখানে দেখানো হলো। আপনাকে কোড স্ক্যান করতে হবে, যা হলো মাঝখানের বর্গক্ষেত্রটি।";
-"about_this_app_software_information_date_of_release_description" = "08/2022";
+"about_this_app_software_information_date_of_release_description" = "09/2022";
 "link_test_result_enter_code_example" = "উদাহরণ: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "পরীক্ষার কোড";
 "link_test_result_button_title" = "চালিয়ে যান";
@@ -1047,13 +1047,13 @@
 "index_case_isolation_advice_further_advice" = "আরও পরামর্শের জন্য, অনুগ্রহ করে ভিজিট করুন:";
 "index_case_isolation_advice_nhs_onilne_link_button" = "NHS 111 online";
 "index_case_isolation_advice_primary_button_title" = "পরিচয় গোপন রেখে অন্যদের অবহিত করুন";
-"index_case_already_isolating_advice_heading_title" = "আপনার COVID-19 পরীক্ষার ফলাফল পজিটিভ এসেছে";
-"index_case_already_isolating_advice_information_box_description" = "পরিচয় গোপন রেখে অ্যাপের মাধ্যমে অন্যদের অবহিত করুন";
-"index_case_already_isolating_advice_body" = "আপনার পরীক্ষার ফলাফলে দেখা যায় যে পরীক্ষার সময় আপনার COVID-19 ছিল। আপনাকে ইমেল, টেক্সট বা ফোনের মাধ্যমে আরও তথ্য পাঠানো হয়েছে।\n\nআপনার সাথে ঘনিষ্ঠ সংস্পর্শে ছিলেন এমন যে কাউকে পরিচয় গোপন রেখে অবহিত করুন যাতে তারা জানেন যে তাদের ঝুঁকি থাকতে পারে। আপনার গোপনীয়তা সুরক্ষিত আছে এবং আপনার ব্যক্তিগত তথ্য আদানপ্রদান করা হবে না।\n\nআপনার বয়স ১৮ বছরের কম হলে, নির্ভরযোগ্য কোনো প্রাপ্তবয়স্ক ব্যক্তিকে এই বার্তা দেখানোর জন্য পরামর্শ দেওয়া হচ্ছে।";
+"index_case_already_isolating_advice_heading_title" = "বাসায় থাকার চেষ্টা চালিয়ে যান";
+"index_case_already_isolating_advice_information_box_description" = "আপনার COVID-19 পরীক্ষার ফলাফল পজিটিভ এসেছে";
+"index_case_already_isolating_advice_body" = "আপনার জ্বর না থাকলে এবং আপনি যথেষ্ট সুস্থ বোধ করলে, সেই সময়ের পরে আপনি আপনার স্বাভাবিক কার্যকলাপ করতে পারেন। অন্যদের মধ্যে COVID-19 ছড়ানো এড়ানোর জন্য এই পদক্ষেপ নেওয়া হয়।";
 "index_case_already_isolating_advice_common_question_link_button" = "অ্যাপের ওয়েবসাইট দেখুন";
 "index_case_already_isolating_advice_further_advice" = "আরও পরামর্শের জন্য, অনুগ্রহ করে ভিজিট করুন:";
 "index_case_already_isolating_advice_nhs_onilne_link_button" = "NHS 111 online";
-"index_case_already_isolating_advice_primary_button_title" = "পরিচয় গোপন রেখে অন্যদের অবহিত করুন";
+"index_case_already_isolating_advice_primary_button_title" = "চালিয়ে যান";
 "be_careful_until_date_title" = "অতিরিক্ত যত্ন নিন এবং অন্যদের রক্ষা করুন";
 "get_tested_wales_link_url" = "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests";
 "home_covid19_guidance_button_title" = "COVID-19 সংক্রান্ত নির্দেশনা";
@@ -1214,7 +1214,7 @@
 "void_test_result_with_isolation_nhs_guidance_link_wls" = "NHS নির্দেশনা";
 "void_test_result_title" = "বাসায় থাকার চেষ্টা চালিয়ে যান";
 "void_end_of_isolation_void_text_no_isolation_title" = "";
-"void_end_of_isolation_link_label" = "";
+"void_end_of_isolation_link_label" = "আরও পরামর্শের জন্য, অনুগ্রহ করে ভিজিট করুন:";
 "void_end_of_isolation_link_label_wls" = "আরও পরামর্শের জন্য, অনুগ্রহ করে ভিজিট করুন:";
 "void_test_please_isolate_accessibility_label_wls" = "বাসায় থাকার চেষ্টা চালিয়ে যান এর জন্য %ld দিন";
 "risky_contact_opt_out_further_advice_link_url" = "";
@@ -1251,3 +1251,4 @@
 "covid_guidance_hub_wales_button_eight_url" = "https://enquiries.test-and-trace.nhs.uk";
 "covid_guidance_hub_england_button_seven_new_label_accessibility_text" = "নতুন অধ্যায়";
 "covid_guidance_hub_wales_button_six_new_label_accessibility_text" = "নতুন অধ্যায়";
+"further_advice_header" = "আরও পরামর্শের জন্য, অনুগ্রহ করে ভিজিট করুন:";

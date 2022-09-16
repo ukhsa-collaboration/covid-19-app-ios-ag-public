@@ -301,15 +301,15 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>zero</key>
-				<string>%li ddiwrnod</string>
+				<string>%li diwrnod</string>
 				<key>one</key>
-				<string>%li ddiwrnod</string>
+				<string>%li diwrnod</string>
 				<key>two</key>
-				<string>%li ddiwrnod</string>
+				<string>%li diwrnod</string>
 				<key>few</key>
-				<string>%li ddiwrnod</string>
+				<string>%li diwrnod</string>
 				<key>many</key>
-				<string>%li ddiwrnod</string>
+				<string>%li diwrnod</string>
 				<key>other</key>
 				<string>%li diwrnod</string>
 			</dict>
@@ -325,15 +325,15 @@
 				<key>NSStringFormatValueTypeKey</key>
 				<string>li</string>
 				<key>zero</key>
-				<string>%li ddiwrnod</string>
+				<string>%li diwrnod</string>
 				<key>one</key>
-				<string>%li ddiwrnod</string>
+				<string>%li diwrnod</string>
 				<key>two</key>
-				<string>%li ddiwrnod</string>
+				<string>%li diwrnod</string>
 				<key>few</key>
-				<string>%li ddiwrnod</string>
+				<string>%li diwrnod</string>
 				<key>many</key>
-				<string>%li ddiwrnod</string>
+				<string>%li diwrnod</string>
 				<key>other</key>
 				<string>%li diwrnod</string>
 			</dict>

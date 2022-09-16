@@ -122,6 +122,37 @@ class RiskyPostcodesEndpointTests: XCTestCase {
                     "linkUrl": {
                         "en": "https://gov.uk/somewhere"
                     },
+                    "externalUrls": {
+                      "title": {
+                        "en": "Keep your app updated:",
+                      },
+                      "urls": [
+                        {
+                          "title": {
+                            "en": "Check the App Store",
+                          },
+                          "url": {
+                            "en": "http://google.com",
+                          }
+                        },
+                        {
+                          "title": {
+                            "en": "Check the Google Play Store",
+                          },
+                          "url": {
+                            "en": "http://google.com",
+                          }
+                        },
+                        {
+                          "title": {
+                            "en": "Visit the app website",
+                          },
+                          "url": {
+                            "en": "http://google.com",
+                          }
+                        }
+                      ]
+                    },
                     "policyData": {
                         "localAuthorityRiskTitle": {
                             "en": "Tier 2"
@@ -170,6 +201,23 @@ class RiskyPostcodesEndpointTests: XCTestCase {
             content: [Locale(identifier: "en"): "Your local authority…"],
             linkTitle: [Locale(identifier: "en"): "Restrictions in your area"],
             linkUrl: [Locale(identifier: "en"): "https://gov.uk/somewhere"],
+            externalUrls: RiskyPostcodes.ExternalUrls(
+                title: [Locale(identifier: "en"): "Keep your app updated:"],
+                urls: [
+                    RiskyPostcodes.ExternalLink(
+                        title: [Locale(identifier: "en"): "Check the App Store"],
+                        url: [Locale(identifier: "en"): "http://google.com"]
+                    ),
+                    RiskyPostcodes.ExternalLink(
+                        title: [Locale(identifier: "en"): "Check the Google Play Store"],
+                        url: [Locale(identifier: "en"): "http://google.com"]
+                    ),
+                    RiskyPostcodes.ExternalLink(
+                        title: [Locale(identifier: "en"): "Visit the app website"],
+                        url: [Locale(identifier: "en"): "http://google.com"]
+                    )
+                ]
+            ),
             policyData: RiskyPostcodes.PolicyData(
                 localAuthorityRiskTitle: [Locale(identifier: "en"): "Tier 2"],
                 heading: [Locale(identifier: "en"): "Your area has coronavirus…"],

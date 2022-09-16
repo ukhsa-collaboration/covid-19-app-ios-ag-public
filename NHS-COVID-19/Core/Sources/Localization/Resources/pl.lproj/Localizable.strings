@@ -174,7 +174,7 @@
 "end_of_isolation_further_advice_visit" = "Aby uzyskać dalsze informacje, należy odwiedzić stronę internetową:";
 "positive_test_result_title" = "Nadal staraj się pozostać w domu przez";
 "positive_test_result_info" = "Masz pozytywny wynik testu na COVID-19";
-"positive_test_result_explanation" = "Aby zrozumieć, w jaki sposób aplikacja liczy dni izolacji, kliknij w poniższy link do listy najczęściej zadawanych pytań (FAQ).\n\nOznacza to, że kiedy test został przeprowadzony, byłeś/-aś zakażony/-a koronawirusem. Wysłano do Ciebie wiadomość e-mail lub wiadomość tekstową.\n\nNie martw się – u większości osób objawy są dość łagodne. Jeżeli jednak dojdzie do pogorszenia objawów, zadzwoń pod numer 111 lub odwiedź stronę internetową, aby uzyskać więcej informacji.";
+"positive_test_result_explanation" = "Po tym czasie, możesz kontynuować normalną aktywność, chyba że będziesz mieć wysoką temperaturę lub będziesz się źle czuć. Ma to zapobiec zarażaniu innych wirusem COVID-19.";
 "positive_test_results_continue" = "Kontynuuj";
 "void_test_result_info" = "Nie mogliśmy stwierdzić, czy miałeś(-aś) COVID-19";
 "void_test_result_explanation" = "Nie mogliśmy stwierdzić, czy miałeś(-aś) COVID-19, w czasie tego testu. \n\nJeżeli masz poniżej 18 lat, radzimy pokazać tę wiadomość zaufanej osobie dorosłej.";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Radzimy porozmawiać z personelem lokalu, aby dowiedzieć się, czy istnieją inne metody zameldowania.";
 "checkin_information_whats_a_qr_code_section_title" = "Jak rozpoznać plakat z kodem NHS QR";
 "checkin_information_whats_a_qr_code_section_description_new" = "Oto jak wyglądają oficjalne plakaty z kodami NHS QR. Należy zeskanować kod, czyli kwadrat znajdujący się pośrodku plakatu.";
-"about_this_app_software_information_date_of_release_description" = "08/2022";
+"about_this_app_software_information_date_of_release_description" = "09/2022";
 "link_test_result_enter_code_example" = "Przykład: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Kod testowy";
 "link_test_result_button_title" = "Kontynuuj";
@@ -1047,13 +1047,13 @@
 "index_case_isolation_advice_further_advice" = "Aby uzyskać dalsze informacje, należy odwiedzić stronę internetową:";
 "index_case_isolation_advice_nhs_onilne_link_button" = "NHS 111 online";
 "index_case_isolation_advice_primary_button_title" = "Powiadom innych anonimowo";
-"index_case_already_isolating_advice_heading_title" = "Masz pozytywny wynik testu na COVID-19";
-"index_case_already_isolating_advice_information_box_description" = "Powiadom o tym anonimowo innych poprzez aplikację";
-"index_case_already_isolating_advice_body" = "Wynik Twojego testu wskazuje, że w czasie gdy został on przeprowadzony miałeś(-aś) COVID-19 . Więcej informacji przesłaliśmy Ci e-mailem, SMS-em lub telefonicznie.\n\nAnonimowo powiadom każdego, kto był z Tobą w bliskim kontakcie, aby wiedzieli o zagrożeniu. Twoja prywatność jest chroniona, a Twoje dane osobowe nie będą udostępniane.\n\nJeżeli nie masz ukończonych 18 lat, radzimy pokazać tę wiadomość zaufanej osobie dorosłej.";
+"index_case_already_isolating_advice_heading_title" = "Nadal staraj się pozostać w domu przez";
+"index_case_already_isolating_advice_information_box_description" = "Masz pozytywny wynik testu na COVID-19";
+"index_case_already_isolating_advice_body" = "Po tym czasie, możesz kontynuować normalną aktywność, chyba że będziesz mieć wysoką temperaturę lub będziesz się źle czuć. Ma to zapobiec zarażaniu innych wirusem COVID-19.";
 "index_case_already_isolating_advice_common_question_link_button" = "Wejdź na witrynę aplikacji";
 "index_case_already_isolating_advice_further_advice" = "Aby uzyskać dalsze informacje, należy odwiedzić stronę internetową:";
 "index_case_already_isolating_advice_nhs_onilne_link_button" = "NHS 111 online";
-"index_case_already_isolating_advice_primary_button_title" = "Powiadom innych anonimowo";
+"index_case_already_isolating_advice_primary_button_title" = "Kontynuuj";
 "be_careful_until_date_title" = "Zachowaj szczególną ostrożność i chroń innych";
 "get_tested_wales_link_url" = "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests";
 "home_covid19_guidance_button_title" = "Wytyczne w kwestii COVID-19";
@@ -1214,7 +1214,7 @@
 "void_test_result_with_isolation_nhs_guidance_link_wls" = "Wytyczne NHS";
 "void_test_result_title" = "Nadal staraj się pozostać w domu przez";
 "void_end_of_isolation_void_text_no_isolation_title" = "";
-"void_end_of_isolation_link_label" = "";
+"void_end_of_isolation_link_label" = "Aby uzyskać dalsze informacje, należy odwiedzić stronę internetową:";
 "void_end_of_isolation_link_label_wls" = "Aby uzyskać dalsze informacje, należy odwiedzić stronę internetową:";
 "void_test_please_isolate_accessibility_label_wls" = "Nadal staraj się pozostać w domu przez %ld dni";
 "risky_contact_opt_out_further_advice_link_url" = "";
@@ -1251,3 +1251,4 @@
 "covid_guidance_hub_wales_button_eight_url" = "https://enquiries.test-and-trace.nhs.uk";
 "covid_guidance_hub_england_button_seven_new_label_accessibility_text" = "Nowa sekcja";
 "covid_guidance_hub_wales_button_six_new_label_accessibility_text" = "Nowa sekcja";
+"further_advice_header" = "Aby uzyskać dalsze informacje, należy odwiedzić stronę internetową:";

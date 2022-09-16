@@ -174,7 +174,7 @@
 "end_of_isolation_further_advice_visit" = "Pentru îndrumări suplimentare, vă rugăm să vizitați:";
 "positive_test_result_title" = "Continuați să încercați să stați acasă timp de";
 "positive_test_result_info" = "Testul dvs. COVID-19 are un rezultat pozitiv";
-"positive_test_result_explanation" = "Pentru a înțelege modul în care aplicația calculează zilele de autoizolare, accesați linkul de mai jos la întrebările frecvente.\n\nRezultatul testului dvs. arată că aveați virusul la momentul testării.  Vi s-au trimis mai multe informații prin e-mail, text sau telefon. Dacă aveți vârsta sub 18 ani, vi se recomandă să arătați acest mesaj unui adult de încredere.\n\nNu vă faceți griji - pentru majoritatea oamenilor simptomele sunt destul de ușoare. Cu toate acestea, dacă simptomele dvs. se agravează, atunci trebuie să sunați la 111 sau să vizitați nhs.uk pentru mai multe sfaturi.";
+"positive_test_result_explanation" = "Puteți să vă desfășurați în continuare activitățile normale după această perioadă dacă nu aveți temperatură mare și vă simțiți destul de bine. Acest lucru are rolul de a evita transmiterea virusului COVID-19 unor alte persoane.";
 "positive_test_results_continue" = "Continuare";
 "void_test_result_info" = "Nu am putut stabili dacă aveți COVID-19";
 "void_test_result_explanation" = "Nu am putut stabili dacă aveați COVID-19 în momentul efectuării testului. \n\nDacă aveți vârsta sub 18 ani, vi se recomandă să arătați acest mesaj unui adult de încredere.";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Vă recomandăm să discutați cu un membru al personalului localului pentru a verifica dacă există alte modalități de a înregistra vizita.";
 "checkin_information_whats_a_qr_code_section_title" = "Cum se recunoaște un afiș cu cod QR NHS";
 "checkin_information_whats_a_qr_code_section_description_new" = "Iată cum arată afișele oficiale cu cod QR NHS. Trebuie să scanați codul, respectiv pătratul din mijloc.";
-"about_this_app_software_information_date_of_release_description" = "08/2022";
+"about_this_app_software_information_date_of_release_description" = "09/2022";
 "link_test_result_enter_code_example" = "Exemplu: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Rezultatele testului";
 "link_test_result_button_title" = "Continuare";
@@ -1047,13 +1047,13 @@
 "index_case_isolation_advice_further_advice" = "Pentru îndrumări suplimentare, vă rugăm să vizitați:";
 "index_case_isolation_advice_nhs_onilne_link_button" = "NHS 111 online";
 "index_case_isolation_advice_primary_button_title" = "Înștiințați pe alții în mod anonim";
-"index_case_already_isolating_advice_heading_title" = "Testul dvs. COVID-19 are un rezultat pozitiv";
-"index_case_already_isolating_advice_information_box_description" = "Înștiințați alte persoane în mod anonim prin intermediul aplicației";
-"index_case_already_isolating_advice_body" = "Rezultatul testului dvs. arată că aveați COVID-19 în momentul efectuării testului. V-au fost trimise mai multe informații prin e-mail, SMS sau telefon.\n\nÎnștiințați în mod anonim pe oricine a avut contact apropiat cu dvs. pentru a le spune că este posibil să fie expuși riscurilor. Confidențialitatea dvs. este protejată iar informațiile dvs. cu caracter personal nu vor fi comunicate.\n\nDacă aveți sub 18 ani, vă recomandăm să arătați acest mesaj unui adult de încredere.";
+"index_case_already_isolating_advice_heading_title" = "Continuați să încercați să stați acasă timp de";
+"index_case_already_isolating_advice_information_box_description" = "Testul dvs. COVID-19 are un rezultat pozitiv";
+"index_case_already_isolating_advice_body" = "Puteți să vă desfășurați în continuare activitățile normale după această perioadă dacă nu aveți temperatură mare și vă simțiți destul de bine. Acest lucru are rolul de a evita transmiterea virusului COVID-19 unor alte persoane.";
 "index_case_already_isolating_advice_common_question_link_button" = "Accesați website-ul aplicației";
 "index_case_already_isolating_advice_further_advice" = "Pentru îndrumări suplimentare, vă rugăm să vizitați:";
 "index_case_already_isolating_advice_nhs_onilne_link_button" = "NHS 111 online";
-"index_case_already_isolating_advice_primary_button_title" = "Înștiințați pe alții în mod anonim";
+"index_case_already_isolating_advice_primary_button_title" = "Continuați";
 "be_careful_until_date_title" = "Luați măsuri de protecție suplimentare și protejați-i pe ceilalți";
 "get_tested_wales_link_url" = "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests";
 "home_covid19_guidance_button_title" = "Recomandări privind COVID-19";
@@ -1214,7 +1214,7 @@
 "void_test_result_with_isolation_nhs_guidance_link_wls" = "Instrucțiuni NHS";
 "void_test_result_title" = "Continuați să încercați să stați acasă timp de";
 "void_end_of_isolation_void_text_no_isolation_title" = "";
-"void_end_of_isolation_link_label" = "";
+"void_end_of_isolation_link_label" = "Pentru îndrumări suplimentare, vă rugăm să vizitați:";
 "void_end_of_isolation_link_label_wls" = "Pentru îndrumări suplimentare, vă rugăm să vizitați:";
 "void_test_please_isolate_accessibility_label_wls" = "Continuați să încercați să stați acasă timp de %ld zile";
 "risky_contact_opt_out_further_advice_link_url" = "";
@@ -1251,3 +1251,4 @@
 "covid_guidance_hub_wales_button_eight_url" = "https://enquiries.test-and-trace.nhs.uk";
 "covid_guidance_hub_england_button_seven_new_label_accessibility_text" = "Secțiune nouă";
 "covid_guidance_hub_wales_button_six_new_label_accessibility_text" = "Secțiune nouă";
+"further_advice_header" = "Pentru îndrumări suplimentare, vă rugăm să vizitați:";
