@@ -127,9 +127,6 @@ class VirologyTestingStateCoordinator: VirologyTestingStateCoordinating {
         guard requiresConfirmatoryTest == false else {
             return false
         }
-        guard result.testKitType == .labResult || ((result.testKitType == .rapidSelfReported || result.testKitType == .rapidResult) && country() == .wales) else {
-            return false
-        }
         guard result.testResult == .positive else {
             return false
         }

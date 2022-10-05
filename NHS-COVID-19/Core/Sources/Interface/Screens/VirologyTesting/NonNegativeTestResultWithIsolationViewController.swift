@@ -21,8 +21,8 @@ private class NonNegativeTestResultWithIsolationContent: PrimaryButtonStickyFoot
 
     init(interactor: Interacting, isolationEndDate: Date, testResultType: TestResultType, currentDateProvider: DateProviding) {
         let informationBox: InformationBox = {
-            if case .positive(_, true) = testResultType {
-                return InformationBox.indication.warning(testResultType.infoText)
+            if case .positive(_, false) = testResultType {
+                return InformationBox.indication.badNews(testResultType.infoText)
             } else {
                 return InformationBox.indication.warning(testResultType.infoText)
             }

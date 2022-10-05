@@ -20,12 +20,14 @@ public class SymptomsOnsetDayFlowViewController: BaseNavigationController {
     private var setOnsetDay: (GregorianDay) -> Void
     private var recordDidHaveSymptoms: () -> Void
     private var testEndDay: GregorianDay
+    private var dateSelectionWindow: () -> Int
 
-    public init(testEndDay: GregorianDay, didFinishAskForSymptomsOnsetDay: @escaping () -> Void, setOnsetDay: @escaping (GregorianDay) -> Void, recordDidHaveSymptoms: @escaping () -> Void) {
+    public init(testEndDay: GregorianDay, didFinishAskForSymptomsOnsetDay: @escaping () -> Void, setOnsetDay: @escaping (GregorianDay) -> Void, recordDidHaveSymptoms: @escaping () -> Void, dateSelectionWindow: @escaping () -> Int) {
         self.didFinishAskForSymptomsOnsetDay = didFinishAskForSymptomsOnsetDay
         self.setOnsetDay = setOnsetDay
         self.recordDidHaveSymptoms = recordDidHaveSymptoms
         self.testEndDay = testEndDay
+        self.dateSelectionWindow = dateSelectionWindow
         super.init()
         monitorState()
     }
@@ -59,9 +61,10 @@ public class SymptomsOnsetDayFlowViewController: BaseNavigationController {
                     return .success(())
                 }
             })
+
             return TestSymptomsReviewViewController(
                 testEndDay: testEndDay,
-                dateSelectionWindow: 6,
+                dateSelectionWindow: dateSelectionWindow(),
                 interactor: interactor
             )
         }

@@ -119,6 +119,26 @@ class VirologyTestingStateCoordinatorTests: XCTestCase {
         XCTAssertTrue(coordinator.requiresOnsetDay(virologyTestResult, requiresConfirmatoryTest: false))
     }
 
+    func testRapidSelfReportedRequireToAskForSymptomsOnsetDay() {
+        let virologyTestResult = VirologyTestResult(
+            testResult: .positive,
+            testKitType: .rapidSelfReported,
+            endDate: Date()
+        )
+
+        XCTAssertTrue(coordinator.requiresOnsetDay(virologyTestResult, requiresConfirmatoryTest: false))
+    }
+
+    func testRapidResultRequireToAskForSymptomsOnsetDay() {
+        let virologyTestResult = VirologyTestResult(
+            testResult: .positive,
+            testKitType: .rapidResult,
+            endDate: Date()
+        )
+
+        XCTAssertTrue(coordinator.requiresOnsetDay(virologyTestResult, requiresConfirmatoryTest: false))
+    }
+
     func testHandleSaveOrderTestKitResponseTests() throws {
         let response = OrderTestkitResponse(
             testOrderWebsite: .random(),

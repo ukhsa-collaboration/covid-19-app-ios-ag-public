@@ -522,7 +522,8 @@ public class ApplicationCoordinator {
                     shouldShowLocalStats: isFeatureEnabled(.localStatistics),
                     localCovidStatsManager: localCovidStatsManager,
                     newLabelForLongCovidEnglandState: newLabelForLongCovidEnglandState,
-                    newLabelForLongCovidWalesState: newLabelForLongCovidWalesState
+                    newLabelForLongCovidWalesState: newLabelForLongCovidWalesState,
+                    indexCaseIsolationDuration: { isolationStateStore.configuration.indexCaseSinceSelfDiagnosisOnset }
                 )
             )
         case .recommendingUpdate(let reason, let titles, let descriptions):

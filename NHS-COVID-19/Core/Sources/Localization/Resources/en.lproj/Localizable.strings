@@ -37,7 +37,7 @@
 "postcode_entry_example_label" = "You need an English or Welsh postcode district to use this app.\n\nExamples: If your postcode is CE1B 2PQ, please enter ‘CE1B‘. If it is CR0 3RL, please enter ‘CR0’. If it is L4 0RE, please enter ‘L4’.";
 "postcode_entry_textfield_label" = "Postcode";
 "postcode_entry_information_title" = "Why do we need your postcode district?";
-"postcode_entry_information_description_1" = "The postcode district helps with learning about the spread of coronavirus in different areas. This makes sure we can give the best possible public health advice for your area.";
+"postcode_entry_information_description_1" = "The postcode district helps with learning about the spread of COVID-19 in different areas. This makes sure we can give the best possible public health advice for your area.";
 "postcode_entry_information_description_2" = "Don’t worry. Your postcode district will not be used to track your location.";
 "postcode_entry_continue_button_title" = "Continue";
 "postcode_entry_error_title" = "Invalid postcode district code";
@@ -309,7 +309,7 @@
 "share_keys_confirmation_info_body" = "Proceed to share this result below.\n\nWhen prompted, select ‘Share’ or ‘Share your device’s random IDs’.";
 "about_this_app_feedback_information_title" = "Feedback information";
 "about_this_app_feedback_information_description" = "If you have feedback about the app, a question thatʼs not answered on our website, or you have a technical problem, please get in touch. You can contact us using our online form or call 119.";
-"share_keys_confirmation_heading" = "Anonymously notify others that they were near someone who tested positive for coronavirus.";
+"share_keys_confirmation_heading" = "Anonymously notify others that they were near someone who tested positive for COVID-19.";
 "share_keys_confirmation_info_title" = "How to share this result";
 "link_test_result_header" = "Enter your test result using the code sent by email or text message";
 "link_test_result_description" = "[to be deleted]";
@@ -393,7 +393,7 @@
 "local_authority_information_button" = "Continue";
 "local_authority_confirmation_heading %@ %@" = "The local authority for %@ is %@";
 "local_authority_confirmation_title" = "Your local authority";
-"local_authority_confirmation_description" = "Great news! The app is going to be more accurate at giving information and guidance for the level of coronavirus risk in your area.\n\nDon‘t worry, your privacy is still protected. The app will never track your identity or location.";
+"local_authority_confirmation_description" = "Great news! The app is going to be more accurate at giving information and guidance for the level of COVID-19 risk in your area.\n\nDon‘t worry, your privacy is still protected. The app will never track your identity or location.";
 "local_authority_confirmation_button" = "Confirm";
 "local_authority_screen_description %@" = "As your postcode district (%@) is in more than one local authority, you need to select the one you are in. This is so the app can give you more accurate information and guidance.\n\nVisit GOV.UK if you do not know your local authority.";
 "local_authority_visit_gov_uk_link_title" = "Find your local authority";
@@ -527,7 +527,7 @@
 "checkin_confirmation_explanation" = "The app is the fastest way to be alerted of potential exposure to coronavirus at a venue.";
 "share_keys_and_venues_share_keys_what_is_a_random_id_heading" = "How does it work?";
 "share_keys_and_venues_share_keys_what_is_a_random_id_body" = "You will be asked to share “random IDs.” This is a randomly generated code which can be shared with other phones that have Exposure Notifications switched on.";
-"share_keys_and_venues_share_keys_how_it_helps_body" = "It lets other app users know they were near someone who tested positive for coronavirus.";
+"share_keys_and_venues_share_keys_how_it_helps_body" = "It lets other app users know they were near someone who tested positive for COVID-19.";
 "share_keys_and_venues_reminder_screen_privacy_notice" = "Nobody will know the notification is linked to you.";
 "link_test_result_thank_you_title" = "Thank you for helping to stop the spread of COVID-19.";
 "qr_code_poster_description_hospitality" = "English hospitality NHS QR code poster:";
@@ -535,20 +535,20 @@
 "mydata_section_self_isolation_end_date_description" = "Last day of self-isolation";
 "checkin_information_official_nhs_qr_codes_title" = "Official NHS QR code posters";
 "share_keys_and_venues_share_keys_title" = "Help notify others";
-"share_keys_and_venues_share_keys_heading" = "Anonymously notify others that they were near someone who tested positive for coronavirus.";
+"share_keys_and_venues_share_keys_heading" = "Anonymously notify others that they were near someone who tested positive for COVID-19.";
 "share_keys_and_venues_share_keys_privacy_notice" = "Nobody will know the notification is linked to you.";
 "share_keys_and_venues_share_keys_how_it_helps_heading" = "How does it help?";
 "share_keys_and_venues_share_keys_button" = "Continue";
 "share_keys_and_venues_help_notify_others_title" = "Help notify others";
 "link_test_result_thank_you_title_one_more_step" = "Thank you!\nOne more quick step to go.";
 "link_test_result_thank_you_screen_continue_button_title" = "Continue";
-"share_keys_and_venues_reminder_screen_heading" = "Notify others who may be at risk of coronavirus (COVID-19)";
+"share_keys_and_venues_reminder_screen_heading" = "Notify others who may be at risk of COVID-19";
 "share_keys_and_venues_reminder_screen_reconsider_sharing_heading" = "Please notify others";
 "share_keys_and_venues_reminder_screen_reconsider_sharing_body" = "You may have been in contact with more people than you realise. The app can alert people who you have been near, but do not know personally, to let them know they may be at risk. By sharing your result, you are helping keep your community safe.";
 "share_keys_and_venues_reminder_screen_back_to_share_button_title" = "Notify Others";
 "share_keys_and_venues_reminder_screen_do_not_share_button_title" = "Do not notify others";
 "alert_share_keys_reminder_title" = "A reminder to notify others";
-"alert_share_keys_reminder_body" = "Let others know they may be at risk of coronavirus, while protecting your privacy.";
+"alert_share_keys_reminder_body" = "Let others know they may be at risk of COVID-19, while protecting your privacy.";
 "no_symptoms_getting_tested_link_label" = "Getting tested";
 "no_symptoms_develop_symptoms_body" = "If you develop any of the listed symptoms, report them on this app.\n\nFor further advice, please visit:";
 "link_nhs_get_tested" = "https://www.nhs.uk/conditions/coronavirus-covid-19/testing/get-tested-for-coronavirus/";
@@ -788,7 +788,7 @@
 "contact_case_exposure_info_screen_information" = "Advice may differ depending on your age, vaccination status, or instructions from contact tracers";
 "contact_case_exposure_info_screen_if_you_have_symptoms" = "If you have symptoms, select “Check symptoms” on the home screen and get a test.";
 "contact_case_exposure_info_screen_continue_button" = "Continue";
-"contact_case_exposure_info_screen_title" = "The app has detected that you have been near someone who tested positive for coronavirus (COVID-19)";
+"contact_case_exposure_info_screen_title" = "The app has detected that you have been near someone who tested positive for COVID-19";
 "radio_button_checked" = "checked";
 "radio_button_unchecked" = "unchecked";
 "radio_button_accessibility_label %@ %@" = "%@. %@";
@@ -1006,7 +1006,7 @@
 "contact_case_no_isolation_fully_vaccinated_list_item_social_distancing_england" = "Limit close contact with anyone in your household who has COVID-19";
 "contact_case_no_isolation_fully_vaccinated_list_item_get_tested_before_meeting_vulnerable_people_england" = "Take a PCR test if you have symptoms of COVID-19";
 "contact_case_no_isolation_fully_vaccinated_list_item_wear_a_mask_england" = "Wear a face covering in crowded, enclosed or poorly ventilated spaces";
-"contact_case_exposure_info_screen_title_england" = "The app has detected that you have been near someone who tested positive for coronavirus (COVID-19)";
+"contact_case_exposure_info_screen_title_england" = "The app has detected that you have been near someone who tested positive for COVID-19";
 "contact_case_exposure_info_screen_information_england" = "If you are under 18, you are advised to show this message to a trusted adult";
 "contact_case_exposure_info_screen_continue_button_england" = "Continue";
 "contact_case_exposure_info_screen_how_close_contacts_are_calculated_heading_england" = "How close contact is calculated";

@@ -32,7 +32,7 @@ extension AdviceForIndexCasesEnglandAlreadyIsolatingViewController {
                     .isAccessibilityElement(false)
                     .centralized(),
 
-                InformationBox.indication.warning(localize(.index_case_already_isolating_advice_information_box_description)),
+                InformationBox.indication.badNews(localize(.index_case_already_isolating_advice_information_box_description)),
                 BaseLabel()
                     .styleAsBody()
                     .set(text: localize(.index_case_already_isolating_advice_body)),

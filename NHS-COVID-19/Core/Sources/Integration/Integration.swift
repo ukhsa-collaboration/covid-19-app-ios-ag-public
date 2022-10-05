@@ -471,7 +471,8 @@ extension CoordinatedAppController {
                 testEndDay: testEndDay,
                 didFinishAskForSymptomsOnsetDay: didFinishAskForSymptomsOnsetDay,
                 setOnsetDay: setOnsetDay,
-                recordDidHaveSymptoms: didConfirmSymptoms
+                recordDidHaveSymptoms: didConfirmSymptoms,
+                dateSelectionWindow: { context.indexCaseIsolationDuration().days }
             )
 
         case .neededForPlodResult(interactor: let interactor):

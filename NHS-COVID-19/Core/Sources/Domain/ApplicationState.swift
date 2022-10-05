@@ -75,6 +75,7 @@ public struct RunningAppContext {
     public var localCovidStatsManager: LocalCovidStatsManaging
     public var newLabelForLongCovidEnglandState: NewLabelState
     public var newLabelForLongCovidWalesState: NewLabelState
+    public var indexCaseIsolationDuration: () -> DayDuration
 }
 
 public typealias GetLocalAuthorities = (_ postcode: Postcode) -> Result<Set<LocalAuthority>, PostcodeValidationError>

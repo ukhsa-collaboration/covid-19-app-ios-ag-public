@@ -26,7 +26,7 @@ extension AdviceForIndexCasesEnglandViewController {
                     .centralized()
                     .set(text: localize(.index_case_isolation_advice_heading_title)),
 
-                InformationBox.indication.warning(localize(.index_case_isolation_advice_information_box_description)),
+                InformationBox.indication.badNews(localize(.index_case_isolation_advice_information_box_description)),
                 BaseLabel()
                     .styleAsBody()
                     .set(text: localize(.index_case_isolation_advice_body)),
