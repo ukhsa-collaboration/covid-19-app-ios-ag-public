@@ -271,8 +271,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     public func makeGuidanceHubEnglandViewController(flowController: UINavigationController?) -> UIViewController? {
         let interactor = GuidanceHubEnglandInteractor(
             flowController: flowController,
-            flowInteractor: self,
-            newLabelForLongCovidEnglandState: self.newLabelForLongCovidCurrentCountryState
+            flowInteractor: self
         )
         return GuidanceHubEnglandViewController(interactor: interactor)
     }
@@ -280,8 +279,7 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
     public func makeGuidanceHubWalesViewController(flowController: UINavigationController?) -> UIViewController? {
         let interactor = GuidanceHubWalesInteractor(
             flowController: flowController,
-            flowInteractor: self,
-            newLabelForLongCovidWalesState: self.newLabelForLongCovidCurrentCountryState
+            flowInteractor: self
         )
         return GuidanceHubWalesViewController(interactor: interactor)
     }
@@ -444,15 +442,6 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
             return context.shouldShowGuidanceHubEngland
         case .wales:
             return context.shouldShowGuidanceHubWales
-        }
-    }
-
-    var newLabelForLongCovidCurrentCountryState: NewLabelState {
-        switch context.country.currentValue {
-        case .england:
-            return context.newLabelForLongCovidEnglandState
-        case .wales:
-            return context.newLabelForLongCovidWalesState
         }
     }
 
@@ -752,16 +741,13 @@ private struct GuidanceHubEnglandInteractor: GuidanceHubEnglandViewController.In
 
     private weak var flowController: UINavigationController?
     private let flowInteractor: HomeFlowViewControllerInteracting
-    fileprivate let newLabelForLongCovidEnglandState: NewLabelState
 
     init(
         flowController: UINavigationController?,
-        flowInteractor: HomeFlowViewControllerInteracting,
-        newLabelForLongCovidEnglandState: NewLabelState
+        flowInteractor: HomeFlowViewControllerInteracting
     ) {
         self.flowController = flowController
         self.flowInteractor = flowInteractor
-        self.newLabelForLongCovidEnglandState = newLabelForLongCovidEnglandState
     }
 
     func didTapEnglandLink1() {
@@ -790,7 +776,6 @@ private struct GuidanceHubEnglandInteractor: GuidanceHubEnglandViewController.In
 
     func didTapEnglandLink7() {
         flowInteractor.openGuidanceHubEnglandLink7()
-        newLabelForLongCovidEnglandState.shouldNotShowNewLabel = true
     }
 
     func didTapEnglandLink8() {
@@ -801,16 +786,13 @@ private struct GuidanceHubEnglandInteractor: GuidanceHubEnglandViewController.In
 private struct GuidanceHubWalesInteractor: GuidanceHubWalesViewController.Interacting {
     private weak var flowController: UINavigationController?
     private let flowInteractor: HomeFlowViewControllerInteracting
-    fileprivate let newLabelForLongCovidWalesState: NewLabelState
 
     init(
         flowController: UINavigationController?,
-        flowInteractor: HomeFlowViewControllerInteracting,
-        newLabelForLongCovidWalesState: NewLabelState
+        flowInteractor: HomeFlowViewControllerInteracting
     ) {
         self.flowController = flowController
         self.flowInteractor = flowInteractor
-        self.newLabelForLongCovidWalesState = newLabelForLongCovidWalesState
     }
 
     func didTapWalesLink1() {
@@ -835,7 +817,6 @@ private struct GuidanceHubWalesInteractor: GuidanceHubWalesViewController.Intera
 
     func didTapWalesLink6() {
         flowInteractor.openGuidanceHubWalesLink6()
-        newLabelForLongCovidWalesState.shouldNotShowNewLabel = true
     }
 
     func didTapWalesLink7() {

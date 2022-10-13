@@ -1,7 +1,7 @@
 "onboarding_strapline_title" = "COVID-19";
 "onboarding_strapline_accessiblity_label" = "COVID-19 y GIG";
-"home_strapline_title" = "Profi ac Olrhain";
-"home_strapline_accessiblity_label" = "Profi ac Olrhain y GIG";
+"home_strapline_title" = "COVID-19";
+"home_strapline_accessiblity_label" = "Ap Covid 19 y GIG";
 "unrecoverable_error_page_title" = "Yn anffodus, nid yw'r ap yma'n gweithio";
 "unrecoverable_error_title" = "Gall hyn fod oherwydd:";
 "unrecoverable_error_description" = "Cyfyngiad yn eich gosodiadau (er enghraifft, os mai ffôn cwmni yw hwn).\n\nMae ap arall ar eich ffôn yn defnyddio'r un dechnoleg gan atal yr ap hwn rhag gweithio.";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Cynghorwn chi i siarad ag aelod o staff yn y lleoliad i weld a oes ffyrdd eraill o fewngofnodi.";
 "checkin_information_whats_a_qr_code_section_title" = "Sut i adnabod poster cod QR y GIG";
 "checkin_information_whats_a_qr_code_section_description_new" = "Dyma sut olwg sydd ar bosteri cod QR swyddogol y GIG. Mae angen i chi sganio’r cod, sydd yn y sgwâr yn y canol.";
-"about_this_app_software_information_date_of_release_description" = "09/2022";
+"about_this_app_software_information_date_of_release_description" = "10/2022";
 "link_test_result_enter_code_example" = "Enghraifft: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Cod y prawf";
 "link_test_result_button_title" = "Parhau";

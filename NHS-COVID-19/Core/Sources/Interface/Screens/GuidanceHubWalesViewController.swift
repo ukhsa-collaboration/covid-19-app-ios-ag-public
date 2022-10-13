@@ -66,8 +66,7 @@ private struct GuidanceHubWalesView: View {
                                         iconName: .externalLink,
                                         action: interactor.didTapWalesLink6,
                                         accessibilityLabel: localize(.covid_guidance_hub_wales_button_six_new_label_accessibility_text)
-                                    ),
-                              shouldShowNewLabelState: interactor.newLabelForLongCovidWalesState
+                                    )
                 )
                 HubButtonCell(viewModel:
                                     .init(
@@ -104,8 +103,6 @@ public protocol GuidanceHubWalesViewControllerInteracting {
     func didTapWalesLink6()
     func didTapWalesLink7()
     func didTapWalesLink8()
-
-    var newLabelForLongCovidWalesState: NewLabelState { get }
 }
 
 public class GuidanceHubWalesViewController: RootViewController {

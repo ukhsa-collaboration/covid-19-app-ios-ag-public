@@ -1,7 +1,7 @@
 "onboarding_strapline_title" = "COVID-19";
 "onboarding_strapline_accessiblity_label" = "NHS Covid 19";
-"home_strapline_title" = "Test and Trace";
-"home_strapline_accessiblity_label" = "NHS Test and Trace";
+"home_strapline_title" = "COVID-19";
+"home_strapline_accessiblity_label" = "Aplikacja NHS Covid 19";
 "unrecoverable_error_page_title" = "Niestety aplikacja obecnie nie działa.";
 "unrecoverable_error_title" = "Potencjalne przyczyny to:";
 "unrecoverable_error_description" = "Ograniczenie w ustawieniach (na przykład, jeśli jest to telefon firmowy)\n\nInna aplikacja w telefonie używa tej samej technologii i blokuje możliwość uruchomienia tej aplikacji.";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Radzimy porozmawiać z personelem lokalu, aby dowiedzieć się, czy istnieją inne metody zameldowania.";
 "checkin_information_whats_a_qr_code_section_title" = "Jak rozpoznać plakat z kodem NHS QR";
 "checkin_information_whats_a_qr_code_section_description_new" = "Oto jak wyglądają oficjalne plakaty z kodami NHS QR. Należy zeskanować kod, czyli kwadrat znajdujący się pośrodku plakatu.";
-"about_this_app_software_information_date_of_release_description" = "09/2022";
+"about_this_app_software_information_date_of_release_description" = "10/2022";
 "link_test_result_enter_code_example" = "Przykład: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Kod testowy";
 "link_test_result_button_title" = "Kontynuuj";

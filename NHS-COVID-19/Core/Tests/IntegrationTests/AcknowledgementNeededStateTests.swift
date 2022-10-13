@@ -230,8 +230,6 @@ class AcknowledgementNeededStateTests: XCTestCase {
             contactCaseIsolationDuration: .constant(DayDuration(11)),
             shouldShowLocalStats: true,
             localCovidStatsManager: MockLocalStatsManager(),
-            newLabelForLongCovidEnglandState: NewLabelState(newLabelForName: "OpenedNewLongCovidInfoInWalesV4_35", setByCoordinator: true),
-            newLabelForLongCovidWalesState: NewLabelState(newLabelForName: "OpenedNewLongCovidInfoInEnglandV4_35", setByCoordinator: true),
             indexCaseIsolationDuration: { 6 }
         )
     }

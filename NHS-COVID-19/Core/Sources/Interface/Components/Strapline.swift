@@ -35,7 +35,7 @@ public struct Strapline: View {
         guard let text = country.wrappedValue.text else {
             return AnyView(EmptyView())
         }
-        return AnyView(Text(text).font(.system(size: 11)))
+        return AnyView(Text(text).font(.system(size: 11)).bold().foregroundColor(Color(.nhsBlue)))
     }
 }
 

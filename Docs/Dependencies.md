@@ -26,9 +26,9 @@ All dependencies are retrieved via Swift Package Manager and compiled from sourc
 |-|-|-|
 | [`ZIPFoundation`](https://github.com/weichsel/ZIPFoundation) | Unpack zip files | [MIT](https://github.com/weichsel/ZIPFoundation/blob/development/LICENSE) |
 | [`swift-log`](https://github.com/apple/swift-log) | Interface for logging (note: logging is fully disabled in production) | [Apache 2.0](https://github.com/apple/swift-log/blob/master/LICENSE.txt) |
-| [`AppConfiguration`](https://github.com/nihp-public/covid-19-app-configuration-public.git) | Contains application configuration, such as endpoints | N/A (Internal) |
-| [`RiskScore`](https://github.com/nihp-public/riskscore-swift-public) | Contains the implementation of the risk score algorithm for v2 EN API | N/A (Internal) |
-| [`BoostSwift`](https://github.com/nihp-public/boostswift-public) |  A dependency of `RiskScore`. It provides a Swift interface to the Boost C++ function [`gamma_p_inv`](https://www.boost.org/doc/libs/1_74_0/libs/math/doc/html/math_toolkit/sf_gamma/igamma_inv.html) |  The library itself is internal, the wrapped function is covered by the [Boost license](https://www.boost.org/users/license.html) |
+| [`AppConfiguration`](https://github.com/nihp-public/covid-19-app-configuration.git) | Contains application configuration, such as endpoints | N/A (Internal) |
+| [`RiskScore`](https://github.com/nihp-public/riskscore-swift) | Contains the implementation of the risk score algorithm for v2 EN API | N/A (Internal) |
+| [`BoostSwift`](https://github.com/nihp-public/BoostSwift) |  A dependency of `RiskScore`. It provides a Swift interface to the Boost C++ function [`gamma_p_inv`](https://www.boost.org/doc/libs/1_74_0/libs/math/doc/html/math_toolkit/sf_gamma/igamma_inv.html) |  The library itself is internal, the wrapped function is covered by the [Boost license](https://www.boost.org/users/license.html) |
 
 ### Used in the internal app
 

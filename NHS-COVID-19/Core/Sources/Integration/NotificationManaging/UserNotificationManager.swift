@@ -84,10 +84,19 @@ class UserNotificationManager {
                 $0.title = localize(.alert_share_keys_reminder_title)
                 $0.body = localize(.alert_share_keys_reminder_body)
             }
-        case .localMessage(let title, let body):
+        case .localMessage(let title, let body, let languageCode):
             return configuring(UNMutableNotificationContent()) {
-                $0.title = title.applyCurrentLanguageDirection()
-                $0.body = body.applyCurrentLanguageDirection()
+                var localeConfiguration: LocaleConfiguration? = nil
+
+                if let languageCode = languageCode {
+                    localeConfiguration = LocaleConfiguration(
+                        localeIdentifier: languageCode,
+                        supportedLocalizations: Bundle.main.supportedLocalizations
+                    )
+                }
+
+                $0.title = title.applyCurrentLanguageDirection(localeConfiguration)
+                $0.body = body.applyCurrentLanguageDirection(localeConfiguration)
             }
         case .selfIsolation:
             assertionFailure("`UserNotificationType.selfIsolation` is deprecated and we should not be scheduling any more of them.")

@@ -84,8 +84,6 @@ public protocol HomeFlowViewControllerInteracting {
     func openGuidanceHubWalesLink6()
     func openGuidanceHubWalesLink7()
     func openGuidanceHubWalesLink8()
-
-    var newLabelForLongCovidCurrentCountryState: NewLabelState { get }
 }
 
 public enum ExposureNotificationReminderIn: Int, CaseIterable {
@@ -108,7 +106,6 @@ public class HomeFlowViewController: BaseNavigationController {
     private let showNotificationScreen: CurrentValueSubject<NotificationInterfaceState?, Never>
     private var localInformationInteractor: LocalInformationInteractor?
     private var localInfoBannerViewModel: InterfaceProperty<LocalInformationBanner.ViewModel?>?
-    private var newLabelForLongCovidCurrentCountryState: NewLabelState
 
     public init(
         interactor: Interacting,
@@ -126,8 +123,7 @@ public class HomeFlowViewController: BaseNavigationController {
         country: InterfaceProperty<Country>,
         shouldShowLanguageSelectionScreen: Bool,
         showNotificationScreen: CurrentValueSubject<NotificationInterfaceState?, Never>,
-        shouldShowLocalStats: Bool,
-        newLabelForLongCovidCurrentCountryState: NewLabelState
+        shouldShowLocalStats: Bool
     ) {
         self.interactor = interactor
 
@@ -138,7 +134,6 @@ public class HomeFlowViewController: BaseNavigationController {
 
         self.userNotificationsEnabled = userNotificationsEnabled
         self.showNotificationScreen = showNotificationScreen
-        self.newLabelForLongCovidCurrentCountryState = interactor.newLabelForLongCovidCurrentCountryState
 
         super.init()
 
@@ -456,10 +451,6 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
 
     public var shouldShowGuidanceHub: Bool {
         flowInteractor.shouldShowGuidanceHub
-    }
-
-    public var newLabelForLongCovidCurrentCountryState: NewLabelState {
-        flowInteractor.newLabelForLongCovidCurrentCountryState
     }
 
     func openSettings() {

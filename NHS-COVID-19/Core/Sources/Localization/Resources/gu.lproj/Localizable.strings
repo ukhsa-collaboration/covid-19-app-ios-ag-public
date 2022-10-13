@@ -1,7 +1,7 @@
 "onboarding_strapline_title" = "COVID-19";
 "onboarding_strapline_accessiblity_label" = "NHS Covid 19";
-"home_strapline_title" = "ટેસ્ટ એન્ડ ટ્રેસ";
-"home_strapline_accessiblity_label" = "NHS ટેસ્ટ એન્ડ ટ્રેસ";
+"home_strapline_title" = "COVID 19";
+"home_strapline_accessiblity_label" = "NHS Covid 19 ઍપ";
 "unrecoverable_error_page_title" = "દુર્ભાગ્યે, આ ઍપ કાર્ય કરી રહી નથી";
 "unrecoverable_error_title" = "આ નીચેના કારણે હોઈ શકે છે:";
 "unrecoverable_error_description" = "તમારા સેટિંગ્સમાં પ્રતિબંધ (ઉદાહરણ તરીકે, જો આ કંપની ફોન છે, તો).\n\nતમારા ફોન પરની અન્ય એપ સમાન ટેક્નોલોજીનો ઉપયોગ કરી રહી છે અને આ એપને કાર્ય કરતાં રોકી રહી છે.";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "તપાસ કરવાની અન્ય રીતો છે કે કેમ તે જોવા માટે અમે તમને સ્થળ પર સ્ટાફના સભ્ય સાથે વાત કરવાની સલાહ આપીશું.";
 "checkin_information_whats_a_qr_code_section_title" = "NHS QR કોડ પોસ્ટરને કેવી રીતે ઓળખવું";
 "checkin_information_whats_a_qr_code_section_description_new" = "અહીં સત્તાવાર NHS QR કોડ પોસ્ટર્સ છે. તમારે કોડ સ્કેન કરવાની જરૂર છે, જે મધ્યમાં ચોરસ છે.";
-"about_this_app_software_information_date_of_release_description" = "09/2022";
+"about_this_app_software_information_date_of_release_description" = "10/2022";
 "link_test_result_enter_code_example" = "ઉદાહરણ: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "ટેસ્ટ કોડ";
 "link_test_result_button_title" = "ચાલુ રાખો";

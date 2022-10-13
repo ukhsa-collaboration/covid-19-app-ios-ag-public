@@ -75,7 +75,7 @@ struct LocalInformationChangeNotifier {
                     }()
 
                     self.notificationManager.add(
-                        type: .localMessage(title: notificationTitle, body: notificationBody),
+                        type: .localMessage(title: notificationTitle, body: notificationBody, languageCode: languageCode),
                         at: nil,
                         withCompletionHandler: nil
                     )

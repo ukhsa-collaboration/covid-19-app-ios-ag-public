@@ -327,15 +327,6 @@ class PostAcknowledgementViewController: UIViewController {
 
         let country = context.country.property(initialValue: context.country.currentValue)
 
-        var showNewLabel: NewLabelState {
-                switch context.country.currentValue {
-                case .england:
-                    return context.newLabelForLongCovidEnglandState
-                case .wales:
-                    return context.newLabelForLongCovidWalesState
-                }
-            }
-
         return HomeFlowViewController(
             interactor: interactor,
             bluetoothOff: context.bluetoothOff.eraseToAnyPublisher(),
@@ -352,8 +343,7 @@ class PostAcknowledgementViewController: UIViewController {
             country: country,
             shouldShowLanguageSelectionScreen: shouldShowLanguageSelectionScreen,
             showNotificationScreen: showNotificationScreen,
-            shouldShowLocalStats: context.shouldShowLocalStats,
-            newLabelForLongCovidCurrentCountryState: showNewLabel
+            shouldShowLocalStats: context.shouldShowLocalStats
         )
     }
 

@@ -73,8 +73,6 @@ public struct RunningAppContext {
     public var contactCaseIsolationDuration: DomainProperty<DayDuration>
     public var shouldShowLocalStats: Bool
     public var localCovidStatsManager: LocalCovidStatsManaging
-    public var newLabelForLongCovidEnglandState: NewLabelState
-    public var newLabelForLongCovidWalesState: NewLabelState
     public var indexCaseIsolationDuration: () -> DayDuration
 }
 

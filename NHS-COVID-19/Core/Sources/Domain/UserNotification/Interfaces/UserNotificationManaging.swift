@@ -25,7 +25,8 @@ public enum UserNotificationType: Equatable {
     case shareKeysReminder
     case localMessage(
         title: String,
-        body: String
+        body: String,
+        languageCode: String? = nil
     )
 
     @available(*, deprecated, message: "No longer in use. Here only to allow existing notifications of this type to be cancelled when people upgrade their app.")

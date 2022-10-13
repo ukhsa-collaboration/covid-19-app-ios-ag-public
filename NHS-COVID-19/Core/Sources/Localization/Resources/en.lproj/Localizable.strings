@@ -1,7 +1,7 @@
 "onboarding_strapline_title" = "COVID-19";
 "onboarding_strapline_accessiblity_label" = "NHS Covid 19";
-"home_strapline_title" = "Test and Trace";
-"home_strapline_accessiblity_label" = "NHS Test and Trace";
+"home_strapline_title" = "COVID-19";
+"home_strapline_accessiblity_label" = "NHS Covid 19 app";
 "unrecoverable_error_page_title" = "Unfortunately, this app is not working";
 "unrecoverable_error_title" = "This could be because:";
 "unrecoverable_error_description" = "A restriction in your settings (for example, if this is a company phone).\n\nAnother app on your phone is using the same technology and stopping this app from working.";
@@ -290,7 +290,7 @@
 "alert_exposure_detection_title" = "Close contact notification";
 "checkin_camera_permission_denial_title" = "Scan an official NHS QR code poster to check in";
 "virology_book_a_test_title" = "Back to home";
-"no_symptoms_still_get_test_body" = "Find out more about the coronavirus testing options available to you:";
+"no_symptoms_still_get_test_body" = "Find out more about the COVID-19 testing options available to you:";
 "end_of_isolation_isolate_if_have_symptom_warning" = "You can continue with normal activities if you don’t have a high temperature and if you feel well enough";
 "negative_test_result_no_isolation_warning" = "If you have a high temperature or do not feel well enough to go to work or do normal activities, try to stay at home until you feel better";
 "link_test_result_thank_you_back_home_button" = "Back to home";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "We advise you to speak to a member of staff at the venue to see if there are other ways of checking in.";
 "checkin_information_whats_a_qr_code_section_title" = "How to recognise an NHS QR code poster";
 "checkin_information_whats_a_qr_code_section_description_new" = "Here are what the official NHS QR code posters look like. You need to scan the code, which is the square in the middle.";
-"about_this_app_software_information_date_of_release_description" = "09/2022";
+"about_this_app_software_information_date_of_release_description" = "10/2022";
 "link_test_result_enter_code_example" = "Example: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Test code";
 "link_test_result_button_title" = "Continue";

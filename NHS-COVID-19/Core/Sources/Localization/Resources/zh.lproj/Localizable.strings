@@ -1,7 +1,7 @@
 "onboarding_strapline_title" = "COVID-19";
 "onboarding_strapline_accessiblity_label" = "NHS Covid 19";
-"home_strapline_title" = "测试和追踪";
-"home_strapline_accessiblity_label" = "NHS 测试和追踪";
+"home_strapline_title" = "COVID 19";
+"home_strapline_accessiblity_label" = "NHS Covid 19 应用";
 "unrecoverable_error_page_title" = "非常遗憾，此应用程序没有运行";
 "unrecoverable_error_title" = "原因如下所示：";
 "unrecoverable_error_description" = "设置方面的限制（例如，如果这是公司电话）。\n\n电话上的另一个应用程序正在使用相同的技术，因此该应用程序无法运行。";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "我们建议您与现场工作人员交谈，询问是否有其他登记方式。";
 "checkin_information_whats_a_qr_code_section_title" = "如何识别 NHS 二维码图片";
 "checkin_information_whats_a_qr_code_section_description_new" = "以下是 NHS 官方二维码图片的样子。您需要扫描中间的正方形二维码。";
-"about_this_app_software_information_date_of_release_description" = "09/2022";
+"about_this_app_software_information_date_of_release_description" = "10/2022";
 "link_test_result_enter_code_example" = "例如：7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "检测结果";
 "link_test_result_button_title" = "继续";

@@ -80,8 +80,7 @@ private struct GuidanceHubEnglandView: View {
                                         action: interactor.didTapEnglandLink7,
                                         accessibilityLabel: localize(.covid_guidance_hub_england_button_seven_new_label_accessibility_text)
 
-                                    ),
-                              shouldShowNewLabelState: interactor.newLabelForLongCovidEnglandState
+                                    )
                 )
 
                 HubButtonCell(viewModel:
@@ -110,8 +109,6 @@ public protocol GuidanceHubEnglandViewControllerInteracting {
     func didTapEnglandLink6()
     func didTapEnglandLink7()
     func didTapEnglandLink8()
-
-    var newLabelForLongCovidEnglandState: NewLabelState { get }
 }
 
 public class GuidanceHubEnglandViewController: RootViewController {

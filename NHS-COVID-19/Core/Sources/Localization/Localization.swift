@@ -338,7 +338,7 @@ public extension String {
         }
     }
 
-    func applyCurrentLanguageDirection() -> String {
-        apply(direction: currentLanguageDirection())
+    func applyCurrentLanguageDirection(_ localeConfiguration: LocaleConfiguration? = nil) -> String {
+        apply(direction: currentLanguageDirection(localeConfiguration: localeConfiguration))
     }
 }

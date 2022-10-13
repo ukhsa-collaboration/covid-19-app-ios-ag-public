@@ -1,7 +1,7 @@
 "onboarding_strapline_title" = "COVID-19";
 "onboarding_strapline_accessiblity_label" = "NHS Covid 19";
-"home_strapline_title" = "Test ve Takip";
-"home_strapline_accessiblity_label" = "NHS Test ve Takip";
+"home_strapline_title" = "COVID 19";
+"home_strapline_accessiblity_label" = "NHS Covid 19 uygulaması";
 "unrecoverable_error_page_title" = "Maalesef bu uygulama çalışmıyor";
 "unrecoverable_error_title" = "Bunun sebebi şunlar olabilir:";
 "unrecoverable_error_description" = "Ayarlarınızdaki bir kısıtlama (örneğin, bir şirket telefonu kullanıyorsanız).\n\nTelefonunuzdaki başka bir uygulamanın aynı teknolojiyi kullanması ve bu, uygulamanın çalışmasını durdurmakta.";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Mekana giriş yapmanın diğer yolları olup olmadığıyla ilgili olarak bir personelle konuşmanızı tavsiye ederiz.";
 "checkin_information_whats_a_qr_code_section_title" = "Bir NHS QR kodu posteri nasıl tanınır";
 "checkin_information_whats_a_qr_code_section_description_new" = "Resmi NHS QR kodu posterlerinin neye benzediğine dair bir örneği burada görebilirsiniz. Ortasında kare olan kodu taratmanız gerekir.";
-"about_this_app_software_information_date_of_release_description" = "09/2022";
+"about_this_app_software_information_date_of_release_description" = "10/2022";
 "link_test_result_enter_code_example" = "Örnek: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Test kodu";
 "link_test_result_button_title" = "Devam";
