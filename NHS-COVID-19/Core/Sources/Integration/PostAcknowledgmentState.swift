@@ -43,10 +43,10 @@ enum PostAcknowledgmentState {
                         return .thankYou(isFollowUpTestRequired ? .stillNeedToBookATest : .completed)
                     }
                 } else if let diagnosisKeySharer = diagnosisKeySharer,
-                    let shareFlowType = SendKeysFlowViewController.ShareFlowType(
-                        hasFinishedInitialKeySharingFlow: diagnosisKeySharer.hasFinishedInitialKeySharingFlow,
-                        hasTriggeredReminderNotification: diagnosisKeySharer.hasTriggeredReminderNotification
-                    ) {
+                          let shareFlowType = SendKeysFlowViewController.ShareFlowType(
+                            hasFinishedInitialKeySharingFlow: diagnosisKeySharer.hasFinishedInitialKeySharingFlow,
+                            hasTriggeredReminderNotification: diagnosisKeySharer.hasTriggeredReminderNotification),
+                          !diagnosisKeySharer.hasSelfReported || shareFlowType == .reminder {
                     return .keySharing(diagnosisKeySharer, shareFlowType)
                 } else if isFollowUpTestRequired {
                     return .followUpTest

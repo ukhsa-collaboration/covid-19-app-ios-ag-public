@@ -153,13 +153,23 @@ struct HomeView: View {
                     )
                 }
 
-                NavigationButton(
-                    imageName: .enterTestResult,
-                    foregroundColor: Color(.background),
-                    backgroundColor: Color(.nhsLightBlue),
-                    text: localize(.home_link_test_result_button_title),
-                    action: interactor.didTapLinkTestResultButton
-                )
+                if interactor.shouldShowSelfReporting {
+                    NavigationButton(
+                        imageName: .enterTestResult,
+                        foregroundColor: Color(.background),
+                        backgroundColor: Color(.nhsLightBlue),
+                        text: localize(.home_link_test_result_button_title),
+                        action: interactor.didTapSelfReportingButton
+                    )
+                } else {
+                    NavigationButton(
+                        imageName: .enterTestResult,
+                        foregroundColor: Color(.background),
+                        backgroundColor: Color(.nhsLightBlue),
+                        text: localize(.home_link_test_result_button_title),
+                        action: interactor.didTapLinkTestResultButton
+                    )
+                }
 
                 if isolationViewModel.isolationState != .notIsolating && shouldShowLocalStats {
                     statsButton()

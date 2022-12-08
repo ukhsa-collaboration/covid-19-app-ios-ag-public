@@ -31,6 +31,7 @@ public protocol HomeFlowViewControllerInteracting {
     func makeTestingInformationViewController(flowController: UINavigationController?, showWarnAndBookATestFlow: InterfaceProperty<Bool>) -> UIViewController?
     func makeFinancialSupportViewController(flowController: UINavigationController?) -> UIViewController?
     func makeLinkTestResultViewController() -> UIViewController?
+    func makeSelfReportingViewController() -> UIViewController?
     func makeContactTracingHubViewController(flowController: UINavigationController?, exposureNotificationsEnabled: InterfaceProperty<Bool>, exposureNotificationsToggleAction: @escaping (Bool) -> Void, userNotificationsEnabled: InterfaceProperty<Bool>) -> UIViewController
     func makeLocalInfoScreenViewController(viewModel: LocalInformationViewController.ViewModel, interactor: LocalInformationViewController.Interacting) -> UIViewController
     func makeBluetoothDisabledWarningViewController(flowController: UINavigationController?) -> UIViewController
@@ -45,6 +46,7 @@ public protocol HomeFlowViewControllerInteracting {
     var shouldShowTestingForCOVID19: Bool { get }
     var shouldShowSelfIsolation: Bool { get }
     var shouldShowGuidanceHub: Bool { get }
+    var shouldShowSelfReporting: Bool { get }
     func openTearmsOfUseLink()
     func openPrivacyLink()
     func openFAQ()
@@ -406,6 +408,14 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
         flowController?.present(viewController, animated: true)
     }
 
+    public func didTapSelfReportingButton() {
+        guard let viewController = flowInteractor.makeSelfReportingViewController() else {
+            return
+        }
+        viewController.modalPresentationStyle = .overFullScreen
+        flowController?.present(viewController, animated: true)
+    }
+
     public func didTapContactTracingHubButton() {
 
         let vc = WrappingViewController {
@@ -451,6 +461,10 @@ private struct HomeViewControllerInteractor: HomeViewController.Interacting {
 
     public var shouldShowGuidanceHub: Bool {
         flowInteractor.shouldShowGuidanceHub
+    }
+
+    public var shouldShowSelfReporting: Bool {
+        flowInteractor.shouldShowSelfReporting
     }
 
     func openSettings() {

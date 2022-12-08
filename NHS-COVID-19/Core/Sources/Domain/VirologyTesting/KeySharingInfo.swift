@@ -10,4 +10,6 @@ struct KeySharingInfo: Equatable {
     var testResultAcknowledgmentTime: UTCHour
     var hasFinishedInitialKeySharingFlow: Bool
     var hasTriggeredReminderNotification: Bool
+    var privateJourney: Bool?
+    var testKitType: TestKitType?
 }

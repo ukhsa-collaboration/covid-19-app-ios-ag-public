@@ -57,6 +57,13 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
             assertField.equals(expected: nil, \.haveActiveIpcTokenBackgroundTick)
             assertField.equals(expected: nil, \.selectedIsolationPaymentsButton)
             assertField.equals(expected: nil, \.launchedIsolationPaymentsApplication)
+
+            // Self reporting
+            assertField.equals(expected: nil, \.selfReportedVoidSelfLFDTestResultEnteredManually)
+            assertField.equals(expected: nil, \.selfReportedNegativeSelfLFDTestResultEnteredManually)
+            assertField.equals(expected: nil, \.isPositiveSelfLFDFree)
+            assertField.equals(expected: nil, \.selfReportedPositiveSelfLFDOnGov)
+            assertField.equals(expected: nil, \.completedSelfReportingTestFlow)
         }
     }
 
@@ -96,6 +103,13 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
             assertField.equals(expected: nil, \.haveActiveIpcTokenBackgroundTick)
             assertField.equals(expected: nil, \.selectedIsolationPaymentsButton)
             assertField.equals(expected: nil, \.launchedIsolationPaymentsApplication)
+
+            // Self reporting
+            assertField.equals(expected: nil, \.selfReportedVoidSelfLFDTestResultEnteredManually)
+            assertField.equals(expected: nil, \.selfReportedNegativeSelfLFDTestResultEnteredManually)
+            assertField.equals(expected: nil, \.isPositiveSelfLFDFree)
+            assertField.equals(expected: nil, \.selfReportedPositiveSelfLFDOnGov)
+            assertField.equals(expected: nil, \.completedSelfReportingTestFlow)
         }
 
     }
@@ -118,6 +132,7 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
                 .selfIsolationHubWales,
                 .guidanceHubEngland,
                 .guidanceHubWales,
+                .selfReporting,
             ]
         )
 
@@ -144,6 +159,7 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
                 .selfIsolationHubWales,
                 .guidanceHubEngland,
                 .guidanceHubWales,
+                .selfReporting,
             ]
         )
 
@@ -168,6 +184,7 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
                 .testingForCOVID19,
                 .selfIsolationHubEngland,
                 .guidanceHubEngland,
+                .selfReporting,
             ]
         )
 
@@ -202,6 +219,7 @@ class MetricsFieldFilterTests: AcceptanceTestCase {
                 .testingForCOVID19,
                 .selfIsolationHubWales,
                 .guidanceHubWales,
+                .selfReporting,
             ]
         )
 

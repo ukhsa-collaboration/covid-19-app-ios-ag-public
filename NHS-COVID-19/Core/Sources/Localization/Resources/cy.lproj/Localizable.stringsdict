@@ -842,5 +842,53 @@
 				<string/>
 			</dict>
 		</dict>
+		<key>self_report_advice_not_reported_result_header days: %ld date: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>zero</key>
+				<string>Ceisiwch aros gartref ac i ffwrdd oddi wrth bobl eraill am %1$ld diwrnod tan 23:59 ar %2$@</string>
+				<key>one</key>
+				<string>Ceisiwch aros gartref ac i ffwrdd oddi wrth bobl eraill am %1$ld diwrnod tan 23:59 ar %2$@</string>
+				<key>two</key>
+				<string>Ceisiwch aros gartref ac i ffwrdd oddi wrth bobl eraill am %1$ld diwrnod tan 23:59 ar %2$@</string>
+				<key>few</key>
+				<string>Ceisiwch aros gartref ac i ffwrdd oddi wrth bobl eraill am %1$ld diwrnod tan 23:59 ar %2$@</string>
+				<key>many</key>
+				<string>Ceisiwch aros gartref ac i ffwrdd oddi wrth bobl eraill am %1$ld diwrnod tan 23:59 ar %2$@</string>
+				<key>other</key>
+				<string>Ceisiwch aros gartref ac i ffwrdd oddi wrth bobl eraill am %1$ld diwrnod tan 23:59 ar %2$@</string>
+			</dict>
+		</dict>
+		<key>self_report_advice_reported_result_header days: %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>zero</key>
+				<string>Ceisiwch aros gartref ac i ffwrdd oddi wrth bobl eraill am %ld o ddiwrnodau</string>
+				<key>one</key>
+				<string>Ceisiwch aros gartref ac i ffwrdd oddi wrth bobl eraill am %ld diwrnod</string>
+				<key>two</key>
+				<string>Ceisiwch aros gartref ac i ffwrdd oddi wrth bobl eraill am %ld o ddiwrnodau</string>
+				<key>few</key>
+				<string>Ceisiwch aros gartref ac i ffwrdd oddi wrth bobl eraill am %ld o ddiwrnodau</string>
+				<key>many</key>
+				<string>Ceisiwch aros gartref ac i ffwrdd oddi wrth bobl eraill am %ld o ddiwrnodau</string>
+				<key>other</key>
+				<string>Ceisiwch aros gartref ac i ffwrdd oddi wrth bobl eraill am %ld o ddiwrnodau</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

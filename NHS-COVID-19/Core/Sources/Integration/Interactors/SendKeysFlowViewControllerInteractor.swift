@@ -20,7 +20,7 @@ struct SendKeysFlowViewControllerInteractor: SendKeysFlowViewController.Interact
     }
 
     func shareKeys(flowType: SendKeysFlowViewController.ShareFlowType) -> AnyPublisher<Void, Error> {
-        return diagnosisKeySharer.shareKeys(DiagnosisKeySharer.ShareFlowType(flowType: flowType))
+        return diagnosisKeySharer.shareKeys(DiagnosisKeySharer.ShareFlowType(flowType: flowType), nil)
             .handleEvents(receiveOutput: didReceiveResult)
             .map { _ in }
             .eraseToAnyPublisher()

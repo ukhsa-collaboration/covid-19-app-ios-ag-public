@@ -1153,6 +1153,139 @@ public enum StringLocalizableKey: String, CaseIterable {
     case nhs111_online_link_title
     case void_test_result_no_isolation_warning
     case void_test_result_no_isolation_further_advice_visit
+
+    //MARK: - Self reporting
+    case self_report_test_type_title
+    case self_report_test_type_header
+    case self_report_test_type_radio_button_option_positive
+    case self_report_test_type_radio_button_option_negative
+    case self_report_test_type_radio_button_option_void
+    case self_report_test_type_error_description
+    case self_report_test_type_back_button_accessibility_label
+    case self_report_negative_or_void_test_result_accessibility_title
+    case self_report_negative_or_void_test_result_back_button_accessibility_label
+    case self_report_negative_or_void_test_result_header
+    case self_report_negative_or_void_test_result_body_one
+    case self_report_negative_or_void_test_result_link_one_title
+    case self_report_negative_or_void_test_result_link_one_url
+    case self_report_negative_or_void_test_result_body_two
+    case self_report_negative_or_void_test_result_subtitle
+    case self_report_negative_or_void_test_result_body_three
+    case self_report_negative_or_void_test_result_body_four
+    case nhs111_online_opens_outside_the_app_link_button_title
+    case self_report_negative_or_void_test_result_back_to_home
+    case self_report_share_result_header
+    case self_report_share_result_subheader
+    case self_report_share_result_body
+    case self_report_share_result_privacy_box
+    case self_report_share_result_bulleted_list_header
+    case self_report_share_result_bulleted_list
+    case self_report_share_result_accessibility_title
+    case self_report_share_result_back_button_accessibility_label
+    case self_report_will_not_notify_others_accessibility_title
+    case self_report_will_not_notify_others_back_button_accessibility_label
+    case self_report_will_not_notify_others_header
+    case self_report_will_not_notify_others_body
+    case self_report_test_kit_type_header
+    case self_report_test_kit_type_description
+    case self_report_test_kit_type_radio_button_option_lfd
+    case self_report_test_kit_type_radio_button_option_pcr
+    case self_report_test_kit_type_error_description
+    case self_report_test_kit_type_accessibility_title
+    case self_report_test_kit_type_back_button_accessibility_label
+    case self_report_test_kit_type_back_button_did_not_share_keys_accessibility_label
+    case self_report_test_supplier_header
+    case self_report_test_supplier_bulleted_list_header
+    case self_report_test_supplier_bulleted_list
+    case self_report_test_supplier_description
+    case self_report_test_supplier_error_description
+    case self_report_test_supplier_first_radio_button_label
+    case self_report_test_supplier_second_radio_button_label
+    case self_report_test_supplier_accessibility_title
+    case self_report_test_supplier_back_button_accessibility_label
+    case self_report_test_date_header
+    case self_report_test_date_error_description
+    case self_report_test_date_accessibility_title
+    case self_report_test_date_back_button_lfd_accessibility_label
+    case self_report_test_date_back_button_pcr_accessibility_label
+    case self_report_test_date_no_date
+    case self_report_test_date_no_date_accessability_label_not_checked
+    case self_report_test_date_no_date_accessability_label_checked
+    case self_report_test_date_placeholder
+    case self_report_test_date_hint
+    case self_report_symptoms_accessibility_title
+    case self_report_symptoms_back_button_accessibility_label
+    case self_report_symptoms_header
+    case self_report_symptoms_bulleted_list
+    case self_report_symptoms_radio_button_option_yes
+    case self_report_symptoms_radio_button_option_no
+    case self_report_symptoms_error_description
+    case self_report_symptoms_date_accessibility_title
+    case self_report_symptoms_date_back_button_accessibility_label
+    case self_report_symptoms_date_header
+    case self_report_symptoms_date_bulleted_list
+    case self_report_symptoms_date_no_date
+    case self_report_symptoms_date_no_date_accessability_label_not_checked
+    case self_report_symptoms_date_no_date_accessability_label_checked
+    case self_report_symptoms_date_placeholder
+    case self_report_symptoms_date_hint
+    case self_report_symptoms_date_error_description
+    case self_report_reported_result_accessibility_title
+    case self_report_reported_result_test_date_back_button_accessibility_label
+    case self_report_reported_result_symptoms_start_date_back_button_accessibility_label
+    case self_report_reported_result_symptoms_back_button_accessibility_label
+    case self_report_reported_result_header
+    case self_report_reported_result_body
+    case self_report_reported_result_radio_button_option_yes
+    case self_report_reported_result_radio_button_option_no
+    case self_report_reported_result_error_description
+    case self_report_check_answers_accessibility_title
+    case self_report_check_answers_back_button_accessibility_label
+    case self_report_check_answers_test_date_back_button_accessibility_label
+    case self_report_check_answers_symptoms_start_date_back_button_accessibility_label
+    case self_report_check_answers_symptoms_back_button_accessibility_label
+    case self_report_check_answers_header
+    case self_report_check_answers_change_link_label
+    case self_report_check_answers_test_type_change_link_accessibility_label
+    case self_report_check_answers_test_supplier_change_link_accessibility_label
+    case self_report_check_answers_test_date_change_link_accessibility_label
+    case self_report_check_answers_symptoms_change_link_accessibility_label
+    case self_report_check_answers_symptoms_date_change_link_accessibility_label
+    case self_report_check_answers_reported_result_change_link_accessibility_label
+    case self_report_check_answers_primary_button
+
+    // Self report thank you screen
+    case self_report_answers_submitted_accessibility_title
+    case self_report_answers_submitted_shared_keys_header
+    case self_report_answers_submitted_shared_keys_reported_description
+    case self_report_answers_submitted_shared_keys_not_reported_description
+    case self_report_answers_submitted_not_reported_info_label
+    case self_report_answers_submitted_not_shared_keys_header
+    case self_report_answers_submitted_not_shared_keys_reported_description
+    case self_report_answers_submitted_not_shared_keys_not_reported_description
+
+    // Self reported advice screen
+    case self_report_advice_accessibility_title
+    case self_report_advice_bulleted_list_header_label
+    case self_report_advice_icon_bullet_1_label
+    case self_report_advice_icon_bullet_2_label
+    case self_report_advice_icon_bullet_3_label
+    case self_report_advice_read_more_url_label
+    case self_report_advice_read_more_url_link
+    case self_report_advice_info_section_url_label
+    case self_report_advice_info_section_description
+    case self_report_advice_primary_link_button_label
+    case self_report_advice_information_label
+    case self_report_advice_not_reported_result_header
+    case self_report_advice_reported_result_out_of_isolation_header
+    case self_report_advice_not_reported_result_out_of_isolation_second_header
+
+    //MARK: - Generic
+    case continue_button_label
+    case error_box_title
+    case loading_accessibility_title
+    case loading_error_accessibility_title
+    case back_to_home
 }
 
 public enum ParameterisedStringLocalizable: Equatable {
@@ -1245,6 +1378,8 @@ public enum ParameterisedStringLocalizable: Equatable {
         case your_symptoms_error_description = "your_symptoms_error_description %@"
         case negative_test_result_with_isolation_accessibility_label = "negative_test_result_with_isolation_accessibility_label %ld"
         case negative_test_after_positive_result_with_isolation_accessibility_label = "negative_test_after_positive_result_with_isolation_accessibility_label %ld"
+        case self_report_advice_reported_result_header = "self_report_advice_reported_result_header days: %ld"
+        case self_report_advice_not_reported_result_header = "self_report_advice_not_reported_result_header days: %ld date: %@"
     }
 
     case checkin_confirmation_date(date: Date)
@@ -1339,6 +1474,9 @@ public enum ParameterisedStringLocalizable: Equatable {
     case try_to_stay_at_home_for_wales_header(days: Int)
 
     case your_symptoms_error_description(question: String)
+
+    case self_report_advice_reported_result_header(days: Int)
+    case self_report_advice_not_reported_result_header(days: Int, endDate: Date)
 
     var key: Key {
         switch self {
@@ -1443,6 +1581,10 @@ public enum ParameterisedStringLocalizable: Equatable {
             return .your_symptoms_error_description
         case .try_to_stay_at_home_for_wales_header:
             return .try_to_stay_at_home_for_wales_header
+        case .self_report_advice_reported_result_header:
+            return .self_report_advice_reported_result_header
+        case .self_report_advice_not_reported_result_header:
+            return .self_report_advice_not_reported_result_header
         }
     }
 
@@ -1620,6 +1762,13 @@ public enum ParameterisedStringLocalizable: Equatable {
 
         case .try_to_stay_at_home_for_wales_header(days: let days):
             return [days]
+        case .self_report_advice_reported_result_header(days: let days):
+            return [days]
+        case .self_report_advice_not_reported_result_header(days: let days, endDate: let endDate):
+            return [
+                days,
+                DateFormatter.dayDateMonth.string(from: endDate.advanced(by: -1))
+            ]
         }
     }
 
@@ -1678,6 +1827,12 @@ private extension DateFormatter {
         formatter.timeStyle = .short
         return formatter
     }()
+
+    static var dayDateMonth: DateFormatter {
+        let dateFormatter = Localization.make(DateFormatter.self)
+        dateFormatter.dateFormat = "EEEE dd MMMM yyyy"
+        return dateFormatter
+    }
 }
 
 private extension DateIntervalFormatter {

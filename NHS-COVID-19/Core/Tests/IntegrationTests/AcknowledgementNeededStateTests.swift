@@ -6,6 +6,7 @@ import Combine
 import Common
 import Scenarios
 import XCTest
+import ExposureNotification
 @testable import Domain
 @testable import Integration
 
@@ -188,6 +189,7 @@ class AcknowledgementNeededStateTests: XCTestCase {
             shouldShowWalesOptOutFlow: false,
             shouldShowGuidanceHubEngland: false,
             shouldShowGuidanceHubWales: false,
+            shouldShowSelfReporting: false,
             postcodeInfo: .constant(nil),
             country: Just(.england).eraseToAnyPublisher().domainProperty(),
             bluetoothOff: .constant(false),
@@ -230,7 +232,9 @@ class AcknowledgementNeededStateTests: XCTestCase {
             contactCaseIsolationDuration: .constant(DayDuration(11)),
             shouldShowLocalStats: true,
             localCovidStatsManager: MockLocalStatsManager(),
-            indexCaseIsolationDuration: { 6 }
+            indexCaseIsolationDuration: { 6 },
+            indexCaseSinceTestResultEndDate: { 6 },
+            selfReportingManager: MockSelfReportingManager()
         )
     }
 
@@ -284,6 +288,26 @@ class AcknowledgementNeededStateTests: XCTestCase {
             .noSymptoms
         }
 
+    }
+
+    private class MockSelfReportingManager: SelfReportingManaging {
+        var alreadyInIsolation: Bool = false
+
+        let diagnosisKeys: [ENTemporaryExposureKey] = []
+
+        func getDiagnosisKeys() -> AnyPublisher<[ENTemporaryExposureKey], Error> {
+            Result.Publisher(diagnosisKeys).eraseToAnyPublisher()
+        }
+
+        func submit(testResult: TestResult, testKitType: TestKitType, testDate: GregorianDay, symptoms: Bool, onsetDay: GregorianDay?, nhsTest: Bool?, reportedResult: Bool?) {}
+
+        func share(keys: Result<[ENTemporaryExposureKey], Error>, completion: @escaping (Result<DiagnosisKeySharer.ShareResult, Error>) -> Void) {
+            completion(.success(.sent))
+        }
+
+        func doNotShareKeys() {}
+        func recordNegativeTestResultMetrics() {}
+        func recordVoidTestResultMetrics() {}
     }
 
     private class MockSymptomsCheckerManager: SymptomsCheckerManaging {

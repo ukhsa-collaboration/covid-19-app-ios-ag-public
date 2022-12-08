@@ -87,7 +87,11 @@ class SandboxExposureNotificationManager: ExposureNotificationManaging {
             message: AlertText.diagnosisKeyAlertMessage.rawValue,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: AlertText.diagnosisKeyAlertDoNotShare.rawValue, style: .default, handler: { _ in }))
+        alert.addAction(UIAlertAction(title: AlertText.diagnosisKeyAlertDoNotShare.rawValue, style: .default, handler: { [weak self] _ in
+            self?.queue.async {
+                completionHandler(nil, ENError(.notAuthorized))
+            }
+        }))
 
         alert.addAction(UIAlertAction(title: AlertText.diagnosisKeyAlertShare.rawValue, style: .default, handler: { [weak self] _ in
             self?.queue.async {

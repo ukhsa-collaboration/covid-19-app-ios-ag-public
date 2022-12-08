@@ -702,5 +702,45 @@
 				<string/>
 			</dict>
 		</dict>
+		<key>self_report_advice_not_reported_result_header days: %ld date: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Staraj się pozostać w domu i unikaj kontaktu z innymi przez %1$ld dni, do godz. 23:59 %2$@</string>
+				<key>few</key>
+				<string>Staraj się pozostać w domu i unikaj kontaktu z innymi przez %1$ld dni, do godz. 23:59 %2$@</string>
+				<key>many</key>
+				<string>Staraj się pozostać w domu i unikaj kontaktu z innymi przez %1$ld dni, do godz. 23:59 %2$@</string>
+				<key>other</key>
+				<string>Staraj się pozostać w domu i unikaj kontaktu z innymi przez %1$ld dni, do godz. 23:59 %2$@</string>
+			</dict>
+		</dict>
+		<key>self_report_advice_reported_result_header days: %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Staraj się pozostać w domu i unikaj kontaktu z innymi przez %ld dni</string>
+				<key>few</key>
+				<string>Staraj się pozostać w domu i unikaj kontaktu z innymi przez %ld dni</string>
+				<key>many</key>
+				<string>Staraj się pozostać w domu i unikaj kontaktu z innymi przez %ld dni</string>
+				<key>other</key>
+				<string>Staraj się pozostać w domu i unikaj kontaktu z innymi przez %ld dni</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

@@ -304,6 +304,26 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         return baseNavigationController
     }
 
+    func makeSelfReportingViewController() -> UIViewController? {
+        let interactor = SelfReportingFlowInteractor(selfReportingManager: context.selfReportingManager)
+        return SelfReportingFlowViewController(
+            interactor,
+            currentDateProvider: currentDateProvider,
+            currentCountry: { context.country.currentValue },
+            testDateSelectionWindow: { context.indexCaseSinceTestResultEndDate().days },
+            symptomsDateSelectionWindow: { context.indexCaseIsolationDuration().days },
+            openURL: context.openURL,
+            isolationEndDate: {
+                switch context.isolationState.currentValue {
+                case .isolate(let isolation):
+                    return isolation.endDate
+                case .noNeedToIsolate:
+                    return nil
+                }
+            }
+        )
+    }
+
     public func makeContactTracingHubViewController(flowController: UINavigationController?, exposureNotificationsEnabled: InterfaceProperty<Bool>, exposureNotificationsToggleAction: @escaping (Bool) -> Void, userNotificationsEnabled: InterfaceProperty<Bool>) -> UIViewController {
 
         struct ContactTracingHubViewControllerInteractor: ContactTracingHubViewController.Interacting {
@@ -443,6 +463,10 @@ struct HomeFlowViewControllerInteractor: HomeFlowViewController.Interacting {
         case .wales:
             return context.shouldShowGuidanceHubWales
         }
+    }
+
+    var shouldShowSelfReporting: Bool {
+        context.shouldShowSelfReporting
     }
 
     func getMyAreaViewModel() -> MyAreaTableViewController.ViewModel {

@@ -17,6 +17,7 @@ public class LoadingErrorViewController: UIViewController {
     private var interacting: Interacting
 
     public init(interacting: Interacting, title: String) {
+        UIAccessibility.post(notification: .screenChanged, argument: localize(.loading_error_accessibility_title))
         self.interacting = interacting
 
         super.init(nibName: nil, bundle: nil)

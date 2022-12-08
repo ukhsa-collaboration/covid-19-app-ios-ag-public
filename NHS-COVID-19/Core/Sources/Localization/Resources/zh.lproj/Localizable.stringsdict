@@ -492,5 +492,33 @@
 				<string/>
 			</dict>
 		</dict>
+		<key>self_report_advice_not_reported_result_header days: %ld date: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>请尽量居家隔离 %1$ld 天，直至 %2$@ 23 点 59 分</string>
+			</dict>
+		</dict>
+		<key>self_report_advice_reported_result_header days: %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>other</key>
+				<string>请尽量居家隔离 %ld 天</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

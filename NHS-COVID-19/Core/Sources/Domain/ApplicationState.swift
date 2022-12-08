@@ -35,6 +35,7 @@ public struct RunningAppContext {
     public var shouldShowWalesOptOutFlow: Bool
     public var shouldShowGuidanceHubEngland: Bool
     public var shouldShowGuidanceHubWales: Bool
+    public var shouldShowSelfReporting: Bool
     public var postcodeInfo: DomainProperty<(postcode: Postcode, localAuthority: LocalAuthority?, risk: DomainProperty<RiskyPostcodeEndpointManager.PostcodeRisk?>)?>
     public var country: DomainProperty<Country>
     public var bluetoothOff: DomainProperty<Bool>
@@ -74,6 +75,8 @@ public struct RunningAppContext {
     public var shouldShowLocalStats: Bool
     public var localCovidStatsManager: LocalCovidStatsManaging
     public var indexCaseIsolationDuration: () -> DayDuration
+    public var indexCaseSinceTestResultEndDate: () -> DayDuration
+    public var selfReportingManager: SelfReportingManaging
 }
 
 public typealias GetLocalAuthorities = (_ postcode: Postcode) -> Result<Set<LocalAuthority>, PostcodeValidationError>

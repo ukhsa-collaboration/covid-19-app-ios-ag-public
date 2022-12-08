@@ -70,7 +70,17 @@ class ExposureKeysManagerTests: XCTestCase {
             currentDateProvider: MockDateProvider(getDate: { today.startDate(in: .current) })
         )
 
-        _ = try manager.sendKeys(for: onsetDay, token: DiagnosisKeySubmissionToken(value: String.random()), acknowledgementDay: today, flowType: .initial).await()
+        let keys: Result<[ENTemporaryExposureKey], Error> = .success(diagnosisKeys)
+
+        _ = try manager.send(
+            keys: keys,
+            for: onsetDay,
+            token: DiagnosisKeySubmissionToken(value: String.random()),
+            acknowledgementDay: today,
+            isPrivateJourney: true,
+            testKitType: .rapidSelfReported,
+            flowType: .initial
+        ).await()
 
         let requestBody = try XCTUnwrap(client.lastRequest?.body)
         let decoder = JSONDecoder()
@@ -104,7 +114,17 @@ class ExposureKeysManagerTests: XCTestCase {
             currentDateProvider: MockDateProvider(getDate: { today.startDate(in: .current) })
         )
 
-        _ = try manager.sendKeys(for: onsetDay, token: DiagnosisKeySubmissionToken(value: String.random()), acknowledgementDay: acknowledgementDay, flowType: .initial).await()
+        let keys: Result<[ENTemporaryExposureKey], Error> = .success(diagnosisKeys)
+
+        _ = try manager.send(
+            keys: keys,
+            for: onsetDay,
+            token: DiagnosisKeySubmissionToken(value: String.random()),
+            acknowledgementDay: acknowledgementDay,
+            isPrivateJourney: true,
+            testKitType: .rapidSelfReported,
+            flowType: .initial
+        ).await()
 
         let requestBody = try XCTUnwrap(client.lastRequest?.body)
         let decoder = JSONDecoder()
@@ -143,7 +163,15 @@ class ExposureKeysManagerTests: XCTestCase {
             currentDateProvider: MockDateProvider(getDate: { today.startDate(in: .current) })
         )
 
-        _ = try manager.sendKeys(for: onsetDay, token: DiagnosisKeySubmissionToken(value: String.random()), acknowledgementDay: acknowledgementDay, flowType: .initial).await()
+        _ = try manager.send(
+            keys: nil,
+            for: onsetDay,
+            token: DiagnosisKeySubmissionToken(value: String.random()),
+            acknowledgementDay: acknowledgementDay,
+            isPrivateJourney: true,
+            testKitType: .labResult,
+            flowType: .initial
+        ).await()
 
         let requestBody = try XCTUnwrap(client.lastRequest?.body)
         let decoder = JSONDecoder()

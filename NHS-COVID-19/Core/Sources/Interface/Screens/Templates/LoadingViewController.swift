@@ -16,6 +16,7 @@ public class LoadingViewController: UIViewController {
     private let interacting: Interacting
 
     public init(interactor: Interacting, title: String) {
+        UIAccessibility.post(notification: .screenChanged, argument: localize(.loading_accessibility_title))
         interacting = interactor
 
         super.init(nibName: nil, bundle: nil)

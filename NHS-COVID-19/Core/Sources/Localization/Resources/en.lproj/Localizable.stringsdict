@@ -562,5 +562,37 @@
 				<string>Continue to self-isolate for %ld days</string>
 			</dict>
 		</dict>
+		<key>self_report_advice_not_reported_result_header days: %ld date: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Try to stay at home and away from others for %1$ld day until %2$@ at 23:59</string>
+				<key>other</key>
+				<string>Try to stay at home and away from others for %1$ld days until %2$@ at 23:59</string>
+			</dict>
+		</dict>
+		<key>self_report_advice_reported_result_header days: %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>Try to stay at home and away from others for %ld day</string>
+				<key>other</key>
+				<string>Try to stay at home and away from others for %ld days</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

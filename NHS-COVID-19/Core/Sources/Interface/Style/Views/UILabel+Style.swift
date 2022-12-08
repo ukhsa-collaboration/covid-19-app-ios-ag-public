@@ -74,6 +74,14 @@ extension UILabel {
     }
 
     @discardableResult
+    public func styleAsBoldSecondaryTitle() -> Self {
+        textColor = UIColor(.primaryText)
+        setBoldDynamicTextStyle(.title2)
+        accessibilityTraits = .header
+        return self
+    }
+
+    @discardableResult
     public func styleAsTertiaryTitle() -> Self {
         textColor = UIColor(.primaryText)
         setBoldDynamicTextStyle(.title3)

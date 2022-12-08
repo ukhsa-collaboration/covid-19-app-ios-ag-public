@@ -4,7 +4,7 @@
 
 import Foundation
 
-public enum TestKitType: Equatable {
+public enum TestKitType: String, Equatable, Codable {
     case labResult
     case rapidResult
     case rapidSelfReported

@@ -27,6 +27,7 @@ public class ApplicationCoordinator {
     private let distributeClient: HTTPClient
     private let selfDiagnosisManager: SelfDiagnosisManager
     private let symptomsCheckerManager: SymptomsCheckerManager
+    private let selfReportingManager: SelfReportingManager
     private let exposureNotificationContext: ExposureNotificationContext
     private let checkInContext: CheckInContext
     private let isolationContext: IsolationContext
@@ -361,6 +362,17 @@ public class ApplicationCoordinator {
 
         trafficObfuscationClient = TrafficObfuscationClient(client: services.apiClient, rateLimiter: ObfuscationRateLimiter())
 
+        selfReportingManager = SelfReportingManager(
+            manager: exposureNotificationContext.exposureNotificationManager,
+            virologyTestingStateStore: virologyTestingStateStore,
+            isolationStateStore: isolationContext.isolationStateStore,
+            currentDateProvider: currentDateProvider,
+            keySharingStore: keySharingStore,
+            exposureNotificationContext: exposureNotificationContext,
+            diagnosisKeySharer: diagnosisKeySharer,
+            trafficObfuscationClient: trafficObfuscationClient
+        )
+
         isFeatureEnabled = { feature in
             enabledFeatures.contains(feature)
         }
@@ -464,6 +476,7 @@ public class ApplicationCoordinator {
                     shouldShowWalesOptOutFlow: isFeatureEnabled(.contactOptOutFlowWales),
                     shouldShowGuidanceHubEngland: isFeatureEnabled(.guidanceHubEngland),
                     shouldShowGuidanceHubWales: isFeatureEnabled(.guidanceHubWales),
+                    shouldShowSelfReporting: isFeatureEnabled(.selfReporting),
                     postcodeInfo: postcodeInfo,
                     country: country,
                     bluetoothOff: bluetoothOff.domainProperty(),
@@ -515,7 +528,9 @@ public class ApplicationCoordinator {
                     contactCaseIsolationDuration: isolationContext.isolationConfiguration.$value.map { $0.for(country.currentValue).contactCase }.domainProperty(),
                     shouldShowLocalStats: isFeatureEnabled(.localStatistics),
                     localCovidStatsManager: localCovidStatsManager,
-                    indexCaseIsolationDuration: { isolationStateStore.configuration.indexCaseSinceSelfDiagnosisOnset }
+                    indexCaseIsolationDuration: { isolationStateStore.configuration.indexCaseSinceSelfDiagnosisOnset },
+                    indexCaseSinceTestResultEndDate: { isolationStateStore.configuration.indexCaseSinceNPEXDayNoSelfDiagnosis },
+                    selfReportingManager: selfReportingManager
                 )
             )
         case .recommendingUpdate(let reason, let titles, let descriptions):
@@ -580,6 +595,11 @@ public class ApplicationCoordinator {
                 }
 
                 guard let virologyTestResult = virologyTestResult else {
+                    return Just(.notNeeded)
+                        .eraseToAnyPublisher()
+                }
+
+                if virologyTestResult.selfReported {
                     return Just(.notNeeded)
                         .eraseToAnyPublisher()
                 }

@@ -29,7 +29,9 @@ class KeySharingStoreTests: XCTestCase {
             diagnosisKeySubmissionToken: .init(value: .random()),
             testResultAcknowledgmentTime: ackTime,
             hasFinishedInitialKeySharingFlow: false,
-            hasTriggeredReminderNotification: false
+            hasTriggeredReminderNotification: false,
+            privateJourney: false,
+            testKitType: .labResult
         )
         encryptedStore.stored["key_sharing"] = Data(#"""
         {
@@ -45,7 +47,9 @@ class KeySharingStoreTests: XCTestCase {
                         "minutes": 0
                     },
                 "hasFinishedInitialKeySharingFlow": false,
-                "hasTriggeredReminderNotification": false
+                "hasTriggeredReminderNotification": false,
+                "privateJourney": false,
+                "testKitType": "labResult"
             }
         }
         """# .utf8)
@@ -59,7 +63,9 @@ class KeySharingStoreTests: XCTestCase {
             diagnosisKeySubmissionToken: .init(value: .random()),
             testResultAcknowledgmentTime: ackTime,
             hasFinishedInitialKeySharingFlow: true,
-            hasTriggeredReminderNotification: true
+            hasTriggeredReminderNotification: true,
+            privateJourney: false,
+            testKitType: .labResult
         )
         encryptedStore.stored["key_sharing"] = Data(#"""
         {
@@ -76,6 +82,40 @@ class KeySharingStoreTests: XCTestCase {
                     },
                 "hasFinishedInitialKeySharingFlow": true,
                 "hasTriggeredReminderNotification": true,
+                "privateJourney": false,
+                "testKitType": "labResult"
+            }
+        }
+        """# .utf8)
+        let store = KeySharingStore(store: encryptedStore)
+        TS.assert(store.info.currentValue, equals: expected)
+    }
+
+    func testLoadingKeySharingInfoTestKitIsNil() throws {
+        let ackTime = UTCHour(day: GregorianDay(year: 2020, month: 5, day: 15), hour: 7)
+        let expected = KeySharingInfo(
+            diagnosisKeySubmissionToken: .init(value: .random()),
+            testResultAcknowledgmentTime: ackTime,
+            hasFinishedInitialKeySharingFlow: false,
+            hasTriggeredReminderNotification: false,
+            privateJourney: nil,
+            testKitType: nil
+        )
+        encryptedStore.stored["key_sharing"] = Data(#"""
+        {
+            "keySharingInfo": {
+                "diagnosisKeySubmissionToken": "\#(expected.diagnosisKeySubmissionToken.value)",
+                "testResultAcknowledgmentTime": {
+                        "day" : {
+                            "year" : 2020,
+                            "month" : 5,
+                            "day" : 15
+                        },
+                        "hour" : 7,
+                        "minutes": 0
+                    },
+                "hasFinishedInitialKeySharingFlow": false,
+                "hasTriggeredReminderNotification": false,
             }
         }
         """# .utf8)

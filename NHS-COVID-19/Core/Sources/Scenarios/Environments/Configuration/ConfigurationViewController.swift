@@ -44,6 +44,7 @@ class ConfigurationViewController: UIViewController {
         let selfIsolationHubToggleWales = createToggle(feature: .selfIsolationHubWales, isOn: featureToggleStorage.selfIsolationHubToggleWales, action: #selector(toggleSelfIsolationHubWales))
         let guidanceHubEnglandToggle = createToggle(feature: .guidanceHubEngland, isOn: featureToggleStorage.guidanceHubEnglandToggle, action: #selector(toggleGuidanceHubEngland))
         let guidanceHubWalesToggle = createToggle(feature: .guidanceHubWales, isOn: featureToggleStorage.guidanceHubWalesToggle, action: #selector(toggleGuidanceHubWales))
+        let selfReportingToggle = createToggle(feature: .selfReporting, isOn: featureToggleStorage.selfReportingToggle, action: #selector(toggleSelfReporting))
 
         let stackView = UIStackView(arrangedSubviews: [
             localStatsButtonToggle,
@@ -55,6 +56,7 @@ class ConfigurationViewController: UIViewController {
             contactOptOutFlowWalesToggle,
             guidanceHubEnglandToggle,
             guidanceHubWalesToggle,
+            selfReportingToggle,
             disclaimer,
         ])
 
@@ -105,6 +107,8 @@ class ConfigurationViewController: UIViewController {
             return "COVID-19 Guidance Home Screen button England"
         case .guidanceHubWales:
             return "COVID-19 Guidance Home Screen button Wales"
+        case .selfReporting:
+            return "Self Reporting"
         }
     }
 
@@ -142,6 +146,10 @@ class ConfigurationViewController: UIViewController {
 
     @objc private func toggleGuidanceHubWales() {
         featureToggleStorage.guidanceHubWalesToggle.toggle()
+    }
+
+    @objc private func toggleSelfReporting() {
+        featureToggleStorage.selfReportingToggle.toggle()
     }
 }
 

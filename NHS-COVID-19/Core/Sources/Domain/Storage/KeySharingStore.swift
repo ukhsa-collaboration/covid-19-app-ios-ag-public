@@ -11,6 +11,8 @@ private struct KeySharingPayload: Codable, DataConvertible {
         var testResultAcknowledgmentTime: UTCHour
         var hasFinishedInitialKeySharingFlow: Bool
         var hasTriggeredReminderNotification: Bool
+        var privateJourney: Bool?
+        var testKitType: TestKitType?
     }
 
     var keySharingInfo: Info?
@@ -22,7 +24,9 @@ private extension KeySharingInfo {
             diagnosisKeySubmissionToken: .init(value: info.diagnosisKeySubmissionToken),
             testResultAcknowledgmentTime: info.testResultAcknowledgmentTime,
             hasFinishedInitialKeySharingFlow: info.hasFinishedInitialKeySharingFlow,
-            hasTriggeredReminderNotification: info.hasTriggeredReminderNotification
+            hasTriggeredReminderNotification: info.hasTriggeredReminderNotification,
+            privateJourney: info.privateJourney,
+            testKitType: info.testKitType
         )
     }
 }
@@ -33,7 +37,9 @@ private extension KeySharingPayload.Info {
             diagnosisKeySubmissionToken: info.diagnosisKeySubmissionToken.value,
             testResultAcknowledgmentTime: info.testResultAcknowledgmentTime,
             hasFinishedInitialKeySharingFlow: info.hasFinishedInitialKeySharingFlow,
-            hasTriggeredReminderNotification: info.hasTriggeredReminderNotification
+            hasTriggeredReminderNotification: info.hasTriggeredReminderNotification,
+            privateJourney: info.privateJourney,
+            testKitType: info.testKitType
         )
     }
 }
@@ -74,13 +80,18 @@ class KeySharingStore {
     }
 
     func save(token: DiagnosisKeySubmissionToken,
-              acknowledgmentTime: UTCHour) {
+              acknowledgmentTime: UTCHour,
+              hasFinishedInitialKeySharingFlow: Bool = false,
+              privateJourney: Bool? = nil,
+              testKitType: TestKitType? = nil) {
         keySharingPayload = KeySharingPayload(
             keySharingInfo: .init(KeySharingInfo(
                 diagnosisKeySubmissionToken: token,
                 testResultAcknowledgmentTime: acknowledgmentTime,
-                hasFinishedInitialKeySharingFlow: false,
-                hasTriggeredReminderNotification: false
+                hasFinishedInitialKeySharingFlow: hasFinishedInitialKeySharingFlow,
+                hasTriggeredReminderNotification: false,
+                privateJourney: privateJourney,
+                testKitType: testKitType
             ))
         )
     }

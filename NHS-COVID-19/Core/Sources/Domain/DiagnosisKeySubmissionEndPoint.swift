@@ -9,9 +9,16 @@ import Foundation
 struct DiagnosisKeySubmissionEndPoint: HTTPEndpoint {
 
     var token: DiagnosisKeySubmissionToken
+    var isPrivateJourney: Bool
+    var testKit: TestKitType
 
     func request(for input: [TemporaryExposureKey]) throws -> HTTPRequest {
-        let payload = Payload(token: token, diagnosisKeys: input)
+        let payload = Payload(
+            token: token,
+            diagnosisKeys: input,
+            isPrivateJourney: isPrivateJourney,
+            testKit: testKit == .labResult ? .labResult : .rapidSelfReported
+        )
         let encoding = JSONEncoder()
         let body = try encoding.encode(payload)
         return .post("/submission/diagnosis-keys", body: .json(body))
@@ -29,13 +36,20 @@ private struct Payload: Codable {
         var daysSinceOnsetOfSymptoms: Int
     }
 
+    enum TestKitType: String, Codable {
+        case labResult = "LAB_RESULT"
+        case rapidSelfReported = "RAPID_SELF_REPORTED"
+    }
+
     var diagnosisKeySubmissionToken: String
     var temporaryExposureKeys: [ExposureKey]
+    var isPrivateJourney: Bool
+    var testKit: TestKitType
 }
 
 extension Payload {
 
-    fileprivate init(token: DiagnosisKeySubmissionToken, diagnosisKeys: [TemporaryExposureKey]) {
+    fileprivate init(token: DiagnosisKeySubmissionToken, diagnosisKeys: [TemporaryExposureKey], isPrivateJourney: Bool, testKit: TestKitType) {
         let keys = diagnosisKeys.map {
             Payload.ExposureKey(
                 key: $0.keyData,
@@ -47,7 +61,9 @@ extension Payload {
         }
         self.init(
             diagnosisKeySubmissionToken: token.value,
-            temporaryExposureKeys: keys
+            temporaryExposureKeys: keys,
+            isPrivateJourney: isPrivateJourney,
+            testKit: testKit
         )
     }
 }

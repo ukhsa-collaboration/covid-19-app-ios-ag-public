@@ -249,6 +249,13 @@ struct SubmissionPayload: Decodable {
         var hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick: Int? = nil
 
         var completedV3SymptomsQuestionnaireAndHasSymptoms: Int? = 0
+
+        // MARK: Self reporting
+        var selfReportedVoidSelfLFDTestResultEnteredManually: Int? = 0
+        var selfReportedNegativeSelfLFDTestResultEnteredManually: Int? = 0
+        var isPositiveSelfLFDFree: Int? = 0
+        var selfReportedPositiveSelfLFDOnGov: Int? = 0
+        var completedSelfReportingTestFlow: Int? = 0
     }
 
     var includesMultipleApplicationVersions: Bool

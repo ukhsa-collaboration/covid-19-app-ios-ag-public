@@ -38,14 +38,17 @@ public enum Feature: CaseIterable {
     /// Shows a button leading to the Guidance Hub for people in Wales.
     case guidanceHubWales
 
+    /// Enables self reporting flow, where people can report private test results
+    case selfReporting
+
     public static let productionEnabledFeatures: [Feature] = [
         .guidanceHubEngland,
-        .guidanceHubWales
+        .guidanceHubWales,
+        .selfReporting,
     ]
 }
 
 extension Feature {
-
     var associatedMetrics: [Metric] {
         switch self {
         case .localStatistics:
@@ -95,6 +98,14 @@ extension Feature {
             return []
         case .guidanceHubWales:
             return []
+        case .selfReporting:
+            return [
+                .selfReportedVoidSelfLFDTestResultEnteredManually,
+                .selfReportedNegativeSelfLFDTestResultEnteredManually,
+                .isPositiveSelfLFDFree,
+                .selfReportedPositiveSelfLFDOnGov,
+                .completedSelfReportingTestFlow,
+            ]
         }
     }
 
@@ -118,6 +129,8 @@ extension Feature {
             return [.england]
         case .guidanceHubWales:
             return [.wales]
+        case .selfReporting:
+            return [.england, .wales]
         }
     }
 }

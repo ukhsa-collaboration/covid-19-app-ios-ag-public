@@ -186,6 +186,13 @@ private struct SubmissionPayload: Codable {
         var hasCompletedV2SymptomsQuestionnaireBackgroundTick: Int? = 0
         var hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick: Int? = 0
         var completedV3SymptomsQuestionnaireAndHasSymptoms: Int? = 0
+
+        // MARK: Self reporting
+        var selfReportedVoidSelfLFDTestResultEnteredManually: Int? = 0
+        var selfReportedNegativeSelfLFDTestResultEnteredManually: Int? = 0
+        var isPositiveSelfLFDFree: Int? = 0
+        var selfReportedPositiveSelfLFDOnGov: Int? = 0
+        var completedSelfReportingTestFlow: Int? = 0
     }
 
     var includesMultipleApplicationVersions: Bool
@@ -325,6 +332,11 @@ private extension Metric {
         case .hasCompletedV2SymptomsQuestionnaireBackgroundTick: return \.hasCompletedV2SymptomsQuestionnaireBackgroundTick
         case .hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick: return \.hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick
         case .completedV3SymptomsQuestionnaireAndHasSymptoms: return  \.completedV3SymptomsQuestionnaireAndHasSymptoms
+        case .selfReportedVoidSelfLFDTestResultEnteredManually: return \.selfReportedVoidSelfLFDTestResultEnteredManually
+        case .selfReportedNegativeSelfLFDTestResultEnteredManually: return \.selfReportedNegativeSelfLFDTestResultEnteredManually
+        case .isPositiveSelfLFDFree: return \.isPositiveSelfLFDFree
+        case .selfReportedPositiveSelfLFDOnGov: return \.selfReportedPositiveSelfLFDOnGov
+        case .completedSelfReportingTestFlow: return \.completedSelfReportingTestFlow
         }
     }
 

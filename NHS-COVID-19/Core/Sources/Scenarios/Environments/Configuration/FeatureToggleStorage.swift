@@ -34,6 +34,9 @@ public struct FeatureToggleStorage {
     @UserDefault("scenario.toggle.guidanceHubWalesToggle", defaultValue: Feature.productionEnabledFeatures.contains(.guidanceHubWales))
     public var guidanceHubWalesToggle: Bool
 
+    @UserDefault("scenario.toggle.selfReportingFeatureToggle", defaultValue: Feature.productionEnabledFeatures.contains(.selfReporting))
+    public var selfReportingToggle: Bool
+
     #warning("Retrieve key from UserDefault")
     public var allFeatureKeys: [String] {
         [
@@ -46,6 +49,7 @@ public struct FeatureToggleStorage {
             $selfIsolationHubToggleWales.key,
             $guidanceHubEnglandToggle.key,
             $guidanceHubWalesToggle.key,
+            $selfReportingToggle.key,
         ]
     }
 
@@ -89,6 +93,10 @@ public struct FeatureToggleStorage {
 
         if store.guidanceHubWalesToggle {
             enabledFeatures.append(.guidanceHubWales)
+        }
+
+        if store.selfReportingToggle {
+            enabledFeatures.append(.selfReporting)
         }
 
         return enabledFeatures

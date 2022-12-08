@@ -71,12 +71,13 @@ public class StickyFooterScrollingContentView: UIView {
     let scrollView: UIScrollView
     private let footerStack: UIStackView?
     private let scrollingStack: UIStackView
+    private let topMargin: Bool
 
-    init(content: StickyFooterScrollingContent) {
+    init(content: StickyFooterScrollingContent, topMargin: Bool) {
         scrollingStack = UIStackView(content: content.scrollingContent)
         scrollView = UIScrollView(stackView: scrollingStack)
         footerStack = content.footerContent.map { UIStackView(content: $0) }
-
+        self.topMargin = topMargin
         super.init(frame: .zero)
 
         addAutolayoutSubview(scrollView)
@@ -138,6 +139,9 @@ public class StickyFooterScrollingContentView: UIView {
             if footerStack != nil {
                 $0.bottom = 0
             }
+            if !topMargin {
+                $0.top = 0
+            }
         }
         footerStack?.layoutMargins = mutating(margins) { $0.top = 0 }
     }
@@ -146,9 +150,9 @@ public class StickyFooterScrollingContentView: UIView {
 public class StickyFooterScrollingContentViewController: UIViewController {
     private weak var scrollView: UIScrollView?
 
-    init(content: StickyFooterScrollingContent) {
+    init(content: StickyFooterScrollingContent, topMargin: Bool = true) {
         super.init(nibName: nil, bundle: nil)
-        let stickyView = StickyFooterScrollingContentView(content: content)
+        let stickyView = StickyFooterScrollingContentView(content: content, topMargin: topMargin)
         scrollView = stickyView.scrollView
         view = stickyView
     }

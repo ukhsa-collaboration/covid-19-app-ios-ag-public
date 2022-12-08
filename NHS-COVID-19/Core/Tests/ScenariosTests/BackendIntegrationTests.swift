@@ -75,7 +75,7 @@ extension BackendIntegrationTests {
             TemporaryExposureKey(exposureKey: ENTemporaryExposureKey(), onsetDay: .today),
             TemporaryExposureKey(exposureKey: ENTemporaryExposureKey(), onsetDay: .today),
         ]
-        try runSubmissionTest(with: DiagnosisKeySubmissionEndPoint(token: diagnosisKeySubmissionToken), input: keys, expectedType: Void.self)
+        try runSubmissionTest(with: DiagnosisKeySubmissionEndPoint(token: diagnosisKeySubmissionToken, isPrivateJourney: false, testKit: .labResult), input: keys, expectedType: Void.self)
     }
 }
 

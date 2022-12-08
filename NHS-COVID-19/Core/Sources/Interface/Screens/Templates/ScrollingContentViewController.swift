@@ -5,12 +5,13 @@
 import UIKit
 
 public class ScrollingContentViewController: StickyFooterScrollingContentViewController {
-    init(views: [StackViewContentProvider]) {
+    init(views: [StackViewContentProvider], topMargin: Bool = true) {
         super.init(
             content: BasicStickyFooterScrollingContent(
                 scrollingViews: views,
                 footerViews: nil
-            )
+            ),
+            topMargin: topMargin
         )
     }
 

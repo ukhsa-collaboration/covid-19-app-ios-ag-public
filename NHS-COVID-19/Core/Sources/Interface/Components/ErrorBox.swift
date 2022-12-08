@@ -16,15 +16,18 @@ public struct ErrorBox: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: .buttonCornerRadius) {
-            Text(verbatim: heading)
-                .font(.title)
-                .foregroundColor(Color(.primaryText))
-                .fixedSize(horizontal: false, vertical: true)
-            Text(verbatim: description)
-                .font(.headline)
-                .foregroundColor(Color(.errorRed))
-                .fixedSize(horizontal: false, vertical: true)
+        HStack {
+            VStack(alignment: .leading, spacing: .buttonCornerRadius) {
+                Text(verbatim: heading)
+                    .font(.title)
+                    .foregroundColor(Color(.primaryText))
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(verbatim: description)
+                    .font(.headline)
+                    .foregroundColor(Color(.errorRed))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer()
         }
         .padding()
         .border(Color(.errorRed), width: 4)
@@ -32,5 +35,6 @@ public struct ErrorBox: View {
         .accessibility(label: Text(verbatim: localize(.symptom_card_accessibility_label(heading: heading, content: description))))
         .accessibility(addTraits: .isStaticText)
         .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
+        .environment(\.layoutDirection, currentLanguageDirection() == .rightToLeft ? .rightToLeft : .leftToRight)
     }
 }

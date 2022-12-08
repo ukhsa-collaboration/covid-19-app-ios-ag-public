@@ -842,5 +842,53 @@
 				<string/>
 			</dict>
 		</dict>
+		<key>self_report_advice_not_reported_result_header days: %ld date: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>zero</key>
+				<string>حاول البقاء في المنزل وبعيدًا عن الآخرين لمدة %1$ld أيام حتى %2$@ الساعة 23:59</string>
+				<key>one</key>
+				<string>حاول البقاء في المنزل وبعيدًا عن الآخرين لمدة %1$ld أيام حتى %2$@ الساعة 23:59</string>
+				<key>two</key>
+				<string>حاول البقاء في المنزل وبعيدًا عن الآخرين لمدة %1$ld أيام حتى %2$@ الساعة 23:59</string>
+				<key>few</key>
+				<string>حاول البقاء في المنزل وبعيدًا عن الآخرين لمدة %1$ld أيام حتى %2$@ الساعة 23:59</string>
+				<key>many</key>
+				<string>حاول البقاء في المنزل وبعيدًا عن الآخرين لمدة %1$ld أيام حتى %2$@ الساعة 23:59</string>
+				<key>other</key>
+				<string>حاول البقاء في المنزل وبعيدًا عن الآخرين لمدة %1$ld أيام حتى %2$@ الساعة 23:59</string>
+			</dict>
+		</dict>
+		<key>self_report_advice_reported_result_header days: %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>zero</key>
+				<string>حاول البقاء في المنزل بعيدًا عن الآخرين لمدة %ld أيام</string>
+				<key>one</key>
+				<string>حاول البقاء في المنزل وبعيدًا عن الآخرين لمدة %ld يوم</string>
+				<key>two</key>
+				<string>حاول البقاء في المنزل بعيدًا عن الآخرين لمدة %ld أيام</string>
+				<key>few</key>
+				<string>حاول البقاء في المنزل بعيدًا عن الآخرين لمدة %ld أيام</string>
+				<key>many</key>
+				<string>حاول البقاء في المنزل بعيدًا عن الآخرين لمدة %ld أيام</string>
+				<key>other</key>
+				<string>حاول البقاء في المنزل بعيدًا عن الآخرين لمدة %ld أيام</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

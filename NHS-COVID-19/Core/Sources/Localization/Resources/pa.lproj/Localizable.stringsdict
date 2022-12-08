@@ -562,5 +562,37 @@
 				<string/>
 			</dict>
 		</dict>
+		<key>self_report_advice_not_reported_result_header days: %ld date: %@</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%2$@ ਨੂੰ 23:59 ਵਜੇ ਤੱਕ %1$ld ਦਿਨ ਲਈ ਘਰ ਰਹਿਣ ਅਤੇ ਦੂਜਿਆਂ ਤੋਂ ਦੂਰ ਰਹਿਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
+				<key>other</key>
+				<string>%2$@ ਨੂੰ 23:59 ਵਜੇ ਤੱਕ %1$ld ਦਿਨਾਂ ਲਈ ਘਰ ਰਹਿਣ ਅਤੇ ਦੂਜਿਆਂ ਤੋਂ ਦੂਰ ਰਹਿਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
+			</dict>
+		</dict>
+		<key>self_report_advice_reported_result_header days: %ld</key>
+		<dict>
+			<key>NSStringLocalizedFormatKey</key>
+			<string>%#@days@</string>
+			<key>days</key>
+			<dict>
+				<key>NSStringFormatSpecTypeKey</key>
+				<string>NSStringPluralRuleType</string>
+				<key>NSStringFormatValueTypeKey</key>
+				<string>li</string>
+				<key>one</key>
+				<string>%ld ਦਿਨ ਲਈ ਘਰ ਰਹਿਣ ਅਤੇ ਦੂਜਿਆਂ ਤੋਂ ਦੂਰ ਰਹਿਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
+				<key>other</key>
+				<string>%ld ਦਿਨਾਂ ਲਈ ਘਰ ਰਹਿਣ ਅਤੇ ਦੂਜਿਆਂ ਤੋਂ ਦੂਰ ਰਹਿਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
+			</dict>
+		</dict>
 	</dict>
 </plist>

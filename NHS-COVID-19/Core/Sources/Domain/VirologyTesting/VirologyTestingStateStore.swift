@@ -102,7 +102,8 @@ public class VirologyTestingStateStore {
                 diagnosisKeySubmissionToken: diagnosisSubmissionToken,
                 requiresConfirmatoryTest: unacknowledgedTestResult.requiresConfirmatoryTest,
                 shouldOfferFollowUpTest: unacknowledgedTestResult.shouldOfferFollowUpTest ?? unacknowledgedTestResult.requiresConfirmatoryTest,
-                confirmatoryDayLimit: unacknowledgedTestResult.confirmatoryDayLimit
+                confirmatoryDayLimit: unacknowledgedTestResult.confirmatoryDayLimit,
+                selfReported: false
             )
         }
     }()

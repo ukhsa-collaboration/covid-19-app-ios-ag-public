@@ -18,6 +18,7 @@ internal protocol HomeScreenScenario: Scenario {
     static var guidanceHubEnabled: Bool { get }
     static var shouldShowSelfDiagnosis: Bool { get }
     static var localInformationEnabled: Bool { get }
+    static var selfReportingEnabled: Bool { get }
 }
 
 extension HomeScreenScenario {
@@ -60,7 +61,8 @@ extension HomeScreenScenario {
                     checkInEnabled: checkInEnabled,
                     testingForCOVID19Enabled: testingForCOVID19Enabled,
                     selfIsolationEnabled: selfIsolationEnabled,
-                    guidanceHubEnabled: guidanceHubEnabled
+                    guidanceHubEnabled: guidanceHubEnabled,
+                    selfReportingEnabled: selfReportingEnabled
                 ),
                 riskLevelBannerViewModel: .constant(postcodeViewModel(parent: parent)),
                 localInfoBannerViewModel: .constant(localInfoBannerViewModel),
@@ -93,6 +95,7 @@ public class SuccessHomeScreenScenario: HomeScreenScenario {
     public static var shouldShowSelfDiagnosis = true
     public static var localInformationEnabled = true
     public static var guidanceHubEnabled = true
+    public static var selfReportingEnabled = true
 }
 
 public class DisabledFeaturesHomeScreenScenario: HomeScreenScenario {
@@ -108,6 +111,7 @@ public class DisabledFeaturesHomeScreenScenario: HomeScreenScenario {
     public static var shouldShowSelfDiagnosis = false
     public static var localInformationEnabled = false
     public static var guidanceHubEnabled = false
+    public static var selfReportingEnabled = false
 }
 
 public class HomeScreenAlerts {
@@ -125,6 +129,7 @@ public class HomeScreenAlerts {
     public static let statsTappedAlertTitle = "Stats button tapped"
     public static let openGuidanceHubEnglandAlertTitle = "Guidance Hub England button tapped"
     public static let openGuidanceHubWalesAlertTitle = "Guidance Hub Wales button tapped"
+    public static let selfReportingAlertTitle = "Self Reporting button tapped"
 }
 
 private class Interactor: HomeViewController.Interacting {
@@ -135,6 +140,7 @@ private class Interactor: HomeViewController.Interacting {
     var guidanceHubEnabled: Bool
     var shouldShowNewLabelForGuidanceHub: Bool = false
     var newLabelForLongCovidCurrentCountryState: NewLabelState = NewLabelState()
+    var selfReportingEnabled: Bool
 
     private weak var viewController: UIViewController?
 
@@ -143,13 +149,15 @@ private class Interactor: HomeViewController.Interacting {
         checkInEnabled: Bool,
         testingForCOVID19Enabled: Bool,
         selfIsolationEnabled: Bool,
-        guidanceHubEnabled: Bool
+        guidanceHubEnabled: Bool,
+        selfReportingEnabled: Bool
     ) {
         self.viewController = viewController
         self.checkInEnabled = checkInEnabled
         self.testingForCOVID19Enabled = testingForCOVID19Enabled
         self.selfIsolationEnabled = selfIsolationEnabled
         self.guidanceHubEnabled = guidanceHubEnabled
+        self.selfReportingEnabled = selfReportingEnabled
     }
 
     func didTapRiskLevelBanner(viewModel: RiskLevelInfoViewController.ViewModel) {
@@ -208,6 +216,10 @@ private class Interactor: HomeViewController.Interacting {
         guidanceHubEnabled
     }
 
+    var shouldShowSelfReporting: Bool {
+        selfReportingEnabled
+    }
+
     func openSettings() {
         viewController?.showAlert(title: HomeScreenAlerts.openSettingAlertTitle)
     }
@@ -224,4 +236,7 @@ private class Interactor: HomeViewController.Interacting {
         viewController?.showAlert(title: HomeScreenAlerts.openGuidanceHubWalesAlertTitle)
     }
 
+    func didTapSelfReportingButton() {
+        viewController?.showAlert(title: HomeScreenAlerts.selfReportingAlertTitle)
+    }
 }

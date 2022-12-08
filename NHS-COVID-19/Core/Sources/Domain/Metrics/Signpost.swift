@@ -116,6 +116,13 @@ public enum Metric: String, CaseIterable {
 
     case completedV3SymptomsQuestionnaireAndHasSymptoms
 
+    // MARK: Self reporting
+    case selfReportedVoidSelfLFDTestResultEnteredManually
+    case selfReportedNegativeSelfLFDTestResultEnteredManually
+    case isPositiveSelfLFDFree
+    case selfReportedPositiveSelfLFDOnGov
+    case completedSelfReportingTestFlow
+
     public static let nonFeatureRelatedMetricsToBeStripped: [Metric] = [
         .didAskForSymptomsOnPositiveTestEntry,
         .isolatedForSelfDiagnosedBackgroundTick,

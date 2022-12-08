@@ -13,6 +13,7 @@ struct VirologyStateTestResult {
     var requiresConfirmatoryTest: Bool
     var shouldOfferFollowUpTest: Bool
     var confirmatoryDayLimit: Int?
+    var selfReported: Bool = false
 }
 
 extension VirologyStateTestResult {
