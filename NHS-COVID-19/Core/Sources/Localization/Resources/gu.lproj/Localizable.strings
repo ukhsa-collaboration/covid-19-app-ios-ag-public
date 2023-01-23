@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "તપાસ કરવાની અન્ય રીતો છે કે કેમ તે જોવા માટે અમે તમને સ્થળ પર સ્ટાફના સભ્ય સાથે વાત કરવાની સલાહ આપીશું.";
 "checkin_information_whats_a_qr_code_section_title" = "NHS QR કોડ પોસ્ટરને કેવી રીતે ઓળખવું";
 "checkin_information_whats_a_qr_code_section_description_new" = "અહીં સત્તાવાર NHS QR કોડ પોસ્ટર્સ છે. તમારે કોડ સ્કેન કરવાની જરૂર છે, જે મધ્યમાં ચોરસ છે.";
-"about_this_app_software_information_date_of_release_description" = "12/2022";
+"about_this_app_software_information_date_of_release_description" = "01/2023";
 "link_test_result_enter_code_example" = "ઉદાહરણ: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "ટેસ્ટ કોડ";
 "link_test_result_button_title" = "ચાલુ રાખો";
@@ -332,7 +332,7 @@
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
 "postcode_entry_error_description_unsupported_country" = "કમનસીબે આ એપને તમારા ક્ષેત્રમાં સપોર્ટ મળતો નથી. તમારા ક્ષેત્ર અથવા દેશ માટે કૃપા કરી આ એપને ડાઉનલોડ કરો.";
 "about_this_app_how_this_app_works_instruction_for_use" = "વધુ જાણવા માટે લિંક પર જાઓ";
-"home_strapline_accessiblity_label_wls" = "NHS વેલ્સ ટેસ્ટ ટ્રેસ પ્રોટેક્ટ";
+"home_strapline_accessiblity_label_wls" = "NHS વેલ્સ";
 "checkin_scanning_failure_description" = "તમે કોઈ કોડ સ્કેન કર્યો હશે કે જે અધિકારી NHS QR કોડ નથી તો, કોડને નુકસાન થઈ શકે છે, અથવા આ સ્થળને ઓળખી શકાશે નહીં.";
 "checkin_scanning_failure_help_link_text" = "વેન્યુ ચેક-ઇનમાં સહાય";
 "negative_test_result_no_isolation_description" = "તમારું COVID-19ના ટેસ્ટનું પરિણામ નૅગેટિવ છે";
@@ -374,10 +374,10 @@
 "dont_worry_notification_title" = "COVID-19 એકસપોઝર માટેની તપાસ પૂરી";
 "dont_worry_notification_body" = "ફિકર- ચિંતા કરશો નહિ, અમે તમારા જોખમ- ભયની તપાસી કરી છે અને આ સમયે કોઈ પગલા લેવાની જરૂર નથી. કૃપા કરી સાવધ રહેવાનું ચાલુ રાખી અને સોશિયલ ડિસ્ટંસ વિષેની તાજેતર સલાહ- સૂચન અનુસરો.";
 "checkin_information_description" = "જો તમે કોઈ એક સ્થળમાં પ્રવેશ કરી રહયા હો (દાખલા તરીકે બાર અથવા રેસ્ટોરા) કે જેઓની પાસે ઓફિશ્યલ NHS QR કોડ પોસ્ટર હોય તો, આ એપનો ઉપયોગ કરી તેને સ્કેન કરો. તમે સ્થળમાં દાખલ થયાના સમયની ત્યારબાદ એપ રજિસ્ટરકરે છે.\n\nસ્થળની તપાસનો ઉપયોગ કરવાથી, જો કોરોનાવાઈરસવાળા લોકોએ તમારી માફક એકજ સરખા સમયે એકજ સરખા સ્થળની મુલાકાત લીધી હોય તો તમને સૂચના મળી શકે.  આવી સૂચનામાં પ્રત્યેક સલાહનો સમાવેશ થઈ શકે, જેમકે કોરોનાવાઈરસ રોગના લક્ષણોને માટે સાવધાન રહેવું.";
-"update_app_button_title" = "હમણાંજ તમારી એપને અપડેટ કરો";
+"update_app_button_title" = "હમણાં જ તમારી એપને અપડેટ કરો";
 "venue_check_in_title" = "વધુ માહિતી";
 "risky_venue_isolation_warning" = "તમને COVID-19 હોઈ શકે છે";
-"alert_latest_app_version_update_title" = "કૃપા કરી તમારા NHS COVID-19 એપને લેટેસ્ટ વર્શન માટે અપડેટ કરો";
+"alert_latest_app_version_update_title" = "કૃપા કરી તમારા NHS COVID-19 એપને લેટેસ્ટ તમે માટે અપડેટ કરો";
 "virology_book_a_test_description" = "બુક એ ટેસ્ટ ફોર યોરસેલ્ફ એટલેકે તમારા પોતાના માટે ટેસ્ટ કે કસોટી નોંધાવાનું' પસંદ કરવાથી તમને સરકારની કોરોનાવાઈરસ ટેસ્ટ કરનારી વેબસાઈટમાં લઈ જશે કે જયાં તમને તમારી થોડીક વ્યક્તિગત વિગતો પૂરી કરવા વિનંતી કરવામાં આવશે (જેમકે તમારું સરનામું) જેથી કરીને ટેસ્ટ કે કસોટી મેળવી શકાય. વેબસાઈટમાં તમે જે દાખલ કરો તે કોઈ પણ શેર કરવામાં આવશે નહિ.\n\nકોઈ એક ડિજિટલ (આંકડાને લગતુ) 'ટોકન કે નિશાની- ચિહ્નનું' નિર્માણ કરવામાં આવશે કે જે અમને એપ માટે તમારું પરિણામ પાછુ મેળવવામાં મદદરૂપ બનશે. ";
 "alert_latest_app_version_update_body" = "વધુ માહિતી માટે અહીં ટેપ કરો.";
 "ask_me_later_button_title" = "મને પછીથી પૂછો કે વિનંતી કરો";
@@ -634,7 +634,7 @@
 "testing_hub_row_enter_test_result_description" = "જે તમને ઇમેઇલ અથવા ટેક્સ્ટ મેસેજ દ્વારા કોઈ કોડ પ્રાપ્ત થયો હોય, તો તમારો 8 અક્ષરનો કોડ દાખલ કરો";
 "unknown_test_result_screen_header" = "તમારું ટેસ્ટ રિઝલ્ટ જોવા માટે એપને અપડેટ કરો";
 "unknown_test_result_screen_description" = "તમારું ટેસ્ટ રિઝલ્ટ બરાબર છે, પણ એપના આ વર્ઝન દ્વારા સપોર્ટેડ નથી.\n\nકૃપા કરીને આગળ શું કરવું તે વિશે ઇમેઇલ અથવા ટેક્સ્ટ મેસેજ દ્વારા તમે પ્રાપ્ત કરેલ માર્ગદર્શનને અનુસરો.\n\nએકવાર તમે એપને અપડેટ કરો છો, તો તમારો રિઝલ્ટ કોડ કામ કરશે નહીં કારણ કે તે સમાપ્ત થઈ ગયો છે અથવા વધુ વખત દાખલ થયો છે.";
-"unknown_test_result_screen_button" = "હમણાંજ તમારી એપને અપડેટ કરો";
+"unknown_test_result_screen_button" = "હમણાં જ તમારી એપને અપડેટ કરો";
 "testing_hub_row_book_lab_test_title" = "ફ્રિ ટેસ્ટ બુક કરો";
 "link_test_result_your_test_result_code_should" = "તમારો ટેસ્ટ રિઝલ્ટ કોડ:";
 "link_test_result_your_test_result_code_bullets" = "8 અક્ષરો જેટલો લાંબો હશે\n\nનાના અક્ષરો અને નંબરો વાપરશે\n\nતમારા રિઝલ્ટથી અલગ તમને મોકલેલા ઇમેઇલ અથવા ટેક્સ્ટ મેસેજમાં હશે";

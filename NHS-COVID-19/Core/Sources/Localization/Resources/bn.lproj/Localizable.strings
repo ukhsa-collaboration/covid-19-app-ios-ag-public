@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "চেক ইন করার অন্য উপায় আছে কিনা জানার জন্য আপনাকে ভেন্যুতে থাকা কোনো কর্মীর সাথে কথা বলার পরামর্শ দেওয়া হচ্ছে।";
 "checkin_information_whats_a_qr_code_section_title" = "কোনো NHS QR কোড পোস্টার যেভাবে চিনবেন";
 "checkin_information_whats_a_qr_code_section_description_new" = "আনুষ্ঠানিক NHS QR কোড পোস্টার কেমন দেখতে, তা এখানে দেখানো হলো। আপনাকে কোড স্ক্যান করতে হবে, যা হলো মাঝখানের বর্গক্ষেত্রটি।";
-"about_this_app_software_information_date_of_release_description" = "12/2022";
+"about_this_app_software_information_date_of_release_description" = "01/2023";
 "link_test_result_enter_code_example" = "উদাহরণ: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "পরীক্ষার কোড";
 "link_test_result_button_title" = "চালিয়ে যান";
@@ -332,7 +332,7 @@
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
 "postcode_entry_error_description_unsupported_country" = "দুর্ভাগ্যজনকভাবে, এই অ্যাপটি আপনার অঞ্চলে সমর্থিত নয়।আপনার অঞ্চল অথবা দেশের জন্যে অনুগ্রহ করে এই অ্যাপটি ডাউনলোড করুন।";
 "about_this_app_how_this_app_works_instruction_for_use" = "আরো জানতে লিঙ্কটিতে যান";
-"home_strapline_accessiblity_label_wls" = "NHS ওয়েল্‌স টেস্ট ট্রেস প্রোটেক্ট";
+"home_strapline_accessiblity_label_wls" = "NHS ওয়েলস";
 "checkin_scanning_failure_description" = "আপনি এমন কোনো কোড স্ক্যান করেছেন যেটি হয়তো অফিসিয়াল NHS কিউআর কোড নয়, বা কোডটি ক্ষতিগ্রস্থ হয়ে গেছে, অথবা ভেন্যুটি হয়তো স্বীকৃত নয়।";
 "checkin_scanning_failure_help_link_text" = "ভেন্যু চেক-ইন করতে সাহায্য";
 "negative_test_result_no_isolation_description" = "আপনার COVID-19 পরীক্ষার ফলাফল নেগেটিভ";
@@ -374,10 +374,10 @@
 "dont_worry_notification_title" = "কোভিড -১৯-এর সংস্পর্শে আসা সংক্রান্ত যাচাই সম্পন্ন হয়েছে";
 "dont_worry_notification_body" = "চিন্তা করবেন না, আমরা আপনার ঝুঁকি নিরূপণ করেছি। এখন কোন ব্যবস্থা নেওয়ার দরকার নেই। দয়া করে সতর্ক থাকবেন এবং সামাজিক দূরত্ব বজায় রাখার ব্যাপারে সর্বশেষ পরামর্শ মেনে চলবেন।";
 "checkin_information_description" = "করোনাভাইরাস আক্রান্ত কোন ব্যক্তি আপনার কাছাকাছি বা একই সময়ে কোন ভেন্যুতে গেলে এই ভেন্যু চেক-ইন ব্যবহার করে আপনি একটি নোটিফিকেশন পেতে সক্ষম হবেন। সেই নোটিফিকেশনে অন্তর্ভুক্ত থাকবে প্রাসঙ্গিক উপদেশ, যেমন করোনাভাইরাসের উপসর্গের উপর নজর রাখা।\n\nআপনি যদি একটি QR কোড স্ক্যান করতে না পারেন এবং অন্য কোনভাবে চেক ইন করতে চান তাহলে কর্মীদলের একজন সদস্যের সাথে কথা বলুন।";
-"update_app_button_title" = "এখনই আপনার অ্যাপটি হালনাগাদ করুন";
+"update_app_button_title" = "এখনই আপনার অ্যাপটি আপডেট করুন";
 "venue_check_in_title" = "আরো তথ্যাদি";
 "risky_venue_isolation_warning" = "আপনার COVID-19 থাকতে পারে";
-"alert_latest_app_version_update_title" = "দয়া করে আপনার এনএইচএস কোভিড-১৯ অ্যাপটি হালনাগাদ করুন";
+"alert_latest_app_version_update_title" = "দয়া করে আপনার এনএইচএস কোভিড-১৯ অ্যাপটি আপডেট করুন";
 "virology_book_a_test_description" = "'নিজের জন্য একটি পরীক্ষা বুকিং করুন' বেছে নিলে তা আপনাকে সরকারের করোনাভাইরাস পরীক্ষার ওয়েবসাইটে নিয়ে যাবে যেখানে পরীক্ষার বন্দোবস্ত করার জন্য আপনাকে কিছু ব্যক্তিগত তথ্য (যেমন আপনার ঠিকানা) পূরণ করতে বলা হবে। আপনি ওয়েবসাইটে যে তথ্য দেবেন তার কোনকিছুই শেয়ার করা হবে না।\n\nএকটি ডিজিটাল 'টোকেন' তৈরি হবে যা আপনার ফলাফল অ্যাপটিতে পৌঁছে দিতে আমাদের সহায়তা করবে।";
 "alert_latest_app_version_update_body" = "আরো তথ্যের জন্য এখানে ট্যাপ করুন।";
 "ask_me_later_button_title" = "আমাকে পরে স্মরণ করিয়ে দেবেন";
@@ -634,7 +634,7 @@
 "testing_hub_row_enter_test_result_description" = "যদি ইমেইল বা টেক্সট মেসেজের মাধ্যমে আপনি ৮ (আট) অক্ষরের একটি কোড পেয়ে থাকেন তাহলে সেটি লিখুন";
 "unknown_test_result_screen_header" = "আপনার পরীক্ষার ফলাফল দেখতে অ্যাপটি আপডেট করুন";
 "unknown_test_result_screen_description" = "আপনার পরীক্ষার ফলাফল যথাবিহিত, তবে অ্যাপের এই সংস্করণে সমর্থিত নয়।\n\nএরপর কী করতে হবে সেই সম্পর্কে ইমেইল বা টেক্সট মেসেজের মাধ্যমে আপনি যে নির্দেশিকা পেয়েছেন তা অনুসরণ করুন।\n\nঅ্যাপটি আপডেট করার পর আপনার ফলাফলের কোডটি কাজ নাও করতে পারে এই কারণে যে এটি হয়তো মেয়াদোত্তীর্ণ বা বহুবার প্রবেশ করা হয়ে গেছে।";
-"unknown_test_result_screen_button" = "এখনই আপনার অ্যাপটি হালনাগাদ করুন";
+"unknown_test_result_screen_button" = "এখনই আপনার অ্যাপটি আপডেট করুন";
 "testing_hub_row_book_lab_test_title" = "বিনামূল্যে একটি পরীক্ষা করানো বুকিং করুন";
 "link_test_result_your_test_result_code_should" = "আপনার পরীক্ষার ফলাফলের কোডটি:";
 "link_test_result_your_test_result_code_bullets" = "৮ (আট) অক্ষরের হবে\n\nছোট হাতের অক্ষর এবং সংখ্যা ব্যবহার করা হবে\n\nআপনার ফলাফল থেকে আলাদা করে আপনাকে পাঠানো ইমেইল বা টেক্সট মেসেজে থাকবে";

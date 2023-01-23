@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "ہم آپ کو  مشورہ دیتے ہیں کہ آپ یہ معلوم کرنے کے لیے متعلقہ مقام پر عملہ کے کسی فرد سے بات کریں کہ آیا چیک-ان کرنے کے دیگر طریقے بھی ہیں۔";
 "checkin_information_whats_a_qr_code_section_title" = "NHS کے QR کوڈ پوسٹر کو کیسے پہچانیں";
 "checkin_information_whats_a_qr_code_section_description_new" = "NHS کا آفیشیل QR کوڈ پوسٹر اس طرح کا نظر آتا ہے۔ آپ کو کوڈ کو اسکین کرنا ہوتا ہے، جو درمیان میں چوکور ہے۔";
-"about_this_app_software_information_date_of_release_description" = "12/2022";
+"about_this_app_software_information_date_of_release_description" = "01/2023";
 "link_test_result_enter_code_example" = "مثال: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "ٹیسٹ کوڈ";
 "link_test_result_button_title" = "جاری رکھیں";
@@ -332,7 +332,7 @@
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
 "postcode_entry_error_description_unsupported_country" = "بدقسمتی سے یہ ایپ آپ کے علاقے میں استعمال کیا جانا مُمکن نہیں۔ برائے مہربانی اپنے علاقے یا مُلک کے لئے ایپ ڈاؤن لوڈ کریں۔";
 "about_this_app_how_this_app_works_instruction_for_use" = "مزید جاننے کے لئے لنک پر جائیں";
-"home_strapline_accessiblity_label_wls" = "NHS ویلز ٹیسٹ ٹریس پروٹیکٹ";
+"home_strapline_accessiblity_label_wls" = "NHS ویلز";
 "checkin_scanning_failure_description" = "ہوسکتا ہے کہ آپ نے کوئی ایسا کوڈ اسکین کیا ہو جو آفیشیئل NHS QR کوڈ نہ ہو، یہ کوڈ خراب ہوسکتا ہے، یا ہوسکتا ہے کہ اس مقام کی شناخت نہ کی جا سکتی ہو۔";
 "checkin_scanning_failure_help_link_text" = "وینیو (مقامات) چیک ان میں مدد";
 "negative_test_result_no_isolation_description" = "آپ کی COVID-19 کی جانچ کا نتیجہ منفی ہے";

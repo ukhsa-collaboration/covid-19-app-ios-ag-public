@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "ننصحك بالتحدّث إلى أحد الأفراد العاملين في المكان لمعرفة الطرق الأخرى المتاحة لتسجيل الدخول.";
 "checkin_information_whats_a_qr_code_section_title" = "كيفية التعرّف على أحد ملصقات رموز NHS QR";
 "checkin_information_whats_a_qr_code_section_description_new" = "نُوضِّح هنا أشكال ملصقات رموز NHS QR الرسمية. يتعين عليك إجراء مسح ضوئي للرمز الذي يظهر في المربع الموجود في المنتصف.";
-"about_this_app_software_information_date_of_release_description" = "12/2022";
+"about_this_app_software_information_date_of_release_description" = "01/2023";
 "link_test_result_enter_code_example" = "على سبيل المثال: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "رمز الاختبار";
 "link_test_result_button_title" = "استمرار";
@@ -332,7 +332,7 @@
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
 "postcode_entry_error_description_unsupported_country" = "للأسف، هذا التطبيق غير مدعومٍ في منطقتك. يرجى تنزيل التطبيق المناسب لمنطقتك أو دولتك.";
 "about_this_app_how_this_app_works_instruction_for_use" = "يرجى زيارة الرابط للاطلاع على المزيد من المعلومات";
-"home_strapline_accessiblity_label_wls" = "خدمة الاختبار والتتبع والحماية من هيئة NHS في ويلز";
+"home_strapline_accessiblity_label_wls" = "NHS ويلز";
 "checkin_scanning_failure_description" = "من المُحتمل أنك قد أجريت مسحًا ضوئيًا لرمزٍ ليس من ضمن رموز NHS QR الرسمية أو ربما يكون الرمز تالفًا أو يتعذّر التعرّف على المكان الذي تحاول تسجيل الدخول إليه.";
 "checkin_scanning_failure_help_link_text" = "المساعدة في تسجيل الدخول إلى المكان";
 "negative_test_result_no_isolation_description" = "نتيجة اختبار COVID-19 الخاصة بك سلبية";

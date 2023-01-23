@@ -1,8 +1,9 @@
 {
   "images" : [
     {
-      "filename" : "Logo Wales-1.pdf",
-      "idiom" : "universal"
+      "filename" : "Asset 1.png",
+      "idiom" : "universal",
+      "scale" : "1x"
     },
     {
       "appearances" : [
@@ -11,8 +12,41 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Logo Wales.pdf",
-      "idiom" : "universal"
+      "filename" : "Asset 2.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "Asset 1@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "Asset 1@2x 1.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "Asset 1@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "Asset 1@3x 1.png",
+      "idiom" : "universal",
+      "scale" : "3x"
     }
   ],
   "info" : {

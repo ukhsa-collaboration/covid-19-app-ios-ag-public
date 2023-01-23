@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Cynghorwn chi i siarad ag aelod o staff yn y lleoliad i weld a oes ffyrdd eraill o fewngofnodi.";
 "checkin_information_whats_a_qr_code_section_title" = "Sut i adnabod poster cod QR y GIG";
 "checkin_information_whats_a_qr_code_section_description_new" = "Dyma sut olwg sydd ar bosteri cod QR swyddogol y GIG. Mae angen i chi sganio’r cod, sydd yn y sgwâr yn y canol.";
-"about_this_app_software_information_date_of_release_description" = "12/2022";
+"about_this_app_software_information_date_of_release_description" = "01/2023";
 "link_test_result_enter_code_example" = "Enghraifft: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Cod y prawf";
 "link_test_result_button_title" = "Parhau";
@@ -332,7 +332,7 @@
 "link_general_advice_wls" = "https://llyw.cymru/coronafeirws";
 "postcode_entry_error_description_unsupported_country" = "Yn anffodus, nid yw'r ap hwn yn cael ei gefnogi yn eich rhanbarth. Lawrlwythwch yr ap ar gyfer eich rhanbarth neu'ch gwlad.";
 "about_this_app_how_this_app_works_instruction_for_use" = "Ewch i'r linc i gael rhagor o wybodaeth";
-"home_strapline_accessiblity_label_wls" = "Profi Olrhain Diogelu GIG Cymru";
+"home_strapline_accessiblity_label_wls" = "GIG Cymru";
 "checkin_scanning_failure_description" = "Efallai eich bod wedi sganio cod nad yw’n god QR swyddogol y GIG, efallai bod y cod wedi’i niweidio, neu efallai nad yw’r lleoliad hwn yn cael ei gydnabod.";
 "checkin_scanning_failure_help_link_text" = "Cymorth i fewngofnodi i leoliad";
 "negative_test_result_no_isolation_description" = "Mae canlyniad eich prawf COVID-19 yn negatif";

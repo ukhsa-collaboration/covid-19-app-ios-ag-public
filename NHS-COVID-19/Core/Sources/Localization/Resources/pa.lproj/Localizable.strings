@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "ਅਸੀਂ ਤੁਹਾਨੂੰ ਸਲਾਹ ਦਿੰਦੇ ਹਾਂ ਕਿ ਤੁਸੀਂ ਸਥਾਨ 'ਤੇ ਸਟਾਫ਼ ਦੇ ਕਿਸੇ ਮੈਂਬਰ ਨਾਲ ਗੱਲ ਕਰਕੇ ਪਤਾ ਕਰੋ ਕਿ ਕੀ ਚੈੱਕ-ਇਨ ਕਰਨ ਦੇ ਹੋਰ ਤਰੀਕੇ ਹਨ।";
 "checkin_information_whats_a_qr_code_section_title" = "ਕਿਸੇ NHS QR ਕੋਡ ਪੋਸਟਰ ਨੂੰ ਕਿਵੇਂ ਪਛਾਣਨਾ ਹੈ";
 "checkin_information_whats_a_qr_code_section_description_new" = "ਅਧਿਕਾਰਤ NHS QR ਕੋਡ ਪੋਸਟਰ ਇਸ ਤਰ੍ਹਾਂ ਦੇ ਦਿਖਾਈ ਦਿੰਦੇ ਹਨ। ਤੁਹਾਨੂੰ ਕੋਡ ਨੂੰ ਸਕੈਨ ਕਰਨ ਦੀ ਲੋੜ ਹੈ ਜੋ, ਕੇਂਦਰ ਵਿੱਚ ਇੱਕ ਵਰਗ ਹੁੰਦਾ ਹੈ।";
-"about_this_app_software_information_date_of_release_description" = "12/2022";
+"about_this_app_software_information_date_of_release_description" = "01/2023";
 "link_test_result_enter_code_example" = "ਉਦਾਹਰਣ: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "ਟੈਸਟ ਕੋਡ";
 "link_test_result_button_title" = "ਜਾਰੀ ਰੱਖੋ";
@@ -332,7 +332,7 @@
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
 "postcode_entry_error_description_unsupported_country" = "ਬਦਕਿਸਮਤੀ ਨਾਲ ਤੁਹਾਡੇ ਖੇਤਰ ਵਿੱਚ ਇਸ ਐਪ ਲਈ ਸਹਾਇਤਾ ਨਹੀਂ ਕੀਤੀ ਜਾਂਦੀ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਖੇਤਰ ਜਾਂ ਦੇਸ਼ ਲਈ ਐਪ ਡਾਊਨਲੋਡ ਕਰੋ।";
 "about_this_app_how_this_app_works_instruction_for_use" = "ਹੋਰ ਜਾਣਨ ਲਈ ਲਿੰਕ ਤੇ ਜਾਓ";
-"home_strapline_accessiblity_label_wls" = "NHS ਵੇਲਜ਼ ਟੈਸਟ ਟਰੇਸ ਪ੍ਰੋਟੈਕਟ";
+"home_strapline_accessiblity_label_wls" = "NHS ਵੇਲਜ਼";
 "checkin_scanning_failure_description" = "ਹੋ ਸਕਦਾ ਹੈ ਕਿ ਤੁਸੀਂ ਕੋਈ ਕੋਡ ਸਕੈਨ ਕੀਤਾ ਹੈ ਜੋ ਅਧਿਕਾਰਤ NHS QR ਕੋਡ ਨਹੀਂ ਹੈ, ਕੋਡ ਖ਼ਰਾਬ ਹੋ ਗਿਆ ਹੋ ਸਕਦਾ ਹੈ, ਜਾਂ ਸ਼ਾਇਦ ਇਸ ਜਗ੍ਹਾ ਨੂੰ ਪਛਾਣਿਆ ਨਹੀਂ ਜਾ ਸਕਦਾ ਹੈ। ";
 "checkin_scanning_failure_help_link_text" = "ਕਿਸੇ ਥਾਂ ਵਿੱਚ ਚੈੱਕ-ਇਨ ਲਈ ਸਹਾਇਤਾ";
 "negative_test_result_no_isolation_description" = "ਤੁਹਾਡੇ COVID-19 ਟੈਸਟ ਦਾ ਨਤੀਜਾ ਨੈਗੇਟਿਵ ਹੈ";

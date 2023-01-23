@@ -423,7 +423,7 @@ public class ApplicationCoordinator {
             }
             return .appUnavailable(reason)
         case .failedToStart:
-            return .failedToStart(openURL: application.open)
+            return .failedToStart(openURL: application.open, country: country)
         case .onboarding:
             let completedOnboardingForCurrentSession = self.completedOnboardingForCurrentSession
             return .onboarding(

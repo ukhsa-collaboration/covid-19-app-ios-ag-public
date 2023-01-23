@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Vă recomandăm să discutați cu un membru al personalului localului pentru a verifica dacă există alte modalități de a înregistra vizita.";
 "checkin_information_whats_a_qr_code_section_title" = "Cum se recunoaște un afiș cu cod QR NHS";
 "checkin_information_whats_a_qr_code_section_description_new" = "Iată cum arată afișele oficiale cu cod QR NHS. Trebuie să scanați codul, respectiv pătratul din mijloc.";
-"about_this_app_software_information_date_of_release_description" = "12/2022";
+"about_this_app_software_information_date_of_release_description" = "01/2023";
 "link_test_result_enter_code_example" = "Exemplu: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Rezultatele testului";
 "link_test_result_button_title" = "Continuare";
@@ -332,7 +332,7 @@
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
 "postcode_entry_error_description_unsupported_country" = "Din păcate, această aplicație nu este acceptată în regiunea dvs. Vă rugăm să descărcați aplicația pentru regiunea sau țara dvs.";
 "about_this_app_how_this_app_works_instruction_for_use" = "Accesați linkul pentru a afla mai multe";
-"home_strapline_accessiblity_label_wls" = "NHS Wales Test Trace Protect (Testați, urmăriți, protejați)";
+"home_strapline_accessiblity_label_wls" = "NHS Țara Galilor";
 "checkin_scanning_failure_description" = "Este posibil să fi scanat un cod care nu este un cod oficial QR NHS, codul poate fi deteriorat sau acest local nu poate fi recunoscut.";
 "checkin_scanning_failure_help_link_text" = "Ajutor cu înregistrarea în locație";
 "negative_test_result_no_isolation_description" = "Rezultatul testului dvs. COVID-19 este negativ";

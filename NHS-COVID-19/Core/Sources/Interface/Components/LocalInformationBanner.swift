@@ -38,7 +38,7 @@ public struct LocalInformationBanner: View {
                         Text(localize(.local_information_banner_read_more))
                         Image(.menuChevron)
                     }
-                    .foregroundColor(Color(.nhsBlue))
+                    .foregroundColor(Color(.tliLinkBlue))
                 }
                 .multilineTextAlignment(.leading)
             }
@@ -54,7 +54,7 @@ public struct LocalInformationBanner: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .foregroundColor(Color(.primaryText))
-        .background(Color(.amber))
+        .background(Color(.tliYellow))
         .environment(\.colorScheme, .light) // always use light mode
         .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
     }

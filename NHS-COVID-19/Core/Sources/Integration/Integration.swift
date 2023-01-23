@@ -32,9 +32,9 @@ extension CoordinatedAppController {
                 return BaseNavigationController(rootViewController: vc)
             }
 
-        case .failedToStart(let openURL):
+        case .failedToStart(let openURL, let country):
             let interactor = UnrecoverableErrorViewControllerInteractor(openURL: openURL)
-            let vc = UnrecoverableErrorViewController(interactor: interactor)
+            let vc = UnrecoverableErrorViewController(interactor: interactor, country: country.currentValue)
             return BaseNavigationController(rootViewController: vc)
 
         case .onboarding(

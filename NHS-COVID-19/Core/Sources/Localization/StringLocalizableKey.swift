@@ -1617,7 +1617,7 @@ public enum ParameterisedStringLocalizable: Equatable {
             return [days]
         case .isolation_until_date(let date):
             return [
-                DateFormatter.dayOfYear().string(from: date.advanced(by: -1)),
+                DateFormatter.dayDateMonth.string(from: date.advanced(by: -1)),
                 DateFormatter.time.string(from: date.advanced(by: -1)),
             ]
         case .end_of_isolation_has_passed_description(let date),
@@ -1635,7 +1635,7 @@ public enum ParameterisedStringLocalizable: Equatable {
         case .be_careful_indicator_accessibility_label(let date, let days):
             return [
                 days,
-                DateFormatter.dayOfYear().string(from: date.advanced(by: -1)),
+                DateFormatter.dayDateMonth.string(from: date.advanced(by: -1)),
                 DateFormatter.time.string(from: date.advanced(by: -1)),
             ]
         case .positive_symptoms_days(let days):

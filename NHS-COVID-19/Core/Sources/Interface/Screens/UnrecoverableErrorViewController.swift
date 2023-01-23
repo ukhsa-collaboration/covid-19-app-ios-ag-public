@@ -4,6 +4,7 @@
 
 import Localization
 import UIKit
+import Common
 
 public protocol UnrecoverableErrorViewControllerInteracting {
     func faqLinkTapped()
@@ -12,10 +13,11 @@ public protocol UnrecoverableErrorViewControllerInteracting {
 public class UnrecoverableErrorViewController: RecoverableErrorViewController {
     public typealias Interacting = UnrecoverableErrorViewControllerInteracting
 
-    public init(interactor: Interacting) {
+    public init(interactor: Interacting, country: Country) {
         super.init(error: NonRecoverableErrorDetail(
-            link: (title: localize(.unrecoverable_error_link), act: interactor.faqLinkTapped))
-        )
+            link: (title: localize(.unrecoverable_error_link), act: interactor.faqLinkTapped),
+            logoStrapLineStyle: .home(country)
+        ))
     }
 
     required init?(coder: NSCoder) {

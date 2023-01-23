@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Radzimy porozmawiać z personelem lokalu, aby dowiedzieć się, czy istnieją inne metody zameldowania.";
 "checkin_information_whats_a_qr_code_section_title" = "Jak rozpoznać plakat z kodem NHS QR";
 "checkin_information_whats_a_qr_code_section_description_new" = "Oto jak wyglądają oficjalne plakaty z kodami NHS QR. Należy zeskanować kod, czyli kwadrat znajdujący się pośrodku plakatu.";
-"about_this_app_software_information_date_of_release_description" = "12/2022";
+"about_this_app_software_information_date_of_release_description" = "01/2023";
 "link_test_result_enter_code_example" = "Przykład: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Kod testowy";
 "link_test_result_button_title" = "Kontynuuj";
@@ -332,7 +332,7 @@
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
 "postcode_entry_error_description_unsupported_country" = "Niestety ta aplikacja nie jest obsługiwana w Twoim regionie. Pobierz aplikację dla swojego regionu lub kraju.";
 "about_this_app_how_this_app_works_instruction_for_use" = "Odwiedź link, aby dowiedzieć się więcej";
-"home_strapline_accessiblity_label_wls" = "NHS Wales Test Trace Protect";
+"home_strapline_accessiblity_label_wls" = "NHS Walia";
 "checkin_scanning_failure_description" = "Być może zamiast oficjalnego kodu NHS QR zeskanowano inny kod albo kod jest uszkodzony lub lokal nie został rozpoznany.";
 "checkin_scanning_failure_help_link_text" = "Pomoc w meldowaniu się w miejscach publicznych";
 "negative_test_result_no_isolation_description" = "Wynik Twojego testu na COVID-19 jest negatywny";

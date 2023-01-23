@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "We advise you to speak to a member of staff at the venue to see if there are other ways of checking in.";
 "checkin_information_whats_a_qr_code_section_title" = "How to recognise an NHS QR code poster";
 "checkin_information_whats_a_qr_code_section_description_new" = "Here are what the official NHS QR code posters look like. You need to scan the code, which is the square in the middle.";
-"about_this_app_software_information_date_of_release_description" = "12/2022";
+"about_this_app_software_information_date_of_release_description" = "01/2023";
 "link_test_result_enter_code_example" = "Example: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Test code";
 "link_test_result_button_title" = "Continue";
@@ -332,7 +332,7 @@
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
 "postcode_entry_error_description_unsupported_country" = "Unfortunately this app is not supported in your region. Please download the app for your region or country.";
 "about_this_app_how_this_app_works_instruction_for_use" = "Visit the link to find out more";
-"home_strapline_accessiblity_label_wls" = "NHS Wales Test Trace Protect";
+"home_strapline_accessiblity_label_wls" = "NHS Wales";
 "checkin_scanning_failure_description" = "You may have scanned a code that is not an official NHS QR code, the code may be damaged, or this venue may not be recognised.";
 "checkin_scanning_failure_help_link_text" = "Help with venue check-in";
 "negative_test_result_no_isolation_description" = "Your COVID-19 test result is negative";

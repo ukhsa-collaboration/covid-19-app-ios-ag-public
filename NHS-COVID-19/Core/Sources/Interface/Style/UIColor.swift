@@ -56,6 +56,9 @@ public enum ColorName: String, CaseIterable, Identifiable {
 
     case accessibleButtonOutline = "Accessible Button Outline"
 
+    case tliYellow = "TLI/Yellow"
+    case tliLinkBlue = "TLI/Link Blue"
+
     public var id: ColorName {
         self
     }

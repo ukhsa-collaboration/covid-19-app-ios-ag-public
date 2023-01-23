@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Waxaannu kugula talineynaa inaad la hadasho xubin ka mid ah shaqaalaha goobta jooga si aad u ogaato inay jiraan siyaabo kale aad isku soo xaadirin karto.";
 "checkin_information_whats_a_qr_code_section_title" = "Qaabka loo aqoonsado warqadda  koodhka NHS QR";
 "checkin_information_whats_a_qr_code_section_description_new" = "Waa kuwan sida ay u eg yihiin warqadaha rasmiga ah ee NHS QR. Waxaad u baahantahay inaad iskaan-garayso koodhka, oo ah afar-geeska dhex-bartanka ku yaalla.";
-"about_this_app_software_information_date_of_release_description" = "12/2022";
+"about_this_app_software_information_date_of_release_description" = "01/2023";
 "link_test_result_enter_code_example" = "Tusaale: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Koodhka baaritaanka";
 "link_test_result_button_title" = "Sii wad";
@@ -332,7 +332,7 @@
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
 "postcode_entry_error_description_unsupported_country" = "Nasiib darro barnaamijkan laguma isticmaali karo gobolkaaga. Fadlan soo degso app-ka gobolkaaga ama dalkaaga.";
 "about_this_app_how_this_app_works_instruction_for_use" = "Booqo marrinka si aad wax badan uga ogaato";
-"home_strapline_accessiblity_label_wls" = "NHS Wales Test Trace Protect";
+"home_strapline_accessiblity_label_wls" = "NHS Wales";
 "checkin_scanning_failure_description" = "Waxaa laga yaabaa inaad iskaan ku sameysay koodh aan ahayn lambarka rasmiga ah ee NHS QR, waxaa laga yaabaa in koodhku uu xun yahay, ama goobtan ayaa laga yaabaa inaan la aqoonsan.";
 "checkin_scanning_failure_help_link_text" = "Iga caawi goobta soo-galista";
 "negative_test_result_no_isolation_description" = "Natiijada baaritaankaaga COVID-19 waa laga waayay";

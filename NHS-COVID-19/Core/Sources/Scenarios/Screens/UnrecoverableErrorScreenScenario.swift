@@ -14,7 +14,7 @@ public class UnrecoverableErrorScreenScenario: Scenario {
     static var appController: AppController {
         NavigationAppController { (parent: UINavigationController) in
             let interactor = Interactor(viewController: parent)
-            return UnrecoverableErrorViewController(interactor: interactor)
+            return UnrecoverableErrorViewController(interactor: interactor, country: .wales)
         }
     }
 }

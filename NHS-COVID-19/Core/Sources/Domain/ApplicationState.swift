@@ -117,7 +117,7 @@ public enum ApplicationState {
     /// Application can’t finish starting. There’s no standard way for the user to recover from this.
     ///
     /// This can happen, for example, if certain authorization is restricted, or if another app is using ExposureNotification API.
-    case failedToStart(openURL: (URL) -> Void)
+    case failedToStart(openURL: (URL) -> Void, country: DomainProperty<Country>)
 
     /// Application needs to show onboarding.
     case onboarding(

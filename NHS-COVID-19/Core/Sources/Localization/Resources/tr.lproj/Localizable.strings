@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Mekana giriş yapmanın diğer yolları olup olmadığıyla ilgili olarak bir personelle konuşmanızı tavsiye ederiz.";
 "checkin_information_whats_a_qr_code_section_title" = "Bir NHS QR kodu posteri nasıl tanınır";
 "checkin_information_whats_a_qr_code_section_description_new" = "Resmi NHS QR kodu posterlerinin neye benzediğine dair bir örneği burada görebilirsiniz. Ortasında kare olan kodu taratmanız gerekir.";
-"about_this_app_software_information_date_of_release_description" = "12/2022";
+"about_this_app_software_information_date_of_release_description" = "01/2023";
 "link_test_result_enter_code_example" = "Örnek: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Test kodu";
 "link_test_result_button_title" = "Devam";
@@ -332,7 +332,7 @@
 "link_general_advice_wls" = "https://gov.wales/coronavirus";
 "postcode_entry_error_description_unsupported_country" = "Ne yazık ki bu uygulama bulunduğunuz bölgede desteklenmiyor. Lütfen bölgeniz veya ülkeniz için sunulan uygulamayı indirin.";
 "about_this_app_how_this_app_works_instruction_for_use" = "Daha fazla bilgi için bağlantıyı ziyaret edin";
-"home_strapline_accessiblity_label_wls" = "NHS Galler Test Takip Koru";
+"home_strapline_accessiblity_label_wls" = "NHS Galler";
 "checkin_scanning_failure_description" = "Resmi bir NHS QR kodu olmayan bir kodu taramış olabilirsiniz; kod zarar görmüş olabilir veya bu mekan kayıtlarda olmayabilir. ";
 "checkin_scanning_failure_help_link_text" = "Mekan girişi yapmak konusunda yardım";
 "negative_test_result_no_isolation_description" = "COVID-19 testinizin sonucu negatiftir";
@@ -377,7 +377,7 @@
 "update_app_button_title" = "Uygulamanızı şimdi güncelleyin";
 "venue_check_in_title" = "Daha fazla bilgi";
 "risky_venue_isolation_warning" = "COVID-19'a yakalanmış olabilirsiniz";
-"alert_latest_app_version_update_title" = "Lütfen NHS COVID-19 uygulamanızı en son sürüme güncelleyin";
+"alert_latest_app_version_update_title" = "Lütfen NHS COVID-19 uygulamasının en son sürümünü yükleyin";
 "virology_book_a_test_description" = "Kendiniz için bir test randevusu alın' seçeneğini seçmeniz, sizi, test yaptırabilmeniz için bazı kişisel bilgilerinizi (adresiniz gibi) girmenizin isteneceği, hükümetin koronavirüs testi web sitesine götürecektir. Web sitesine girdiğiniz hiçbir bilgi paylaşılmayacaktır.\n\nSonuçlarınızı uygulamaya geri getirmemize yardımcı olması için dijital bir \"jeton\" oluşturulacaktır.";
 "alert_latest_app_version_update_body" = "Daha fazla bilgi için buraya dokunun.";
 "ask_me_later_button_title" = "Daha sonra sor";
