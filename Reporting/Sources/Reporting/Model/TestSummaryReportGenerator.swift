@@ -19,6 +19,13 @@ private struct Target: Decodable {
     var executableLines: Int
     var lineCoverage: Double
     var name: String
+    var files: [File]
+}
+
+private struct File: Decodable, Hashable {
+    var coveredLines: Int
+    var executableLines: Int
+    var path: String
 }
 
 struct TestSummaryReportGenerator {
@@ -27,17 +34,19 @@ struct TestSummaryReportGenerator {
     private let targetNames = ["Domain", "Integration", "Localization", "Interface", "Common"]
 
     func createCoverageSummary(from data: Data) throws -> Data {
-        let targets: [Target]
+        var targets: [Target] = []
         let decoder = JSONDecoder()
 
         // Deserialize
 
         do {
             let jsonData = try decoder.decode(TestResults.self, from: data)
-            targets = jsonData.targets.filter { $0.executableLines > 0 && targetNames.contains($0.name) }
-
-            if targets.count != targetNames.count {
-                throw SummaryReportError.errorDecodingTestResults
+            let files = jsonData.targets.filter { $0.executableLines > 0 }.flatMap { $0.files }
+            
+            for targetName in targetNames {
+                let targetFiles: Set<File> = Set(files.filter { $0.path.contains("/Core/Sources/\(targetName)") })
+                let target = try convertToTarget(targetName, files: Array(targetFiles))
+                targets.append(target)
             }
         } catch {
             throw SummaryReportError.errorDecodingTestResults
@@ -74,6 +83,19 @@ struct TestSummaryReportGenerator {
         }
     }
 
+    private func convertToTarget(_ name: String, files: [File]) throws -> Target {
+        let allLines = files.map { $0.executableLines }.reduce(0, +)
+        let allCovered = files.map { $0.coveredLines }.reduce(0, +)
+        
+        guard allCovered < allLines else {
+            throw SummaryReportError.errorDecodingTestResults
+        }
+
+        let lineCoverage = Double(allCovered) / Double(allLines)
+        
+        return Target(coveredLines: allCovered, executableLines: allLines, lineCoverage: lineCoverage, name: name, files: files)
+    }
+    
     /// Calculates weighted average percentage
     private func calculateTotalCoveragePercentage(from targets: [Target]) throws -> Double {
         let allLines = targets.map { $0.executableLines }.reduce(0, +)

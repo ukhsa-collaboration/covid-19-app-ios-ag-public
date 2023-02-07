@@ -132,7 +132,7 @@ extension IsolationModelAcceptanceTests {
 
 }
 
-private struct NoOpBackgroundTask: BackgroundTask {
+private struct NoOpBackgroundTask: BackgroundJob {
     var identifier = ""
     var expirationHandler: (() -> Void)? {
         get {

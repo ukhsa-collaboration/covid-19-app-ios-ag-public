@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "તપાસ કરવાની અન્ય રીતો છે કે કેમ તે જોવા માટે અમે તમને સ્થળ પર સ્ટાફના સભ્ય સાથે વાત કરવાની સલાહ આપીશું.";
 "checkin_information_whats_a_qr_code_section_title" = "NHS QR કોડ પોસ્ટરને કેવી રીતે ઓળખવું";
 "checkin_information_whats_a_qr_code_section_description_new" = "અહીં સત્તાવાર NHS QR કોડ પોસ્ટર્સ છે. તમારે કોડ સ્કેન કરવાની જરૂર છે, જે મધ્યમાં ચોરસ છે.";
-"about_this_app_software_information_date_of_release_description" = "01/2023";
+"about_this_app_software_information_date_of_release_description" = "02/2023";
 "link_test_result_enter_code_example" = "ઉદાહરણ: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "ટેસ્ટ કોડ";
 "link_test_result_button_title" = "ચાલુ રાખો";
@@ -377,7 +377,7 @@
 "update_app_button_title" = "હમણાં જ તમારી એપને અપડેટ કરો";
 "venue_check_in_title" = "વધુ માહિતી";
 "risky_venue_isolation_warning" = "તમને COVID-19 હોઈ શકે છે";
-"alert_latest_app_version_update_title" = "કૃપા કરી તમારા NHS COVID-19 એપને લેટેસ્ટ તમે માટે અપડેટ કરો";
+"alert_latest_app_version_update_title" = "કૃપા કરી તમારા NHS COVID-19 એપને લેટેસ્ટ વર્ઝન માટે અપડેટ કરો";
 "virology_book_a_test_description" = "બુક એ ટેસ્ટ ફોર યોરસેલ્ફ એટલેકે તમારા પોતાના માટે ટેસ્ટ કે કસોટી નોંધાવાનું' પસંદ કરવાથી તમને સરકારની કોરોનાવાઈરસ ટેસ્ટ કરનારી વેબસાઈટમાં લઈ જશે કે જયાં તમને તમારી થોડીક વ્યક્તિગત વિગતો પૂરી કરવા વિનંતી કરવામાં આવશે (જેમકે તમારું સરનામું) જેથી કરીને ટેસ્ટ કે કસોટી મેળવી શકાય. વેબસાઈટમાં તમે જે દાખલ કરો તે કોઈ પણ શેર કરવામાં આવશે નહિ.\n\nકોઈ એક ડિજિટલ (આંકડાને લગતુ) 'ટોકન કે નિશાની- ચિહ્નનું' નિર્માણ કરવામાં આવશે કે જે અમને એપ માટે તમારું પરિણામ પાછુ મેળવવામાં મદદરૂપ બનશે. ";
 "alert_latest_app_version_update_body" = "વધુ માહિતી માટે અહીં ટેપ કરો.";
 "ask_me_later_button_title" = "મને પછીથી પૂછો કે વિનંતી કરો";

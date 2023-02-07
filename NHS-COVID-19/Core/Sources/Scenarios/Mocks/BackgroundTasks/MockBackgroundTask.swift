@@ -5,7 +5,7 @@
 import Domain
 import Foundation
 
-public class MockBackgroundTask: BackgroundTask {
+public class MockBackgroundTask: BackgroundJob {
     public var identifier: String = UUID().uuidString
     public var expirationHandler: (() -> Void)?
     public var taskCompletion: ((Bool) -> Void)?

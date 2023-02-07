@@ -11,7 +11,7 @@ public protocol BackgroundTaskScheduling {
     func register(
         forTaskWithIdentifier identifier: String,
         using queue: DispatchQueue?,
-        launchHandler: @escaping (BackgroundTask) -> Void
+        launchHandler: @escaping (BackgroundJob) -> Void
     ) -> Bool
 
     func getPendingTaskRequests(completionHandler: @escaping ([BGTaskRequest]) -> Void)
@@ -21,7 +21,7 @@ public protocol BackgroundTaskScheduling {
 
 @available(iOSApplicationExtension, unavailable)
 extension BGTaskScheduler: BackgroundTaskScheduling {
-    public func register(forTaskWithIdentifier identifier: String, using queue: DispatchQueue?, launchHandler: @escaping (BackgroundTask) -> Void) -> Bool {
+    public func register(forTaskWithIdentifier identifier: String, using queue: DispatchQueue?, launchHandler: @escaping (BackgroundJob) -> Void) -> Bool {
         register(forTaskWithIdentifier: identifier, using: queue) { (bgTask: BGTask) in
             launchHandler(bgTask)
         }

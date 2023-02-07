@@ -4,10 +4,10 @@
 
 import BackgroundTasks
 
-public protocol BackgroundTask {
+public protocol BackgroundJob {
     var identifier: String { get }
     var expirationHandler: (() -> Void)? { get nonmutating set }
     func setTaskCompleted(success: Bool)
 }
 
-extension BGTask: BackgroundTask {}
+extension BGTask: BackgroundJob {}

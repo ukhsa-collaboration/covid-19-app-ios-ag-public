@@ -4,6 +4,7 @@
 
 import Foundation
 import SwiftSyntax
+import SwiftSyntaxParser
 
 private class LocalizationFuncVisitor: SyntaxVisitor {
 

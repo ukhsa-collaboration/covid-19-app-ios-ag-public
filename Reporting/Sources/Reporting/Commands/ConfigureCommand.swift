@@ -64,25 +64,14 @@ struct ConfigureCommand: ParsableCommand {
 
         try identity.write(to: identityFile)
 
+        let tempPath = ProcessInfo.processInfo.environment["RUNNER_TEMP"] ?? "_temp"
+        let keychainName = "\(tempPath)/app-signing.keychain-db"
         let keychainPassword = UUID().uuidString
-        let keychainName = UUID().uuidString
 
         try Bash.run("security", "create-keychain", "-p", keychainPassword, keychainName)
-        try Bash.run("security", "list-keychains", "-d", "user", "-s", "login.keychain", keychainName)
-        try Bash.run(
-            "security",
-            "import",
-            identityFile.path,
-            "-k",
-            keychainName,
-            "-P",
-            password,
-            "-T",
-            "/usr/bin/codesign",
-            "-T",
-            "/usr/bin/security"
-        )
-        try Bash.run("security", "set-keychain-settings", "-lut", "6000", keychainName)
+        try Bash.run("security", "list-keychains", "-d", "user", "-s", keychainName)
+        try Bash.run("security", "import", identityFile.path, "-k", keychainName, "-P", password, "-T", "/usr/bin/codesign", "-T", "/usr/bin/security")
+        try Bash.run("security", "set-keychain-settings", "-lut", "21600", keychainName)
         try Bash.run("security", "unlock-keychain", "-p", keychainPassword, keychainName)
         try Bash.run("security", "set-key-partition-list", "-S", "apple-tool:,apple:", "-s", "-k", keychainPassword, keychainName)
 

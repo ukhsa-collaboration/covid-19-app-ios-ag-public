@@ -27,7 +27,7 @@ class BackgroundTaskAggregator {
         scheduleNextTaskIfNeeded()
     }
 
-    func performBackgroundTask(backgroundTask: BackgroundTask) {
+    func performBackgroundTask(backgroundTask: BackgroundJob) {
         Self.logger.info("starting background task")
         Metrics.begin(.backgroundTasks)
 

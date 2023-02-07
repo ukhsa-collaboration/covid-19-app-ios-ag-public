@@ -23,7 +23,7 @@ class SandboxedAppController: AppController {
         rootViewController.addFilling(content.rootViewController)
     }
 
-    func performBackgroundTask(task: BackgroundTask) {}
+    func performBackgroundTask(task: BackgroundJob) {}
 
 }
 

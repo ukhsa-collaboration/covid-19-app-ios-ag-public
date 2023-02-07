@@ -14,7 +14,7 @@
 "exposure_notification_disabled_description_1" = "لضمان سلامة عمل التطبيق، يحتاج هذا التطبيق إلى استخدام بعض الخصائص الموجودة في هاتفك مثل \"البلوتوث منخفض الطاقة\" لتتبع الاتصال والكاميرا لتسجيل الدخول إلى الأماكن.\n\nقد يُطلق على هذه الأذونات في هاتفك \"إشعارات التعرّض\" أو \"تسجيل التعرّض\".";
 "exposure_notification_disabled_action" = "افتح إعدادات الهاتف";
 "authorization_denied_title" = "السماح لـ \"Exposure notifications\" لكي يعمل هذا التطبيق";
-"authorization_denied_description_1" = "هذه هي الطريقة التي يخبرك بها التطبيق إذا ما كنت على اتصال وثيق بشخص ما ثبُتت إصابته بـ COVID-19.\n\nقد يتصل هاتفك بهذه الـ ’Exposure notifications’ أو ’Exposure logging’.\n\nانتقل الى إعدادات هاتفك وقم بالتغيير إلى \"السماح.\" '(Allow)'";
+"authorization_denied_description_1" = "هذه هي الطريقة التي يخبرك بها التطبيق إذا ما كنت على اتصال وثيق بشخص ما ثبُتت إصابته بـ COVID-19.\n\nقد يتصل هاتفك بهذه الـ ’Exposure notifications’ أو ’Exposure logging’.\n\nانتقل الى إعدادات هاتفك وقم بالتغيير إلى \"السماح\" '(Allow)'.";
 "authorization_denied_description_2" = "يحدث \"تسجيل التعرّض\" عندما تسمح خاصية البلوتوث لهاتفك باستلام الهويات العشوائية المشفرة الخاصة بالمستخدمين الآخرين وإرسال هويتك العشوائية إلى هواتفهم. ويمكن تعطيل هذه الخاصية في أي وقت من الأوقات، ولكن سيتوقف التطبيق عن العمل.";
 "authorization_denied_description_3" = "يرجى قبول الأذونات عندما يُطلب الحصول عليها.";
 "authorization_denied_action" = "افتح إعدادات الهاتف";
@@ -282,7 +282,7 @@
 "close" = "إغلاق";
 "nhs_111_online_service" = "NHS 111 online";
 "bluetooth_disabled_description" = "يستخدم هذا التطبيق خاصية البلوتوث لتحديد ما إذا كان هاتفك موجودًا بالقرب من هاتفٍ آخر تم تثبيت نفس التطبيق عليه؛ علمًا بأن هذا التطبيق لن يعمل في حال إيقاف تشغيل خاصية البلوتوث.\n\nيستخدم هذا التطبيق خاصية \"البلوتوث منخفض الطاقة\" - وهي تقنية موفرة لطاقة البطارية.\n\nيرجى الانتقال إلى الإعدادات وتشغيل خاصية البلوتوث.";
-"authorization_denied_description" = "هذه هي الطريقة التي يخبرك بها التطبيق إذا ما كنت على اتصال وثيق بشخص ما ثبُتت إصابته بـ COVID-19.\n\nقد يتصل هاتفك بهذه الـ ’Exposure notifications’ أو ’Exposure logging’.\n\nانتقل الى إعدادات هاتفك وقم بالتغيير إلى \"السماح.\" '(Allow)'";
+"authorization_denied_description" = "هذه هي الطريقة التي يخبرك بها التطبيق إذا ما كنت على اتصال وثيق بشخص ما ثبُتت إصابته بـ COVID-19.\n\nقد يتصل هاتفك بهذه الـ ’Exposure notifications’ أو ’Exposure logging’.\n\nانتقل الى إعدادات هاتفك وقم بالتغيير إلى \"السماح\" '(Allow)'.";
 "checkin_camera_qrcode_scanner_title" = "مسح ضوئي لملصق أحد رموز NHS QR الرسمية لتسجيل الدخول";
 "checkin_camera_qrcode_scanner_status_label" = "كيف يساعدنا ذلك في البقاء بأمانٍ";
 "checkin_confirmation_title" = "تم تسجيل الدخول بنجاح";
@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "ننصحك بالتحدّث إلى أحد الأفراد العاملين في المكان لمعرفة الطرق الأخرى المتاحة لتسجيل الدخول.";
 "checkin_information_whats_a_qr_code_section_title" = "كيفية التعرّف على أحد ملصقات رموز NHS QR";
 "checkin_information_whats_a_qr_code_section_description_new" = "نُوضِّح هنا أشكال ملصقات رموز NHS QR الرسمية. يتعين عليك إجراء مسح ضوئي للرمز الذي يظهر في المربع الموجود في المنتصف.";
-"about_this_app_software_information_date_of_release_description" = "01/2023";
+"about_this_app_software_information_date_of_release_description" = "02/2023";
 "link_test_result_enter_code_example" = "على سبيل المثال: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "رمز الاختبار";
 "link_test_result_button_title" = "استمرار";

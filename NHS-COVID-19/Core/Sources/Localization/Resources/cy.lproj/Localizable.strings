@@ -318,7 +318,7 @@
 "checkin_information_help_scanning_section_description" = "Cynghorwn chi i siarad ag aelod o staff yn y lleoliad i weld a oes ffyrdd eraill o fewngofnodi.";
 "checkin_information_whats_a_qr_code_section_title" = "Sut i adnabod poster cod QR y GIG";
 "checkin_information_whats_a_qr_code_section_description_new" = "Dyma sut olwg sydd ar bosteri cod QR swyddogol y GIG. Mae angen i chi sganio’r cod, sydd yn y sgwâr yn y canol.";
-"about_this_app_software_information_date_of_release_description" = "01/2023";
+"about_this_app_software_information_date_of_release_description" = "02/2023";
 "link_test_result_enter_code_example" = "Enghraifft: 7g8s3stn";
 "link_test_result_enter_code_textfield_label" = "Cod y prawf";
 "link_test_result_button_title" = "Parhau";

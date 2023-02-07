@@ -8,13 +8,13 @@ import UIKit
 public protocol AppController {
     var rootViewController: UIViewController { get }
 
-    func performBackgroundTask(task: BackgroundTask)
+    func performBackgroundTask(task: BackgroundJob)
 
     func handleUserNotificationResponse(_ response: UNNotificationResponse, completionHandler: @escaping () -> Void)
 }
 
 extension AppController {
-    public func performBackgroundTask(task: BackgroundTask) {
+    public func performBackgroundTask(task: BackgroundJob) {
         task.setTaskCompleted(success: true)
     }
 

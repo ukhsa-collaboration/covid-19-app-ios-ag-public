@@ -4,7 +4,7 @@
 
 import Foundation
 
-struct NoOpBackgroundTask: BackgroundTask {
+struct NoOpBackgroundTask: BackgroundJob {
     var identifier = ""
     var expirationHandler: (() -> Void)? {
         get {

@@ -60,7 +60,7 @@ public class CoordinatedAppController: AppController {
         setupUI()
     }
 
-    public func performBackgroundTask(task: BackgroundTask) {
+    public func performBackgroundTask(task: BackgroundJob) {
         coordinator.performBackgroundTask(task: task)
     }
 

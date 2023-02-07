@@ -31,7 +31,6 @@ public struct ToggleButton: View {
                 }.frame(width: 60)
             }
             Toggle(text, isOn: $isToggledOn)
-                .accessibility(label: Text(text)) // fixes accessibility label when the switch is turned off and turned back on again
                 .font(.body)
                 .foregroundColor(Color(.primaryText))
                 .fixedSize(horizontal: false, vertical: true)

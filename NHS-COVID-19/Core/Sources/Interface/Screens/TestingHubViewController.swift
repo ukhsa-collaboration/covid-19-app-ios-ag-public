@@ -105,4 +105,8 @@ public class TestingHubViewController: RootViewController {
         addFilling(contentViewController)
     }
 
+    override public func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
+    }
 }

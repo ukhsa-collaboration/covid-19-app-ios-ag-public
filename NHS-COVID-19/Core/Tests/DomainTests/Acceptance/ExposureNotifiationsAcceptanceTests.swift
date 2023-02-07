@@ -144,7 +144,7 @@ private extension AcceptanceTestCase {
 
 }
 
-private class AcceptanceBackgroundTask: BackgroundTask {
+private class AcceptanceBackgroundTask: BackgroundJob {
     var identifier = ""
 
     @Published

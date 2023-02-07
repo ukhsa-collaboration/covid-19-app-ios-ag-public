@@ -138,4 +138,8 @@ public class GuidanceHubEnglandViewController: RootViewController {
 
     }
 
+    override public func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
+    }
 }

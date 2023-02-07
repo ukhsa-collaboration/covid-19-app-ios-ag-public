@@ -1830,7 +1830,7 @@ private extension DateFormatter {
 
     static var dayDateMonth: DateFormatter {
         let dateFormatter = Localization.make(DateFormatter.self)
-        dateFormatter.dateFormat = "EEEE dd MMMM yyyy"
+        dateFormatter.dateFormat = "EEEE d MMMM yyyy"
         return dateFormatter
     }
 }

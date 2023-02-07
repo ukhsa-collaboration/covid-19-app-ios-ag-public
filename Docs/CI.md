@@ -167,6 +167,10 @@ A distribution provisioning profile with necessary entitlements for App Store bu
 
 This profile should have correct entitlements for the app. The profile should use a wildcard app ID as it will be used for both Production and Scenarios apps.
 
+### `KEYCHAIN_PASSWORD`
+
+Password used for new keychains created on the runner.
+
 ## App Store Connect
 
 ### `ASC_API_KEY`

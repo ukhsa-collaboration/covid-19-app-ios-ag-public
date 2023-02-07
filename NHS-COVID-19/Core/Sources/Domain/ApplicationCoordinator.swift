@@ -969,11 +969,11 @@ localAuthorityValidator: LocalAuthoritiesValidator) {
         }
     }
 
-    public func performBackgroundTask(task: BackgroundTask) {
+    public func performBackgroundTask(task: BackgroundJob) {
         _performBackgroundTask(task: task)
     }
 
-    private func _performBackgroundTask(task: BackgroundTask, counter: Int = 0) {
+    private func _performBackgroundTask(task: BackgroundJob, counter: Int = 0) {
         // TODO: Find a more robust way of doing this.
         // If we’ve just booted, delay the tasks a little bit until we’ve settled into a new state.
         if case .starting = state, counter < 3 {

@@ -7,14 +7,14 @@ import Domain
 
 class MockBackgroundTaskScheduler: BackgroundTaskScheduling {
     var requests = [BGTaskRequest]()
-    private var taskInfo = [String: (queue: DispatchQueue?, launchHandler: (BackgroundTask) -> Void)]()
+    private var taskInfo = [String: (queue: DispatchQueue?, launchHandler: (BackgroundJob) -> Void)]()
 
     func submit(_ taskRequest: BGTaskRequest) throws {
         requests.append(taskRequest)
     }
 
     @discardableResult
-    func register(forTaskWithIdentifier identifier: String, using queue: DispatchQueue?, launchHandler: @escaping (BackgroundTask) -> Void) -> Bool {
+    func register(forTaskWithIdentifier identifier: String, using queue: DispatchQueue?, launchHandler: @escaping (BackgroundJob) -> Void) -> Bool {
         taskInfo[identifier] = (queue, launchHandler)
         return true
     }

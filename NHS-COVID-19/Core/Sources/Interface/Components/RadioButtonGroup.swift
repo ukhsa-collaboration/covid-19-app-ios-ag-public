@@ -49,36 +49,27 @@ public struct RadioButtonGroup: View {
             switch alignment {
             case .horizontal:
                 HStack(alignment: .firstTextBaseline, spacing: .standardSpacing) {
-                    ForEach(0..<buttonViewModels.count, id: \.self) { index in
-                        RadioButton(
-                            title: buttonViewModels[index].title,
-                            accessibilityText: buttonViewModels[index].accessibilityText,
-                            isSelected: state.selectedID == buttonViewModels[index].id
-                        ) {
-                            state.selectedID = buttonViewModels[index].id
-                            buttonViewModels[index].action()
-                        }
-                    }
-                    // leading-aligning radio buttons
+                    content
                     Spacer()
                 }
-                .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
-                .environment(\.layoutDirection, currentLanguageDirection() == .rightToLeft ? .rightToLeft : .leftToRight)
             case .vertical:
-                VStack(spacing: .standardSpacing) {
-                    ForEach(0..<buttonViewModels.count, id: \.self) { index in
-                        VerticalRadioButton(
-                            title: buttonViewModels[index].title,
-                            accessibilityText: buttonViewModels[index].accessibilityText,
-                            isSelected: state.selectedID == buttonViewModels[index].id
-                        ) {
-                            state.selectedID = buttonViewModels[index].id
-                            buttonViewModels[index].action()
-                        }
-                    }
-                }
-                .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
-                .environment(\.layoutDirection, currentLanguageDirection() == .rightToLeft ? .rightToLeft : .leftToRight)
+                VStack(spacing: .standardSpacing) { content }
+            }
+        }
+        .environment(\.locale, Locale(identifier: currentLocaleIdentifier()))
+        .environment(\.layoutDirection, currentLanguageDirection() == .rightToLeft ? .rightToLeft : .leftToRight)
+    }
+
+    private var content: some View {
+        ForEach(0..<buttonViewModels.count, id: \.self) { index in
+            RadioButton(
+                title: buttonViewModels[index].title,
+                accessibilityText: buttonViewModels[index].accessibilityText,
+                isSelected: state.selectedID == buttonViewModels[index].id,
+                alignment: alignment
+            ) {
+                state.selectedID = buttonViewModels[index].id
+                buttonViewModels[index].action()
             }
         }
     }
@@ -88,6 +79,7 @@ private struct RadioButton: View {
     let title: String
     let accessibilityText: String?
     let isSelected: Bool
+    let alignment: RadioButtonGroup.RadioButtonAlignment
     let action: () -> Void
 
     public var body: some View {
@@ -107,6 +99,9 @@ private struct RadioButton: View {
                     .font(.headline)
                     .foregroundColor(Color(.primaryText))
                     .fixedSize(horizontal: false, vertical: true)
+                if alignment == .vertical {
+                    Spacer()
+                }
             }
             .padding()
             .background(Color(.surface))
@@ -114,59 +109,7 @@ private struct RadioButton: View {
             .overlay(
                 RoundedRectangle(cornerRadius: .buttonCornerRadius)
                     .stroke(
-                        isSelected ? Color(.nhsButtonGreen) : Color(.surface),
-                        lineWidth: .halfHairSpacing
-                    )
-            )
-        }
-        .buttonStyle(PlainButtonStyle())
-        .accessibilityElement()
-        .accessibility(
-            label: Text(
-                verbatim: localize(
-                    .radio_button_accessibility_label(
-                        value: isSelected ? localize(.radio_button_checked) : localize(.radio_button_unchecked),
-                        content: accessibilityText ?? title
-                    )
-                )
-            )
-        )
-        .accessibility(addTraits: .isButton)
-    }
-}
-
-private struct VerticalRadioButton: View {
-    let title: String
-    let accessibilityText: String?
-    let isSelected: Bool
-    let action: () -> Void
-
-    public var body: some View {
-        Button(action: {
-            withAnimation { action() }
-        }) {
-            HStack(alignment: .firstTextBaseline, spacing: .halfSpacing) {
-                ZStack {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(Color(.nhsButtonGreen))
-                        .opacity(isSelected ? 1 : 0)
-                    Image(systemName: "circle")
-                        .foregroundColor(Color(.secondaryText))
-                        .opacity(isSelected ? 0 : 1)
-                }
-                Text(verbatim: title)
-                    .font(.headline)
-                    .foregroundColor(Color(.primaryText))
-                    .fixedSize(horizontal: false, vertical: true)
-                Spacer()
-            }
-            .padding(.standardSpacing)
-            .background(Color(.surface))
-            .clipShape(RoundedRectangle(cornerRadius: .buttonCornerRadius))
-            .overlay(
-                RoundedRectangle(cornerRadius: .buttonCornerRadius)
-                    .stroke(
-                        isSelected ? Color(.nhsButtonGreen) : Color(.gray),
+                        isSelected ? Color(.nhsButtonGreen) : Color(.secondaryText),
                         lineWidth: .halfHairSpacing
                     )
             )
