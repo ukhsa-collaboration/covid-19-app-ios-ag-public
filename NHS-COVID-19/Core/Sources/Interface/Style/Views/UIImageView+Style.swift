@@ -14,6 +14,16 @@ extension UIImageView {
     }
 
     @discardableResult
+    public func styleAsAccessibleDecoration(_ accessibility: String) -> Self {
+        isAccessibilityElement = true
+        accessibilityElementsHidden = false
+        contentMode = .scaleAspectFit
+        accessibilityTraits = .image
+        accessibilityLabel = accessibility
+        return self
+    }
+
+    @discardableResult
     public func color(_ color: ColorName) -> Self {
         tintColor = UIColor(color)
         return self

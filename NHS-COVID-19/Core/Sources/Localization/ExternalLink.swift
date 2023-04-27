@@ -58,6 +58,11 @@ public enum ExternalLink: CaseIterable {
     case walesNHS111OnlineLink
     case selfIsolationInfo
     case negativeOrVoidTestResultEnglandFindMoreLink
+    case closureLink1
+    case closureLink2
+    case closureLink3
+    case closureLink4
+    case closureLink5
 
     public var url: URL {
         switch self {
@@ -167,6 +172,16 @@ public enum ExternalLink: CaseIterable {
             return localizeURL(.self_report_advice_read_more_url_link)
         case .negativeOrVoidTestResultEnglandFindMoreLink:
             return localizeURL(.self_report_negative_or_void_test_result_link_one_url)
+        case .closureLink1:
+            return localizeURL(.closure_url_1_link)
+        case .closureLink2:
+            return localizeURL(.closure_url_2_link)
+        case .closureLink3:
+            return localizeURL(.closure_url_3_link)
+        case .closureLink4:
+            return localizeURL(.closure_url_4_link)
+        case .closureLink5:
+            return localizeURL(.closure_url_5_link)
         }
     }
 }

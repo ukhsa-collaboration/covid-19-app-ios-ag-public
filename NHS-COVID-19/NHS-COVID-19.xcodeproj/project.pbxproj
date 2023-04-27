@@ -243,6 +243,8 @@
 		B766DEC227F6F5CA00EFA8B5 /* GuidanceHubEnglandFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B766DEC127F6F5CA00EFA8B5 /* GuidanceHubEnglandFlowTests.swift */; };
 		B766DEC427F6F9F400EFA8B5 /* GuidanceHubEnglandScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B766DEC327F6F9F400EFA8B5 /* GuidanceHubEnglandScreen.swift */; };
 		B766DEC627F701AD00EFA8B5 /* GuidanceHubEnglandScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B766DEC527F701AD00EFA8B5 /* GuidanceHubEnglandScreenTests.swift */; };
+		B7AB6F5629B62CD70064818D /* ClosureScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AB6F5529B62CD70064818D /* ClosureScreenTests.swift */; };
+		B7AB6F5829B62D170064818D /* ClosureScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AB6F5729B62D170064818D /* ClosureScreen.swift */; };
 		B7AD9CA02926E15A0048EA5E /* AdviceReportedResultsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AD9C9F2926E15A0048EA5E /* AdviceReportedResultsScreen.swift */; };
 		B7AD9CA22926E9AF0048EA5E /* AdviceNotReportedResultScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AD9CA12926E9AF0048EA5E /* AdviceNotReportedResultScreenTests.swift */; };
 		B7AD9CA42927A8040048EA5E /* AdviceReportedResultScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AD9CA32927A8040048EA5E /* AdviceReportedResultScreenTests.swift */; };
@@ -608,6 +610,8 @@
 		B766DEC127F6F5CA00EFA8B5 /* GuidanceHubEnglandFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidanceHubEnglandFlowTests.swift; sourceTree = "<group>"; };
 		B766DEC327F6F9F400EFA8B5 /* GuidanceHubEnglandScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidanceHubEnglandScreen.swift; sourceTree = "<group>"; };
 		B766DEC527F701AD00EFA8B5 /* GuidanceHubEnglandScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidanceHubEnglandScreenTests.swift; sourceTree = "<group>"; };
+		B7AB6F5529B62CD70064818D /* ClosureScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosureScreenTests.swift; sourceTree = "<group>"; };
+		B7AB6F5729B62D170064818D /* ClosureScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosureScreen.swift; sourceTree = "<group>"; };
 		B7AD9C9F2926E15A0048EA5E /* AdviceReportedResultsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdviceReportedResultsScreen.swift; sourceTree = "<group>"; };
 		B7AD9CA12926E9AF0048EA5E /* AdviceNotReportedResultScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdviceNotReportedResultScreenTests.swift; sourceTree = "<group>"; };
 		B7AD9CA32927A8040048EA5E /* AdviceReportedResultScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdviceReportedResultScreenTests.swift; sourceTree = "<group>"; };
@@ -959,6 +963,7 @@
 				882E6CB027E200720078D517 /* AdviceForIndexCasesEnglandAlreadyIsolatingScreenTests.swift */,
 				E36419F327E4A1D7004AAB23 /* GuidanceForSymptomaticCasesEnglandScreenTests.swift */,
 				B766DEC527F701AD00EFA8B5 /* GuidanceHubEnglandScreenTests.swift */,
+				B7AB6F5529B62CD70064818D /* ClosureScreenTests.swift */,
 				103A3A67289284E400AE16E8 /* GuidanceHubWalesScreenTests.swift */,
 				105740A0282291660021CE1E /* HowDoYouFeelScreenTests.swift */,
 				108FC9EB282948F400597E5B /* SymptomaticCasesSummaryTryStayHomeScreenTests.swift */,
@@ -1265,6 +1270,7 @@
 				882E6CAE27E200210078D517 /* AdviceForIndexCasesEnglandAlreadyIsolatingScreen.swift */,
 				8B3F665D27FF22B8002020A6 /* GuidanceHubWalesScreen.swift */,
 				B766DEC327F6F9F400EFA8B5 /* GuidanceHubEnglandScreen.swift */,
+				B7AB6F5729B62D170064818D /* ClosureScreen.swift */,
 				105740A22822933F0021CE1E /* HowDoYouFeelScreen.swift */,
 			);
 			path = Screens;
@@ -1940,6 +1946,7 @@
 				DDF8A86E24EBD3A30064A6FC /* BelowRequiredAgeErrorScreen.swift in Sources */,
 				89AB940D2462AAE3004E405C /* EnterPostcodeScreenTests.swift in Sources */,
 				ED32D6AF2679096A0002DC38 /* ContactTracingAdviceScreen.swift in Sources */,
+				B7AB6F5629B62CD70064818D /* ClosureScreenTests.swift in Sources */,
 				95C555D02548104100E81624 /* LocalAuthorityConfirmationScreen.swift in Sources */,
 				089E16F126AAAACE00634BD4 /* ContactCaseContinueIsolationScreen.swift in Sources */,
 				B7D5E2812913CEA70072CCEA /* SelfReportingCheckAnswersScreenTest.swift in Sources */,
@@ -2064,6 +2071,7 @@
 				94894E3D24CABC9600D6CDA7 /* PositiveTestResultNoIsolationScreen.swift in Sources */,
 				ED9F784326863DFE004D1DE9 /* ContactTracingHubFlowTests.swift in Sources */,
 				2273581E25EEA2DA003C86DE /* MyAreaScreenTests.swift in Sources */,
+				B7AB6F5829B62D170064818D /* ClosureScreen.swift in Sources */,
 				89C3DC832462BA1E001338E3 /* XCUIElement.swift in Sources */,
 				0808A5BA26777218004EB81A /* BookARapidTestScreenTests.swift in Sources */,
 				22CDCECE24CAE9070047B203 /* AboutThisAppScreenTests.swift in Sources */,

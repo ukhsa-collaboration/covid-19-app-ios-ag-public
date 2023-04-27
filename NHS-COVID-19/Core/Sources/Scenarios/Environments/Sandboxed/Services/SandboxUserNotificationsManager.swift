@@ -49,4 +49,6 @@ class SandboxUserNotificationsManager: UserNotificationManaging {
     func removePending(type: UserNotificationType) {}
 
     func removeAllDelivered(for type: UserNotificationType) {}
+
+    func removeAll() {}
 }

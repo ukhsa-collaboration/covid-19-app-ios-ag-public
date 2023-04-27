@@ -45,6 +45,7 @@ class ConfigurationViewController: UIViewController {
         let guidanceHubEnglandToggle = createToggle(feature: .guidanceHubEngland, isOn: featureToggleStorage.guidanceHubEnglandToggle, action: #selector(toggleGuidanceHubEngland))
         let guidanceHubWalesToggle = createToggle(feature: .guidanceHubWales, isOn: featureToggleStorage.guidanceHubWalesToggle, action: #selector(toggleGuidanceHubWales))
         let selfReportingToggle = createToggle(feature: .selfReporting, isOn: featureToggleStorage.selfReportingToggle, action: #selector(toggleSelfReporting))
+        let decommissioningClosureSceenToggle = createToggle(feature: .decommissioningClosureSceen, isOn: featureToggleStorage.decommissioningClosureSceenToggle, action: #selector(toggleDecommissioningClosureSceen))
 
         let stackView = UIStackView(arrangedSubviews: [
             localStatsButtonToggle,
@@ -57,6 +58,7 @@ class ConfigurationViewController: UIViewController {
             guidanceHubEnglandToggle,
             guidanceHubWalesToggle,
             selfReportingToggle,
+            decommissioningClosureSceenToggle,
             disclaimer,
         ])
 
@@ -89,6 +91,8 @@ class ConfigurationViewController: UIViewController {
 
     func getFeatureString(feature: Feature) -> String {
         switch feature {
+        case .decommissioningClosureSceen:
+            return "Decommissioning Closure Sceen"
         case .localStatistics:
             return "Local statistics home screen button"
         case .venueCheckIn:
@@ -150,6 +154,10 @@ class ConfigurationViewController: UIViewController {
 
     @objc private func toggleSelfReporting() {
         featureToggleStorage.selfReportingToggle.toggle()
+    }
+
+    @objc private func toggleDecommissioningClosureSceen() {
+        featureToggleStorage.decommissioningClosureSceenToggle.toggle()
     }
 }
 

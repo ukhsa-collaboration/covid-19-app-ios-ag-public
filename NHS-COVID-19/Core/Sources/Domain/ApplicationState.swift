@@ -23,6 +23,7 @@ enum LogicalState: Equatable {
     case authorizationRequired
     case canNotRunExposureNotification(ExposureDetectionDisabledReason)
     case fullyOnboarded
+    case decommissioned
 }
 
 public struct RunningAppContext {
@@ -154,11 +155,21 @@ public enum ApplicationState {
 
     /// Application is properly set up and is running exposure detection
     case runningExposureNotification(RunningAppContext)
+
+    case decommissioned(openURL: (URL) -> Void)
 }
 
 extension ApplicationState {
     var isAppUnavailable: Bool {
         if case .appUnavailable = self {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    var isAppDecommissioned: Bool {
+        if case .decommissioned = self {
             return true
         } else {
             return false

@@ -23,7 +23,7 @@ swift run Reporter workspace ../NHS-COVID-19.xcworkspace --scheme "NHS-COVID-19"
 popd
 
 ## Generate documentation
-git clone https://github.com/nihp-public/COVID-19-app-documentation-reporting.git doc_gen
+git clone https://github.com/ukhsa-collaboration/COVID-19-app-documentation-reporting.git doc_gen
 pushd doc_gen
 git checkout iOS-reporting-but-small
 npm install

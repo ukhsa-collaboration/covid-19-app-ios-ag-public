@@ -1280,6 +1280,24 @@ public enum StringLocalizableKey: String, CaseIterable {
     case self_report_advice_reported_result_out_of_isolation_header
     case self_report_advice_not_reported_result_out_of_isolation_second_header
 
+    // Closure screen
+    case closure_page_name
+    case closure_image_accessibility_label
+    case closure_title
+    case closure_paragraph
+    case closure_url_1_label
+    case closure_url_1_link
+    case closure_url_2_label
+    case closure_url_2_link
+    case closure_url_3_label
+    case closure_url_3_link
+    case closure_url_4_label
+    case closure_url_4_link
+    case closure_url_5_label
+    case closure_url_5_link
+    case closure_notification_title
+    case closure_notification_body
+
     //MARK: - Generic
     case continue_button_label
     case error_box_title

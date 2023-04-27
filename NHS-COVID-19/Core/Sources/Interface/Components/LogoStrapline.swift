@@ -14,6 +14,7 @@ public class LogoStrapline: UIView {
     public enum Style {
         case home(Country)
         case onboarding
+        case closure
 
         var label: String? {
             switch self {
@@ -24,7 +25,7 @@ public class LogoStrapline: UIView {
                 case .wales:
                     return nil
                 }
-            case .onboarding:
+            case .onboarding, .closure:
                 return localize(.onboarding_strapline_title)
             }
         }
@@ -35,6 +36,8 @@ public class LogoStrapline: UIView {
                 return localizeForCountry(.home_strapline_accessiblity_label)
             case .onboarding:
                 return localize(.onboarding_strapline_accessiblity_label)
+            case .closure:
+                return localize(.home_strapline_accessiblity_label)
             }
         }
 
@@ -47,7 +50,7 @@ public class LogoStrapline: UIView {
                 case .wales:
                     return .logoWales
                 }
-            case .onboarding:
+            case .onboarding, .closure:
                 return .logoAlt
             }
         }
@@ -61,7 +64,7 @@ public class LogoStrapline: UIView {
                 case .wales:
                     return CGFloat.navBarLogoHeightWithoutLabel
                 }
-            case .onboarding:
+            case .onboarding, .closure:
                 return CGFloat.navBarLogoHeight
             }
         }
@@ -71,14 +74,26 @@ public class LogoStrapline: UIView {
         self.colorName = colorName
         super.init(frame: .zero)
 
-        isAccessibilityElement = false
-        accessibilityElementsHidden = true
-        accessibilityLabel = style.accessibilityLabel
-        accessibilityTraits = [.header, .staticText]
+        setAccessibility(for: style)
 
         backgroundColor = .clear
 
         update(style: style)
+    }
+
+    func setAccessibility(for style: Style) {
+        switch style {
+        case .closure:
+            isAccessibilityElement = true
+            accessibilityElementsHidden = false
+            accessibilityLabel = style.accessibilityLabel
+            accessibilityTraits = [.header, .staticText]
+        case .onboarding, .home(_):
+            isAccessibilityElement = false
+            accessibilityElementsHidden = true
+            accessibilityLabel = style.accessibilityLabel
+            accessibilityTraits = [.header, .staticText]
+        }
     }
 
     func update(style: Style) {

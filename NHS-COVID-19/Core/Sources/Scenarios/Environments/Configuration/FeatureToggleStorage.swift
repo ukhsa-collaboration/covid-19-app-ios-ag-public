@@ -37,6 +37,9 @@ public struct FeatureToggleStorage {
     @UserDefault("scenario.toggle.selfReportingFeatureToggle", defaultValue: Feature.productionEnabledFeatures.contains(.selfReporting))
     public var selfReportingToggle: Bool
 
+    @UserDefault("scenario.toggle.decommissioningClosureSceenToggle", defaultValue: Feature.productionEnabledFeatures.contains(.decommissioningClosureSceen))
+    public var decommissioningClosureSceenToggle: Bool
+
     #warning("Retrieve key from UserDefault")
     public var allFeatureKeys: [String] {
         [
@@ -50,6 +53,7 @@ public struct FeatureToggleStorage {
             $guidanceHubEnglandToggle.key,
             $guidanceHubWalesToggle.key,
             $selfReportingToggle.key,
+            $decommissioningClosureSceenToggle.key,
         ]
     }
 
@@ -97,6 +101,10 @@ public struct FeatureToggleStorage {
 
         if store.selfReportingToggle {
             enabledFeatures.append(.selfReporting)
+        }
+
+        if store.decommissioningClosureSceenToggle {
+            enabledFeatures.append(.decommissioningClosureSceen)
         }
 
         return enabledFeatures

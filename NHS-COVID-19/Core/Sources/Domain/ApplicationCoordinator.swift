@@ -379,7 +379,19 @@ public class ApplicationCoordinator {
 
         metricReporter.set(rawState: rawState.domainProperty())
 
-        monitorRawState()
+        if isFeatureEnabled(.decommissioningClosureSceen) {
+            deleteDataForDecommisioning()
+            state = makeState(for: .decommissioned)
+
+            disableExposureNotificationIfEnabled()
+
+            DispatchQueue.main.async {
+                var decommissioningNotifier = DecommissioningNotifier(notificationManager: self.userNotificationManager)
+                decommissioningNotifier.alertUser()
+            }
+        } else {
+            monitorRawState()
+        }
 
         setupBackgroundTask()
 
@@ -394,6 +406,7 @@ public class ApplicationCoordinator {
         metricReporter.monitorHousekeeping()
 
         services.userNotificationsManager.removePending(type: .selfIsolation)
+        services.userNotificationsManager.removeAll()
     }
 
     private func monitorRawState() {
@@ -411,6 +424,8 @@ public class ApplicationCoordinator {
 
     private func makeState(for logicalState: LogicalState) -> ApplicationState {
         switch logicalState {
+        case .decommissioned:
+            return .decommissioned(openURL: application.open)
         case .starting:
             return .starting
         case .appUnavailable(let logicalReason, let descriptions):
@@ -664,6 +679,16 @@ public class ApplicationCoordinator {
             .eraseToAnyPublisher()
     }
 
+    private func disableExposureNotificationIfEnabled() {
+        exposureNotificationContext.exposureNotificationStateController.combinedState
+            .sink { [weak self] combinedState in
+                if combinedState.isEnabled {
+                    self?.exposureNotificationContext.exposureNotificationStateController.disable { }
+                }
+            }
+            .store(in: &cancellables)
+    }
+
     private func setupBackgroundTask() {
         $state.sink { [weak self] state in
             guard let self = self else { return }
@@ -695,6 +720,9 @@ public class ApplicationCoordinator {
     }
 
     private func makeBackgroundJobs(for state: ApplicationState) -> [BackgroundTaskAggregator.Job] {
+
+        if state.isAppDecommissioned { return [] }
+
         let availabilityCheck = BackgroundTaskAggregator.Job(
             work: appAvailabilityManager.update
         )
@@ -708,7 +736,8 @@ public class ApplicationCoordinator {
                 .postcodeAndLocalAuthorityRequired where postcodeStore.postcode.currentValue != nil,
                 .recommendedUpdate:
             enabledJobs.append(contentsOf: makeBackgroundJobsForRunningState())
-        case .appUnavailable,
+        case .decommissioned,
+                .appUnavailable,
                 .authorizationRequired,
                 .canNotRunExposureNotification,
                 .failedToStart,
@@ -990,6 +1019,13 @@ localAuthorityValidator: LocalAuthoritiesValidator) {
     }
 
     private func deleteAllData() {
+        languageStore.delete()
+        riskyPostcodeEndpointManager.reload()
+
+        deleteDataForDecommisioning()
+    }
+
+    private func deleteDataForDecommisioning() {
         completedOnboardingForCurrentSession.value = false
         bluetoothOffAcknowledged.value = false
         postcodeStore.delete()
@@ -999,9 +1035,7 @@ localAuthorityValidator: LocalAuthoritiesValidator) {
         exposureNotificationContext.exposureWindowStore?.delete()
         virologyTestingStateStore.delete()
         metricReporter.delete()
-        languageStore.delete()
         isolationPaymentContext.deleteAllData()
-        riskyPostcodeEndpointManager.reload()
         homeAnimationsStore.delete()
         localInformationEndpointManager.deleteCurrentInfo()
         symptomsCheckerManager.deleteAll()

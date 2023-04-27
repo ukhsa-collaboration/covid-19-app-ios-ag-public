@@ -17,6 +17,7 @@ public class MockUserNotificationsManager: UserNotificationManaging {
     public var notificationType: UserNotificationType?
     public var removePendingNotificationType: UserNotificationType?
     public var removeAllShownNotificationType: UserNotificationType?
+    public var removedAll: Bool?
 
     public init() {}
 
@@ -39,5 +40,9 @@ public class MockUserNotificationsManager: UserNotificationManaging {
 
     public func removeAllDelivered(for type: UserNotificationType) {
         removeAllShownNotificationType = type
+    }
+
+    public func removeAll() {
+        removedAll = true
     }
 }

@@ -28,6 +28,7 @@ public enum UserNotificationType: Equatable {
         body: String,
         languageCode: String? = nil
     )
+    case decommissioning
 
     @available(*, deprecated, message: "No longer in use. Here only to allow existing notifications of this type to be cancelled when people upgrade their app.")
     case selfIsolation
@@ -60,6 +61,8 @@ public enum UserNotificationType: Equatable {
             return "localMessageUpdate"
         case .selfIsolation:
              return "selfIsolation"
+        case .decommissioning:
+            return "decommissioning"
         }
     }
 }
@@ -88,4 +91,5 @@ public protocol UserNotificationManaging {
     func add(type: UserNotificationType, at: DateComponents?, withCompletionHandler completionHandler: ((Error?) -> Void)?)
     func removePending(type: UserNotificationType)
     func removeAllDelivered(for type: UserNotificationType)
+    func removeAll()
 }

@@ -363,6 +363,7 @@ class ExposureNotificationReminderTests: XCTestCase {
     // MARK: - Mocks
 
     private class MockUserNotificationManager: UserNotificationManaging {
+
         public var triggerAt: DateComponents?
         public var notificationType: UserNotificationType?
         public var authorizationStatus = AuthorizationStatus.notDetermined
@@ -387,6 +388,7 @@ class ExposureNotificationReminderTests: XCTestCase {
 
         func removeAllDelivered(for type: UserNotificationType) {}
 
+        func removeAll() {}
     }
 
 }

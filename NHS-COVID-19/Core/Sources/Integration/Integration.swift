@@ -14,6 +14,8 @@ extension CoordinatedAppController {
         for state: ApplicationState
     ) -> UIViewController {
         switch state {
+        case .decommissioned(let openURL):
+            return ClosureViewController(interactor: ClosureInteractor(openURL: openURL))
         case .starting:
             let s = UIStoryboard(name: "LaunchScreen", bundle: nil)
             return s.instantiateInitialViewController()!
@@ -608,6 +610,31 @@ private struct ContactTracingBluetoothInteractor: ContactTracingBluetoothViewCon
 
     func didTapContinueButton() {
         submitAction()
+    }
+}
+
+private struct ClosureInteractor: ClosureViewController.Interacting {
+
+    let openURL: (URL) -> Void
+
+    func didTapURL1() {
+        openURL(ExternalLink.closureLink1.url)
+    }
+
+    func didTapURL2() {
+        openURL(ExternalLink.closureLink2.url)
+    }
+
+    func didTapURL3() {
+        openURL(ExternalLink.closureLink3.url)
+    }
+
+    func didTapURL4() {
+        openURL(ExternalLink.closureLink4.url)
+    }
+
+    func didTapURL5() {
+        openURL(ExternalLink.closureLink5.url)
     }
 }
 

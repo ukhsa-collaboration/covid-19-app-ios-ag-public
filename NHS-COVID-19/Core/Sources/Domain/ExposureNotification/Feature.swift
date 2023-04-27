@@ -41,16 +41,22 @@ public enum Feature: CaseIterable {
     /// Enables self reporting flow, where people can report private test results
     case selfReporting
 
+    /// Enables the closure screen for decommissioning
+    case decommissioningClosureSceen
+
     public static let productionEnabledFeatures: [Feature] = [
         .guidanceHubEngland,
         .guidanceHubWales,
         .selfReporting,
+        .decommissioningClosureSceen
     ]
 }
 
 extension Feature {
     var associatedMetrics: [Metric] {
         switch self {
+        case .decommissioningClosureSceen:
+            return []
         case .localStatistics:
             return []
         case .venueCheckIn:
@@ -111,6 +117,8 @@ extension Feature {
 
     var countriesOfRelevance: [Country] {
         switch self {
+        case .decommissioningClosureSceen:
+            return [.england, .wales]
         case .localStatistics:
             return [.england, .wales]
         case .venueCheckIn:

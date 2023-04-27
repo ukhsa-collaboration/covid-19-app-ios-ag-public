@@ -16,7 +16,7 @@ class AcceptanceTestCase: XCTestCase {
     struct Instance: TestProp {
         struct Configuration: TestPropConfiguration {
             var application = MockApplication()
-            var enabledFeatures = Feature.allCases
+            var enabledFeatures = Feature.allCases.filter({ $0 != .decommissioningClosureSceen })
             var exposureNotificationManager = MockExposureNotificationManager()
             var userNotificationsManager = MockUserNotificationsManager()
             var processingTaskRequestManager = MockProcessingTaskRequestManager()

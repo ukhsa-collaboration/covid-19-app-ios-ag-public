@@ -101,6 +101,11 @@ class UserNotificationManager {
         case .selfIsolation:
             assertionFailure("`UserNotificationType.selfIsolation` is deprecated and we should not be scheduling any more of them.")
             return UNMutableNotificationContent()
+        case .decommissioning:
+            return configuring(UNMutableNotificationContent()) {
+                $0.title = localize(.closure_notification_title)
+                $0.body = localize(.closure_notification_body)
+            }
         }
     }
 }
@@ -127,5 +132,9 @@ extension UserNotificationManager: UserNotificationManaging {
 
     func removeAllDelivered(for type: UserNotificationType) {
         manager.removeDeliveredNotifications(withIdentifiers: [type.identifier])
+    }
+
+    func removeAll() {
+        manager.removeAllPendingNotificationRequests()
     }
 }
